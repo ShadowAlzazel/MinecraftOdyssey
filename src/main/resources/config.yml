@@ -1,0 +1,13 @@
+# -------------------------------------
+# Minecraft Odyssey Config File
+#
+# -------------------------------------
+#
+#
+names:
+  server-name: "Vailcraft"
+
+# enables or disables daily world events
+daily-world-events: true
+
+server-join: true
