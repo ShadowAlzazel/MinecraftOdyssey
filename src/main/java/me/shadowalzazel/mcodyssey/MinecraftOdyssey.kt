@@ -21,7 +21,7 @@ class MinecraftOdyssey : JavaPlugin() {
         config.options().copyDefaults()
         saveConfig()
 
-        if (config.getBoolean("daily-world-events")) {
+        if (config.getBoolean("daily-world-phenomenon")) {
             server.pluginManager.registerEvents(OdysseyPlayerEventListener,this)
         }
         server.pluginManager.registerEvents(OdysseyDailyEventListener, this)
