@@ -57,7 +57,7 @@ object OdysseyDailyEventListener : Listener {
     fun onNewDay(event: TimeSkipEvent) {
         val currentWorld = event.world
 
-        val worldPhenomenonList = listOf(SolarEclipse(), BreezyDay(), SlimeDay(), Earthquake())
+        val worldPhenomenonList = listOf(SolarEclipse(), BreezyDay(), SlimeDay(), Earthquake(), BloodMoon(), BlueMoon())
         val randomWorldPhenomenon = worldPhenomenonList.random()
         val rolledRate = (0..100).random()
 

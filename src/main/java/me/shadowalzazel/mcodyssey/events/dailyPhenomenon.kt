@@ -3,6 +3,7 @@ package me.shadowalzazel.mcodyssey.events
 import org.bukkit.World
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+//import org.bukkit.scheduler.BukkitRunnable
 
 open class DailyPhenomenon(name: String, rate: Int) {
 
@@ -55,6 +56,24 @@ class SolarEclipse : DailyPhenomenon("Solar Eclipse", 50) {
     }
 }
 
+class BloodMoon : DailyPhenomenon("Blood Moon", 50) {
+
+    override fun phenomenonEffect(phenomenonWorld: World) {
+        println("A blood moon is happening at ${phenomenonWorld.name}!")
+
+    }
+}
+
+class BlueMoon : DailyPhenomenon("Blue Moon", 50) {
+
+    override fun phenomenonEffect(phenomenonWorld: World) {
+        println("A blue moon is happening at ${phenomenonWorld.name}!")
+
+    }
+}
+
+
+
 class BreezyDay : DailyPhenomenon("Breezy Day", 80) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
@@ -74,10 +93,41 @@ class Earthquake : DailyPhenomenon("Earthquake", 20) {
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("A large tremor has hit ${phenomenonWorld.name}!")
         val worldPlayers = phenomenonWorld.players
-        val breezeEffect = PotionEffect(PotionEffectType.CONFUSION, 60, 0)
+        val breezeEffect = PotionEffect(PotionEffectType.CONFUSION, 160, 1)
         for (breezePlayer in worldPlayers) {
             breezePlayer.addPotionEffect(breezeEffect)
             breezePlayer.sendMessage("The ground trembles profoundly!!!")
         }
+
+        //someOdysseyRunnable = BukkitRunnable {
+
+       //     @override
+        //    fun tremblePlayers() {
+        //        val trembleEffect = PotionEffect(PotionEffectType.SLOW, 80, 1)
+        //        for (tPlayers in worldPlayers) {
+        //            tPlayers.addPotionEffect(trembleEffect)
+        //        }
+        //    }
+        //}
+        //open class TrembleTask : BukkitRunnable() {
+        //    override fun run() {
+        //        //val trembleEffect = PotionEffect(PotionEffectType.SLOW, 80, 1)
+        //        //for (tPlayers in worldPlayers) {
+        //        //    tPlayers.addPotionEffect(trembleEffect)
+        //         //}
+        //        println("Hello World!")
+
+
+
+        //}
+
+
+        //val scheduler = Bukkit.getScheduler()
+        //.runTaskLater(this, TrembleTask(), 60L)
+        //scheduler.runTaskLaterAsynchronously(this, TrembleTask(), 60L)
+
+
     }
 }
+
+
