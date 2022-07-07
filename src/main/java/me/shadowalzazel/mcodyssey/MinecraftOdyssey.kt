@@ -21,10 +21,10 @@ class MinecraftOdyssey : JavaPlugin() {
         config.options().copyDefaults()
         saveConfig()
 
-        if (config.getBoolean("daily-world-phenomenon")) {
-            server.pluginManager.registerEvents(OdysseyPlayerEventListener,this)
+        if (config.getBoolean("daily-world-phenomenon.enabled")) {
+            server.pluginManager.registerEvents(OdysseyDailyEventListener,this)
         }
-        server.pluginManager.registerEvents(OdysseyDailyEventListener, this)
+        server.pluginManager.registerEvents(OdysseyPlayerEventListener, this)
 
         // Hello World!
         logger.info("The Odyssey has just begun!")
