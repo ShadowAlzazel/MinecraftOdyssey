@@ -10,4 +10,6 @@ names:
 # enables or disables daily world events
 daily-world-events: true
 
+mega-events: true
+
 server-join: true
