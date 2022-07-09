@@ -15,6 +15,9 @@ open class DailyPhenomenon(name: String, rate: Int) {
             phenomenonEffect(phenomenonWorld)
         else {
             println("An uneventful day...")
+            for (aPlayer in phenomenonWorld.players) {
+                aPlayer.sendMessage("An uneventful day proceeds...")
+            }
 
         }
 
