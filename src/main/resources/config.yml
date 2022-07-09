@@ -14,7 +14,11 @@ daily-world-phenomenon:
   blood-moon-enabled: true
   breezy-day-enabled: true
 
-player-minimum-for-luck: 1
+# dictates whether the end game is disabled
+end-game:
+  enabled: false
+
+player-minimum-for-luck: 3
 
 mega-events: true
 

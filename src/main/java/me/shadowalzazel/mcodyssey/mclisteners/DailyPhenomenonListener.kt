@@ -10,16 +10,18 @@ import org.bukkit.event.world.TimeSkipEvent
 
 object OdysseyDailyPhenomenonListener : Listener {
 
-    var endActivation = false
+    // End-Game activation
+    private var endActivation = false
+    private var endGame: Boolean = MinecraftOdyssey.instance.config.getBoolean("end-game.enabled")
 
     // Event Chooser
     @EventHandler
     fun onNewDay(event: TimeSkipEvent) {
 
-        if (endActivation) {
+        if (endActivation or endGame) {
             val currentWorld = event.world
 
-            val worldPhenomenonList = listOf(SolarEclipse(), BreezyDay(), SlimeDay(), Earthquake(), BloodMoon(), BlueMoon())
+            val worldPhenomenonList = listOf(GravityShift(), BreezyDay(), SolarFlare(), Earthquake(), WorldFamine())
             val randomWorldPhenomenon = worldPhenomenonList.random()
             val rolledRate = (0..100).random()
 
