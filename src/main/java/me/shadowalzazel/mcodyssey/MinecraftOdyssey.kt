@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey
 
+import me.shadowalzazel.mcodyssey.mclisteners.MinecraftOdysseyListeners
 import me.shadowalzazel.mcodyssey.mclisteners.OdysseyDailyPhenomenonListener
 import me.shadowalzazel.mcodyssey.mclisteners.OdysseyPlayerJoinListener
 
@@ -20,6 +21,8 @@ class MinecraftOdyssey : JavaPlugin() {
         // Config start up
         config.options().copyDefaults()
         saveConfig()
+
+        server.pluginManager.registerEvents(MinecraftOdysseyListeners, this)
 
         if (config.getBoolean("daily-world-phenomenon.enabled")) {
             server.pluginManager.registerEvents(OdysseyDailyPhenomenonListener, this)
