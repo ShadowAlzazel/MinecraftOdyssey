@@ -8,6 +8,8 @@ import org.bukkit.plugin.java.JavaPlugin
 
 class MinecraftOdyssey : JavaPlugin() {
 
+
+
     companion object {
         lateinit var instance : MinecraftOdyssey
     }

@@ -11,29 +11,41 @@ import org.bukkit.event.world.TimeSkipEvent
 object OdysseyDailyPhenomenonListener : Listener {
 
     // End-Game activation
-    private var endActivation = false
+    private var endActivation = true
+    private var cooldown : Long = 1232132313123
     private var endGame: Boolean = MinecraftOdyssey.instance.config.getBoolean("end-game.enabled")
 
     // Event Chooser
     @EventHandler
     fun onNewDay(event: TimeSkipEvent) {
 
-        if (endActivation or endGame) {
-            val currentWorld = event.world
+        var timeElapsed = System.currentTimeMillis() - cooldown
 
-            val worldPhenomenonList = listOf(GravityShift(), BreezyDay(), SolarFlare(), Earthquake(), WorldFamine())
-            val randomWorldPhenomenon = worldPhenomenonList.random()
-            val rolledRate = (0..100).random()
+        // Event Cool down timer
+        if (timeElapsed >= 10000) {
+            cooldown = System.currentTimeMillis()
 
-            //Daily luck
-            val luckConfigAmount = MinecraftOdyssey.instance.config.getInt("player-minimum-for-luck")
-            if (currentWorld.players.size >= luckConfigAmount) {
-                val drawOfFortunes = DrawOfFortunes()
-                drawOfFortunes.phenomenonEffect(currentWorld)
+            if (endActivation or endGame) {
+                val currentWorld = event.world
+
+                val worldPhenomenonList = listOf(GravityShift(), BreezyDay(), SolarFlare(), Earthquake(), WorldFamine())
+                val randomWorldPhenomenon = worldPhenomenonList.random()
+                val rolledRate = (0..100).random()
+
+                //Daily luck
+                val luckConfigAmount = MinecraftOdyssey.instance.config.getInt("player-minimum-for-luck")
+                if (currentWorld.players.size >= luckConfigAmount) {
+                    val drawOfFortunes = DrawOfFortunes()
+                    drawOfFortunes.phenomenonEffect(currentWorld)
+                }
+
+                randomWorldPhenomenon.phenomenonActivation(currentWorld, rolledRate)
             }
-
-            randomWorldPhenomenon.phenomenonActivation(currentWorld, rolledRate)
         }
+        else {
+            println("Cannot Trigger anymore daily events!")
+        }
+
     }
 
     //Event Activation

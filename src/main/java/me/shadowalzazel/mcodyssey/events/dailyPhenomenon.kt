@@ -86,8 +86,10 @@ class GravityShift : DailyPhenomenon("GravityShift", 75) {
         println("The gravity shifts ${phenomenonWorld.name}!")
         val worldPlayers = phenomenonWorld.players
         val lowGravityEffect = PotionEffect(PotionEffectType.JUMP, 12000, 1)
+        val lowGravityEffect2 = PotionEffect(PotionEffectType.SLOW_FALLING, 12000, 1)
         for (aPlayer in worldPlayers) {
             aPlayer.addPotionEffect(lowGravityEffect)
+            aPlayer.addPotionEffect(lowGravityEffect2)
             aPlayer.sendMessage("${ChatColor.AQUA} $serverName! is experiencing a relativistic shift and unstable gravity zones!")
         }
     }
@@ -101,6 +103,7 @@ class WorldFamine : DailyPhenomenon("World Famine", 30) {
         val famineEffect = PotionEffect(PotionEffectType.HUNGER, 12000, 1)
         for (aPlayer in worldPlayers) {
             aPlayer.addPotionEffect(famineEffect)
+            aPlayer.foodLevel = 10
             aPlayer.sendMessage("${ChatColor.GREEN}A famine has hit ${phenomenonWorld.name}!")
         }
     }
@@ -135,9 +138,9 @@ class BreezyDay : DailyPhenomenon("Breezy Day", 80) {
         println("A swift wind is happening at ${phenomenonWorld.name}!")
         val worldPlayers = phenomenonWorld.players
         val breezeEffect = PotionEffect(PotionEffectType.SPEED, 12000, 1)
-        for (breezePlayer in worldPlayers) {
-            breezePlayer.addPotionEffect(breezeEffect)
-            breezePlayer.sendMessage("${ChatColor.BLUE}A swift winds follows your side...")
+        for (aPlayer in worldPlayers) {
+            aPlayer.addPotionEffect(breezeEffect)
+            aPlayer.sendMessage("${ChatColor.BLUE}A swift winds follows your side...")
         }
     }
 }
@@ -147,10 +150,14 @@ class Earthquake : DailyPhenomenon("Earthquake", 20) {
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("A large tremor has hit ${phenomenonWorld.name}!")
         val worldPlayers = phenomenonWorld.players
-        val breezeEffect = PotionEffect(PotionEffectType.CONFUSION, 150, 1)
-        for (breezePlayer in worldPlayers) {
-            breezePlayer.addPotionEffect(breezeEffect)
-            breezePlayer.sendMessage("${ChatColor.BOLD}The ground trembles profoundly!!!")
+        val trembleEffect = PotionEffect(PotionEffectType.CONFUSION, 150, 2)
+        val shakeEffect = PotionEffect(PotionEffectType.SLOW, 190, 2)
+        for (aPlayer in worldPlayers) {
+            if (!aPlayer.isFlying){
+                aPlayer.addPotionEffect(trembleEffect)
+                aPlayer.addPotionEffect(shakeEffect)
+                aPlayer.sendMessage("${ChatColor.BOLD}The ground trembles profoundly!!!")
+            }
         }
 
         //someOdysseyRunnable = BukkitRunnable {
