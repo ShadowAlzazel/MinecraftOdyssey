@@ -42,7 +42,7 @@ class DrawOfFortunes : DailyPhenomenon("Draw of Fortunes", 100) {
         luckyPlayer.addPotionEffect(dailyLuckEffect)
         luckyPlayer.sendMessage("${ChatColor.YELLOW}Fortune favors you today...")
 
-        if (luckyPlayer.name !=  unluckyPlayer.name){
+        if (luckyPlayer.name ==  unluckyPlayer.name){
             luckyPlayer.addPotionEffect(dailyUnluckEffect)
             luckyPlayer.sendMessage("${ChatColor.RED}The odds are stacked against you today...")
         }

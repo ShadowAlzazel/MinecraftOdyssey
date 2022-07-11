@@ -12,7 +12,7 @@ object OdysseyDailyPhenomenonListener : Listener {
 
     // End-Game activation
     private var endActivation = true
-    private var cooldown : Long = 1232132313123
+    private var cooldown : Long = 123
     private var endGame: Boolean = MinecraftOdyssey.instance.config.getBoolean("end-game.enabled")
 
     // Event Chooser
