@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.mclisteners
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
-import me.shadowalzazel.mcodyssey.events.*
+import me.shadowalzazel.mcodyssey.phenomenons.*
 import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -10,28 +10,42 @@ import org.bukkit.event.world.TimeSkipEvent
 
 object OdysseyDailyPhenomenonListener : Listener {
 
-    var endActivation = false
+    // End-Game activation
+    private var endActivation = true
+    private var cooldown : Long = 123
+    private var endGame: Boolean = MinecraftOdyssey.instance.config.getBoolean("end-game.enabled")
 
     // Event Chooser
     @EventHandler
     fun onNewDay(event: TimeSkipEvent) {
 
-        if (endActivation) {
-            val currentWorld = event.world
+        var timeElapsed = System.currentTimeMillis() - cooldown
 
-            val worldPhenomenonList = listOf(SolarEclipse(), BreezyDay(), SlimeDay(), Earthquake(), BloodMoon(), BlueMoon())
-            val randomWorldPhenomenon = worldPhenomenonList.random()
-            val rolledRate = (0..100).random()
+        // Event Cool down timer
+        if (timeElapsed >= 10000) {
+            cooldown = System.currentTimeMillis()
 
-            //Daily luck
-            val luckConfigAmount = MinecraftOdyssey.instance.config.getInt("player-minimum-for-luck")
-            if (currentWorld.players.size >= luckConfigAmount) {
-                val drawOfFortunes = DrawOfFortunes()
-                drawOfFortunes.phenomenonEffect(currentWorld)
+            if (endActivation or endGame) {
+                val currentWorld = event.world
+
+                val worldPhenomenonList = listOf(GravityShift(), BreezyDay(), SolarFlare(), Earthquake(), WorldFamine(), BioluminescentDay(), FairyFollowDay(), ShimmerIntoxication(), SpiritsAwaken(), StoneFlash(), CometDay(), BlazingSoul())
+                val randomWorldPhenomenon = worldPhenomenonList.random()
+                val rolledRate = (0..100).random()
+
+                //Daily luck
+                val luckConfigAmount = MinecraftOdyssey.instance.config.getInt("player-minimum-for-luck")
+                if (currentWorld.players.size >= luckConfigAmount) {
+                    val drawOfFortunes = DrawOfFortunes()
+                    drawOfFortunes.phenomenonEffect(currentWorld)
+                }
+
+                randomWorldPhenomenon.phenomenonActivation(currentWorld, rolledRate)
             }
-
-            randomWorldPhenomenon.phenomenonActivation(currentWorld, rolledRate)
         }
+        else {
+            println("Cannot Trigger anymore daily events!")
+        }
+
     }
 
     //Event Activation
