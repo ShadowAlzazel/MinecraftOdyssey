@@ -28,7 +28,7 @@ object OdysseyDailyPhenomenonListener : Listener {
             if (endActivation or endGame) {
                 val currentWorld = event.world
 
-                val worldPhenomenonList = listOf(GravityShift(), BreezyDay(), SolarFlare(), Earthquake(), WorldFamine())
+                val worldPhenomenonList = listOf(GravityShift(), BreezyDay(), SolarFlare(), Earthquake(), WorldFamine(), BioluminescentDay(), FairyFollowDay(), ShimmerIntoxication(), SpiritsAwaken())
                 val randomWorldPhenomenon = worldPhenomenonList.random()
                 val rolledRate = (0..100).random()
 
