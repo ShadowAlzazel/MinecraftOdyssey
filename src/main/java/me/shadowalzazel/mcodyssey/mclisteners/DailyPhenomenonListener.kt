@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.mclisteners
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
-import me.shadowalzazel.mcodyssey.events.*
+import me.shadowalzazel.mcodyssey.phenomenons.*
 import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -28,7 +28,7 @@ object OdysseyDailyPhenomenonListener : Listener {
             if (endActivation or endGame) {
                 val currentWorld = event.world
 
-                val worldPhenomenonList = listOf(GravityShift(), BreezyDay(), SolarFlare(), Earthquake(), WorldFamine(), BioluminescentDay(), FairyFollowDay(), ShimmerIntoxication(), SpiritsAwaken())
+                val worldPhenomenonList = listOf(GravityShift(), BreezyDay(), SolarFlare(), Earthquake(), WorldFamine(), BioluminescentDay(), FairyFollowDay(), ShimmerIntoxication(), SpiritsAwaken(), StoneFlash(), CometDay(), BlazingSoul())
                 val randomWorldPhenomenon = worldPhenomenonList.random()
                 val rolledRate = (0..100).random()
 

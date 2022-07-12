@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.events
+package me.shadowalzazel.mcodyssey.phenomenons
 
 import io.papermc.paper.advancement.AdvancementDisplay
 import org.bukkit.NamespacedKey

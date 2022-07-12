@@ -1,7 +1,6 @@
 package me.shadowalzazel.mcodyssey.mclisteners
 
 import org.bukkit.ChatColor
-import org.bukkit.Material
 import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
