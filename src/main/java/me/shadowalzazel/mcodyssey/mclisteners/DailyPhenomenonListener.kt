@@ -14,6 +14,7 @@ object OdysseyDailyPhenomenonListener : Listener {
     private var endActivation = true
     private var cooldown : Long = 123
     private var endGame: Boolean = MinecraftOdyssey.instance.config.getBoolean("end-game.enabled")
+    private val cooldownTimer = 10000 //10000
 
     // Event Chooser
     @EventHandler
@@ -22,7 +23,7 @@ object OdysseyDailyPhenomenonListener : Listener {
         var timeElapsed = System.currentTimeMillis() - cooldown
 
         // Event Cool down timer
-        if (timeElapsed >= 10000) {
+        if (timeElapsed >= cooldownTimer) {
             cooldown = System.currentTimeMillis()
 
             if (endActivation or endGame) {

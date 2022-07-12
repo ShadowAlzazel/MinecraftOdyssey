@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.phenomenons
 
+import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import org.bukkit.ChatColor
 import org.bukkit.World
 import org.bukkit.potion.PotionEffect
@@ -10,12 +11,19 @@ import org.bukkit.potion.PotionEffectType
 open class DailyPhenomenon(name: String, rate: Int) : Phenomenon(name, rate) {
 
     override fun phenomenonActivation(phenomenonWorld: World, rollRate: Int){
+
+        val dayMessages = listOf<String>("An uneventful day proceeds...", "Looks like nothing is happening today...", "MULTIPLE HOSTILES INCOM.. False alarm. Nothing is going on.",
+            "There are rumors that the Ambassador is on route to this test world...", "Hello World!", "Just another ordinary day...", "The forecast predicts... Nothing.",
+            "No distinct events are Schedu-Predicted for today.", "The standard cycle was not disturbed...", "A normal day follows...", "Just plain Today...", "The only thing that happens is nothing at all")
+        //val dayMessages = MinecraftOdyssey.instance.config.getStringList("day-messages")
+        val randomMessage = dayMessages.random()
+
         if (rollRate < occurrenceRate)
             phenomenonEffect(phenomenonWorld)
         else {
             println("No Daily Phenomenon Occur")
             for (aPlayer in phenomenonWorld.players) {
-                aPlayer.sendMessage("${ChatColor.ITALIC}An uneventful day proceeds...")
+                aPlayer.sendMessage("${ChatColor.ITALIC}$randomMessage")
 
             }
         }
@@ -84,7 +92,7 @@ class BlueMoon : DailyPhenomenon("BlueMoon", 50) {
     }
 }
 
-class BlazingSoul : DailyPhenomenon("BlazingSoul", 60) {
+class BlazingSoul : DailyPhenomenon("BlazingSoul", 45) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("The players soul's are ablaze at ${phenomenonWorld.name}!")
@@ -103,7 +111,7 @@ class BlazingSoul : DailyPhenomenon("BlazingSoul", 60) {
             val blazingMindRandom = (0..2).random()
             val blazingBodyRandom = (0..2).random()
 
-            if (blazingBodyRandom == 3) {
+            if (blazingBodyRandom == 2) {
                 aPlayer.addPotionEffect(blazingBodyEffect)
                 aPlayer.addPotionEffect(blazingBodyEffect2)
                 aPlayer.sendMessage("${ChatColor.GOLD}Your body is set ablaze!")
@@ -122,7 +130,7 @@ class BlazingSoul : DailyPhenomenon("BlazingSoul", 60) {
     }
 }
 
-class CometDay : DailyPhenomenon("CometDay", 90) {
+class CometDay : DailyPhenomenon("CometDay", 70) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("A comet can be seen at ${phenomenonWorld.name}!")
@@ -135,7 +143,7 @@ class CometDay : DailyPhenomenon("CometDay", 90) {
         }
     }
 }
-class StoneFlash : DailyPhenomenon("StoneFlash", 60) {
+class StoneFlash : DailyPhenomenon("StoneFlash", 45) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("A flash stones ${phenomenonWorld.name}!")
@@ -152,7 +160,7 @@ class StoneFlash : DailyPhenomenon("StoneFlash", 60) {
     }
 }
 
-class GravityShift : DailyPhenomenon("GravityShift", 60) {
+class GravityShift : DailyPhenomenon("GravityShift", 55) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("The gravity shifts ${phenomenonWorld.name}!")
@@ -168,10 +176,10 @@ class GravityShift : DailyPhenomenon("GravityShift", 60) {
     }
 }
 
-class ShimmerIntoxication : DailyPhenomenon("ShimmerIntoxication", 60) {
+class ShimmerIntoxication : DailyPhenomenon("ShimmerIntoxication", 50) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
-        println("The gravity shifts ${phenomenonWorld.name}!")
+        println("There is shimmer appearing at ${phenomenonWorld.name}!")
         // Shimmer effects
         val shimmerStrength = PotionEffect(PotionEffectType.INCREASE_DAMAGE, 12000, 0)
         val shimmerResistance = PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 12000, 0)
@@ -186,7 +194,7 @@ class ShimmerIntoxication : DailyPhenomenon("ShimmerIntoxication", 60) {
     }
 }
 
-class WorldFamine : DailyPhenomenon("WorldFamine", 30) {
+class WorldFamine : DailyPhenomenon("WorldFamine", 15) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("A famine is happening at ${phenomenonWorld.name}!")
@@ -202,7 +210,7 @@ class WorldFamine : DailyPhenomenon("WorldFamine", 30) {
     }
 }
 
-class SolarFlare : DailyPhenomenon("SolarFlare", 45) {
+class SolarFlare : DailyPhenomenon("SolarFlare", 30) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("A Solar Flare has hit $serverName!")
@@ -218,7 +226,7 @@ class SolarFlare : DailyPhenomenon("SolarFlare", 45) {
     }
 }
 
-class BreezyDay : DailyPhenomenon("BreezyDay", 90) {
+class BreezyDay : DailyPhenomenon("BreezyDay", 70) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("A swift wind is happening at ${phenomenonWorld.name}!")
@@ -233,7 +241,7 @@ class BreezyDay : DailyPhenomenon("BreezyDay", 90) {
     }
 }
 
-class BioluminescentDay : DailyPhenomenon("BioluminescentDay", 90) {
+class BioluminescentDay : DailyPhenomenon("BioluminescentDay", 70) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("The nano-lifeforms glow at ${phenomenonWorld.name}!")
@@ -247,7 +255,7 @@ class BioluminescentDay : DailyPhenomenon("BioluminescentDay", 90) {
     }
 }
 
-class FairyFollowDay : DailyPhenomenon("FairyFollowDay", 60) {
+class FairyFollowDay : DailyPhenomenon("FairyFollowDay", 50) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("The fairies escape at ${phenomenonWorld.name}!")
@@ -278,7 +286,7 @@ class FairyFollowDay : DailyPhenomenon("FairyFollowDay", 60) {
     }
 }
 
-class SpiritsAwaken : DailyPhenomenon("SpiritsAwaken", 60) {
+class SpiritsAwaken : DailyPhenomenon("SpiritsAwaken", 50) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("The spirits have chosen champions at ${phenomenonWorld.name}!")
@@ -310,7 +318,7 @@ class SpiritsAwaken : DailyPhenomenon("SpiritsAwaken", 60) {
     }
 }
 
-class Earthquake : DailyPhenomenon("Earthquake", 45) {
+class Earthquake : DailyPhenomenon("Earthquake", 30) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("A large tremor has hit ${phenomenonWorld.name}!")
