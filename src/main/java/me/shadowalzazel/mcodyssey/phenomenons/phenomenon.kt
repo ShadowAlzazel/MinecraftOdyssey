@@ -6,20 +6,26 @@ import org.bukkit.World
 open class Phenomenon(name: String, rate: Int) {
 
     val phenomenonName = name
-    val occurrenceRate = rate
-    val currentlyActive = true
+    var occurrenceRate = rate
+    open val hasWarning: Boolean = false
+    open val currentlyActive = true
     val serverName: String? = MinecraftOdyssey.instance.config.getString("names.server-name")
 
-    open fun phenomenonActivation(phenomenonWorld: World, rollRate: Int){
-        if (rollRate < occurrenceRate) {
+    open fun phenomenonActivation(phenomenonWorld: World, rollRate: Int): Boolean {
+        return if (rollRate < occurrenceRate) {
             phenomenonEffect(phenomenonWorld)
-        }
-        else {
+            true
+        } else {
             println("An uneventful day...")
+            false
         }
     }
 
     open fun phenomenonEffect(phenomenonWorld: World) {
         return
+    }
+
+    open fun phenomenonWarning(phenomenonWorld: World): String {
+        return "No Warning"
     }
 }

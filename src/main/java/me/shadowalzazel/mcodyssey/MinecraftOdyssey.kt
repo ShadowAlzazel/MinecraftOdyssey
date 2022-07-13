@@ -8,7 +8,10 @@ import org.bukkit.plugin.java.JavaPlugin
 
 class MinecraftOdyssey : JavaPlugin() {
 
-
+    var dailyPhenomenonActive: Boolean = false
+    var nightlyPhenomenonActive: Boolean = false
+    var endGame: Boolean = true
+    //var endGame: Boolean = MinecraftOdyssey.instance.config.getBoolean("end-game.enabled")
 
     companion object {
         lateinit var instance : MinecraftOdyssey

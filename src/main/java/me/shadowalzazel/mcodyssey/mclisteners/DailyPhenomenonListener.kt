@@ -2,45 +2,46 @@ package me.shadowalzazel.mcodyssey.mclisteners
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.phenomenons.*
-import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.world.TimeSkipEvent
 
 object OdysseyDailyPhenomenonListener : Listener {
 
-    // End-Game activation
-    private var endActivation = true
-    private var cooldown : Long = 123
-    private var endGame: Boolean = MinecraftOdyssey.instance.config.getBoolean("end-game.enabled")
-    private val cooldownTimer = 10000 //10000
+    // Cool Down timers
+    private var cooldown : Long = 0
+    private val cooldownTimer = 100 //10000
 
     // Event Chooser
     @EventHandler
     fun onNewDay(event: TimeSkipEvent) {
 
-        var timeElapsed = System.currentTimeMillis() - cooldown
+        MinecraftOdyssey.instance.dailyPhenomenonActive = false
+        val timeElapsed = System.currentTimeMillis() - cooldown
 
         // Event Cool down timer
         if (timeElapsed >= cooldownTimer) {
             cooldown = System.currentTimeMillis()
 
-            if (endActivation or endGame) {
+            // Check if end game
+            if ((MinecraftOdyssey.instance.endGame) && (!MinecraftOdyssey.instance.dailyPhenomenonActive)) {
                 val currentWorld = event.world
-
-                val worldPhenomenonList = listOf(GravityShift(), BreezyDay(), SolarFlare(), Earthquake(), WorldFamine(), BioluminescentDay(), FairyFollowDay(), ShimmerIntoxication(), SpiritsAwaken(), StoneFlash(), CometDay(), BlazingSoul())
-                val randomWorldPhenomenon = worldPhenomenonList.random()
+                //make dictionary later
+                val dailyPhenomenonList = listOf(GravityShift(), BreezyDay(), SolarFlare(), Earthquake(), WorldFamine(), BioluminescentDay(), FairyFollowDay(), ShimmerIntoxication(), SpiritsAwaken(), StoneFlash(), CometDay(), BlazingSoul())
+                val randomDailyPhenomenon = dailyPhenomenonList.random()
                 val rolledRate = (0..100).random()
 
-                //Daily luck
+                //Daily luck is not daily phenomenon
                 val luckConfigAmount = MinecraftOdyssey.instance.config.getInt("player-minimum-for-luck")
                 if (currentWorld.players.size >= luckConfigAmount) {
                     val drawOfFortunes = DrawOfFortunes()
                     drawOfFortunes.phenomenonEffect(currentWorld)
                 }
 
-                randomWorldPhenomenon.phenomenonActivation(currentWorld, rolledRate)
+                val phenomenonActivated: Boolean = randomDailyPhenomenon.phenomenonActivation(currentWorld, rolledRate)
+                if (phenomenonActivated) {
+                    MinecraftOdyssey.instance.dailyPhenomenonActive = true
+                }
             }
         }
         else {
@@ -49,13 +50,4 @@ object OdysseyDailyPhenomenonListener : Listener {
 
     }
 
-    //Event Activation
-    @EventHandler
-    fun onDefeatEnderDragon(event: EntityDeathEvent) {
-        val dragon = event.entity
-        if (dragon.type == EntityType.ENDER_DRAGON) {
-            println("The end has started at ${event.entity.world.name}")
-            endActivation = true
-        }
-    }
 }
