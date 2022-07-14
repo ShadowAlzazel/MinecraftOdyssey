@@ -8,34 +8,51 @@ import org.bukkit.event.player.PlayerBedEnterEvent
 
 object OdysseyNightlyPhenonmenonListener : Listener {
 
-    private var cooldown: Long = 0
-    private val cooldownTimer = 100 //10000 -> 10 sec
+    var nightlyPhenomenonList = listOf(BloodMoon(), BlueMoon())
+
+    // Cool Down timers
+    private var cooldown : Long = 0
+    private val cooldownTimer = 10 //10000 -> 10 sec
+
+    private var cooldownNightPhenomenon: Long = 0
+    private val cooldownNightTimer = 12000 // 10 mins
 
     @EventHandler
     fun onNightTime(event: PlayerBedEnterEvent) {
 
-        val timeElapsed = System.currentTimeMillis() - cooldown
-
         if (MinecraftOdyssey.instance.endGame) {
             val currentWorld = event.player.world
-            if ((timeElapsed >= cooldownTimer) && (cooldown > 10)) {
-                cooldown = System.currentTimeMillis()
 
+            if (currentWorld.time > 12000) {
 
+                if (!MinecraftOdyssey.instance.nightlyPhenomenonActive) {
 
-                if (currentWorld.time > 12000) {
-                    val nightlyPhenomenonList = listOf(BloodMoon(), BlueMoon())
-                    val randomNightlyPhenomenon = nightlyPhenomenonList.random()
-                    val rolledRate = (0..100).random()
+                    // Nightly Event Change
+                    val timeElapsedMC = event.player.world.fullTime - cooldownNightPhenomenon
+                    if (timeElapsedMC > cooldownNightTimer) {
+                        cooldownNightPhenomenon = currentWorld.fullTime
 
+                        // Event Cool down timer
+                        val timeElapsed = System.currentTimeMillis() - cooldown
+                        if (timeElapsed >= cooldownTimer) {
+                            cooldown = System.currentTimeMillis()
 
-                    if (!MinecraftOdyssey.instance.nightlyPhenomenonActive)
-                        MinecraftOdyssey.instance.nightlyPhenomenonActive = true
+                            val randomNightlyPhenomenon = nightlyPhenomenonList.random()
+                            val rolledRate = (0..100).random()
 
+                            val phenomenonActivated: Boolean = randomNightlyPhenomenon.phenomenonActivation(currentWorld, rolledRate)
+                            if (phenomenonActivated) {
+                                MinecraftOdyssey.instance.nightlyPhenomenonActive = true
+                                event.isCancelled = true
+                            }
+                        }
+                    }
                 }
-
+                else {
+                    event.isCancelled = true
+                    event.player.sendMessage("The night prevents you from sleeping.")
+                }
             }
         }
     }
-
 }

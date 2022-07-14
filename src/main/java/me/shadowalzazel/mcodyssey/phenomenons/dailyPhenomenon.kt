@@ -7,32 +7,35 @@ import org.bukkit.potion.PotionEffectType
 //import org.bukkit.scheduler.BukkitRunnable
 
 
-open class DailyPhenomenon(name: String, rate: Int) : Phenomenon(name, rate) {
+open class DailyPhenomenon(name: String, rate: Int, growthRate: Int, warning: Int) : Phenomenon(name, rate, growthRate, warning) {
+
+    private val dayMessages = listOf<String>("An uneventful day proceeds...", "Looks like nothing is happening today...", "MULTIPLE HOSTILES INCOM.. False alarm. Nothing is going on.",
+        "There are rumors that the Ambassador is on route to this test world...", "Hello World!", "Just another ordinary day...", "The forecast predicts... Nothing.",
+        "No distinct events are Schedu-Predicted for today.", "The standard cycle was not disturbed...", "A normal day follows...", "Just plain Today...", "The only thing that happens is nothing at all")
+
+    override val hasWarning: Boolean = true
 
     override fun phenomenonActivation(phenomenonWorld: World, rollRate: Int): Boolean {
 
-        val dayMessages = listOf<String>("An uneventful day proceeds...", "Looks like nothing is happening today...", "MULTIPLE HOSTILES INCOM.. False alarm. Nothing is going on.",
-            "There are rumors that the Ambassador is on route to this test world...", "Hello World!", "Just another ordinary day...", "The forecast predicts... Nothing.",
-            "No distinct events are Schedu-Predicted for today.", "The standard cycle was not disturbed...", "A normal day follows...", "Just plain Today...", "The only thing that happens is nothing at all")
         //val dayMessages = MinecraftOdyssey.instance.config.getStringList("day-messages")
         val randomMessage = dayMessages.random()
 
         if (rollRate < occurrenceRate) {
             phenomenonEffect(phenomenonWorld)
-            occurrenceRate = 10
+            occurrenceRate = occurranceRestartRate
             return true
         }
         else {
-            println("No Daily Phenomenon Occur")
+            println("$phenomenonName Daily Phenomenon Did Not Occur")
 
             // Send daily fail message
             for (aPlayer in phenomenonWorld.players) {
                 aPlayer.sendMessage("${ChatColor.ITALIC}$randomMessage")
             }
-            occurrenceRate += 8
+            occurrenceRate += occurranceFailGrowthRate
 
-            // Check if event has great chance of occurring
-            if (occurrenceRate > 80) {
+            // Check if event has 50/50 chance of occurring
+            if (occurrenceRate >= warningThreshold) {
                 if (hasWarning) {
                     val failMessage: String = phenomenonWarning(phenomenonWorld)
                     for (aPlayer in phenomenonWorld.players) {
@@ -43,10 +46,14 @@ open class DailyPhenomenon(name: String, rate: Int) : Phenomenon(name, rate) {
             return false
         }
     }
+    override fun phenomenonWarning(phenomenonWorld: World): String {
+        return "Found an Exception! :D"
+    }
+
 }
 
 
-class DrawOfFortunes : DailyPhenomenon("DrawOfFortunes", 100) {
+class DrawOfFortunes : DailyPhenomenon("DrawOfFortunes", 100, 0, 0) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("Fortunes have been drawn at $serverName")
@@ -79,7 +86,7 @@ class DrawOfFortunes : DailyPhenomenon("DrawOfFortunes", 100) {
 
 //Make drinking milk cancellable event to prevent players from disabling potion effects and add new item to prevent phenomenon
 
-class SlimeDay : DailyPhenomenon("SlimeDay", 80) {
+class SlimeDay : DailyPhenomenon("SlimeDay", 80, 5, 50) {
 
     override fun phenomenonEffect(phenomenonWorld: World){
         println("Slime is falling from the Sky at ${phenomenonWorld.name}!")
@@ -88,7 +95,7 @@ class SlimeDay : DailyPhenomenon("SlimeDay", 80) {
 
 }
 
-class SolarEclipse : DailyPhenomenon("SolarEclipse", 50) {
+class SolarEclipse : DailyPhenomenon("SolarEclipse", 50, 4, 50) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("A solar eclipse is happening at ${phenomenonWorld.name}!")
@@ -97,9 +104,7 @@ class SolarEclipse : DailyPhenomenon("SolarEclipse", 50) {
 
 }
 
-class BlazingSoul : DailyPhenomenon("BlazingSoul", 40) {
-
-    override val hasWarning: Boolean = true
+class BlazingSoul : DailyPhenomenon("BlazingSoul", 40, 5, 50) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("The players soul's are ablaze at ${phenomenonWorld.name}!")
@@ -142,16 +147,26 @@ class BlazingSoul : DailyPhenomenon("BlazingSoul", 40) {
 
 }
 
-class CometDay : DailyPhenomenon("CometDay", 45) {
+class CometSighting : DailyPhenomenon("CometSighting", 40, 5, 50) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("A comet can be seen at ${phenomenonWorld.name}!")
-        // Effect for Breezy Day
-        val breezeEffect = PotionEffect(PotionEffectType.INCREASE_DAMAGE, 12000, 0)
+        // Effect for Comet Sighting
+        val cometLightEffect = PotionEffect(PotionEffectType.NIGHT_VISION, 12000, 0)
+        val cometInspireEffect = PotionEffect(PotionEffectType.INCREASE_DAMAGE, 12000, 0)
 
         for (aPlayer in phenomenonWorld.players) {
-            aPlayer.addPotionEffect(breezeEffect)
-            aPlayer.sendMessage("${ChatColor.BLUE}A bright comet is seen in the sky...")
+            when((0..2).random()) {
+                in 0..1 -> {
+                    aPlayer.addPotionEffect(cometLightEffect)
+                    aPlayer.sendMessage("${ChatColor.AQUA}A bright comet is seen in the sky...")
+                }
+                else -> {
+                    aPlayer.addPotionEffect(cometLightEffect)
+                    aPlayer.addPotionEffect(cometInspireEffect)
+                    aPlayer.sendMessage("${ChatColor.AQUA}The bright comet in the sky inspires you...")
+                }
+            }
         }
     }
 
@@ -161,9 +176,7 @@ class CometDay : DailyPhenomenon("CometDay", 45) {
 
 }
 
-class StoneFlash : DailyPhenomenon("StoneFlash", 40) {
-
-    override val hasWarning: Boolean = true
+class StoneFlash : DailyPhenomenon("StoneFlash", 35, 5, 60) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("A flash stones ${phenomenonWorld.name}!")
@@ -174,7 +187,7 @@ class StoneFlash : DailyPhenomenon("StoneFlash", 40) {
 
         for (aPlayer in phenomenonWorld.players) {
             aPlayer.addPotionEffects(stoneSkinEffects)
-            aPlayer.sendMessage("${ChatColor.GRAY}After a super luminous flash of light, your skin has turned into stone?")
+            aPlayer.sendMessage("${ChatColor.DARK_GRAY}After a super luminous flash of light your skin has turned into stone?")
         }
     }
 
@@ -184,9 +197,7 @@ class StoneFlash : DailyPhenomenon("StoneFlash", 40) {
 
 }
 
-class GravityShift : DailyPhenomenon("GravityShift", 35) {
-
-    override val hasWarning: Boolean = true
+class GravityShift : DailyPhenomenon("GravityShift", 32, 4, 40) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("The gravity shifts ${phenomenonWorld.name}!")
@@ -207,9 +218,7 @@ class GravityShift : DailyPhenomenon("GravityShift", 35) {
 
 }
 
-class ShimmerIntoxication : DailyPhenomenon("ShimmerIntoxication", 40) {
-
-    override val hasWarning: Boolean = true
+class ShimmerIntoxication : DailyPhenomenon("ShimmerIntoxication", 35, 6, 50) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("There is shimmer appearing at ${phenomenonWorld.name}!")
@@ -232,9 +241,7 @@ class ShimmerIntoxication : DailyPhenomenon("ShimmerIntoxication", 40) {
 
 }
 
-class WorldFamine : DailyPhenomenon("WorldFamine", 15) {
-
-    override val hasWarning: Boolean = true
+class WorldFamine : DailyPhenomenon("WorldFamine", 15, 4, 40) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("A famine is happening at ${phenomenonWorld.name}!")
@@ -255,9 +262,7 @@ class WorldFamine : DailyPhenomenon("WorldFamine", 15) {
 
 }
 
-class SolarFlare : DailyPhenomenon("SolarFlare", 25) {
-
-    override val hasWarning: Boolean = true
+class SolarFlare : DailyPhenomenon("SolarFlare", 25, 4, 40) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("A Solar Flare has hit $serverName!")
@@ -278,9 +283,7 @@ class SolarFlare : DailyPhenomenon("SolarFlare", 25) {
 
 }
 
-class BreezyDay : DailyPhenomenon("BreezyDay", 45) {
-
-    override val hasWarning: Boolean = true
+class BreezyDay : DailyPhenomenon("BreezyDay", 45, 5, 50) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("A swift wind is happening at ${phenomenonWorld.name}!")
@@ -300,9 +303,7 @@ class BreezyDay : DailyPhenomenon("BreezyDay", 45) {
 
 }
 
-class BioluminescentDay : DailyPhenomenon("BioluminescentDay", 45) {
-
-    override val hasWarning: Boolean = true
+class BioluminescentDay : DailyPhenomenon("BioluminescentDay", 45, 5, 55) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("The nano-lifeforms glow at ${phenomenonWorld.name}!")
@@ -321,9 +322,7 @@ class BioluminescentDay : DailyPhenomenon("BioluminescentDay", 45) {
 
 }
 
-class FairyFollowDay : DailyPhenomenon("FairyFollowDay", 45) {
-
-    override val hasWarning: Boolean = true
+class FairyFollowDay : DailyPhenomenon("FairyFollowDay", 45, 5, 50) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("The fairies escape at ${phenomenonWorld.name}!")
@@ -354,31 +353,29 @@ class FairyFollowDay : DailyPhenomenon("FairyFollowDay", 45) {
     }
 
     override fun phenomenonWarning(phenomenonWorld: World): String {
-        return "You spot a fairy whizzing through the air but it soon vanishes..."
+        return "You think you spot a fairy whizzing through the air but it soon vanishes..."
     }
 
 }
 
-class SpiritsAwaken : DailyPhenomenon("SpiritsAwaken", 45) {
-
-    override val hasWarning: Boolean = true
+class SpiritsAwaken : DailyPhenomenon("SpiritsAwaken", 45, 5, 50) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("The spirits have chosen champions at ${phenomenonWorld.name}!")
         // Guardian Effects
-        val bearSpiritEffect = PotionEffect(PotionEffectType.INCREASE_DAMAGE, 12000, 0)
-        val falconSpiritEffect = PotionEffect(PotionEffectType.NIGHT_VISION, 12000, 0)
+        val bearSpiritEffect = PotionEffect(PotionEffectType.SATURATION, 12000, 0)
+        val tigerSpiritEffect = PotionEffect(PotionEffectType.INCREASE_DAMAGE, 12000, 0)
         val turtleSpiritEffect = PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 12000, 0)
 
         for (aPlayer in phenomenonWorld.players) {
             when ((0..10).random()) {
                 in 9..10 -> {
                     aPlayer.addPotionEffect(bearSpiritEffect)
-                    aPlayer.sendMessage("${ChatColor.AQUA}A bear spirit has decided to protect you today...")
+                    aPlayer.sendMessage("${ChatColor.YELLOW}A bear spirit has decided to shadow you today...")
                 }
                 in 7..8 -> {
-                    aPlayer.addPotionEffect(falconSpiritEffect)
-                    aPlayer.sendMessage("${ChatColor.YELLOW}A falcon spirit is seen following you high above...")
+                    aPlayer.addPotionEffect(tigerSpiritEffect)
+                    aPlayer.sendMessage("${ChatColor.GOLD}A tiger spirit roars within...")
                 }
                 in 5..6 -> {
                     aPlayer.addPotionEffect(turtleSpiritEffect)
@@ -397,9 +394,10 @@ class SpiritsAwaken : DailyPhenomenon("SpiritsAwaken", 45) {
     }
 }
 
-class Earthquake : DailyPhenomenon("Earthquake", 20) {
+class Earthquake : DailyPhenomenon("Earthquake", 20, 4, 0) {
 
     // No Warning
+    override val hasWarning: Boolean = false
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("A large tremor has hit ${phenomenonWorld.name}!")

@@ -3,10 +3,13 @@ package me.shadowalzazel.mcodyssey.phenomenons
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import org.bukkit.World
 
-open class Phenomenon(name: String, rate: Int) {
+open class Phenomenon(name: String, rate: Int, growthRate: Int, warning: Int) {
 
     val phenomenonName = name
     var occurrenceRate = rate
+    var occurranceFailGrowthRate = growthRate
+    var occurranceRestartRate = rate - 10
+    var warningThreshold = warning
     open val hasWarning: Boolean = false
     open val currentlyActive = true
     val serverName: String? = MinecraftOdyssey.instance.config.getString("names.server-name")
