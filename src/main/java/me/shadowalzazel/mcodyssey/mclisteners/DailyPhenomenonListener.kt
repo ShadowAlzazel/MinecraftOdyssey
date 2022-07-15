@@ -10,14 +10,14 @@ object OdysseyDailyPhenomenonListener : Listener {
 
     //make dictionary later
     // Daily Events
-    var dailyPhenomenonList = listOf(
+    private val dailyPhenomenonList = listOf(
         GravityShift(), BreezyDay(), SolarFlare(), Earthquake(), WorldFamine(), BioluminescentDay(), FairyFollowDay(),
         ShimmerIntoxication(), SpiritsAwaken(), StoneFlash(), CometSighting(), BlazingSoul()
     )
 
     // Cool Down timers
     private var cooldown : Long = 0
-    private val cooldownTimer = 10 //10000 -> 10 sec
+    private val cooldownTimer = 10000 //10000 -> 10 sec
 
     // Event Chooser
     @EventHandler
@@ -34,7 +34,7 @@ object OdysseyDailyPhenomenonListener : Listener {
             // Check if end game
             if ((MinecraftOdyssey.instance.endGame) && (!MinecraftOdyssey.instance.dailyPhenomenonActive)) {
                 val currentWorld = event.world
-                var randomDailyPhenomenon = dailyPhenomenonList.random()
+                val randomDailyPhenomenon = dailyPhenomenonList.random()
                 val rolledRate = (0..100).random()
 
                 //Daily luck is not daily phenomenon
@@ -50,10 +50,5 @@ object OdysseyDailyPhenomenonListener : Listener {
                 }
             }
         }
-        else {
-            println("Cannot Trigger anymore daily events!")
-        }
-
     }
-
 }

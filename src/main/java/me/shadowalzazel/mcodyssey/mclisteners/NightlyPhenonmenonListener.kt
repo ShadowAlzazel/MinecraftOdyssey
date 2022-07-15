@@ -8,14 +8,14 @@ import org.bukkit.event.player.PlayerBedEnterEvent
 
 object OdysseyNightlyPhenonmenonListener : Listener {
 
-    var nightlyPhenomenonList = listOf(BloodMoon(), BlueMoon())
+    private val nightlyPhenomenonList = listOf(BloodMoon(), BlueMoon())
 
     // Cool Down timers
     private var cooldown : Long = 0
-    private val cooldownTimer = 10 //10000 -> 10 sec
+    private val cooldownTimer = 10000 //10000 -> 10 sec
 
     private var cooldownNightPhenomenon: Long = 0
-    private val cooldownNightTimer = 12000 // 10 mins
+    private val cooldownNightTimer = 12000 // 10 minutes
 
     @EventHandler
     fun onNightTime(event: PlayerBedEnterEvent) {

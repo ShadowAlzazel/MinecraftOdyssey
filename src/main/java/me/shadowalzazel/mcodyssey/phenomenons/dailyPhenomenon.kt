@@ -110,7 +110,7 @@ class BlazingSoul : DailyPhenomenon("BlazingSoul", 40, 5, 50) {
         println("The players soul's are ablaze at ${phenomenonWorld.name}!")
         // Blazing Soul Effects
         val blazingBodyEffect = PotionEffect(PotionEffectType.FIRE_RESISTANCE, 12000, 0)
-        val blazingBodyEffect2 = PotionEffect(PotionEffectType.HEALTH_BOOST, 12000, -1)
+        val blazingBodyEffect2 = PotionEffect(PotionEffectType.SPEED, 12000, 0)
         val blazingMindEffect  = PotionEffect(PotionEffectType.FAST_DIGGING, 12000, 0)
         val blazingSoulEffect = PotionEffect(PotionEffectType.GLOWING, 12000, 1)
         val blazingSoulEffect2 = PotionEffect(PotionEffectType.INCREASE_DAMAGE, 12000, 1)
@@ -119,9 +119,9 @@ class BlazingSoul : DailyPhenomenon("BlazingSoul", 40, 5, 50) {
         for (aPlayer in phenomenonWorld.players) {
             aPlayer.sendMessage("${ChatColor.ITALIC}You sense the crackling embers...")
             // roll for each effect
-            val blazingSoulRandom = (0..2).random()
-            val blazingMindRandom = (0..2).random()
-            val blazingBodyRandom = (0..2).random()
+            val blazingSoulRandom = (0..3).random()
+            val blazingMindRandom = (0..3).random()
+            val blazingBodyRandom = (0..3).random()
 
             if (blazingBodyRandom == 2) {
                 aPlayer.addPotionEffect(blazingBodyEffect)
@@ -183,7 +183,7 @@ class StoneFlash : DailyPhenomenon("StoneFlash", 35, 5, 60) {
         // Stone Flash Effects
         val petrifyEffect = PotionEffect(PotionEffectType.SLOW, 12000, 0)
         val stoneSkinEffect = PotionEffect(PotionEffectType.ABSORPTION, 12000, 4)
-        val stoneSkinEffects = mutableListOf<PotionEffect>(stoneSkinEffect, petrifyEffect)
+        val stoneSkinEffects = listOf<PotionEffect>(stoneSkinEffect, petrifyEffect)
 
         for (aPlayer in phenomenonWorld.players) {
             aPlayer.addPotionEffects(stoneSkinEffects)
@@ -204,7 +204,7 @@ class GravityShift : DailyPhenomenon("GravityShift", 32, 4, 40) {
         // Low Gravity Effects
         val lowGravityEffect = PotionEffect(PotionEffectType.JUMP, 12000, 1)
         val lowGravityEffect2 = PotionEffect(PotionEffectType.SLOW_FALLING, 12000, 1)
-        val lowGravityEffects = mutableListOf<PotionEffect>(lowGravityEffect, lowGravityEffect2)
+        val lowGravityEffects = listOf<PotionEffect>(lowGravityEffect, lowGravityEffect2)
 
         for (aPlayer in phenomenonWorld.players) {
             aPlayer.addPotionEffects(lowGravityEffects)
@@ -226,7 +226,7 @@ class ShimmerIntoxication : DailyPhenomenon("ShimmerIntoxication", 35, 6, 50) {
         val shimmerStrength = PotionEffect(PotionEffectType.INCREASE_DAMAGE, 12000, 0)
         val shimmerResistance = PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 12000, 0)
         val shimmerHangover = PotionEffect(PotionEffectType.CONFUSION, 120, 0)
-        val shimmerEffects = mutableListOf<PotionEffect>(shimmerStrength, shimmerResistance, shimmerHangover)
+        val shimmerEffects = listOf<PotionEffect>(shimmerStrength, shimmerResistance, shimmerHangover)
 
         // Apply shimmer for every player
         for (aPlayer in phenomenonWorld.players) {
@@ -269,7 +269,7 @@ class SolarFlare : DailyPhenomenon("SolarFlare", 25, 4, 40) {
         // Effects for Solar Flare
         val solarFlareEffect = PotionEffect(PotionEffectType.WEAKNESS, 12000, 0)
         val solarResistanceEffect = PotionEffect(PotionEffectType.FIRE_RESISTANCE, 12000, 0)
-        val solarEffects = mutableListOf<PotionEffect>(solarFlareEffect, solarResistanceEffect)
+        val solarEffects = listOf<PotionEffect>(solarFlareEffect, solarResistanceEffect)
 
         for (aPlayer in phenomenonWorld.players) {
             aPlayer.addPotionEffects(solarEffects)
