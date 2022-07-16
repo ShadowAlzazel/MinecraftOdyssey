@@ -4,6 +4,7 @@
 # -------------------------------------
 #
 #
+
 names:
   server-name: "Vailcraft"
 
@@ -18,12 +19,22 @@ daily-world-phenomenon:
 end-game:
   enabled: true
 
-player-minimum-for-luck: 3
+player-minimum-for-luck: 4
 
 mega-events: true
 
 server-join: true
 
-# effect give @e[type=minecraft:ender_dragon] minecraft:resistance 9999 1
-# effect give @e[type=minecraft:ender_dragon] minecraft:health_boost 9999 250
-# effect give @e[type=minecraft:ender_dragon] minecraft:instant_health 9999 1
+# Day messages
+day-messages:
+  msg-1: "An uneventful day proceeds..."
+  msg-2: "Looks like nothing is happening today..."
+  msg-3: "MULTIPLE HOSTILES INCOM.. False alarm. Nothing is going on."
+  msg-4: "There are rumors that the Ambassador is on route to this test world..."
+  msg-5: "Hello World!"
+  msg-6: "Just another ordinary day..."
+  msg-7: "The forecast predicts... Nothing."
+  msg-8: "No distinct events are Schedu-Predicted for today."
+  msg-9: "The standard cycle was not disturbed..."
+  msg-10: "A normal day follows..."
+  msg-11: "Just plain Today..."
