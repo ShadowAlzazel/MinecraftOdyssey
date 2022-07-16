@@ -3,6 +3,7 @@ package me.shadowalzazel.mcodyssey.mclisteners
 import com.google.common.collect.ImmutableList
 import me.shadowalzazel.mcodyssey.bosses.AmbassadorBoss
 import org.bukkit.Color
+import org.bukkit.Sound
 import org.bukkit.FireworkEffect
 import org.bukkit.Material
 import org.bukkit.entity.*
@@ -70,6 +71,7 @@ object AmbassadorBossListener : Listener {
 
     private fun calculateLootTable(droppedItem: Item, givingPlayer: Player){
         val droppedMaterial: Material = droppedItem.itemStack.type
+        // Check if item in table
         if (droppedMaterial in itemLootTable) {
             when (droppedMaterial) {
                 Material.NETHERITE_INGOT -> {
@@ -105,7 +107,7 @@ object AmbassadorBossListener : Listener {
             // Confirm ID
             if (event.entity.uniqueId == ambassadorBoss.ambassadorBossEntity!!.uniqueId) {
                 // Check if Ambassador Has patience
-                if (ambassadorBoss.patienceMeter > 0) {
+                if (ambassadorBoss.patienceMeter >= 0) {
                     if (event.damager is Player) {
                         val dPlayer = event.damager
                         if (ambassadorBoss.patienceMeter >= 0) {
@@ -129,7 +131,7 @@ object AmbassadorBossListener : Listener {
                 // Combat Mode
                 else {
                     val timeElapsed: Long = System.currentTimeMillis() - takeDamageCooldown
-                    if (timeElapsed >= 15000) {
+                    if (timeElapsed >= 12000) {
                         takeDamageCooldown = System.currentTimeMillis()
                         ambassadorAttacks(ambassadorBoss.ambassadorBossEntity!!)
 
@@ -158,20 +160,27 @@ object AmbassadorBossListener : Listener {
                 // Launch at target
                 if (ambassadorEntity.target is Player) {
                     val playerTarget: Player = ambassadorEntity.target as Player
+                    val playerLocation = playerTarget.location
                     // Spawn Firework
-                    var superFirework: Firework = ambassadorEntity.world.spawnEntity(playerTarget.location, EntityType.FIREWORK) as Firework
-                    var superFireworkEffectsBuilder = FireworkEffect.builder()
+                    var superFirework: Firework = ambassadorEntity.world.spawnEntity(playerLocation, EntityType.FIREWORK) as Firework
                     // Create Firework Effects
-                    superFireworkEffectsBuilder.with(FireworkEffect.Type.STAR)
+                    var superFireworkEffectsBuilder = FireworkEffect.builder()
+                    superFireworkEffectsBuilder.with(FireworkEffect.Type.BALL_LARGE)
                     superFireworkEffectsBuilder.withColor(Color.BLUE)
                     superFireworkEffectsBuilder.withFade(Color.PURPLE)
-                    //superFireworkEffectsBuilder.withFlicker()
+                    superFireworkEffectsBuilder.trail(true)
+                    superFireworkEffectsBuilder.flicker(true)
+                    superFireworkEffectsBuilder.withFlicker()
+                    superFireworkEffectsBuilder.withTrail()
                     val superFireworkEffects = superFireworkEffectsBuilder.build()
 
-                    // Add Effects and power
+                    // Add Effects, Sound, and Power
                     superFirework.fireworkMeta.addEffect(superFireworkEffects)
-                    superFirework.fireworkMeta.power = 10
-                    superFirework.ticksToDetonate = 3
+                    superFirework.fireworkMeta.power = 50
+                    superFirework.ticksToDetonate = 10
+                    //playerTarget.world.playSound(playerTarget.location, Sound.ENTITY_LIGHTNING_BOLT_IMPACT, 2.1, 1.1)
+
+
                 }
             }
         }

@@ -28,20 +28,25 @@ open class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
 
     fun createBoss(odysseyWorld: World) {
         val odysseyBossEntity: Illusioner = spawnBoss(odysseyWorld)
-        //6 00 tks = 30 sec
+        // 600 tks = 30 sec
         // Add Potion Effects
         val voidFall = PotionEffect(PotionEffectType.SLOW_FALLING, 600, 1)
-        val enhancedHealth = PotionEffect(PotionEffectType.HEALTH_BOOST, 9999, 204)
+        val enhancedHealth = PotionEffect(PotionEffectType.HEALTH_BOOST, 9999, 150)
         val healHealth = PotionEffect(PotionEffectType.REGENERATION, 5, 100)
         val fallResistance = PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 600, 2)
         val ankiFallEffects = listOf<PotionEffect>(fallResistance, enhancedHealth, healHealth, voidFall)
         odysseyBossEntity.addPotionEffects(ankiFallEffects)
 
+        // Change Default Behaviour
         odysseyBossEntity.customName = "${ChatColor.LIGHT_PURPLE}$bossName"
         odysseyBossEntity.isCustomNameVisible = true
         odysseyBossEntity.removeWhenFarAway = false
+        odysseyBossEntity.isCanJoinRaid = false
         odysseyBossEntity.isAware = false
-        odysseyBossEntity.health = 850.0
+        odysseyBossEntity.health = 600.0
+
+        // Add Item
+
         ambassadorBossEntity = odysseyBossEntity
     }
 

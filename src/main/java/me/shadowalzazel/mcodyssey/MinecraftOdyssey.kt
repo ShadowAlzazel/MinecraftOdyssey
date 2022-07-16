@@ -38,6 +38,7 @@ class MinecraftOdyssey : JavaPlugin() {
         server.pluginManager.registerEvents(AmbassadorBossListener, this)
 
         server.pluginManager.registerEvents(OdysseyPlayerJoinListener, this)
+        server.pluginManager.registerEvents(OdysseyPlayerLeaveListener, this)
 
         // Hello World!
         logger.info("The Odyssey has just begun!")
