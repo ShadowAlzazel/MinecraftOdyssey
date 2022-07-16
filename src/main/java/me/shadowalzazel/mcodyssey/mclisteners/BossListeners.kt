@@ -1,16 +1,20 @@
 package me.shadowalzazel.mcodyssey.mclisteners
 
+import com.google.common.collect.ImmutableList
 import me.shadowalzazel.mcodyssey.bosses.AmbassadorBoss
+import org.bukkit.Color
+import org.bukkit.FireworkEffect
 import org.bukkit.Material
-import org.bukkit.entity.Item
+import org.bukkit.entity.*
 import org.bukkit.event.Listener
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerTeleportEvent
-import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 import java.util.UUID
 
 object AmbassadorBossListener : Listener {
@@ -18,6 +22,7 @@ object AmbassadorBossListener : Listener {
     private val ambassadorBoss = AmbassadorBoss()
     private var counter = 0
     private var playersGiftCooldown = mutableMapOf<UUID, Long>()
+    private var takeDamageCooldown: Long = 0
 
     //Temp make specific command/event later
     @EventHandler
@@ -70,7 +75,7 @@ object AmbassadorBossListener : Listener {
                 Material.NETHERITE_INGOT -> {
                     ambassadorBoss.appeasementMeter += 2
                     givingPlayer.sendMessage("Such fine Goods!")
-                    givingPlayer.inventory.addItem(ItemStack(Material.ACACIA_DOOR, 2))
+                    givingPlayer.inventory.addItem(ItemStack(Material.ENCHANTING_TABLE, 2))
                 }
                 Material.DIAMOND, Material.EMERALD, Material.AMETHYST_SHARD -> {
                     ambassadorBoss.appeasementMeter += 2
@@ -95,30 +100,83 @@ object AmbassadorBossListener : Listener {
     // Check if Patience is low
     @EventHandler
     fun onAmbassadorTakeDamage(event: EntityDamageByEntityEvent) {
+        // Check if Ambassador Active
         if (ambassadorBoss.ambassadorActive) {
-            // Check if Ambassador Has patience
-            if (ambassadorBoss.patienceMeter > 0) {
-                if (event.damager is Player) {
-                    val dPlayer = event.damager
-                    if (ambassadorBoss.patienceMeter >= 0) {
-                        ambassadorBoss.patienceMeter -= event.damage
-                        for (aPlayer in dPlayer.world.players) {
-                            aPlayer.sendMessage("${dPlayer.name} is testing my patience!")
+            // Confirm ID
+            if (event.entity.uniqueId == ambassadorBoss.ambassadorBossEntity!!.uniqueId) {
+                // Check if Ambassador Has patience
+                if (ambassadorBoss.patienceMeter > 0) {
+                    if (event.damager is Player) {
+                        val dPlayer = event.damager
+                        if (ambassadorBoss.patienceMeter >= 0) {
+                            ambassadorBoss.patienceMeter -= event.damage
+                            for (aPlayer in dPlayer.world.players) {
+                                aPlayer.sendMessage("${dPlayer.name} is testing my patience!")
+                            }
+                        }
+                        if (ambassadorBoss.patienceMeter <= 0) {
+                            ambassadorBoss.ambassadorBossEntity!!.isAware = true
+                            for (aPlayer in dPlayer.world.players) {
+                                aPlayer.sendMessage("Due to ${dPlayer.name}'s insolence, you will be judged!")
+                            }
                         }
                     }
-                    if (ambassadorBoss.patienceMeter <= 0) {
-                        ambassadorBoss.ambassadorBossEntity!!.isAware = true
-                        for (aPlayer in dPlayer.world.players) {
-                            aPlayer.sendMessage("Due to ${dPlayer.name}'s insolence, you will be judged!")
-                        }
-
+                    // For projectiles
+                    else {
+                        ambassadorBoss.patienceMeter -= event.damage
                     }
                 }
-                // For projectiles
+                // Combat Mode
                 else {
-                    ambassadorBoss.patienceMeter -= event.damage
+                    val timeElapsed: Long = System.currentTimeMillis() - takeDamageCooldown
+                    if (timeElapsed >= 15000) {
+                        takeDamageCooldown = System.currentTimeMillis()
+                        ambassadorAttacks(ambassadorBoss.ambassadorBossEntity!!)
+
+                    }
                 }
             }
         }
     }
+
+    private fun ambassadorAttacks(ambassadorEntity: Illusioner) {
+        val ambassadorLocation = ambassadorEntity.location
+        val voidRise = PotionEffect(PotionEffectType.LEVITATION, 100, 0)
+        val voidShatter = PotionEffect(PotionEffectType.WEAKNESS, 160, 0)
+        val voidRisingEffects = listOf<PotionEffect>(voidShatter, voidRise)
+
+        when((0..5).random()) {
+            // Gravity Attack
+            0, 1, 2 -> {
+                for (aPlayer in ambassadorEntity.world.getNearbyPlayers(ambassadorLocation, 15.0, 15.0, 15.0)) {
+                    aPlayer.addPotionEffects(voidRisingEffects)
+                }
+
+            }
+            // Rocket Attack
+            3, 4 -> {
+                // Launch at target
+                if (ambassadorEntity.target is Player) {
+                    val playerTarget: Player = ambassadorEntity.target as Player
+                    // Spawn Firework
+                    var superFirework: Firework = ambassadorEntity.world.spawnEntity(playerTarget.location, EntityType.FIREWORK) as Firework
+                    var superFireworkEffectsBuilder = FireworkEffect.builder()
+                    // Create Firework Effects
+                    superFireworkEffectsBuilder.with(FireworkEffect.Type.STAR)
+                    superFireworkEffectsBuilder.withColor(Color.BLUE)
+                    superFireworkEffectsBuilder.withFade(Color.PURPLE)
+                    //superFireworkEffectsBuilder.withFlicker()
+                    val superFireworkEffects = superFireworkEffectsBuilder.build()
+
+                    // Add Effects and power
+                    superFirework.fireworkMeta.addEffect(superFireworkEffects)
+                    superFirework.fireworkMeta.power = 10
+                    superFirework.ticksToDetonate = 3
+                }
+            }
+        }
+    }
+
+
+
 }

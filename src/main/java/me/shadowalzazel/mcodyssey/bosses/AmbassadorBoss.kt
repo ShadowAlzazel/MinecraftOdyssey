@@ -32,7 +32,7 @@ open class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         // Add Potion Effects
         val voidFall = PotionEffect(PotionEffectType.SLOW_FALLING, 600, 1)
         val enhancedHealth = PotionEffect(PotionEffectType.HEALTH_BOOST, 9999, 204)
-        val healHealth = PotionEffect(PotionEffectType.REGENERATION, 5, 255)
+        val healHealth = PotionEffect(PotionEffectType.REGENERATION, 5, 100)
         val fallResistance = PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 600, 2)
         val ankiFallEffects = listOf<PotionEffect>(fallResistance, enhancedHealth, healHealth, voidFall)
         odysseyBossEntity.addPotionEffects(ankiFallEffects)
@@ -41,6 +41,7 @@ open class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         odysseyBossEntity.isCustomNameVisible = true
         odysseyBossEntity.removeWhenFarAway = false
         odysseyBossEntity.isAware = false
+        odysseyBossEntity.health = 850.0
         ambassadorBossEntity = odysseyBossEntity
     }
 
