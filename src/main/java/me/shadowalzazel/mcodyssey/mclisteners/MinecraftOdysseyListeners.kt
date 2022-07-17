@@ -11,7 +11,7 @@ import org.bukkit.potion.PotionEffectType
 
 object MinecraftOdysseyListeners : Listener {
 
-
+    // Check if Ender Dragon Dies
     @EventHandler
     fun onDefeatEnderDragon(event: EntityDeathEvent) {
         val dragon = event.entity

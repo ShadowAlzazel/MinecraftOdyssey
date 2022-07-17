@@ -6,7 +6,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerBedEnterEvent
 
-object OdysseyNightlyPhenonmenonListener : Listener {
+object OdysseyNightlyPhenonenonListener : Listener {
 
     private val nightlyPhenomenonList = listOf(BloodMoon(), BlueMoon())
 

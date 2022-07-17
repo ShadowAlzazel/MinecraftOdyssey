@@ -1,9 +1,11 @@
 package me.shadowalzazel.mcodyssey
 
+import me.shadowalzazel.mcodyssey.commands.SpawnAmbassador
 import me.shadowalzazel.mcodyssey.mclisteners.*
 import me.shadowalzazel.mcodyssey.phenomenons.*
 
 import org.bukkit.plugin.java.JavaPlugin
+import java.util.*
 
 class MinecraftOdyssey : JavaPlugin() {
 
@@ -12,6 +14,7 @@ class MinecraftOdyssey : JavaPlugin() {
     //var endGame: Boolean = MinecraftOdyssey.instance.config.getBoolean("end-game.enabled")
 
     var endGame: Boolean = true
+    var activeBoss: Boolean = false
 
     companion object {
         lateinit var instance : MinecraftOdyssey
@@ -28,20 +31,25 @@ class MinecraftOdyssey : JavaPlugin() {
         config.options().copyDefaults()
         saveConfig()
 
-        server.pluginManager.registerEvents(MinecraftOdysseyListeners, this)
 
+        // Register Events
+        server.pluginManager.registerEvents(MinecraftOdysseyListeners, this)
         if (config.getBoolean("daily-world-phenomenon.enabled")) {
             server.pluginManager.registerEvents(OdysseyDailyPhenomenonListener, this)
-            //server.pluginManager.registerEvents(OdysseyNightlyPhenonmenonListener, this)
+            server.pluginManager.registerEvents(OdysseyNightlyPhenonenonListener, this)
         }
-        //temp activation
         server.pluginManager.registerEvents(AmbassadorBossListener, this)
-
         server.pluginManager.registerEvents(OdysseyPlayerJoinListener, this)
+        server.pluginManager.registerEvents(OdysseyPlayerLeaveListener, this)
+
+
+        // Register Commands
+        getCommand("SpawnAmbassador")?.setExecutor(SpawnAmbassador)
+
+
 
         // Hello World!
         logger.info("The Odyssey has just begun!")
-
     }
 
     override fun onDisable() {

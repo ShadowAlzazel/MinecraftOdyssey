@@ -34,9 +34,10 @@ open class DailyPhenomenon(name: String, rate: Int, growthRate: Int, warning: In
             }
             occurrenceRate += occurranceFailGrowthRate
 
-            // Check if event has 50/50 chance of occurring
-            if (occurrenceRate >= warningThreshold) {
-                if (hasWarning) {
+            // Check if event has a warning
+            if (hasWarning){
+                if (occurrenceRate >= warningThreshold) {
+                    // Warning Message
                     val failMessage: String = phenomenonWarning(phenomenonWorld)
                     for (aPlayer in phenomenonWorld.players) {
                         aPlayer.sendMessage("${ChatColor.ITALIC}$failMessage")
@@ -64,8 +65,8 @@ class DrawOfFortunes : DailyPhenomenon("DrawOfFortunes", 100, 0, 0) {
         val luckyPlayer = phenomenonWorld.players.random()
         val unluckyPlayer = phenomenonWorld.players.random()
 
-        // Lucky and Unlucky
-        if (luckyPlayer.name ==  unluckyPlayer.name){
+        // Lucky and Unlucky Check
+        if (luckyPlayer.uniqueId == unluckyPlayer.uniqueId){
             luckyPlayer.sendMessage("${ChatColor.ITALIC}Your fortune as well as your fate are in your hands...")
         }
         else {
@@ -76,10 +77,6 @@ class DrawOfFortunes : DailyPhenomenon("DrawOfFortunes", 100, 0, 0) {
             unluckyPlayer.addPotionEffect(dailyUnluckEffect)
             unluckyPlayer.sendMessage("${ChatColor.RED}The odds are stacked against you today...")
         }
-    }
-
-    override fun phenomenonWarning(phenomenonWorld: World): String {
-        return "Found an Exception! :D"
     }
 
 }
@@ -337,7 +334,7 @@ class FairyFollowDay : DailyPhenomenon("FairyFollowDay", 45, 5, 50) {
                 3 -> {
                     val loveEffects = mutableListOf<PotionEffect>(loveEffect, luckEffect, followEffect)
                     aPlayer.addPotionEffects(loveEffects)
-                    aPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}A beautiful fairy has fallen in LOVE with you!")
+                    aPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}A beautiful fairy has fallen in ${ChatColor.ITALIC}LOVE ${ChatColor.RESET}${ChatColor.LIGHT_PURPLE}with you!")
                 }
                 in 1..2 -> {
                     val likeEffects = mutableListOf<PotionEffect>(luckEffect, followEffect)
@@ -404,7 +401,7 @@ class Earthquake : DailyPhenomenon("Earthquake", 20, 4, 0) {
         // Earthquake Effects
         val trembleConfusionEffect = PotionEffect(PotionEffectType.CONFUSION, 150, 2)
         val trembleSlowEffect = PotionEffect(PotionEffectType.SLOW, 190, 2)
-        val trembleEffects = mutableListOf<PotionEffect>(trembleConfusionEffect, trembleSlowEffect)
+        val trembleEffects = listOf<PotionEffect>(trembleConfusionEffect, trembleSlowEffect)
         val shakeEffect = PotionEffect(PotionEffectType.SLOW, 100, 1)
 
         for (aPlayer in phenomenonWorld.players) {
@@ -422,9 +419,7 @@ class Earthquake : DailyPhenomenon("Earthquake", 20, 4, 0) {
                     }
                 }
                 else -> {
-                    if (!aPlayer.isFlying){
-                        aPlayer.sendMessage("${ChatColor.ITALIC}Tremors are heard from afar...")
-                    }
+                    aPlayer.sendMessage("${ChatColor.ITALIC}Tremors are heard from afar...")
                 }
             }
         }
