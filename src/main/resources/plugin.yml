@@ -4,3 +4,9 @@ main: me.shadowalzazel.mcodyssey.MinecraftOdyssey
 api-version: 1.19
 authors: [ShadowAlzazel]
 description: A server side expansion pack for a new minecraft adventure!
+
+commands:
+  SpawnAmbassador:
+    description: ""
+    usage: /<command>
+    permission: op

@@ -1,25 +1,31 @@
+@file:Suppress("DEPRECATION")
+
 package me.shadowalzazel.mcodyssey.mclisteners
 
-import com.google.common.collect.ImmutableList
+import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent
+import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.bosses.AmbassadorBoss
-import org.bukkit.Color
 import org.bukkit.Sound
-import org.bukkit.FireworkEffect
-import org.bukkit.Material
+import org.bukkit.*
 import org.bukkit.entity.*
 import org.bukkit.event.Listener
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.player.PlayerCommandSendEvent
 import org.bukkit.event.player.PlayerDropItemEvent
-import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import java.util.UUID
 
 object AmbassadorBossListener : Listener {
-    private val itemLootTable = listOf<Material>(Material.NETHERITE_INGOT, Material.DIAMOND)
+    private val itemLootTable = listOf<Material>(Material.NETHERITE_INGOT, Material.DIAMOND, Material.EMERALD, Material.AMETHYST_SHARD, Material.ENDER_CHEST,
+        Material.COPPER_INGOT, Material.IRON_INGOT, Material.GOLD_INGOT, Material.DIRT, Material.COARSE_DIRT, Material.ROOTED_DIRT,
+        Material.ENCHANTED_BOOK, Material.SHULKER_BOX, Material.ENCHANTED_GOLDEN_APPLE, Material.DANDELION, Material.POPPY, Material.BLUE_ORCHID, Material.ALLIUM, Material.AZURE_BLUET, Material.ORANGE_TULIP,
+        Material.RED_TULIP, Material.WHITE_TULIP, Material.PINK_TULIP, Material.CORNFLOWER, Material.LILY_OF_THE_VALLEY, Material.SUNFLOWER,
+        Material.LILAC, Material.ROSE_BUSH, Material.PEONY)
+
     private val ambassadorBoss = AmbassadorBoss()
     private var counter = 0
     private var playersGiftCooldown = mutableMapOf<UUID, Long>()
@@ -27,11 +33,16 @@ object AmbassadorBossListener : Listener {
 
     //Temp make specific command/event later
     @EventHandler
-    fun onPlayerJoin(event: PlayerJoinEvent) {
-        if (counter >=   0) {
-            counter += 1
-            ambassadorBoss.createBoss(event.player.world)
-            ambassadorBoss.ambassadorActive = true
+    fun onPlayerSummonAmbassador(event: PlayerCommandSendEvent) {
+        if (event.player.isOp) {
+            if (MinecraftOdyssey.instance.activeBoss) {
+                if (counter >= 0) {
+                    counter += 1
+                    println("${event.player} called the Ambassador")
+                    ambassadorBoss.createBoss(event.player.world)
+                    ambassadorBoss.ambassadorActive = true
+                }
+            }
         }
     }
 
@@ -69,33 +80,127 @@ object AmbassadorBossListener : Listener {
         }
     }
 
+    @EventHandler
+    fun onPlayerEnderFlyAway(event: PlayerElytraBoostEvent) {
+        // MAKER THIS MORE READABLE
+        if (ambassadorBoss.ambassadorActive) {
+            val ambassadorLocation = ambassadorBoss.ambassadorBossEntity!!.location
+            val nearbyPlayers = event.player.world.getNearbyPlayers(ambassadorLocation, 25.0, 25.0, 25.0)
+            ambassadorLocation.y += 1
+            if (event.player in nearbyPlayers) {
+                event.isCancelled = true
+                event.player.teleport(ambassadorLocation)
+                val voidForcePull = PotionEffect(PotionEffectType.CONFUSION, 200, 0)
+                val voidRise = PotionEffect(PotionEffectType.LEVITATION, 200, 0)
+                val voidPullEffects = listOf<PotionEffect>(voidRise, voidForcePull)
+                event.player.addPotionEffects(voidPullEffects)
+                event.player.damage(4.5)
+                event.player.playSound(event.player, Sound.ENTITY_ENDERMAN_TELEPORT, 0.8F, 1.0F)
+                event.player.playSound(event.player, Sound.ENTITY_EVOKER_PREPARE_WOLOLO, 1.0F, 1.1F)
+                event.player.playSound(event.player, Sound.ENTITY_ELDER_GUARDIAN_CURSE, 0.8F, 0.9F)
+            }
+        }
+    }
+
     private fun calculateLootTable(droppedItem: Item, givingPlayer: Player){
         val droppedMaterial: Material = droppedItem.itemStack.type
         // Check if item in table
         if (droppedMaterial in itemLootTable) {
+
+            // MAKE THIS OWN UTILITY CLASS LATER
+            // ACTUALLY !!!!!!!!!!!!!!!!!!
+
+            // Galvanized Steel
+            val galvanizedSteel = ItemStack(Material.IRON_BLOCK, 8)
+            val galvanizedSteelMeta: ItemMeta = galvanizedSteel.itemMeta
+            galvanizedSteelMeta.setDisplayName("${ChatColor.DARK_GRAY}${ChatColor.ITALIC}Galvanized Steel")
+            galvanizedSteel.itemMeta = galvanizedSteelMeta
+
+            // Hawking Containment Unit
+            val miniaturizedBlackHole = ItemStack(Material.ENDER_CHEST, 8)
+            val miniaturizedBlackHoleMeta: ItemMeta = miniaturizedBlackHole.itemMeta
+            miniaturizedBlackHoleMeta.setDisplayName("${ChatColor.LIGHT_PURPLE}${ChatColor.ITALIC}Hawking Containment Unit-${ChatColor.MAGIC}0x0000008")
+            miniaturizedBlackHole.itemMeta = miniaturizedBlackHoleMeta
+
+            // Idescine Saplings
+            val idescineSaplings = ItemStack(Material.OAK_SAPLING, 2)
+            val idescineSaplingsMeta: ItemMeta = idescineSaplings.itemMeta
+            idescineSaplingsMeta.setDisplayName("${ChatColor.GREEN}${ChatColor.ITALIC}Idescine Sapling")
+            idescineSaplingsMeta.lore = listOf("A seed not ready to fully mature", "due to the conditions of the test-world...")
+            idescineSaplings.itemMeta = idescineSaplingsMeta
+
+            // Kugelblitz Containment Silo
+            val kugelblitzContainmentSilo = ItemStack(Material.YELLOW_SHULKER_BOX, 1)
+            val kugelblitzContainmentSiloMeta: ItemMeta = kugelblitzContainmentSilo.itemMeta
+            kugelblitzContainmentSiloMeta.setDisplayName("${ChatColor.YELLOW}${ChatColor.ITALIC}Kugelblitz Containment Silo-${ChatColor.MAGIC}0x0000008")
+            kugelblitzContainmentSiloMeta.lore = listOf("A portable source of energy and matter")
+            kugelblitzContainmentSilo.itemMeta = kugelblitzContainmentSiloMeta
+
+            //
+            val rhoAnnulusSchematics = ItemStack(Material.PAPER, 1)
+            val rhoAnnulusSchematicsMeta: ItemMeta = rhoAnnulusSchematics.itemMeta
+            rhoAnnulusSchematicsMeta.setDisplayName("${ChatColor.LIGHT_PURPLE}${ChatColor.ITALIC}rhoAnnulusSchematics-${ChatColor.MAGIC}Kepler-186f")
+            rhoAnnulusSchematicsMeta.lore = listOf("${ChatColor.MAGIC}Keple${ChatColor.RESET}r-186f", "Rho Sys${ChatColor.MAGIC}tem. Vail's Test Site... Section A2${ChatColor.RESET}002")
+            rhoAnnulusSchematics.itemMeta = rhoAnnulusSchematicsMeta
+
+            // MAKE DEATH MESSAGE!!!!!!
+
             when (droppedMaterial) {
                 Material.NETHERITE_INGOT -> {
-                    ambassadorBoss.appeasementMeter += 2
-                    givingPlayer.sendMessage("Such fine Goods!")
-                    givingPlayer.inventory.addItem(ItemStack(Material.ENCHANTING_TABLE, 2))
+                    ambassadorBoss.appeasementMeter += 1
+                    if (ambassadorBoss.appeasementMeter > 50) {
+                        givingPlayer.sendMessage("Hmm casted Neutronium Bark... Here are some miniaturized black holes repurposed as storage that might help you.")
+                        givingPlayer.inventory.addItem(kugelblitzContainmentSilo)
+                        givingPlayer.inventory.addItem(kugelblitzContainmentSilo)
+                        givingPlayer.inventory.addItem(kugelblitzContainmentSilo)
+                    }
+                    else {
+                        givingPlayer.sendMessage("Hmm casted Neutronium Bark... Here are some quantum-entangled vacuums repurposed as storage that might help you.")
+                        givingPlayer.inventory.addItem(miniaturizedBlackHole)
+                    }
                 }
                 Material.DIAMOND, Material.EMERALD, Material.AMETHYST_SHARD -> {
-                    ambassadorBoss.appeasementMeter += 2
-                    givingPlayer.sendMessage("Such fine Gems!")
+                    givingPlayer.sendMessage("These gems are not that refined according to standards. But... here is something for such work.")
+                    // Random Loot
                 }
-                Material.DRIED_KELP_BLOCK -> {
-                    ambassadorBoss.appeasementMeter -= 4
-                    givingPlayer.sendMessage("You think me a fool! Such garbage shall not be accepted!")
+                Material.COPPER_INGOT, Material.IRON_INGOT, Material.GOLD_INGOT -> {
+                    ambassadorBoss.appeasementMeter += 1
+                    // Random Loot
+                    givingPlayer.sendMessage("Such fine Ingots!")
                 }
+                Material.DIRT, Material.COARSE_DIRT, Material.ROOTED_DIRT -> {
+                    ambassadorBoss.appeasementMeter -= 2
+                    givingPlayer.sendMessage("I can not accept something that crude...")
+                }
+                Material.ENCHANTED_BOOK ->  {
+                    ambassadorBoss.appeasementMeter += 4
+                    givingPlayer.sendMessage("Enchanted Literature! Something quite interesting this test-site was made for...")
+                }
+                Material.ENDER_CHEST, Material.SHULKER_BOX -> {
+                    ambassadorBoss.appeasementMeter += 4
+                    givingPlayer.sendMessage("Sub-Dimensional Storage. A step towards industrialization I see...")
+                    givingPlayer.inventory.addItem(galvanizedSteel)
+                }
+                Material.ENCHANTED_GOLDEN_APPLE -> {
+                    ambassadorBoss.appeasementMeter += 10
+                    givingPlayer.sendMessage("How did you get this?... I did not hear that Vail planted Aether roots from Lupercal...")
+                    givingPlayer.sendMessage("${ChatColor.ITALIC}Do not alert the others... Here take this. Keep it safe, it will help you soon to come...")
+                    givingPlayer.inventory.addItem(rhoAnnulusSchematics)
+
+                }
+                Material.DANDELION, Material.POPPY, Material.BLUE_ORCHID, Material.ALLIUM, Material.AZURE_BLUET, Material.ORANGE_TULIP,
+                Material.RED_TULIP, Material.WHITE_TULIP, Material.PINK_TULIP, Material.CORNFLOWER, Material.LILY_OF_THE_VALLEY, Material.SUNFLOWER,
+                Material.LILAC, Material.ROSE_BUSH, Material.PEONY -> {
+                    ambassadorBoss.appeasementMeter += 1
+                    givingPlayer.sendMessage("For an uncivilized world, flowers still bloom... Hopefully you do as well...")
+                    givingPlayer.inventory.addItem(idescineSaplings)
+
+                }
+
                 else -> {}
             }
             droppedItem.remove()
         }
-    }
-
-    @EventHandler
-    fun onPlayerEnderPearlAway(event: PlayerTeleportEvent) {
-
     }
 
 
@@ -119,7 +224,7 @@ object AmbassadorBossListener : Listener {
                         if (ambassadorBoss.patienceMeter <= 0) {
                             ambassadorBoss.ambassadorBossEntity!!.isAware = true
                             for (aPlayer in dPlayer.world.players) {
-                                aPlayer.sendMessage("Due to ${dPlayer.name}'s insolence, you will be judged!")
+                                aPlayer.sendMessage("Due to ${dPlayer.name}'s insolence, you shall be judged!")
                             }
                         }
                     }
@@ -143,28 +248,46 @@ object AmbassadorBossListener : Listener {
 
     private fun ambassadorAttacks(ambassadorEntity: Illusioner) {
         val ambassadorLocation = ambassadorEntity.location
-        val voidRise = PotionEffect(PotionEffectType.LEVITATION, 100, 0)
+        val voidRise = PotionEffect(PotionEffectType.LEVITATION, 120, 0)
+        val voidFall = PotionEffect(PotionEffectType.SLOW_FALLING, 120, 0)
         val voidShatter = PotionEffect(PotionEffectType.WEAKNESS, 160, 0)
         val voidRisingEffects = listOf<PotionEffect>(voidShatter, voidRise)
-
-        when((0..5).random()) {
+        val nearbyPlayers = ambassadorEntity.world.getNearbyPlayers(ambassadorLocation, 15.0, 15.0, 15.0)
+        when((0..1).random()) {
             // Gravity Attack
-            0, 1, 2 -> {
-                for (aPlayer in ambassadorEntity.world.getNearbyPlayers(ambassadorLocation, 15.0, 15.0, 15.0)) {
+            0, 1 -> {
+                // Clean Up Later
+                for (aPlayer in nearbyPlayers) {
                     aPlayer.addPotionEffects(voidRisingEffects)
+                    aPlayer.playEffect(EntityEffect.ARROW_PARTICLES)
+                    aPlayer.world.playEffect(aPlayer.location, Effect.CHORUS_FLOWER_DEATH, 2)
+                    aPlayer.damage(10.0)
+                    aPlayer.playSound(aPlayer, Sound.ENTITY_EVOKER_PREPARE_WOLOLO, 1.0F, 1.1F)
+                    aPlayer.playSound(aPlayer, Sound.BLOCK_ANVIL_LAND, 1.0F, 0.5F)
+                    aPlayer.playSound(aPlayer, Sound.BLOCK_ANVIL_BREAK, 1.0F, 0.8F)
+                    aPlayer.playSound(aPlayer, Sound.ITEM_TRIDENT_RIPTIDE_3, 1.0F, 1.0F)
+                    aPlayer.playSound(aPlayer, Sound.BLOCK_RESPAWN_ANCHOR_CHARGE, 1.0F, 0.8F)
+                    aPlayer.playSound(aPlayer, Sound.ENTITY_EVOKER_CAST_SPELL, 1.5F, 1.0F)
                 }
-
+                val randomPlayer = nearbyPlayers.random()
+                val randomPlayerLocation = randomPlayer.location
+                randomPlayerLocation.y += 10
+                ambassadorEntity.teleport(randomPlayerLocation)
+                ambassadorEntity.addPotionEffect(voidFall)
             }
+
+
             // Rocket Attack
-            3, 4 -> {
+            2 -> {
                 // Launch at target
                 if (ambassadorEntity.target is Player) {
                     val playerTarget: Player = ambassadorEntity.target as Player
                     val playerLocation = playerTarget.location
                     // Spawn Firework
-                    var superFirework: Firework = ambassadorEntity.world.spawnEntity(playerLocation, EntityType.FIREWORK) as Firework
+                    val superFirework: Firework = ambassadorEntity.world.spawnEntity(playerLocation, EntityType.FIREWORK) as Firework
                     // Create Firework Effects
-                    var superFireworkEffectsBuilder = FireworkEffect.builder()
+                    val superFireworkMeta = superFirework.fireworkMeta
+                    val superFireworkEffectsBuilder = FireworkEffect.builder()
                     superFireworkEffectsBuilder.with(FireworkEffect.Type.BALL_LARGE)
                     superFireworkEffectsBuilder.withColor(Color.BLUE)
                     superFireworkEffectsBuilder.withFade(Color.PURPLE)
@@ -175,10 +298,11 @@ object AmbassadorBossListener : Listener {
                     val superFireworkEffects = superFireworkEffectsBuilder.build()
 
                     // Add Effects, Sound, and Power
-                    superFirework.fireworkMeta.addEffect(superFireworkEffects)
-                    superFirework.fireworkMeta.power = 50
-                    superFirework.ticksToDetonate = 10
-                    //playerTarget.world.playSound(playerTarget.location, Sound.ENTITY_LIGHTNING_BOLT_IMPACT, 2.1, 1.1)
+                    superFireworkMeta.addEffect(superFireworkEffects)
+                    superFireworkMeta.power = 69
+                    superFirework.fireworkMeta = superFireworkMeta
+                    val targetWorld = playerTarget.world
+                    targetWorld.playEffect(playerLocation, Effect.ELECTRIC_SPARK, 0, 20)
 
 
                 }
