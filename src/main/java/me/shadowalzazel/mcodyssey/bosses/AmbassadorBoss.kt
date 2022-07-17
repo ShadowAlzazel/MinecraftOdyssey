@@ -26,7 +26,7 @@ open class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         val spawnBossLocation = Location(odysseyWorld, randomXLoc.toDouble(), 250.toDouble(), randomZLoc.toDouble())
         println("Spawned the Ambassador at $randomXLoc, $randomZLoc")
         for (aPlayer in odysseyWorld.players) {
-            aPlayer.sendMessage("${ChatColor.GOLD}${ChatColor.MAGIC}[Vail] ${ChatColor.RESET}${ChatColor.YELLOW}My Ambassador has arrived!")
+            aPlayer.sendMessage("${ChatColor.GOLD}[${ChatColor.MAGIC}Vail${ChatColor.RESET}${ChatColor.GOLD}]${ChatColor.YELLOW} My Ambassador has arrived!")
             aPlayer.playSound(aPlayer.location, Sound.ENTITY_EVOKER_PREPARE_SUMMON, 2.0F, 1.0F)
         }
         return odysseyWorld.spawnEntity(spawnBossLocation, EntityType.ILLUSIONER) as Illusioner
@@ -73,7 +73,7 @@ open class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         // Add Potion Effects
         val voidFall = PotionEffect(PotionEffectType.SLOW_FALLING, 1200, 1)
         val voidGlow = PotionEffect(PotionEffectType.GLOWING, 1200, 1)
-        val enhancedHealth = PotionEffect(PotionEffectType.HEALTH_BOOST, 99999, 150)
+        val enhancedHealth = PotionEffect(PotionEffectType.HEALTH_BOOST, 99999, 175)
         val ankiRainEffects = listOf<PotionEffect>(enhancedHealth, voidFall, voidGlow)
         odysseyBossEntity.addPotionEffects(ankiRainEffects)
 

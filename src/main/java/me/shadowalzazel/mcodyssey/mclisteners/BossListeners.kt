@@ -3,6 +3,7 @@
 package me.shadowalzazel.mcodyssey.mclisteners
 
 import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent
+import com.destroystokyo.paper.event.player.PlayerSetSpawnEvent
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.bosses.AmbassadorBoss
 import org.bukkit.Sound
@@ -11,6 +12,7 @@ import org.bukkit.entity.*
 import org.bukkit.event.Listener
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerCommandSendEvent
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.inventory.ItemStack
@@ -26,6 +28,8 @@ object AmbassadorBossListener : Listener {
         Material.RED_TULIP, Material.WHITE_TULIP, Material.PINK_TULIP, Material.CORNFLOWER, Material.LILY_OF_THE_VALLEY, Material.SUNFLOWER,
         Material.LILAC, Material.ROSE_BUSH, Material.PEONY)
 
+
+    // Move this to MAIN LATER
     private val ambassadorBoss = AmbassadorBoss()
     private var counter = 0
     private var playersGiftCooldown = mutableMapOf<UUID, Long>()
@@ -33,10 +37,10 @@ object AmbassadorBossListener : Listener {
 
     //Temp make specific command/event later
     @EventHandler
-    fun onPlayerSummonAmbassador(event: PlayerCommandSendEvent) {
+    fun onPlayerSummonAmbassador(event: PlayerSetSpawnEvent) {
         if (event.player.isOp) {
             if (MinecraftOdyssey.instance.activeBoss) {
-                if (counter >= 0) {
+                if (counter == 0) {
                     counter += 1
                     println("${event.player} called the Ambassador")
                     ambassadorBoss.createBoss(event.player.world)
@@ -81,6 +85,21 @@ object AmbassadorBossListener : Listener {
     }
 
     @EventHandler
+    fun onAmbassadorDeath(event: EntityDeathEvent) {
+        if (ambassadorBoss.ambassadorActive) {
+            if (event.entity == ambassadorBoss.ambassadorBossEntity) {
+                if (event.entity.killer is Player) {
+                    for (aPlayer in event.entity.world.players) {
+                        aPlayer.sendMessage("${ChatColor.YELLOW}${ChatColor.ITALIC}The Ambassador has departed ungracefully!")
+                        aPlayer.sendMessage("${ChatColor.YELLOW}${ChatColor.ITALIC}With ${event.entity.killer!!.name} taking the final blow!")
+                    }
+                }
+                MinecraftOdyssey.instance.ambassadorDeafeated = true
+            }
+        }
+    }
+
+    @EventHandler
     fun onPlayerEnderFlyAway(event: PlayerElytraBoostEvent) {
         // MAKER THIS MORE READABLE
         if (ambassadorBoss.ambassadorActive) {
@@ -119,7 +138,7 @@ object AmbassadorBossListener : Listener {
             // Hawking Containment Unit
             val miniaturizedBlackHole = ItemStack(Material.ENDER_CHEST, 8)
             val miniaturizedBlackHoleMeta: ItemMeta = miniaturizedBlackHole.itemMeta
-            miniaturizedBlackHoleMeta.setDisplayName("${ChatColor.LIGHT_PURPLE}${ChatColor.ITALIC}Hawking Containment Unit-${ChatColor.MAGIC}0x0000008")
+            miniaturizedBlackHoleMeta.setDisplayName("${ChatColor.BLUE}${ChatColor.ITALIC}Hawking Containment Unit-${ChatColor.MAGIC}0x0000008")
             miniaturizedBlackHole.itemMeta = miniaturizedBlackHoleMeta
 
             // Idescine Saplings
@@ -239,7 +258,6 @@ object AmbassadorBossListener : Listener {
                     if (timeElapsed >= 12000) {
                         takeDamageCooldown = System.currentTimeMillis()
                         ambassadorAttacks(ambassadorBoss.ambassadorBossEntity!!)
-
                     }
                 }
             }
@@ -253,20 +271,23 @@ object AmbassadorBossListener : Listener {
         val voidShatter = PotionEffect(PotionEffectType.WEAKNESS, 160, 0)
         val voidRisingEffects = listOf<PotionEffect>(voidShatter, voidRise)
         val nearbyPlayers = ambassadorEntity.world.getNearbyPlayers(ambassadorLocation, 15.0, 15.0, 15.0)
+        for (aPlayers in nearbyPlayers) {
+            aPlayers.sendMessage("Such Folly!")
+        }
+
         when((0..1).random()) {
             // Gravity Attack
-            0, 1 -> {
-                // Clean Up Later
+            0 -> {
+                // Clean Up Later!!!!
                 for (aPlayer in nearbyPlayers) {
                     aPlayer.addPotionEffects(voidRisingEffects)
                     aPlayer.playEffect(EntityEffect.ARROW_PARTICLES)
-                    aPlayer.world.playEffect(aPlayer.location, Effect.CHORUS_FLOWER_DEATH, 2)
                     aPlayer.damage(10.0)
                     aPlayer.playSound(aPlayer, Sound.ENTITY_EVOKER_PREPARE_WOLOLO, 1.0F, 1.1F)
+                    aPlayer.playSound(aPlayer, Sound.AMBIENT_BASALT_DELTAS_MOOD, 2.5F, 0.8F)
                     aPlayer.playSound(aPlayer, Sound.BLOCK_ANVIL_LAND, 1.0F, 0.5F)
                     aPlayer.playSound(aPlayer, Sound.BLOCK_ANVIL_BREAK, 1.0F, 0.8F)
                     aPlayer.playSound(aPlayer, Sound.ITEM_TRIDENT_RIPTIDE_3, 1.0F, 1.0F)
-                    aPlayer.playSound(aPlayer, Sound.BLOCK_RESPAWN_ANCHOR_CHARGE, 1.0F, 0.8F)
                     aPlayer.playSound(aPlayer, Sound.ENTITY_EVOKER_CAST_SPELL, 1.5F, 1.0F)
                 }
                 val randomPlayer = nearbyPlayers.random()
@@ -278,31 +299,32 @@ object AmbassadorBossListener : Listener {
 
 
             // Rocket Attack
-            2 -> {
+            1 -> {
                 // Launch at target
                 if (ambassadorEntity.target is Player) {
                     val playerTarget: Player = ambassadorEntity.target as Player
                     val playerLocation = playerTarget.location
                     // Spawn Firework
                     val superFirework: Firework = ambassadorEntity.world.spawnEntity(playerLocation, EntityType.FIREWORK) as Firework
+                    playerLocation.x += 1
+                    val superFirework1: Firework = ambassadorEntity.world.spawnEntity(playerLocation, EntityType.FIREWORK) as Firework
+                    playerLocation.z += 1
+                    val superFirework2: Firework = ambassadorEntity.world.spawnEntity(playerLocation, EntityType.FIREWORK) as Firework
                     // Create Firework Effects
                     val superFireworkMeta = superFirework.fireworkMeta
-                    val superFireworkEffectsBuilder = FireworkEffect.builder()
-                    superFireworkEffectsBuilder.with(FireworkEffect.Type.BALL_LARGE)
-                    superFireworkEffectsBuilder.withColor(Color.BLUE)
-                    superFireworkEffectsBuilder.withFade(Color.PURPLE)
-                    superFireworkEffectsBuilder.trail(true)
-                    superFireworkEffectsBuilder.flicker(true)
-                    superFireworkEffectsBuilder.withFlicker()
-                    superFireworkEffectsBuilder.withTrail()
-                    val superFireworkEffects = superFireworkEffectsBuilder.build()
-
+                    superFireworkMeta.power = 70
                     // Add Effects, Sound, and Power
-                    superFireworkMeta.addEffect(superFireworkEffects)
-                    superFireworkMeta.power = 69
+                    superFireworkMeta.addEffect(FireworkEffect.builder().with(FireworkEffect.Type.BALL_LARGE).withColor(Color.BLUE).withFade(Color.PURPLE).trail(true).flicker(true).build())
                     superFirework.fireworkMeta = superFireworkMeta
-                    val targetWorld = playerTarget.world
-                    targetWorld.playEffect(playerLocation, Effect.ELECTRIC_SPARK, 0, 20)
+                    superFirework1.fireworkMeta = superFireworkMeta
+                    superFirework2.fireworkMeta = superFireworkMeta
+                    superFirework.detonate()
+                    superFirework2.detonate()
+                    superFirework1.detonate()
+
+                    playerTarget.playSound(playerTarget.location, Sound.AMBIENT_BASALT_DELTAS_MOOD, 2.5F, 0.8F)
+                    playerTarget.playSound(playerTarget.location, Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 2.5F, 0.8F)
+                    playerTarget.playSound(playerTarget.location, Sound.ENTITY_IRON_GOLEM_DEATH, 2.0F, 0.8F)
 
 
                 }

@@ -13,7 +13,12 @@ class MinecraftOdyssey : JavaPlugin() {
     var nightlyPhenomenonActive: Boolean = false
     //var endGame: Boolean = MinecraftOdyssey.instance.config.getBoolean("end-game.enabled")
 
+    // Boss Progression
     var endGame: Boolean = true
+    var ambassadorDeafeated: Boolean = false
+
+
+
     var activeBoss: Boolean = false
 
     companion object {
