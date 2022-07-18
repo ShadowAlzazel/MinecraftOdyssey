@@ -20,7 +20,7 @@ object OdysseyNightlyPhenonenonListener : Listener {
     @EventHandler
     fun onNightTime(event: PlayerBedEnterEvent) {
 
-        if (MinecraftOdyssey.instance.endGame) {
+        if (MinecraftOdyssey.instance.ambassadorDeafeated) {
             val currentWorld = event.player.world
 
             if (currentWorld.time > 12000) {

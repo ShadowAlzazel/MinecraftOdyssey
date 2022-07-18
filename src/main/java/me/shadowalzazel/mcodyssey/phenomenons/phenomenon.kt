@@ -5,8 +5,9 @@ import org.bukkit.World
 
 open class Phenomenon(name: String, rate: Int, growthRate: Int, warning: Int) {
 
-    val phenomenonName = name
     var occurrenceRate = rate
+    // variables for calculating rates
+    val phenomenonName = name
     var occurranceFailGrowthRate = growthRate
     var occurranceRestartRate = rate - 10
     var warningThreshold = warning
