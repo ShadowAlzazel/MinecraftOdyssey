@@ -13,58 +13,71 @@ import org.bukkit.potion.PotionEffectType
 @Suppress("DEPRECATION")
 open class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
 
-    var patienceMeter: Double = 50.0
+    var patienceMeter: Double = 75.0
     var appeasementMeter: Double = 0.0
     var ambassadorBossEntity: Illusioner? = null
     var ambassadorActive: Boolean = false
 
     // spawner for boss entity
     private fun spawnBoss(odysseyWorld: World): Illusioner {
-        //test XYZ
-        val randomZLoc = (-10..10).random()
-        val randomXLoc = (-10..10).random()
-        val spawnBossLocation = Location(odysseyWorld, randomXLoc.toDouble(), 250.toDouble(), randomZLoc.toDouble())
-        println("Spawned the Ambassador at $randomXLoc, $randomZLoc")
+        //random
+        val villageLocation =  Location(odysseyWorld, (-50).toDouble(), 100.toDouble(), (-50).toDouble())
+        val randomPlayers = odysseyWorld.getNearbyPlayers(villageLocation, 100.0)
+        val randomPlayer = randomPlayers.random()
+        val playerLoc = randomPlayer.location
+        playerLoc.y += 150
+        println("Spawned the Ambassador at ${randomPlayer.location.x}, ${randomPlayer.location.z}")
         for (aPlayer in odysseyWorld.players) {
-            aPlayer.sendMessage("${ChatColor.GOLD}[${ChatColor.MAGIC}Vail${ChatColor.RESET}${ChatColor.GOLD}]${ChatColor.YELLOW} My Ambassador has arrived!")
-            aPlayer.playSound(aPlayer.location, Sound.ENTITY_EVOKER_PREPARE_SUMMON, 2.0F, 1.0F)
+            aPlayer.sendMessage("${ChatColor.GOLD}${ChatColor.MAGIC}[Vail]${ChatColor.RESET}${ChatColor.YELLOW} My Ambassador has arrived!")
+            aPlayer.playSound(aPlayer.location, Sound.ENTITY_EVOKER_PREPARE_SUMMON, 2.5F, 0.9F)
         }
-        return odysseyWorld.spawnEntity(spawnBossLocation, EntityType.ILLUSIONER) as Illusioner
+        return odysseyWorld.spawnEntity(playerLoc, EntityType.ILLUSIONER) as Illusioner
 
     }
 
+    fun spawnDummy() {
+        val currentLocation = ambassadorBossEntity!!.location
+        val randomXZLoc = (-5..5).random()
+        currentLocation.x += randomXZLoc
+        currentLocation.z += randomXZLoc
+        currentLocation.y += 3
+        val ambassadorDummy = ambassadorBossEntity!!.world.spawnEntity(currentLocation, EntityType.ILLUSIONER) as Illusioner
+        ambassadorDummy.customName = "${ChatColor.LIGHT_PURPLE}$bossName"
+        ambassadorDummy.isCustomNameVisible = true
+        ambassadorDummy.isCanJoinRaid = false
+        ambassadorDummy.isAware = true
+        ambassadorDummy.lootTable = null
+        ambassadorDummy.health = 25.0
+
+        // Add Item
+        val ambassadorWeapon: ItemStack = createAmbassadorWeapon()
+        ambassadorDummy.clearActiveItem()
+        ambassadorDummy.equipment.setItemInMainHand(ambassadorWeapon)
+
+    }
+
+    // Create Kinetic Weapon
     private fun createAmbassadorWeapon(): ItemStack {
-        val rocketBlaster = ItemStack(Material.BOW, 1)
-        val rocketBlasterMeta: ItemMeta = rocketBlaster.itemMeta
-        rocketBlasterMeta.setDisplayName("${ChatColor.LIGHT_PURPLE}Kinetic Blaster")
-        val rocketBlasterLore = listOf("A weapon commissioned to shoot kinetic darts", "Designed by the current natives")
-        rocketBlasterMeta.lore = rocketBlasterLore
-        rocketBlasterMeta.addEnchant(Enchantment.ARROW_DAMAGE, 5, true)
-        rocketBlasterMeta.addEnchant(Enchantment.ARROW_INFINITE, 1, true)
-        rocketBlasterMeta.addEnchant(Enchantment.ARROW_KNOCKBACK, 2, true)
-        rocketBlaster.itemMeta = rocketBlasterMeta
-        return rocketBlaster
+        val kineticBlaster = ItemStack(Material.BOW, 1)
+        val kineticBlasterMeta: ItemMeta = kineticBlaster.itemMeta
+        kineticBlasterMeta.setDisplayName("${ChatColor.LIGHT_PURPLE}Kinetic Blaster")
+        val kineticBlasterLore = listOf("A weapon commissioned to shoot kinetic darts", "Designed by the current natives")
+        kineticBlasterMeta.lore = kineticBlasterLore
+        kineticBlasterMeta.addEnchant(Enchantment.ARROW_DAMAGE, 5, true)
+        kineticBlasterMeta.addEnchant(Enchantment.ARROW_INFINITE, 1, true)
+        kineticBlasterMeta.addEnchant(Enchantment.ARROW_KNOCKBACK, 2, true)
+        kineticBlaster.itemMeta = kineticBlasterMeta
+        return kineticBlaster
 
     }
 
-    private fun createSuperFirework(): ItemStack {
+    //REPURPOSE LATER
+    private fun createSuperFirework(){
         // Create Firework Effects
-
-        //var superFirework = ItemStack(Material.FIREWORK_ROCKET)
-        var superFirework = ItemStack(Material.FIREWORK_ROCKET, 64)
-        var superFireworkEffectsBuilder = FireworkEffect.builder()
-        superFireworkEffectsBuilder.withColor(Color.BLUE)
-        superFireworkEffectsBuilder.with(FireworkEffect.Type.BALL_LARGE)
-        superFireworkEffectsBuilder.withFade(Color.PURPLE)
-        superFireworkEffectsBuilder.trail(true)
-        superFireworkEffectsBuilder.flicker(true)
-        superFireworkEffectsBuilder.withFlicker()
-        superFireworkEffectsBuilder.withTrail()
-        val superFireworkEffects = superFireworkEffectsBuilder.build()
+        //: ItemStack
 
         // Add Effects, Sound, and Power
-
-        return superFirework
+        return
     }
 
     fun createBoss(odysseyWorld: World) {
@@ -73,8 +86,9 @@ open class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         // Add Potion Effects
         val voidFall = PotionEffect(PotionEffectType.SLOW_FALLING, 1200, 1)
         val voidGlow = PotionEffect(PotionEffectType.GLOWING, 1200, 1)
-        val enhancedHealth = PotionEffect(PotionEffectType.HEALTH_BOOST, 99999, 175)
-        val ankiRainEffects = listOf<PotionEffect>(enhancedHealth, voidFall, voidGlow)
+        val voidSolar = PotionEffect(PotionEffectType.FIRE_RESISTANCE, 99999, 3)
+        val enhancedHealth = PotionEffect(PotionEffectType.HEALTH_BOOST, 99999, 235)
+        val ankiRainEffects = listOf<PotionEffect>(enhancedHealth, voidFall, voidSolar, voidGlow)
         odysseyBossEntity.addPotionEffects(ankiRainEffects)
 
         // Change Default Behaviour
@@ -84,7 +98,7 @@ open class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         odysseyBossEntity.isCanJoinRaid = false
         odysseyBossEntity.isAware = false
         odysseyBossEntity.canPickupItems = true
-        odysseyBossEntity.health = 600.0
+        odysseyBossEntity.health = 950.0
 
         // Add Item
         val ambassadorWeapon: ItemStack = createAmbassadorWeapon()
