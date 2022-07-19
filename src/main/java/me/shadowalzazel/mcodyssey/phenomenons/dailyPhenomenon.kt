@@ -1,25 +1,26 @@
 package me.shadowalzazel.mcodyssey.phenomenons
 
+import me.shadowalzazel.mcodyssey.phenomenons.utility.Phenomenon
 import org.bukkit.ChatColor
 import org.bukkit.World
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-//import org.bukkit.scheduler.BukkitRunnable
-
 
 open class DailyPhenomenon(name: String, rate: Int, growthRate: Int, warning: Int) : Phenomenon(name, rate, growthRate, warning) {
 
     private val dayMessages = listOf<String>("An uneventful day proceeds...", "Looks like nothing is happening today...", "MULTIPLE HOSTILES INCOM.. False alarm. Nothing is going on.",
-        "There are rumors that the Ambassador is on route to this test world...", "Hello World!", "Just another ordinary day...", "The forecast predicts... Nothing.",
+        "What is next...", "Hello World!", "Just another ordinary day...", "The forecast predicts... Nothing.",
         "No distinct events are Schedu-Predicted for today.", "The standard cycle was not disturbed...", "A normal day follows...", "Just plain Today...", "The only thing that happens is nothing at all")
 
     override val hasWarning: Boolean = true
 
+    // Activation Check function
     override fun phenomenonActivation(phenomenonWorld: World, rollRate: Int): Boolean {
 
         //val dayMessages = MinecraftOdyssey.instance.config.getStringList("day-messages")
         val randomMessage = dayMessages.random()
 
+        // Activate Effects if rolled
         if (rollRate < occurrenceRate) {
             phenomenonEffect(phenomenonWorld)
             occurrenceRate = occurranceRestartRate
@@ -27,11 +28,11 @@ open class DailyPhenomenon(name: String, rate: Int, growthRate: Int, warning: In
         }
         else {
             println("$phenomenonName Daily Phenomenon Did Not Occur")
-
             // Send daily fail message
             for (aPlayer in phenomenonWorld.players) {
                 aPlayer.sendMessage("${ChatColor.ITALIC}$randomMessage")
             }
+            // Grow Fail Rate
             occurrenceRate += occurranceFailGrowthRate
 
             // Check if event has a warning
@@ -199,9 +200,8 @@ class GravityShift : DailyPhenomenon("GravityShift", 32, 4, 40) {
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("The gravity shifts ${phenomenonWorld.name}!")
         // Low Gravity Effects
-        val lowGravityEffect = PotionEffect(PotionEffectType.JUMP, 12000, 1)
-        val lowGravityEffect2 = PotionEffect(PotionEffectType.SLOW_FALLING, 12000, 1)
-        val lowGravityEffects = listOf<PotionEffect>(lowGravityEffect, lowGravityEffect2)
+        val lowGravityEffects = listOf(PotionEffect(PotionEffectType.JUMP, 12000, 1),
+            PotionEffect(PotionEffectType.SLOW_FALLING, 12000, 1))
 
         for (aPlayer in phenomenonWorld.players) {
             aPlayer.addPotionEffects(lowGravityEffects)

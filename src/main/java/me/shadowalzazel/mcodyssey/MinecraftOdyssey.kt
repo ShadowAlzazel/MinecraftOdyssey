@@ -1,11 +1,11 @@
 package me.shadowalzazel.mcodyssey
 
+import me.shadowalzazel.mcodyssey.bosses.theAmbassador.AmbassadorListeners
+import me.shadowalzazel.mcodyssey.bosses.utility.OdysseyBoss
 import me.shadowalzazel.mcodyssey.commands.SpawnAmbassador
 import me.shadowalzazel.mcodyssey.mclisteners.*
-import me.shadowalzazel.mcodyssey.phenomenons.*
 
 import org.bukkit.plugin.java.JavaPlugin
-import java.util.*
 
 class MinecraftOdyssey : JavaPlugin() {
 
@@ -14,11 +14,12 @@ class MinecraftOdyssey : JavaPlugin() {
     //var endGame: Boolean = MinecraftOdyssey.instance.config.getBoolean("end-game.enabled")
 
     // Boss Progression
+    // Change This LATER to read from storage
     var endGame: Boolean = true
-    var ambassadorDeafeated: Boolean = false
+    var ambassadorDefeated: Boolean = true
 
-
-
+    // Boss Mechanics
+    var currentBoss: OdysseyBoss? = null
     var activeBoss: Boolean = false
 
     companion object {
@@ -41,9 +42,9 @@ class MinecraftOdyssey : JavaPlugin() {
         server.pluginManager.registerEvents(MinecraftOdysseyListeners, this)
         if (config.getBoolean("daily-world-phenomenon.enabled")) {
             server.pluginManager.registerEvents(OdysseyDailyPhenomenonListener, this)
-            server.pluginManager.registerEvents(OdysseyNightlyPhenonenonListener, this)
+            server.pluginManager.registerEvents(OdysseyNightlyPhenomenonListener, this)
         }
-        server.pluginManager.registerEvents(AmbassadorBossListener, this)
+        server.pluginManager.registerEvents(AmbassadorListeners, this)
         server.pluginManager.registerEvents(OdysseyPlayerJoinListener, this)
         server.pluginManager.registerEvents(OdysseyPlayerLeaveListener, this)
 
