@@ -1,6 +1,8 @@
 package me.shadowalzazel.mcodyssey.commands
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.bosses.theAmbassador.AmbassadorBoss
+import me.shadowalzazel.mcodyssey.bosses.theAmbassador.AmbassadorListeners
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -13,20 +15,27 @@ object SpawnAmbassador : CommandExecutor {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender is Player) {
-            val aPlayer = sender
-            if (aPlayer.isOp) {
+            if (sender.isOp) {
                 if (!MinecraftOdyssey.instance.activeBoss) {
-                    if (!spawnCooldown.containsKey(aPlayer.uniqueId)) {
-                        spawnCooldown[aPlayer.uniqueId] = System.currentTimeMillis()
+                    if (!spawnCooldown.containsKey(sender.uniqueId)) {
+                        spawnCooldown[sender.uniqueId] = System.currentTimeMillis()
+                        MinecraftOdyssey.instance.currentBoss = AmbassadorBoss()
                         MinecraftOdyssey.instance.activeBoss = true
-                        println("${aPlayer.name}Spawned the Ambassador")
+                        MinecraftOdyssey.instance.server.pluginManager.registerEvents(AmbassadorListeners, MinecraftOdyssey.instance)
+                        val ambassadorBoss = MinecraftOdyssey.instance.currentBoss as AmbassadorBoss
+                        ambassadorBoss.createBoss(sender.world)
+                        println("${sender.name}Spawned the Ambassador")
                     }
                     else {
-                        val timeElapsed: Long = System.currentTimeMillis()- spawnCooldown[aPlayer.uniqueId]!!
+                        val timeElapsed: Long = System.currentTimeMillis()- spawnCooldown[sender.uniqueId]!!
                         if (timeElapsed >= 5000) {
-                            spawnCooldown[aPlayer.uniqueId] = System.currentTimeMillis()
+                            spawnCooldown[sender.uniqueId] = System.currentTimeMillis()
+                            MinecraftOdyssey.instance.currentBoss = AmbassadorBoss()
                             MinecraftOdyssey.instance.activeBoss = true
-                            println("${aPlayer.name}Spawned the Ambassador")
+                            MinecraftOdyssey.instance.server.pluginManager.registerEvents(AmbassadorListeners, MinecraftOdyssey.instance)
+                            val ambassadorBoss = MinecraftOdyssey.instance.currentBoss as AmbassadorBoss
+                            ambassadorBoss.createBoss(sender.world)
+                            println("${sender.name}Spawned the Ambassador")
                         }
                         else {
                             println("Cannot Spawn anymore Bosses")

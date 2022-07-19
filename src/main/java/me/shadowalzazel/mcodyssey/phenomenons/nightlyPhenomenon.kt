@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.phenomenons
 
+import me.shadowalzazel.mcodyssey.phenomenons.utility.Phenomenon
 import org.bukkit.ChatColor
 import org.bukkit.World
 import org.bukkit.potion.PotionEffect

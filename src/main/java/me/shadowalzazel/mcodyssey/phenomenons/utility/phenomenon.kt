@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.phenomenons
+package me.shadowalzazel.mcodyssey.phenomenons.utility
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import org.bukkit.World

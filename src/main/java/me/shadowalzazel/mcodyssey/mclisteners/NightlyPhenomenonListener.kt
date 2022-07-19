@@ -6,7 +6,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerBedEnterEvent
 
-object OdysseyNightlyPhenonenonListener : Listener {
+object OdysseyNightlyPhenomenonListener : Listener {
 
     private val nightlyPhenomenonList = listOf(BloodMoon(), BlueMoon())
 
@@ -19,27 +19,29 @@ object OdysseyNightlyPhenonenonListener : Listener {
 
     @EventHandler
     fun onNightTime(event: PlayerBedEnterEvent) {
-
-        if (MinecraftOdyssey.instance.ambassadorDeafeated) {
+        // Check if ambassador defeated
+        if (MinecraftOdyssey.instance.ambassadorDefeated) {
+            // Check if new day
+            val dayElapsed = event.player.world.fullTime - cooldownNightPhenomenon
+            if (dayElapsed > cooldownNightTimer) {
+                MinecraftOdyssey.instance.nightlyPhenomenonActive = false
+            }
+            // Check current world time
             val currentWorld = event.player.world
-
             if (currentWorld.time > 12000) {
-
+                // Check if nightly active
                 if (!MinecraftOdyssey.instance.nightlyPhenomenonActive) {
-
                     // Nightly Event Change
                     val timeElapsedMC = event.player.world.fullTime - cooldownNightPhenomenon
                     if (timeElapsedMC > cooldownNightTimer) {
                         cooldownNightPhenomenon = currentWorld.fullTime
-
                         // Event Cool down timer
                         val timeElapsed = System.currentTimeMillis() - cooldown
                         if (timeElapsed >= cooldownTimer) {
                             cooldown = System.currentTimeMillis()
-
+                            // Calculate if nightly phenomenon
                             val randomNightlyPhenomenon = nightlyPhenomenonList.random()
                             val rolledRate = (0..100).random()
-
                             val phenomenonActivated: Boolean = randomNightlyPhenomenon.phenomenonActivation(currentWorld, rolledRate)
                             if (phenomenonActivated) {
                                 MinecraftOdyssey.instance.nightlyPhenomenonActive = true
