@@ -1,7 +1,11 @@
 package me.shadowalzazel.mcodyssey.enchantments
 
 import io.papermc.paper.enchantments.EnchantmentRarity
+import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.Style
+import org.bukkit.ChatColor
+import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.enchantments.EnchantmentTarget
@@ -9,18 +13,18 @@ import org.bukkit.entity.EntityCategory
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 
-class BaneOfTheSwine(key: NamespacedKey) : Enchantment(key) {
+class BaneOfTheSwine(namespace: String?, private val name: String, private val maxLevel: Int) : Enchantment(NamespacedKey(MinecraftOdyssey.instance, namespace!!)) {
 
     override fun translationKey(): String {
         TODO("Not yet implemented")
     }
 
     override fun getName(): String {
-        return "BaneOfTheSwine"
+        return name
     }
 
     override fun getMaxLevel(): Int {
-        return 5
+        return maxLevel
     }
 
     override fun getStartLevel(): Int {
@@ -51,11 +55,19 @@ class BaneOfTheSwine(key: NamespacedKey) : Enchantment(key) {
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {
-        return false
+        return when (item.type) {
+            Material.ENCHANTED_BOOK, Material.NETHERITE_SWORD -> {
+                true
+            }
+            else -> {
+                false
+            }
+        }
     }
 
     override fun displayName(level: Int): Component {
-        TODO("Not yet implemented")
+        val someDisplayName = "${ChatColor.GOLD}$name $level"
+        return Component.text(someDisplayName)
     }
 
     override fun isTradeable(): Boolean {

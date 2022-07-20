@@ -3,6 +3,8 @@ package me.shadowalzazel.mcodyssey
 import me.shadowalzazel.mcodyssey.bosses.theAmbassador.AmbassadorListeners
 import me.shadowalzazel.mcodyssey.bosses.utility.OdysseyBoss
 import me.shadowalzazel.mcodyssey.commands.SpawnAmbassador
+import me.shadowalzazel.mcodyssey.commands.GiveTestItem
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.mclisteners.*
 
 import org.bukkit.plugin.java.JavaPlugin
@@ -37,21 +39,27 @@ class MinecraftOdyssey : JavaPlugin() {
         config.options().copyDefaults()
         saveConfig()
 
+        // Register Enchantments
+        OdysseyEnchantments.register()
 
-        // Register Events
+        // Register Utility Listeners
         server.pluginManager.registerEvents(MinecraftOdysseyListeners, this)
+        // Daily Phenomenon listeners
         if (config.getBoolean("daily-world-phenomenon.enabled")) {
             server.pluginManager.registerEvents(OdysseyDailyPhenomenonListener, this)
             server.pluginManager.registerEvents(OdysseyNightlyPhenomenonListener, this)
         }
+        // Boss Listeners
         server.pluginManager.registerEvents(AmbassadorListeners, this)
+        // Join and Leave Messages
         server.pluginManager.registerEvents(OdysseyPlayerJoinListener, this)
         server.pluginManager.registerEvents(OdysseyPlayerLeaveListener, this)
-
+        // Enchantment listener
+        server.pluginManager.registerEvents(EnchantmentListeners, this)
 
         // Register Commands
         getCommand("SpawnAmbassador")?.setExecutor(SpawnAmbassador)
-
+        getCommand("GiveTestItem")?.setExecutor(GiveTestItem)
 
 
         // Hello World!
@@ -59,7 +67,12 @@ class MinecraftOdyssey : JavaPlugin() {
     }
 
     override fun onDisable() {
+
+
+
         // Plugin shutdown logic
         logger.info("The Odyssey can wait another day...")
     }
+
+
 }

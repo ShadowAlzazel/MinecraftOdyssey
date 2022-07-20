@@ -4,6 +4,8 @@ import me.shadowalzazel.mcodyssey.odysseyUtility.utilty.OdysseyItem
 import org.bukkit.Material
 import org.bukkit.ChatColor
 
+// MAKE OBJECTS LATER
+
 // Galvanized Steel
 class GalvanizedSteel : OdysseyItem("Galvanized Steel", Material.IRON_BLOCK) {
     override val odysseyDisplayName: String = "${ChatColor.DARK_GRAY}${ChatColor.ITALIC}$name"
@@ -68,7 +70,7 @@ class PolymorphicGlue : OdysseyItem("Polymorphic Glue", Material.SLIME_BLOCK) {
     override val odysseyLore = listOf("Industrial Glue...")
 }
 
-// Artificial Srat Unit 092412X
+// Artificial Star Unit 092412X
 class ArtificialStarUnit : OdysseyItem("Artificial Star Unit", Material.EMERALD) {
     override val odysseyDisplayName: String =
         "${ChatColor.AQUA}${ChatColor.ITALIC}$name-${ChatColor.MAGIC}092412X"
