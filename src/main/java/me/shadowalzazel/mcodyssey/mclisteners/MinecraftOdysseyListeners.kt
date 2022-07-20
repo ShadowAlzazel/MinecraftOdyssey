@@ -52,7 +52,7 @@ object MinecraftOdysseyListeners : Listener {
     // Smiting table logic
 
     // Check for new enchants and repairs
-
+    // FIX FOR ALL ENCHANTS
     @EventHandler
     fun onAnvilEnchant(event: PrepareAnvilEvent) {
         if (event.inventory.firstItem != null && event.inventory.secondItem != null) {
@@ -71,7 +71,7 @@ object MinecraftOdysseyListeners : Listener {
                                 break
                             }
                             // Check of item applicable
-                            if (!enchant.canEnchantItem(firstItem))
+                            if (!(enchant.canEnchantItem(firstItem)))
                             {
                                 return
                             }
@@ -85,7 +85,9 @@ object MinecraftOdysseyListeners : Listener {
                             if (firstItem.itemMeta.hasLore()) {
                                 someLore = ((firstItem.lore!! + secondItem.lore!!) as MutableList<String?>)
                             }
+                            someLore = secondItem.lore!!
 
+                            // ADD DEBUG
                             val anvilResult = firstItem.clone()
                             anvilResult.addUnsafeEnchantments(enchantmentsAppliedBook)
                             anvilResult.itemMeta.lore = someLore

@@ -13,8 +13,8 @@ object OdysseyEnchantments {
 
 
     fun register() {
-        val registered = Arrays.stream(Enchantment.values()).collect(Collectors.toList()).contains(BANE_OF_THE_SWINE)
-        if (!registered) registerEnchantment(BANE_OF_THE_SWINE)
+        val registered = Arrays.stream(Enchantment.values()).collect(Collectors.toList()).contains(BANE_OF_THE_SEA)
+        if (!registered) registerEnchantment(BANE_OF_THE_SEA)
     }
 
     fun registerEnchantment(enchantment: Enchantment?) {
