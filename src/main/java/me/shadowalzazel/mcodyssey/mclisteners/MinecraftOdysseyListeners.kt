@@ -1,11 +1,16 @@
+@file:Suppress("DEPRECATION")
+
 package me.shadowalzazel.mcodyssey.mclisteners
 
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import org.bukkit.ChatColor
+import org.bukkit.Material
 import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.entity.EntityDeathEvent
+import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
@@ -42,4 +47,54 @@ object MinecraftOdysseyListeners : Listener {
             }
         }
     }
+
+
+    // Smiting table logic
+
+    // Check for new enchants and repairs
+
+    @EventHandler
+    fun onAnvilEnchant(event: PrepareAnvilEvent) {
+        if (event.inventory.firstItem != null && event.inventory.secondItem != null) {
+            // Check if Book
+            val secondItem = event.inventory.secondItem!!
+            val firstItem = event.inventory.firstItem!!
+            if (secondItem.hasItemMeta()) {
+                if (secondItem.type == Material.ENCHANTED_BOOK) {
+                    if (secondItem.itemMeta.hasEnchants()) {
+                        // Check if odyssey enchant in set
+                        var hasOdysseyEnchant = false
+                        val enchantmentsAppliedBook = secondItem.enchantments
+                        for (enchant in enchantmentsAppliedBook.keys) {
+                            if (enchant in OdysseyEnchantments.enchantmentSet) {
+                                hasOdysseyEnchant = true
+                                break
+                            }
+                            // Check of item applicable
+                            if (!enchant.canEnchantItem(firstItem))
+                            {
+                                return
+                            }
+                            // Check Conflicts ADD LATER
+                        }
+                        // Apply Odyssey Enchant Stuff
+                        if (hasOdysseyEnchant) {
+                            //val enchantmentsAppliedItem = firstItem.enchantments
+                            //val newEnchantments = enchantmentsAppliedItem + enchantmentsAppliedBook
+                            var someLore = mutableListOf<String?>()
+                            if (firstItem.itemMeta.hasLore()) {
+                                someLore = ((firstItem.lore!! + secondItem.lore!!) as MutableList<String?>)
+                            }
+
+                            val anvilResult = firstItem.clone()
+                            anvilResult.addUnsafeEnchantments(enchantmentsAppliedBook)
+                            anvilResult.itemMeta.lore = someLore
+                            event.result = anvilResult
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }

@@ -1,7 +1,11 @@
 package me.shadowalzazel.mcodyssey.enchantments.utility
 
 import io.papermc.paper.enchantments.EnchantmentRarity
+import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.TextComponent
+import net.kyori.adventure.text.format.NamedTextColor
+import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.enchantments.EnchantmentTarget
@@ -9,69 +13,75 @@ import org.bukkit.entity.EntityCategory
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 
-
-// REFACTOR LATER
-open class OdysseyEnchantment(key: NamespacedKey, name: String) : Enchantment(key) {
-
-    val odysseyName: String = name
+open class OdysseyEnchantmentWrapper(namespace: String?, private val name: String, private val maxLevel: Int) :
+    Enchantment(NamespacedKey(MinecraftOdyssey.instance, namespace!!)) {
 
     override fun translationKey(): String {
         TODO("Not yet implemented")
     }
 
     override fun getName(): String {
-        return odysseyName
+        return name
     }
 
     override fun getMaxLevel(): Int {
-        TODO("Not yet implemented")
+        return maxLevel
     }
 
     override fun getStartLevel(): Int {
-        TODO("Not yet implemented")
+        return 1
     }
 
     override fun getItemTarget(): EnchantmentTarget {
-        TODO("Not yet implemented")
+        return EnchantmentTarget.WEAPON
     }
 
     override fun isTreasure(): Boolean {
-        TODO("Not yet implemented")
+        return true
     }
 
     override fun isCursed(): Boolean {
-        TODO("Not yet implemented")
+        return false
     }
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        TODO("Not yet implemented")
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {
-        TODO("Not yet implemented")
+        return when (item.type) {
+            Material.ENCHANTED_BOOK -> {
+                true
+            }
+            else -> {
+                false
+            }
+        }
     }
 
     override fun displayName(level: Int): Component {
-        TODO("Not yet implemented")
+        var displayComponent: TextComponent = Component.text("$name $level").color(NamedTextColor.GOLD)
+        return displayComponent
+
     }
 
     override fun isTradeable(): Boolean {
-        TODO("Not yet implemented")
+        return false
     }
 
     override fun isDiscoverable(): Boolean {
-        TODO("Not yet implemented")
+        return false
     }
 
     override fun getRarity(): EnchantmentRarity {
-        TODO("Not yet implemented")
+        return EnchantmentRarity.UNCOMMON
     }
 
     override fun getDamageIncrease(level: Int, entityCategory: EntityCategory): Float {
-        TODO("Not yet implemented")
+        return 0.0F
     }
 
     override fun getActiveSlots(): MutableSet<EquipmentSlot> {
-        TODO("Not yet implemented")
+        return mutableSetOf(EquipmentSlot.HAND)
     }
 }

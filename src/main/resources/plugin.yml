@@ -10,3 +10,7 @@ commands:
     description: ""
     usage: /<command>
     permission: op
+  GiveTestItem:
+    description: ""
+    usage: /<command>
+    permission: op
