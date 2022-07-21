@@ -1,3 +1,5 @@
+@file:OptIn(DelicateCoroutinesApi::class)
+
 package me.shadowalzazel.mcodyssey.mclisteners
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
@@ -6,7 +8,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDeathEvent
-
+import kotlinx.coroutines.*
 object EnchantmentListeners : Listener {
 
     // UNBIDDEN
@@ -21,6 +23,13 @@ object EnchantmentListeners : Listener {
                         if (somePlayer.gameMode != GameMode.CREATIVE || somePlayer.gameMode != GameMode.SPECTATOR) {
                             somePlayer.sendMessage("TEST!SEA")
                             somePlayer.giveExpLevels(10)
+
+                            GlobalScope.launch {
+                                println("Some New Taske")
+                                delay(2000)
+                                println("YAY NO STOPS!")
+                                somePlayer.sendMessage("FINALLY!!!!")
+                            }
                         }
                     }
                 }
