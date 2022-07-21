@@ -15,6 +15,8 @@ import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import java.util.*
+// Experimental
+
 
 // DO COROUTINES LATER !!!
 
@@ -78,9 +80,9 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         }
         val spawningPlayer = worldPlayers.random()
         val spawningLocation = spawningPlayer.location
-        spawningLocation.x += (-100..100).random()
-        spawningLocation.z += (-100..100).random()
-        spawningLocation.y = 250.0
+        spawningLocation.x += (-48..48).random()
+        spawningLocation.z += (-48..48).random()
+        spawningLocation.y = spawningPlayer.location.y + 100
         println("The Ambassador has arrived at ${spawningLocation.x}, ${spawningLocation.z}")
         return odysseyWorld.spawnEntity(spawningLocation, EntityType.ILLUSIONER) as Illusioner
     }
@@ -152,7 +154,8 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         superFireworkMeta.power = 120
         // FIX VELOCITY
         superFirework.velocity = targetPlayer.location.direction.subtract(bossEntity!!.location.direction)
-        superFirework.ticksToDetonate = 8
+        superFirework.ticksToDetonate = 1
+        superFirework.fireworkMeta = superFireworkMeta
         return superFirework
     }
 
@@ -209,8 +212,8 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
 
     // Do Gravity Wave Damage
     private fun doGravityWaveDamage(somePlayers: MutableCollection<Player>, someWorld: World) {
-        val gravityRise = PotionEffect(PotionEffectType.LEVITATION, 150, 0)
-        val gravityShatter = PotionEffect(PotionEffectType.WEAKNESS, 200, 1)
+        val gravityRise = PotionEffect(PotionEffectType.LEVITATION, 100, 0)
+        val gravityShatter = PotionEffect(PotionEffectType.WEAKNESS, 250, 1)
         val gravityWaveEffects = listOf(gravityRise, gravityShatter)
 
         for (somePlayer in somePlayers) {
@@ -274,6 +277,11 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         // Quotes
         val timeElapsed: Long = System.currentTimeMillis() - takeDamageCooldown
         if (timeElapsed >= 7000) {
+            val randomAttackQuote = randomMessageList.random()
+            takeDamageCooldown = System.currentTimeMillis()
+            for (somePlayer in bossEntity!!.world.getNearbyPlayers(bossEntity!!.location, 17.5)) {
+                somePlayer.sendMessage(randomAttackQuote)
+            }
             if (someDamager is Player) {
                 when((0..4).random()) {
                     2, 3, 4 -> {
@@ -287,11 +295,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
             else {
                 gravityWaveAttack(bossEntity as Entity)
             }
-            val randomAttackQuote = randomMessageList.random()
-            takeDamageCooldown = System.currentTimeMillis()
-            for (somePlayer in bossEntity!!.world.getNearbyPlayers(bossEntity!!.location, 17.5)) {
-                somePlayer.sendMessage(randomAttackQuote)
-            }
+
         }
     }
 
@@ -457,7 +461,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 Material.BOOK -> {
                     appeasement += 1
                     if (appeasement < 45) {
-                        givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Hopefully this culture is not so dull as other test-s... Nevermind...")
+                        givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Hopefully this culture is not so dull as other test-s... Never mind...")
                     }
                     else {
                         givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}So far I can say I am enjoying this...")
