@@ -6,6 +6,8 @@ import me.shadowalzazel.mcodyssey.commands.SpawnAmbassador
 import me.shadowalzazel.mcodyssey.commands.GiveTestItem
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.mclisteners.*
+import me.shadowalzazel.mcodyssey.odysseyUtility.OdysseyRecipes
+import org.bukkit.Bukkit
 
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -23,6 +25,8 @@ class MinecraftOdyssey : JavaPlugin() {
     // Boss Mechanics
     var currentBoss: OdysseyBoss? = null
     var activeBoss: Boolean = false
+    var timeSinceBoss: Long = System.currentTimeMillis()
+    var bossDespawnTimer: Long = System.currentTimeMillis()
 
     companion object {
         lateinit var instance : MinecraftOdyssey
@@ -39,8 +43,8 @@ class MinecraftOdyssey : JavaPlugin() {
         config.options().copyDefaults()
         saveConfig()
 
-        // Register Enchantments
-        OdysseyEnchantments.register()
+        //*** Register Enchantments
+        //OdysseyEnchantments.register()
 
         // Register Utility Listeners
         server.pluginManager.registerEvents(MinecraftOdysseyListeners, this)
@@ -57,9 +61,14 @@ class MinecraftOdyssey : JavaPlugin() {
         // Enchantment listener
         server.pluginManager.registerEvents(EnchantmentListeners, this)
 
+        // Custom Recipes
+        //***Bukkit.addRecipe(OdysseyRecipes.odysseySmithing)
+        Bukkit.addRecipe(OdysseyRecipes.odysseyNaming)
+
+
         // Register Commands
         getCommand("SpawnAmbassador")?.setExecutor(SpawnAmbassador)
-        getCommand("GiveTestItem")?.setExecutor(GiveTestItem)
+        //*** getCommand("GiveTestItem")?.setExecutor(GiveTestItem)
 
 
         // Hello World!

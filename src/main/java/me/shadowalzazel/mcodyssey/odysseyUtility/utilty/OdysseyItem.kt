@@ -8,18 +8,20 @@ import org.bukkit.inventory.meta.ItemMeta
 @Suppress("DEPRECATION")
 open class OdysseyItem(itemName: String, itemMaterial: Material) {
     val name = itemName
-    val material = itemMaterial
+    private val material = itemMaterial
     open val odysseyDisplayName: String? = null
     open val odysseyLore: List<String> = listOf()
     open val isEnchanted: Boolean = false
+    open val someEnchantType: Enchantment? = null
+    open val someEnchantLevel: Int? = 0
 
-    fun createItemStack(amount: Int, enchantmentLevel: Int?, enchantmentType: Enchantment?): ItemStack {
+    fun createItemStack(amount: Int): ItemStack {
         val newOdysseyItemStack = ItemStack(material, amount)
         val newOdysseyMeta: ItemMeta = newOdysseyItemStack.itemMeta
         if (isEnchanted) {
-            if (enchantmentLevel != null) {
-                if (enchantmentType != null) {
-                    newOdysseyMeta.addEnchant(enchantmentType, enchantmentLevel, true)
+            if (someEnchantType != null) {
+                if (someEnchantLevel != null) {
+                    newOdysseyMeta.addEnchant(someEnchantType!!, someEnchantLevel!!, true)
                 }
             }
         }
