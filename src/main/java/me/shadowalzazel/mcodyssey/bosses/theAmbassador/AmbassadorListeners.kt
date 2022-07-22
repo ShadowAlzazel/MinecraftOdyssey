@@ -8,6 +8,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerDropItemEvent
+import org.bukkit.event.world.TimeSkipEvent
 
 object AmbassadorListeners: Listener {
 
@@ -53,6 +54,25 @@ object AmbassadorListeners: Listener {
     }
 
     @EventHandler
+    fun checkAmbassadorDay(event: TimeSkipEvent) {
+        if (MinecraftOdyssey.instance.activeBoss) {
+            if (MinecraftOdyssey.instance.currentBoss is AmbassadorBoss) {
+                val ambassadorBoss = MinecraftOdyssey.instance.currentBoss as AmbassadorBoss
+                val timeElapsed = System.currentTimeMillis() - ambassadorBoss.despawnTimer
+                val globalTimeElapsed = System.currentTimeMillis() - MinecraftOdyssey.instance.bossDespawnTimer
+                if (timeElapsed >= 3000000 && globalTimeElapsed > 3000000) { //3000000
+                    ambassadorBoss.departBoss()
+                    ambassadorBoss.bossEntity!!.remove()
+                    MinecraftOdyssey.instance.activeBoss = false
+                    MinecraftOdyssey.instance.ambassadorDefeated = true
+                    MinecraftOdyssey.instance.currentBoss = null
+                }
+            }
+        }
+
+    }
+
+    @EventHandler
     fun onAmbassadorDeath(event: EntityDeathEvent) {
         if (MinecraftOdyssey.instance.activeBoss) {
             if (MinecraftOdyssey.instance.currentBoss is AmbassadorBoss) {
@@ -66,7 +86,7 @@ object AmbassadorListeners: Listener {
                         MinecraftOdyssey.instance.ambassadorDefeated = true
                         MinecraftOdyssey.instance.currentBoss = null
                     }
-                    // Last Hit Melee Blow
+                    // Last Hit
                     else {
                         val vanquisher = event.entity.getTargetEntity(10)
                         if (vanquisher != null) {

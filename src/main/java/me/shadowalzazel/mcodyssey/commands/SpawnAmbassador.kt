@@ -21,7 +21,6 @@ object SpawnAmbassador : CommandExecutor {
                         spawnCooldown[sender.uniqueId] = System.currentTimeMillis()
                         MinecraftOdyssey.instance.currentBoss = AmbassadorBoss()
                         MinecraftOdyssey.instance.activeBoss = true
-                        MinecraftOdyssey.instance.server.pluginManager.registerEvents(AmbassadorListeners, MinecraftOdyssey.instance)
                         val ambassadorBoss = MinecraftOdyssey.instance.currentBoss as AmbassadorBoss
                         ambassadorBoss.createBoss(sender.world)
                         println("${sender.name}Spawned the Ambassador")
@@ -32,7 +31,6 @@ object SpawnAmbassador : CommandExecutor {
                             spawnCooldown[sender.uniqueId] = System.currentTimeMillis()
                             MinecraftOdyssey.instance.currentBoss = AmbassadorBoss()
                             MinecraftOdyssey.instance.activeBoss = true
-                            MinecraftOdyssey.instance.server.pluginManager.registerEvents(AmbassadorListeners, MinecraftOdyssey.instance)
                             val ambassadorBoss = MinecraftOdyssey.instance.currentBoss as AmbassadorBoss
                             ambassadorBoss.createBoss(sender.world)
                             println("${sender.name}Spawned the Ambassador")

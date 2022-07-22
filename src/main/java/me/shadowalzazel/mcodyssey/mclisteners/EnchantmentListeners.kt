@@ -19,7 +19,7 @@ object EnchantmentListeners : Listener {
                 val somePlayer = event.entity.killer!!
                 if (somePlayer.inventory.itemInMainHand.hasItemMeta()) {
                     val someWeapon = somePlayer.inventory.itemInMainHand
-                    if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.BANE_OF_THE_SEA)) {
+                    if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.BANE_OF_THE_SWINE)) {
                         if (somePlayer.gameMode != GameMode.CREATIVE || somePlayer.gameMode != GameMode.SPECTATOR) {
                             somePlayer.sendMessage("TEST!SEA")
                             somePlayer.giveExpLevels(10)
