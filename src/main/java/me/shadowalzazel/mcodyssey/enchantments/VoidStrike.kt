@@ -5,11 +5,11 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object FreezingAspect : OdysseyEnchantmentWrapper("frezzingaspect", "Freezing Aspect", 2) {
+object VoidStrike : OdysseyEnchantmentWrapper("voidstrike", "Void Strike", 1) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            FIRE_ASPECT -> {
+            SWEEPING_EDGE, OdysseyEnchantments.EXPLODING -> {
                 true
             }
             else -> {

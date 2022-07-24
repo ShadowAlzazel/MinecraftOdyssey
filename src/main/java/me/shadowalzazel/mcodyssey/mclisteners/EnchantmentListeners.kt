@@ -1,5 +1,3 @@
-@file:OptIn(DelicateCoroutinesApi::class)
-
 package me.shadowalzazel.mcodyssey.mclisteners
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
@@ -8,7 +6,6 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDeathEvent
-import kotlinx.coroutines.*
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.mclisteners.utility.FreezingTask
 import org.bukkit.Color
@@ -17,7 +14,19 @@ import org.bukkit.Particle
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Fireball
 import org.bukkit.entity.Firework
+import org.bukkit.entity.Hoglin
+import org.bukkit.entity.Illager
+import org.bukkit.entity.Illusioner
 import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Pig
+import org.bukkit.entity.Piglin
+import org.bukkit.entity.PiglinAbstract
+import org.bukkit.entity.PiglinBrute
+import org.bukkit.entity.Pillager
+import org.bukkit.entity.Raider
+import org.bukkit.entity.Ravager
+import org.bukkit.entity.Vex
+import org.bukkit.entity.WaterMob
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
@@ -25,7 +34,47 @@ import org.bukkit.util.Vector
 
 object EnchantmentListeners : Listener {
 
+
+    // Extra Damage Modifiers
+    // 2.5
+    @EventHandler
+    fun modifierDamageIncrease(event: EntityDamageByEntityEvent) {
+        if (event.damager is Player) {
+            val somePlayer: Player = event.damager as Player
+            if (event.entity is LivingEntity) {
+                val damagedEntity: LivingEntity = event.entity as LivingEntity
+                if (somePlayer.inventory.itemInMainHand.hasItemMeta()) {
+                    val someWeapon = somePlayer.inventory.itemInMainHand
+                    // Bane of the Illager
+                    if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.BANE_OF_THE_ILLAGER)) {
+                        if (damagedEntity is Vex || damagedEntity is Raider) {
+                            event.damage += (someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.BANE_OF_THE_ILLAGER).toDouble() * 2.5)
+                            println("${event.damage}")
+
+                        }
+                    }
+                    // Bane of the Sea
+                    else if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.BANE_OF_THE_SEA)) {
+                        if (damagedEntity.isInWaterOrRainOrBubbleColumn || damagedEntity.isSwimming || damagedEntity is WaterMob) {
+                            event.damage += (someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.BANE_OF_THE_SWINE).toDouble() * 2.0)
+                            println("${event.damage}")
+                        }
+                    }
+                    // Bane of the Swine
+                    else if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.BANE_OF_THE_SWINE)) {
+                        if (damagedEntity is Piglin || damagedEntity is PiglinBrute || damagedEntity is Pig || damagedEntity is Hoglin || damagedEntity is PiglinAbstract) {
+                            event.damage += (someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.BANE_OF_THE_SWINE).toDouble() * 2.5)
+                            println("${event.damage}")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
     // EXPLODING enchantment effects
+    // Check if creeper
     @EventHandler
     fun explodingEnchant(event: EntityDeathEvent) {
         if (event.entity.killer is Player) {
@@ -35,11 +84,9 @@ object EnchantmentListeners : Listener {
                     val someWeapon = somePlayer.inventory.itemInMainHand
                     if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.EXPLODING)) {
                         if (somePlayer.gameMode != GameMode.SPECTATOR) {
-                            // Test message
-                            somePlayer.sendMessage("BOOM!")
                             // Boom variables
                             val boomLocation = event.entity.location
-                            val boomMagnitude =  someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.EXPLODING)
+                            val boomMagnitude = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.EXPLODING)
 
                             // Fireball
                             val boomExplosion: Fireball = somePlayer.world.spawnEntity(boomLocation, EntityType.FIREBALL) as Fireball
@@ -58,17 +105,6 @@ object EnchantmentListeners : Listener {
                             // Particles
                             somePlayer.world.spawnParticle(Particle.FLASH, boomLocation, 5, 1.0, 1.0, 1.0)
                             somePlayer.world.spawnParticle(Particle.LAVA, boomLocation, 35, 1.5, 1.0, 1.5)
-
-                            /*
-                            GlobalScope.launch {
-                                println("Some New Task")
-                                delay(2000)
-                                println("YAY NO STOPS!")
-                                somePlayer.sendMessage("FINALLY!!!!")
-
-
-                            }
-                            */
                         }
                     }
                 }
@@ -77,43 +113,57 @@ object EnchantmentListeners : Listener {
     }
 
 
+    // VOID_STRIKE enchantment effects
+    // Void Strike can stack
+    @EventHandler
+    fun voidStrikeStacking(event: EntityDamageByEntityEvent) {
+        if (event.damager is Player) {
+            val somePlayer: Player = event.damager as Player
+            if (event.entity is LivingEntity) {
+                val voidTouchedEntity: LivingEntity = event.entity as LivingEntity
+                if (somePlayer.inventory.itemInMainHand.hasItemMeta()) {
+                    val someWeapon = somePlayer.inventory.itemInMainHand
+                    if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.VOID_STRIKE)) {
+                        if (somePlayer.gameMode != GameMode.SPECTATOR) {
+
+
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+
     // FREEZING enchantment effects
     @EventHandler
     fun applyFreezing(event: EntityDamageByEntityEvent) {
         if (event.damager is Player) {
+            val somePlayer: Player = event.damager as Player
             if (event.entity is LivingEntity) {
-                val somePlayer: Player = event.damager as Player
+                val freezingEntity: LivingEntity = event.entity as LivingEntity
                 if (somePlayer.inventory.itemInMainHand.hasItemMeta()) {
                     val someWeapon = somePlayer.inventory.itemInMainHand
                     if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.FREEZING_ASPECT)) {
                         if (somePlayer.gameMode != GameMode.SPECTATOR) {
-                            val freezeFactor = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.FREEZING_ASPECT)
-                            val freezingEntity: LivingEntity = event.entity as LivingEntity
-                            val freezingSlow = PotionEffect(PotionEffectType.SLOW, freezeFactor * 20 * 3, freezeFactor)
-                            freezingEntity.addPotionEffect(freezingSlow)
+                            // Fix for powder LATER
+                            if (event.entity.freezeTicks <= 50) {
+                                val freezeFactor = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.FREEZING_ASPECT)
 
-                            val freezingTask = FreezingTask(freezingEntity, freezeFactor)
-                            freezingTask.runTaskTimerAsynchronously(MinecraftOdyssey.instance, 0, 20)
+                                // Effects
+                                val freezingSlow = PotionEffect(PotionEffectType.SLOW, (freezeFactor * 20 * 3) - 2, freezeFactor - 1)
+                                freezingEntity.addPotionEffect(freezingSlow)
 
+                                // Particles
+                                somePlayer.world.spawnParticle(Particle.SNOWFLAKE, freezingEntity.location, 25, 1.0, 0.5, 1.0)
+                                println("Applied Freeze Stuff")
 
-                            GlobalScope.launch {
-                                var freezeCooldown = System.currentTimeMillis()
-                                var counter = 0
-                                // TEST
-                                freezingEntity.freezeTicks = 100
-                                while(freezeFactor * 3 > counter) {
-                                    val timeElapsed = System.currentTimeMillis() - freezeCooldown
-                                    if (timeElapsed >= 1000) {
-                                        freezeCooldown = System.currentTimeMillis()
-                                        freezingEntity.damage(1.0)
-                                        counter += 1
-
-                                    }
-
-                                }
-                                freezingEntity.freezeTicks = 0
+                                val freezingTask = FreezingTask(freezingEntity, freezeFactor)
+                                freezingTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20)
                             }
-                            //END COROUTINE
+
                         }
                     }
                 }

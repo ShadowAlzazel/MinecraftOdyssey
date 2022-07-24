@@ -594,6 +594,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
 
             }
         }
+        // DO GILDED ENCHANTMENTS
         if (giftAccepted) {
             giftedItem.remove()
             // Calculation for gift likeness

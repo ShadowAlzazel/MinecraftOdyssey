@@ -57,6 +57,7 @@ object MinecraftOdysseyListeners : Listener {
         }
     }
 
+    // Gilded for ONLY smithing
 
     // Check for new enchants and repairs
     // FIX FOR ALL ENCHANTS

@@ -4,6 +4,8 @@ import org.bukkit.Particle
 import org.bukkit.entity.LivingEntity
 import org.bukkit.scheduler.BukkitRunnable
 
+
+// FREEZE Timer
 class FreezingTask(freezingEntity: LivingEntity, freezeFactor: Int) : BukkitRunnable() {
 
     var freezeCooldown = System.currentTimeMillis()
@@ -25,6 +27,7 @@ class FreezingTask(freezingEntity: LivingEntity, freezeFactor: Int) : BukkitRunn
         freezingVictim.world.spawnParticle(Particle.SNOWBALL, freezingVictim.location, 45, 0.5, 1.0, 0.5)
         freezingVictim.world.spawnParticle(Particle.FALLING_DRIPSTONE_WATER, freezingVictim.location, 25, 0.5, 1.0, 0.5)
         counter += 1
+        // MAYBE DO MORE FREEZE TO MAGMA / BLAZE
         val timeElapsed = System.currentTimeMillis() - freezeCooldown
         if (freezeFactor * 3 < counter || freezingVictim.health <= 1.0 || timeElapsed > freezeFactor * 3 * 1000) {
             freezingVictim.freezeTicks = 0
@@ -32,4 +35,22 @@ class FreezingTask(freezingEntity: LivingEntity, freezeFactor: Int) : BukkitRunn
         }
 
     }
+}
+
+
+// VOID_STRIKE effects
+class VoidTouchedTask(voidTouchedEntity: LivingEntity, voidStrikeFactor: Int) : BukkitRunnable() {
+
+    // Stacked
+    // Apply damage due to damage
+    // player damage only
+    // reset if someone else
+    // damage stack modifier depends on inital damage
+
+    override fun run() {
+        TODO("Not yet implemented")
+    }
+
+
+
 }

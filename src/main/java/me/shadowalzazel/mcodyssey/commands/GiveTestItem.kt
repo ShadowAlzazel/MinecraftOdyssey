@@ -17,13 +17,13 @@ object GiveTestItem : CommandExecutor {
             // Create Test Sword Enchantments
             val unbiddenSword = ItemStack(Material.IRON_SWORD, 1)
             val someBook = ItemStack(Material.NETHERITE_SWORD, 1)
-            someBook.addUnsafeEnchantment(OdysseyEnchantments.FREEZING_ASPECT, 2)
+            someBook.addUnsafeEnchantment(OdysseyEnchantments.BANE_OF_THE_ILLAGER, 2)
             //someBook.addUnsafeEnchantment(Enchantment.DURABILITY, 3)
             // Make Enchantment Lore
             val someBookMeta = someBook.itemMeta
             // Make this listener later
-            val someBookLore = listOf("${ChatColor.GOLD}${OdysseyEnchantments.FREEZING_ASPECT.name} II")
-            println(OdysseyEnchantments.FREEZING_ASPECT.displayName(3))
+            val someBookLore = listOf("${ChatColor.GOLD}${OdysseyEnchantments.BANE_OF_THE_ILLAGER.name} II")
+            println(OdysseyEnchantments.BANE_OF_THE_ILLAGER.displayName(2))
             someBookMeta.lore = someBookLore
             someBook.itemMeta = someBookMeta
             // Give
