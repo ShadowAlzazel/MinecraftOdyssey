@@ -43,8 +43,8 @@ class MinecraftOdyssey : JavaPlugin() {
         config.options().copyDefaults()
         saveConfig()
 
-        //*** Register Enchantments
-        //OdysseyEnchantments.register()
+        // Register Enchantments
+        OdysseyEnchantments.register()
 
         // Register Utility Listeners
         server.pluginManager.registerEvents(MinecraftOdysseyListeners, this)
@@ -68,7 +68,7 @@ class MinecraftOdyssey : JavaPlugin() {
 
         // Register Commands
         getCommand("SpawnAmbassador")?.setExecutor(SpawnAmbassador)
-        //*** getCommand("GiveTestItem")?.setExecutor(GiveTestItem)
+        getCommand("GiveTestItem")?.setExecutor(GiveTestItem)
 
 
         // Hello World!

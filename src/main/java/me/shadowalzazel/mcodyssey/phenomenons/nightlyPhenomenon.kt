@@ -41,7 +41,7 @@ open class NightlyPhenomenon(name: String, rate: Int, growthRate: Int, warning: 
     }
 }
 
-class BloodMoon : NightlyPhenomenon("BloodMoon", 15, 3, 0) {
+class BlueMoon : NightlyPhenomenon("BlueMoon", 10, 3, 0) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("A blood moon is happening at ${phenomenonWorld.name}!")
@@ -57,7 +57,7 @@ class BloodMoon : NightlyPhenomenon("BloodMoon", 15, 3, 0) {
 
 }
 
-class BlueMoon : NightlyPhenomenon("BlueMoon", 15, 3, 0) {
+class BloodMoon : NightlyPhenomenon("BloodMoon", 10, 3, 0) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("A blood moon is happening at ${phenomenonWorld.name}!")

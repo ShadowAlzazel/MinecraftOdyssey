@@ -9,7 +9,7 @@ object BaneOfTheSea : OdysseyEnchantmentWrapper("baneofthesea", "Bane of the Sea
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            DAMAGE_ARTHROPODS, IMPALING -> {
+            DAMAGE_ARTHROPODS, IMPALING, DAMAGE_ALL, DAMAGE_UNDEAD -> {
                 true
             }
             else -> {
