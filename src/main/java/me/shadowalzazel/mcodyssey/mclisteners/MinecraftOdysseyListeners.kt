@@ -4,7 +4,8 @@ package me.shadowalzazel.mcodyssey.mclisteners
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.bosses.theAmbassador.AmbassadorBoss
-import me.shadowalzazel.mcodyssey.commands.SpawnAmbassador
+import me.shadowalzazel.mcodyssey.enchantments.GildedPower
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.EntityType
@@ -13,17 +14,17 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.entity.EntityDeathEvent
+import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.event.inventory.PrepareSmithingEvent
 import org.bukkit.event.world.TimeSkipEvent
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.Repairable
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import java.sql.Time
 
 object MinecraftOdysseyListeners : Listener {
 
     private var smithingCooldown: Long = 0
+    private var gildingCooldown: Long = 0
 
     // Check if Ender Dragon Dies
     @EventHandler
@@ -57,120 +58,157 @@ object MinecraftOdysseyListeners : Listener {
         }
     }
 
-
-    // Check for new enchants and repairs
-    // FIX FOR ALL ENCHANTS
-    // ANVIL OR SMITH
-    /*
+    // Gilded for ONLY smithing
     @EventHandler
-    fun onAnvilEnchant(event: PrepareAnvilEvent) {
+    fun cancelAnvilGilding(event: PrepareAnvilEvent) {
         if (event.inventory.firstItem != null && event.inventory.secondItem != null) {
-            // Check if Book
-            val secondItem = event.inventory.secondItem!!
-            val firstItem = event.inventory.firstItem!!
-            println("Null Check!")
-            if (secondItem.itemMeta.hasLore() || firstItem.itemMeta.hasLore()) {
-                println("Passed lore OR")
-                var hasOdysseyEnchant = false
-                // Check if it has odyssey enchant
-                val newEnchantments = firstItem.enchantments + secondItem.enchantments
-                for (enchant in newEnchantments.keys) {
-                    println("CHECKING...")
-                    if (enchant in OdysseyEnchantments.enchantmentSet) {
-                        hasOdysseyEnchant = true
-                        break
-                    }
-                    // Check if it cannot be applied
-                    if (!(enchant.canEnchantItem(firstItem)))
-                    {
-                        return
-                    }
-                }
 
-                if (hasOdysseyEnchant) {
-                    println("Passed Check")
-                    // ADD DEBUG
-                    var someLore = listOf<String>()
+            //BASE CASE!
+            if (event.inventory.firstItem!!.type == Material.ENCHANTED_GOLDEN_APPLE && event.inventory.secondItem!!.type == Material.GOLD_INGOT) {
+                event.result = ItemStack(Material.GOLDEN_HOE)
+                event.viewers.forEach {somePlayer -> (somePlayer as Player).updateInventory()}
+                println("${event.result}")
+            }
 
-                    if (firstItem.itemMeta.hasLore() && secondItem.itemMeta.hasLore()) {
-                        val firstLore = firstItem.itemMeta.lore
-                        val secondLore = secondItem.itemMeta.lore
-                        val newLore = firstLore!! + secondLore
-                        someLore = newLore as List<String>
-                    }
-                    else if (firstItem.itemMeta.hasLore()) {
-                        someLore = firstItem.itemMeta.lore!!
-                    }
-                    else if (secondItem.itemMeta.hasLore()) {
-                        someLore = secondItem.itemMeta.lore!!
+            // Check if items have odyssey enchants
+            else if (event.inventory.firstItem!!.hasItemMeta() || event.inventory.secondItem!!.hasItemMeta()) {
+                val firstItem = event.inventory.firstItem
+                val secondItem = event.inventory.secondItem
+                if (firstItem!!.itemMeta.hasEnchants() || secondItem!!.itemMeta.hasEnchants()) {
+                    val firstEnchants = firstItem.enchantments
+                    val secondEnchants = secondItem?.enchantments
+
+                    // Check if Odyssey Enchants
+                    for (enchant in firstEnchants.keys) {
+                        if (enchant in OdysseyEnchantments.enchantmentSet) {
+                            event.result = ItemStack(Material.AIR, 1)
+                            event.viewers.forEach {somePlayer -> (somePlayer as Player).updateInventory()}
+                        }
                     }
 
-                    println("ADDED LORE")
-
-                    if (event.result != null) {
-                        val anvilResult = event.result
-                        anvilResult!!.itemMeta = firstItem.itemMeta
-                        anvilResult.addUnsafeEnchantments(newEnchantments)
-                        anvilResult.itemMeta.lore = someLore
-                        event.result = anvilResult
-                        println("FINISHED")
+                    for (enchant in secondEnchants?.keys!!) {
+                        if (enchant in OdysseyEnchantments.enchantmentSet) {
+                            event.result = ItemStack(Material.AIR, 1)
+                            event.viewers.forEach {somePlayer -> (somePlayer as Player).updateInventory()}
+                        }
                     }
-                    println("HUH>")
-
-
-
-
-                    // ADD NULL CHECK LATER
-                    //val anvilItem = event.result
-
                 }
             }
         }
     }
-    */
 
-    /*
+
+
     @EventHandler
-    fun basicSmithingCraft(event: PrepareSmithingEvent) {
-        val timeElapsed = System.currentTimeMillis() - smithingCooldown
-        if (timeElapsed > 2) {
-            smithingCooldown = System.currentTimeMillis()
+    fun gildedEnchantmentApplication(event: PrepareSmithingEvent) {
+        // WORKS!!!
+        if (event.inventory.inputEquipment != null && event.inventory.inputMineral != null) {
+            val timeElapsed = System.currentTimeMillis() - gildingCooldown
 
-            if (event.inventory.inputEquipment != null && event.inventory.inputMineral != null) {
-                event.result = ItemStack(Material.AIR, 1)
 
-                if (event.inventory.inputEquipment!!.type == Material.DIAMOND_SWORD && event.inventory.inputMineral!!.type == Material.ENCHANTED_BOOK) {
-                    event.result = ItemStack(Material.GOLDEN_HOE)
-                    event.viewers.forEach {somePlayer -> (somePlayer as Player).updateInventory()}
-                    println("${event.result}")
+            //BASE CASE!
+            if (event.inventory.inputEquipment!!.type == Material.ENCHANTED_GOLDEN_APPLE && event.inventory.inputMineral!!.type == Material.GOLD_INGOT) {
+                event.result = ItemStack(Material.GOLDEN_HOE)
+                event.viewers.forEach {somePlayer -> (somePlayer as Player).updateInventory()}
+                println("${event.result}")
+            }
+
+            // BOOK CAN NEVER HAVE GILDED POWER
+            // Check if book
+            else if (event.inventory.inputMineral!!.type == Material.ENCHANTED_BOOK && event.inventory.inputEquipment!!.type != Material.ENCHANTED_BOOK) {
+                // Create values
+                val gildedEquipment = event.inventory.inputEquipment!!.clone()
+                val gildedEnchantmentBook = event.inventory.inputMineral
+                // Check
+                if (gildedEquipment.itemMeta.hasLore()) {
+                    var someLore: MutableList<String>
+                    var hasOdysseyEnchant = false
+                    var odysseyEnchantCounter = 0
+                    var gildedPower = 0
+                    // Check if it has odyssey enchant
+                    val newEnchantments = gildedEnchantmentBook!!.itemMeta.enchants
+                    val equipmentEnchantments = gildedEquipment.itemMeta.enchants
+                    for (enchant in newEnchantments.keys) {
+                        println("CHECKING...")
+                        // Check gilded power
+                        if (enchant in OdysseyEnchantments.enchantmentSet) {
+                            hasOdysseyEnchant = true
+                        }
+                        // Check if it cannot be applied
+                        if (!(enchant.canEnchantItem(gildedEquipment)))
+                        {
+                            return
+                        }
+                    }
+                    for (enchant in equipmentEnchantments.keys) {
+                        if (enchant in OdysseyEnchantments.enchantmentSet) {
+                            if (enchant != OdysseyEnchantments.GILDED_POWER) {
+                                odysseyEnchantCounter += 1
+                            }
+                        }
+                    }
+                    // Check gilded power
+                    if (gildedEquipment.itemMeta.hasEnchant(OdysseyEnchantments.GILDED_POWER)) {
+                        gildedPower = gildedEquipment.itemMeta.getEnchantLevel(OdysseyEnchantments.GILDED_POWER)
+                    }
+                    // Has Odyssey Enchant
+                    if (hasOdysseyEnchant && (gildedPower > odysseyEnchantCounter || gildedPower == 0)) {
+                        println("Passed Check")
+                        // ADD DEBUG
+                        someLore = gildedEnchantmentBook.lore!!
+                        if (gildedEquipment.itemMeta.hasLore()) {
+                            // Insert 1 below list LATER
+                            val newLore = someLore + gildedEquipment.itemMeta.lore
+                            someLore = newLore as MutableList<String>
+                        }
+                        // Add Enchantments
+                        gildedEquipment.addUnsafeEnchantments(newEnchantments)
+                        if (gildedEquipment.itemMeta.hasEnchant(GildedPower)) {
+                            gildedEquipment.removeEnchantment(GildedPower)
+                        }
+                        gildedEquipment.addEnchantment(GildedPower, odysseyEnchantCounter + 1)
+                        gildedEquipment.itemMeta.lore = someLore
+                        // Viewer warning
+                        for (viewer in event.viewers) {
+                            if (viewer is Player) {
+                                println("Gilded Thing")
+                                if (timeElapsed > 20) {
+                                    gildingCooldown = System.currentTimeMillis()
+                                    viewer.sendMessage("This is a permanent gilded enchantment!")
+                                }
+                            }
+                        }
+                        // Create new item
+                        event.result = gildedEquipment
+                        event.viewers.forEach { somePlayer -> (somePlayer as Player).updateInventory() }
+                        println("${event.result}")
+                    }
+                    // Check
+                    else {
+                        event.result = ItemStack(Material.AIR, 1)
+                        event.viewers.forEach { somePlayer -> (somePlayer as Player).updateInventory() }
+                        println("${event.result}")
+                    }
                 }
+                // Check
                 else {
                     event.result = ItemStack(Material.AIR, 1)
                     event.viewers.forEach {somePlayer -> (somePlayer as Player).updateInventory()}
                     println("${event.result}")
                 }
-
-                event.setResult(event.result)
-                event.viewers.forEach {somePlayer -> (somePlayer as Player).updateInventory()}
-                println("${event.result}")
             }
         }
-
     }
-    */
-
 
 
     @EventHandler
-    // MAKE ALL HERE!!
-    fun basicSmithingCraft(event: PrepareSmithingEvent) {
-        // WORKS!!!
+    // Equipment Naming
+    fun odysseySmithingNaming(event: PrepareSmithingEvent) {
         if (event.inventory.inputEquipment != null && event.inventory.inputMineral != null) {
             val timeElapsed = System.currentTimeMillis() - smithingCooldown
 
-
             //BASE CASE!
-            if (event.inventory.inputEquipment!!.type == Material.DIAMOND_SWORD && event.inventory.inputMineral!!.type == Material.ENCHANTED_BOOK) {
+            if (event.inventory.inputEquipment!!.type == Material.ENCHANTED_GOLDEN_APPLE && event.inventory.inputMineral!!.type == Material.GOLD_INGOT) {
                 event.result = ItemStack(Material.GOLDEN_HOE)
                 event.viewers.forEach {somePlayer -> (somePlayer as Player).updateInventory()}
                 println("${event.result}")
@@ -178,10 +216,8 @@ object MinecraftOdysseyListeners : Listener {
 
             // Naming
             else if (event.inventory.inputMineral!!.type == Material.DIAMOND || event.inventory.inputMineral!!.type == Material.AMETHYST_SHARD) {
-                //event.result = event.inventory.inputEquipment!!
-                //val namedSword = ItemStack(event.inventory.inputEquipment!!.type, 1)
-                val namedSword = event.inventory.inputEquipment!!.clone()
-                var forgerName = mutableListOf("")
+                val namedEquipment = event.inventory.inputEquipment!!.clone()
+                val forgerName = mutableListOf("")
                 for (viewer in event.viewers) {
                     if (viewer is Player) {
                         forgerName += "${ChatColor.DARK_GRAY}${ChatColor.ITALIC}Created by ${viewer.name}"
@@ -192,13 +228,14 @@ object MinecraftOdysseyListeners : Listener {
                         }
                     }
                 }
-                if (namedSword.lore != null) {
-                    namedSword.lore!! + forgerName
+                if (namedEquipment.lore != null) {
+                    val newLore = namedEquipment.lore!! + forgerName
+                    namedEquipment.lore = newLore
                 }
                 else {
-                    namedSword.lore = forgerName
+                    namedEquipment.lore = forgerName
                 }
-                event.result = namedSword
+                event.result = namedEquipment
                 event.viewers.forEach { somePlayer -> (somePlayer as Player).updateInventory() }
                 println("${event.result}")
             }
@@ -213,6 +250,7 @@ object MinecraftOdysseyListeners : Listener {
 
 
 
+    // Create new boss
     @EventHandler
     fun newBoss(event: TimeSkipEvent) {
         if (!MinecraftOdyssey.instance.activeBoss) {

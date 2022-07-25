@@ -6,15 +6,24 @@ import java.util.stream.Collectors
 
 object OdysseyEnchantments {
 
-    val BANE_OF_THE_SWINE: Enchantment = BaneOfTheSwine("baneoftheswine", "BANE_OF_THE_SWINE", 5)
+    // Enchantments
+    val BANE_OF_THE_SWINE: Enchantment = BaneOfTheSwine
     val BANE_OF_THE_SEA: Enchantment = BaneOfTheSea
+    val BANE_OF_THE_ILLAGER: Enchantment = BaneOfTheIllager
+    val EXPLODING: Enchantment = Exploding
+    val FREEZING_ASPECT : Enchantment = FreezingAspect
+    val VOID_STRIKE: Enchantment = VoidStrike
+    val GILDED_POWER: Enchantment = GildedPower
 
-    val enchantmentSet = setOf(BANE_OF_THE_SWINE, BANE_OF_THE_SEA)
+    // Set of all enchantments
+    val enchantmentSet = setOf(BANE_OF_THE_SWINE, BANE_OF_THE_SEA, EXPLODING, BANE_OF_THE_ILLAGER, FREEZING_ASPECT, VOID_STRIKE, GILDED_POWER)
 
-
+    // Register
     fun register() {
-        val registered = Arrays.stream(Enchantment.values()).collect(Collectors.toList()).contains(BANE_OF_THE_SWINE)
-        if (!registered) registerEnchantment(BANE_OF_THE_SWINE)
+        for (odysseyEnchant in enchantmentSet) {
+            val registered = Arrays.stream(Enchantment.values()).collect(Collectors.toList()).contains(odysseyEnchant)
+            if (!registered) registerEnchantment(odysseyEnchant)
+        }
     }
 
     fun registerEnchantment(enchantment: Enchantment?) {
@@ -30,7 +39,7 @@ object OdysseyEnchantments {
         }
         if (registered) {
             // Send to console
-            println("Registered")
+            println("Registered $enchantment")
         }
     }
 }
