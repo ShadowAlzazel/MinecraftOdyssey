@@ -17,6 +17,7 @@ import org.bukkit.entity.Firework
 import org.bukkit.entity.Hoglin
 import org.bukkit.entity.Illager
 import org.bukkit.entity.Illusioner
+import org.bukkit.entity.LargeFireball
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Pig
 import org.bukkit.entity.Piglin
@@ -97,8 +98,9 @@ object EnchantmentListeners : Listener {
                             // Firework effect and color
                             val boomFirework: Firework = somePlayer.world.spawnEntity(boomLocation, EntityType.FIREWORK) as Firework
                             val boomFireworkMeta = boomFirework.fireworkMeta
-                            boomFireworkMeta.addEffect(FireworkEffect.builder().with(FireworkEffect.Type.BALL_LARGE).withColor(Color.RED).withFade(Color.FUCHSIA).trail(true).flicker(true).build())
-                            boomFireworkMeta.power = boomMagnitude * 20
+                            val randomColors = listOf(Color.BLUE, Color.RED, Color.YELLOW, Color.FUCHSIA, Color.AQUA, Color.ORANGE, Color.MAROON)
+                            boomFireworkMeta.addEffect(FireworkEffect.builder().with(FireworkEffect.Type.BALL_LARGE).withColor(randomColors.random()).withFade(randomColors.random()).trail(true).flicker(true).build())
+                            boomFireworkMeta.power = boomMagnitude * 30
                             boomFirework.fireworkMeta = boomFireworkMeta
                             boomFirework.velocity = Vector(0.0, -3.0, 0.0)
 

@@ -234,7 +234,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
     // Do Gravity Wave Damage
     private fun doGravityWaveDamage(somePlayers: MutableCollection<Player>, someWorld: World) {
         val gravityRise = PotionEffect(PotionEffectType.LEVITATION, 100, 0)
-        val gravityShatter = PotionEffect(PotionEffectType.WEAKNESS, 250, 1)
+        val gravityShatter = PotionEffect(PotionEffectType.WEAKNESS, 100, 0)
         val gravityWaveEffects = listOf(gravityRise, gravityShatter)
 
         for (somePlayer in somePlayers) {
