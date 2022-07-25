@@ -2,6 +2,7 @@ package me.shadowalzazel.mcodyssey.bosses.theAmbassador
 
 import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import org.bukkit.entity.Illusioner
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -48,7 +49,11 @@ object AmbassadorListeners: Listener {
         if (MinecraftOdyssey.instance.activeBoss) {
             if (MinecraftOdyssey.instance.currentBoss is AmbassadorBoss) {
                 val ambassadorBoss = MinecraftOdyssey.instance.currentBoss as AmbassadorBoss
-                ambassadorBoss.detectDamage(event.damager, event.damage)
+                val ambassadorEntity: Illusioner = ambassadorBoss.bossEntity as Illusioner
+                if (event.entity == ambassadorEntity) {
+                    ambassadorBoss.detectDamage(event.damager, event.damage)
+
+                }
             }
         }
     }

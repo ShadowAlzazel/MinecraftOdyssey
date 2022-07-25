@@ -13,9 +13,10 @@ object OdysseyEnchantments {
     val EXPLODING: Enchantment = Exploding
     val FREEZING_ASPECT : Enchantment = FreezingAspect
     val VOID_STRIKE: Enchantment = VoidStrike
+    val GILDED_POWER: Enchantment = GildedPower
 
     // Set of all enchantments
-    val enchantmentSet = setOf(BANE_OF_THE_SWINE, BANE_OF_THE_SEA, EXPLODING, BANE_OF_THE_ILLAGER, FREEZING_ASPECT, VOID_STRIKE)
+    val enchantmentSet = setOf(BANE_OF_THE_SWINE, BANE_OF_THE_SEA, EXPLODING, BANE_OF_THE_ILLAGER, FREEZING_ASPECT, VOID_STRIKE, GILDED_POWER)
 
     // Register
     fun register() {

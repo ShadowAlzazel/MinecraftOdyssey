@@ -64,6 +64,7 @@ class MinecraftOdyssey : JavaPlugin() {
         // Custom Recipes
         //***Bukkit.addRecipe(OdysseyRecipes.odysseySmithing)
         Bukkit.addRecipe(OdysseyRecipes.odysseyNaming)
+        Bukkit.addRecipe(OdysseyRecipes.odysseyGildedSmithing)
 
 
         // Register Commands
