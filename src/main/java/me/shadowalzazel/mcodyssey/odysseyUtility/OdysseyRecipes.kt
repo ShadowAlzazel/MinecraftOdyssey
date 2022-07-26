@@ -43,4 +43,12 @@ object OdysseyRecipes {
         RecipeChoice.MaterialChoice(Material.DIAMOND, Material.AMETHYST_SHARD)
     )
 
+    var baneOfTheSeaRecipe: SmithingRecipe = SmithingRecipe(
+        NamespacedKey(MinecraftOdyssey.instance, "baneofthesearecipe"),
+        ItemStack(Material.AIR),
+        RecipeChoice.MaterialChoice(Material.ENCHANTED_BOOK,
+        ),
+        RecipeChoice.MaterialChoice(Material.NAUTILUS_SHELL, Material.HEART_OF_THE_SEA, Material.CONDUIT)
+    )
+
 }

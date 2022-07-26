@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.bosses.theAmbassador
 
 import me.shadowalzazel.mcodyssey.bosses.utility.OdysseyBoss
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.odysseyUtility.*
 import org.bukkit.*
 import org.bukkit.enchantments.Enchantment
@@ -89,8 +90,8 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         val ambassadorEntity: Illusioner = spawnBoss(odysseyWorld)
         // 1200 tks = 60 sec
         // Add Potion Effects
-        val voidFall = PotionEffect(PotionEffectType.SLOW_FALLING, 1200, 1)
-        val voidGlow = PotionEffect(PotionEffectType.GLOWING, 1200, 1)
+        val voidFall = PotionEffect(PotionEffectType.SLOW_FALLING, 2400, 1)
+        val voidGlow = PotionEffect(PotionEffectType.GLOWING, 2400, 1)
         val voidSolar = PotionEffect(PotionEffectType.FIRE_RESISTANCE, 99999, 3)
         val enhancedHealth = PotionEffect(PotionEffectType.HEALTH_BOOST, 99999, 235)
         val ankiRainEffects = listOf(enhancedHealth, voidFall, voidSolar, voidGlow)
@@ -444,7 +445,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
 
 
         // Check if special item make (MAKE SEPARATE FLAGS LATER)
-        if (giftedItem.itemStack.itemMeta.hasEnchants() && giftedMaterial != Material.ENCHANTED_BOOK) {
+        if ((giftedItem.itemStack.itemMeta.hasEnchants() && giftedMaterial != Material.ENCHANTED_BOOK) ) {
             givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}I can not accept this.")
             appeasement -= 1
             return
@@ -570,14 +571,26 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 bossEntity?.world!!.spawnParticle(Particle.VILLAGER_HAPPY, givingPlayer.location, 15, 1.0, 1.0, 1.0)
                 givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Musical anomalies... Interesting...")
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
+                //Give sound based enchant if likeness high
             }
             Material.MUSIC_DISC_WARD, Material.MUSIC_DISC_11, Material.MUSIC_DISC_5, Material.MUSIC_DISC_13, Material.MUSIC_DISC_CHIRP, Material.MUSIC_DISC_FAR, Material.MUSIC_DISC_MALL, Material.MUSIC_DISC_MELLOHI, Material.MUSIC_DISC_BLOCKS,
             Material.MUSIC_DISC_PIGSTEP, Material.MUSIC_DISC_STAL, Material.MUSIC_DISC_OTHERSIDE, Material.MUSIC_DISC_STRAD, Material.MUSIC_DISC_WAIT, Material.MUSIC_DISC_CAT -> {
                 giftLikeness += 5
                 bossEntity?.world!!.spawnParticle(Particle.VILLAGER_HAPPY, givingPlayer.location, 15, 1.0, 1.0, 1.0)
                 givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Primitive music... Something I find amusing...")
+                val randomEnchantments = listOf(OdysseyEnchantments.BANE_OF_THE_ILLAGER, OdysseyEnchantments.BANE_OF_THE_SWINE, OdysseyEnchantments.BACKSTABBER, OdysseyEnchantments.VOID_STRIKE, OdysseyEnchantments.GUARDING_STRIKE)
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 5))
-
+                givingPlayer.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(randomEnchantments.random(), 1))
+            }
+            // Later add books
+            /*
+            Material.CONDUIT -> {
+            }
+            */
+            Material.BEACON -> {
+                giftLikeness += 55
+                givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Follow the path of doubt...")
+                givingPlayer.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.EXPLODING, 1))
             }
             Material.CHEST, Material.BARREL -> {
                 giftLikeness += 1

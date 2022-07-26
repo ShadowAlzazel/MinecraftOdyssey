@@ -8,6 +8,7 @@ import org.bukkit.inventory.meta.ItemMeta
 @Suppress("DEPRECATION")
 open class OdysseyItem(itemName: String, itemMaterial: Material) {
     val name = itemName
+    val romanNumeralList = mapOf(1 to "I", 2 to "II", 3 to "III", 4 to "IV", 5 to "V", 6 to "VI", 7 to "VII", 8 to "VIII", 9 to "IX", 10 to "X")
     private val material = itemMaterial
     open val odysseyDisplayName: String? = null
     open val odysseyLore: List<String> = listOf()
@@ -15,7 +16,7 @@ open class OdysseyItem(itemName: String, itemMaterial: Material) {
     open val someEnchantType: Enchantment? = null
     open val someEnchantLevel: Int? = 0
 
-    fun createItemStack(amount: Int): ItemStack {
+    open fun createItemStack(amount: Int): ItemStack {
         val newOdysseyItemStack = ItemStack(material, amount)
         val newOdysseyMeta: ItemMeta = newOdysseyItemStack.itemMeta
         if (isEnchanted) {

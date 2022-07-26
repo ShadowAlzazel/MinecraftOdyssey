@@ -15,17 +15,12 @@ import org.bukkit.entity.EntityType
 import org.bukkit.entity.Fireball
 import org.bukkit.entity.Firework
 import org.bukkit.entity.Hoglin
-import org.bukkit.entity.Illager
-import org.bukkit.entity.Illusioner
-import org.bukkit.entity.LargeFireball
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Pig
 import org.bukkit.entity.Piglin
 import org.bukkit.entity.PiglinAbstract
 import org.bukkit.entity.PiglinBrute
-import org.bukkit.entity.Pillager
 import org.bukkit.entity.Raider
-import org.bukkit.entity.Ravager
 import org.bukkit.entity.Vex
 import org.bukkit.entity.WaterMob
 import org.bukkit.event.entity.EntityDamageByEntityEvent
@@ -123,13 +118,47 @@ object EnchantmentListeners : Listener {
             val somePlayer: Player = event.damager as Player
             if (event.entity is LivingEntity) {
                 val voidTouchedEntity: LivingEntity = event.entity as LivingEntity
+                // Add more monitors
                 if (somePlayer.inventory.itemInMainHand.hasItemMeta()) {
                     val someWeapon = somePlayer.inventory.itemInMainHand
                     if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.VOID_STRIKE)) {
                         if (somePlayer.gameMode != GameMode.SPECTATOR) {
-
-
-
+                            println("V")
+                            val someTags = voidTouchedEntity.scoreboardTags
+                            var voidDamage = 0
+                            var playerMatch = false
+                            var voidTouched = false
+                            for (tag in someTags) {
+                                if (tag == "VoidTouched ${somePlayer.name}") {
+                                    playerMatch = true
+                                    voidTouched = true
+                                }
+                                println(tag)
+                                for (x in 0..9) {
+                                    if (tag == "VoidStruck ${somePlayer.name} $x") {
+                                        voidTouchedEntity.removeScoreboardTag("VoidStruck ${somePlayer.name} $x")
+                                        val newX = x + 1
+                                        voidTouchedEntity.addScoreboardTag("VoidStruck ${somePlayer.name} $newX")
+                                        voidDamage = (someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.VOID_STRIKE) * x) + someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.VOID_STRIKE)
+                                        break
+                                    }
+                                }
+                                // Max modifier
+                                if (tag == "VoidStruck ${somePlayer.name} 10") {
+                                    voidTouchedEntity.removeScoreboardTag("VoidStruck ${somePlayer.name} 10")
+                                    voidTouchedEntity.addScoreboardTag("VoidStruck ${somePlayer.name} 0")
+                                }
+                            }
+                            // Apply initial tags
+                            if (!voidTouched) {
+                                voidTouchedEntity.addScoreboardTag("VoidStruck ${somePlayer.name} 0")
+                                voidTouchedEntity.addScoreboardTag("VoidTouched ${somePlayer.name}")
+                            }
+                            // Check if player
+                            if (playerMatch) {
+                                event.damage += voidDamage
+                                println(event.damage)
+                            }
                         }
                     }
                 }
@@ -172,6 +201,62 @@ object EnchantmentListeners : Listener {
             }
         }
     }
+
+
+    // Guarding Strike
+    @EventHandler
+    fun guardingStrikeEnchant(event: EntityDeathEvent) {
+        if (event.entity.killer is Player) {
+            val somePlayer: Player = event.entity.killer as Player
+            if (somePlayer.inventory.itemInMainHand.hasItemMeta()) {
+                val someWeapon = somePlayer.inventory.itemInMainHand
+                if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.GUARDING_STRIKE)) {
+                    if (somePlayer.gameMode != GameMode.SPECTATOR) {
+                        val guardingFactor = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.GUARDING_STRIKE)
+                        // Effects
+                        val guardingPose = PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, (6 + guardingFactor) * 20, guardingFactor - 1)
+                        somePlayer.addPotionEffect(guardingPose)
+                        somePlayer.world.spawnParticle(Particle.SCRAPE, somePlayer.location, 25, 1.0, 0.5, 1.0)
+                        somePlayer.world.spawnParticle(Particle.ELECTRIC_SPARK, somePlayer.location, 25, 1.0, 0.5, 1.0)
+                        // Particles
+                        println("Did guarding strike")
+
+                    }
+                }
+            }
+        }
+    }
+
+
+    // BACKSTABBER enchant
+    @EventHandler
+    fun backstabberEnchant(event: EntityDamageByEntityEvent) {
+        if (event.damager is Player) {
+            val somePlayer: Player = event.damager as Player
+            if (event.entity is LivingEntity) {
+                val someEntity: LivingEntity = event.entity as LivingEntity
+                if (somePlayer.inventory.itemInMainHand.hasItemMeta()) {
+                    val someWeapon = somePlayer.inventory.itemInMainHand
+                    if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.BACKSTABBER)) {
+                        if (somePlayer.gameMode != GameMode.SPECTATOR) {
+                            val target = someEntity.getTargetEntity(15)
+                            if (target != null) {
+                                if (target != somePlayer) {
+                                    val backstabberProwess = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.BACKSTABBER)
+                                    val newDamage = 2 + (backstabberProwess * (2 + backstabberProwess))
+                                    someEntity.world.spawnParticle(Particle.CRIT_MAGIC, somePlayer.location, 45, 1.0, 0.5, 1.0)
+                                    someEntity.world.spawnParticle(Particle.WARPED_SPORE, somePlayer.location, 45, 1.0, 0.5, 1.0)
+                                    event.damage += newDamage
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    //WHIRL WIND AXE ONLY?
 
 
 
