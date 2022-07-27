@@ -31,7 +31,7 @@ object OdysseyItems {
 
 
 object GildedBook : OdysseyItem("Gilded Book", Material.ENCHANTED_BOOK) {
-    override val odysseyDisplayName: String = "${ChatColor.GOLD}Gilded Book"
+    override val odysseyDisplayName: String = "${ChatColor.GOLD}${ChatColor.ITALIC}Gilded Book"
     fun createGildedBook(gildedEnchantment: Enchantment, level: Int): ItemStack {
         val newGildedBook = ItemStack(Material.ENCHANTED_BOOK, 1)
         newGildedBook.addUnsafeEnchantment(gildedEnchantment, level)

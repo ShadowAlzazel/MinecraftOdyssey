@@ -90,6 +90,7 @@ object AmbassadorListeners: Listener {
                         MinecraftOdyssey.instance.activeBoss = false
                         MinecraftOdyssey.instance.ambassadorDefeated = true
                         MinecraftOdyssey.instance.currentBoss = null
+                        MinecraftOdyssey.instance.bossDespawnTimer = System.currentTimeMillis()
                     }
                     // Last Hit
                     else {
@@ -100,6 +101,7 @@ object AmbassadorListeners: Listener {
                                 MinecraftOdyssey.instance.activeBoss = false
                                 MinecraftOdyssey.instance.ambassadorDefeated = true
                                 MinecraftOdyssey.instance.currentBoss = null
+                                MinecraftOdyssey.instance.bossDespawnTimer = System.currentTimeMillis()
                             }
                             else {
                                 event.isCancelled = true

@@ -114,6 +114,26 @@ object MinecraftOdysseyListeners : Listener {
                 println("${event.result}")
             }
 
+            // Adding Gilded Power
+            else if (event.inventory.inputMineral!!.type == Material.ENCHANTED_GOLDEN_APPLE) {
+                val someItem = event.inventory.inputEquipment!!.clone()
+                if (someItem.hasItemMeta()) {
+                    if (someItem.itemMeta.hasEnchant(OdysseyEnchantments.GILDED_POWER)) {
+                        val gildedPower = someItem.getEnchantmentLevel(OdysseyEnchantments.GILDED_POWER)
+                        if (gildedPower < 3) {
+                            val newItemMeta = someItem.itemMeta
+                            newItemMeta.removeEnchant(GildedPower)
+                            newItemMeta.addEnchant(OdysseyEnchantments.GILDED_POWER, gildedPower + 1, true)
+                            someItem.itemMeta = newItemMeta
+                            event.result = someItem
+                            println("${event.result}")
+                        }
+                    }
+                }
+            }
+
+
+
             // Naming
             else if (event.inventory.inputMineral!!.type == Material.DIAMOND || event.inventory.inputMineral!!.type == Material.AMETHYST_SHARD) {
                 val namedEquipment = event.inventory.inputEquipment!!.clone()
@@ -147,6 +167,7 @@ object MinecraftOdysseyListeners : Listener {
                 event.viewers.forEach { somePlayer -> (somePlayer as Player).updateInventory() }
                 println("${event.result}")
             }
+
             // BOOK CAN NEVER HAVE GILDED POWER
             // Check if book
             else if (event.inventory.inputMineral!!.type == Material.ENCHANTED_BOOK && event.inventory.inputEquipment!!.type != Material.ENCHANTED_BOOK) {
@@ -246,6 +267,7 @@ object MinecraftOdysseyListeners : Listener {
                     }
                 }
             }
+            // Combine Similar gilded enchant
             else if (event.inventory.inputMineral!!.type == Material.ENCHANTED_BOOK && event.inventory.inputEquipment!!.type == Material.ENCHANTED_BOOK) {
                 val gildedBook1 = event.inventory.inputMineral
                 val gildedBook2 = event.inventory.inputEquipment

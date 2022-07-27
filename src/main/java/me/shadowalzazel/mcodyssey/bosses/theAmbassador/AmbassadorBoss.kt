@@ -580,7 +580,8 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Primitive music... Something I find amusing...")
                 val randomEnchantments = listOf(OdysseyEnchantments.BANE_OF_THE_ILLAGER, OdysseyEnchantments.BANE_OF_THE_SWINE, OdysseyEnchantments.BACKSTABBER, OdysseyEnchantments.VOID_STRIKE, OdysseyEnchantments.GUARDING_STRIKE)
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 5))
-                givingPlayer.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(randomEnchantments.random(), 1))
+                val randomBook = OdysseyItems.GILDED_BOOK.createGildedBook(randomEnchantments.random(), 1)
+                givingPlayer.inventory.addItem(randomBook)
             }
             // Later add books
             /*

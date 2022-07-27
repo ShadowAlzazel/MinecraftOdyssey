@@ -8,9 +8,11 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDeathEvent
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.mclisteners.utility.FreezingTask
+import me.shadowalzazel.mcodyssey.mclisteners.utility.HoneyedTask
 import org.bukkit.Color
 import org.bukkit.FireworkEffect
 import org.bukkit.Particle
+import org.bukkit.entity.Bee
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Fireball
 import org.bukkit.entity.Firework
@@ -226,6 +228,40 @@ object EnchantmentListeners : Listener {
             }
         }
     }
+
+
+    // Balance
+    @EventHandler
+    fun buzzyBeesEnchant(event: EntityDamageByEntityEvent) {
+        if (event.damager is Player) {
+            val somePlayer: Player = event.damager as Player
+            val honeyedEntity: LivingEntity = event.entity as LivingEntity
+            if (somePlayer.inventory.itemInMainHand.hasItemMeta()) {
+                val someWeapon = somePlayer.inventory.itemInMainHand
+                if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.BUZZY_BEES)) {
+                    if (somePlayer.gameMode != GameMode.SPECTATOR) {
+                        val honeyFactor = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.BUZZY_BEES)
+                        val honeySlow = PotionEffect(PotionEffectType.SLOW, ((3 * honeyFactor) + 3) * 20, 0)
+                        honeyedEntity.world.spawnParticle(Particle.DRIPPING_HONEY, honeyedEntity.location, 35, 1.0, 0.5, 1.0)
+                        honeyedEntity.world.spawnParticle(Particle.FALLING_HONEY, honeyedEntity.location, 35, 1.5, 0.5, 1.5)
+                        honeyedEntity.world.spawnParticle(Particle.LANDING_HONEY, honeyedEntity.location, 35, 1.0, 0.5, 1.0)
+                        honeyedEntity.addPotionEffect(honeySlow)
+
+                        val honeyedTask = HoneyedTask(honeyedEntity, honeyFactor)
+                        honeyedTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20)
+
+                        for (x in 1..honeyFactor) {
+                            val someBee: Bee = honeyedEntity.world.spawnEntity(honeyedEntity.location, EntityType.BEE) as Bee
+                            someBee.target = honeyedEntity
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+
 
 
     // BACKSTABBER enchant

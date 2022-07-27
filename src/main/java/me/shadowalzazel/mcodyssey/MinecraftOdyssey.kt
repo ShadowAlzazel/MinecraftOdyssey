@@ -4,6 +4,7 @@ import me.shadowalzazel.mcodyssey.bosses.theAmbassador.AmbassadorListeners
 import me.shadowalzazel.mcodyssey.bosses.utility.OdysseyBoss
 import me.shadowalzazel.mcodyssey.commands.SpawnAmbassador
 import me.shadowalzazel.mcodyssey.commands.GiveTestItem
+import me.shadowalzazel.mcodyssey.commands.SpawnHogRider
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.mclisteners.*
 import me.shadowalzazel.mcodyssey.odysseyUtility.OdysseyRecipes
@@ -65,10 +66,13 @@ class MinecraftOdyssey : JavaPlugin() {
         //***Bukkit.addRecipe(OdysseyRecipes.odysseySmithing)
         Bukkit.addRecipe(OdysseyRecipes.odysseyNaming)
         Bukkit.addRecipe(OdysseyRecipes.odysseyGildedSmithing)
+        Bukkit.addRecipe(OdysseyRecipes.gildedBookCombining)
+        Bukkit.addRecipe(OdysseyRecipes.gildingUpgrading)
 
 
         // Register Commands
         getCommand("SpawnAmbassador")?.setExecutor(SpawnAmbassador)
+        getCommand("SpawnHogRider")?.setExecutor(SpawnHogRider)
         getCommand("GiveTestItem")?.setExecutor(GiveTestItem)
 
 
@@ -77,8 +81,6 @@ class MinecraftOdyssey : JavaPlugin() {
     }
 
     override fun onDisable() {
-
-
 
         // Plugin shutdown logic
         logger.info("The Odyssey can wait another day...")
