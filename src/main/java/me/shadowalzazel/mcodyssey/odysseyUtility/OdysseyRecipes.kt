@@ -50,6 +50,8 @@ object OdysseyRecipes {
         RecipeChoice.MaterialChoice(Material.DIAMOND, Material.AMETHYST_SHARD)
     )
 
+
+    //Change to special later
     var gildingUpgrading: SmithingRecipe = SmithingRecipe(
         NamespacedKey(MinecraftOdyssey.instance, "gildingupgrading"),
         ItemStack(Material.AIR),
@@ -64,7 +66,7 @@ object OdysseyRecipes {
             Material.NETHERITE_HELMET, Material.DIAMOND_HELMET, Material.IRON_HELMET, Material.GOLDEN_HELMET, Material.CHAINMAIL_HELMET, Material.LEATHER_HELMET,
             Material.ELYTRA, Material.SHIELD, Material.BOW, Material.CROSSBOW, Material.TRIDENT, Material.SUNFLOWER,
         ),
-        RecipeChoice.MaterialChoice(Material.ENCHANTED_GOLDEN_APPLE)
+        RecipeChoice.MaterialChoice(Material.DRAGON_EGG)
     )
 
 

@@ -52,11 +52,13 @@ object AmbassadorListeners: Listener {
                 val ambassadorEntity: Illusioner = ambassadorBoss.bossEntity as Illusioner
                 if (event.entity == ambassadorEntity) {
                     ambassadorBoss.detectDamage(event.damager, event.damage)
+                    println("lul")
 
                 }
             }
         }
     }
+
 
     @EventHandler
     fun checkAmbassadorDay(event: TimeSkipEvent) {

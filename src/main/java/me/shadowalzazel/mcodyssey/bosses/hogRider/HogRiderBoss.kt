@@ -2,10 +2,7 @@ package me.shadowalzazel.mcodyssey.bosses.hogRider
 
 import me.shadowalzazel.mcodyssey.bosses.utility.OdysseyBoss
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import org.bukkit.ChatColor
-import org.bukkit.Location
-import org.bukkit.Material
-import org.bukkit.World
+import org.bukkit.*
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.*
 import org.bukkit.inventory.ItemStack
@@ -26,8 +23,8 @@ class HogRiderBoss : OdysseyBoss("Hog Rider", "Piglin") {
         // Add lore and name
         val smokyWarHammerMeta: ItemMeta = smokyWarHammer.itemMeta
         smokyWarHammerMeta.setDisplayName("${ChatColor.GOLD}Puny Smoky War-hammer")
-        val smokyWarHammerLore = listOf("${ChatColor.GOLD}${OdysseyEnchantments.BANE_OF_THE_SWINE.name} II",
-            "${ChatColor.GOLD}${OdysseyEnchantments.FREEZING_ASPECT.name} V",
+        val smokyWarHammerLore = listOf("${ChatColor.GOLD}${OdysseyEnchantments.BANE_OF_THE_SWINE.name} V",
+            "${ChatColor.GOLD}${OdysseyEnchantments.FREEZING_ASPECT.name} II",
             "${ChatColor.GOLD}${OdysseyEnchantments.GUARDING_STRIKE.name} II",
             "A weapon ironic in name", "That has slaughtered many")
         smokyWarHammerMeta.lore = smokyWarHammerLore
@@ -63,10 +60,16 @@ class HogRiderBoss : OdysseyBoss("Hog Rider", "Piglin") {
 
 
     fun createBoss(odysseyWorld: World, someLocation: Location) {
+        //
+        val worldPlayers = odysseyWorld.players
+        for (somePlayer in worldPlayers) {
+            somePlayer.playSound(somePlayer.location, Sound.ENTITY_GHAST_SCREAM, 2.5F, 0.9F)
+            somePlayer.sendMessage("${ChatColor.GOLD}[Hog Rida] ${ChatColor.RESET}HOOOOOOGGG RIIDDDAAAAAAAAAAA")
+        }
         // 1200 tks = 60 sec
-        val hogRider = spawnRider(odysseyWorld, someLocation) as PiglinBrute
-        val warthog = spawnMount(odysseyWorld, someLocation) as Hoglin
-        // Crate mount
+        val hogRider = spawnRider(odysseyWorld, someLocation)
+        val warthog = spawnMount(odysseyWorld, someLocation)
+        // Create mount
         warthog.addPassenger(hogRider)
         // Add Potion Effects
         val flameResistance = PotionEffect(PotionEffectType.FIRE_RESISTANCE, 99999, 3)
@@ -95,7 +98,6 @@ class HogRiderBoss : OdysseyBoss("Hog Rider", "Piglin") {
         warthog.setBaby()
         warthog.health = 950.0
         warthog.removeWhenFarAway = false
-
 
         // Add Item
         val hogRiderWeapon: ItemStack = createHogRiderWeapon()

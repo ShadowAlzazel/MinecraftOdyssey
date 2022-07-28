@@ -11,6 +11,7 @@ import org.bukkit.entity.Illusioner
 import org.bukkit.entity.Item
 import org.bukkit.entity.Player
 import org.bukkit.entity.Entity
+import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.potion.PotionEffect
@@ -174,7 +175,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         superFireworkMeta.addEffect(FireworkEffect.builder().with(FireworkEffect.Type.BALL_LARGE).withColor(randomColors.random()).withFade(randomColors.random()).trail(true).flicker(true).build())
         superFireworkMeta.power = 120
         // FIX VELOCITY
-        superFirework.velocity = targetPlayer.location.direction.subtract(bossEntity!!.location.direction)
+        superFirework.velocity = targetPlayer.location.add(0.0, 5.0, 0.0).subtract(targetPlayer.location).toVector().multiply(1)
         superFirework.ticksToDetonate = (1..3).random()
         superFirework.fireworkMeta = superFireworkMeta
         return superFirework
@@ -186,7 +187,6 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         // Create sounds, particles, and do damage to nearby players
         for (somePlayer in somePlayers) {
             // IDK TO SPAWN AT PLAYER WITH 0 VEL OR WHAT
-            createSuperFirework(somePlayer)
             createSuperFirework(somePlayer)
             somePlayer.damage(24.5)
             somePlayer.playSound(somePlayer.location, Sound.AMBIENT_BASALT_DELTAS_MOOD, 2.5F, 0.8F)
@@ -201,7 +201,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
     // Firework Attack Call
     private fun fireworkAttack(targetPlayer: Player) {
         // Find players for splash
-        val playersNearTarget = targetPlayer.world.getNearbyPlayers(targetPlayer.location, 3.5)
+        val playersNearTarget = targetPlayer.world.getNearbyPlayers(targetPlayer.location, 4.5)
         doFireworkDamage(playersNearTarget)
     }
 
@@ -234,17 +234,18 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
 
     // Do Gravity Wave Damage
     private fun doGravityWaveDamage(somePlayers: MutableCollection<Player>, someWorld: World) {
-        val gravityRise = PotionEffect(PotionEffectType.LEVITATION, 100, 0)
+        val gravityDistort = PotionEffect(PotionEffectType.SLOW_FALLING, 200, 0)
         val gravityShatter = PotionEffect(PotionEffectType.WEAKNESS, 100, 0)
-        val gravityWaveEffects = listOf(gravityRise, gravityShatter)
+        val gravityWaveEffects = listOf(gravityDistort, gravityShatter)
 
         for (somePlayer in somePlayers) {
             // Do damage, apply effects and teleport
             somePlayer.addPotionEffects(gravityWaveEffects)
             somePlayer.damage(18.5)
-            val gravityPush = somePlayer.location
-            gravityPush.y += 2.5
-            somePlayer.teleport(gravityPush)
+            val gravityAttract = somePlayer.location
+            gravityAttract.add(0.0, 12.5, 0.0)
+            //superFirework.velocity = targetPlayer.location.direction.subtract(bossEntity!!.location.direction)
+            somePlayer.velocity = gravityAttract.subtract(somePlayer.location).toVector().multiply(0.2)
 
             // Apply sound and particles
             somePlayer.playSound(somePlayer, Sound.ENTITY_EVOKER_PREPARE_WOLOLO, 1.3F, 1.1F)
@@ -277,6 +278,41 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         // Spawn Dummies
         spawnDummy()
         spawnDummy()
+    }
+
+    // hijack
+    private fun hijackAttack(ambassadorEntity: Illusioner) {
+        var playersNearAmbassador = ambassadorEntity.world.getNearbyPlayers(ambassadorEntity.location, 24.5)
+        val randomPlayer = playersNearAmbassador.random()
+
+        if (playersNearAmbassador.size > 1) {
+            playersNearAmbassador.remove(randomPlayer)
+        }
+
+        randomPlayer.teleport(ambassadorEntity.location)
+        val hijackAttract = randomPlayer.location
+        for (somePlayer in playersNearAmbassador) {
+            // arrow
+            val someArrow = ambassadorEntity.world.spawnEntity(hijackAttract.add(0.0, 2.5, 0.0), EntityType.ARROW)
+            someArrow.velocity = somePlayer.location.subtract(someArrow.location).toVector().multiply(1.0)
+            somePlayer.damage(11.0)
+            somePlayer.attack(randomPlayer)
+
+            //pull
+            somePlayer.velocity = hijackAttract.subtract(somePlayer.location).toVector().multiply(0.20)
+
+            //sounds and particles
+            somePlayer.playSound(somePlayer, Sound.ENTITY_ENDERMAN_TELEPORT, 0.8F, 1.0F)
+            somePlayer.playSound(somePlayer, Sound.ENTITY_EVOKER_PREPARE_WOLOLO, 1.0F, 1.1F)
+            somePlayer.playSound(somePlayer, Sound.ENTITY_ELDER_GUARDIAN_CURSE, 0.8F, 0.9F)
+            somePlayer.world.spawnParticle(Particle.DAMAGE_INDICATOR, somePlayer.location, 13, 1.5, 0.5, 1.5)
+            somePlayer.world.spawnParticle(Particle.PORTAL, somePlayer.location, 32, 2.5, 0.5, 2.5)
+            somePlayer.world.spawnParticle(Particle.END_ROD, somePlayer.location, 15, 2.0, 1.0, 2.0)
+            somePlayer.spawnParticle(Particle.FLASH, somePlayer.location, 5, 1.0, 1.0, 1.0)
+
+        }
+        //val hijackedPlayer = playersNearAmbassador.random()
+        //hijackedPlayer.setPassenger(ambassadorEntity)
     }
 
 
@@ -312,19 +348,23 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 somePlayer.sendMessage(randomAttackQuote)
             }
             if (someDamager is Player) {
-                when((0..4).random()) {
+                when((0..6).random()) {
                     3, 4 -> {
                         gravityWaveAttack(someDamager)
                     }
                     0, 1, 2 -> {
                         fireworkAttack(someDamager)
                     }
+                    5, 6 -> {
+                        hijackAttack(bossEntity!!)
+                    }
+
                 }
             }
             else {
-                gravityWaveAttack(bossEntity as Entity)
+                hijackAttack(bossEntity!!)
+                println("lsssss")
             }
-
         }
     }
 
@@ -457,13 +497,13 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         val someGift = itemLootTable.random()
         when (giftedMaterial) {
             Material.NETHER_STAR -> {
-                bossEntity?.world!!.spawnParticle(Particle.SPELL_WITCH, givingPlayer.location, 15, 1.0, 1.0, 1.0)
+                bossEntity?.world!!.spawnParticle(Particle.SPELL_WITCH, givingPlayer.location, 35, 1.0, 1.0, 1.0)
                 giftLikeness += 9
                 givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}An unborn Unit-${ChatColor.MAGIC}092412X.${ChatColor.RESET}. I shall start its sentience activation cycle for you...")
                 givingPlayer.inventory.addItem(OdysseyItems.ARTIFICIAL_STAR_UNIT.createItemStack(1))
             }
             Material.NETHERITE_INGOT -> {
-                bossEntity?.world!!.spawnParticle(Particle.SPELL_WITCH, givingPlayer.location, 15, 1.0, 1.0, 1.0)
+                bossEntity?.world!!.spawnParticle(Particle.SPELL_WITCH, givingPlayer.location, 35, 1.0, 1.0, 1.0)
                 giftLikeness += 6
                 if (appeasement > 50) {
                     givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Hmm casted Neutronium Bark... Here take this special Unit-${ChatColor.MAGIC}092412X.")
@@ -517,7 +557,6 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}I can not accept something that crude...")
             }
             Material.ENCHANTED_BOOK ->  {
-                bossEntity?.world!!.spawnParticle(Particle.VILLAGER_HAPPY, givingPlayer.location, 15, 1.0, 1.0, 1.0)
                 giftLikeness += 4
                 givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Enchanted Literature! Something quite interesting this test-site was made for...and a Good Read")
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward + 1))
@@ -575,23 +614,55 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
             }
             Material.MUSIC_DISC_WARD, Material.MUSIC_DISC_11, Material.MUSIC_DISC_5, Material.MUSIC_DISC_13, Material.MUSIC_DISC_CHIRP, Material.MUSIC_DISC_FAR, Material.MUSIC_DISC_MALL, Material.MUSIC_DISC_MELLOHI, Material.MUSIC_DISC_BLOCKS,
             Material.MUSIC_DISC_PIGSTEP, Material.MUSIC_DISC_STAL, Material.MUSIC_DISC_OTHERSIDE, Material.MUSIC_DISC_STRAD, Material.MUSIC_DISC_WAIT, Material.MUSIC_DISC_CAT -> {
-                giftLikeness += 5
+                bossEntity?.world!!.spawnParticle(Particle.SPELL_WITCH, givingPlayer.location, 35, 1.0, 1.0, 1.0)
+                giftLikeness += 45
                 bossEntity?.world!!.spawnParticle(Particle.VILLAGER_HAPPY, givingPlayer.location, 15, 1.0, 1.0, 1.0)
                 givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Primitive music... Something I find amusing...")
-                val randomEnchantments = listOf(OdysseyEnchantments.BANE_OF_THE_ILLAGER, OdysseyEnchantments.BANE_OF_THE_SWINE, OdysseyEnchantments.BACKSTABBER, OdysseyEnchantments.VOID_STRIKE, OdysseyEnchantments.GUARDING_STRIKE)
+                val randomEnchantments = listOf(OdysseyEnchantments.BANE_OF_THE_ILLAGER, OdysseyEnchantments.BANE_OF_THE_SWINE, OdysseyEnchantments.BACKSTABBER, OdysseyEnchantments.BUZZY_BEES, OdysseyEnchantments.GUARDING_STRIKE)
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 5))
-                val randomBook = OdysseyItems.GILDED_BOOK.createGildedBook(randomEnchantments.random(), 1)
-                givingPlayer.inventory.addItem(randomBook)
+                if (appeasement >= 35) {
+                    givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}These are some relics I have collected from previous visits...")
+                    val randomBook = OdysseyItems.GILDED_BOOK.createGildedBook(randomEnchantments.random(), 1)
+                    givingPlayer.inventory.addItem(randomBook)
+                }
             }
             // Later add books
-            /*
             Material.CONDUIT -> {
-            }
-            */
-            Material.BEACON -> {
+                bossEntity?.world!!.spawnParticle(Particle.SPELL_WITCH, givingPlayer.location, 35, 1.0, 1.0, 1.0)
+                givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}The ocean is essential to this world's stability! Though, power does not give you an excuse to butcher.")
                 giftLikeness += 55
-                givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Follow the path of doubt...")
-                givingPlayer.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.EXPLODING, 1))
+                val seaBook = OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BANE_OF_THE_SEA, 4)
+                givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
+                givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
+                if (appeasement >= 45) {
+                    givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
+                    givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
+                }
+                givingPlayer.inventory.addItem(seaBook)
+            }
+            Material.TRIDENT -> {
+                bossEntity?.world!!.spawnParticle(Particle.SPELL_WITCH, givingPlayer.location, 35, 1.0, 1.0, 1.0)
+                givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Do no be afraid of the sea or its monsters...")
+                giftLikeness += 35
+                val seaBook = OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BANE_OF_THE_SEA, (1..3).random())
+                givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
+                givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
+                givingPlayer.inventory.addItem(seaBook)
+
+            }
+            Material.BEACON -> {
+                bossEntity?.world!!.spawnParticle(Particle.SPELL_WITCH, givingPlayer.location, 35, 1.0, 1.0, 1.0)
+                giftLikeness += 55
+                givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Follow the path of doubt...and not blinding light")
+                val randomEnchantments = listOf(OdysseyEnchantments.BANE_OF_THE_ILLAGER, OdysseyEnchantments.BANE_OF_THE_SWINE, OdysseyEnchantments.BACKSTABBER, OdysseyEnchantments.BUZZY_BEES, OdysseyEnchantments.VOID_STRIKE)
+                val randomBook = OdysseyItems.GILDED_BOOK.createGildedBook(randomEnchantments.random(), 1)
+                givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
+                givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
+                if (appeasement >= 45) {
+                    givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
+                    givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
+                }
+                givingPlayer.inventory.addItem(randomBook)
             }
             Material.CHEST, Material.BARREL -> {
                 giftLikeness += 1
@@ -615,8 +686,10 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
             appeasement += giftLikeness
             val newLikeness = playerLikeness[givingPlayer.uniqueId]!! + giftLikeness
             playerLikeness[givingPlayer.uniqueId] = newLikeness
+            if (playerLikeness[givingPlayer.uniqueId]!! > 50.0) {
+                givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Your gifts are enjoyable")
+            }
         }
-
     }
 }
 

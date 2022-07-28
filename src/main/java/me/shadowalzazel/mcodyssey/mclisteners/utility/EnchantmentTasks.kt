@@ -6,11 +6,10 @@ import org.bukkit.scheduler.BukkitRunnable
 
 
 // FREEZE Timer
-class FreezingTask(freezingEntity: LivingEntity, freezeFactor: Int) : BukkitRunnable() {
+class FreezingTask(freezingEntity: LivingEntity, private val freezeFactor: Int) : BukkitRunnable() {
 
     private var freezeCooldown = System.currentTimeMillis()
     private val freezingVictim = freezingEntity
-    private val freezeFactor = freezeFactor
     private var counter = 0
 
     override fun run() {
@@ -35,19 +34,18 @@ class FreezingTask(freezingEntity: LivingEntity, freezeFactor: Int) : BukkitRunn
 
 
 // Bee Effects
-class HoneyedTask(honeyedEntity: LivingEntity, honeyFactor: Int) : BukkitRunnable() {
+class HoneyedTask(honeyedEntity: LivingEntity, private val honeyFactor: Int) : BukkitRunnable() {
 
     private var honeyCooldown = System.currentTimeMillis()
     private val honeyedVictim = honeyedEntity
-    private val honeyFactor = honeyFactor
     private var counter = 0
 
     override fun run() {
         println("Effect Honey")
         // some timer
-        honeyedVictim.world.spawnParticle(Particle.DRIPPING_HONEY, honeyedVictim.location, 25, 1.0, 0.5, 1.0)
-        honeyedVictim.world.spawnParticle(Particle.FALLING_HONEY, honeyedVictim.location, 25, 1.0, 0.5, 1.0)
-        honeyedVictim.world.spawnParticle(Particle.LANDING_HONEY, honeyedVictim.location, 25, 1.0, 0.5, 1.0)
+        honeyedVictim.world.spawnParticle(Particle.DRIPPING_HONEY, honeyedVictim.location, 15, 0.25, 1.0, 0.25)
+        honeyedVictim.world.spawnParticle(Particle.FALLING_HONEY, honeyedVictim.location, 15, 0.25, 1.0, 0.25)
+        honeyedVictim.world.spawnParticle(Particle.LANDING_HONEY, honeyedVictim.location, 10, 0.25, 0.4, 0.25)
         counter += 1
 
         val timeElapsed = System.currentTimeMillis() - honeyCooldown

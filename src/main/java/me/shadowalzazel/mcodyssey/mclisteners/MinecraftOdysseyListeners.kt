@@ -115,7 +115,7 @@ object MinecraftOdysseyListeners : Listener {
             }
 
             // Adding Gilded Power
-            else if (event.inventory.inputMineral!!.type == Material.ENCHANTED_GOLDEN_APPLE) {
+            else if (event.inventory.inputMineral!!.type == Material.DRAGON_EGG) {
                 val someItem = event.inventory.inputEquipment!!.clone()
                 if (someItem.hasItemMeta()) {
                     if (someItem.itemMeta.hasEnchant(OdysseyEnchantments.GILDED_POWER)) {
