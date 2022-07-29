@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDeathEvent
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.mclisteners.utility.DecayingTask
 import me.shadowalzazel.mcodyssey.mclisteners.utility.FreezingTask
 import me.shadowalzazel.mcodyssey.mclisteners.utility.HoneyedTask
 import org.bukkit.*
@@ -30,11 +31,15 @@ import java.util.*
 
 object EnchantmentListeners : Listener {
 
-
+    // Internal cool downs for enchantments
     private var playersExplodingCooldown = mutableMapOf<UUID, Long>()
     private var playersBuzzyBeesCooldown = mutableMapOf<UUID, Long>()
     private var playersBackstabberCooldown = mutableMapOf<UUID, Long>()
     private var playersGuardingStrikeCooldown = mutableMapOf<UUID, Long>()
+    private var playersDecayingTouchCooldown = mutableMapOf<UUID, Long>()
+
+
+
     // Extra Damage Modifiers
     // 2.5
     @EventHandler
@@ -146,67 +151,86 @@ object EnchantmentListeners : Listener {
 
                             val onlinePlayers = event.damager.world.players
 
+                            // tag variables
+                            var tagToRemove: String? = null
+                            val tagsToRemove = mutableListOf<String>()
+                            var tagToAdd: String? = null
+
                             // Initial check
                             for (tag in someTags) {
                                 for (unknownPlayer in onlinePlayers) {
-                                    if (tag == "VoidTouched ${unknownPlayer.name}" && tag != "VoidTouched ${somePlayer.name}") {
+                                    if (tag == "VoidTouched_${unknownPlayer.name}" && tag != "VoidTouched_${somePlayer.name}") {
                                         voidConflict = true
                                         break
                                     }
-
                                 }
                                 if (voidConflict) {
                                     break
                                 }
                                 // Check if player match
-                                if (tag == "VoidTouched ${somePlayer.name}") {
+                                if (tag == "VoidTouched_${somePlayer.name}") {
                                     playerMatch = true
                                     voidTouched = true
                                 }
                                 println(tag)
                             }
-                            // Run if no other voided
-                            if (!voidConflict && playerMatch) {
-                                for (tag in someTags) {
-                                    for (x in 0..9) {
-                                        if (tag == "VoidStruck ${somePlayer.name} $x") {
-                                            voidTouchedEntity.removeScoreboardTag("VoidStruck ${somePlayer.name} $x")
-                                            val newX = x + 1
-                                            voidTouchedEntity.addScoreboardTag("VoidStruck ${somePlayer.name} $newX")
-                                            voidDamage =
-                                                (someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.VOID_STRIKE) * x) + someWeapon.itemMeta.getEnchantLevel(
-                                                    OdysseyEnchantments.VOID_STRIKE
-                                                )
-                                            break
-                                        }
-                                    }
-                                    // Max modifier
-                                    if (tag == "VoidStruck ${somePlayer.name} 10") {
-                                        voidTouchedEntity.removeScoreboardTag("VoidStruck ${somePlayer.name} 10")
-                                        voidTouchedEntity.addScoreboardTag("VoidStruck ${somePlayer.name} 0")
-                                        break
-                                    }
-                                }
-                            }
                             // Remove conflicts RESET
                             if (voidConflict) {
                                 for (tag in someTags) {
                                     for (unknownPlayer in onlinePlayers) {
-                                        if (tag == "VoidTouched ${unknownPlayer.name}") {
-                                            voidTouchedEntity.removeScoreboardTag(tag)
+                                        if (tag == "VoidTouched_${unknownPlayer.name}") {
+                                            //voidTouchedEntity.removeScoreboardTag(tag)
+                                            tagsToRemove.add(tag)
                                         }
                                     }
                                 }
+                                for (someTag in tagsToRemove) {
+                                    voidTouchedEntity.removeScoreboardTag(someTag)
+                                }
+                            }
+                            val voidTouchFactor = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.VOID_STRIKE)
+
+                            // Run if no other voided
+                            if (!voidConflict && playerMatch) {
+                                println(someTags)
+                                for (tag in someTags) {
+                                    // Max modifier
+                                    if (tag == "VoidStruck_${somePlayer.name}_10") {
+                                        //voidTouchedEntity.removeScoreboardTag("VoidStruck_${somePlayer.name}_10")
+                                        tagToRemove = "VoidStruck_${somePlayer.name}_10"
+                                        //voidTouchedEntity.addScoreboardTag("VoidStruck_${somePlayer.name}_0")
+                                        tagToAdd = "VoidStruck_${somePlayer.name}_0"
+                                        break
+                                    }
+                                    for (x in 0..9) {
+                                        if (tag == "VoidStruck_${somePlayer.name}_$x") {
+                                            //voidTouchedEntity.removeScoreboardTag("VoidStruck_${somePlayer.name}_$x")
+                                            tagToRemove = "VoidStruck_${somePlayer.name}_$x"
+                                            val newX = x + 1
+                                            //voidTouchedEntity.addScoreboardTag("VoidStruck_${somePlayer.name}_$newX")
+                                            tagToAdd = "VoidStruck_${somePlayer.name}_$newX"
+                                            voidDamage = (voidTouchFactor * x) + voidTouchFactor
+                                            break
+                                        }
+                                    }
+                                }
+                                voidTouchedEntity.addScoreboardTag(tagToAdd!!)
+                                voidTouchedEntity.removeScoreboardTag(tagToRemove!!)
+
                             }
                             // Apply initial tags
                             if (!voidTouched) {
-                                voidTouchedEntity.addScoreboardTag("VoidStruck ${somePlayer.name} 0")
-                                voidTouchedEntity.addScoreboardTag("VoidTouched ${somePlayer.name}")
+                                voidTouchedEntity.addScoreboardTag("VoidStruck_${somePlayer.name}_0")
+                                voidTouchedEntity.addScoreboardTag("VoidTouched_${somePlayer.name}")
                             }
                             // Check if player
                             if (playerMatch) {
-                                somePlayer.world.spawnParticle(Particle.PORTAL, voidTouchedEntity.location, 35, 1.0, 0.5, 1.0)
-                                somePlayer.world.spawnParticle(Particle.WAX_OFF, voidTouchedEntity.location, 15, 1.0, 0.5, 1.0)
+                                somePlayer.world.spawnParticle(Particle.PORTAL, voidTouchedEntity.location, 85, 1.15, 0.85, 1.15)
+                                somePlayer.world.spawnParticle(Particle.WAX_OFF, voidTouchedEntity.location, 45, 1.0, 0.75, 1.0)
+                                somePlayer.world.spawnParticle(Particle.SPELL_WITCH, voidTouchedEntity.location, 50, 1.0, 0.75, 1.0)
+                                somePlayer.playSound(somePlayer.location, Sound.BLOCK_BEACON_DEACTIVATE, 1.5F, 0.5F)
+                                somePlayer.playSound(somePlayer.location, Sound.BLOCK_AMETHYST_BLOCK_BREAK, 1.7F, 0.2F)
+                                somePlayer.playSound(somePlayer.location, Sound.ENTITY_ENDER_EYE_DEATH, 3.5F, 0.4F)
                                 event.damage += voidDamage
                                 println(event.damage)
                             }
@@ -291,11 +315,56 @@ object EnchantmentListeners : Listener {
     }
 
 
+    // DECAYING_TOUCH Enchantment Effects
+    @EventHandler
+    fun decayingTouchEnchantEvent(event: EntityDamageByEntityEvent) {
+        if (event.damager is Player) {
+            val somePlayer: Player = event.damager as Player
+            if (event.entity is LivingEntity) {
+                val decayingEntity: LivingEntity = event.entity as LivingEntity
+                if (somePlayer.inventory.itemInMainHand.hasItemMeta()) {
+                    val someWeapon = somePlayer.inventory.itemInMainHand
+                    if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.DECAYING_TOUCH)) {
+                        if (somePlayer.gameMode != GameMode.SPECTATOR) {
+
+                            if (!playersDecayingTouchCooldown.containsKey(somePlayer.uniqueId)) {
+                                playersDecayingTouchCooldown[somePlayer.uniqueId] = 0L
+                            }
+
+                            val timeElapsed: Long = System.currentTimeMillis() - playersDecayingTouchCooldown[somePlayer.uniqueId]!!
+                            val decayingTouchFactor = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.DECAYING_TOUCH)
+
+                            if (timeElapsed > (3 - decayingTouchFactor) * 1000) {
+                                playersDecayingTouchCooldown[somePlayer.uniqueId] = System.currentTimeMillis()
+
+                                decayingEntity.world.spawnParticle(Particle.SPORE_BLOSSOM_AIR , decayingEntity.location, 40, 0.25, 0.4, 0.25)
+                                decayingEntity.world.spawnParticle(Particle.GLOW, decayingEntity.location, 20, 0.25, 0.4, 0.25)
+                                decayingEntity.world.spawnParticle(Particle.GLOW_SQUID_INK, decayingEntity.location, 15, 0.25, 0.25, 0.25)
+                                decayingEntity.world.spawnParticle(Particle.SNEEZE, decayingEntity.location, 40, 0.25, 0.25, 0.25)
+                                decayingEntity.world.spawnParticle(Particle.SCRAPE, decayingEntity.location, 20, 0.5, 1.0, 0.5)
+
+                                val decayEffect = PotionEffect(PotionEffectType.HUNGER, 10 , 0)
+                                decayingEntity.addPotionEffect(decayEffect)
+
+                                val decayingTask = DecayingTask(decayingEntity, decayingTouchFactor)
+                                // Every 2 secs
+                                decayingTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20 * 2)
+
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+
     // Balance LATER
     @EventHandler
     fun buzzyBeesEnchant(event: EntityDamageByEntityEvent) {
         if (event.damager is Player) {
-
             if (event.entity is LivingEntity) {
                 val somePlayer: Player = event.damager as Player
                 val honeyedEntity: LivingEntity = event.entity as LivingEntity
@@ -311,9 +380,9 @@ object EnchantmentListeners : Listener {
 
                                 val timeElapsed: Long = System.currentTimeMillis() - playersBuzzyBeesCooldown[somePlayer.uniqueId]!!
 
-                                if (timeElapsed > 2 * 1000) {
+                                val honeyFactor = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.BUZZY_BEES)
+                                if (timeElapsed > (3.5 - honeyFactor) * 1000) {
                                     playersBuzzyBeesCooldown[somePlayer.uniqueId] = System.currentTimeMillis()
-                                    val honeyFactor = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.BUZZY_BEES)
                                     val honeySlow = PotionEffect(PotionEffectType.SLOW, ((3 * honeyFactor) + 3) * 20, 0)
                                     honeyedEntity.world.spawnParticle(Particle.DRIPPING_HONEY, honeyedEntity.location, 15, 1.0, 0.5, 1.0)
                                     honeyedEntity.world.spawnParticle(Particle.FALLING_HONEY, honeyedEntity.location, 20, 1.5, 0.5, 1.5)
@@ -322,7 +391,8 @@ object EnchantmentListeners : Listener {
                                     somePlayer.playSound(somePlayer.location, Sound.BLOCK_HONEY_BLOCK_FALL, 2.5F, 0.9F)
 
                                     val honeyedTask = HoneyedTask(honeyedEntity, honeyFactor)
-                                    honeyedTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20)
+                                    // Every 10 ticks -> 0.5 sec
+                                    honeyedTask.runTaskTimer(MinecraftOdyssey.instance, 0, 10)
 
                                     /*
                                     for (x in 1..honeyFactor) {
@@ -332,14 +402,14 @@ object EnchantmentListeners : Listener {
                                     */
                                     if (honeyedEntity.health > event.finalDamage + 1) {
                                         val someBee: Bee = honeyedEntity.world.spawnEntity(somePlayer.location, EntityType.BEE) as Bee
-                                        val honeySpeed = PotionEffect(PotionEffectType.SPEED, 10, (honeyFactor - 1))
-                                        val honeyStrength = PotionEffect(PotionEffectType.INCREASE_DAMAGE, 10, (honeyFactor - 1))
-                                        val honeyDexterity = PotionEffect(PotionEffectType.FAST_DIGGING, 10, (honeyFactor - 1))
-                                        val honeyRoids = listOf(honeyDexterity, honeySpeed, honeyStrength)
+                                        val honeySpeed = PotionEffect(PotionEffectType.SPEED, 10, (honeyFactor))
+                                        val honeyStrength = PotionEffect(PotionEffectType.INCREASE_DAMAGE, 10, (honeyFactor))
+                                        val honeyDexterity = PotionEffect(PotionEffectType.FAST_DIGGING, 10, (honeyFactor))
+                                        val honeyConstitution = PotionEffect(PotionEffectType.ABSORPTION, 10, (honeyFactor + 2))
+                                        val honeyRoids = listOf(honeyDexterity, honeySpeed, honeyStrength, honeyConstitution)
                                         someBee.addPotionEffects(honeyRoids)
                                         someBee.target = honeyedEntity
                                     }
-
                                 }
                             }
                         }

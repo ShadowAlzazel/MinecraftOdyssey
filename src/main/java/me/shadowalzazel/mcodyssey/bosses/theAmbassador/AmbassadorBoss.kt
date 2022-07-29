@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.bosses.theAmbassador
 
+import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.bosses.utility.OdysseyBoss
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.odysseyUtility.*
@@ -282,7 +283,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
 
     // hijack
     private fun hijackAttack(ambassadorEntity: Illusioner) {
-        var playersNearAmbassador = ambassadorEntity.world.getNearbyPlayers(ambassadorEntity.location, 24.5)
+        val playersNearAmbassador = ambassadorEntity.world.getNearbyPlayers(ambassadorEntity.location, 24.5)
         val randomPlayer = playersNearAmbassador.random()
 
         if (playersNearAmbassador.size > 1) {
@@ -311,8 +312,12 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
             somePlayer.spawnParticle(Particle.FLASH, somePlayer.location, 5, 1.0, 1.0, 1.0)
 
         }
-        //val hijackedPlayer = playersNearAmbassador.random()
-        //hijackedPlayer.setPassenger(ambassadorEntity)
+
+        val hijackedPlayer = playersNearAmbassador.random()
+        hijackedPlayer.setPassenger(ambassadorEntity)
+        val hijackTask = AmbassadorHijackTasks(ambassadorEntity)
+        hijackTask.runTaskTimer(MinecraftOdyssey.instance, 0, 10)
+
     }
 
 
@@ -334,6 +339,11 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         targetPlayer.world.spawnParticle(Particle.DAMAGE_INDICATOR, targetPlayer.location, 5, 1.5, 0.5, 1.5)
         targetPlayer.world.spawnParticle(Particle.VIBRATION, targetPlayer.location, 15, 2.5, 0.5, 2.5)
         targetPlayer.world.spawnParticle(Particle.END_ROD, targetPlayer.location, 15, 2.0, 1.0, 2.0)
+    }
+
+
+    private fun attackPatterns(ambassadorEntity: Illusioner) {
+
     }
 
 
@@ -362,8 +372,15 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 }
             }
             else {
-                hijackAttack(bossEntity!!)
-                println("lsssss")
+                when((0..2).random()) {
+                    0, 1 -> {
+                        hijackAttack(bossEntity!!)
+                    }
+                    2 -> {
+                        gravityWaveAttack(someDamager)
+                    }
+
+                }
             }
         }
     }
@@ -442,9 +459,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
             }
         }
         else {
-            if (someDamager is Player) {
-                attackToDamager(someDamager)
-            }
+            attackToDamager(someDamager)
         }
     }
 
@@ -630,7 +645,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
             Material.CONDUIT -> {
                 bossEntity?.world!!.spawnParticle(Particle.SPELL_WITCH, givingPlayer.location, 35, 1.0, 1.0, 1.0)
                 givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}The ocean is essential to this world's stability! Though, power does not give you an excuse to butcher.")
-                giftLikeness += 55
+                giftLikeness += 45
                 val seaBook = OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BANE_OF_THE_SEA, 4)
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
@@ -643,7 +658,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
             Material.TRIDENT -> {
                 bossEntity?.world!!.spawnParticle(Particle.SPELL_WITCH, givingPlayer.location, 35, 1.0, 1.0, 1.0)
                 givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Do no be afraid of the sea or its monsters...")
-                giftLikeness += 35
+                giftLikeness += 30
                 val seaBook = OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BANE_OF_THE_SEA, (1..3).random())
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
@@ -652,7 +667,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
             }
             Material.BEACON -> {
                 bossEntity?.world!!.spawnParticle(Particle.SPELL_WITCH, givingPlayer.location, 35, 1.0, 1.0, 1.0)
-                giftLikeness += 55
+                giftLikeness += 45
                 givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Follow the path of doubt...and not blinding light")
                 val randomEnchantments = listOf(OdysseyEnchantments.BANE_OF_THE_ILLAGER, OdysseyEnchantments.BANE_OF_THE_SWINE, OdysseyEnchantments.BACKSTABBER, OdysseyEnchantments.BUZZY_BEES, OdysseyEnchantments.VOID_STRIKE)
                 val randomBook = OdysseyItems.GILDED_BOOK.createGildedBook(randomEnchantments.random(), 1)
