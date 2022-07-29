@@ -40,7 +40,7 @@ object OdysseyDropsListeners : Listener {
                     var looting = 0.0
                     if (somePlayer.equipment.itemInMainHand != null) {
                         if (somePlayer.equipment.itemInMainHand.itemMeta.hasEnchant(Enchantment.LOOT_BONUS_MOBS)) {
-                            looting += (somePlayer.activeItem.getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS) * 0.75)
+                            looting += (somePlayer.activeItem.getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS) * 1.0)
                         }
                     }
                     var luck = 0.0
