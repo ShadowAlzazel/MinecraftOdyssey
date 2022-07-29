@@ -44,8 +44,8 @@ class HoneyedTask(honeyedEntity: LivingEntity, private val honeyFactor: Int) : B
         println("Effect Honey")
         // some timer
         honeyedVictim.world.spawnParticle(Particle.DRIPPING_HONEY, honeyedVictim.location, 15, 0.25, 1.0, 0.25)
-        honeyedVictim.world.spawnParticle(Particle.FALLING_HONEY, honeyedVictim.location, 15, 0.25, 1.0, 0.25)
-        honeyedVictim.world.spawnParticle(Particle.LANDING_HONEY, honeyedVictim.location, 10, 0.25, 0.4, 0.25)
+        honeyedVictim.world.spawnParticle(Particle.FALLING_HONEY, honeyedVictim.location, 8, 0.25, 1.0, 0.25)
+        honeyedVictim.world.spawnParticle(Particle.LANDING_HONEY, honeyedVictim.location, 8, 0.25, 0.4, 0.25)
         counter += 1
 
         val timeElapsed = System.currentTimeMillis() - honeyCooldown
@@ -58,19 +58,32 @@ class HoneyedTask(honeyedEntity: LivingEntity, private val honeyFactor: Int) : B
 
 
 
-// VOID_STRIKE effects
-class VoidTouchedTask(voidTouchedEntity: LivingEntity, voidStrikeFactor: Int) : BukkitRunnable() {
+// DECAYING TOUCH effects
+class DecayingTask(decayingEntity: LivingEntity, private val decayingTouchFactor: Int) : BukkitRunnable() {
+
+    private var decayCooldown = System.currentTimeMillis()
+    private val decayingVictim = decayingEntity
+    private var counter = 0
 
     // Stacked
     // Apply damage due to damage
-    // player damage only
-    // reset if someone else
-    // damages stack modifier depends on initial damage
 
     override fun run() {
-        TODO("Not yet implemented")
+
+        decayingVictim.world.spawnParticle(Particle.SPORE_BLOSSOM_AIR , decayingVictim.location, 45, 0.5, 0.75, 0.5)
+        decayingVictim.world.spawnParticle(Particle.GLOW, decayingVictim.location, 15, 0.75, 0.8, 0.75)
+        decayingVictim.world.spawnParticle(Particle.GLOW_SQUID_INK, decayingVictim.location, 15, 0.25, 0.25, 0.25)
+        decayingVictim.world.spawnParticle(Particle.SNEEZE, decayingVictim.location, 45, 0.25, 0.25, 0.25)
+        decayingVictim.world.spawnParticle(Particle.SCRAPE, decayingVictim.location, 15, 0.25, 0.4, 0.25)
+        decayingVictim.damage(decayingTouchFactor.toDouble())
+        counter += 1
+
+        val timeElapsed = System.currentTimeMillis() - decayCooldown
+        // 10 sec
+        if (5 < counter || decayingVictim.health <= 0.5 || timeElapsed > 10 * 1000) {
+            this.cancel()
+        }
+
     }
-
-
 
 }

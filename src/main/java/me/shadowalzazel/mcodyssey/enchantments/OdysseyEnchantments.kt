@@ -17,9 +17,10 @@ object OdysseyEnchantments {
     val GILDED_POWER: Enchantment = GildedPower
     val BACKSTABBER: Enchantment = Backstabber
     val BUZZY_BEES: Enchantment = BuzzyBees
+    val DECAYING_TOUCH: Enchantment = DecayingTouch
 
     // Set of all enchantments
-    val enchantmentSet = setOf(BANE_OF_THE_SWINE, BANE_OF_THE_SEA, EXPLODING, BANE_OF_THE_ILLAGER, FREEZING_ASPECT, VOID_STRIKE, GILDED_POWER, GUARDING_STRIKE, BACKSTABBER, BUZZY_BEES)
+    val enchantmentSet = setOf(BANE_OF_THE_SWINE, BANE_OF_THE_SEA, EXPLODING, BANE_OF_THE_ILLAGER, FREEZING_ASPECT, VOID_STRIKE, GILDED_POWER, GUARDING_STRIKE, BACKSTABBER, BUZZY_BEES, DECAYING_TOUCH)
 
     // Register
     fun register() {

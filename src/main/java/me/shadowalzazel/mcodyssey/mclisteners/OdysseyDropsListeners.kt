@@ -40,7 +40,7 @@ object OdysseyDropsListeners : Listener {
                     var looting = 0.0
                     if (somePlayer.equipment.itemInMainHand != null) {
                         if (somePlayer.equipment.itemInMainHand.itemMeta.hasEnchant(Enchantment.LOOT_BONUS_MOBS)) {
-                            looting += (somePlayer.activeItem.getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS) * 0.5)
+                            looting += (somePlayer.activeItem.getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS) * 0.75)
                         }
                     }
                     var luck = 0.0
@@ -55,7 +55,7 @@ object OdysseyDropsListeners : Listener {
                     // Loot check and entity check
                     when (event.entity) {
                         is Stray -> {
-                            if ((1 + luck + looting) * 10 > (0..1000).random()) {
+                            if ((1.5 + luck + looting) * 10 > (0..1000).random()) {
                                 somePlayer.world.dropItem(
                                     event.entity.location,
                                     (OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.FREEZING_ASPECT, 1))
@@ -64,7 +64,7 @@ object OdysseyDropsListeners : Listener {
                             }
                         }
                         is Creeper -> {
-                            if ((1 + luck + looting) * 10 > (0..1000).random()) {
+                            if ((1.5 + luck + looting) * 10 > (0..1000).random()) {
                                 somePlayer.world.dropItem(
                                     event.entity.location,
                                     (OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.EXPLODING, 1))
@@ -73,7 +73,7 @@ object OdysseyDropsListeners : Listener {
                             }
                         }
                         is PigZombie -> {
-                            if ((1 + luck + looting) * 10 > (0..1000).random()) {
+                            if ((1.5 + luck + looting) * 10 > (0..1000).random()) {
                                 somePlayer.world.dropItem(
                                     event.entity.location,
                                     (OdysseyItems.GILDED_BOOK.createGildedBook(
@@ -85,7 +85,7 @@ object OdysseyDropsListeners : Listener {
                             }
                         }
                         is Vindicator -> {
-                            if ((2.5 + luck + looting) * 10 > (0..1000).random()) {
+                            if ((3.0 + luck + looting) * 10 > (0..1000).random()) {
                                 somePlayer.world.dropItem(
                                     event.entity.location,
                                     (OdysseyItems.GILDED_BOOK.createGildedBook(
@@ -95,6 +95,44 @@ object OdysseyDropsListeners : Listener {
                                 )
                                 droppedItemSound(somePlayer)
                             }
+                        }
+                        is Husk -> {
+                            if ((1.5 + luck + looting) * 10 > (0..1000).random()) {
+                                somePlayer.world.dropItem(
+                                    event.entity.location,
+                                    (OdysseyItems.GILDED_BOOK.createGildedBook(
+                                        OdysseyEnchantments.DECAYING_TOUCH,
+                                        1
+                                    ))
+                                )
+                                droppedItemSound(somePlayer)
+                            }
+                        }
+                        is Drowned -> {
+                            if ((1.0 + luck + looting) * 10 > (0..1000).random()) {
+                                somePlayer.world.dropItem(
+                                    event.entity.location,
+                                    (OdysseyItems.GILDED_BOOK.createGildedBook(
+                                        OdysseyEnchantments.BANE_OF_THE_SEA,
+                                        1
+                                    ))
+                                )
+                                droppedItemSound(somePlayer)
+                            }
+                        }
+                        is Shulker -> {
+                            if ((2.5 + luck + looting) * 10 > (0..1000).random()) {
+                                somePlayer.world.dropItem(
+                                    event.entity.location,
+                                    (OdysseyItems.GILDED_BOOK.createGildedBook(
+                                        OdysseyEnchantments.VOID_STRIKE,
+                                        1
+                                    ))
+                                )
+                                droppedItemSound(somePlayer)
+                            }
+                        }
+                        else -> {
                         }
                     }
                 }
