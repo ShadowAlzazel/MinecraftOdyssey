@@ -10,6 +10,10 @@ commands:
     description: ""
     usage: /<command>
     permission: op
+  SpawnHogRider:
+    description: ""
+    usage: /<command>
+    permission: op
   GiveTestItem:
     description: ""
     usage: /<command>

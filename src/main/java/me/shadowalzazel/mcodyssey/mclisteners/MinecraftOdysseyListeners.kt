@@ -6,8 +6,10 @@ import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.bosses.theAmbassador.AmbassadorBoss
 import me.shadowalzazel.mcodyssey.enchantments.GildedPower
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
+import me.shadowalzazel.mcodyssey.odysseyUtility.OdysseyItems
 import org.bukkit.ChatColor
 import org.bukkit.Material
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -33,7 +35,7 @@ object MinecraftOdysseyListeners : Listener {
         val endWorld = event.entity.world
         if (dragon.type == EntityType.ENDER_DRAGON) {
             for (aPlayer in endWorld.players) {
-                aPlayer.sendMessage("${ChatColor.DARK_PURPLE}The end as just begun ...")
+                aPlayer.sendMessage("${ChatColor.DARK_PURPLE}The end has just begun ...")
 
             }
         }
@@ -97,128 +99,11 @@ object MinecraftOdysseyListeners : Listener {
         }
     }
 
+    //Make BOOK + material for gilded later
 
-
-    /*
-    // Gilded Smithing
+    // Odyssey Smithing
     @EventHandler
-    fun gildedEnchantmentApplication(event: PrepareSmithingEvent) {
-        // FIX!!!!!!!!!!!!
-        if (event.inventory.inputEquipment != null && event.inventory.inputMineral != null) {
-            val timeElapsed = System.currentTimeMillis() - gildingCooldown
-
-            //BASE CASE!
-            if (event.inventory.inputEquipment!!.type == Material.ENCHANTED_GOLDEN_APPLE && event.inventory.inputMineral!!.type == Material.GOLD_INGOT) {
-                event.result = ItemStack(Material.GOLDEN_HOE)
-                event.viewers.forEach {somePlayer -> (somePlayer as Player).updateInventory()}
-                println("${event.result}")
-            }
-
-            // BOOK CAN NEVER HAVE GILDED POWER
-            // Check if book
-            else if (event.inventory.inputMineral!!.type == Material.ENCHANTED_BOOK && event.inventory.inputEquipment!!.type != Material.ENCHANTED_BOOK) {
-                // Create values
-                val gildedEquipment = event.inventory.inputEquipment!!.clone()
-                val gildedEnchantmentBook = event.inventory.inputMineral
-                // Check
-                if (gildedEnchantmentBook != null) {
-                    // Checking if it has odyssey enchant
-                    val newEnchantments = gildedEnchantmentBook.itemMeta.enchants
-                    var hasOdysseyEnchant = false
-                    for (enchant in newEnchantments.keys) {
-                        println("CHECKING...")
-                        // Check gilded power
-                        if (enchant in OdysseyEnchantments.enchantmentSet) {
-                            hasOdysseyEnchant = true
-                        }
-                        // Check if it cannot be applied
-                        if (!(enchant.canEnchantItem(gildedEquipment))) {
-                            return
-                        }
-                    }
-                    // Checks for enchantment counter
-                    if (gildedEnchantmentBook.itemMeta.hasLore() && hasOdysseyEnchant) {
-                        var odysseyEnchantCounter = 0
-                        var gildedPower = 0
-                        // Check if it has odyssey enchant
-                        val equipmentEnchantments = gildedEquipment.itemMeta.enchants
-                        for (enchant in equipmentEnchantments.keys) {
-                            if (enchant in OdysseyEnchantments.enchantmentSet) {
-                                if (enchant != OdysseyEnchantments.GILDED_POWER) {
-                                    odysseyEnchantCounter += 1
-                                }
-                            }
-                        }
-                        // Check gilded power
-                        if (gildedEquipment.itemMeta.hasEnchant(OdysseyEnchantments.GILDED_POWER)) {
-                            gildedPower = gildedEquipment.itemMeta.getEnchantLevel(OdysseyEnchantments.GILDED_POWER)
-                        }
-                        // Check if power allows new enchants
-                        if (gildedPower > odysseyEnchantCounter || gildedPower == 0) {
-                            println("Passed Check")
-                            // Add Enchantments
-                            gildedEquipment.addUnsafeEnchantments(newEnchantments)
-                            if (gildedEquipment.itemMeta.hasEnchant(GildedPower)) {
-                                gildedEquipment.removeEnchantment(GildedPower)
-                            }
-                            gildedEquipment.addEnchantment(GildedPower, odysseyEnchantCounter + 1)
-                            // Viewer warning
-                            for (viewer in event.viewers) {
-                                if (viewer is Player) {
-                                    println("Gilded Thing")
-                                    if (timeElapsed > 20) {
-                                        gildingCooldown = System.currentTimeMillis()
-                                        viewer.sendMessage("This is a permanent gilded enchantment!")
-                                    }
-                                }
-                            }
-                            // Adds Lore
-                            val equipmentMeta = gildedEquipment.itemMeta
-                            if (equipmentMeta.hasLore()) {
-                                val newLore = gildedEnchantmentBook.itemMeta.lore!!
-                                newLore.addAll(equipmentMeta.lore!!)
-                                equipmentMeta.lore = newLore
-                                val gildedLore = newLore
-                                gildedEquipment.itemMeta.lore = equipmentMeta.lore
-
-                            }
-                            else {
-                                equipmentMeta.lore = gildedEnchantmentBook.itemMeta.lore!!
-                                val gildedLore = equipmentMeta.lore
-                                gildedEquipment.itemMeta.lore = equipmentMeta.lore
-                            }
-                            //gildedEquipment.itemMeta = gildedMeta
-                            //gildedEquipment.itemMeta.lore = gildedMeta.lore
-                            println("${gildedEquipment.itemMeta.lore}")
-                            // Create new item
-                            event.result = gildedEquipment
-                            event.viewers.forEach { somePlayer -> (somePlayer as Player).updateInventory() }
-                            println("${event.result}")
-                        }
-                        // Check
-                        else {
-                            event.result = ItemStack(Material.AIR, 1)
-                            event.viewers.forEach { somePlayer -> (somePlayer as Player).updateInventory() }
-                            println("${event.result}")
-                        }
-                    }
-                    // Check
-                    else {
-                        event.result = ItemStack(Material.AIR, 1)
-                        event.viewers.forEach {somePlayer -> (somePlayer as Player).updateInventory()}
-                        println("${event.result}")
-                    }
-                }
-            }
-        }
-    }
-
-     */
-
-
-    @EventHandler
-    // Equipment Naming
-    fun odysseySmithingNaming(event: PrepareSmithingEvent) {
+    fun odysseySmithing(event: PrepareSmithingEvent) {
         if (event.inventory.inputEquipment != null && event.inventory.inputMineral != null) {
             val timeElapsed = System.currentTimeMillis() - smithingCooldown
 
@@ -228,6 +113,26 @@ object MinecraftOdysseyListeners : Listener {
                 event.viewers.forEach {somePlayer -> (somePlayer as Player).updateInventory()}
                 println("${event.result}")
             }
+
+            // Adding Gilded Power
+            else if (event.inventory.inputMineral!!.type == Material.DRAGON_EGG) {
+                val someItem = event.inventory.inputEquipment!!.clone()
+                if (someItem.hasItemMeta()) {
+                    if (someItem.itemMeta.hasEnchant(OdysseyEnchantments.GILDED_POWER)) {
+                        val gildedPower = someItem.getEnchantmentLevel(OdysseyEnchantments.GILDED_POWER)
+                        if (gildedPower < 3) {
+                            val newItemMeta = someItem.itemMeta
+                            newItemMeta.removeEnchant(GildedPower)
+                            newItemMeta.addEnchant(OdysseyEnchantments.GILDED_POWER, gildedPower + 1, true)
+                            someItem.itemMeta = newItemMeta
+                            event.result = someItem
+                            println("${event.result}")
+                        }
+                    }
+                }
+            }
+
+
 
             // Naming
             else if (event.inventory.inputMineral!!.type == Material.DIAMOND || event.inventory.inputMineral!!.type == Material.AMETHYST_SHARD) {
@@ -262,6 +167,7 @@ object MinecraftOdysseyListeners : Listener {
                 event.viewers.forEach { somePlayer -> (somePlayer as Player).updateInventory() }
                 println("${event.result}")
             }
+
             // BOOK CAN NEVER HAVE GILDED POWER
             // Check if book
             else if (event.inventory.inputMineral!!.type == Material.ENCHANTED_BOOK && event.inventory.inputEquipment!!.type != Material.ENCHANTED_BOOK) {
@@ -273,11 +179,13 @@ object MinecraftOdysseyListeners : Listener {
                     // Checking if it has odyssey enchant
                     val newEnchantments = gildedEnchantmentBook.itemMeta.enchants
                     var hasOdysseyEnchant = false
+                    var someOdysseyEnchant: Enchantment? = null
                     for (enchant in newEnchantments.keys) {
                         println("CHECKING...")
                         // Check gilded power
                         if (enchant in OdysseyEnchantments.enchantmentSet) {
                             hasOdysseyEnchant = true
+                            someOdysseyEnchant = enchant
                         }
                         // Check if it cannot be applied
                         if (!(enchant.canEnchantItem(gildedEquipment))) {
@@ -291,6 +199,10 @@ object MinecraftOdysseyListeners : Listener {
                         // Check if it has odyssey enchant
                         val equipmentEnchantments = gildedEquipment.itemMeta.enchants
                         for (enchant in equipmentEnchantments.keys) {
+                            if (someOdysseyEnchant!!.conflictsWith(enchant)) {
+                                return
+                            }
+
                             if (enchant in OdysseyEnchantments.enchantmentSet) {
                                 if (enchant != OdysseyEnchantments.GILDED_POWER) {
                                     odysseyEnchantCounter += 1
@@ -355,12 +267,51 @@ object MinecraftOdysseyListeners : Listener {
                     }
                 }
             }
+            // Combine Similar gilded enchant
+            else if (event.inventory.inputMineral!!.type == Material.ENCHANTED_BOOK && event.inventory.inputEquipment!!.type == Material.ENCHANTED_BOOK) {
+                val gildedBook1 = event.inventory.inputMineral
+                val gildedBook2 = event.inventory.inputEquipment
+                var gildedLevel = 0
+                var someEnchant: Enchantment? = null
+                var canCombine = false
+                if (gildedBook1!!.hasItemMeta() && gildedBook2!!.hasItemMeta()) {
+                    for (enchant in gildedBook1.enchantments.keys) {
+                        if (enchant in OdysseyEnchantments.enchantmentSet && enchant != OdysseyEnchantments.GILDED_POWER) {
+                            if (gildedBook2.itemMeta.hasEnchant(enchant)) {
+                                gildedLevel = gildedBook1.getEnchantmentLevel(enchant)
+                                // Combine only same level and not max level
+                                if (gildedBook2.getEnchantmentLevel(enchant) == gildedLevel && gildedLevel < enchant.maxLevel) {
+                                    canCombine = true
+                                    someEnchant = enchant
+                                    break
+                                }
+                            }
+                        }
+                    }
+                    // Check if similar enchant
+                    if (canCombine) {
+                        val newBook = OdysseyItems.GILDED_BOOK.createGildedBook(someEnchant!!, gildedLevel + 1)
+                        event.result = newBook
+                        event.viewers.forEach {somePlayer -> (somePlayer as Player).updateInventory()}
+                    }
+                    // Check
+                    else {
+                        event.result = ItemStack(Material.AIR, 1)
+                        event.viewers.forEach {somePlayer -> (somePlayer as Player).updateInventory()}
+                        println("${event.result}")
+                    }
+                }
+            }
+
+
             // Check
+            /*
             else {
                 event.result = ItemStack(Material.AIR, 1)
                 event.viewers.forEach {somePlayer -> (somePlayer as Player).updateInventory()}
                 println("${event.result}")
             }
+            */
         }
     }
 

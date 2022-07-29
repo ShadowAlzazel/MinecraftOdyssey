@@ -52,11 +52,13 @@ object AmbassadorListeners: Listener {
                 val ambassadorEntity: Illusioner = ambassadorBoss.bossEntity as Illusioner
                 if (event.entity == ambassadorEntity) {
                     ambassadorBoss.detectDamage(event.damager, event.damage)
+                    println("lul")
 
                 }
             }
         }
     }
+
 
     @EventHandler
     fun checkAmbassadorDay(event: TimeSkipEvent) {
@@ -90,6 +92,7 @@ object AmbassadorListeners: Listener {
                         MinecraftOdyssey.instance.activeBoss = false
                         MinecraftOdyssey.instance.ambassadorDefeated = true
                         MinecraftOdyssey.instance.currentBoss = null
+                        MinecraftOdyssey.instance.bossDespawnTimer = System.currentTimeMillis()
                     }
                     // Last Hit
                     else {
@@ -100,6 +103,7 @@ object AmbassadorListeners: Listener {
                                 MinecraftOdyssey.instance.activeBoss = false
                                 MinecraftOdyssey.instance.ambassadorDefeated = true
                                 MinecraftOdyssey.instance.currentBoss = null
+                                MinecraftOdyssey.instance.bossDespawnTimer = System.currentTimeMillis()
                             }
                             else {
                                 event.isCancelled = true

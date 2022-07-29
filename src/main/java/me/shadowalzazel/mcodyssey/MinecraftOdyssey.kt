@@ -1,9 +1,11 @@
 package me.shadowalzazel.mcodyssey
 
+import me.shadowalzazel.mcodyssey.bosses.hogRider.HogRiderListeners
 import me.shadowalzazel.mcodyssey.bosses.theAmbassador.AmbassadorListeners
 import me.shadowalzazel.mcodyssey.bosses.utility.OdysseyBoss
 import me.shadowalzazel.mcodyssey.commands.SpawnAmbassador
 import me.shadowalzazel.mcodyssey.commands.GiveTestItem
+import me.shadowalzazel.mcodyssey.commands.SpawnHogRider
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.mclisteners.*
 import me.shadowalzazel.mcodyssey.odysseyUtility.OdysseyRecipes
@@ -46,6 +48,9 @@ class MinecraftOdyssey : JavaPlugin() {
         // Register Enchantments
         OdysseyEnchantments.register()
 
+
+        // REGISTER DAILY
+
         // Register Utility Listeners
         server.pluginManager.registerEvents(MinecraftOdysseyListeners, this)
         // Daily Phenomenon listeners
@@ -55,30 +60,31 @@ class MinecraftOdyssey : JavaPlugin() {
         }
         // Boss Listeners
         server.pluginManager.registerEvents(AmbassadorListeners, this)
+        server.pluginManager.registerEvents(HogRiderListeners, this)
         // Join and Leave Messages
         server.pluginManager.registerEvents(OdysseyPlayerJoinListener, this)
         server.pluginManager.registerEvents(OdysseyPlayerLeaveListener, this)
         // Enchantment listener
         server.pluginManager.registerEvents(EnchantmentListeners, this)
+        //Mob drops
+        server.pluginManager.registerEvents(OdysseyDropsListeners, this)
 
         // Custom Recipes
-        //***Bukkit.addRecipe(OdysseyRecipes.odysseySmithing)
         Bukkit.addRecipe(OdysseyRecipes.odysseyNaming)
         Bukkit.addRecipe(OdysseyRecipes.odysseyGildedSmithing)
-
+        Bukkit.addRecipe(OdysseyRecipes.gildedBookCombining)
+        Bukkit.addRecipe(OdysseyRecipes.gildingUpgrading)
 
         // Register Commands
         getCommand("SpawnAmbassador")?.setExecutor(SpawnAmbassador)
+        getCommand("SpawnHogRider")?.setExecutor(SpawnHogRider)
         getCommand("GiveTestItem")?.setExecutor(GiveTestItem)
-
 
         // Hello World!
         logger.info("The Odyssey has just begun!")
     }
 
     override fun onDisable() {
-
-
 
         // Plugin shutdown logic
         logger.info("The Odyssey can wait another day...")
