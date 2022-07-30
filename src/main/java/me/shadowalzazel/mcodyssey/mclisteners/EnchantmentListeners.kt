@@ -144,106 +144,109 @@ object EnchantmentListeners : Listener {
                     if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.VOID_STRIKE)) {
                         if (somePlayer.gameMode != GameMode.SPECTATOR) {
 
-                            if (!playersVoidStrikeCooldown.containsKey(somePlayer.uniqueId)) {
-                                playersVoidStrikeCooldown[somePlayer.uniqueId] = 0L
-                            }
+                            if (somePlayer.itemUseRemainingTime == 0) {
 
-                            val timeElapsed: Long = System.currentTimeMillis() - playersVoidStrikeCooldown[somePlayer.uniqueId]!!
-
-                            if (timeElapsed > 0.75 * 1000) {
-                                playersVoidStrikeCooldown[somePlayer.uniqueId] = System.currentTimeMillis()
-
-                                println("V")
-                                val someTags = voidTouchedEntity.scoreboardTags
-                                var voidDamage = 0
-                                var playerMatch = false
-                                var voidTouched = false
-                                var voidConflict = false
-
-                                val onlinePlayers = event.damager.world.players
-
-                                // tag variables
-                                var tagToRemove: String? = null
-                                val tagsToRemove = mutableListOf<String>()
-                                var tagToAdd: String? = null
-
-                                // Initial check
-                                for (tag in someTags) {
-                                    for (unknownPlayer in onlinePlayers) {
-                                        if (tag == "VoidTouched_${unknownPlayer.name}" && tag != "VoidTouched_${somePlayer.name}") {
-                                            voidConflict = true
-                                            break
-                                        }
-                                    }
-                                    if (voidConflict) {
-                                        break
-                                    }
-                                    // Check if player match
-                                    if (tag == "VoidTouched_${somePlayer.name}") {
-                                        playerMatch = true
-                                        voidTouched = true
-                                    }
-                                    println(tag)
+                                if (!playersVoidStrikeCooldown.containsKey(somePlayer.uniqueId)) {
+                                    playersVoidStrikeCooldown[somePlayer.uniqueId] = 0L
                                 }
-                                // Remove conflicts RESET
-                                if (voidConflict) {
+
+                                val timeElapsed: Long = System.currentTimeMillis() - playersVoidStrikeCooldown[somePlayer.uniqueId]!!
+
+                                if (timeElapsed > 0.75 * 1000) {
+                                    playersVoidStrikeCooldown[somePlayer.uniqueId] = System.currentTimeMillis()
+
+                                    println("V")
+                                    val someTags = voidTouchedEntity.scoreboardTags
+                                    var voidDamage = 0
+                                    var playerMatch = false
+                                    var voidTouched = false
+                                    var voidConflict = false
+
+                                    val onlinePlayers = event.damager.world.players
+
+                                    // tag variables
+                                    var tagToRemove: String? = null
+                                    val tagsToRemove = mutableListOf<String>()
+                                    var tagToAdd: String? = null
+
+                                    // Initial check
                                     for (tag in someTags) {
                                         for (unknownPlayer in onlinePlayers) {
-                                            if (tag == "VoidTouched_${unknownPlayer.name}") {
-                                                //voidTouchedEntity.removeScoreboardTag(tag)
-                                                tagsToRemove.add(tag)
-                                            }
-                                        }
-                                    }
-                                    for (someTag in tagsToRemove) {
-                                        voidTouchedEntity.removeScoreboardTag(someTag)
-                                    }
-                                }
-                                val voidTouchFactor = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.VOID_STRIKE)
-
-                                // Run if no other voided
-                                if (!voidConflict && playerMatch) {
-                                    println(someTags)
-                                    for (tag in someTags) {
-                                        // Max modifier
-                                        if (tag == "VoidStruck_${somePlayer.name}_10") {
-                                            //voidTouchedEntity.removeScoreboardTag("VoidStruck_${somePlayer.name}_10")
-                                            tagToRemove = "VoidStruck_${somePlayer.name}_10"
-                                            //voidTouchedEntity.addScoreboardTag("VoidStruck_${somePlayer.name}_0")
-                                            tagToAdd = "VoidStruck_${somePlayer.name}_0"
-                                            break
-                                        }
-                                        for (x in 0..9) {
-                                            if (tag == "VoidStruck_${somePlayer.name}_$x") {
-                                                //voidTouchedEntity.removeScoreboardTag("VoidStruck_${somePlayer.name}_$x")
-                                                tagToRemove = "VoidStruck_${somePlayer.name}_$x"
-                                                val newX = x + 1
-                                                //voidTouchedEntity.addScoreboardTag("VoidStruck_${somePlayer.name}_$newX")
-                                                tagToAdd = "VoidStruck_${somePlayer.name}_$newX"
-                                                voidDamage = (voidTouchFactor * x) + voidTouchFactor
+                                            if (tag == "VoidTouched_${unknownPlayer.name}" && tag != "VoidTouched_${somePlayer.name}") {
+                                                voidConflict = true
                                                 break
                                             }
                                         }
+                                        if (voidConflict) {
+                                            break
+                                        }
+                                        // Check if player match
+                                        if (tag == "VoidTouched_${somePlayer.name}") {
+                                            playerMatch = true
+                                            voidTouched = true
+                                        }
+                                        println(tag)
                                     }
-                                    voidTouchedEntity.addScoreboardTag(tagToAdd!!)
-                                    voidTouchedEntity.removeScoreboardTag(tagToRemove!!)
+                                    // Remove conflicts RESET
+                                    if (voidConflict) {
+                                        for (tag in someTags) {
+                                            for (unknownPlayer in onlinePlayers) {
+                                                if (tag == "VoidTouched_${unknownPlayer.name}") {
+                                                    //voidTouchedEntity.removeScoreboardTag(tag)
+                                                    tagsToRemove.add(tag)
+                                                }
+                                            }
+                                        }
+                                        for (someTag in tagsToRemove) {
+                                            voidTouchedEntity.removeScoreboardTag(someTag)
+                                        }
+                                    }
+                                    val voidTouchFactor = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.VOID_STRIKE)
 
-                                }
-                                // Apply initial tags
-                                if (!voidTouched) {
-                                    voidTouchedEntity.addScoreboardTag("VoidStruck_${somePlayer.name}_0")
-                                    voidTouchedEntity.addScoreboardTag("VoidTouched_${somePlayer.name}")
-                                }
-                                // Check if player
-                                if (playerMatch) {
-                                    somePlayer.world.spawnParticle(Particle.PORTAL, voidTouchedEntity.location, 85, 1.15, 0.85, 1.15)
-                                    somePlayer.world.spawnParticle(Particle.WAX_OFF, voidTouchedEntity.location, 45, 1.0, 0.75, 1.0)
-                                    somePlayer.world.spawnParticle(Particle.SPELL_WITCH, voidTouchedEntity.location, 50, 1.0, 0.75, 1.0)
-                                    somePlayer.playSound(somePlayer.location, Sound.BLOCK_BEACON_DEACTIVATE, 1.5F, 0.5F)
-                                    somePlayer.playSound(somePlayer.location, Sound.BLOCK_AMETHYST_BLOCK_BREAK, 1.7F, 0.2F)
-                                    somePlayer.playSound(somePlayer.location, Sound.ENTITY_ENDER_EYE_DEATH, 3.5F, 0.4F)
-                                    event.damage += voidDamage
-                                    println(event.damage)
+                                    // Run if no other voided
+                                    if (!voidConflict && playerMatch) {
+                                        println(someTags)
+                                        for (tag in someTags) {
+                                            // Max modifier
+                                            if (tag == "VoidStruck_${somePlayer.name}_10") {
+                                                //voidTouchedEntity.removeScoreboardTag("VoidStruck_${somePlayer.name}_10")
+                                                tagToRemove = "VoidStruck_${somePlayer.name}_10"
+                                                //voidTouchedEntity.addScoreboardTag("VoidStruck_${somePlayer.name}_0")
+                                                tagToAdd = "VoidStruck_${somePlayer.name}_0"
+                                                break
+                                            }
+                                            for (x in 0..9) {
+                                                if (tag == "VoidStruck_${somePlayer.name}_$x") {
+                                                    //voidTouchedEntity.removeScoreboardTag("VoidStruck_${somePlayer.name}_$x")
+                                                    tagToRemove = "VoidStruck_${somePlayer.name}_$x"
+                                                    val newX = x + 1
+                                                    //voidTouchedEntity.addScoreboardTag("VoidStruck_${somePlayer.name}_$newX")
+                                                    tagToAdd = "VoidStruck_${somePlayer.name}_$newX"
+                                                    voidDamage = (voidTouchFactor * x) + voidTouchFactor
+                                                    break
+                                                }
+                                            }
+                                        }
+                                        voidTouchedEntity.addScoreboardTag(tagToAdd!!)
+                                        voidTouchedEntity.removeScoreboardTag(tagToRemove!!)
+
+                                    }
+                                    // Apply initial tags
+                                    if (!voidTouched) {
+                                        voidTouchedEntity.addScoreboardTag("VoidStruck_${somePlayer.name}_0")
+                                        voidTouchedEntity.addScoreboardTag("VoidTouched_${somePlayer.name}")
+                                    }
+                                    // Check if player
+                                    if (playerMatch) {
+                                        somePlayer.world.spawnParticle(Particle.PORTAL, voidTouchedEntity.location, 85, 1.15, 0.85, 1.15)
+                                        somePlayer.world.spawnParticle(Particle.WAX_OFF, voidTouchedEntity.location, 45, 1.0, 0.75, 1.0)
+                                        somePlayer.world.spawnParticle(Particle.SPELL_WITCH, voidTouchedEntity.location, 50, 1.0, 0.75, 1.0)
+                                        somePlayer.playSound(somePlayer.location, Sound.BLOCK_BEACON_DEACTIVATE, 1.5F, 0.5F)
+                                        somePlayer.playSound(somePlayer.location, Sound.BLOCK_AMETHYST_BLOCK_BREAK, 1.7F, 0.2F)
+                                        somePlayer.playSound(somePlayer.location, Sound.ENTITY_ENDER_EYE_DEATH, 3.5F, 0.4F)
+                                        event.damage += voidDamage
+                                        println(event.damage)
+                                    }
                                 }
                             }
                         }

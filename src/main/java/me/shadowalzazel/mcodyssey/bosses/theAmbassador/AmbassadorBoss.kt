@@ -95,8 +95,8 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         val voidFall = PotionEffect(PotionEffectType.SLOW_FALLING, 2400, 1)
         val voidGlow = PotionEffect(PotionEffectType.GLOWING, 2400, 1)
         val voidSolar = PotionEffect(PotionEffectType.FIRE_RESISTANCE, 99999, 3)
-        val enhancedHealth = PotionEffect(PotionEffectType.HEALTH_BOOST, 99999, 235)
-        val ankiRainEffects = listOf(enhancedHealth, voidFall, voidSolar, voidGlow)
+        val bossHealth = PotionEffect(PotionEffectType.HEALTH_BOOST, 99999, 235)
+        val ankiRainEffects = listOf(bossHealth, voidFall, voidSolar, voidGlow)
         ambassadorEntity.addPotionEffects(ankiRainEffects)
 
         despawnTimer = System.currentTimeMillis()

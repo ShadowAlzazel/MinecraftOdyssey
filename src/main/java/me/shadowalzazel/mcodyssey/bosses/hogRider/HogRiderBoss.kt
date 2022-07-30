@@ -16,6 +16,7 @@ class HogRiderBoss : OdysseyBoss("Hog Rider", "Piglin") {
     var bossEntityRider: PiglinBrute? = null
     var bossEntityMount: Hoglin? = null
     var despawnTimer: Long = 1
+    var hogJumpAttackCooldown: Long = 0L
 
     private fun createHogRiderWeapon(): ItemStack {
         val smokyWarHammer = ItemStack(Material.NETHERITE_AXE, 1)
@@ -111,6 +112,28 @@ class HogRiderBoss : OdysseyBoss("Hog Rider", "Piglin") {
         // Change boss class
         bossEntityRider = hogRider
         bossEntityMount = warthog
+    }
+
+
+    fun hogRiderAttacks(hogRiderEntity: PiglinBrute) {
+        val timeElapsed: Long = System.currentTimeMillis() - hogJumpAttackCooldown
+
+        if (timeElapsed >= 2 * 1000) {
+
+            if (bossEntityMount != null) {
+                println("Jumped")
+                hogJumpAttackCooldown = System.currentTimeMillis()
+                val playersNearHogRider = hogRiderEntity.world.getNearbyPlayers(hogRiderEntity.location, 25.5)
+                val randomPlayer = playersNearHogRider.random()
+
+                bossEntityMount!!.velocity = randomPlayer.location.add(0.0, 1.5 ,0.0).subtract(hogRiderEntity.location).toVector().multiply(0.25)
+            }
+
+            // Scream
+
+
+        }
+
     }
 
 
