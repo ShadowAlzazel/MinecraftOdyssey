@@ -26,6 +26,7 @@ object OdysseyItems {
     val POLYMORPHIC_GLUE: OdysseyItem = PolymorphicGlue
     val ARTIFICIAL_STAR_UNIT: OdysseyItem = ArtificialStarUnit
     val GILDED_BOOK = GildedBook
+    val SILMARIL_OF_YGGLADIEL = SilmarilOfYggladiel
 
 }
 
@@ -44,6 +45,15 @@ object GildedBook : OdysseyItem("Gilded Book", Material.ENCHANTED_BOOK) {
     }
 }
 
+
+object SilmarilOfYggladiel : OdysseyItem("Silmaril Of Yggladiel", Material.AMETHYST_CLUSTER) {
+    override val odysseyDisplayName: String = "${ChatColor.LIGHT_PURPLE}${ChatColor.ITALIC}$name"
+    override val odysseyLore = listOf("${ChatColor.GOLD}A jewel fruit by the world tree Yggladiel on Lupercal")
+    override val isEnchanted: Boolean = true
+    override val someEnchantType: Enchantment = Enchantment.LOOT_BONUS_BLOCKS
+    override val someEnchantLevel: Int = 5
+
+}
 
 
 // Paper's of Arcus
