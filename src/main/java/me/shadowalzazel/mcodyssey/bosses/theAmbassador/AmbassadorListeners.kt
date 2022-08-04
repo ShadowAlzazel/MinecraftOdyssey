@@ -67,7 +67,7 @@ object AmbassadorListeners: Listener {
                 val ambassadorBoss = MinecraftOdyssey.instance.currentBoss as AmbassadorBoss
                 val timeElapsed = System.currentTimeMillis() - ambassadorBoss.despawnTimer
                 val globalTimeElapsed = System.currentTimeMillis() - MinecraftOdyssey.instance.bossDespawnTimer
-                if (timeElapsed >= 3000000 && globalTimeElapsed > 3000000) { //3000000
+                if (timeElapsed >= 90000000 && globalTimeElapsed > 90000000) { //3000000
                     ambassadorBoss.departBoss()
                     ambassadorBoss.bossEntity!!.remove()
                     MinecraftOdyssey.instance.activeBoss = false
