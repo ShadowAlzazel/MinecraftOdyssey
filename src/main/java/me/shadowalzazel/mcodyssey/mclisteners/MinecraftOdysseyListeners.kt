@@ -4,7 +4,7 @@ package me.shadowalzazel.mcodyssey.mclisteners
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.bosses.theAmbassador.AmbassadorBoss
-import me.shadowalzazel.mcodyssey.enchantments.GildedPower
+import me.shadowalzazel.mcodyssey.enchantments.utility.GildedPower
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.odysseyUtility.OdysseyItems
 import org.bukkit.ChatColor

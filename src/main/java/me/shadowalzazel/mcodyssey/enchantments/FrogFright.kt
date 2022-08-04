@@ -5,11 +5,11 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object GuardingStrike : OdysseyEnchantmentWrapper("guardingstrike", "Guarding Strike", 2) {
+object FrogFright : OdysseyEnchantmentWrapper("frogfright", "Frog Fright", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.VOID_STRIKE, OdysseyEnchantments.EXPLODING, KNOCKBACK-> {
+            OdysseyEnchantments.VOID_STRIKE, OdysseyEnchantments.EXPLODING, KNOCKBACK -> {
                 true
             }
             else -> {
