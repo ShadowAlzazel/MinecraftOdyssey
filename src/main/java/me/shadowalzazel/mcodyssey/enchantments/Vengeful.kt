@@ -5,11 +5,11 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object PotionBarrier : OdysseyEnchantmentWrapper("potionbarrier", "Potion Barrier", 2) {
+object Vengeful : OdysseyEnchantmentWrapper("vengeful", "Vengeful", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            THORNS, OdysseyEnchantments.FRUITFUL_FARE -> {
+            THORNS, OdysseyEnchantments.FRUITFUL_FARE, OdysseyEnchantments.POTION_BARRIER -> {
                 true
             }
             else -> {
@@ -30,4 +30,3 @@ object PotionBarrier : OdysseyEnchantmentWrapper("potionbarrier", "Potion Barrie
     }
 
 }
-

@@ -15,6 +15,7 @@ object OdysseyRecipes {
         RecipeChoice.MaterialChoice(Material.ENCHANTED_BOOK), RecipeChoice.MaterialChoice(Material.ENCHANTED_BOOK)
     )
 
+    // Main for gilded books to equipment
     var odysseyGildedSmithing: SmithingRecipe = SmithingRecipe(
         NamespacedKey(MinecraftOdyssey.instance, "odysseygildedsmithing"),
         ItemStack(Material.AIR),
