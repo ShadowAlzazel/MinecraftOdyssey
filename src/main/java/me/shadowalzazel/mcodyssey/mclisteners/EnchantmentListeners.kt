@@ -6,10 +6,9 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDeathEvent
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
-import me.shadowalzazel.mcodyssey.mclisteners.utility.DecayingTask
-import me.shadowalzazel.mcodyssey.mclisteners.utility.FreezingTask
-import me.shadowalzazel.mcodyssey.mclisteners.utility.HoneyedTask
+import me.shadowalzazel.mcodyssey.mclisteners.utility.*
 import org.bukkit.*
+import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Bee
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Fireball
@@ -37,7 +36,10 @@ object EnchantmentListeners : Listener {
     private var playersBuzzyBeesCooldown = mutableMapOf<UUID, Long>()
     private var playersDecayingTouchCooldown = mutableMapOf<UUID, Long>()
     private var playersExplodingCooldown = mutableMapOf<UUID, Long>()
+    private var playersFruitfulFareCooldown = mutableMapOf<UUID, Long>()
+    private var playersGravityWellCooldown = mutableMapOf<UUID, Long>()
     private var playersGuardingStrikeCooldown = mutableMapOf<UUID, Long>()
+    private var playersHemorrhageCooldown = mutableMapOf<UUID, Long>()
     private var playersPotionBarrierCooldown = mutableMapOf<UUID, Long>()
     private var playersVoidStrikeCooldown = mutableMapOf<UUID, Long>()
     private var playersWhirlwindCooldown = mutableMapOf<UUID, Long>()
@@ -178,6 +180,31 @@ object EnchantmentListeners : Listener {
     }
 
 
+    // COWARDICE enchantment effects
+    @EventHandler
+    fun cowardiceEnchantment(event: EntityDamageByEntityEvent) {
+        if (event.entity is LivingEntity) {
+            val cowardiceEntity = event.entity as LivingEntity
+            if (cowardiceEntity.equipment != null) {
+                if (cowardiceEntity.equipment!!.leggings != null) {
+                    val someArmor = cowardiceEntity.equipment!!.leggings!!
+                    if (someArmor.hasItemMeta()) {
+                        if (someArmor.itemMeta.hasEnchant(OdysseyEnchantments.COWARDICE)) {
+                            val cowardiceFactor = someArmor.itemMeta.getEnchantLevel(OdysseyEnchantments.COWARDICE)
+                            val cowardiceEffect = PotionEffect(PotionEffectType.SPEED, 6 * 20 , cowardiceFactor)
+                            val nearbyEnemies = cowardiceEntity.world.getNearbyLivingEntities(cowardiceEntity.location, 2.5)
+                            if (event.damager in nearbyEnemies) {
+                                cowardiceEntity.velocity = cowardiceEntity.location.add(0.0, 0.50, 0.0).subtract(event.damager.location).toVector().multiply(0.75)
+                            }
+                            cowardiceEntity.addPotionEffect(cowardiceEffect)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
     // DECAYING_TOUCH Enchantment Effects
     @EventHandler
     fun decayingTouchEnchantment(event: EntityDamageByEntityEvent) {
@@ -197,7 +224,7 @@ object EnchantmentListeners : Listener {
                             val timeElapsed: Long = System.currentTimeMillis() - playersDecayingTouchCooldown[somePlayer.uniqueId]!!
                             val decayingTouchFactor = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.DECAYING_TOUCH)
 
-                            if (timeElapsed > (3 - decayingTouchFactor) * 1000) {
+                            if (timeElapsed > (3.5 - decayingTouchFactor) * 1000) {
                                 playersDecayingTouchCooldown[somePlayer.uniqueId] = System.currentTimeMillis()
 
                                 decayingEntity.world.spawnParticle(Particle.SPORE_BLOSSOM_AIR , decayingEntity.location, 40, 0.25, 0.4, 0.25)
@@ -206,7 +233,7 @@ object EnchantmentListeners : Listener {
                                 decayingEntity.world.spawnParticle(Particle.SNEEZE, decayingEntity.location, 40, 0.25, 0.25, 0.25)
                                 decayingEntity.world.spawnParticle(Particle.SCRAPE, decayingEntity.location, 20, 0.5, 1.0, 0.5)
 
-                                val decayEffect = PotionEffect(PotionEffectType.HUNGER, 10 , 0)
+                                val decayEffect = PotionEffect(PotionEffectType.HUNGER, 10 * 20 , 0)
                                 decayingEntity.addPotionEffect(decayEffect)
 
                                 val decayingTask = DecayingTask(decayingEntity, decayingTouchFactor)
@@ -332,6 +359,95 @@ object EnchantmentListeners : Listener {
     }
 
 
+    // FRUITFUL_FARE enchantment effects
+    @EventHandler
+    fun fruitfulFareEnchantment(event: PlayerItemConsumeEvent) {
+        val somePlayer: Player = event.player
+        if (somePlayer.inventory.chestplate != null) {
+            if (somePlayer.inventory.chestplate!!.hasItemMeta()) {
+                val someArmor = somePlayer.inventory.chestplate
+                if (someArmor!!.itemMeta.hasEnchant(OdysseyEnchantments.FRUITFUL_FARE)) {
+                    val fruitfulFareFactor = someArmor.itemMeta.getEnchantLevel(OdysseyEnchantments.FRUITFUL_FARE)
+                    if (somePlayer.gameMode != GameMode.SPECTATOR) {
+                        // ADD later all with keys for more heal
+                        val someFoods = listOf(Material.APPLE, Material.PUMPKIN_PIE, Material.HONEY_BOTTLE, Material.DRIED_KELP)
+
+                        if (event.item.type in someFoods) {
+                            if (!playersFruitfulFareCooldown.containsKey(somePlayer.uniqueId)) {
+                                playersFruitfulFareCooldown[somePlayer.uniqueId] = 0L
+                            }
+
+                            val timeElapsed: Long = System.currentTimeMillis() - playersFruitfulFareCooldown[somePlayer.uniqueId]!!
+                            if (timeElapsed > (10 - fruitfulFareFactor) * 1000) {
+                                playersFruitfulFareCooldown[somePlayer.uniqueId] = System.currentTimeMillis()
+
+                                // Effects
+                                val currentHealth = somePlayer.health
+                                println(somePlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value)
+                                println(currentHealth)
+                                if (somePlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value < currentHealth + (1 + fruitfulFareFactor)) {
+                                    somePlayer.health = somePlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value
+                                }
+                                else {
+                                    somePlayer.health += (1 + fruitfulFareFactor)
+                                }
+
+                                // Particles
+                                somePlayer.world.spawnParticle(Particle.HEART, somePlayer.location, 35, 0.5, 0.5, 0.5)
+                                somePlayer.world.spawnParticle(Particle.VILLAGER_HAPPY, somePlayer.location, 35, 0.5, 0.5, 0.5)
+                                somePlayer.world.spawnParticle(Particle.COMPOSTER, somePlayer.location, 35, 0.5, 0.5, 0.5)
+                                somePlayer.playSound(somePlayer.location, Sound.ENTITY_STRIDER_HAPPY, 1.5F, 0.5F)
+                                somePlayer.playSound(somePlayer.location, Sound.BLOCK_RESPAWN_ANCHOR_SET_SPAWN, 1.5F, 0.5F)
+                                somePlayer.playSound(somePlayer.location, Sound.ENTITY_WANDERING_TRADER_DRINK_POTION, 1.5F, 0.8F)
+
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    // GRAVITY_WELL enchantment effects
+    @EventHandler
+    fun gravityWellEnchantment(event: EntityDamageByEntityEvent) {
+        if (event.damager is Player) {
+            val somePlayer: Player = event.damager as Player
+            if (event.entity is LivingEntity) {
+                val gravitatingEntity: LivingEntity = event.entity as LivingEntity
+                if (somePlayer.inventory.itemInMainHand.hasItemMeta()) {
+                    val someWeapon = somePlayer.inventory.itemInMainHand
+                    if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.GRAVITY_WELL)) {
+                        if (somePlayer.gameMode != GameMode.SPECTATOR) {
+
+                            if (!playersGravityWellCooldown.containsKey(somePlayer.uniqueId)) {
+                                playersGravityWellCooldown[somePlayer.uniqueId] = 0L
+                            }
+
+                            val timeElapsed: Long = System.currentTimeMillis() - playersGravityWellCooldown[somePlayer.uniqueId]!!
+
+                            if (timeElapsed > 8 * 1000) {
+                                playersGravityWellCooldown[somePlayer.uniqueId] = System.currentTimeMillis()
+
+                                somePlayer.playSound(somePlayer.location, Sound.BLOCK_RESPAWN_ANCHOR_CHARGE, 1.5F, 0.2F)
+
+                                val singularityPoint = event.entity.location
+                                val gravityWellFactor = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.GRAVITY_WELL)
+                                val gravityWellTask = GravitationalAttract(gravitatingEntity, singularityPoint, gravityWellFactor, somePlayer)
+                                // Every 10 ticks -> 0.5 sec
+                                gravityWellTask.runTaskTimer(MinecraftOdyssey.instance, 0, 10)
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
     // GUARDING_STRIKE enchantment effects
     @EventHandler
     fun guardingStrikeEnchant(event: EntityDeathEvent) {
@@ -362,6 +478,41 @@ object EnchantmentListeners : Listener {
                             somePlayer.playSound(somePlayer.location, Sound.BLOCK_DEEPSLATE_BREAK, 1.5F, 0.5F)
 
                             println("Did guarding strike")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // HEMORRHAGE Enchantment Effects
+    @EventHandler
+    fun hemorrhageEnchantment(event: EntityDamageByEntityEvent) {
+        if (event.damager is Player) {
+            val somePlayer: Player = event.damager as Player
+            if (event.entity is LivingEntity) {
+                val hemorrhagingEntity: LivingEntity = event.entity as LivingEntity
+                if (somePlayer.inventory.itemInMainHand.hasItemMeta()) {
+                    val someWeapon = somePlayer.inventory.itemInMainHand
+                    if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.HEMORRHAGE)) {
+                        if (somePlayer.gameMode != GameMode.SPECTATOR) {
+
+                            if (!playersHemorrhageCooldown.containsKey(somePlayer.uniqueId)) {
+                                playersHemorrhageCooldown[somePlayer.uniqueId] = 0L
+                            }
+
+                            val timeElapsed: Long = System.currentTimeMillis() - playersHemorrhageCooldown[somePlayer.uniqueId]!!
+                            val hemorrhageFactor = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.HEMORRHAGE)
+
+                            if (timeElapsed > (3.5 - hemorrhageFactor) * 1000) {
+                                playersHemorrhageCooldown[somePlayer.uniqueId] = System.currentTimeMillis()
+
+                                val hemorrhageTask = HemorrhageTask(hemorrhagingEntity, hemorrhageFactor)
+                                // Every 1.5 secs
+                                hemorrhageTask.runTaskTimer(MinecraftOdyssey.instance, 0, 30)
+
+
+                            }
                         }
                     }
                 }
@@ -411,6 +562,101 @@ object EnchantmentListeners : Listener {
     }
 
 
+    // SPOREFUL enchantment effects
+    @EventHandler
+    fun sporefulEnchantment(event: EntityDamageByEntityEvent) {
+        if (event.entity is LivingEntity) {
+            val sporingEntity = event.entity as LivingEntity
+            if (sporingEntity.equipment != null) {
+                if (sporingEntity.equipment!!.leggings != null) {
+                    val someArmor = sporingEntity.equipment!!.leggings!!
+                    if (someArmor.hasItemMeta()) {
+                        if (someArmor.itemMeta.hasEnchant(OdysseyEnchantments.SPOREFUL)) {
+                            val sporingFactor = someArmor.itemMeta.getEnchantLevel(OdysseyEnchantments.SPOREFUL)
+                            val nearbyEnemies = sporingEntity.world.getNearbyLivingEntities(sporingEntity.location, sporingFactor.toDouble() * 0.75)
+                            nearbyEnemies.remove(sporingEntity)
+                            // Effects
+                            val sporegenesisEffect = PotionEffect(PotionEffectType.POISON, ((sporingFactor * 2) + 2) * 20, 0)
+                            val sporefusionEffect = PotionEffect(PotionEffectType.CONFUSION, ((sporingFactor * 2) + 2) * 20, 1)
+                            val sporeSlowEffect = PotionEffect(PotionEffectType.SLOW, 20, 0)
+                            // Particles
+                            sporingEntity.world.spawnParticle(Particle.GLOW_SQUID_INK, sporingEntity.location, 65, 0.5, 0.5, 0.5)
+                            sporingEntity.world.spawnParticle(Particle.GLOW, sporingEntity.location, 45, 0.5, 0.5, 0.5)
+                            sporingEntity.world.spawnParticle(Particle.WARPED_SPORE, sporingEntity.location, 95, 0.75, 0.5, 0.75)
+                            sporingEntity.world.spawnParticle(Particle.SNEEZE, sporingEntity.location, 65, 0.15, 0.15, 0.15)
+                            sporingEntity.world.spawnParticle(Particle.FALLING_SPORE_BLOSSOM, sporingEntity.location, 85, 1.0, 0.5, 1.0)
+
+                            for (threat in nearbyEnemies) {
+                                threat.addPotionEffect(sporegenesisEffect)
+                                threat.addPotionEffect(sporefusionEffect)
+                                threat.addPotionEffect(sporeSlowEffect)
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    // SQUIDIFY enchantment effects
+    @EventHandler
+    fun squidifyEnchantment(event: EntityDamageByEntityEvent) {
+        if (event.entity is LivingEntity) {
+            val squidingEntity = event.entity as LivingEntity
+            if (squidingEntity.equipment != null) {
+                if (squidingEntity.equipment!!.leggings != null) {
+                    val someArmor = squidingEntity.equipment!!.leggings!!
+                    if (someArmor.hasItemMeta()) {
+                        if (someArmor.itemMeta.hasEnchant(OdysseyEnchantments.SQUIDIFY)) {
+                            val squidingFactor = someArmor.itemMeta.getEnchantLevel(OdysseyEnchantments.SQUIDIFY)
+                            val nearbyEnemies = squidingEntity.world.getNearbyLivingEntities(squidingEntity.location, squidingFactor.toDouble() * 0.75)
+                            nearbyEnemies.remove(squidingEntity)
+                            // Effects
+                            val squidInkEffect = PotionEffect(PotionEffectType.BLINDNESS, (squidingFactor * 2) + 2, 1)
+                            val squidSlowEffect = PotionEffect(PotionEffectType.SLOW, squidingFactor * 20, 2)
+                            // Particles
+                            squidingEntity.world.spawnParticle(Particle.ASH, squidingEntity.location, 95, 1.5, 0.5, 1.5)
+                            squidingEntity.world.spawnParticle(Particle.SPELL_MOB_AMBIENT, squidingEntity.location, 55, 0.75, 0.5, 0.75)
+                            squidingEntity.world.spawnParticle(Particle.SQUID_INK, squidingEntity.location, 85, 0.75, 0.5, 0.75)
+                            squidingEntity.world.spawnParticle(Particle.SMOKE_LARGE, squidingEntity.location, 85, 1.0, 0.5, 1.0)
+
+                            for (threat in nearbyEnemies) {
+                                threat.addPotionEffect(squidInkEffect)
+                                threat.addPotionEffect(squidSlowEffect)
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    // VENGEFUL enchantment effects
+    @EventHandler
+    fun vengefulEnchantment(event: EntityDamageByEntityEvent) {
+        if (event.entity is LivingEntity) {
+            val vengefulEntity = event.entity as LivingEntity
+            if (vengefulEntity.equipment != null) {
+                if (vengefulEntity.equipment!!.chestplate != null) {
+                    val someChestplate = vengefulEntity.equipment!!.chestplate!!
+                    if (someChestplate.hasItemMeta()) {
+                        if (someChestplate.itemMeta.hasEnchant(OdysseyEnchantments.VENGEFUL)) {
+                            val vengefulFactor = someChestplate.itemMeta.getEnchantLevel(OdysseyEnchantments.VENGEFUL)
+                            val nearbyEnemies = vengefulEntity.world.getNearbyLivingEntities(vengefulEntity.location, vengefulFactor.toDouble() + 0.5)
+
+                            if (event.damager in nearbyEnemies) {
+                                vengefulEntity.attack(event.damager)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 
     // VOID_STRIKE enchantment effects
@@ -550,8 +796,7 @@ object EnchantmentListeners : Listener {
                     val someWeapon = somePlayer.inventory.itemInMainHand
                     if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.WHIRLWIND)) {
                         if (somePlayer.gameMode != GameMode.SPECTATOR) {
-                            val target = someEntity.getTargetEntity(15)
-                            if (target != somePlayer) {
+                            if (someEntity.hasLineOfSight(somePlayer)) {
                                 if (!playersWhirlwindCooldown.containsKey(somePlayer.uniqueId)) {
                                     playersWhirlwindCooldown[somePlayer.uniqueId] = 0L
                                 }
@@ -559,11 +804,12 @@ object EnchantmentListeners : Listener {
                                 val timeElapsed: Long =
                                     System.currentTimeMillis() - playersWhirlwindCooldown[somePlayer.uniqueId]!!
 
-                                if (timeElapsed > 0.75 * 1000) {
+                                if (timeElapsed > 0.85 * 1000) {
                                     val whirlwindFactor = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.WHIRLWIND)
                                     playersWhirlwindCooldown[somePlayer.uniqueId] = System.currentTimeMillis()
 
-                                    val entitiesNearPlayer = somePlayer.world.getNearbyLivingEntities(somePlayer.location, 1.25)
+                                    //1.25
+                                    val entitiesNearPlayer = somePlayer.world.getNearbyLivingEntities(somePlayer.location, 1.375)
                                     entitiesNearPlayer.remove(somePlayer)
                                     entitiesNearPlayer.remove(someEntity)
 
@@ -571,34 +817,38 @@ object EnchantmentListeners : Listener {
                                     val xCord = somePlayer.location.x - 1.25
                                     val yCord = somePlayer.location.y + 1
                                     val zCord = somePlayer.location.z
-                                    val someLocation = somePlayer.location
+                                    //val someLocation = somePlayer.location
 
                                     for (n in 0..16) {
                                         val s = (2.5 / 16) * n
                                         if (n == 16 || n == 0) {
-                                            //somePlayer.world.spawnParticle(Particle.SWEEP_ATTACK, xCord + s, yCord, zCord, 3)
-                                            somePlayer.spawnParticle(Particle.SWEEP_ATTACK, someLocation.add(xCord + s, yCord, zCord), 1)
+                                            somePlayer.world.spawnParticle(Particle.SWEEP_ATTACK, xCord + s, yCord, zCord, 1)
                                         }
                                         else {
                                             var q = s
                                             if (n > 8) {
                                                 q -= (2.5 / 16) * (n - 8)
                                             }
-                                            //somePlayer.world.spawnParticle(Particle.SWEEP_ATTACK, xCord + s, yCord, zCord + q, 3)
-                                            //somePlayer.world.spawnParticle(Particle.SWEEP_ATTACK, xCord + s, yCord, zCord - q, 3)
-                                            somePlayer.spawnParticle(Particle.SWEEP_ATTACK, someLocation.add(xCord + s, yCord, zCord + q), 1)
-                                            somePlayer.spawnParticle(Particle.SWEEP_ATTACK, someLocation.add(xCord + s, yCord, zCord - q), 1)
+                                            somePlayer.world.spawnParticle(Particle.SWEEP_ATTACK, xCord + s, yCord, zCord + q, 1)
+                                            somePlayer.world.spawnParticle(Particle.SWEEP_ATTACK, xCord + s, yCord, zCord - q, 1)
                                         }
                                     }
 
-
+                                    val playerLocation = somePlayer.location
                                     val someDamage = event.damage
+                                    val whirlwindPercentage = (0.3 + ((whirlwindFactor * 3) * 0.1))
+                                    val whirlDamage = someDamage * whirlwindPercentage
+                                    println("event: $someDamage, percent: $whirlwindPercentage, newDamage: $whirlDamage")
+
                                     for (closeEntity in entitiesNearPlayer) {
-                                        closeEntity.damage(someDamage * (0.2 + ((whirlwindFactor * 3) / 10)), somePlayer)
+                                        closeEntity.damage(whirlDamage, somePlayer)
+                                        closeEntity.velocity = closeEntity.location.add(0.0, 1.15, 0.0).subtract(playerLocation).toVector().multiply(0.45)
                                         //somePlayer.world.spawnParticle(Particle.SWEEP_ATTACK, closeEntity.location, 1, 0.05, 0.05, 0.05)
-                                        somePlayer.playSound(closeEntity.location, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 3.5F, 0.7F)
-                                        somePlayer.playSound(closeEntity.location, Sound.ITEM_CROSSBOW_QUICK_CHARGE_2, 3.5F, 0.4F)
                                     }
+                                    somePlayer.playSound(somePlayer.location, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1.2F, 0.7F)
+                                    somePlayer.playSound(somePlayer.location, Sound.ITEM_SHIELD_BLOCK, 1.2F, 0.6F)
+                                    somePlayer.playSound(somePlayer.location, Sound.ITEM_TRIDENT_RIPTIDE_3, 1.2F, 0.6F)
+                                    somePlayer.playSound(somePlayer.location, Sound.ITEM_TRIDENT_RIPTIDE_2, 1.2F, 1.2F)
 
 
                                 }

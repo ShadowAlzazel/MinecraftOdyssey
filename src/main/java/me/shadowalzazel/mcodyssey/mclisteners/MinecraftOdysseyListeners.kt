@@ -9,6 +9,8 @@ import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.odysseyUtility.OdysseyItems
 import org.bukkit.ChatColor
 import org.bukkit.Material
+import org.bukkit.attribute.Attribute
+import org.bukkit.attribute.AttributeModifier
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
@@ -19,9 +21,11 @@ import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.event.inventory.PrepareSmithingEvent
 import org.bukkit.event.world.TimeSkipEvent
+import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import java.util.*
 
 object MinecraftOdysseyListeners : Listener {
 
@@ -114,16 +118,33 @@ object MinecraftOdysseyListeners : Listener {
                 println("${event.result}")
             }
 
+            // TEMP!!!
             // Adding Gilded Power
             else if (event.inventory.inputMineral!!.type == Material.DRAGON_EGG) {
                 val someItem = event.inventory.inputEquipment!!.clone()
                 if (someItem.hasItemMeta()) {
                     if (someItem.itemMeta.hasEnchant(OdysseyEnchantments.GILDED_POWER)) {
                         val gildedPower = someItem.getEnchantmentLevel(OdysseyEnchantments.GILDED_POWER)
-                        if (gildedPower < 3) {
+                        // 3
+                        // TEMP 1000
+                        if (gildedPower < 1000) {
                             val newItemMeta = someItem.itemMeta
                             newItemMeta.removeEnchant(GildedPower)
                             newItemMeta.addEnchant(OdysseyEnchantments.GILDED_POWER, gildedPower + 1, true)
+                            val genericAttackDamageUUID: UUID = UUID.fromString("CB3F55D3-645C-4F38-A497-9C13A33DB5CF")
+                            //val someNewAttackStat = AttributeModifier(genericAttackDamageUUID, "generic.attack_damage", 1.0, AttributeModifier.Operation.ADD_NUMBER)
+                            //val oldAttack = newItemMeta.
+                            if (newItemMeta.hasAttributeModifiers()) {
+                                val oldAttackAttribute = newItemMeta.attributeModifiers!![Attribute.GENERIC_ATTACK_DAMAGE]
+                                println(oldAttackAttribute)
+                                //FIX !!!!!!!!!!!!!!
+
+                            }
+
+                            val someNewAttackStat = AttributeModifier(UUID.randomUUID(), "generic.attack_damage", 100.0, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND)
+                            newItemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, someNewAttackStat)
+                            //newItemMeta.addAttributeModifier()
+                            println(newItemMeta.attributeModifiers)
                             someItem.itemMeta = newItemMeta
                             event.result = someItem
                             println("${event.result}")
@@ -134,7 +155,7 @@ object MinecraftOdysseyListeners : Listener {
 
 
 
-            // Naming
+            // NAMING
             else if (event.inventory.inputMineral!!.type == Material.DIAMOND || event.inventory.inputMineral!!.type == Material.AMETHYST_SHARD) {
                 val namedEquipment = event.inventory.inputEquipment!!.clone()
                 val forgerName = mutableListOf("")
@@ -156,8 +177,6 @@ object MinecraftOdysseyListeners : Listener {
                     val newLore = namedEquipment.lore!! + forgerName
                     newItemMeta.lore = newLore
                     namedEquipment.itemMeta = newItemMeta
-
-
                 }
                 else {
                     newItemMeta.lore = forgerName
@@ -168,10 +187,12 @@ object MinecraftOdysseyListeners : Listener {
                 println("${event.result}")
             }
 
-            // BOOK CAN NEVER HAVE GILDED POWER
-            // Check if book
+
+
+            // GILDED SMITHING
             else if (event.inventory.inputMineral!!.type == Material.ENCHANTED_BOOK && event.inventory.inputEquipment!!.type != Material.ENCHANTED_BOOK) {
-                // Create values
+                // BOOK CAN NEVER HAVE GILDED POWER
+                // Create items
                 val gildedEquipment = event.inventory.inputEquipment!!.clone()
                 val gildedEnchantmentBook = event.inventory.inputMineral
                 // Check
@@ -267,7 +288,8 @@ object MinecraftOdysseyListeners : Listener {
                     }
                 }
             }
-            // Combine Similar gilded enchant
+
+            // GILDED BOOK COMBINE
             else if (event.inventory.inputMineral!!.type == Material.ENCHANTED_BOOK && event.inventory.inputEquipment!!.type == Material.ENCHANTED_BOOK) {
                 val gildedBook1 = event.inventory.inputMineral
                 val gildedBook2 = event.inventory.inputEquipment
