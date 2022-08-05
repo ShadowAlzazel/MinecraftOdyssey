@@ -23,7 +23,9 @@ import org.bukkit.entity.Raider
 import org.bukkit.entity.Vex
 import org.bukkit.entity.WaterMob
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.ProjectileHitEvent
 import org.bukkit.event.player.PlayerItemConsumeEvent
+import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
@@ -519,6 +521,37 @@ object EnchantmentListeners : Listener {
             }
         }
     }
+
+
+    // MIRROR_FORCE enchantment effects
+    @EventHandler
+    fun mirrorForceEnchantment(event: ProjectileHitEvent) {
+        if (event.hitEntity != null) {
+            if (event.hitEntity is LivingEntity) {
+                val blockingEntity = event.hitEntity as LivingEntity
+                if (blockingEntity.equipment != null ) {
+                    if (blockingEntity.equipment!!.itemInOffHand.hasItemMeta() ) {
+                        val someShield = blockingEntity.equipment!!.itemInOffHand
+                        if (someShield.itemMeta.hasEnchant(OdysseyEnchantments.MIRROR_FORCE)) {
+                            if (blockingEntity.isHandRaised) {
+                                if (blockingEntity.handRaised == EquipmentSlot.OFF_HAND) {
+                                    println("Blocked!")
+
+                                    //cooldown is factor
+
+                                    event.entity.velocity = event.entity.location.subtract(blockingEntity.location).toVector()
+                                    //direction
+
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
 
     // POTION_BARRIER enchantment effects

@@ -24,6 +24,7 @@ object OdysseyEnchantments {
     val GRAVITY_WELL: Enchantment = GravityWell
     val GUARDING_STRIKE: Enchantment = GuardingStrike
     val HEMORRHAGE: Enchantment = Hemorrhage
+    val MIRROR_FORCE: Enchantment = MirrorForce
     val POTION_BARRIER: Enchantment = PotionBarrier
     val SPOREFUL: Enchantment = Sporeful
     val SQUIDIFY: Enchantment = Squidify
@@ -33,7 +34,7 @@ object OdysseyEnchantments {
 
     // Set of all enchantments
     val enchantmentSet = setOf(GILDED_POWER, BACKSTABBER, BANE_OF_THE_ILLAGER, BANE_OF_THE_SEA, BANE_OF_THE_SWINE, BUZZY_BEES, COWARDICE, DECAYING_TOUCH,
-        EXPLODING, FREEZING_ASPECT, FROG_FRIGHT, FRUITFUL_FARE, GRAVITY_WELL, GUARDING_STRIKE, HEMORRHAGE, POTION_BARRIER, SPOREFUL, SQUIDIFY, VOID_STRIKE, WHIRLWIND)
+        EXPLODING, FREEZING_ASPECT, FROG_FRIGHT, FRUITFUL_FARE, GRAVITY_WELL, GUARDING_STRIKE, HEMORRHAGE, MIRROR_FORCE, POTION_BARRIER, SPOREFUL, SQUIDIFY, VOID_STRIKE, WHIRLWIND)
 
     // Register
     fun register() {

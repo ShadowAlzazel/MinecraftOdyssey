@@ -137,6 +137,9 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
     // Defeat Boss
     fun defeatedBoss(ambassadorEntity: Illusioner, vanquisher: Player) {
         val nearbyPlayers = ambassadorEntity.world.getNearbyPlayers(ambassadorEntity.location, 64.0)
+
+        vanquisher.world.dropItem(ambassadorEntity.location, (OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.GRAVITY_WELL, 1)))
+
         for (somePlayer in ambassadorEntity.world.players) {
             somePlayer.sendMessage("${ChatColor.YELLOW}${ChatColor.ITALIC}The Ambassador has departed ungracefully!")
             somePlayer.sendMessage("${ChatColor.YELLOW}${ChatColor.ITALIC}With ${ChatColor.GOLD}${vanquisher.name} ${ChatColor.RESET}${ChatColor.YELLOW}${ChatColor.ITALIC}taking the final blow!")
@@ -535,12 +538,12 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
             Material.DIAMOND, Material.EMERALD, Material.AMETHYST_SHARD -> {
                 giftLikeness -= 1
                 givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}These gems are not that refined according to standards. But... here is something for such work.")
-                givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward + 3))
+                givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward + 1))
             }
             Material.COPPER_INGOT, Material.IRON_INGOT, Material.GOLD_INGOT -> {
                 giftLikeness += 1
                 givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}The tribute of raw materials express the loyalty and growth of this world...")
-                givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward + 1))
+                givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward))
             }
             Material.IRON_BLOCK, Material.GOLD_BLOCK, Material.COPPER_BLOCK -> {
                 bossEntity?.world!!.spawnParticle(Particle.VILLAGER_HAPPY, givingPlayer.location, 15, 1.0, 1.0, 1.0)
@@ -598,7 +601,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
             Material.ENDER_CHEST -> {
                 giftLikeness += 3
                 givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Sub-Dimensional Storage. A step towards industrialization I see...And excellent presents!")
-                givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 3))
+                givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward + 1))
             }
             Material.ENCHANTED_GOLDEN_APPLE -> {
                 giftLikeness += 50

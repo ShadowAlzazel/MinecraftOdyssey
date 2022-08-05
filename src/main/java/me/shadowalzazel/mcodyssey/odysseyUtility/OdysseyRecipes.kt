@@ -9,6 +9,7 @@ import org.bukkit.inventory.SmithingRecipe
 
 object OdysseyRecipes {
 
+    // Main for combining books
     var gildedBookCombining: SmithingRecipe = SmithingRecipe(
         NamespacedKey(MinecraftOdyssey.instance, "gildedbookcombining"),
         ItemStack(Material.AIR),
