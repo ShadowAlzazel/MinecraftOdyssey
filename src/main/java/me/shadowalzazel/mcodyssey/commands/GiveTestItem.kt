@@ -24,9 +24,9 @@ object GiveTestItem : CommandExecutor {
             sender.inventory.addItem(someBook)
 
              */
-            sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.HEMORRHAGE, 2))
+            //sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.HEMORRHAGE, 2))
             //sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.POTION_BARRIER, 2))
-            sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.FREEZING_ASPECT, 2))
+            sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.MIRROR_FORCE, 2))
             return true
         }
         else {

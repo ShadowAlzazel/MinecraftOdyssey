@@ -6,6 +6,7 @@ import me.shadowalzazel.mcodyssey.bosses.utility.OdysseyBoss
 import me.shadowalzazel.mcodyssey.commands.*
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.mclisteners.*
+import me.shadowalzazel.mcodyssey.odysseyUtility.CookingRecipes
 import me.shadowalzazel.mcodyssey.odysseyUtility.OdysseyRecipes
 import org.bukkit.Bukkit
 
@@ -64,14 +65,22 @@ class MinecraftOdyssey : JavaPlugin() {
         server.pluginManager.registerEvents(OdysseyPlayerLeaveListener, this)
         // Enchantment listener
         server.pluginManager.registerEvents(EnchantmentListeners, this)
-        //Mob drops
+        // Mob drops
         server.pluginManager.registerEvents(OdysseyDropsListeners, this)
+        // Odyssey Food
+        server.pluginManager.registerEvents(OdysseyFoodListeners, this)
 
         // Custom Recipes
         Bukkit.addRecipe(OdysseyRecipes.odysseyNaming)
         Bukkit.addRecipe(OdysseyRecipes.odysseyGildedSmithing)
         Bukkit.addRecipe(OdysseyRecipes.gildedBookCombining)
         Bukkit.addRecipe(OdysseyRecipes.gildingUpgrading)
+
+        //Cooking Recipes
+        for (cookingRecipe in CookingRecipes.recipeSet) {
+            Bukkit.addRecipe(cookingRecipe)
+        }
+
 
         // Register Commands
         getCommand("SpawnAmbassador")?.setExecutor(SpawnAmbassador)
