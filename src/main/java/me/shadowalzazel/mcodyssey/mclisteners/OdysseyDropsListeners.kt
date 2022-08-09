@@ -25,10 +25,6 @@ object OdysseyDropsListeners : Listener {
         println("Dropped Item Gilded ${somePlayer.name}")
     }
 
-
-
-
-
     @EventHandler
     fun mobDrops(event: EntityDeathEvent) {
         if (MinecraftOdyssey.instance.ambassadorDefeated) {
@@ -99,6 +95,18 @@ object OdysseyDropsListeners : Listener {
                                     event.entity.location,
                                     (OdysseyItems.GILDED_BOOK.createGildedBook(
                                         OdysseyEnchantments.BANE_OF_THE_ILLAGER,
+                                        1
+                                    ))
+                                )
+                                droppedItemSound(somePlayer)
+                            }
+                        }
+                        is Ravager -> {
+                            if ((4.25 + luck + looting) * 10 > (0..1000).random()) {
+                                somePlayer.world.dropItem(
+                                    event.entity.location,
+                                    (OdysseyItems.GILDED_BOOK.createGildedBook(
+                                        OdysseyEnchantments.WHIRLWIND,
                                         1
                                     ))
                                 )

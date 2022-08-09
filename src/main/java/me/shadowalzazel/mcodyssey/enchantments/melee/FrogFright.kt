@@ -1,15 +1,16 @@
-package me.shadowalzazel.mcodyssey.enchantments
+package me.shadowalzazel.mcodyssey.enchantments.melee
 
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantmentWrapper
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object DecayingTouch : OdysseyEnchantmentWrapper("decayingtouch", "Decaying Touch", 3) {
+object FrogFright : OdysseyEnchantmentWrapper("frogfright", "Frog Fright", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            FIRE_ASPECT, OdysseyEnchantments.GUARDING_STRIKE, OdysseyEnchantments.FREEZING_ASPECT, OdysseyEnchantments.VOID_STRIKE -> {
+            OdysseyEnchantments.VOID_STRIKE, OdysseyEnchantments.EXPLODING, KNOCKBACK -> {
                 true
             }
             else -> {
@@ -29,5 +30,6 @@ object DecayingTouch : OdysseyEnchantmentWrapper("decayingtouch", "Decaying Touc
             }
         }
     }
+
 
 }

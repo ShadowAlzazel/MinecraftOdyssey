@@ -1,15 +1,16 @@
-package me.shadowalzazel.mcodyssey.enchantments
+package me.shadowalzazel.mcodyssey.enchantments.melee
 
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantmentWrapper
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object Exploding : OdysseyEnchantmentWrapper("exploding", "Exploding", 3) {
+object BaneOfTheSea : OdysseyEnchantmentWrapper("baneofthesea", "Bane of the Sea", 5) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            SWEEPING_EDGE, OdysseyEnchantments.BACKSTABBER, OdysseyEnchantments.VOID_STRIKE -> {
+            DAMAGE_ARTHROPODS, IMPALING, DAMAGE_ALL, DAMAGE_UNDEAD, OdysseyEnchantments.BANE_OF_THE_SWINE, OdysseyEnchantments.BANE_OF_THE_ILLAGER -> {
                 true
             }
             else -> {
