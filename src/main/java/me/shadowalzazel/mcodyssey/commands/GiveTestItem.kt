@@ -26,7 +26,8 @@ object GiveTestItem : CommandExecutor {
              */
             //sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.HEMORRHAGE, 2))
             //sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.POTION_BARRIER, 2))
-            sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.DOUSE, 2))
+            //sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.ALCHEMY_ARTILLERY, 2))
+            sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.LUCKY_DRAW, 2))
 
             sender.inventory.addItem(OdysseyItems.NEUTRONIUM_BARK_SCRAPS.createItemStack(1))
             sender.inventory.addItem(OdysseyItems.IDESCINE_ESSENCE.createItemStack(1))

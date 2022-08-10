@@ -6,6 +6,10 @@ import me.shadowalzazel.mcodyssey.bosses.utility.OdysseyBoss
 import me.shadowalzazel.mcodyssey.commands.*
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.mclisteners.*
+import me.shadowalzazel.mcodyssey.mclisteners.enchantmentListeners.ArmorListeners
+import me.shadowalzazel.mcodyssey.mclisteners.enchantmentListeners.MeleeListeners
+import me.shadowalzazel.mcodyssey.mclisteners.enchantmentListeners.MiscListeners
+import me.shadowalzazel.mcodyssey.mclisteners.enchantmentListeners.RangedListeners
 import me.shadowalzazel.mcodyssey.odysseyUtility.CookingRecipes
 import me.shadowalzazel.mcodyssey.odysseyUtility.OdysseyRecipes
 import org.bukkit.Bukkit
@@ -60,8 +64,11 @@ class MinecraftOdyssey : JavaPlugin() {
         // Join and Leave Messages
         server.pluginManager.registerEvents(OdysseyPlayerJoinListener, this)
         server.pluginManager.registerEvents(OdysseyPlayerLeaveListener, this)
-        // Enchantment listener
-        server.pluginManager.registerEvents(EnchantmentListeners, this)
+        // Enchantment listeners
+        server.pluginManager.registerEvents(ArmorListeners, this)
+        server.pluginManager.registerEvents(MeleeListeners, this)
+        server.pluginManager.registerEvents(MiscListeners, this)
+        server.pluginManager.registerEvents(RangedListeners, this)
         // Mob drops
         server.pluginManager.registerEvents(OdysseyDropsListeners, this)
         // Odyssey Food
