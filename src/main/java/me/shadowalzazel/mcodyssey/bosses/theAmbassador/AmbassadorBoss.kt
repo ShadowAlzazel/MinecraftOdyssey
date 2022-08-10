@@ -516,9 +516,11 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         when (giftedMaterial) {
             Material.NETHER_STAR -> {
                 bossEntity?.world!!.spawnParticle(Particle.SPELL_WITCH, givingPlayer.location, 35, 1.0, 1.0, 1.0)
-                giftLikeness += 9
+                giftLikeness += 45
                 givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}An unborn Unit-${ChatColor.MAGIC}092412X.${ChatColor.RESET}. I shall start its sentience activation cycle for you...")
                 givingPlayer.inventory.addItem(OdysseyItems.ARTIFICIAL_STAR_UNIT.createItemStack(1))
+                val gravityBook = OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.GRAVITY_WELL, (1..3).random())
+                givingPlayer.inventory.addItem(gravityBook)
             }
             Material.NETHERITE_INGOT -> {
                 bossEntity?.world!!.spawnParticle(Particle.SPELL_WITCH, givingPlayer.location, 35, 1.0, 1.0, 1.0)
@@ -588,14 +590,17 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 }
             }
             Material.BOOK, Material.PAINTING -> {
-                giftLikeness += 1
+                giftLikeness += 2
                 if (appeasement < 45) {
                     givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Hopefully this culture is not so dull as other test-s... Never mind...")
-                    givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward + 1))
+                    givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward))
                 }
                 else {
+                    val randomEnchantments = listOf(OdysseyEnchantments.SPOREFUL, OdysseyEnchantments.SQUIDIFY, OdysseyEnchantments.BACKSTABBER, OdysseyEnchantments.BUZZY_BEES, OdysseyEnchantments.FRUITFUL_FARE, OdysseyEnchantments.POTION_BARRIER)
+                    val randomBook = OdysseyItems.GILDED_BOOK.createGildedBook(randomEnchantments.random(), 1)
                     givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}So far I can say I am enjoying this...")
-                    givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
+                    givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward + 1))
+                    givingPlayer.inventory.addItem(randomBook)
                 }
             }
             Material.ENDER_CHEST -> {

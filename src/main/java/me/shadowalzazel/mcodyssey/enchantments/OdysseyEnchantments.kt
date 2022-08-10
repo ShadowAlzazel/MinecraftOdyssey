@@ -1,5 +1,9 @@
 package me.shadowalzazel.mcodyssey.enchantments
 
+import me.shadowalzazel.mcodyssey.enchantments.armor.*
+import me.shadowalzazel.mcodyssey.enchantments.melee.*
+import me.shadowalzazel.mcodyssey.enchantments.other.MirrorForce
+import me.shadowalzazel.mcodyssey.enchantments.ranged.AlchemyArtillery
 import me.shadowalzazel.mcodyssey.enchantments.utility.GildedPower
 import org.bukkit.enchantments.Enchantment
 import java.util.*
@@ -10,6 +14,7 @@ object OdysseyEnchantments {
     // Utility
     val GILDED_POWER: Enchantment = GildedPower
     // Enchantments
+    val ALCHEMYARTILLERY: Enchantment = AlchemyArtillery
     val BACKSTABBER: Enchantment = Backstabber
     val BANE_OF_THE_ILLAGER: Enchantment = BaneOfTheIllager
     val BANE_OF_THE_SEA: Enchantment = BaneOfTheSea
@@ -17,6 +22,7 @@ object OdysseyEnchantments {
     val BUZZY_BEES: Enchantment = BuzzyBees
     val COWARDICE: Enchantment = Cowardice
     val DECAYING_TOUCH: Enchantment = DecayingTouch
+    val DOUSE: Enchantment = Douse
     val EXPLODING: Enchantment = Exploding
     val FREEZING_ASPECT : Enchantment = FreezingAspect
     val FROG_FRIGHT: Enchantment = FrogFright
@@ -33,7 +39,7 @@ object OdysseyEnchantments {
     val WHIRLWIND: Enchantment = Whirlwind
 
     // Set of all enchantments
-    val enchantmentSet = setOf(GILDED_POWER, BACKSTABBER, BANE_OF_THE_ILLAGER, BANE_OF_THE_SEA, BANE_OF_THE_SWINE, BUZZY_BEES, COWARDICE, DECAYING_TOUCH,
+    val enchantmentSet = setOf(GILDED_POWER, ALCHEMYARTILLERY, BANE_OF_THE_ILLAGER, BANE_OF_THE_SEA, BANE_OF_THE_SWINE, BUZZY_BEES, COWARDICE, DECAYING_TOUCH, DOUSE,
         EXPLODING, FREEZING_ASPECT, FROG_FRIGHT, FRUITFUL_FARE, GRAVITY_WELL, GUARDING_STRIKE, HEMORRHAGE, MIRROR_FORCE, POTION_BARRIER, SPOREFUL, SQUIDIFY, VOID_STRIKE, WHIRLWIND)
 
     // Register

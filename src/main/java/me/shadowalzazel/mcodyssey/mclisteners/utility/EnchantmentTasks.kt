@@ -33,6 +33,72 @@ class HoneyedTask(honeyedEntity: LivingEntity, private val honeyFactor: Int) : B
 
 }
 
+// DOUSED task
+class DousedTask(dousedEntity: LivingEntity) : BukkitRunnable() {
+    private var dousingCooldown = System.currentTimeMillis()
+
+    private val dousedVictim = dousedEntity
+    private var counter = 0
+    override fun run() {
+        if ("Doused" !in dousedVictim.scoreboardTags) {
+            this.cancel()
+        }
+
+        val dousingBlock = Material.COAL_BLOCK.createBlockData()
+        val dousingDust = Material.BLACK_CONCRETE_POWDER.createBlockData()
+        dousedVictim.world.spawnParticle(Particle.BLOCK_CRACK, dousedVictim.location, 35, 0.45, 0.25, 0.45, dousingBlock)
+        dousedVictim.world.spawnParticle(Particle.FALLING_DUST, dousedVictim.location, 35, 0.45, 0.25, 0.45, dousingDust)
+        dousedVictim.world.spawnParticle(Particle.SMOKE_NORMAL, dousedVictim.location, 15, 0.25, 1.0, 0.25)
+        counter += 1
+
+        val timeElapsed = System.currentTimeMillis() - dousingCooldown
+        if (10 < counter || dousedVictim.health <= 0.50 || timeElapsed > 10 * 1000) {
+            var removeDouse = false
+            if ("Doused" in dousedVictim.scoreboardTags) {
+                removeDouse = true
+            }
+            if (removeDouse) {
+                dousedVictim.scoreboardTags.remove("Doused")
+            }
+            this.cancel()
+        }
+
+    }
+
+}
+
+// DOUSED task 2
+class DouseIgniteTask(dousedEntity: LivingEntity, private val douseFactor: Int) : BukkitRunnable() {
+    private var dousingCooldown = System.currentTimeMillis()
+
+    private val dousedVictim = dousedEntity
+    private var counter = 0
+    override fun run() {
+        if (dousedVictim.isInWaterOrRainOrBubbleColumn) {
+            this.cancel()
+        }
+
+        //Particles
+        dousedVictim.world.spawnParticle(Particle.FLASH, dousedVictim.location, 2, 1.0, 1.0, 1.0)
+        dousedVictim.world.spawnParticle(Particle.SMALL_FLAME, dousedVictim.location, 30, 1.25, 1.0, 1.25)
+        dousedVictim.world.spawnParticle(Particle.SMOKE_NORMAL, dousedVictim.location, 30, 1.25, 1.0, 1.25)
+        dousedVictim.world.spawnParticle(Particle.FLAME, dousedVictim.location, 15, 0.75, 0.5, 0.75)
+        dousedVictim.world.spawnParticle(Particle.SMOKE_LARGE, dousedVictim.location, 15, 0.75, 0.5, 0.75)
+
+        dousedVictim.damage(douseFactor * 0.5)
+
+        counter += 1
+
+        val timeElapsed = System.currentTimeMillis() - dousingCooldown
+        if (((douseFactor * 2) + 6) < counter || dousedVictim.health <= 0.0 || timeElapsed > ((douseFactor * 2) + 6) * 1000) {
+            this.cancel()
+        }
+
+    }
+
+}
+
+
 // DECAYING_TOUCH task
 class DecayingTask(decayingEntity: LivingEntity, private val decayingTouchFactor: Int) : BukkitRunnable() {
     private var decayCooldown = System.currentTimeMillis()

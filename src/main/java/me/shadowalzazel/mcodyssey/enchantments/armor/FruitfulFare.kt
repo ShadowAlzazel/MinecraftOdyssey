@@ -1,15 +1,16 @@
-package me.shadowalzazel.mcodyssey.enchantments
+package me.shadowalzazel.mcodyssey.enchantments.armor
 
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantmentWrapper
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object GravityWell : OdysseyEnchantmentWrapper("gravitywell", "Gravity Well", 3) {
+object FruitfulFare : OdysseyEnchantmentWrapper("fruitfulfare", "Fruitful Fare", 2) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            KNOCKBACK, OdysseyEnchantments.FROG_FRIGHT -> {
+            THORNS, OdysseyEnchantments.POTION_BARRIER -> {
                 true
             }
             else -> {
@@ -20,8 +21,7 @@ object GravityWell : OdysseyEnchantmentWrapper("gravitywell", "Gravity Well", 3)
 
     override fun canEnchantItem(item: ItemStack): Boolean {
         return when (item.type) {
-            Material.ENCHANTED_BOOK, Material.NETHERITE_SWORD, Material.DIAMOND_SWORD, Material.IRON_SWORD, Material.GOLDEN_SWORD, Material.STONE_SWORD, Material.WOODEN_SWORD,
-            Material.NETHERITE_AXE, Material.DIAMOND_AXE, Material.IRON_AXE, Material.GOLDEN_AXE, Material.STONE_AXE, Material.WOODEN_AXE -> {
+            Material.ENCHANTED_BOOK, Material.NETHERITE_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.IRON_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, Material.LEATHER_CHESTPLATE -> {
                 true
             }
             else -> {
@@ -29,6 +29,4 @@ object GravityWell : OdysseyEnchantmentWrapper("gravitywell", "Gravity Well", 3)
             }
         }
     }
-
-
 }

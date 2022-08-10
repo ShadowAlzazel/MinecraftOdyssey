@@ -1,16 +1,16 @@
-package me.shadowalzazel.mcodyssey.enchantments
+package me.shadowalzazel.mcodyssey.enchantments.melee
 
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantmentWrapper
 import org.bukkit.Material
-import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object Backstabber : OdysseyEnchantmentWrapper("backstabber", "Backstabber", 3) {
+object VoidStrike : OdysseyEnchantmentWrapper("voidstrike", "Void Strike", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.VOID_STRIKE -> {
+            SWEEPING_EDGE, OdysseyEnchantments.EXPLODING, OdysseyEnchantments.GUARDING_STRIKE, OdysseyEnchantments.BACKSTABBER, DAMAGE_ALL, DAMAGE_UNDEAD, DAMAGE_ARTHROPODS -> {
                 true
             }
             else -> {

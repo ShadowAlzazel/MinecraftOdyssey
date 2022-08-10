@@ -1,15 +1,16 @@
-package me.shadowalzazel.mcodyssey.enchantments
+package me.shadowalzazel.mcodyssey.enchantments.other
 
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantmentWrapper
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object PotionBarrier : OdysseyEnchantmentWrapper("potionbarrier", "Potion Barrier", 2) {
+object MirrorForce : OdysseyEnchantmentWrapper("mirrorforce", "Mirror Force", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            THORNS, OdysseyEnchantments.FRUITFUL_FARE -> {
+            OdysseyEnchantments.GRAVITY_WELL -> {
                 true
             }
             else -> {
@@ -20,7 +21,7 @@ object PotionBarrier : OdysseyEnchantmentWrapper("potionbarrier", "Potion Barrie
 
     override fun canEnchantItem(item: ItemStack): Boolean {
         return when (item.type) {
-            Material.ENCHANTED_BOOK, Material.NETHERITE_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.IRON_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, Material.LEATHER_CHESTPLATE -> {
+            Material.ENCHANTED_BOOK, Material.SHIELD -> {
                 true
             }
             else -> {
@@ -30,4 +31,3 @@ object PotionBarrier : OdysseyEnchantmentWrapper("potionbarrier", "Potion Barrie
     }
 
 }
-

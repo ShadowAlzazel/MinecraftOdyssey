@@ -1,15 +1,16 @@
-package me.shadowalzazel.mcodyssey.enchantments
+package me.shadowalzazel.mcodyssey.enchantments.melee
 
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantmentWrapper
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object FrogFright : OdysseyEnchantmentWrapper("frogfright", "Frog Fright", 3) {
+object BuzzyBees : OdysseyEnchantmentWrapper("buzzybees", "Buzzy Bees", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.VOID_STRIKE, OdysseyEnchantments.EXPLODING, KNOCKBACK -> {
+            SWEEPING_EDGE, OdysseyEnchantments.BACKSTABBER, OdysseyEnchantments.VOID_STRIKE -> {
                 true
             }
             else -> {
@@ -29,6 +30,5 @@ object FrogFright : OdysseyEnchantmentWrapper("frogfright", "Frog Fright", 3) {
             }
         }
     }
-
 
 }

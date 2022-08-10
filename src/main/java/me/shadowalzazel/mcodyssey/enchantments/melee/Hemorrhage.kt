@@ -1,15 +1,16 @@
-package me.shadowalzazel.mcodyssey.enchantments
+package me.shadowalzazel.mcodyssey.enchantments.melee
 
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantmentWrapper
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object Squidify : OdysseyEnchantmentWrapper("squidify", "Squidify", 3) {
+object Hemorrhage : OdysseyEnchantmentWrapper("hemorrhage", "Hemorrhage", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            THORNS, OdysseyEnchantments.SPOREFUL -> {
+            SWEEPING_EDGE, OdysseyEnchantments.VOID_STRIKE -> {
                 true
             }
             else -> {
@@ -20,7 +21,7 @@ object Squidify : OdysseyEnchantmentWrapper("squidify", "Squidify", 3) {
 
     override fun canEnchantItem(item: ItemStack): Boolean {
         return when (item.type) {
-            Material.ENCHANTED_BOOK, Material.NETHERITE_LEGGINGS, Material.DIAMOND_LEGGINGS, Material.IRON_LEGGINGS, Material.CHAINMAIL_LEGGINGS, Material.LEATHER_LEGGINGS -> {
+            Material.ENCHANTED_BOOK, Material.NETHERITE_AXE, Material.DIAMOND_AXE, Material.IRON_AXE, Material.GOLDEN_AXE, Material.STONE_AXE, Material.WOODEN_AXE -> {
                 true
             }
             else -> {
