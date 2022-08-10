@@ -11,9 +11,14 @@ object CookingItems {
     val PUMPKIN_COOKIE = PumpkinCookie
     val HONEY_COOKIE = HoneyCookie
     val APPLE_COOKIE = AppleCookie
+
     val FRENCH_TOAST = FrenchToast
+
     val SUGARY_BREAD = SugaryBread
+
     val BACON = Bacon
+
+    val SALMON_ROLL = SalmonRollSushi
 
 }
 
@@ -49,7 +54,6 @@ object FrenchToast : OdysseyItem("French Toast", Material.BREAD) {
     override val odysseyLore = listOf("${ChatColor.GRAY}French Toast!")
 }
 
-
 // BACON
 object Bacon : OdysseyItem("Bacon", Material.COOKED_PORKCHOP) {
     override val odysseyDisplayName: String = "${ChatColor.RED}${ChatColor.ITALIC}$name"
@@ -60,4 +64,10 @@ object Bacon : OdysseyItem("Bacon", Material.COOKED_PORKCHOP) {
 object SugaryBread : OdysseyItem("Sugary Bread", Material.BREAD) {
     override val odysseyDisplayName: String = "${ChatColor.RED}${ChatColor.ITALIC}$name"
     override val odysseyLore = listOf("${ChatColor.GRAY}Sugary Bread!")
+}
+
+// BEETROOT_COOKIE
+object SalmonRollSushi : OdysseyItem("Salmon Roll", Material.COOKED_SALMON) {
+    override val odysseyDisplayName: String = "${ChatColor.RED}${ChatColor.ITALIC}$name"
+    override val odysseyLore = listOf("${ChatColor.GRAY}Salmon Roll Sushi!")
 }

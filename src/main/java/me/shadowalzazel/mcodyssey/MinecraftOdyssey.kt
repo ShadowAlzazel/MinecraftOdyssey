@@ -47,9 +47,6 @@ class MinecraftOdyssey : JavaPlugin() {
         // Register Enchantments
         OdysseyEnchantments.register()
 
-
-        // REGISTER DAILY
-
         // Register Utility Listeners
         server.pluginManager.registerEvents(MinecraftOdysseyListeners, this)
         // Daily Phenomenon listeners
@@ -69,14 +66,19 @@ class MinecraftOdyssey : JavaPlugin() {
         server.pluginManager.registerEvents(OdysseyDropsListeners, this)
         // Odyssey Food
         server.pluginManager.registerEvents(OdysseyFoodListeners, this)
+        // Items
+        server.pluginManager.registerEvents(OdysseyItemListeners, this)
 
         // Custom Recipes
-        Bukkit.addRecipe(OdysseyRecipes.odysseyNaming)
-        Bukkit.addRecipe(OdysseyRecipes.odysseyGildedSmithing)
-        Bukkit.addRecipe(OdysseyRecipes.gildedBookCombining)
-        Bukkit.addRecipe(OdysseyRecipes.gildingUpgrading)
-
-        //Cooking Recipes
+        Bukkit.addRecipe(OdysseyRecipes.ODYSSEY_NAMING)
+        Bukkit.addRecipe(OdysseyRecipes.ODYSSEY_GILDED_SMITHING)
+        Bukkit.addRecipe(OdysseyRecipes.GILDED_BOOK_COMBINING)
+        Bukkit.addRecipe(OdysseyRecipes.GILDED_ITEM_UPGRADING)
+        // Item Recipes
+        for (itemRecipe in OdysseyRecipes.recipeSet) {
+            Bukkit.addRecipe(itemRecipe)
+        }
+        // Cooking Recipes
         for (cookingRecipe in CookingRecipes.recipeSet) {
             Bukkit.addRecipe(cookingRecipe)
         }
