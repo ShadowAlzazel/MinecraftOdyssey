@@ -264,7 +264,7 @@ object EnchantmentListeners : Listener {
                 val dousedEntity: LivingEntity = event.entity as LivingEntity
                 var isDoused = false
 
-                if ("Doused" !in dousedEntity.scoreboardTags) {
+                if ("Doused" in dousedEntity.scoreboardTags) {
                     isDoused = true
                 }
 
@@ -286,47 +286,32 @@ object EnchantmentListeners : Listener {
 
 
                 if (dousedEntity.fireTicks > 0) {
-                    var removeTag = false
-                    if ("Doused" in dousedEntity.scoreboardTags) {
-
-                        /*
-                        // Douse Boom
-                        val boomLocation = event.entity.location
-                        val boomExplosion: Fireball = somePlayer.world.spawnEntity(boomLocation, EntityType.FIREBALL) as Fireball
-                        boomExplosion.setIsIncendiary(false)
-                        boomExplosion.yield = 0.0F
-                        boomExplosion.direction = Vector(0.0, -4.5, 0.0)
-
-                        //Particles
-                        somePlayer.world.spawnParticle(Particle.FLASH, boomLocation, 5, 1.0, 1.0, 1.0)
-                        somePlayer.world.spawnParticle(Particle.SMALL_FLAME, boomLocation, 50, 1.25, 1.0, 1.25)
-                        somePlayer.world.spawnParticle(Particle.SMOKE_NORMAL, boomLocation, 50, 1.25, 1.0, 1.25)
-                        somePlayer.world.spawnParticle(Particle.FLAME, boomLocation, 20, 0.75, 0.5, 0.75)
-                        somePlayer.world.spawnParticle(Particle.SMOKE_LARGE, boomLocation, 20, 0.75, 0.5, 0.75)
-
-                        // Firework effect and color
-                        val boomFirework: Firework = somePlayer.world.spawnEntity(boomLocation, EntityType.FIREWORK) as Firework
-                        val boomFireworkMeta = boomFirework.fireworkMeta
-                        boomFireworkMeta.addEffect(FireworkEffect.builder().with(FireworkEffect.Type.STAR).withColor(Color.ORANGE).withFade(Color.RED).trail(true).flicker(true).build())
-                        boomFireworkMeta.power = douseFactor * 20
-                        boomFirework.fireworkMeta = boomFireworkMeta
-                        boomFirework.velocity = Vector(0.0, -3.0, 0.0)
-                        */
-
-
-
-                        //dousedEntity.fireTicks = 20 * ((douseFactor * 2) + 6)
-
-                        removeTag = true
+                    var removeDouse = false
+                    var douseFactorPower: Int? = null
+                    var tagToRemove: String? = null
+                    if (isDoused) {
+                        for (x in 1..3) {
+                            if ("Doused_Factor_$x" in dousedEntity.scoreboardTags) {
+                                tagToRemove = "Doused_Factor_$x"
+                                douseFactorPower = x
+                                removeDouse = true
+                            }
+                        }
                     }
-                    if (removeTag) {
+                    if (removeDouse) {
                         dousedEntity.scoreboardTags.remove("Doused")
-                        isDoused = true
+                        dousedEntity.scoreboardTags.remove(tagToRemove!!)
+
+                        // sounds
+
+
+                        // do douse effects
+                        dousedEntity.fireTicks = 20 * ((douseFactorPower!! * 4) + 4) + 1
+                        val igniteDouseTask = DouseIgniteTask(dousedEntity, douseFactorPower)
+                        igniteDouseTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20)
+
                     }
-
-
                 }
-
             }
         }
     }
@@ -617,7 +602,7 @@ object EnchantmentListeners : Listener {
                                 if (blockingEntity.handRaised == EquipmentSlot.OFF_HAND) {
                                     println("Blocked!")
 
-                                    //cooldown is factor
+                                    //cooldown is part of the factor
 
                                     event.entity.velocity = event.entity.location.subtract(blockingEntity.location).toVector()
                                     //direction

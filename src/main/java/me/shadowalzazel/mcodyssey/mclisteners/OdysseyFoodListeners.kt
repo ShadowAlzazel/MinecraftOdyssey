@@ -16,29 +16,45 @@ object OdysseyFoodListeners : Listener {
             if (event.item.itemMeta.hasLore()) {
                 val somePlayer = event.player
                 val someFood = event.item
-                val foodLore = someFood.itemMeta.lore
+                val foodLore = someFood.itemMeta.lore!!.first()
                 var satisfyingFood = true
 
                 when (event.item.type) {
-
                     Material.COOKIE -> {
-                        if ("§7A beetroot cookie!" in foodLore!!) {
-                            val beetrootCookieEffect = PotionEffect(PotionEffectType.INCREASE_DAMAGE, 4 * 20, 0)
-                            somePlayer.addPotionEffect(beetrootCookieEffect)
+                        when (foodLore) {
+                            "§7A beetroot cookie!" -> {
+                                val someCookieEffect = PotionEffect(PotionEffectType.INCREASE_DAMAGE, 4 * 20, 0)
+                                somePlayer.addPotionEffect(someCookieEffect)
+                            }
+                            "§7A pumpkin cookie!" -> {
+                                val someCookieEffect = PotionEffect(PotionEffectType.FAST_DIGGING, 5 * 20, 0)
+                                somePlayer.addPotionEffect(someCookieEffect)
+                            }
+                            "§7A honey cookie!" -> {
+                                val someCookieEffect = PotionEffect(PotionEffectType.REGENERATION, 4 * 20, 0)
+                                somePlayer.addPotionEffect(someCookieEffect)
+                            }
+                            "§7An apple cookie!" -> {
+                                val someCookieEffect = PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 4 * 20, 0)
+                                somePlayer.addPotionEffect(someCookieEffect)
+                            }
+                            "§7A berry cookie!" -> {
+                                val someCookieEffect = PotionEffect(PotionEffectType.FAST_DIGGING, 2 * 20, 0)
+                                somePlayer.addPotionEffect(someCookieEffect)
+                            }
+                            "§7A melon cookie!" -> {
+                                val someCookieEffect = PotionEffect(PotionEffectType.REGENERATION, 2 * 20, 0)
+                                somePlayer.addPotionEffect(someCookieEffect)
+                            }
+                            "§7A sugar cookie!" -> {
+                                val someCookieEffect = PotionEffect(PotionEffectType.SPEED, 5 * 20, 0)
+                                somePlayer.addPotionEffect(someCookieEffect)
+                            }
+                            "§7A golden cookie!" -> {
+                                val someCookieEffect = PotionEffect(PotionEffectType.ABSORPTION, 20 * 10, 2)
+                                somePlayer.addPotionEffect(someCookieEffect)
+                            }
                         }
-                        else if ("§7A pumpkin cookie!" in foodLore) {
-                            val beetrootCookieEffect = PotionEffect(PotionEffectType.FAST_DIGGING, 4 * 20, 0)
-                            somePlayer.addPotionEffect(beetrootCookieEffect)
-                        }
-                        else if ("§7A honey cookie!" in foodLore) {
-                            val beetrootCookieEffect = PotionEffect(PotionEffectType.ABSORPTION, 4 * 20, 0)
-                            somePlayer.addPotionEffect(beetrootCookieEffect)
-                        }
-                        else if ("§7An apple cookie!" in foodLore) {
-                            val beetrootCookieEffect = PotionEffect(PotionEffectType.REGENERATION, 4 * 20, 0)
-                            somePlayer.addPotionEffect(beetrootCookieEffect)
-                        }
-
                     }
                     else -> {
                         satisfyingFood = false

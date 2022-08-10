@@ -28,9 +28,7 @@ class HoneyedTask(honeyedEntity: LivingEntity, private val honeyFactor: Int) : B
         if (((3 * honeyFactor) + 3) < counter || honeyedVictim.health <= 1.0 || timeElapsed > ((3 * honeyFactor) + 3) * 1000) {
             this.cancel()
         }
-
     }
-
 }
 
 // DOUSED task
@@ -79,18 +77,24 @@ class DouseIgniteTask(dousedEntity: LivingEntity, private val douseFactor: Int) 
         }
 
         //Particles
-        dousedVictim.world.spawnParticle(Particle.FLASH, dousedVictim.location, 2, 1.0, 1.0, 1.0)
-        dousedVictim.world.spawnParticle(Particle.SMALL_FLAME, dousedVictim.location, 30, 1.25, 1.0, 1.25)
-        dousedVictim.world.spawnParticle(Particle.SMOKE_NORMAL, dousedVictim.location, 30, 1.25, 1.0, 1.25)
-        dousedVictim.world.spawnParticle(Particle.FLAME, dousedVictim.location, 15, 0.75, 0.5, 0.75)
-        dousedVictim.world.spawnParticle(Particle.SMOKE_LARGE, dousedVictim.location, 15, 0.75, 0.5, 0.75)
+        val someLocation = dousedVictim.location.clone()
+        someLocation.y += 1.0
 
-        dousedVictim.damage(douseFactor * 0.5)
+        val ignitedDust = Material.PUMPKIN.createBlockData()
+        dousedVictim.world.spawnParticle(Particle.FALLING_DUST, someLocation, 35, 0.75, 0.25, 0.75, ignitedDust)
+
+        dousedVictim.world.spawnParticle(Particle.SMALL_FLAME, someLocation, 50, 1.05, 0.25, 1.05)
+        dousedVictim.world.spawnParticle(Particle.SMOKE_NORMAL, someLocation, 10, 1.25, 0.25, 1.25)
+        dousedVictim.world.spawnParticle(Particle.FLAME, someLocation, 35, 0.75, 0.25, 0.75)
+        dousedVictim.world.spawnParticle(Particle.SMOKE_LARGE, someLocation, 5, 0.75, 0.25, 0.75)
+        dousedVictim.world.spawnParticle(Particle.LAVA, someLocation, 85, 0.75, 0.25, 0.75)
+
+        dousedVictim.damage(1.0 + (douseFactor * 0.75))
 
         counter += 1
 
         val timeElapsed = System.currentTimeMillis() - dousingCooldown
-        if (((douseFactor * 2) + 6) < counter || dousedVictim.health <= 0.0 || timeElapsed > ((douseFactor * 2) + 6) * 1000) {
+        if (((douseFactor * 4) + 4) < counter || dousedVictim.health <= 0.0 || timeElapsed > ((douseFactor * 4) + 4) * 1000) {
             this.cancel()
         }
 

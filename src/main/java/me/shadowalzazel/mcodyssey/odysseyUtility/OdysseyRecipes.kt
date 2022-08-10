@@ -4,20 +4,28 @@ import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.Recipe
 import org.bukkit.inventory.RecipeChoice
+import org.bukkit.inventory.ShapedRecipe
 import org.bukkit.inventory.SmithingRecipe
 
 object OdysseyRecipes {
 
+    val PURE_ANTIMATTER_CRYSTAL_RECIPE: ShapedRecipe = createPurelyUnstableAntimatterCrystalRecipe()
+    val FRUIT_OF_ERISHKIGAL_RECIPE: ShapedRecipe = createFruitOfErishkigal()
+
+    val recipeSet = setOf<Recipe>(PURE_ANTIMATTER_CRYSTAL_RECIPE, FRUIT_OF_ERISHKIGAL_RECIPE)
+
+
     // Main for combining books
-    var gildedBookCombining: SmithingRecipe = SmithingRecipe(
+    var GILDED_BOOK_COMBINING: SmithingRecipe = SmithingRecipe(
         NamespacedKey(MinecraftOdyssey.instance, "gildedbookcombining"),
         ItemStack(Material.AIR),
         RecipeChoice.MaterialChoice(Material.ENCHANTED_BOOK), RecipeChoice.MaterialChoice(Material.ENCHANTED_BOOK)
     )
 
     // Main for gilded books to equipment
-    var odysseyGildedSmithing: SmithingRecipe = SmithingRecipe(
+    var ODYSSEY_GILDED_SMITHING: SmithingRecipe = SmithingRecipe(
         NamespacedKey(MinecraftOdyssey.instance, "odysseygildedsmithing"),
         ItemStack(Material.AIR),
         RecipeChoice.MaterialChoice(Material.NETHERITE_SWORD, Material.DIAMOND_SWORD, Material.IRON_SWORD, Material.GOLDEN_SWORD, Material.STONE_SWORD, Material.WOODEN_SWORD,
@@ -35,7 +43,7 @@ object OdysseyRecipes {
     )
 
     //Make special diamond later
-    var odysseyNaming: SmithingRecipe = SmithingRecipe(
+    var ODYSSEY_NAMING: SmithingRecipe = SmithingRecipe(
         NamespacedKey(MinecraftOdyssey.instance, "odysseynaming"),
         ItemStack(Material.AIR),
         RecipeChoice.MaterialChoice(Material.NETHERITE_SWORD, Material.DIAMOND_SWORD, Material.IRON_SWORD, Material.GOLDEN_SWORD, Material.STONE_SWORD, Material.WOODEN_SWORD,
@@ -54,7 +62,7 @@ object OdysseyRecipes {
 
 
     //Change to special later
-    var gildingUpgrading: SmithingRecipe = SmithingRecipe(
+    var GILDED_ITEM_UPGRADING: SmithingRecipe = SmithingRecipe(
         NamespacedKey(MinecraftOdyssey.instance, "gildingupgrading"),
         ItemStack(Material.AIR),
         RecipeChoice.MaterialChoice(Material.NETHERITE_SWORD, Material.DIAMOND_SWORD, Material.IRON_SWORD, Material.GOLDEN_SWORD, Material.STONE_SWORD, Material.WOODEN_SWORD,
@@ -72,6 +80,7 @@ object OdysseyRecipes {
     )
 
 
+    /*
     var baneOfTheSeaRecipe: SmithingRecipe = SmithingRecipe(
         NamespacedKey(MinecraftOdyssey.instance, "baneofthesearecipe"),
         ItemStack(Material.AIR),
@@ -79,5 +88,39 @@ object OdysseyRecipes {
         ),
         RecipeChoice.MaterialChoice(Material.NAUTILUS_SHELL, Material.HEART_OF_THE_SEA, Material.CONDUIT)
     )
+     */
+
+
+    // Purely Unstable
+    private fun createPurelyUnstableAntimatterCrystalRecipe(): ShapedRecipe {
+        val someResult = OdysseyItems.PURE_ANTIMATTER_CRYSTAL.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "purelyunstableantimattercrystal"), someResult)
+        val exactImpureAntimatter = OdysseyItems.IMPURE_ANTIMATTER_SHARD.createItemStack(1)
+        val exactScrap = OdysseyItems.NEUTRONIUM_BARK_SCRAPS.createItemStack(1)
+        val exactDiamond = OdysseyItems.REFINED_NEPTUNIAN_DIAMONDS.createItemStack(1)
+
+        someRecipe.shape("XZX", "ZYZ", "XZX")
+        someRecipe.setIngredient('X', RecipeChoice.ExactChoice(exactDiamond))
+        someRecipe.setIngredient('Y', RecipeChoice.ExactChoice(exactImpureAntimatter))
+        someRecipe.setIngredient('Z', RecipeChoice.ExactChoice(exactScrap))
+        return someRecipe
+    }
+
+    //
+    private fun createFruitOfErishkigal(): ShapedRecipe {
+        val someResult = OdysseyItems.FRUIT_OF_ERISHKIGAL.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "fruitoferishkigal"), someResult)
+        val exactPureAntimatter = OdysseyItems.PURE_ANTIMATTER_CRYSTAL.createItemStack(1)
+        val exactIdescineEssence = OdysseyItems.IDESCINE_ESSENCE.createItemStack(1)
+
+        someRecipe.shape("XZX", "ZYZ", "XZX")
+        someRecipe.setIngredient('X', RecipeChoice.ExactChoice(exactIdescineEssence))
+        someRecipe.setIngredient('Y', Material.ENCHANTED_GOLDEN_APPLE)
+        someRecipe.setIngredient('Z', RecipeChoice.ExactChoice(exactPureAntimatter))
+        return someRecipe
+    }
+
+
+
 
 }
