@@ -183,13 +183,13 @@ class GravitationalAttract(gravitatingEntity: LivingEntity, singularityPoint: Lo
         gravitatingVictim.world.spawnParticle(Particle.FLASH, gravitatingVictim.location, 3, 0.1, 0.3, 0.1)
         counter += 1
 
-        val nearbyVictims = gravitatingVictim.world.getNearbyLivingEntities(singularityLocation, gravityFactor.toDouble() - 0.5)
+        val nearbyVictims = gravitatingVictim.world.getNearbyLivingEntities(singularityLocation, gravityFactor.toDouble())
         nearbyVictims.remove(collapser)
         for (gravitating in nearbyVictims) {
             //gravitating.velocity = singularityLocation.add(0.0, 0.15, 0.0).subtract(gravitating.location).toVector().multiply(0.05)
             val closeLocation = singularityLocation.clone()
-            val randomX = (-3..3).random() * 0.1
-            val randomZ = (-3..3).random() * 0.1
+            val randomX = (-3..3).random() * 0.08
+            val randomZ = (-3..3).random() * 0.08
             gravitating.teleport(closeLocation.add(randomX, 0.1, randomZ))
 
             if (counter % 2 == 0) {

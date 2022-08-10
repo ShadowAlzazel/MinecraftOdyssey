@@ -6,11 +6,11 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object AlchemyArtillery : OdysseyEnchantmentWrapper("alchemyartillery", "Alchemy Artillery", 3) {
+object Rend: OdysseyEnchantmentWrapper("rend", "Rend", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.REND -> {
+            OdysseyEnchantments.ALCHEMY_ARTILLERY -> {
                 true
             }
             else -> {
@@ -21,7 +21,7 @@ object AlchemyArtillery : OdysseyEnchantmentWrapper("alchemyartillery", "Alchemy
 
     override fun canEnchantItem(item: ItemStack): Boolean {
         return when (item.type) {
-            Material.ENCHANTED_BOOK, Material.CROSSBOW -> {
+            Material.ENCHANTED_BOOK, Material.CROSSBOW, Material.BOW -> {
                 true
             }
             else -> {
