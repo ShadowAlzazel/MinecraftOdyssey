@@ -10,8 +10,9 @@ import me.shadowalzazel.mcodyssey.mclisteners.enchantmentListeners.ArmorListener
 import me.shadowalzazel.mcodyssey.mclisteners.enchantmentListeners.MeleeListeners
 import me.shadowalzazel.mcodyssey.mclisteners.enchantmentListeners.MiscListeners
 import me.shadowalzazel.mcodyssey.mclisteners.enchantmentListeners.RangedListeners
-import me.shadowalzazel.mcodyssey.odysseyUtility.CookingRecipes
-import me.shadowalzazel.mcodyssey.odysseyUtility.OdysseyRecipes
+import me.shadowalzazel.mcodyssey.recipes.CookingRecipes
+import me.shadowalzazel.mcodyssey.recipes.GildingRecipes
+import me.shadowalzazel.mcodyssey.recipes.OdysseyRecipes
 import org.bukkit.Bukkit
 
 import org.bukkit.plugin.java.JavaPlugin
@@ -52,7 +53,7 @@ class MinecraftOdyssey : JavaPlugin() {
         OdysseyEnchantments.register()
 
         // Register Utility Listeners
-        server.pluginManager.registerEvents(MinecraftOdysseyListeners, this)
+        server.pluginManager.registerEvents(OdysseyGildingListeners, this)
         // Daily Phenomenon listeners
         if (config.getBoolean("daily-world-phenomenon.enabled")) {
             server.pluginManager.registerEvents(OdysseyDailyPhenomenonListener, this)
@@ -77,10 +78,10 @@ class MinecraftOdyssey : JavaPlugin() {
         server.pluginManager.registerEvents(OdysseyItemListeners, this)
 
         // Custom Recipes
-        Bukkit.addRecipe(OdysseyRecipes.ODYSSEY_NAMING)
-        Bukkit.addRecipe(OdysseyRecipes.ODYSSEY_GILDED_SMITHING)
-        Bukkit.addRecipe(OdysseyRecipes.GILDED_BOOK_COMBINING)
-        Bukkit.addRecipe(OdysseyRecipes.GILDED_ITEM_UPGRADING)
+        Bukkit.addRecipe(GildingRecipes.ODYSSEY_NAMING)
+        Bukkit.addRecipe(GildingRecipes.ODYSSEY_GILDED_SMITHING)
+        Bukkit.addRecipe(GildingRecipes.GILDED_BOOK_COMBINING)
+        Bukkit.addRecipe(GildingRecipes.GILDED_ITEM_UPGRADING)
         // Item Recipes
         for (itemRecipe in OdysseyRecipes.recipeSet) {
             Bukkit.addRecipe(itemRecipe)

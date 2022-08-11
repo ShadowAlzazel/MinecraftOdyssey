@@ -2,7 +2,7 @@ package me.shadowalzazel.mcodyssey.mclisteners
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.odysseyUtility.OdysseyItems
+import me.shadowalzazel.mcodyssey.items.OdysseyItems
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.enchantments.Enchantment
@@ -165,25 +165,8 @@ object OdysseyDropsListeners : Listener {
                         }
                     }
                 }
-
-
-                /*
-                if (event.entity.getTargetEntity(25) == somePlayer) {
-                    if (event.entity.hasLineOfSight(somePlayer)) {
-                        if (event.entity.ticksLived > 20 * 5) {
-
-
-                            }
-                        }
-                    }
-                }
-
-                 */
             }
         }
     }
-
-
-
 
 }

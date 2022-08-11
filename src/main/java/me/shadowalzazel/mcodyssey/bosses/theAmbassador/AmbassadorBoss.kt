@@ -3,7 +3,7 @@ package me.shadowalzazel.mcodyssey.bosses.theAmbassador
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.bosses.utility.OdysseyBoss
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.odysseyUtility.*
+import me.shadowalzazel.mcodyssey.items.*
 import org.bukkit.*
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.EntityType
@@ -12,7 +12,6 @@ import org.bukkit.entity.Illusioner
 import org.bukkit.entity.Item
 import org.bukkit.entity.Player
 import org.bukkit.entity.Entity
-import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.potion.PotionEffect
@@ -575,6 +574,11 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
             Material.DIRT, Material.COARSE_DIRT, Material.ROOTED_DIRT -> {
                 giftLikeness -= 2
                 givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}I can not accept something that crude...")
+            }
+            Material.SCULK, Material.SCULK_CATALYST, Material.SCULK_SENSOR, Material.SCULK_SHRIEKER, Material.SCULK_VEIN -> {
+                giftLikeness -= 45
+                patience -= 45
+                givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}The Sculk has corrupted this forsaken place... Its eradication is inevitable")
             }
             Material.ENCHANTED_BOOK ->  {
                 giftLikeness += 4

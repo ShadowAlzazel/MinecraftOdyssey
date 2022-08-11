@@ -1,6 +1,6 @@
-package me.shadowalzazel.mcodyssey.odysseyUtility
+package me.shadowalzazel.mcodyssey.items
 
-import me.shadowalzazel.mcodyssey.odysseyUtility.utilty.OdysseyItem
+import me.shadowalzazel.mcodyssey.items.utilty.OdysseyItem
 import org.bukkit.Material
 import org.bukkit.ChatColor
 import org.bukkit.enchantments.Enchantment
@@ -8,7 +8,6 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 
 // MAKE OBJECTS LATER
-
 object OdysseyItems {
 
     //
@@ -29,6 +28,7 @@ object OdysseyItems {
     val POLYMORPHIC_GLUE: OdysseyItem = PolymorphicGlue
     val ARTIFICIAL_STAR_UNIT: OdysseyItem = ArtificialStarUnit
     val IMPURE_ANTIMATTER_SHARD: OdysseyItem = ImpureAntiMatterShard
+    val NEUTRONIUM_BARK_INGOT: OdysseyItem = NeutroniumBarkIngot
     val PURE_ANTIMATTER_CRYSTAL: OdysseyItem = PureAntimatterCrystal
     val FRUIT_OF_ERISHKIGAL: OdysseyItem = FruitOfErishkigal
     val SILMARIL_OF_YGGLADIEL = SilmarilOfYggladiel
@@ -157,6 +157,16 @@ object ImpureAntiMatterShard : OdysseyItem("Impure Anti-matter Shard", Material.
     override val isEnchanted: Boolean = true
     override val someEnchantType: Enchantment = Enchantment.ARROW_INFINITE
     override val someEnchantLevel: Int = 1
+}
+
+// NEUTRONIUM_BARK_INGOT
+object NeutroniumBarkIngot: OdysseyItem("Neutronium-Bark Ingot", Material.NETHERITE_INGOT) {
+    override val odysseyDisplayName: String =
+        "${ChatColor.AQUA}${ChatColor.ITALIC}$name"
+    override val odysseyLore = listOf("${ChatColor.GOLD}${ChatColor.ITALIC}A refined plank of dense matter...")
+    override val isEnchanted: Boolean = true
+    override val someEnchantType: Enchantment = Enchantment.DURABILITY
+    override val someEnchantLevel: Int = 5
 }
 
 // Pure Anti-Matter Crystal
