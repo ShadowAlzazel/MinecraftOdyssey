@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.odysseyUtility.utilty
+package me.shadowalzazel.mcodyssey.items.utilty
 
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment

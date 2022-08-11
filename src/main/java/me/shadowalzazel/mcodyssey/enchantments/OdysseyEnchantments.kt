@@ -2,7 +2,9 @@ package me.shadowalzazel.mcodyssey.enchantments
 
 import me.shadowalzazel.mcodyssey.enchantments.armor.*
 import me.shadowalzazel.mcodyssey.enchantments.melee.*
+import me.shadowalzazel.mcodyssey.enchantments.other.HookShot
 import me.shadowalzazel.mcodyssey.enchantments.other.MirrorForce
+import me.shadowalzazel.mcodyssey.enchantments.other.WarpDrive
 import me.shadowalzazel.mcodyssey.enchantments.ranged.AlchemyArtillery
 import me.shadowalzazel.mcodyssey.enchantments.ranged.LuckyDraw
 import me.shadowalzazel.mcodyssey.enchantments.ranged.Rend
@@ -32,19 +34,22 @@ object OdysseyEnchantments {
     val GRAVITY_WELL: Enchantment = GravityWell
     val GUARDING_STRIKE: Enchantment = GuardingStrike
     val HEMORRHAGE: Enchantment = Hemorrhage
+    val HOOK_SHOT: Enchantment = HookShot
     val LUCKY_DRAW: Enchantment = LuckyDraw
     val MIRROR_FORCE: Enchantment = MirrorForce
     val POTION_BARRIER: Enchantment = PotionBarrier
     val REND: Enchantment = Rend
+    val SPEEDY_SPURS: Enchantment = SpeedySpurs
     val SPOREFUL: Enchantment = Sporeful
     val SQUIDIFY: Enchantment = Squidify
     val VENGEFUL: Enchantment = Vengeful
     val VOID_STRIKE: Enchantment = VoidStrike
+    val WARP_DRIVE: Enchantment = WarpDrive
     val WHIRLWIND: Enchantment = Whirlwind
 
     // Set of all enchantments
     val enchantmentSet = setOf(GILDED_POWER, ALCHEMY_ARTILLERY, BANE_OF_THE_ILLAGER, BANE_OF_THE_SEA, BANE_OF_THE_SWINE, BUZZY_BEES, COWARDICE, DECAYING_TOUCH, DOUSE,
-        EXPLODING, FREEZING_ASPECT, FROG_FRIGHT, FRUITFUL_FARE, GRAVITY_WELL, GUARDING_STRIKE, HEMORRHAGE, LUCKY_DRAW, MIRROR_FORCE, POTION_BARRIER, REND, SPOREFUL, SQUIDIFY, VOID_STRIKE, WHIRLWIND)
+        EXPLODING, FREEZING_ASPECT, FROG_FRIGHT, FRUITFUL_FARE, GRAVITY_WELL, GUARDING_STRIKE, HEMORRHAGE, HOOK_SHOT, LUCKY_DRAW, MIRROR_FORCE, POTION_BARRIER, REND, SPEEDY_SPURS, SQUIDIFY, VOID_STRIKE, WARP_DRIVE, WHIRLWIND)
 
     // Register
     fun register() {

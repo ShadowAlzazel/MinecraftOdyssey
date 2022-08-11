@@ -1,6 +1,8 @@
 package me.shadowalzazel.mcodyssey.mclisteners.enchantmentListeners
 
+import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
+import me.shadowalzazel.mcodyssey.mclisteners.utility.SpeedySpursTask
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.Particle
@@ -12,6 +14,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.player.PlayerItemConsumeEvent
+import org.bukkit.event.vehicle.VehicleEnterEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import java.util.*
@@ -61,13 +64,13 @@ object ArmorListeners : Listener {
                         val someFoods = listOf(Material.APPLE, Material.PUMPKIN_PIE, Material.HONEY_BOTTLE, Material.DRIED_KELP)
 
                         if (event.item.type in someFoods) {
-                            if (!ArmorListeners.playersFruitfulFareCooldown.containsKey(somePlayer.uniqueId)) {
-                                ArmorListeners.playersFruitfulFareCooldown[somePlayer.uniqueId] = 0L
+                            if (!playersFruitfulFareCooldown.containsKey(somePlayer.uniqueId)) {
+                                playersFruitfulFareCooldown[somePlayer.uniqueId] = 0L
                             }
 
-                            val timeElapsed: Long = System.currentTimeMillis() - ArmorListeners.playersFruitfulFareCooldown[somePlayer.uniqueId]!!
+                            val timeElapsed: Long = System.currentTimeMillis() - playersFruitfulFareCooldown[somePlayer.uniqueId]!!
                             if (timeElapsed > (10 - fruitfulFareFactor) * 1000) {
-                                ArmorListeners.playersFruitfulFareCooldown[somePlayer.uniqueId] = System.currentTimeMillis()
+                                playersFruitfulFareCooldown[somePlayer.uniqueId] = System.currentTimeMillis()
 
                                 // Effects
                                 val currentHealth = somePlayer.health
@@ -130,6 +133,29 @@ object ArmorListeners : Listener {
 
                             }
 
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    // SPEEDY_SPURS enchantment effects
+    @EventHandler
+    fun speedySpursEnchantment(event: VehicleEnterEvent) {
+        if (event.entered is Player) {
+            if (event.vehicle is LivingEntity) {
+                val somePlayer = event.entered as Player
+                val someMount = event.vehicle as LivingEntity
+                if (somePlayer.gameMode != GameMode.SPECTATOR) {
+                    if (somePlayer.inventory.boots != null) {
+                        if (somePlayer.inventory.boots!!.hasItemMeta()) {
+                            if (somePlayer.inventory.boots!!.itemMeta!!.hasEnchant(OdysseyEnchantments.SPEEDY_SPURS)) {
+                                val speedySpursFactor = somePlayer.inventory.boots!!.getEnchantmentLevel(OdysseyEnchantments.SPEEDY_SPURS)
+                                val someSpeedySpursTask = SpeedySpursTask(somePlayer, someMount, speedySpursFactor)
+                                someSpeedySpursTask.runTaskTimer(MinecraftOdyssey.instance, 0, 10 * 20)
+                            }
                         }
                     }
                 }

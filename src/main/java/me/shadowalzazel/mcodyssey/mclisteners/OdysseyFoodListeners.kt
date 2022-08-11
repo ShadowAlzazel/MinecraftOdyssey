@@ -31,7 +31,7 @@ object OdysseyFoodListeners : Listener {
                                 somePlayer.addPotionEffect(someCookieEffect)
                             }
                             "§7A honey cookie!" -> {
-                                val someCookieEffect = PotionEffect(PotionEffectType.REGENERATION, 4 * 20, 0)
+                                val someCookieEffect = PotionEffect(PotionEffectType.ABSORPTION, 4 * 20, 0)
                                 somePlayer.addPotionEffect(someCookieEffect)
                             }
                             "§7An apple cookie!" -> {
@@ -39,11 +39,15 @@ object OdysseyFoodListeners : Listener {
                                 somePlayer.addPotionEffect(someCookieEffect)
                             }
                             "§7A berry cookie!" -> {
-                                val someCookieEffect = PotionEffect(PotionEffectType.FAST_DIGGING, 2 * 20, 0)
+                                val someCookieEffect = PotionEffect(PotionEffectType.INCREASE_DAMAGE, 2 * 20, 0)
+                                somePlayer.addPotionEffect(someCookieEffect)
+                            }
+                            "§7A glow-berry cookie!" -> {
+                                val someCookieEffect = PotionEffect(PotionEffectType.GLOWING, 2 * 20, 0)
                                 somePlayer.addPotionEffect(someCookieEffect)
                             }
                             "§7A melon cookie!" -> {
-                                val someCookieEffect = PotionEffect(PotionEffectType.REGENERATION, 2 * 20, 0)
+                                val someCookieEffect = PotionEffect(PotionEffectType.REGENERATION, 3 * 20, 0)
                                 somePlayer.addPotionEffect(someCookieEffect)
                             }
                             "§7A sugar cookie!" -> {
@@ -51,7 +55,7 @@ object OdysseyFoodListeners : Listener {
                                 somePlayer.addPotionEffect(someCookieEffect)
                             }
                             "§7A golden cookie!" -> {
-                                val someCookieEffect = PotionEffect(PotionEffectType.ABSORPTION, 20 * 10, 2)
+                                val someCookieEffect = PotionEffect(PotionEffectType.ABSORPTION, 10 * 20, 2)
                                 somePlayer.addPotionEffect(someCookieEffect)
                             }
                         }

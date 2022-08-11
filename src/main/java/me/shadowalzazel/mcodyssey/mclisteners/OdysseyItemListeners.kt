@@ -2,8 +2,8 @@ package me.shadowalzazel.mcodyssey.mclisteners
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.mclisteners.utility.UnstableAntimatterTask
-import me.shadowalzazel.mcodyssey.odysseyUtility.OdysseyItems
-import me.shadowalzazel.mcodyssey.odysseyUtility.OdysseyRecipes
+import me.shadowalzazel.mcodyssey.items.OdysseyItems
+import me.shadowalzazel.mcodyssey.recipes.OdysseyRecipes
 import org.bukkit.ChatColor
 import org.bukkit.GameMode
 import org.bukkit.Sound
@@ -43,8 +43,8 @@ object OdysseyItemListeners : Listener {
                     }
                     */
                     //val timeElapsed: Long = System.currentTimeMillis() - this.unstableAntimatterCountdown[somePlayer.uniqueId]!!
-                    if ("Unstable Crafting!!!" !in somePlayer.scoreboardTags) {
-                        somePlayer.scoreboardTags.add("Unstable Crafting!!!")
+                    if ("Unstable_Crafting" !in somePlayer.scoreboardTags) {
+                        somePlayer.scoreboardTags.add("Unstable_Crafting")
                         val antimatterCraftingTask = UnstableAntimatterTask(somePlayer)
                         antimatterCraftingTask.runTaskTimer(MinecraftOdyssey.instance, 0, 1)
                         println("Countdown Started!")
@@ -54,9 +54,9 @@ object OdysseyItemListeners : Listener {
                 // Clear taq
                 else if (event.inventory.result == OdysseyRecipes.FRUIT_OF_ERISHKIGAL_RECIPE.result) {
                     somePlayer.playSound(somePlayer.location, Sound.ENTITY_ENDER_EYE_DEATH, 1.5F, 0.15F)
-                    if ("Unstable Crafting!!!" in somePlayer.scoreboardTags) {
-                        somePlayer.scoreboardTags.remove("Unstable Crafting!!!")
-                        somePlayer.scoreboardTags.add("Clear Instability!!!")
+                    if ("Unstable_Crafting" in somePlayer.scoreboardTags) {
+                        somePlayer.scoreboardTags.remove("Unstable_Crafting")
+                        somePlayer.scoreboardTags.add("Clear_Instability")
                     }
                 }
 
@@ -110,6 +110,9 @@ object OdysseyItemListeners : Listener {
                         }
                         println(playerHealth.modifiers)
                     }
+                    //
+                    else -> {
+                    }
                 }
             }
         }
@@ -119,9 +122,9 @@ object OdysseyItemListeners : Listener {
     @EventHandler
     fun leftCraftingAntimatter(event: PlayerQuitEvent) {
         val somePlayer = event.player
-        if ("Unstable Crafting!!!" in somePlayer.scoreboardTags) {
+        if ("Unstable_Crafting" in somePlayer.scoreboardTags) {
             // add remove
-            somePlayer.scoreboardTags.remove("Unstable Crafting!!!")
+            somePlayer.scoreboardTags.remove("Unstable_Crafting")
             somePlayer.damage(314.15)
             println("Tried to leave!")
         }

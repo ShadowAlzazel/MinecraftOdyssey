@@ -1,6 +1,6 @@
-package me.shadowalzazel.mcodyssey.odysseyUtility
+package me.shadowalzazel.mcodyssey.items
 
-import me.shadowalzazel.mcodyssey.odysseyUtility.utilty.OdysseyItem
+import me.shadowalzazel.mcodyssey.items.utilty.OdysseyItem
 import org.bukkit.ChatColor
 import org.bukkit.Material
 
@@ -11,6 +11,11 @@ object CookingItems {
     val PUMPKIN_COOKIE = PumpkinCookie
     val HONEY_COOKIE = HoneyCookie
     val APPLE_COOKIE = AppleCookie
+    val BERRY_COOKIE = BerryCookie
+    val GLOW_BERRY_COOKIE = GlowBerryCookie
+    val MELON_COOKIE = MelonCookie
+    val SUGAR_COOKIE = SugarCookie
+    val GOLDEN_COOKIE = GoldenCookie
 
     val FRENCH_TOAST = FrenchToast
 
@@ -46,6 +51,36 @@ object HoneyCookie : OdysseyItem("Honey Cookie", Material.COOKIE) {
 object AppleCookie : OdysseyItem("Apple Cookie", Material.COOKIE) {
     override val odysseyDisplayName: String = "${ChatColor.RED}${ChatColor.ITALIC}$name"
     override val odysseyLore = listOf("${ChatColor.GRAY}An apple cookie!")
+}
+
+// BERRY_COOKIE
+object BerryCookie : OdysseyItem("Berry Cookie", Material.COOKIE) {
+    override val odysseyDisplayName: String = "${ChatColor.RED}${ChatColor.ITALIC}$name"
+    override val odysseyLore = listOf("${ChatColor.GRAY}A berry cookie!")
+}
+
+// GLOW_BERRY_COOKIE
+object GlowBerryCookie : OdysseyItem("Glow-Berry Cookie", Material.COOKIE) {
+    override val odysseyDisplayName: String = "${ChatColor.RED}${ChatColor.ITALIC}$name"
+    override val odysseyLore = listOf("${ChatColor.GRAY}A glow-berry cookie!")
+}
+
+// MELON_COOKIE
+object MelonCookie : OdysseyItem("Melon Cookie", Material.COOKIE) {
+    override val odysseyDisplayName: String = "${ChatColor.RED}${ChatColor.ITALIC}$name"
+    override val odysseyLore = listOf("${ChatColor.GRAY}A melon cookie!")
+}
+
+// SUGAR_COOKIE
+object SugarCookie : OdysseyItem("Sugar Cookie", Material.COOKIE) {
+    override val odysseyDisplayName: String = "${ChatColor.RED}${ChatColor.ITALIC}$name"
+    override val odysseyLore = listOf("${ChatColor.GRAY}A sugar cookie!")
+}
+
+// GOLDEN_COOKIE
+object GoldenCookie : OdysseyItem("Golden Cookie", Material.COOKIE) {
+    override val odysseyDisplayName: String = "${ChatColor.RED}${ChatColor.ITALIC}$name"
+    override val odysseyLore = listOf("${ChatColor.GRAY}A golden cookie!")
 }
 
 // FRENCH_TOAST

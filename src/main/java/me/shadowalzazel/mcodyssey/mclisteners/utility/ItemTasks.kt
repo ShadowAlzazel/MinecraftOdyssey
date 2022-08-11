@@ -12,16 +12,16 @@ class UnstableAntimatterTask(private val somePlayer: Player) : BukkitRunnable() 
         counter += 1
 
         val timeElapsed = System.currentTimeMillis() - someCooldown
-        val isUnstable = ("Unstable Crafting!!!" in somePlayer.scoreboardTags)
-        val stabalized = ("Clear Instability!!!" in somePlayer.scoreboardTags)
+        val isUnstable = ("Unstable_Crafting" in somePlayer.scoreboardTags)
+        val stabalized = ("Clear_Instability" in somePlayer.scoreboardTags)
 
         if (stabalized) {
-            somePlayer.scoreboardTags.remove("Unstable Crafting!!!")
-            somePlayer.scoreboardTags.remove("Clear Instability!!!")
+            somePlayer.scoreboardTags.remove("Unstable_Crafting")
+            somePlayer.scoreboardTags.remove("Clear_Instability")
             this.cancel()
         }
         else if ((10 * 20 < counter || timeElapsed > 10 * 1000) && isUnstable) {
-            somePlayer.scoreboardTags.remove("Unstable Crafting!!!")
+            somePlayer.scoreboardTags.remove("Unstable_Crafting")
             somePlayer.damage(314.15)
             println("Died! Unstable!")
 
