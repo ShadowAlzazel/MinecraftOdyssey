@@ -139,13 +139,7 @@ object OdysseyDropsListeners : Listener {
                         }
                         is Drowned -> {
                             if ((1.5 + luck + looting) * 10 > (0..1000).random()) {
-                                somePlayer.world.dropItem(
-                                    event.entity.location,
-                                    (OdysseyItems.GILDED_BOOK.createGildedBook(
-                                        OdysseyEnchantments.BANE_OF_THE_SEA,
-                                        1
-                                    ))
-                                )
+                                somePlayer.world.dropItem(event.entity.location, (OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BANE_OF_THE_SEA, 1)))
                                 droppedItemSound(somePlayer)
                             }
                         }

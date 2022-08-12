@@ -14,7 +14,8 @@ import me.shadowalzazel.mcodyssey.recipes.CookingRecipes
 import me.shadowalzazel.mcodyssey.recipes.GildingRecipes
 import me.shadowalzazel.mcodyssey.recipes.OdysseyRecipes
 import org.bukkit.Bukkit
-
+import org.bukkit.Material
+  
 import org.bukkit.plugin.java.JavaPlugin
 
 class MinecraftOdyssey : JavaPlugin() {
@@ -51,6 +52,9 @@ class MinecraftOdyssey : JavaPlugin() {
 
         // Register Enchantments
         OdysseyEnchantments.register()
+
+        // Register Alchemy
+        server.pluginManager.registerEvents(OdysseyAlchemyListeners, this)
 
         // Register Utility Listeners
         server.pluginManager.registerEvents(OdysseyGildingListeners, this)

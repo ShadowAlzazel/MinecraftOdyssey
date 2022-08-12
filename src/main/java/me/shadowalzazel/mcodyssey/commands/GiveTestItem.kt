@@ -1,5 +1,7 @@
 package me.shadowalzazel.mcodyssey.commands
 
+import me.shadowalzazel.mcodyssey.alchemy.AlchemyPotions
+import me.shadowalzazel.mcodyssey.alchemy.utility.AwkwardPotion
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.items.OdysseyItems
 import org.bukkit.command.Command
@@ -27,8 +29,13 @@ object GiveTestItem : CommandExecutor {
             //sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.HEMORRHAGE, 2))
             //sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.POTION_BARRIER, 2))
             //sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.ALCHEMY_ARTILLERY, 2))
-            sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.HOOK_SHOT, 2))
+            //sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.WARP_DRIVE, 2))
             //sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.REND, 2))
+            //sender.inventory.addItem(AlchemyPotions.POTION_OF_LEVITATION.createItemStack(1))
+            //sender.inventory.addItem(AlchemyPotions.POTION_OF_WITHERING.createItemStack(1))
+            //sender.inventory.addItem(AlchemyPotions.POTION_OF_BIOLUMINESCENCE.createItemStack(1))
+            //sender.inventory.addItem(AlchemyPotions.POTION_OF_LUCK.createItemStack(1))
+            sender.inventory.addItem(AwkwardPotion.createAwkwardPotion())
 
             //sender.inventory.addItem(OdysseyItems.NEUTRONIUM_BARK_SCRAPS.createItemStack(1))
             //sender.inventory.addItem(OdysseyItems.IDESCINE_ESSENCE.createItemStack(1))
