@@ -75,7 +75,7 @@ object MiscListeners : Listener {
                                         // Vector Math
                                         var someVector = somePlayer.velocity.clone()
                                         val unitVector = someVector.clone().normalize()
-                                        someVector = unitVector.clone().multiply((warpFactor * 7.5) + 7.5)
+                                        someVector = unitVector.clone().multiply((warpFactor * 5.0) + 5)
                                         val someWarpLocation = somePlayer.location.clone()
                                         someWarpLocation.add(someVector)
                                         // Effects and Teleport
@@ -156,61 +156,6 @@ object MiscListeners : Listener {
             }
         }
     }
-
-
-
-    /*
-    // WARP_DRIVE enchantment effects
-    @EventHandler
-    fun warpDriveEnchantment(event: PlayerItemConsumeEvent) {
-        val somePlayer = event.player
-        if (somePlayer.equipment.chestplate != null) {
-            if (somePlayer.equipment.chestplate.hasItemMeta()) {
-                val someElytra = somePlayer.equipment.chestplate
-                if (someElytra.itemMeta.hasEnchant(OdysseyEnchantments.WARP_DRIVE)) {
-                    if (event.item.type == Material.ENDER_PEARL) {
-                        val someSpeed = somePlayer.velocity.clone().length()
-                        if (!somePlayer.isDead && someSpeed > 0.125) {
-                            if (event.player.gameMode != GameMode.SPECTATOR) {
-                                val warpFactor = someElytra.itemMeta.getEnchantLevel(OdysseyEnchantments.WARP_DRIVE)
-                                if (!playersWarpDriveCooldown.containsKey(somePlayer.uniqueId)) {
-                                    playersWarpDriveCooldown[somePlayer.uniqueId] = 0L
-                                }
-                                val timeElapsed: Long = System.currentTimeMillis() - playersWarpDriveCooldown[somePlayer.uniqueId]!!
-                                if (timeElapsed >= 1.0 * 1000) {
-                                    // Timer
-                                    playersWarpDriveCooldown[somePlayer.uniqueId] = System.currentTimeMillis()
-                                    // Vector Math
-                                    var someVector = somePlayer.velocity.clone()
-                                    val unitVector = someVector.clone().normalize()
-                                    someVector = unitVector.clone().multiply((warpFactor * 7.5) + 7.5)
-                                    val someWarpLocation = somePlayer.location.clone()
-                                    someWarpLocation.add(someVector)
-                                    // Effects and Teleport
-                                    somePlayer.world.spawnParticle(Particle.FLASH, somePlayer.location, 15, 0.0, 0.0, 0.0)
-                                    somePlayer.world.spawnParticle(Particle.SONIC_BOOM, somePlayer.location, 5, 0.0, 0.0, 0.0)
-                                    somePlayer.world.spawnParticle(Particle.PORTAL, somePlayer.location, 85, 1.5, 1.5, 1.5)
-                                    somePlayer.playSound(somePlayer.location, Sound.BLOCK_BEACON_DEACTIVATE, 2.5F, 2.5F)
-                                    somePlayer.teleport(someWarpLocation)
-                                    somePlayer.world.spawnParticle(Particle.FLASH, somePlayer.location, 15, 0.0, 0.0, 0.0)
-                                    somePlayer.world.spawnParticle(Particle.SONIC_BOOM, somePlayer.location, 5, 0.0, 0.0, 0.0)
-                                    somePlayer.world.spawnParticle(Particle.PORTAL, somePlayer.location, 85, 1.5, 1.5, 1.5)
-                                    somePlayer.playSound(somePlayer.location, Sound.BLOCK_BEACON_DEACTIVATE, 2.5F, 2.5F)
-                                    // Post Teleport
-                                    somePlayer.velocity = unitVector.clone().multiply(1)
-                                    println(someVector)
-                                    // Event
-                                    println("X")
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-     */
 
 
 }

@@ -7,11 +7,10 @@ import org.bukkit.Particle
 import org.bukkit.Particle.DustOptions
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
-import org.bukkit.entity.Vehicle
+import org.bukkit.util.Vector
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
-
 
 // BUZZY_BEES task
 class HoneyedTask(honeyedEntity: LivingEntity, private val honeyFactor: Int) : BukkitRunnable() {
@@ -88,7 +87,7 @@ class DouseIgniteTask(dousedEntity: LivingEntity, private val douseFactor: Int) 
 
         dousedVictim.world.spawnParticle(Particle.SMALL_FLAME, someLocation, 50, 1.05, 0.25, 1.05)
         dousedVictim.world.spawnParticle(Particle.SMOKE_NORMAL, someLocation, 10, 1.25, 0.25, 1.25)
-        dousedVictim.world.spawnParticle(Particle.FLAME, someLocation, 35, 0.75, 0.25, 0.75)
+        dousedVictim.world.spawnParticle(Particle.FLAME, someLocation, 35, 0.75, 0.25, 0.75, 0)
         dousedVictim.world.spawnParticle(Particle.SMOKE_LARGE, someLocation, 5, 0.75, 0.25, 0.75)
         dousedVictim.world.spawnParticle(Particle.LAVA, someLocation, 85, 0.75, 0.25, 0.75)
 
@@ -164,6 +163,18 @@ class FreezingTask(freezingEntity: LivingEntity, private val freezeFactor: Int) 
             this.cancel()
         }
 
+    }
+}
+
+// FROG_FRIGHT task
+class FrogFrightTask(private val toungedEntity: LivingEntity?, private val someVector: Vector) : BukkitRunnable() {
+    override fun run() {
+        if (toungedEntity != null) {
+            if (!toungedEntity.isDead) {
+                toungedEntity.velocity = someVector.clone().multiply(-1.1)
+            }
+        }
+        this.cancel()
     }
 }
 

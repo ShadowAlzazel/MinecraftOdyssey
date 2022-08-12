@@ -383,8 +383,17 @@ object MeleeListeners : Listener {
                     if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.FROG_FRIGHT)) {
                         if (somePlayer.gameMode != GameMode.SPECTATOR) {
                             val frogFrightFactor = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.FROG_FRIGHT)
-                            froggingEntity.velocity = froggingEntity.location.add(0.0, frogFrightFactor * 2.75, 0.0).subtract(froggingEntity.location).toVector().multiply(0.25)
-                            somePlayer.world.spawnParticle(Particle.TOWN_AURA, somePlayer.location, 45, 1.0, 0.5, 1.0)
+                            // MATH
+                            val closeEntityLocation = froggingEntity.location.clone().add(0.0, 1.75, 0.0)
+                            val someDirectionVector = closeEntityLocation.clone().subtract(somePlayer.location.clone()).toVector()
+                            val someUnitVector = someDirectionVector.clone().normalize()
+                            val someNewVector = someUnitVector.clone().multiply(1.15 + (0.15 * frogFrightFactor))
+                            froggingEntity.velocity = someNewVector
+
+                            val someToungTask = FrogFrightTask(froggingEntity, someNewVector.clone())
+                            someToungTask.runTaskTimer(MinecraftOdyssey.instance, 20, 1)
+
+                            somePlayer.world.spawnParticle(Particle.TOWN_AURA, somePlayer.location, 65, 1.0, 0.5, 1.0)
                             somePlayer.playSound(somePlayer.location, Sound.ENTITY_FROG_EAT, 5.5F, 0.5F)
 
                         }
@@ -651,14 +660,13 @@ object MeleeListeners : Listener {
                                 val timeElapsed: Long =
                                     System.currentTimeMillis() - playersWhirlwindCooldown[somePlayer.uniqueId]!!
 
-                                if (timeElapsed > 0.85 * 1000) {
+                                if (timeElapsed > 1.0 * 1000) {
                                     val whirlwindFactor = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.WHIRLWIND)
                                     playersWhirlwindCooldown[somePlayer.uniqueId] = System.currentTimeMillis()
 
                                     //1.25
                                     val entitiesNearPlayer = somePlayer.world.getNearbyLivingEntities(somePlayer.location, 1.375)
                                     entitiesNearPlayer.remove(somePlayer)
-                                    entitiesNearPlayer.remove(someEntity)
 
                                     //Particles
                                     val xCord = somePlayer.location.x - 1.25
@@ -669,27 +677,32 @@ object MeleeListeners : Listener {
                                     for (n in 0..16) {
                                         val s = (2.5 / 16) * n
                                         if (n == 16 || n == 0) {
-                                            somePlayer.world.spawnParticle(Particle.SWEEP_ATTACK, xCord + s, yCord, zCord, 1)
+                                            somePlayer.world.spawnParticle(Particle.EXPLOSION_LARGE, xCord + s, yCord, zCord, 1)
                                         }
                                         else {
                                             var q = s
                                             if (n > 8) {
                                                 q -= (2.5 / 16) * (n - 8)
                                             }
-                                            somePlayer.world.spawnParticle(Particle.SWEEP_ATTACK, xCord + s, yCord, zCord + q, 1)
-                                            somePlayer.world.spawnParticle(Particle.SWEEP_ATTACK, xCord + s, yCord, zCord - q, 1)
+                                            somePlayer.world.spawnParticle(Particle.EXPLOSION_LARGE, xCord + s, yCord, zCord + q, 1)
+                                            somePlayer.world.spawnParticle(Particle.EXPLOSION_LARGE, xCord + s, yCord, zCord - q, 1)
                                         }
                                     }
 
-                                    val playerLocation = somePlayer.location
                                     val someDamage = event.damage
                                     val whirlwindPercentage = (0.3 + ((whirlwindFactor * 3) * 0.1))
                                     val whirlDamage = someDamage * whirlwindPercentage
                                     println("event: $someDamage, percent: $whirlwindPercentage, newDamage: $whirlDamage")
 
+                                    val somePlayerLocation = somePlayer.location.clone()
                                     for (closeEntity in entitiesNearPlayer) {
-                                        closeEntity.damage(whirlDamage, somePlayer)
-                                        closeEntity.velocity = closeEntity.location.add(0.0, 1.15, 0.0).subtract(playerLocation).toVector().multiply(0.45)
+                                        if (closeEntity != someEntity) closeEntity.damage(whirlDamage, somePlayer)
+                                        // MATH
+                                        val closeEntityLocation = closeEntity.location.clone().add(0.0, 1.5, 0.0)
+                                        val someDirectionVector = closeEntityLocation.clone().subtract(somePlayerLocation.clone()).toVector()
+                                        val someUnitVector = someDirectionVector.clone().normalize()
+                                        val someNewVector = someUnitVector.clone().multiply(0.75 + (0.1 * whirlwindFactor))
+                                        closeEntity.velocity = someNewVector
                                         //somePlayer.world.spawnParticle(Particle.SWEEP_ATTACK, closeEntity.location, 1, 0.05, 0.05, 0.05)
                                     }
                                     somePlayer.playSound(somePlayer.location, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1.2F, 0.7F)

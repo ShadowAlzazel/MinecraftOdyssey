@@ -65,6 +65,8 @@ class HogRiderBoss : OdysseyBoss("Hog Rider", "Piglin") {
         val worldPlayers = odysseyWorld.players
         for (somePlayer in worldPlayers) {
             somePlayer.playSound(somePlayer.location, Sound.ENTITY_GHAST_SCREAM, 2.5F, 0.9F)
+            somePlayer.playSound(somePlayer.location, Sound.ITEM_GOAT_HORN_SOUND_5, 2.5F, 0.85F)
+            somePlayer.playSound(somePlayer.location, Sound.ITEM_GOAT_HORN_SOUND_6, 2.5F, 0.85F)
             somePlayer.sendMessage("${ChatColor.GOLD}[Hog Rida] ${ChatColor.RESET}HOOOOOOGGG RIIDDDAAAAAAAAAAA")
         }
         // 1200 tks = 60 sec
@@ -118,15 +120,22 @@ class HogRiderBoss : OdysseyBoss("Hog Rider", "Piglin") {
     fun hogRiderAttacks(hogRiderEntity: PiglinBrute) {
         val timeElapsed: Long = System.currentTimeMillis() - hogJumpAttackCooldown
 
-        if (timeElapsed >= 2 * 1000) {
+        if (timeElapsed >= 3 * 1000) {
 
             if (bossEntityMount != null) {
                 println("Jumped")
                 hogJumpAttackCooldown = System.currentTimeMillis()
-                val playersNearHogRider = hogRiderEntity.world.getNearbyPlayers(hogRiderEntity.location, 25.5)
+                val playersNearHogRider = hogRiderEntity.world.getNearbyPlayers(hogRiderEntity.location, 10.5)
                 val randomPlayer = playersNearHogRider.random()
 
-                bossEntityMount!!.velocity = randomPlayer.location.add(0.0, 1.5 ,0.0).subtract(hogRiderEntity.location).toVector().multiply(0.25)
+                val randomPlayerLocation = randomPlayer.location.clone().add(0.0, 0.75, 0.0)
+                val warthogLocation = bossEntityMount!!.location.clone()
+                val someJumpVector = randomPlayerLocation.subtract(warthogLocation)
+                println(someJumpVector)
+                val someUnitVector = someJumpVector.toVector().clone().normalize()
+                println(someUnitVector)
+                bossEntityMount!!.velocity = someUnitVector.clone().multiply(1.5)
+                println(bossEntityMount!!.velocity)
             }
 
             // Scream

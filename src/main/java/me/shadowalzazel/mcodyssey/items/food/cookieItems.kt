@@ -1,32 +1,8 @@
-package me.shadowalzazel.mcodyssey.items
+package me.shadowalzazel.mcodyssey.items.food
 
 import me.shadowalzazel.mcodyssey.items.utilty.OdysseyItem
 import org.bukkit.ChatColor
 import org.bukkit.Material
-
-
-object CookingItems {
-
-    val BEETROOT_COOKIE = BeetrootCookie
-    val PUMPKIN_COOKIE = PumpkinCookie
-    val HONEY_COOKIE = HoneyCookie
-    val APPLE_COOKIE = AppleCookie
-    val BERRY_COOKIE = BerryCookie
-    val GLOW_BERRY_COOKIE = GlowBerryCookie
-    val MELON_COOKIE = MelonCookie
-    val SUGAR_COOKIE = SugarCookie
-    val GOLDEN_COOKIE = GoldenCookie
-
-    val FRENCH_TOAST = FrenchToast
-
-    val SUGARY_BREAD = SugaryBread
-
-    val BACON = Bacon
-
-    val SALMON_ROLL = SalmonRollSushi
-
-}
-
 
 
 // BEETROOT_COOKIE
@@ -81,28 +57,4 @@ object SugarCookie : OdysseyItem("Sugar Cookie", Material.COOKIE) {
 object GoldenCookie : OdysseyItem("Golden Cookie", Material.COOKIE) {
     override val odysseyDisplayName: String = "${ChatColor.RED}${ChatColor.ITALIC}$name"
     override val odysseyLore = listOf("${ChatColor.GRAY}A golden cookie!")
-}
-
-// FRENCH_TOAST
-object FrenchToast : OdysseyItem("French Toast", Material.BREAD) {
-    override val odysseyDisplayName: String = "${ChatColor.RED}${ChatColor.ITALIC}$name"
-    override val odysseyLore = listOf("${ChatColor.GRAY}French Toast!")
-}
-
-// BACON
-object Bacon : OdysseyItem("Bacon", Material.COOKED_PORKCHOP) {
-    override val odysseyDisplayName: String = "${ChatColor.RED}${ChatColor.ITALIC}$name"
-    override val odysseyLore = listOf("${ChatColor.GRAY}Bacon!")
-}
-
-// SUGARY_BREAD
-object SugaryBread : OdysseyItem("Sugary Bread", Material.BREAD) {
-    override val odysseyDisplayName: String = "${ChatColor.RED}${ChatColor.ITALIC}$name"
-    override val odysseyLore = listOf("${ChatColor.GRAY}Sugary Bread!")
-}
-
-// BEETROOT_COOKIE
-object SalmonRollSushi : OdysseyItem("Salmon Roll", Material.COOKED_SALMON) {
-    override val odysseyDisplayName: String = "${ChatColor.RED}${ChatColor.ITALIC}$name"
-    override val odysseyLore = listOf("${ChatColor.GRAY}Salmon Roll Sushi!")
 }
