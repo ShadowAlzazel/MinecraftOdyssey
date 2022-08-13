@@ -6,6 +6,8 @@ import org.bukkit.entity.Entity
 import org.bukkit.entity.Item
 import org.bukkit.inventory.ItemStack
 
+
+// Change to list ingredient later
 open class OdysseyAlchemyCauldronRecipe(val result: OdysseyPotion, val firstIngredient: ItemStack, val secondIngredient: ItemStack, val fuelBlock: Material) {
 
     fun validateRecipe(someEntities: MutableCollection<Entity?>, someFuel: Material): Boolean {
@@ -29,6 +31,8 @@ open class OdysseyAlchemyCauldronRecipe(val result: OdysseyPotion, val firstIngr
         return valid
     }
 
+    // SUpports stacks
+
     private fun alchemicalAntithesis(someMaterials: MutableCollection<Item>) {
         val someLocation = someMaterials.elementAt(0).location.clone()
         someMaterials.elementAt(0).remove()
@@ -38,25 +42,4 @@ open class OdysseyAlchemyCauldronRecipe(val result: OdysseyPotion, val firstIngr
         alchemyTask.runTaskTimer(MinecraftOdyssey.instance, 0, 2)
 
     }
-
-
-    /*
-    private fun alchemicalAntithesis(someMaterials: MutableCollection<Item>) {
-        val ingredientOne = someMaterials.elementAt(0)
-        val ingredientTwo = someMaterials.elementAt(1)
-
-        println("A")
-        if (ingredientOne.itemStack == firstIngredient && ingredientTwo.itemStack == secondIngredient || ingredientOne.itemStack == secondIngredient && ingredientTwo.itemStack == firstIngredient) {
-            val someLocation = ingredientOne.location.clone()
-            ingredientOne.remove()
-            ingredientTwo.remove()
-            val alchemyTask = AlchemyTask(someLocation, result.createItemStack(1))
-            // Every 0.5 secs
-            alchemyTask.runTaskTimer(MinecraftOdyssey.instance, 0, 10)
-        }
-
-    }
-
-     */
-
 }

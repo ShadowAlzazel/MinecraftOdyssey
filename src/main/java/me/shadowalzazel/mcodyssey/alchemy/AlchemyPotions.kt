@@ -11,6 +11,11 @@ object AlchemyPotions {
     val POTION_OF_WITHERING: OdysseyPotion = PotionOfWithering
     val POTION_OF_BIOLUMINESCENCE: OdysseyPotion = PotionOfBioluminescence
     val POTION_OF_LUCK: OdysseyPotion = PotionOfLuck
+    val POTION_OF_RESISTANCE: OdysseyPotion = PotionOfResistance
+    val POTION_OF_HASTE: OdysseyPotion = PotionOfHaste
+    //
+    val POTION_OF_DECAY: OdysseyPotion = PotionOfDecay
+    val POTION_OF_SHIMMER: OdysseyPotion = PotionOfShimmer
 
-    val potionSet = setOf(CRYSTALLINE_POTION, POTION_OF_LEVITATION, POTION_OF_WITHERING, POTION_OF_BIOLUMINESCENCE, POTION_OF_LUCK)
+    val potionSet = setOf(CRYSTALLINE_POTION, POTION_OF_LEVITATION, POTION_OF_WITHERING, POTION_OF_BIOLUMINESCENCE, POTION_OF_LUCK, POTION_OF_RESISTANCE, POTION_OF_HASTE, POTION_OF_DECAY)
 }

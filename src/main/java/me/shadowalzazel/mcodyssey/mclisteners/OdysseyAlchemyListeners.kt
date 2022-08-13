@@ -10,9 +10,13 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.CauldronLevelChangeEvent
+import org.bukkit.event.entity.PotionSplashEvent
 import org.bukkit.event.inventory.BrewEvent
+import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.PotionMeta
+import org.bukkit.potion.PotionData
+import org.bukkit.potion.PotionType
 
 object OdysseyAlchemyListeners : Listener {
 
@@ -61,15 +65,37 @@ object OdysseyAlchemyListeners : Listener {
                         val someBrewedPotion = brewerSlots[x]!!
                         for (someOdysseyPotion: OdysseyPotion in AlchemyPotions.potionSet) {
                             if (someOdysseyPotion.odysseyDisplayName == someBrewedPotion.itemMeta.displayName) {
-                                val newPotion = ItemStack(ingredientType, 1)
-                                val newPotionMeta: PotionMeta = someBrewedPotion.itemMeta as PotionMeta
-                                newPotion.itemMeta = newPotionMeta
-                                event.results[x] = newPotion
+                                val somePotionMeta = someBrewedPotion.itemMeta as PotionMeta
+                                if (somePotionMeta.basePotionData.type != PotionType.UNCRAFTABLE) {
+                                    val newPotion = ItemStack(ingredientType, 1)
+                                    val newPotionMeta: PotionMeta = someBrewedPotion.itemMeta as PotionMeta
+                                    newPotion.itemMeta = newPotionMeta
+                                    event.results[x] = newPotion
+                                }
+                                else {
+                                    val newPotion = ItemStack(ingredientType, 1)
+                                    val newPotionMeta: PotionMeta = someBrewedPotion.itemMeta as PotionMeta
+                                    newPotion.itemMeta = newPotionMeta
+                                    event.results[x] = newPotion
+                                }
                             }
                         }
                     }
                 }
             }
         }
+    }
+
+    @EventHandler
+    fun tippedArrowTableInteract(event: PlayerInteractEvent) {
+        if (event.material == Material.FLETCHING_TABLE) {
+            println("Arrow Tip")
+        }
+    }
+
+
+    @EventHandler
+    fun alchemyPotionSplash(event: PotionSplashEvent) {
+
     }
 }

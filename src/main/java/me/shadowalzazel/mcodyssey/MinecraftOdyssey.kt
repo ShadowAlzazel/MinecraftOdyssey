@@ -14,8 +14,7 @@ import me.shadowalzazel.mcodyssey.recipes.CookingRecipes
 import me.shadowalzazel.mcodyssey.recipes.GildingRecipes
 import me.shadowalzazel.mcodyssey.recipes.OdysseyRecipes
 import org.bukkit.Bukkit
-import org.bukkit.Material
-  
+
 import org.bukkit.plugin.java.JavaPlugin
 
 class MinecraftOdyssey : JavaPlugin() {
@@ -60,8 +59,8 @@ class MinecraftOdyssey : JavaPlugin() {
         server.pluginManager.registerEvents(OdysseyGildingListeners, this)
         // Daily Phenomenon listeners
         if (config.getBoolean("daily-world-phenomenon.enabled")) {
-            server.pluginManager.registerEvents(OdysseyDailyPhenomenonListener, this)
-            server.pluginManager.registerEvents(OdysseyNightlyPhenomenonListener, this)
+            server.pluginManager.registerEvents(DailyPhenomenaListeners, this)
+            server.pluginManager.registerEvents(NightlyPhenomenaListener, this)
         }
         // Boss Listeners
         server.pluginManager.registerEvents(AmbassadorListeners, this)

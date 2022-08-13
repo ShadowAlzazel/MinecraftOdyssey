@@ -6,9 +6,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerBedEnterEvent
 
-object OdysseyNightlyPhenomenonListener : Listener {
-
-    private val nightlyPhenomenonList = listOf(BloodMoon(), BlueMoon())
+object NightlyPhenomenaListener : Listener {
 
     // Cool Down timers
     private var cooldown : Long = 0
@@ -40,7 +38,7 @@ object OdysseyNightlyPhenomenonListener : Listener {
                         if (timeElapsed >= cooldownTimer) {
                             cooldown = System.currentTimeMillis()
                             // Calculate if nightly phenomenon
-                            val randomNightlyPhenomenon = nightlyPhenomenonList.random()
+                            val randomNightlyPhenomenon = NightlyPhenomena.phenomenaList.random()
                             val rolledRate = (0..100).random()
                             val phenomenonActivated: Boolean = randomNightlyPhenomenon.phenomenonActivation(currentWorld, rolledRate)
                             if (phenomenonActivated) {
