@@ -6,7 +6,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDeathEvent
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
-import me.shadowalzazel.mcodyssey.tasks.*
+import me.shadowalzazel.mcodyssey.effects.*
 import org.bukkit.*
 import org.bukkit.entity.Bee
 import org.bukkit.entity.EntityType
@@ -211,14 +211,9 @@ object MeleeListeners : Listener {
                                 val decayEffect = PotionEffect(PotionEffectType.HUNGER, 10 * 20 , 0)
                                 decayingEntity.addPotionEffect(decayEffect)
 
-                                val pop = listOf(decayEffect)
-                                decayingEntity.addPotionEffects(pop)
-                                val oww = listOf<PotionEffect>()
-                                if (oww.isEmpty())
-
                                 // Every 2 secs
                                 decayingEntity.addScoreboardTag("Decaying")
-                                val decayingTask = DecayingTask(decayingEntity, decayingTouchFactor)
+                                val decayingTask = DecayingTask(decayingEntity, decayingTouchFactor, 5)
                                 decayingTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20 * 2)
 
 
@@ -284,7 +279,7 @@ object MeleeListeners : Listener {
                         // do douse effects
                         dousedEntity.addScoreboardTag("Ignited")
                         dousedEntity.fireTicks = 20 * ((douseFactorPower!! * 4) + 4) + 1
-                        val igniteDouseTask = DouseIgniteTask(dousedEntity, douseFactorPower)
+                        val igniteDouseTask = BlazingTask(dousedEntity, douseFactorPower)
                         igniteDouseTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20)
 
                     }
@@ -368,8 +363,8 @@ object MeleeListeners : Listener {
                                 println("Applied Freeze Stuff")
 
                                 //
-                                freezingEntity.addScoreboardTag("Freezing")
-                                val freezingTask = FreezingTask(freezingEntity, freezeFactor)
+                                freezingEntity.addScoreboardTag(OdysseyEffectTags.FREEZING)
+                                val freezingTask = FreezingTask(freezingEntity, freezeFactor, freezeFactor * 3)
                                 freezingTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20)
                             }
 

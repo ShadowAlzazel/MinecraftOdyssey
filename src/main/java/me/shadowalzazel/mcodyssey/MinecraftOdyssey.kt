@@ -54,7 +54,6 @@ class MinecraftOdyssey : JavaPlugin() {
 
         // Register Alchemy
         server.pluginManager.registerEvents(OdysseyAlchemyListeners, this)
-
         // Register Utility Listeners
         server.pluginManager.registerEvents(OdysseyGildingListeners, this)
         // Daily Phenomenon listeners

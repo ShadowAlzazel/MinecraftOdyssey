@@ -15,9 +15,13 @@ object AlchemyRecipes {
     val POTION_OF_HASTE_RECIPE: OdysseyAlchemyCauldronRecipe = PotionOfHasteRecipe
     //
     val POTION_OF_DECAY_RECIPE: OdysseyAlchemyCauldronRecipe = PotionOfDecayRecipe
+    val POTION_OF_FROST_RECIPE: OdysseyAlchemyCauldronRecipe = PotionOfFrostRecipe
+    val POTION_OF_DOUSE_RECIPE: OdysseyAlchemyCauldronRecipe = PotionOfDouseRecipe
+    val POTION_OF_ABLAZE_RECIPE: OdysseyAlchemyCauldronRecipe = PotionOfAblazeRecipe
+    //
     val POTION_OF_SHIMMER_RECIPE: OdysseyAlchemyCauldronRecipe = PotionOfShimmerRecipe
     //
     val alchemyRecipeSet = setOf(CRYSTALLINE_POTION_RECIPE, POTION_OF_LEVITATION_RECIPE, POTION_OF_WITHERING_RECIPE, POTION_OF_BIOLUMINESCENCE, POTION_OF_LUCK_RECIPE,
-        POTION_OF_RESISTANCE_RECIPE, POTION_OF_HASTE_RECIPE, POTION_OF_DECAY_RECIPE, POTION_OF_SHIMMER_RECIPE)
+        POTION_OF_RESISTANCE_RECIPE, POTION_OF_HASTE_RECIPE, POTION_OF_DECAY_RECIPE, POTION_OF_DOUSE_RECIPE, POTION_OF_ABLAZE_RECIPE, POTION_OF_FROST_RECIPE, POTION_OF_SHIMMER_RECIPE)
 
 }

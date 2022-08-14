@@ -2,7 +2,7 @@ package me.shadowalzazel.mcodyssey.mclisteners.enchantmentListeners
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.tasks.SpeedySpursTask
+import me.shadowalzazel.mcodyssey.effects.SpeedySpursTask
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.Particle

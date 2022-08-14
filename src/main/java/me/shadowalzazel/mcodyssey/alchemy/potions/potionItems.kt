@@ -13,18 +13,18 @@ object CrystallinePotion : OdysseyPotion("Crystalline Potion",
 }
 
 object PotionOfLevitation : OdysseyPotion("Potion of Levitation",
-    listOf(PotionEffect(PotionEffectType.LEVITATION, 8 * 20 , 0)),
+    listOf(PotionEffect(PotionEffectType.LEVITATION, 10 * 20 , 0)),
     Color.TEAL) {
     override val odysseyDisplayName: String = "${ChatColor.WHITE}$name"
 }
 
 object PotionOfWithering : OdysseyPotion("Potion of Withering",
-    listOf(PotionEffect(PotionEffectType.WITHER, 10 * 20 , 0)), Color.fromRGB(23, 20, 19)) {
+    listOf(PotionEffect(PotionEffectType.WITHER, 30 * 20 , 0)), Color.fromRGB(23, 20, 19)) {
     override val odysseyDisplayName: String = "${ChatColor.WHITE}$name"
 }
 
 object PotionOfBioluminescence : OdysseyPotion("Potion of Bioluminescence",
-    listOf(PotionEffect(PotionEffectType.GLOWING, 15 * 20 , 0)), Color.fromRGB(0, 255, 179)) {
+    listOf(PotionEffect(PotionEffectType.GLOWING, 60 * 20 , 0)), Color.fromRGB(0, 255, 179)) {
     override val odysseyDisplayName: String = "${ChatColor.WHITE}$name"
 }
 
@@ -34,7 +34,7 @@ object PotionOfLuck : OdysseyPotion("Potion of Luck",
 }
 
 object PotionOfResistance : OdysseyPotion("Potion of Resistance",
-    listOf(PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 20 , 0)), Color.fromRGB(65, 97, 122)) {
+    listOf(PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 30 * 20 , 0)), Color.fromRGB(65, 97, 122)) {
     override val odysseyDisplayName: String = "${ChatColor.WHITE}$name"
 }
 
@@ -43,9 +43,24 @@ object PotionOfHaste : OdysseyPotion("Potion of Haste",
     override val odysseyDisplayName: String = "${ChatColor.WHITE}$name"
 }
 
-object PotionOfDecay : OdysseyPotion("Potion of Decay", emptyList(), Color.fromRGB(134, 227, 116)) {
+object PotionOfDecay : OdysseyPotion("Bottle o' Decay", emptyList(), Color.fromRGB(134, 227, 116)) {
     override val odysseyDisplayName: String = "${ChatColor.AQUA}$name"
-    override val odysseyLore = listOf("${ChatColor.GOLD}Decaying (0:10)")
+    override val odysseyLore = listOf("${ChatColor.GOLD}Decaying (0:30)")
+}
+
+object PotionOfFrost : OdysseyPotion("Bottle o' Frost", emptyList(), Color.fromRGB(163, 211, 255)) {
+    override val odysseyDisplayName: String = "${ChatColor.AQUA}$name"
+    override val odysseyLore = listOf("${ChatColor.GOLD}Freezing (0:20)")
+}
+
+object PotionOfDouse : OdysseyPotion("Bottle o' Douse", emptyList(), Color.fromRGB(66, 46, 38)) {
+    override val odysseyDisplayName: String = "${ChatColor.AQUA}$name"
+    override val odysseyLore = listOf("${ChatColor.GOLD}Douse (0:30)")
+}
+
+object PotionOfAblaze : OdysseyPotion("Bottle o' Ablaze", emptyList(), Color.fromRGB(247, 74, 0)) {
+    override val odysseyDisplayName: String = "${ChatColor.AQUA}$name"
+    override val odysseyLore = listOf("${ChatColor.GOLD}Blazing (0:20)")
 }
 
 object PotionOfShimmer : OdysseyPotion("Bottle o' Shimmer",

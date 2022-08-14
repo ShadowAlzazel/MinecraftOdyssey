@@ -2,14 +2,14 @@ package me.shadowalzazel.mcodyssey.alchemy.utility
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import org.bukkit.Material
-import org.bukkit.entity.Entity
 import org.bukkit.entity.Item
 import org.bukkit.inventory.ItemStack
 
 
 // Change to list ingredient later
-open class OdysseyAlchemyCauldronRecipe(val result: OdysseyPotion, val firstIngredient: ItemStack, val secondIngredient: ItemStack, val fuelBlock: Material) {
+open class OdysseyAlchemyCauldronRecipe(val result: OdysseyPotion, val ingredientList: List<ItemStack> ,val ingredientSize: Int, val fuelBlock: Material) {
 
+    /*
     fun validateRecipe(someEntities: MutableCollection<Entity?>, someFuel: Material): Boolean {
         var someItems: MutableSet<Item> = mutableSetOf()
         var valid = false
@@ -31,13 +31,54 @@ open class OdysseyAlchemyCauldronRecipe(val result: OdysseyPotion, val firstIngr
         return valid
     }
 
-    // SUpports stacks
+     */
+    fun validateRecipe(someItemEntities: MutableCollection<Item>, someFuel: Material): Boolean {
+        var valid = false
+        if ((someItemEntities.size == ingredientSize) && someFuel == fuelBlock) {
+            val someItemEntitiesCollection: MutableCollection<Item> = someItemEntities.toCollection(mutableListOf())
+
+            for (someItem: Item in someItemEntitiesCollection) {
+                if (someItem.itemStack !in ingredientList) return false
+            }
+            /*
+            val ingredientMap = ingredientList.associateWith { false }.toMutableMap<ItemStack, Boolean>()
+
+            for (someIngredient: ItemStack in ingredientMap.keys) {
+                var itemToRemove: Item? = null
+                for (someItem: Item in someItemEntitiesCollection) {
+                    if (someItem.itemStack == someIngredient) {
+                        ingredientMap[someIngredient] = true
+                        itemToRemove = someItem
+                        break
+                    }
+                }
+                //
+                if (itemToRemove != null) someItemEntitiesCollection.remove(itemToRemove)
+
+            }
+            for (value in ingredientMap.values) {
+                if (!value) return false
+            }
+            */
+            valid = true
+        }
+        if (valid) {
+            alchemicalAntithesis(someItemEntities)
+            println("Alchemy!")
+        }
+        return valid
+    }
+
 
     private fun alchemicalAntithesis(someMaterials: MutableCollection<Item>) {
         val someLocation = someMaterials.elementAt(0).location.clone()
-        someMaterials.elementAt(0).remove()
-        someMaterials.elementAt(1).remove()
-        val alchemyTask = AlchemyTask(someLocation, result.createItemStack(1))
+        val someBlock = someLocation.block
+
+        for (itemEntity in someMaterials) {
+            itemEntity.remove()
+        }
+
+        val alchemyTask = AlchemyTask(someBlock, result.createItemStack(1))
         // Every 0.5 secs
         alchemyTask.runTaskTimer(MinecraftOdyssey.instance, 0, 2)
 

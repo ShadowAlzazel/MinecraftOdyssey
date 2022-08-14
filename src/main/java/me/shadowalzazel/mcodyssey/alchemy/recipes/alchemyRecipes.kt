@@ -9,28 +9,107 @@ import org.bukkit.inventory.ItemStack
 
 // temp internal
 // CRYSTALLINE_POTION
-internal object CrystallinePotionRecipe : OdysseyAlchemyCauldronRecipe(AlchemyPotions.CRYSTALLINE_POTION, ItemStack(Material.AMETHYST_SHARD, 2), AwkwardPotion.createAwkwardPotion(), Material.FIRE)
+object CrystallinePotionRecipe : OdysseyAlchemyCauldronRecipe(
+    AlchemyPotions.CRYSTALLINE_POTION,
+    listOf(
+        ItemStack(Material.AMETHYST_SHARD, 1),
+        AwkwardPotion.createAwkwardPotion()),
+    2, Material.FIRE)
 
 // POTION_OF_LEVITATION_RECIPE
-object PotionOfLevitationRecipe : OdysseyAlchemyCauldronRecipe(AlchemyPotions.POTION_OF_LEVITATION, ItemStack(Material.SHULKER_SHELL, 1), AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1), Material.SOUL_FIRE)
+object PotionOfLevitationRecipe : OdysseyAlchemyCauldronRecipe(
+    AlchemyPotions.POTION_OF_LEVITATION,
+    listOf(
+        ItemStack(Material.SHULKER_SHELL, 1),
+        ItemStack(Material.PHANTOM_MEMBRANE, 2),
+        ItemStack(Material.FEATHER, 2),
+        AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1)),
+    4, Material.SOUL_FIRE)
 
 // POTION_OF_WITHERING_RECIPE
-object PotionOfWitheringRecipe : OdysseyAlchemyCauldronRecipe(AlchemyPotions.POTION_OF_WITHERING, ItemStack(Material.WITHER_ROSE, 1), AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1), Material.SOUL_FIRE)
+object PotionOfWitheringRecipe : OdysseyAlchemyCauldronRecipe(
+    AlchemyPotions.POTION_OF_WITHERING,
+    listOf(
+        ItemStack(Material.WITHER_ROSE, 1),
+        AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1)),
+    2, Material.SOUL_FIRE)
 
 // POTION_OF_BIOLUMINESCENCE
-object PotionOfBioluminescenceRecipe : OdysseyAlchemyCauldronRecipe(AlchemyPotions.POTION_OF_BIOLUMINESCENCE, ItemStack(Material.GLOW_BERRIES, 3), AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1), Material.FIRE)
+object PotionOfBioluminescenceRecipe : OdysseyAlchemyCauldronRecipe(
+    AlchemyPotions.POTION_OF_BIOLUMINESCENCE,
+    listOf(
+        ItemStack(Material.GLOW_BERRIES, 3),
+        ItemStack(Material.GLOW_INK_SAC, 3),
+        AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1)),
+    3, Material.FIRE)
 
 // POTION_OF_LUCK_RECIPE
-object PotionOfLuckRecipe : OdysseyAlchemyCauldronRecipe(AlchemyPotions.POTION_OF_LUCK, ItemStack(Material.NAUTILUS_SHELL, 1), AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1), Material.FIRE)
+object PotionOfLuckRecipe : OdysseyAlchemyCauldronRecipe(
+    AlchemyPotions.POTION_OF_LUCK,
+    listOf(
+        ItemStack(Material.NAUTILUS_SHELL, 1),
+        AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1)),
+    2, Material.FIRE)
 
 // POTION_OF_RESISTANCE_RECIPE
-object PotionOfResistanceRecipe : OdysseyAlchemyCauldronRecipe(AlchemyPotions.POTION_OF_RESISTANCE, ItemStack(Material.DIAMOND, 1), AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1), Material.FIRE)
+object PotionOfResistanceRecipe : OdysseyAlchemyCauldronRecipe(
+    AlchemyPotions.POTION_OF_RESISTANCE, listOf(
+    ItemStack(Material.DIAMOND, 1),
+    AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1)),
+    2, Material.FIRE)
 
 // POTION_OF_HASTE_RECIPE
-object PotionOfHasteRecipe : OdysseyAlchemyCauldronRecipe(AlchemyPotions.POTION_OF_HASTE, ItemStack(Material.PUMPKIN, 1), AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1), Material.FIRE)
+object PotionOfHasteRecipe : OdysseyAlchemyCauldronRecipe(
+    AlchemyPotions.POTION_OF_HASTE,
+    listOf(
+        ItemStack(Material.PUMPKIN, 2),
+        ItemStack(Material.SUGAR, 4),
+        AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1)),
+    3, Material.FIRE)
 
 // POTION_OF_DECAY_RECIPE
-object PotionOfDecayRecipe : OdysseyAlchemyCauldronRecipe(AlchemyPotions.POTION_OF_DECAY, ItemStack(Material.ROTTEN_FLESH, 8), AlchemyPotions.POTION_OF_WITHERING.createItemStack(1), Material.SOUL_FIRE)
+object PotionOfDecayRecipe : OdysseyAlchemyCauldronRecipe(
+    AlchemyPotions.POTION_OF_DECAY,
+    listOf(
+        ItemStack(Material.ROTTEN_FLESH, 8),
+        AlchemyPotions.POTION_OF_WITHERING.createItemStack(1)),
+    2, Material.SOUL_FIRE)
+
+// POTION_OF_FROST_RECIPE
+object PotionOfFrostRecipe : OdysseyAlchemyCauldronRecipe(
+    AlchemyPotions.POTION_OF_FROST,
+    listOf(
+        ItemStack(Material.BLUE_ICE, 4),
+        ItemStack(Material.SNOWBALL, 8),
+        AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1)),
+    3, Material.SOUL_FIRE)
+
+// POTION_OF_DOUSE_RECIPE
+object PotionOfDouseRecipe : OdysseyAlchemyCauldronRecipe(
+    AlchemyPotions.POTION_OF_DOUSE,
+    listOf(
+        ItemStack(Material.CHARCOAL, 4),
+        ItemStack(Material.NETHERRACK, 4),
+        AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1)),
+    3, Material.SOUL_FIRE)
+
+// POTION_OF_ABLAZE_RECIPE
+object PotionOfAblazeRecipe : OdysseyAlchemyCauldronRecipe(
+    AlchemyPotions.POTION_OF_ABLAZE,
+    listOf(
+        ItemStack(Material.BLAZE_POWDER, 8),
+        ItemStack(Material.FIRE_CHARGE, 4),
+        ItemStack(Material.HONEY_BLOCK, 1),
+        AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1)),
+    4, Material.FIRE)
 
 // POTION_OF_SHIMMER_RECIPE
-object PotionOfShimmerRecipe : OdysseyAlchemyCauldronRecipe(AlchemyPotions.POTION_OF_SHIMMER, ItemStack(Material.END_CRYSTAL, 2), AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1), Material.SOUL_FIRE)
+object PotionOfShimmerRecipe : OdysseyAlchemyCauldronRecipe(
+    AlchemyPotions.POTION_OF_SHIMMER,
+    listOf(
+        ItemStack(Material.DIAMOND, 2),
+        ItemStack(Material.PRISMARINE_SHARD, 6),
+        ItemStack(Material.GLOW_BERRIES, 6),
+        ItemStack(Material.AMETHYST_CLUSTER, 2),
+        AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1)),
+    5, Material.FIRE)
