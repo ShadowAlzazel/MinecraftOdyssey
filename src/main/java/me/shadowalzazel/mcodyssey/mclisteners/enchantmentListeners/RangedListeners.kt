@@ -1,9 +1,9 @@
 package me.shadowalzazel.mcodyssey.mclisteners.enchantmentListeners
 
-import com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent
 import io.papermc.paper.event.entity.EntityLoadCrossbowEvent
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import org.bukkit.Material
+import org.bukkit.Particle
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity
@@ -12,10 +12,8 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityShootBowEvent
 import org.bukkit.event.entity.ProjectileHitEvent
-import org.bukkit.event.entity.ProjectileLaunchEvent
 import org.bukkit.event.player.PlayerSwapHandItemsEvent
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.PotionMeta
 import java.util.*
 
 
@@ -143,7 +141,7 @@ object RangedListeners : Listener {
                     if (someEntity.equipment!!.itemInMainHand.type == Material.BOW || someEntity.equipment!!.itemInMainHand.type == Material.CROSSBOW) {
                         val someWeapon = someEntity.equipment!!.itemInMainHand
                         if (someWeapon.hasItemMeta()) {
-                            if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.REND)) {
+                            if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.SOUL_REND)) {
                                 if ("Rended_${someEntity.name}" !in rendedEntity!!.scoreboardTags) {
                                     rendedEntity.scoreboardTags.add("Rended_${someEntity.name}")
                                     //Effects
@@ -164,21 +162,23 @@ object RangedListeners : Listener {
         if (event.offHandItem!!.type == Material.BOW || event.offHandItem!!.type == Material.CROSSBOW) {
             val someWeapon = event.offHandItem!!
             if (someWeapon.hasItemMeta()) {
-                if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.REND)) {
+                if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.SOUL_REND)) {
                     val nearbyEnemies = somePlayer.world.getNearbyLivingEntities(somePlayer.location, 25.0)
-                    println(System.nanoTime())
-                    val rendLevel = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.REND)
+                    //println(System.nanoTime())
+                    val rendLevel = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.SOUL_REND)
 
                     for (someEntity in nearbyEnemies) {
                         if ("Rended_${somePlayer.name}" in someEntity.scoreboardTags) {
                             val rendStacks = someEntity.arrowsInBody
                             someEntity.damage((rendStacks * rendLevel * 1) + 1.0)
+                            someEntity.world.spawnParticle(Particle.SOUL, someEntity.location, 25, 0.05, 0.35, 0.05)
+                            someEntity.world.spawnParticle(Particle.SCULK_SOUL, someEntity.location, 25, 0.05, 0.35, 0.05)
                             println(rendStacks)
                             someEntity.scoreboardTags.remove("Rended_${somePlayer.name}")
                             //Effects
                         }
                     }
-                    println(System.nanoTime())
+                    //println(System.nanoTime())
                 }
             }
         }

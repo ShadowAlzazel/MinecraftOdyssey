@@ -12,11 +12,11 @@ import org.bukkit.inventory.ShapedRecipe
 object OdysseyRecipes {
 
     private val NEUTRONIUM_BARK_INGOT_RECIPE: ShapedRecipe = createNeutroniumIngot()
-    private val NEUTRONIUM_BARK_SWORD_RECIPE: ShapedRecipe = createNeutroniumSword()
+    private val NEUTRONIUM_BARK_SWORD_RECIPE: ShapedRecipe = createNeutroniumSword() // Disabled
     val PURE_ANTIMATTER_CRYSTAL_RECIPE: ShapedRecipe = createPurelyUnstableAntimatterCrystalRecipe()
     val FRUIT_OF_ERISHKIGAL_RECIPE: ShapedRecipe = createFruitOfErishkigal()
 
-    val recipeSet = setOf<Recipe>(NEUTRONIUM_BARK_INGOT_RECIPE, NEUTRONIUM_BARK_SWORD_RECIPE, PURE_ANTIMATTER_CRYSTAL_RECIPE, FRUIT_OF_ERISHKIGAL_RECIPE)
+    val recipeSet = setOf<Recipe>(NEUTRONIUM_BARK_INGOT_RECIPE, PURE_ANTIMATTER_CRYSTAL_RECIPE, FRUIT_OF_ERISHKIGAL_RECIPE)
 
 
     //

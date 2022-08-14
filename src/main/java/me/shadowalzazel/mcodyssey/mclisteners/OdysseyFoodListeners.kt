@@ -55,7 +55,7 @@ object OdysseyFoodListeners : Listener {
                                 somePlayer.addPotionEffect(someCookieEffect)
                             }
                             "§7A golden cookie!" -> {
-                                val someCookieEffect = PotionEffect(PotionEffectType.ABSORPTION, 10 * 20, 2)
+                                val someCookieEffect = PotionEffect(PotionEffectType.ABSORPTION, 15 * 20, 1)
                                 somePlayer.addPotionEffect(someCookieEffect)
                             }
                         }

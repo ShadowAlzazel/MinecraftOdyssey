@@ -1,19 +1,15 @@
 package me.shadowalzazel.mcodyssey.mclisteners
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
-import me.shadowalzazel.mcodyssey.phenomenons.*
+import me.shadowalzazel.mcodyssey.phenomenon.DailyPhenomena
+import me.shadowalzazel.mcodyssey.phenomenon.DrawOfFortunes
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.world.TimeSkipEvent
 
-object OdysseyDailyPhenomenonListener : Listener {
+object DailyPhenomenaListeners : Listener {
 
-    //make dictionary later
-    // Daily Events
-    private val dailyPhenomenonList = listOf(
-        GravityShift(), BreezyDay(), SolarFlare(), Earthquake(), WorldFamine(), BioluminescentDay(), FairyFollowDay(),
-        ShimmerIntoxication(), SpiritsAwaken(), StoneFlash(), CometSighting(), BlazingSoul()
-    )
+    // Daily Phenomena
 
     // Cool Down timers
     private var cooldown : Long = 0
@@ -34,14 +30,13 @@ object OdysseyDailyPhenomenonListener : Listener {
             // Check if end game
             if ((MinecraftOdyssey.instance.endGame) && (!MinecraftOdyssey.instance.dailyPhenomenonActive)) {
                 val currentWorld = event.world
-                val randomDailyPhenomenon = dailyPhenomenonList.random()
+                val randomDailyPhenomenon = DailyPhenomena.phenomenaList.random()
                 val rolledRate = (0..100).random()
 
                 //Daily luck is not daily phenomenon
                 val luckConfigAmount = MinecraftOdyssey.instance.config.getInt("player-minimum-for-luck")
                 if (currentWorld.players.size >= luckConfigAmount) {
-                    val drawOfFortunes = DrawOfFortunes()
-                    drawOfFortunes.phenomenonEffect(currentWorld)
+                    DrawOfFortunes.phenomenonEffect(currentWorld)
                 }
 
                 val phenomenonActivated: Boolean = randomDailyPhenomenon.phenomenonActivation(currentWorld, rolledRate)

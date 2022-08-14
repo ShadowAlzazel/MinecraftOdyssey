@@ -6,7 +6,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDeathEvent
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
-import me.shadowalzazel.mcodyssey.mclisteners.utility.*
+import me.shadowalzazel.mcodyssey.effects.*
 import org.bukkit.*
 import org.bukkit.entity.Bee
 import org.bukkit.entity.EntityType
@@ -109,8 +109,9 @@ object MeleeListeners : Listener {
                                     honeyedEntity.addPotionEffect(honeySlow)
                                     somePlayer.playSound(somePlayer.location, Sound.BLOCK_HONEY_BLOCK_FALL, 2.5F, 0.9F)
 
-                                    val honeyedTask = HoneyedTask(honeyedEntity, honeyFactor)
                                     // Every 10 ticks -> 0.5 sec
+                                    honeyedEntity.addScoreboardTag("Decaying")
+                                    val honeyedTask = HoneyedTask(honeyedEntity, honeyFactor)
                                     honeyedTask.runTaskTimer(MinecraftOdyssey.instance, 0, 10)
 
                                     /*
@@ -210,8 +211,9 @@ object MeleeListeners : Listener {
                                 val decayEffect = PotionEffect(PotionEffectType.HUNGER, 10 * 20 , 0)
                                 decayingEntity.addPotionEffect(decayEffect)
 
-                                val decayingTask = DecayingTask(decayingEntity, decayingTouchFactor)
                                 // Every 2 secs
+                                decayingEntity.addScoreboardTag("Decaying")
+                                val decayingTask = DecayingTask(decayingEntity, decayingTouchFactor, 5)
                                 decayingTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20 * 2)
 
 
@@ -275,8 +277,9 @@ object MeleeListeners : Listener {
 
 
                         // do douse effects
+                        dousedEntity.addScoreboardTag("Ignited")
                         dousedEntity.fireTicks = 20 * ((douseFactorPower!! * 4) + 4) + 1
-                        val igniteDouseTask = DouseIgniteTask(dousedEntity, douseFactorPower)
+                        val igniteDouseTask = BlazingTask(dousedEntity, douseFactorPower)
                         igniteDouseTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20)
 
                     }
@@ -359,7 +362,9 @@ object MeleeListeners : Listener {
                                 somePlayer.world.spawnParticle(Particle.SNOWFLAKE, freezingEntity.location, 25, 1.0, 0.5, 1.0)
                                 println("Applied Freeze Stuff")
 
-                                val freezingTask = FreezingTask(freezingEntity, freezeFactor)
+                                //
+                                freezingEntity.addScoreboardTag(OdysseyEffectTags.FREEZING)
+                                val freezingTask = FreezingTask(freezingEntity, freezeFactor, freezeFactor * 3)
                                 freezingTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20)
                             }
 
@@ -429,8 +434,10 @@ object MeleeListeners : Listener {
 
                                 val singularityPoint = event.entity.location
                                 val gravityWellFactor = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.GRAVITY_WELL)
-                                val gravityWellTask = GravitationalAttract(gravitatingEntity, singularityPoint, gravityWellFactor, somePlayer)
+
                                 // Every 10 ticks -> 0.5 sec
+                                gravitatingEntity.addScoreboardTag("Gravity_Well")
+                                val gravityWellTask = GravitationalAttract(gravitatingEntity, singularityPoint, gravityWellFactor, somePlayer)
                                 gravityWellTask.runTaskTimer(MinecraftOdyssey.instance, 0, 10)
 
                             }
@@ -501,10 +508,10 @@ object MeleeListeners : Listener {
                             if (timeElapsed > (3.5 - hemorrhageFactor) * 1000) {
                                 playersHemorrhageCooldown[somePlayer.uniqueId] = System.currentTimeMillis()
 
-                                val hemorrhageTask = HemorrhageTask(hemorrhagingEntity, hemorrhageFactor)
                                 // Every 1.5 secs
+                                hemorrhagingEntity.addScoreboardTag("Hemorrhaging")
+                                val hemorrhageTask = HemorrhageTask(hemorrhagingEntity, hemorrhageFactor)
                                 hemorrhageTask.runTaskTimer(MinecraftOdyssey.instance, 0, 30)
-
 
                             }
                         }
