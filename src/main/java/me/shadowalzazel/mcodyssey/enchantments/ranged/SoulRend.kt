@@ -6,7 +6,7 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object Rend: OdysseyEnchantmentWrapper("rend", "Rend", 3) {
+object SoulRend: OdysseyEnchantmentWrapper("soulrend", "Soul Rend", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {

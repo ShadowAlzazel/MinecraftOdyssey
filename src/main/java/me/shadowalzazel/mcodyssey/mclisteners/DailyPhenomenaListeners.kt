@@ -1,8 +1,8 @@
 package me.shadowalzazel.mcodyssey.mclisteners
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
-import me.shadowalzazel.mcodyssey.phenomenons.DailyPhenomena
-import me.shadowalzazel.mcodyssey.phenomenons.DrawOfFortunes
+import me.shadowalzazel.mcodyssey.phenomenon.DailyPhenomena
+import me.shadowalzazel.mcodyssey.phenomenon.DrawOfFortunes
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.world.TimeSkipEvent

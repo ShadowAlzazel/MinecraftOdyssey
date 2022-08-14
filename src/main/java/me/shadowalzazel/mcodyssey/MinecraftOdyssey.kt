@@ -10,6 +10,8 @@ import me.shadowalzazel.mcodyssey.mclisteners.enchantmentListeners.ArmorListener
 import me.shadowalzazel.mcodyssey.mclisteners.enchantmentListeners.MeleeListeners
 import me.shadowalzazel.mcodyssey.mclisteners.enchantmentListeners.MiscListeners
 import me.shadowalzazel.mcodyssey.mclisteners.enchantmentListeners.RangedListeners
+import me.shadowalzazel.mcodyssey.phenomenon.dailyPhenomena.utilty.DailyPhenomenon
+import me.shadowalzazel.mcodyssey.phenomenon.nightlyPhenomena.utilty.NightlyPhenomenon
 import me.shadowalzazel.mcodyssey.recipes.CookingRecipes
 import me.shadowalzazel.mcodyssey.recipes.GildingRecipes
 import me.shadowalzazel.mcodyssey.recipes.OdysseyRecipes
@@ -20,7 +22,9 @@ import org.bukkit.plugin.java.JavaPlugin
 class MinecraftOdyssey : JavaPlugin() {
 
     var dailyPhenomenonActive: Boolean = false
+    var currentDailyPhenomenon: DailyPhenomenon? = null
     var nightlyPhenomenonActive: Boolean = false
+    var currentNightlyPhenomenon: NightlyPhenomenon? = null
     //var endGame: Boolean = MinecraftOdyssey.instance.config.getBoolean("end-game.enabled")
 
     // Boss Progression

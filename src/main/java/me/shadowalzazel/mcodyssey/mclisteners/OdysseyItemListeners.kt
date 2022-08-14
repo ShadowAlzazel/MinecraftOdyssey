@@ -64,6 +64,7 @@ object OdysseyItemListeners : Listener {
         }
     }
 
+
     @EventHandler
     fun consumingItem(event: PlayerItemConsumeEvent) {
         if (event.item.hasItemMeta()) {

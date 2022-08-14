@@ -10,7 +10,7 @@ object AlchemyArtillery : OdysseyEnchantmentWrapper("alchemyartillery", "Alchemy
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.REND -> {
+            OdysseyEnchantments.SOUL_REND, MENDING -> {
                 true
             }
             else -> {

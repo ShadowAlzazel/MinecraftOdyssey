@@ -12,7 +12,7 @@ object SpawnTestKnight : CommandExecutor {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender is Player) {
-            OdysseyMobs.VANGUARD.createKnight(sender.world, sender.location)
+            OdysseyMobs.SAVAGE.createKnight(sender.world, sender.location)
         }
         return true
     }

@@ -1,6 +1,6 @@
-package me.shadowalzazel.mcodyssey.phenomenons.dailyPhenomena.utilty
+package me.shadowalzazel.mcodyssey.phenomenon.dailyPhenomena.utilty
 
-import me.shadowalzazel.mcodyssey.phenomenons.utility.Phenomenon
+import me.shadowalzazel.mcodyssey.phenomenon.utility.Phenomenon
 import org.bukkit.ChatColor
 import org.bukkit.World
 

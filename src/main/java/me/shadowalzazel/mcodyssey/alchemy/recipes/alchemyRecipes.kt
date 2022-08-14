@@ -67,6 +67,36 @@ object PotionOfHasteRecipe : OdysseyAlchemyCauldronRecipe(
         AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1)),
     3, Material.FIRE)
 
+// POTION_OF_CONSTITUTION_RECIPE
+object PotionOfConstitutionRecipe : OdysseyAlchemyCauldronRecipe(
+    AlchemyPotions.POTION_OF_CONSTITUTION,
+    listOf(
+        ItemStack(Material.POPPED_CHORUS_FRUIT, 5),
+        ItemStack(Material.GLISTERING_MELON_SLICE, 5),
+        ItemStack(Material.SOUL_SAND, 5),
+        AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1)),
+    4, Material.SOUL_FIRE)
+
+// POTION_OF_STONE_SKIN_RECIPE
+object PotionOfStoneSkinRecipe : OdysseyAlchemyCauldronRecipe(
+    AlchemyPotions.POTION_OF_STONE_SKIN,
+    listOf(
+        ItemStack(Material.STONE, 8),
+        ItemStack(Material.LEATHER, 8),
+        ItemStack(Material.CRYING_OBSIDIAN, 4),
+        AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1)),
+    4, Material.FIRE)
+
+// POTION_OF_WRATH_RECIPE
+object PotionOfWrathRecipe : OdysseyAlchemyCauldronRecipe(
+    AlchemyPotions.POTION_OF_WRATH,
+    listOf(
+        ItemStack(Material.GOAT_HORN, 1),
+        ItemStack(Material.BLAZE_ROD, 4),
+        ItemStack(Material.CRIMSON_FUNGUS, 6),
+        AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1)),
+    4, Material.SOUL_FIRE)
+
 // POTION_OF_DECAY_RECIPE
 object PotionOfDecayRecipe : OdysseyAlchemyCauldronRecipe(
     AlchemyPotions.POTION_OF_DECAY,

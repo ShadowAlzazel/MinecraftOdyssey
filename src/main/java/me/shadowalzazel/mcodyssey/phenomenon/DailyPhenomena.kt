@@ -1,7 +1,7 @@
-package me.shadowalzazel.mcodyssey.phenomenons
+package me.shadowalzazel.mcodyssey.phenomenon
 
-import me.shadowalzazel.mcodyssey.phenomenons.dailyPhenomena.*
-import me.shadowalzazel.mcodyssey.phenomenons.dailyPhenomena.utilty.DailyPhenomenon
+import me.shadowalzazel.mcodyssey.phenomenon.dailyPhenomena.*
+import me.shadowalzazel.mcodyssey.phenomenon.dailyPhenomena.utilty.DailyPhenomenon
 
 object DailyPhenomena {
 

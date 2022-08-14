@@ -83,7 +83,7 @@ object OdysseyAlchemyListeners : Listener {
                                 }
                             }
                         }
-                        println(nearbyEntities)
+                        //println(nearbyEntities)
                     }
                 }
             }
@@ -167,7 +167,6 @@ object OdysseyAlchemyListeners : Listener {
                 val somePotionMeta = somePotion.itemMeta as PotionMeta
                 if (somePotionMeta.basePotionData.type == PotionType.UNCRAFTABLE) {
                     val potionName = somePotionMeta.displayName
-
                     var potionDuration = 0
                     if (potionName in alchemyPotionNames) {
                         // Logic
@@ -176,7 +175,6 @@ object OdysseyAlchemyListeners : Listener {
                         val potionLoreTimer = potionLore.subSequence((i - 5)..i)
                         potionDuration = loreToSeconds(potionLoreTimer)
                     }
-
                     when (potionName) {
                         "§bBottle o' Decay" -> {
                             val hungerDecay = PotionEffect(PotionEffectType.HUNGER, potionDuration, 0)
@@ -260,7 +258,7 @@ object OdysseyAlchemyListeners : Listener {
                     if (tagToAdd != null) {
                         somePotionMeta.addCustomEffect(customEffectToAdd!!, true)
                         potionCloud.addCustomEffect(customEffectToAdd, true)
-                        //potionCloud.duration = potionDuration
+                        potionCloud.duration = 20 * 20
                         potionCloud.reapplicationDelay = applicationDelay
                         potionCloud.addScoreboardTag(tagToAdd)
                     }
@@ -277,12 +275,17 @@ object OdysseyAlchemyListeners : Listener {
         for (tag in somePotionCloud.scoreboardTags) {
             when (tag) {
                 "Decaying_Cloud" -> {
-
+                    for (decayinEntity: LivingEntity in someEntities) {
+                        val decayingTask = DecayingTask(decayinEntity, 1, 5)
+                        decayinEntity.addScoreboardTag("Decaying")
+                        decayingTask.runTaskTimer(MinecraftOdyssey.instance, 0, 40)
+                    }
                 }
                 "Frost_Cloud" -> {
                     for (freezingEntity: LivingEntity in someEntities) {
                         if ("Freezing" !in freezingEntity.scoreboardTags) {
-                            val freezingTask = FreezingTask(freezingEntity, 1, somePotionCloud.duration / 20)
+                            // Temp 5 do string tags later
+                            val freezingTask = FreezingTask(freezingEntity, 1, 5)
                             freezingEntity.addScoreboardTag("Freezing")
                             freezingTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20)
                         }
