@@ -11,7 +11,6 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.potion.PotionEffectType
-import java.util.zip.ZipOutputStream
 
 object OdysseyDropsListeners : Listener {
 
@@ -32,7 +31,7 @@ object OdysseyDropsListeners : Listener {
             if (event.entity.killer is Player) {
                 val somePlayer: Player = event.entity.killer as Player
                 if (event.entity.hasLineOfSight(somePlayer)) {
-                    val randomEnchantList = listOf(OdysseyEnchantments.HEMORRHAGE, OdysseyEnchantments.WHIRLWIND, OdysseyEnchantments.SPEEDY_SPURS, OdysseyEnchantments.WARP_DRIVE,
+                    val randomEnchantList = listOf(OdysseyEnchantments.HEMORRHAGE, OdysseyEnchantments.WHIRLWIND, OdysseyEnchantments.SPEEDY_SPURS, OdysseyEnchantments.WARP_JUMP,
                         OdysseyEnchantments.COWARDICE, OdysseyEnchantments.LUCKY_DRAW, OdysseyEnchantments.SOUL_REND, OdysseyEnchantments.SPOREFUL, OdysseyEnchantments.FRUITFUL_FARE, OdysseyEnchantments.POTION_BARRIER)
 
                     // Looting and luck
@@ -134,7 +133,7 @@ object OdysseyDropsListeners : Listener {
                             }
                         }
                         is Squid -> {
-                            if ((5.5 + luck + looting + misc) * 10 > (0..1000).random()) {
+                            if ((3.5 + luck + looting + misc) * 10 > (0..1000).random()) {
                                 somePlayer.world.dropItem(event.entity.location, (OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.SQUIDIFY, 1)))
                                 droppedItemSound(somePlayer)
                             }

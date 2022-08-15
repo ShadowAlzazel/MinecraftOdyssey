@@ -14,7 +14,7 @@ object DailyPhenomena {
     val FLAUNTING_FAIRIES: DailyPhenomenon = FlauntingFairies
     val GRAVITY_SHIFT: DailyPhenomenon = GravityShift
     val SHIMMER_INTOXICATION: DailyPhenomenon = ShimmerIntoxication
-    val SLIME_STORM: DailyPhenomenon = SlimeStorm
+    val SLIME_STORM: DailyPhenomenon = SlimeShower
     val SOLAR_FLARE: DailyPhenomenon = SolarFlare
     val SPIRITS_RELEASE: DailyPhenomenon = SpiritsRelease
     val STONE_FLASH: DailyPhenomenon = StoneFlash

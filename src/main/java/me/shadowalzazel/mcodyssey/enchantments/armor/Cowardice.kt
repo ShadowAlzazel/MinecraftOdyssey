@@ -29,4 +29,7 @@ object Cowardice : OdysseyEnchantmentWrapper("cowardice", "Cowardice", 3) {
         }
     }
 
+    fun todo() {
+        TODO("Fix")
+    }
 }

@@ -1,22 +1,23 @@
 package me.shadowalzazel.mcodyssey.mobs
 
-import me.shadowalzazel.mcodyssey.mobs.utility.OdysseyMob
-import org.bukkit.ChatColor
-import org.bukkit.Location
-import org.bukkit.Material
-import org.bukkit.World
-import org.bukkit.enchantments.Enchantment
-import org.bukkit.entity.EntityType
-import org.bukkit.entity.Skeleton
-import org.bukkit.entity.SkeletonHorse
-import org.bukkit.inventory.ItemStack
-import org.bukkit.potion.PotionEffect
-import org.bukkit.potion.PotionEffectType
+import me.shadowalzazel.mcodyssey.mobs.hostile.Mimic
+import me.shadowalzazel.mcodyssey.mobs.hostile.Savage
+import me.shadowalzazel.mcodyssey.mobs.hostile.SculkCrawler
+import me.shadowalzazel.mcodyssey.mobs.hostile.Vanguard
+import me.shadowalzazel.mcodyssey.mobs.other.WanderingSoul
+import me.shadowalzazel.mcodyssey.mobs.passive.TreasurePig
 
 
 object OdysseyMobs {
 
-    val VANGUARD = Vanguard
+    val MIMIC = Mimic
     val SAVAGE = Savage
+    val SCULK_CRAWLER = SculkCrawler
+    val TREASURE_PIG = TreasurePig
+    val VANGUARD = Vanguard
+    val WANDERING_SOUL = WanderingSoul
 
+    fun g() {
+        TODO("Make Sculked mobs that quiet")
+    }
 }

@@ -1,6 +1,5 @@
 package me.shadowalzazel.mcodyssey.mclisteners.enchantmentListeners
 
-import com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import org.bukkit.GameMode
 import org.bukkit.Material
@@ -11,7 +10,6 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.ProjectileHitEvent
 import org.bukkit.event.entity.ProjectileLaunchEvent
-import org.bukkit.event.player.PlayerItemConsumeEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import java.util.*
@@ -60,11 +58,11 @@ object MiscListeners : Listener {
                 if (somePlayer.equipment.chestplate != null) {
                     if (somePlayer.equipment.chestplate.hasItemMeta()) {
                         val someElytra = somePlayer.equipment.chestplate
-                        if (someElytra.itemMeta.hasEnchant(OdysseyEnchantments.WARP_DRIVE)) {
+                        if (someElytra.itemMeta.hasEnchant(OdysseyEnchantments.WARP_JUMP)) {
                             val someSpeed = somePlayer.velocity.clone().length()
                             if (!somePlayer.isDead && someSpeed > 0.125) {
                                 if (somePlayer.gameMode != GameMode.SPECTATOR) {
-                                    val warpFactor = someElytra.itemMeta.getEnchantLevel(OdysseyEnchantments.WARP_DRIVE)
+                                    val warpFactor = someElytra.itemMeta.getEnchantLevel(OdysseyEnchantments.WARP_JUMP)
                                     if (!playersWarpDriveCooldown.containsKey(somePlayer.uniqueId)) {
                                         playersWarpDriveCooldown[somePlayer.uniqueId] = 0L
                                     }

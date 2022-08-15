@@ -85,11 +85,11 @@ object NightlyPhenomenaListener : Listener {
                         if (event.spawnReason == CreatureSpawnEvent.SpawnReason.NATURAL || event.spawnReason == CreatureSpawnEvent.SpawnReason.REINFORCEMENTS) {
                             val someEntity = event.entity
                             val someName = someEntity.name
+                            someEntity.addPotionEffects(bloodMoonEffects)
                             someEntity.health += 20
                             val newName = "§4Blood Moon $someName"
                             someEntity.customName = newName
                             someEntity.scoreboardTags.add("Blood_Moon_Mob")
-                            someEntity.addPotionEffects(bloodMoonEffects)
                             val randomUpgrade = (0..100).random()
                             if (60 < randomUpgrade) {
                                 val spawnLocation = someEntity.location.clone()

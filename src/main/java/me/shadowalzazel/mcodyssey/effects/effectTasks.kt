@@ -13,7 +13,7 @@ import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
 
 // BLAZING task
-class BlazingTask(dousedEntity: LivingEntity, private val douseFactor: Int) : BukkitRunnable() {
+class BlazingTask(dousedEntity: LivingEntity, private val douseFactor: Int, private val blazingCount: Int) : BukkitRunnable() {
     private var dousingCooldown = System.currentTimeMillis()
 
     private val dousedVictim = dousedEntity
@@ -22,7 +22,7 @@ class BlazingTask(dousedEntity: LivingEntity, private val douseFactor: Int) : Bu
         if (dousedVictim.isInWaterOrRainOrBubbleColumn) {
             this.cancel()
         }
-        if ("Ignited" !in dousedVictim.scoreboardTags) {
+        if ("Ablaze" !in dousedVictim.scoreboardTags) {
             this.cancel()
         }
 
@@ -44,8 +44,8 @@ class BlazingTask(dousedEntity: LivingEntity, private val douseFactor: Int) : Bu
         counter += 1
 
         val timeElapsed = System.currentTimeMillis() - dousingCooldown
-        if (((douseFactor * 4) + 4) < counter || dousedVictim.health <= 0.0 || timeElapsed > ((douseFactor * 4) + 4) * 1000) {
-            if (!dousedVictim.isDead) dousedVictim.scoreboardTags.remove("Ignited")
+        if (blazingCount < counter || dousedVictim.health <= 0.0 || timeElapsed > blazingCount * 1000) {
+            if (!dousedVictim.isDead) dousedVictim.scoreboardTags.remove("Ablaze")
             this.cancel()
         }
 
@@ -54,7 +54,7 @@ class BlazingTask(dousedEntity: LivingEntity, private val douseFactor: Int) : Bu
 }
 
 // DECAYING_TOUCH task
-class DecayingTask(decayingEntity: LivingEntity, private val decayingTouchFactor: Int, private val decayingCount: Int) : BukkitRunnable() {
+class DecayingTask(decayingEntity: LivingEntity, private val decayingFactor: Int, private val decayingCount: Int) : BukkitRunnable() {
     private var decayCooldown = System.currentTimeMillis()
     private val decayingVictim = decayingEntity
     private var counter = 0
@@ -70,10 +70,10 @@ class DecayingTask(decayingEntity: LivingEntity, private val decayingTouchFactor
         decayingVictim.world.spawnParticle(Particle.GLOW_SQUID_INK, decayingVictim.location, 15, 0.25, 0.25, 0.25)
         decayingVictim.world.spawnParticle(Particle.SNEEZE, decayingVictim.location, 45, 0.25, 0.25, 0.25)
         decayingVictim.world.spawnParticle(Particle.SCRAPE, decayingVictim.location, 15, 0.25, 0.4, 0.25)
-        decayingVictim.damage(decayingTouchFactor.toDouble() * 0.75)
+        decayingVictim.damage(decayingFactor.toDouble() * 0.75)
 
         val timeElapsed = System.currentTimeMillis() - decayCooldown
-        // 10 sec
+        // Every 2 sec
         if (decayingCount < counter || decayingVictim.health <= 0.5 || timeElapsed > (decayingCount * 2) * 1000) {
             if (!decayingVictim.isDead) decayingVictim.scoreboardTags.remove("Decaying")
             this.cancel()
@@ -84,7 +84,7 @@ class DecayingTask(decayingEntity: LivingEntity, private val decayingTouchFactor
 }
 
 // DOUSED task
-class DousedTask(dousedEntity: LivingEntity) : BukkitRunnable() {
+class DousedTask(dousedEntity: LivingEntity, private val douseCount: Int) : BukkitRunnable() {
     private var dousingCooldown = System.currentTimeMillis()
     private val dousedVictim = dousedEntity
     private var counter = 0

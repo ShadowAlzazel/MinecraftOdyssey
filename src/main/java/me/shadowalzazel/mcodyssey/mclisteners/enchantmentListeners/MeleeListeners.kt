@@ -247,7 +247,7 @@ object MeleeListeners : Listener {
                                 val douseFactor = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.DOUSE)
                                 dousedEntity.scoreboardTags.add("Doused")
                                 dousedEntity.scoreboardTags.add("Doused_Factor_$douseFactor")
-                                val dousingTask = DousedTask(dousedEntity)
+                                val dousingTask = DousedTask(dousedEntity, 10)
                                 dousingTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20)
                                 return
                             }
@@ -277,9 +277,9 @@ object MeleeListeners : Listener {
 
 
                         // do douse effects
-                        dousedEntity.addScoreboardTag("Ignited")
+                        dousedEntity.addScoreboardTag("Ablaze")
                         dousedEntity.fireTicks = 20 * ((douseFactorPower!! * 4) + 4) + 1
-                        val igniteDouseTask = BlazingTask(dousedEntity, douseFactorPower)
+                        val igniteDouseTask = BlazingTask(dousedEntity, douseFactorPower, ((douseFactorPower * 4) + 4))
                         igniteDouseTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20)
 
                     }
@@ -725,6 +725,10 @@ object MeleeListeners : Listener {
                 }
             }
         }
+    }
+
+    fun h() {
+        TODO("Check if glowing then do more damage")
     }
 
 

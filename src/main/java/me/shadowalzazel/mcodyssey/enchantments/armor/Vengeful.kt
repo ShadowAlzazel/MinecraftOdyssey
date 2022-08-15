@@ -30,4 +30,7 @@ object Vengeful : OdysseyEnchantmentWrapper("vengeful", "Vengeful", 3) {
         }
     }
 
+    fun todo() {
+        TODO("Add Vengeful tag and if attacked consumed + damage")
+    }
 }
