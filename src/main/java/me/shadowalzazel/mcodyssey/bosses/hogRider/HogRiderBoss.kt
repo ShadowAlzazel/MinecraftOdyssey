@@ -18,6 +18,10 @@ class HogRiderBoss : OdysseyBoss("Hog Rider", "Piglin") {
     var despawnTimer: Long = 1
     var hogJumpAttackCooldown: Long = 0L
 
+    fun g() {
+        TODO("Finish")
+    }
+
     private fun createHogRiderWeapon(): ItemStack {
         val smokyWarHammer = ItemStack(Material.NETHERITE_AXE, 1)
 

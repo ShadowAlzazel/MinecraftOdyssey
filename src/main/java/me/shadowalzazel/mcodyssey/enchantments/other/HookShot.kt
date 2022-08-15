@@ -29,4 +29,8 @@ object HookShot : OdysseyEnchantmentWrapper("hookshot", "Hook Shot", 2) {
         }
     }
 
+
+    fun todo() {
+        TODO("Temporarily Disabled")
+    }
 }

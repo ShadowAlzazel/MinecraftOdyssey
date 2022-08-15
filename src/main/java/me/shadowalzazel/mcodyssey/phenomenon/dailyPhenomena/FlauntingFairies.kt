@@ -8,6 +8,10 @@ import org.bukkit.potion.PotionEffectType
 
 object FlauntingFairies : DailyPhenomenon("Flaunting_Fairies", 45, 5, 50) {
 
+    fun todo() {
+        TODO("Sine Wave fairy particle")
+    }
+
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("The fairies escape at ${phenomenonWorld.name}!")
         // Effects for Fairy Follow Day
@@ -22,6 +26,7 @@ object FlauntingFairies : DailyPhenomenon("Flaunting_Fairies", 45, 5, 50) {
                     val loveEffects = mutableListOf<PotionEffect>(loveEffect, luckEffect, followEffect)
                     aPlayer.addPotionEffects(loveEffects)
                     aPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}A beautiful fairy has fallen in ${ChatColor.ITALIC}LOVE ${ChatColor.RESET}${ChatColor.LIGHT_PURPLE}with you!")
+                    if ("Fairy_Charmed" !in aPlayer.scoreboardTags) aPlayer.scoreboardTags.add("Fairy_Charmed")
                 }
                 in 1..2 -> {
                     val likeEffects = mutableListOf<PotionEffect>(luckEffect, followEffect)
@@ -29,7 +34,7 @@ object FlauntingFairies : DailyPhenomenon("Flaunting_Fairies", 45, 5, 50) {
                     aPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}A fairy has taken quite a liking to you!")
                 }
                 else -> {
-                    aPlayer.sendMessage("${ChatColor.ITALIC}A couple fairies mess with you but soon disappear...")
+                    aPlayer.sendMessage("${ChatColor.ITALIC}A couple fairies flaunt with you but soon disappear...")
                 }
             }
 

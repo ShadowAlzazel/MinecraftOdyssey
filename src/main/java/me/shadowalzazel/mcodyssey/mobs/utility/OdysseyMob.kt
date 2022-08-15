@@ -1,5 +1,5 @@
 package me.shadowalzazel.mcodyssey.mobs.utility
 
-open class OdysseyMob(name: String) {
+open class OdysseyMob(internal val name: String) {
 
 }

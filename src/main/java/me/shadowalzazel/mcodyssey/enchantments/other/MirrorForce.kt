@@ -30,4 +30,8 @@ object MirrorForce : OdysseyEnchantmentWrapper("mirrorforce", "Mirror Force", 3)
         }
     }
 
+    fun todo() {
+        TODO("Fix")
+    }
+
 }

@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.mobs
+package me.shadowalzazel.mcodyssey.mobs.hostile
 
 import me.shadowalzazel.mcodyssey.mobs.utility.OdysseyMob
 import org.bukkit.ChatColor

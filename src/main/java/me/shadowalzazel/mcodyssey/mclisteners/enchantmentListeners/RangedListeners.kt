@@ -172,7 +172,7 @@ object RangedListeners : Listener {
                             val rendStacks = someEntity.arrowsInBody
                             someEntity.damage((rendStacks * rendLevel * 1) + 1.0)
                             someEntity.world.spawnParticle(Particle.SOUL, someEntity.location, 25, 0.05, 0.35, 0.05)
-                            someEntity.world.spawnParticle(Particle.SCULK_SOUL, someEntity.location, 25, 0.05, 0.35, 0.05)
+                            someEntity.world.spawnParticle(Particle.SCULK_SOUL, someEntity.location, 25, 0.25, 0.35, 0.25)
                             println(rendStacks)
                             someEntity.scoreboardTags.remove("Rended_${somePlayer.name}")
                             //Effects

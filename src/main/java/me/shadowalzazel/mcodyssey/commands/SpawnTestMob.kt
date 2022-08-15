@@ -12,7 +12,7 @@ object SpawnTestMob : CommandExecutor {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender is Player) {
-            OdysseyMobs.SAVAGE.createMob(sender.world, sender.location)
+            OdysseyMobs.SCULK_CRAWLER.createMob(sender.world, sender.location)
         }
         return true
     }

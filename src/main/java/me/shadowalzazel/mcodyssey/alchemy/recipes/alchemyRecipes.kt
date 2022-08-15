@@ -91,8 +91,8 @@ object PotionOfStoneSkinRecipe : OdysseyAlchemyCauldronRecipe(
 object PotionOfWrathRecipe : OdysseyAlchemyCauldronRecipe(
     AlchemyPotions.POTION_OF_WRATH,
     listOf(
-        ItemStack(Material.GOAT_HORN, 1),
-        ItemStack(Material.BLAZE_ROD, 4),
+        ItemStack(Material.WARPED_FUNGUS, 6),
+        ItemStack(Material.BLAZE_POWDER, 5),
         ItemStack(Material.CRIMSON_FUNGUS, 6),
         AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1)),
     4, Material.SOUL_FIRE)
@@ -132,6 +132,16 @@ object PotionOfAblazeRecipe : OdysseyAlchemyCauldronRecipe(
         ItemStack(Material.HONEY_BLOCK, 1),
         AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1)),
     4, Material.FIRE)
+
+// BOTTLED_SOULS_RECIPE
+object BottledSoulsRecipe : OdysseyAlchemyCauldronRecipe(
+    AlchemyPotions.BOTTLED_SOULS,
+    listOf(
+        ItemStack(Material.SOUL_LANTERN, 6),
+        ItemStack(Material.SCULK_VEIN, 8),
+        ItemStack(Material.CRYING_OBSIDIAN, 4),
+        AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1)),
+    4, Material.SOUL_FIRE)
 
 // POTION_OF_SHIMMER_RECIPE
 object PotionOfShimmerRecipe : OdysseyAlchemyCauldronRecipe(
