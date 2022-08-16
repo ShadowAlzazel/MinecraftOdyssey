@@ -1,7 +1,6 @@
 package me.shadowalzazel.mcodyssey.mclisteners.enchantmentListeners
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDeathEvent
@@ -15,13 +14,12 @@ import org.bukkit.entity.Firework
 import org.bukkit.entity.Hoglin
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Pig
-import org.bukkit.entity.Piglin
 import org.bukkit.entity.PiglinAbstract
-import org.bukkit.entity.PiglinBrute
 import org.bukkit.entity.Raider
-import org.bukkit.entity.Vex
 import org.bukkit.entity.WaterMob
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.EntityDamageEvent
+import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
@@ -32,612 +30,146 @@ import java.util.*
 
 object MeleeListeners : Listener {
 
+
     // Internal cool downs for enchantments
-    private var playersBackstabberCooldown = mutableMapOf<UUID, Long>()
-    private var playersBuzzyBeesCooldown = mutableMapOf<UUID, Long>()
-    private var playersDecayingTouchCooldown = mutableMapOf<UUID, Long>()
-    private var playersExplodingCooldown = mutableMapOf<UUID, Long>()
-    private var playersGravityWellCooldown = mutableMapOf<UUID, Long>()
-    private var playersGuardingStrikeCooldown = mutableMapOf<UUID, Long>()
-    private var playersHemorrhageCooldown = mutableMapOf<UUID, Long>()
-    private var playersVoidStrikeCooldown = mutableMapOf<UUID, Long>()
-    private var playersWhirlwindCooldown = mutableMapOf<UUID, Long>()
+    private var backstabberCooldown = mutableMapOf<UUID, Long>()
+    private var buzzyBeesCooldown = mutableMapOf<UUID, Long>()
+    private var decayingTouchCooldown = mutableMapOf<UUID, Long>()
+    private var explodingCooldown = mutableMapOf<UUID, Long>()
+    private var gravityWellCooldown = mutableMapOf<UUID, Long>()
+    private var guardingStrikeCooldown = mutableMapOf<UUID, Long>()
+    private var hemorrhageCooldown = mutableMapOf<UUID, Long>()
+    private var voidStrikeCooldown = mutableMapOf<UUID, Long>()
+    private var whirlwindCooldown = mutableMapOf<UUID, Long>()
 
-    // Extra Damage Modifiers
-    // 2.5
+    // Main function for enchantments relating to entity damage
     @EventHandler
-    fun modifierDamageIncrease(event: EntityDamageByEntityEvent) {
-        if (event.damager is Player) {
-            val somePlayer: Player = event.damager as Player
-            if (event.entity is LivingEntity) {
-                val damagedEntity: LivingEntity = event.entity as LivingEntity
-                if (somePlayer.inventory.itemInMainHand.hasItemMeta()) {
-                    val someWeapon = somePlayer.inventory.itemInMainHand
-                    // Bane of the Illager
-                    if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.BANE_OF_THE_ILLAGER)) {
-                        if (damagedEntity is Vex || damagedEntity is Raider) {
-                            event.damage += (someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.BANE_OF_THE_ILLAGER).toDouble() * 2.5)
-                            println("${event.damage}")
-                        }
-                    }
-                    // Bane of the Sea
-                    else if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.BANE_OF_THE_SEA)) {
-                        if (damagedEntity.isInWaterOrRainOrBubbleColumn || damagedEntity.isSwimming || damagedEntity is WaterMob) {
-                            event.damage += (someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.BANE_OF_THE_SWINE).toDouble() * 2.0)
-                            println("${event.damage}")
-                        }
-                    }
-                    // Bane of the Swine
-                    else if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.BANE_OF_THE_SWINE)) {
-                        if (damagedEntity is Piglin || damagedEntity is PiglinBrute || damagedEntity is Pig || damagedEntity is Hoglin || damagedEntity is PiglinAbstract) {
-                            event.damage += (someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.BANE_OF_THE_SWINE).toDouble() * 2.5)
-                            println("${event.damage}")
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-    // BUZZY_BEES Enchantment Effects
-    @EventHandler
-    fun buzzyBeesEnchant(event: EntityDamageByEntityEvent) {
-        if (event.damager is Player) {
-            if (event.entity is LivingEntity) {
-                val somePlayer: Player = event.damager as Player
-                val honeyedEntity: LivingEntity = event.entity as LivingEntity
-                if (honeyedEntity.type != EntityType.BEE) {
-                    if (somePlayer.inventory.itemInMainHand.hasItemMeta()) {
-                        val someWeapon = somePlayer.inventory.itemInMainHand
-                        if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.BUZZY_BEES)) {
-                            if (somePlayer.gameMode != GameMode.SPECTATOR) {
-
-                                if (!playersBuzzyBeesCooldown.containsKey(somePlayer.uniqueId)) {
-                                    playersBuzzyBeesCooldown[somePlayer.uniqueId] = 0L
-                                }
-
-                                val timeElapsed: Long = System.currentTimeMillis() - playersBuzzyBeesCooldown[somePlayer.uniqueId]!!
-
-                                val honeyFactor = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.BUZZY_BEES)
-                                if (timeElapsed > (3.5 - honeyFactor) * 1000) {
-                                    playersBuzzyBeesCooldown[somePlayer.uniqueId] = System.currentTimeMillis()
-                                    val honeySlow = PotionEffect(PotionEffectType.SLOW, ((3 * honeyFactor) + 3) * 20, 0)
-                                    honeyedEntity.world.spawnParticle(Particle.DRIPPING_HONEY, honeyedEntity.location, 15, 1.0, 0.5, 1.0)
-                                    honeyedEntity.world.spawnParticle(Particle.FALLING_HONEY, honeyedEntity.location, 20, 1.5, 0.5, 1.5)
-                                    honeyedEntity.world.spawnParticle(Particle.LANDING_HONEY, honeyedEntity.location, 10, 1.0, 0.5, 1.0)
-                                    honeyedEntity.addPotionEffect(honeySlow)
-                                    somePlayer.playSound(somePlayer.location, Sound.BLOCK_HONEY_BLOCK_FALL, 2.5F, 0.9F)
-
-                                    // Every 10 ticks -> 0.5 sec
-                                    honeyedEntity.addScoreboardTag("Decaying")
-                                    val honeyedTask = HoneyedTask(honeyedEntity, honeyFactor)
-                                    honeyedTask.runTaskTimer(MinecraftOdyssey.instance, 0, 10)
-
-                                    /*
-                                    for (x in 1..honeyFactor) {
-                                        val someBee: Bee = honeyedEntity.world.spawnEntity(honeyedEntity.location, EntityType.BEE) as Bee
-                                        someBee.target = honeyedEntity
-                                    }
-                                    */
-                                    if (honeyedEntity.health > event.finalDamage + 1) {
-                                        val someBee: Bee = honeyedEntity.world.spawnEntity(somePlayer.location, EntityType.BEE) as Bee
-                                        val honeySpeed = PotionEffect(PotionEffectType.SPEED, 10, (honeyFactor))
-                                        val honeyStrength = PotionEffect(PotionEffectType.INCREASE_DAMAGE, 10, (honeyFactor))
-                                        val honeyDexterity = PotionEffect(PotionEffectType.FAST_DIGGING, 10, (honeyFactor))
-                                        val honeyConstitution = PotionEffect(PotionEffectType.ABSORPTION, 10, (honeyFactor + 2))
-                                        val honeyRoids = listOf(honeyDexterity, honeySpeed, honeyStrength, honeyConstitution)
-                                        someBee.addPotionEffects(honeyRoids)
-                                        someBee.target = honeyedEntity
-                                    }
+    fun mainDamageHandler(event: EntityDamageByEntityEvent) {
+        // Check if event damager and damaged is living entity
+        if (event.damager is LivingEntity && event.entity is LivingEntity && event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK) { // Make thorns bug new enchant apply ranged effects
+            val someDamager = event.damager as LivingEntity
+            val someVictim = event.entity as LivingEntity
+            // Check if active item has lore
+            if (someDamager.equipment?.itemInMainHand?.hasItemMeta() == true)  {
+                val someWeapon = someDamager.equipment?.itemInMainHand
+                // Loop for all enchants
+                for (enchant in someWeapon!!.enchantments) {
+                    // Check if Gilded Enchantment
+                    if (enchant.key in OdysseyEnchantments.enchantmentSet) { // IDK if this faster
+                        // Check when
+                        when (enchant.key) {
+                            OdysseyEnchantments.BACKSTABBER -> {
+                                if (!backstabberCooldown.containsKey(someDamager.uniqueId)) { backstabberCooldown[someDamager.uniqueId] = 0L }
+                                val timeElapsed: Long = System.currentTimeMillis() - backstabberCooldown[someDamager.uniqueId]!!
+                                if (timeElapsed > 6.0 * 1000) {
+                                    backstabberCooldown[someDamager.uniqueId] = System.currentTimeMillis()
+                                    backstabberEnchantment(event, someWeapon, someVictim)
                                 }
                             }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-    // BACKSTABBER enchant
-    @EventHandler
-    fun backstabberEnchantment(event: EntityDamageByEntityEvent) {
-        if (event.damager is Player) {
-            val somePlayer: Player = event.damager as Player
-            if (event.entity is LivingEntity) {
-                val someEntity: LivingEntity = event.entity as LivingEntity
-                if (somePlayer.inventory.itemInMainHand.hasItemMeta()) {
-                    val someWeapon = somePlayer.inventory.itemInMainHand
-                    if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.BACKSTABBER)) {
-                        if (somePlayer.gameMode != GameMode.SPECTATOR) {
-                            val target = someEntity.getTargetEntity(15)
-                            if (target != somePlayer) {
-
-                                if (!playersBackstabberCooldown.containsKey(somePlayer.uniqueId)) {
-                                    playersBackstabberCooldown[somePlayer.uniqueId] = 0L
-                                }
-
-                                val timeElapsed: Long = System.currentTimeMillis() - playersBackstabberCooldown[somePlayer.uniqueId]!!
-
-                                if (timeElapsed > 6.5 * 1000) {
-                                    playersBackstabberCooldown[somePlayer.uniqueId] = System.currentTimeMillis()
-                                    val backstabberProwess = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.BACKSTABBER)
-                                    val newDamage = 3 + (backstabberProwess * 3)
-                                    someEntity.world.spawnParticle(Particle.CRIT_MAGIC, somePlayer.location, 45, 0.5, 0.5, 0.5)
-                                    someEntity.world.spawnParticle(Particle.WARPED_SPORE, somePlayer.location, 35, 0.5, 0.5, 0.5)
-                                    someEntity.world.spawnParticle(Particle.SPELL_WITCH, somePlayer.location, 35, 0.5, 0.5, 0.5)
-                                    somePlayer.playSound(somePlayer.location, Sound.ENTITY_ARROW_HIT_PLAYER, 1.5F, 0.9F)
-                                    event.damage += newDamage
-                                    println(event.damage)
+                            OdysseyEnchantments.BANE_OF_THE_ILLAGER -> {
+                                baneOfTheIllagerEnchantment(event, someWeapon, someVictim)
+                            }
+                            OdysseyEnchantments.BANE_OF_THE_SEA -> {
+                                baneOfTheSeaEnchantment(event, someWeapon, someVictim)
+                            }
+                            OdysseyEnchantments.BANE_OF_THE_SWINE -> {
+                                baneOfTheSwineEnchantment(event, someWeapon, someVictim)
+                            }
+                            OdysseyEnchantments.BUZZY_BEES -> {
+                                if (!buzzyBeesCooldown.containsKey(someDamager.uniqueId)) { buzzyBeesCooldown[someDamager.uniqueId] = 0L }
+                                val timeElapsed: Long = System.currentTimeMillis() - buzzyBeesCooldown[someDamager.uniqueId]!!
+                                if (timeElapsed > 2.5 * 1000) {
+                                    buzzyBeesCooldown[someDamager.uniqueId] = System.currentTimeMillis()
+                                    buzzyBeesEnchantment(event, someWeapon, someVictim)
                                 }
                             }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-    // DECAYING_TOUCH Enchantment Effects
-    @EventHandler
-    fun decayingTouchEnchantment(event: EntityDamageByEntityEvent) {
-        if (event.damager is Player) {
-            val somePlayer: Player = event.damager as Player
-            if (event.entity is LivingEntity) {
-                val decayingEntity: LivingEntity = event.entity as LivingEntity
-                if (somePlayer.inventory.itemInMainHand.hasItemMeta()) {
-                    val someWeapon = somePlayer.inventory.itemInMainHand
-                    if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.DECAYING_TOUCH)) {
-                        if (somePlayer.gameMode != GameMode.SPECTATOR) {
-
-                            if (!playersDecayingTouchCooldown.containsKey(somePlayer.uniqueId)) {
-                                playersDecayingTouchCooldown[somePlayer.uniqueId] = 0L
-                            }
-
-                            val timeElapsed: Long = System.currentTimeMillis() - playersDecayingTouchCooldown[somePlayer.uniqueId]!!
-                            val decayingTouchFactor = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.DECAYING_TOUCH)
-
-                            if (timeElapsed > (3.5 - decayingTouchFactor) * 1000) {
-                                playersDecayingTouchCooldown[somePlayer.uniqueId] = System.currentTimeMillis()
-
-                                decayingEntity.world.spawnParticle(Particle.SPORE_BLOSSOM_AIR , decayingEntity.location, 40, 0.25, 0.4, 0.25)
-                                decayingEntity.world.spawnParticle(Particle.GLOW, decayingEntity.location, 20, 0.25, 0.4, 0.25)
-                                decayingEntity.world.spawnParticle(Particle.GLOW_SQUID_INK, decayingEntity.location, 15, 0.25, 0.25, 0.25)
-                                decayingEntity.world.spawnParticle(Particle.SNEEZE, decayingEntity.location, 40, 0.25, 0.25, 0.25)
-                                decayingEntity.world.spawnParticle(Particle.SCRAPE, decayingEntity.location, 20, 0.5, 1.0, 0.5)
-
-                                val decayEffect = PotionEffect(PotionEffectType.HUNGER, 10 * 20 , 0)
-                                decayingEntity.addPotionEffect(decayEffect)
-
-                                // Every 2 secs
-                                decayingEntity.addScoreboardTag("Decaying")
-                                val decayingTask = DecayingTask(decayingEntity, decayingTouchFactor, 5)
-                                decayingTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20 * 2)
-
-
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-    // DOUSE Enchantment Effects
-    @EventHandler
-    fun douseEnchantment(event: EntityDamageByEntityEvent) {
-        if (event.damager is Player) {
-            val somePlayer: Player = event.damager as Player
-            if (event.entity is LivingEntity) {
-                val dousedEntity: LivingEntity = event.entity as LivingEntity
-                var isDoused = false
-
-                if ("Doused" in dousedEntity.scoreboardTags) {
-                    isDoused = true
-                }
-
-                if (!isDoused) {
-                    if (somePlayer.inventory.itemInMainHand.hasItemMeta()) {
-                        val someWeapon = somePlayer.inventory.itemInMainHand
-                        if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.DOUSE)) {
-                            if (somePlayer.gameMode != GameMode.SPECTATOR) {
-                                val douseFactor = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.DOUSE)
-                                dousedEntity.scoreboardTags.add("Doused")
-                                dousedEntity.scoreboardTags.add("Doused_Factor_$douseFactor")
-                                val dousingTask = DousedTask(dousedEntity, 10)
-                                dousingTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20)
-                                return
-                            }
-                        }
-                    }
-                }
-
-
-                if (dousedEntity.fireTicks > 0) {
-                    var removeDouse = false
-                    var douseFactorPower: Int? = null
-                    var tagToRemove: String? = null
-                    if (isDoused) {
-                        for (x in 1..3) {
-                            if ("Doused_Factor_$x" in dousedEntity.scoreboardTags) {
-                                tagToRemove = "Doused_Factor_$x"
-                                douseFactorPower = x
-                                removeDouse = true
-                            }
-                        }
-                    }
-                    if (removeDouse) {
-                        dousedEntity.scoreboardTags.remove("Doused")
-                        dousedEntity.scoreboardTags.remove(tagToRemove!!)
-
-                        // sounds
-
-
-                        // do douse effects
-                        dousedEntity.addScoreboardTag("Ablaze")
-                        dousedEntity.fireTicks = 20 * ((douseFactorPower!! * 4) + 4) + 1
-                        val igniteDouseTask = BlazingTask(dousedEntity, douseFactorPower, ((douseFactorPower * 4) + 4))
-                        igniteDouseTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20)
-
-                    }
-                }
-            }
-        }
-    }
-
-
-    // EXPLODING enchantment effects
-    @EventHandler
-    fun explodingEnchant(event: EntityDeathEvent) {
-        if (event.entity.killer is Player) {
-            if (event.entity !is Player) {
-                val somePlayer = event.entity.killer!!
-                if (somePlayer.inventory.itemInMainHand.hasItemMeta()) {
-                    val someWeapon = somePlayer.inventory.itemInMainHand
-                    if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.EXPLODING)) {
-                        if (somePlayer.gameMode != GameMode.SPECTATOR) {
-
-                            if (!playersExplodingCooldown.containsKey(somePlayer.uniqueId)) {
-                                playersExplodingCooldown[somePlayer.uniqueId] = 0L
-                            }
-
-                            val timeElapsed: Long = System.currentTimeMillis() - playersExplodingCooldown[somePlayer.uniqueId]!!
-
-                            if (timeElapsed > 1 * 1000) {
-                                playersExplodingCooldown[somePlayer.uniqueId] = System.currentTimeMillis()
-                                // Boom variables
-                                val boomLocation = event.entity.location
-                                val boomMagnitude = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.EXPLODING)
-
-                                // Fireball
-                                val boomExplosion: Fireball = somePlayer.world.spawnEntity(boomLocation, EntityType.FIREBALL) as Fireball
-                                boomExplosion.setIsIncendiary(false)
-                                boomExplosion.yield = 0.0F
-                                boomExplosion.direction = Vector(0.0, -3.0, 0.0)
-
-                                // Firework effect and color
-                                val boomFirework: Firework = somePlayer.world.spawnEntity(boomLocation, EntityType.FIREWORK) as Firework
-                                val boomFireworkMeta = boomFirework.fireworkMeta
-                                val randomColors = listOf(Color.BLUE, Color.RED, Color.YELLOW, Color.FUCHSIA, Color.AQUA, Color.ORANGE)
-                                boomFireworkMeta.addEffect(FireworkEffect.builder().with(FireworkEffect.Type.BALL_LARGE).withColor(randomColors.random()).withFade(randomColors.random()).trail(true).flicker(true).build())
-                                boomFireworkMeta.power = boomMagnitude * 30
-                                boomFirework.fireworkMeta = boomFireworkMeta
-                                boomFirework.velocity = Vector(0.0, -3.0, 0.0)
-
-                                // Particles
-                                somePlayer.world.spawnParticle(Particle.FLASH, boomLocation, 5, 1.0, 1.0, 1.0)
-                                somePlayer.world.spawnParticle(Particle.LAVA, boomLocation, 35, 1.5, 1.0, 1.5)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-    // FREEZING_ASPECT enchantment effects
-    @EventHandler
-    fun freezingAspectEnchantment(event: EntityDamageByEntityEvent) {
-        if (event.damager is Player) {
-            val somePlayer: Player = event.damager as Player
-            if (event.entity is LivingEntity) {
-                val freezingEntity: LivingEntity = event.entity as LivingEntity
-                if (somePlayer.inventory.itemInMainHand.hasItemMeta()) {
-                    val someWeapon = somePlayer.inventory.itemInMainHand
-                    if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.FREEZING_ASPECT)) {
-                        if (somePlayer.gameMode != GameMode.SPECTATOR) {
-                            // Fix for powder LATER
-                            if (event.entity.freezeTicks <= 50) {
-                                val freezeFactor = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.FREEZING_ASPECT)
-
-                                // Effects
-                                val freezingSlow = PotionEffect(PotionEffectType.SLOW, (freezeFactor * 20 * 3) - 2, freezeFactor - 1)
-                                freezingEntity.addPotionEffect(freezingSlow)
-
-                                // Particles
-                                somePlayer.world.spawnParticle(Particle.SNOWFLAKE, freezingEntity.location, 25, 1.0, 0.5, 1.0)
-                                println("Applied Freeze Stuff")
-
-                                //
-                                freezingEntity.addScoreboardTag(OdysseyEffectTags.FREEZING)
-                                val freezingTask = FreezingTask(freezingEntity, freezeFactor, freezeFactor * 3)
-                                freezingTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20)
-                            }
-
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-    // FROG_FRIGHT enchantment effects
-    @EventHandler
-    fun frogFrightEnchantment(event: EntityDamageByEntityEvent) {
-        if (event.damager is Player) {
-            val somePlayer: Player = event.damager as Player
-            if (event.entity is LivingEntity) {
-                val froggingEntity: LivingEntity = event.entity as LivingEntity
-                if (somePlayer.inventory.itemInMainHand.hasItemMeta()) {
-                    val someWeapon = somePlayer.inventory.itemInMainHand
-                    if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.FROG_FRIGHT)) {
-                        if (somePlayer.gameMode != GameMode.SPECTATOR) {
-                            val frogFrightFactor = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.FROG_FRIGHT)
-                            // MATH
-                            val closeEntityLocation = froggingEntity.location.clone().add(0.0, 1.75, 0.0)
-                            val someDirectionVector = closeEntityLocation.clone().subtract(somePlayer.location.clone()).toVector()
-                            val someUnitVector = someDirectionVector.clone().normalize()
-                            val someNewVector = someUnitVector.clone().multiply(1.15 + (0.15 * frogFrightFactor))
-                            froggingEntity.velocity = someNewVector
-
-                            val someToungTask = FrogFrightTask(froggingEntity, someNewVector.clone())
-                            someToungTask.runTaskTimer(MinecraftOdyssey.instance, 20, 1)
-
-                            somePlayer.world.spawnParticle(Particle.TOWN_AURA, somePlayer.location, 65, 1.0, 0.5, 1.0)
-                            somePlayer.playSound(somePlayer.location, Sound.ENTITY_FROG_EAT, 5.5F, 0.5F)
-
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-    // GRAVITY_WELL enchantment effects
-    @EventHandler
-    fun gravityWellEnchantment(event: EntityDamageByEntityEvent) {
-        if (event.damager is Player) {
-            val somePlayer: Player = event.damager as Player
-            if (event.entity is LivingEntity) {
-                val gravitatingEntity: LivingEntity = event.entity as LivingEntity
-                if (somePlayer.inventory.itemInMainHand.hasItemMeta()) {
-                    val someWeapon = somePlayer.inventory.itemInMainHand
-                    if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.GRAVITY_WELL)) {
-                        if (somePlayer.gameMode != GameMode.SPECTATOR) {
-
-                            if (!playersGravityWellCooldown.containsKey(somePlayer.uniqueId)) {
-                                playersGravityWellCooldown[somePlayer.uniqueId] = 0L
-                            }
-
-                            val timeElapsed: Long = System.currentTimeMillis() - playersGravityWellCooldown[somePlayer.uniqueId]!!
-
-                            if (timeElapsed > 8 * 1000) {
-                                playersGravityWellCooldown[somePlayer.uniqueId] = System.currentTimeMillis()
-
-                                somePlayer.playSound(somePlayer.location, Sound.BLOCK_RESPAWN_ANCHOR_CHARGE, 1.5F, 0.2F)
-
-                                val singularityPoint = event.entity.location
-                                val gravityWellFactor = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.GRAVITY_WELL)
-
-                                // Every 10 ticks -> 0.5 sec
-                                gravitatingEntity.addScoreboardTag("Gravity_Well")
-                                val gravityWellTask = GravitationalAttract(gravitatingEntity, singularityPoint, gravityWellFactor, somePlayer)
-                                gravityWellTask.runTaskTimer(MinecraftOdyssey.instance, 0, 10)
-
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-    // GUARDING_STRIKE enchantment effects
-    @EventHandler
-    fun guardingStrikeEnchant(event: EntityDeathEvent) {
-        if (event.entity.killer is Player) {
-            val somePlayer: Player = event.entity.killer as Player
-            if (somePlayer.inventory.itemInMainHand.hasItemMeta()) {
-                val someWeapon = somePlayer.inventory.itemInMainHand
-                if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.GUARDING_STRIKE)) {
-                    if (somePlayer.gameMode != GameMode.SPECTATOR) {
-
-                        if (!playersGuardingStrikeCooldown.containsKey(somePlayer.uniqueId)) {
-                            playersGuardingStrikeCooldown[somePlayer.uniqueId] = 0L
-                        }
-
-                        val timeElapsed: Long = System.currentTimeMillis() - playersGuardingStrikeCooldown[somePlayer.uniqueId]!!
-
-                        if (timeElapsed > 8 * 1000) {
-                            playersGuardingStrikeCooldown[somePlayer.uniqueId] = System.currentTimeMillis()
-
-                            val guardingFactor = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.GUARDING_STRIKE)
-                            // Effects
-                            val guardingPose = PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, (2 + (guardingFactor * 2)) * 20, 0)
-                            somePlayer.addPotionEffect(guardingPose)
-                            // Particles
-                            somePlayer.world.spawnParticle(Particle.SCRAPE, somePlayer.location, 35, 1.0, 0.5, 1.0)
-                            somePlayer.world.spawnParticle(Particle.ELECTRIC_SPARK, somePlayer.location, 35, 1.0, 0.5, 1.0)
-                            somePlayer.playSound(somePlayer.location, Sound.ITEM_SHIELD_BLOCK, 1.5F, 0.5F)
-                            somePlayer.playSound(somePlayer.location, Sound.BLOCK_DEEPSLATE_BREAK, 1.5F, 0.5F)
-
-                            println("Did guarding strike")
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    // HEMORRHAGE Enchantment Effects
-    @EventHandler
-    fun hemorrhageEnchantment(event: EntityDamageByEntityEvent) {
-        if (event.damager is Player) {
-            val somePlayer: Player = event.damager as Player
-            if (event.entity is LivingEntity) {
-                val hemorrhagingEntity: LivingEntity = event.entity as LivingEntity
-                if (somePlayer.inventory.itemInMainHand.hasItemMeta()) {
-                    val someWeapon = somePlayer.inventory.itemInMainHand
-                    if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.HEMORRHAGE)) {
-                        if (somePlayer.gameMode != GameMode.SPECTATOR) {
-
-                            if (!playersHemorrhageCooldown.containsKey(somePlayer.uniqueId)) {
-                                playersHemorrhageCooldown[somePlayer.uniqueId] = 0L
-                            }
-
-                            val timeElapsed: Long = System.currentTimeMillis() - playersHemorrhageCooldown[somePlayer.uniqueId]!!
-                            val hemorrhageFactor = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.HEMORRHAGE)
-
-                            if (timeElapsed > (3.5 - hemorrhageFactor) * 1000) {
-                                playersHemorrhageCooldown[somePlayer.uniqueId] = System.currentTimeMillis()
-
-                                // Every 1.5 secs
-                                hemorrhagingEntity.addScoreboardTag("Hemorrhaging")
-                                val hemorrhageTask = HemorrhageTask(hemorrhagingEntity, hemorrhageFactor)
-                                hemorrhageTask.runTaskTimer(MinecraftOdyssey.instance, 0, 30)
-
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-    // VOID_STRIKE enchantment effects
-    @EventHandler
-    fun voidStrikeEnchantment(event: EntityDamageByEntityEvent) {
-        if (event.damager is Player) {
-            val somePlayer: Player = event.damager as Player
-            if (event.entity is LivingEntity) {
-                val voidTouchedEntity: LivingEntity = event.entity as LivingEntity
-                // Add more monitors
-                if (somePlayer.inventory.itemInMainHand.hasItemMeta()) {
-                    val someWeapon = somePlayer.inventory.itemInMainHand
-                    if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.VOID_STRIKE)) {
-                        if (somePlayer.gameMode != GameMode.SPECTATOR) {
-
-                            if (somePlayer.itemUseRemainingTime == 0) {
-
-                                if (!playersVoidStrikeCooldown.containsKey(somePlayer.uniqueId)) {
-                                    playersVoidStrikeCooldown[somePlayer.uniqueId] = 0L
+                            OdysseyEnchantments.DECAYING_TOUCH -> {
+                                if (!decayingTouchCooldown.containsKey(someDamager.uniqueId)) { decayingTouchCooldown[someDamager.uniqueId] = 0L }
+                                val timeElapsed: Long = System.currentTimeMillis() - decayingTouchCooldown[someDamager.uniqueId]!!
+                                if (timeElapsed > 3.0 * 1000) {
+                                    decayingTouchCooldown[someDamager.uniqueId] = System.currentTimeMillis()
+                                    decayingTouchEnchantment(someWeapon, someVictim)
                                 }
-
-                                val timeElapsed: Long = System.currentTimeMillis() - playersVoidStrikeCooldown[somePlayer.uniqueId]!!
-
+                            }
+                            OdysseyEnchantments.DOUSE -> {
+                                douseEnchantment(someWeapon, someVictim)
+                            }
+                            OdysseyEnchantments.FREEZING_ASPECT -> {
+                                freezingAspectEnchantment(someWeapon, someVictim)
+                            }
+                            OdysseyEnchantments.FROG_FRIGHT -> {
+                                frogFrightEnchantment(event, someWeapon, someVictim)
+                            }
+                            OdysseyEnchantments.GRAVITY_WELL -> {
+                                if (!gravityWellCooldown.containsKey(someDamager.uniqueId)) { gravityWellCooldown[someDamager.uniqueId] = 0L }
+                                val timeElapsed: Long = System.currentTimeMillis() - gravityWellCooldown[someDamager.uniqueId]!!
+                                if (timeElapsed > 8.0 * 1000) {
+                                    gravityWellCooldown[someDamager.uniqueId] = System.currentTimeMillis()
+                                    gravityWellEnchantment(event, someWeapon, someVictim)
+                                }
+                            }
+                            OdysseyEnchantments.HEMORRHAGE -> {
+                                if (!hemorrhageCooldown.containsKey(someDamager.uniqueId)) { hemorrhageCooldown[someDamager.uniqueId] = 0L }
+                                val timeElapsed: Long = System.currentTimeMillis() - hemorrhageCooldown[someDamager.uniqueId]!!
+                                if (timeElapsed > 3.5 * 1000) {
+                                    hemorrhageCooldown[someDamager.uniqueId] = System.currentTimeMillis()
+                                    hemorrhageEnchantment(someWeapon, someVictim)
+                                }
+                            }
+                            OdysseyEnchantments.VOID_STRIKE -> {
+                                if (!voidStrikeCooldown.containsKey(someDamager.uniqueId)) { voidStrikeCooldown[someDamager.uniqueId] = 0L }
+                                val timeElapsed: Long = System.currentTimeMillis() - voidStrikeCooldown[someDamager.uniqueId]!!
+                                //val attackSpeedAttribute = someDamager.getAttribute(Attribute.GENERIC_ATTACK_SPEED)
                                 if (timeElapsed > 0.75 * 1000) {
-                                    playersVoidStrikeCooldown[somePlayer.uniqueId] = System.currentTimeMillis()
+                                    voidStrikeCooldown[someDamager.uniqueId] = System.currentTimeMillis()
+                                    voidStrikeEnchantment(event, someWeapon, someVictim)
+                                }
+                            }
+                            OdysseyEnchantments.WHIRLWIND -> {
+                                if (!whirlwindCooldown.containsKey(someDamager.uniqueId)) { whirlwindCooldown[someDamager.uniqueId] = 0L }
+                                val timeElapsed: Long = System.currentTimeMillis() - whirlwindCooldown[someDamager.uniqueId]!!
+                                if (timeElapsed > 3.5 * 1000) {
+                                    whirlwindCooldown[someDamager.uniqueId] = System.currentTimeMillis()
+                                    whirlwindEnchantment(event, someDamager, someVictim, someWeapon)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
-                                    println("V")
-                                    val someTags = voidTouchedEntity.scoreboardTags
-                                    var voidDamage = 0
-                                    var playerMatch = false
-                                    var voidTouched = false
-                                    var voidConflict = false
-
-                                    val onlinePlayers = event.damager.world.players
-
-                                    // tag variables
-                                    var tagToRemove: String? = null
-                                    val tagsToRemove = mutableListOf<String>()
-                                    var tagToAdd: String? = null
-
-                                    // Initial check
-                                    for (tag in someTags) {
-                                        for (unknownPlayer in onlinePlayers) {
-                                            if (tag == "VoidTouched_${unknownPlayer.name}" && tag != "VoidTouched_${somePlayer.name}") {
-                                                voidConflict = true
-                                                break
-                                            }
-                                        }
-                                        if (voidConflict) {
-                                            break
-                                        }
-                                        // Check if player match
-                                        if (tag == "VoidTouched_${somePlayer.name}") {
-                                            playerMatch = true
-                                            voidTouched = true
-                                        }
-                                        println(tag)
-                                    }
-                                    // Remove conflicts RESET
-                                    if (voidConflict) {
-                                        for (tag in someTags) {
-                                            for (unknownPlayer in onlinePlayers) {
-                                                if (tag == "VoidTouched_${unknownPlayer.name}") {
-                                                    //voidTouchedEntity.removeScoreboardTag(tag)
-                                                    tagsToRemove.add(tag)
-                                                }
-                                            }
-                                        }
-                                        for (someTag in tagsToRemove) {
-                                            voidTouchedEntity.removeScoreboardTag(someTag)
-                                        }
-                                    }
-                                    val voidTouchFactor = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.VOID_STRIKE)
-
-                                    // Run if no other voided
-                                    if (!voidConflict && playerMatch) {
-                                        println(someTags)
-                                        for (tag in someTags) {
-                                            // Max modifier
-                                            if (tag == "VoidStruck_${somePlayer.name}_10") {
-                                                //voidTouchedEntity.removeScoreboardTag("VoidStruck_${somePlayer.name}_10")
-                                                tagToRemove = "VoidStruck_${somePlayer.name}_10"
-                                                //voidTouchedEntity.addScoreboardTag("VoidStruck_${somePlayer.name}_0")
-                                                tagToAdd = "VoidStruck_${somePlayer.name}_0"
-                                                break
-                                            }
-                                            for (x in 0..9) {
-                                                if (tag == "VoidStruck_${somePlayer.name}_$x") {
-                                                    //voidTouchedEntity.removeScoreboardTag("VoidStruck_${somePlayer.name}_$x")
-                                                    tagToRemove = "VoidStruck_${somePlayer.name}_$x"
-                                                    val newX = x + 1
-                                                    //voidTouchedEntity.addScoreboardTag("VoidStruck_${somePlayer.name}_$newX")
-                                                    tagToAdd = "VoidStruck_${somePlayer.name}_$newX"
-                                                    voidDamage = (voidTouchFactor * x) + voidTouchFactor
-                                                    break
-                                                }
-                                            }
-                                        }
-                                        voidTouchedEntity.addScoreboardTag(tagToAdd!!)
-                                        voidTouchedEntity.removeScoreboardTag(tagToRemove!!)
-
-                                    }
-                                    // Apply initial tags
-                                    if (!voidTouched) {
-                                        voidTouchedEntity.addScoreboardTag("VoidStruck_${somePlayer.name}_0")
-                                        voidTouchedEntity.addScoreboardTag("VoidTouched_${somePlayer.name}")
-                                    }
-                                    // Check if player
-                                    if (playerMatch) {
-                                        somePlayer.world.spawnParticle(Particle.PORTAL, voidTouchedEntity.location, 85, 1.15, 0.85, 1.15)
-                                        somePlayer.world.spawnParticle(Particle.WAX_OFF, voidTouchedEntity.location, 45, 1.0, 0.75, 1.0)
-                                        somePlayer.world.spawnParticle(Particle.SPELL_WITCH, voidTouchedEntity.location, 50, 1.0, 0.75, 1.0)
-                                        somePlayer.playSound(somePlayer.location, Sound.BLOCK_BEACON_DEACTIVATE, 1.5F, 0.5F)
-                                        somePlayer.playSound(somePlayer.location, Sound.BLOCK_AMETHYST_BLOCK_BREAK, 1.7F, 0.2F)
-                                        somePlayer.playSound(somePlayer.location, Sound.ENTITY_ENDER_EYE_DEATH, 3.5F, 0.4F)
-                                        event.damage += voidDamage
-                                        println(event.damage)
-                                    }
+    // Main function for enchantments relating to entity deaths
+    @EventHandler
+    fun mainDeathHandler(event: EntityDeathEvent) {
+        // Check if event killer and entity are living entity
+        if (event.entity.killer is LivingEntity) { // Make thorns bug new enchant apply ranged effects
+            val someKiller = event.entity.killer as LivingEntity
+            val someVictim: LivingEntity = event.entity
+            // Check if active item has lore
+            if (someKiller.equipment?.itemInMainHand?.hasItemMeta() == true) {
+                val someWeapon = someKiller.equipment?.itemInMainHand
+                // Loop for all enchants
+                for (enchant in someWeapon!!.enchantments) {
+                    // Check if Gilded Enchantment
+                    if (enchant.key in OdysseyEnchantments.enchantmentSet) { // IDK if this faster
+                        // Check when
+                        when (enchant.key) {
+                            OdysseyEnchantments.EXPLODING -> {
+                                if (!explodingCooldown.containsKey(someKiller.uniqueId)) { explodingCooldown[someKiller.uniqueId] = 0L }
+                                val timeElapsed: Long = System.currentTimeMillis() - explodingCooldown[someKiller.uniqueId]!!
+                                if (timeElapsed > 1.25 * 1000) {
+                                    explodingCooldown[someKiller.uniqueId] = System.currentTimeMillis()
+                                    explodingEnchantment(event, someWeapon, someVictim)
+                                }
+                            }
+                            OdysseyEnchantments.GUARDING_STRIKE -> {
+                                if (!guardingStrikeCooldown.containsKey(someKiller.uniqueId)) { guardingStrikeCooldown[someKiller.uniqueId] = 0L }
+                                val timeElapsed: Long = System.currentTimeMillis() - guardingStrikeCooldown[someKiller.uniqueId]!!
+                                if (timeElapsed > 8 * 1000) {
+                                    guardingStrikeCooldown[someKiller.uniqueId] = System.currentTimeMillis()
+                                    guardingStrikeEnchantment(someWeapon, someVictim, someKiller)
                                 }
                             }
                         }
@@ -648,87 +180,360 @@ object MeleeListeners : Listener {
     }
 
 
-    //WHIRLWIND enchantment effects
-    @EventHandler
-    fun whirlwindEnchantment(event: EntityDamageByEntityEvent) {
-        if (event.damager is Player) {
-            val somePlayer: Player = event.damager as Player
-            if (event.entity is LivingEntity) {
-                val someEntity: LivingEntity = event.entity as LivingEntity
-                if (somePlayer.inventory.itemInMainHand.hasItemMeta()) {
-                    val someWeapon = somePlayer.inventory.itemInMainHand
-                    if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.WHIRLWIND)) {
-                        if (somePlayer.gameMode != GameMode.SPECTATOR) {
-                            if (someEntity.hasLineOfSight(somePlayer)) {
-                                if (!playersWhirlwindCooldown.containsKey(somePlayer.uniqueId)) {
-                                    playersWhirlwindCooldown[somePlayer.uniqueId] = 0L
-                                }
+    // BACKSTABBER Enchantment Function
+    private fun backstabberEnchantment(event: EntityDamageByEntityEvent, damagerWeapon: ItemStack, eventVictim: LivingEntity) {
+        // Check enchantment Strength
+        val enchantmentStrength = damagerWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.BACKSTABBER)
+        // Check if not target
+        val victimTarget = eventVictim.getTargetEntity(10)
+        if (victimTarget != event.damager) {
+            // Particles and sounds
+            eventVictim.world.spawnParticle(Particle.CRIT_MAGIC, eventVictim.location, 95, 0.5, 0.5, 0.5)
+            eventVictim.world.spawnParticle(Particle.WARPED_SPORE, eventVictim.location, 95, 0.5, 0.5, 0.5)
+            eventVictim.world.spawnParticle(Particle.ELECTRIC_SPARK, eventVictim.location, 65, 0.5, 0.5, 0.5)
+            eventVictim.world.spawnParticle(Particle.CRIT, eventVictim.location, 65, 0.5, 0.5, 0.5)
+            eventVictim.world.playSound(eventVictim.location, Sound.BLOCK_HONEY_BLOCK_FALL, 2.5F, 0.9F)
+            // Damage
+            event.damage += (3 + (enchantmentStrength * 3))
+        }
+    }
 
-                                val timeElapsed: Long =
-                                    System.currentTimeMillis() - playersWhirlwindCooldown[somePlayer.uniqueId]!!
+    // BANE_OF_THE_ILLAGER Enchantment Function
+    private fun baneOfTheIllagerEnchantment(event: EntityDamageByEntityEvent, damagerWeapon: ItemStack, eventVictim: LivingEntity) {
+        if (eventVictim is Raider) {
+            event.damage += (damagerWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.BANE_OF_THE_ILLAGER).toDouble() * 2.5)
+        }
+    }
 
-                                if (timeElapsed > 1.0 * 1000) {
-                                    val whirlwindFactor = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.WHIRLWIND)
-                                    playersWhirlwindCooldown[somePlayer.uniqueId] = System.currentTimeMillis()
+    // BANE_OF_THE_SEA Enchantment Function
+    private fun baneOfTheSeaEnchantment(event: EntityDamageByEntityEvent, damagerWeapon: ItemStack, eventVictim: LivingEntity) {
+        if (eventVictim.isInWaterOrRainOrBubbleColumn || eventVictim is WaterMob || eventVictim.isSwimming || event.damager.isInWaterOrRainOrBubbleColumn) {
+            event.damage += (damagerWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.BANE_OF_THE_SEA).toDouble() * 2.0)
+        }
+    }
 
-                                    //1.25
-                                    val entitiesNearPlayer = somePlayer.world.getNearbyLivingEntities(somePlayer.location, 1.375)
-                                    entitiesNearPlayer.remove(somePlayer)
+    // BANE_OF_THE_SWINE Enchantment Function
+    private fun baneOfTheSwineEnchantment(event: EntityDamageByEntityEvent, damagerWeapon: ItemStack, eventVictim: LivingEntity) {
+        if (eventVictim is PiglinAbstract || eventVictim is Pig || eventVictim is Hoglin) {
+            event.damage += (damagerWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.BANE_OF_THE_SWINE).toDouble() * 2.5)
+        }
+    }
 
-                                    //Particles
-                                    val xCord = somePlayer.location.x - 1.25
-                                    val yCord = somePlayer.location.y + 1
-                                    val zCord = somePlayer.location.z
-                                    //val someLocation = somePlayer.location
+    // BUZZY_BEES Enchantment Function
+    private fun buzzyBeesEnchantment(event: EntityDamageByEntityEvent, damagerWeapon: ItemStack, eventVictim: LivingEntity) {
+        // Check enchantment Strength
+        val enchantmentStrength = damagerWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.BUZZY_BEES)
 
-                                    for (n in 0..16) {
-                                        val s = (2.5 / 16) * n
-                                        if (n == 16 || n == 0) {
-                                            somePlayer.world.spawnParticle(Particle.EXPLOSION_LARGE, xCord + s, yCord, zCord, 1)
-                                        }
-                                        else {
-                                            var q = s
-                                            if (n > 8) {
-                                                q -= (2.5 / 16) * (n - 8)
-                                            }
-                                            somePlayer.world.spawnParticle(Particle.EXPLOSION_LARGE, xCord + s, yCord, zCord + q, 1)
-                                            somePlayer.world.spawnParticle(Particle.EXPLOSION_LARGE, xCord + s, yCord, zCord - q, 1)
-                                        }
-                                    }
+        // Effects
+        val buzzyBeesSlow = PotionEffect(PotionEffectType.SLOW, ((3 * enchantmentStrength) + 3) * 20, 0)
+        eventVictim.addPotionEffect(buzzyBeesSlow)
+        eventVictim.addScoreboardTag("Honeyed")
+        val honeyedTask = HoneyedTask(eventVictim, enchantmentStrength, ((3 * enchantmentStrength) + 3) * 2)
+        honeyedTask.runTaskTimer(MinecraftOdyssey.instance, 0, 10) // Every 10 ticks -> 0.5 sec
 
-                                    val someDamage = event.damage
-                                    val whirlwindPercentage = (0.3 + ((whirlwindFactor * 3) * 0.1))
-                                    val whirlDamage = someDamage * whirlwindPercentage
-                                    println("event: $someDamage, percent: $whirlwindPercentage, newDamage: $whirlDamage")
+        // Particles and Sounds
+        eventVictim.world.spawnParticle(Particle.DRIPPING_HONEY, eventVictim.location, 15, 1.0, 0.5, 1.0)
+        eventVictim.world.spawnParticle(Particle.FALLING_HONEY, eventVictim.location, 20, 1.5, 0.5, 1.5)
+        eventVictim.world.spawnParticle(Particle.LANDING_HONEY, eventVictim.location, 10, 1.0, 0.5, 1.0)
+        event.damager.world.playSound(eventVictim.location, Sound.BLOCK_HONEY_BLOCK_FALL, 2.5F, 0.9F)
 
-                                    val somePlayerLocation = somePlayer.location.clone()
-                                    for (closeEntity in entitiesNearPlayer) {
-                                        if (closeEntity != someEntity) closeEntity.damage(whirlDamage, somePlayer)
-                                        // MATH
-                                        val closeEntityLocation = closeEntity.location.clone().add(0.0, 1.5, 0.0)
-                                        val someDirectionVector = closeEntityLocation.clone().subtract(somePlayerLocation.clone()).toVector()
-                                        val someUnitVector = someDirectionVector.clone().normalize()
-                                        val someNewVector = someUnitVector.clone().multiply(0.75 + (0.1 * whirlwindFactor))
-                                        closeEntity.velocity = someNewVector
-                                        //somePlayer.world.spawnParticle(Particle.SWEEP_ATTACK, closeEntity.location, 1, 0.05, 0.05, 0.05)
-                                    }
-                                    somePlayer.playSound(somePlayer.location, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1.2F, 0.7F)
-                                    somePlayer.playSound(somePlayer.location, Sound.ITEM_SHIELD_BLOCK, 1.2F, 0.6F)
-                                    somePlayer.playSound(somePlayer.location, Sound.ITEM_TRIDENT_RIPTIDE_3, 1.2F, 0.6F)
-                                    somePlayer.playSound(somePlayer.location, Sound.ITEM_TRIDENT_RIPTIDE_2, 1.2F, 1.2F)
+        // Spawn Bee if not low
+        if (eventVictim.health > event.finalDamage + 1) {
+            val someBee: Bee = eventVictim.world.spawnEntity(eventVictim.location, EntityType.BEE) as Bee
+            val beeSpeed = PotionEffect(PotionEffectType.SPEED, 10, (enchantmentStrength))
+            val beeStrength = PotionEffect(PotionEffectType.INCREASE_DAMAGE, 10, (enchantmentStrength))
+            val beeDexterity = PotionEffect(PotionEffectType.FAST_DIGGING, 10, (enchantmentStrength))
+            val beeCarapace = PotionEffect(PotionEffectType.ABSORPTION, 10, (enchantmentStrength + 2))
+            someBee.addPotionEffects(listOf(beeSpeed, beeStrength, beeDexterity, beeCarapace))
+            someBee.target = eventVictim
+        }
 
+    }
 
-                                }
-                            }
-                        }
+    // DECAYING_TOUCH Enchantment Function
+    private fun decayingTouchEnchantment(damagerWeapon: ItemStack, eventVictim: LivingEntity) {
+        // Check enchantment Strength
+        val enchantmentStrength = damagerWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.DECAYING_TOUCH)
+
+        // Effects
+        val decayEffect = PotionEffect(PotionEffectType.HUNGER, 10 * 20 , 0)
+        eventVictim.addPotionEffect(decayEffect)
+        eventVictim.addScoreboardTag("Decaying")
+        val decayingTask = DecayingTask(eventVictim, enchantmentStrength, 5) // Every 2 secs
+        decayingTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20 * 2)
+
+        // Particles and sounds
+        eventVictim.world.spawnParticle(Particle.SPORE_BLOSSOM_AIR , eventVictim.location, 40, 0.25, 0.4, 0.25)
+        eventVictim.world.spawnParticle(Particle.GLOW, eventVictim.location, 20, 0.25, 0.4, 0.25)
+        eventVictim.world.spawnParticle(Particle.GLOW_SQUID_INK, eventVictim.location, 15, 0.25, 0.25, 0.25)
+        eventVictim.world.spawnParticle(Particle.SNEEZE, eventVictim.location, 40, 0.25, 0.25, 0.25)
+        eventVictim.world.spawnParticle(Particle.SCRAPE, eventVictim.location, 20, 0.5, 1.0, 0.5)
+
+    }
+
+    // DOUSE Enchantment Function
+    private fun douseEnchantment(damagerWeapon: ItemStack, eventVictim: LivingEntity) { // Moved Ignition to ablaze effect
+        // Check enchantment Strength
+        val enchantmentStrength = damagerWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.DOUSE)
+
+        // Add Doused if not in tags
+        if ("Doused" !in eventVictim.scoreboardTags) {
+            eventVictim.scoreboardTags.add("Doused")
+            eventVictim.scoreboardTags.add("Doused_Factor_$enchantmentStrength")
+            // Effects
+            val dousingTask = DousedTask(eventVictim, 10)
+            dousingTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20)
+
+        }
+
+    }
+
+    // EXPLODING Enchantment Function
+    private fun explodingEnchantment(event: EntityDeathEvent, damagerWeapon: ItemStack, eventVictim: LivingEntity) {
+        // Boom variables
+        val deathLocation = event.entity.location.clone()
+        val enchantmentStrength = damagerWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.EXPLODING)
+
+        // Fireball
+        val boomExplosion: Fireball = eventVictim.world.spawnEntity(deathLocation, EntityType.FIREBALL) as Fireball
+        boomExplosion.setIsIncendiary(false)
+        boomExplosion.yield = 0.0F
+        boomExplosion.direction = Vector(0.0, -3.0, 0.0)
+
+        // Firework effect and color
+        val boomFirework: Firework = deathLocation.world.spawnEntity(deathLocation, EntityType.FIREWORK) as Firework
+        val boomFireworkMeta = boomFirework.fireworkMeta
+        val randomColors = listOf(Color.BLUE, Color.RED, Color.YELLOW, Color.FUCHSIA, Color.AQUA, Color.ORANGE)
+        boomFireworkMeta.addEffect(FireworkEffect.builder().with(FireworkEffect.Type.BALL_LARGE).withColor(randomColors.random()).withFade(randomColors.random()).trail(true).flicker(true).build())
+        boomFireworkMeta.power = enchantmentStrength * 30
+        boomFirework.fireworkMeta = boomFireworkMeta
+        boomFirework.velocity = Vector(0.0, -3.0, 0.0)
+
+        // Particles
+        eventVictim.world.spawnParticle(Particle.FLASH, deathLocation, 5, 1.0, 1.0, 1.0)
+        eventVictim.world.spawnParticle(Particle.LAVA, deathLocation, 35, 1.5, 1.0, 1.5)
+    }
+
+    // FREEZING_ASPECT Enchantment Function
+    private fun freezingAspectEnchantment(damagerWeapon: ItemStack, eventVictim: LivingEntity) {
+        val enchantmentStrength = damagerWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.FREEZING_ASPECT)
+        if (eventVictim.freezeTicks <= 50) {
+            // Particles
+            eventVictim.world.spawnParticle(Particle.SNOWFLAKE, eventVictim.location, 25, 1.0, 0.5, 1.0)
+
+            // Effects
+            val freezingSlow = PotionEffect(PotionEffectType.SLOW, (enchantmentStrength * 20 * 3) - 2, enchantmentStrength - 1)
+            eventVictim.addPotionEffect(freezingSlow)
+            eventVictim.addScoreboardTag("Freezing")
+            val freezingTask = FreezingTask(eventVictim, enchantmentStrength, enchantmentStrength * 3)
+            freezingTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20)
+        }
+    }
+
+    // FROG_FRIGHT Enchantment Function
+    private fun frogFrightEnchantment(event: EntityDamageByEntityEvent, damagerWeapon: ItemStack, eventVictim: LivingEntity) {
+        val enchantmentStrength = damagerWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.FROG_FRIGHT)
+        // Vector Math
+        val closeEntityLocation = eventVictim.location.clone().add(0.0, 1.75, 0.0)
+        val someDirectionVector = closeEntityLocation.clone().subtract(event.damager.location.clone()).toVector()
+        val someUnitVector = someDirectionVector.clone().normalize()
+        val someNewVector = someUnitVector.clone().multiply(1.15 + (0.15 * enchantmentStrength))
+        eventVictim.velocity = someNewVector
+
+        // Effects and Particles
+        val someFroggingTask = FrogFrightTask(eventVictim, someNewVector.clone())
+        someFroggingTask.runTaskTimer(MinecraftOdyssey.instance, 20, 1)
+
+        eventVictim.world.spawnParticle(Particle.TOWN_AURA, eventVictim.location, 65, 1.0, 0.5, 1.0)
+        eventVictim.world.playSound(eventVictim.location, Sound.ENTITY_FROG_EAT, 3.5F, 0.5F)
+
+    }
+
+    // GRAVITY_WELL Enchantment Function
+    private fun gravityWellEnchantment(event: EntityDamageByEntityEvent, damagerWeapon: ItemStack, eventVictim: LivingEntity) {
+        val enchantmentStrength = damagerWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.GRAVITY_WELL)
+        val singularityPoint = event.entity.location
+
+        /* Particles and Sounds */
+        eventVictim.world.playSound(singularityPoint, Sound.BLOCK_RESPAWN_ANCHOR_CHARGE, 1.75F, 0.3F)
+        eventVictim.world.spawnParticle(Particle.WHITE_ASH, singularityPoint, 105, 1.0, 0.5, 1.0)
+
+        // Every 10 ticks -> 0.5 sec
+        eventVictim.addScoreboardTag("Gravity_Well")
+        val gravityWellTask = GravitationalAttract(eventVictim, event.damager as LivingEntity, enchantmentStrength * 1, (enchantmentStrength * 2) + 2)
+        gravityWellTask.runTaskTimer(MinecraftOdyssey.instance, 0, 10)
+
+    }
+
+    // GUARDING_STRIKE Enchantment Function
+    private fun guardingStrikeEnchantment(damagerWeapon: ItemStack, eventVictim: LivingEntity, eventKiller: LivingEntity) {
+        val enchantmentStrength = damagerWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.GUARDING_STRIKE)
+
+        // Effects
+        val guardingPose = PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, (2 + (enchantmentStrength * 2)) * 20, 0)
+        eventKiller.addPotionEffect(guardingPose)
+        // Particles and Sounds
+        eventKiller.world.spawnParticle(Particle.SCRAPE, eventVictim.location, 35, 1.0, 0.5, 1.0)
+        eventKiller.world.spawnParticle(Particle.ELECTRIC_SPARK, eventVictim.location, 35, 1.0, 0.5, 1.0)
+        eventKiller.world.playSound(eventVictim.location, Sound.ITEM_SHIELD_BLOCK, 1.5F, 0.5F)
+        eventKiller.world.playSound(eventVictim.location, Sound.BLOCK_DEEPSLATE_BREAK, 1.5F, 0.5F)
+    }
+
+    // HEMORRHAGE Enchantment Function
+    private fun hemorrhageEnchantment(damagerWeapon: ItemStack, eventVictim: LivingEntity) {
+        val enchantmentStrength = damagerWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.HEMORRHAGE)
+        if (eventVictim.freezeTicks <= 50) {
+            // Particles
+            eventVictim.world.spawnParticle(Particle.CRIT, eventVictim.location, 45, 1.0, 0.5, 1.0)
+
+            // Effects
+            eventVictim.addScoreboardTag("Hemorrhaging")
+            val hemorrhageTask = HemorrhageTask(eventVictim, enchantmentStrength)
+            hemorrhageTask.runTaskTimer(MinecraftOdyssey.instance, 0, 30) // Every 1.5 secs
+        }
+    }
+
+    // VOID_STRIKE Enchantment Function
+    private fun voidStrikeEnchantment(event: EntityDamageByEntityEvent, damagerWeapon: ItemStack, eventVictim: LivingEntity) {
+        val enchantmentStrength = damagerWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.VOID_STRIKE)
+        // Variables
+        var voidDamage = 0
+        var voidTouched = false
+        var voidConflict = false
+        // Values
+        val victimScoreboardTags = eventVictim.scoreboardTags
+        val voidStrikeIDs = voidStrikeCooldown.keys.toList()
+        val voidDamagerID: UUID = event.damager.uniqueId
+
+        // Initial Conflict Check
+        if ("Void_Touched" in victimScoreboardTags) {
+            voidTouched = true
+            for (tag in victimScoreboardTags) {
+                for (someID in voidStrikeIDs) {
+                    if (tag == "Void_Touched_By_${someID}" && tag != "Void_Touched_By_${voidDamagerID}") {
+                        voidConflict = true
+                        break
                     }
                 }
+                if (voidConflict) {
+                    break
+                }
             }
+        }
+        // Remove all void related tags if conflict
+        if (voidConflict) {
+            val tagsToRemove = mutableListOf<String>()
+            for (tag in victimScoreboardTags) {
+                val voidTouchedTagPrefix = tag.subSequence(0..11).toString()
+                val voidStruckTagPrefix = tag.subSequence(0..10).toString()
+                if ((voidTouchedTagPrefix == "Void_Touched") || (voidStruckTagPrefix == "Void_Struck")) {
+                    tagsToRemove.add(tag)
+                }
+            }
+            for (tag in tagsToRemove) {
+                eventVictim.scoreboardTags.remove(tag)
+            }
+        }
+
+        if (!voidConflict) {
+            // Check if already voided
+            if (voidTouched) {
+                var voidStruckValue: Int? = null
+                for (tag in victimScoreboardTags) {
+                    // Change Void Struck tag
+                    val voidStruckTagPrefix = tag.subSequence(0..10).toString()
+                    if (voidStruckTagPrefix == "Void_Struck") {
+                        val tagLastIndex = tag.lastIndex
+                        voidStruckValue = tag[tagLastIndex].toString().toInt()
+                        break
+                    }
+                }
+                // Void Struck value to damage and update tag
+                if (voidStruckValue != null) {
+                    if (voidStruckValue == 9) {
+                        eventVictim.scoreboardTags.remove("Void_Struck_${voidStruckValue}")
+                        eventVictim.scoreboardTags.add("Void_Struck_0")
+                    }
+                    else {
+                        eventVictim.scoreboardTags.remove("Void_Struck_${voidStruckValue}")
+                        eventVictim.scoreboardTags.add("Void_Struck_${voidStruckValue + 1}")
+                    }
+                    voidDamage = (enchantmentStrength * (voidStruckValue + 1))
+                }
+            }
+            // Add tags if not voided
+            else {
+                eventVictim.scoreboardTags.add("Void_Touched")
+                eventVictim.scoreboardTags.add("Void_Touched_By_${voidDamagerID}")
+                eventVictim.scoreboardTags.add("Void_Struck_0")
+            }
+
+            // Particles and Sounds
+            eventVictim.world.spawnParticle(Particle.PORTAL, eventVictim.location, 85, 1.15, 0.85, 1.15)
+            eventVictim.world.spawnParticle(Particle.WAX_OFF, eventVictim.location, 45, 1.0, 0.75, 1.0)
+            eventVictim.world.spawnParticle(Particle.SPELL_WITCH, eventVictim.location, 50, 1.0, 0.75, 1.0)
+            eventVictim.world.playSound(eventVictim.location, Sound.BLOCK_BEACON_DEACTIVATE, 1.5F, 0.5F)
+            eventVictim.world.playSound(eventVictim.location, Sound.BLOCK_AMETHYST_BLOCK_BREAK, 1.7F, 0.2F)
+            eventVictim.world.playSound(eventVictim.location, Sound.ENTITY_ENDER_EYE_DEATH, 3.5F, 0.4F)
+
+            // Damage
+            event.damage += voidDamage
+        }
+    }
+
+    // WHIRLWIND Enchantment Function
+    private fun whirlwindEnchantment(event: EntityDamageByEntityEvent, eventDamager: LivingEntity, eventVictim: LivingEntity, damagerWeapon: ItemStack) {
+        val enchantmentStrength = damagerWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.WHIRLWIND)
+        // Entity list
+        val entitiesNearby = eventDamager.world.getNearbyLivingEntities(eventDamager.location, 1.5)
+        entitiesNearby.remove(eventDamager)
+
+        // Location
+        val eventLocation = eventDamager.location
+
+        // Particles and Sound
+        val xCord = eventDamager.location.x - 1.25
+        val yCord = eventDamager.location.y + 1
+        val zCord = eventDamager.location.z
+        for (n in 0..16) {
+            val s = (2.5 / 16) * n
+            if (n == 16 || n == 0) {
+                eventDamager.world.spawnParticle(Particle.EXPLOSION_LARGE, xCord + s, yCord, zCord, 1)
+            }
+            else {
+                var q = s
+                if (n > 8) {
+                    q -= (2.5 / 16) * (n - 8)
+                }
+                eventDamager.world.spawnParticle(Particle.EXPLOSION_LARGE, xCord + s, yCord, zCord + q, 1)
+                eventDamager.world.spawnParticle(Particle.EXPLOSION_LARGE, xCord + s, yCord, zCord - q, 1)
+            }
+        }
+        eventDamager.world.playSound(eventLocation, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1.2F, 0.7F)
+        eventDamager.world.playSound(eventLocation, Sound.ITEM_SHIELD_BLOCK, 1.2F, 0.6F)
+        eventDamager.world.playSound(eventLocation, Sound.ITEM_TRIDENT_RIPTIDE_3, 1.2F, 0.6F)
+        eventDamager.world.playSound(eventLocation, Sound.ITEM_TRIDENT_RIPTIDE_2, 1.2F, 1.2F)
+
+        // Damage Calculation
+        val someDamage = event.damage
+        val whirlwindPercentage = (((enchantmentStrength * 3) * 0.1))
+        val whirlDamage = someDamage * whirlwindPercentage
+
+        for (closeEntity in entitiesNearby) {
+            // Exclude event victim
+            if (closeEntity != eventVictim) closeEntity.damage(whirlDamage, eventDamager)
+            // Vector Math
+            val closeEntityLocation = closeEntity.location.clone().add(0.0, 1.5, 0.0)
+            val someDirectionVector = closeEntityLocation.clone().subtract(eventLocation.clone()).toVector()
+            val someUnitVector = someDirectionVector.clone().normalize()
+            val someNewVector = someUnitVector.clone().multiply(0.75 + (0.1 * enchantmentStrength))
+            closeEntity.velocity = someNewVector
         }
     }
 
     fun h() {
-        TODO("Check if glowing then do more damage")
+        TODO("Check if glowing then do more damage" +
+                "Echo Enchant")
     }
 
 

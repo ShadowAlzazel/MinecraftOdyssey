@@ -542,7 +542,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward + 1))
             }
             Material.COPPER_INGOT, Material.IRON_INGOT, Material.GOLD_INGOT -> {
-                giftLikeness += 1
+                giftLikeness += 2
                 givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}The tribute of raw materials express the loyalty and growth of this world...")
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward))
             }
@@ -594,8 +594,8 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 }
             }
             Material.BOOK, Material.PAINTING -> {
-                giftLikeness += 2
-                if (appeasement < 45) {
+                giftLikeness += 4
+                if (appeasement < 55) {
                     givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Hopefully this culture is not so dull as other test-s... Never mind...")
                     givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward))
                 }
