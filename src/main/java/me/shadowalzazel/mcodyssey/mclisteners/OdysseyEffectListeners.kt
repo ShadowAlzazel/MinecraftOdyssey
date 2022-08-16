@@ -1,13 +1,24 @@
 package me.shadowalzazel.mcodyssey.mclisteners
 
+import org.bukkit.entity.LivingEntity
+import org.bukkit.event.EventHandler
+import org.bukkit.event.entity.EntityDamageByEntityEvent
+
 object OdysseyEffectListeners {
 
-    fun t() {
-        TODO("Douse Check if fire damage then trigger ablaze")
-    }
-
-    fun h() {
-        TODO("Check if jumping and honeyed, then set velocity * 0.2")
+    // Main Function regarding effects and tags
+    @EventHandler
+    fun mainTagAndEffectHandler(event: EntityDamageByEntityEvent) {
+        if (event.entity is LivingEntity) {
+            val someVictim = event.entity
+            for (tag in someVictim.scoreboardTags) {
+                when (tag) {
+                    "TEMP" -> {
+                        println("Temp")
+                    }
+                }
+            }
+        }
     }
 
 

@@ -25,11 +25,7 @@ import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
 import java.util.*
 
-
-//REFACTOR INTO MULTIPLE LISTENERS!!!
-
 object MeleeListeners : Listener {
-
 
     // Internal cool downs for enchantments
     private var backstabberCooldown = mutableMapOf<UUID, Long>()
@@ -93,6 +89,9 @@ object MeleeListeners : Listener {
                             }
                             OdysseyEnchantments.DOUSE -> {
                                 douseEnchantment(someWeapon, someVictim)
+                            }
+                            OdysseyEnchantments.ECHO -> {
+                                echoEnchantment(someWeapon, someDamager, someVictim)
                             }
                             OdysseyEnchantments.FREEZING_ASPECT -> {
                                 freezingAspectEnchantment(someWeapon, someVictim)
@@ -179,6 +178,7 @@ object MeleeListeners : Listener {
         }
     }
 
+    /*----------------------------------------------------------------------------------*/
 
     // BACKSTABBER Enchantment Function
     private fun backstabberEnchantment(event: EntityDamageByEntityEvent, damagerWeapon: ItemStack, eventVictim: LivingEntity) {
@@ -284,6 +284,20 @@ object MeleeListeners : Listener {
             val dousingTask = DousedTask(eventVictim, 10)
             dousingTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20)
 
+        }
+
+    }
+
+    // ECHO Enchantment Function
+    private fun echoEnchantment(damagerWeapon: ItemStack, eventDamager: LivingEntity, eventVictim: LivingEntity) {
+        val enchantmentStrength = damagerWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.ECHO)
+        if ((0..100).random() < enchantmentStrength * 20) {
+            if (!eventVictim.isDead) {
+                // Swing
+                eventDamager.swingOffHand()
+                // Particles
+                eventVictim.world.spawnParticle(Particle.SWEEP_ATTACK, eventVictim.location, 3, 0.05, 0.05, 0.05)
+            }
         }
 
     }
@@ -492,6 +506,7 @@ object MeleeListeners : Listener {
         val eventLocation = eventDamager.location
 
         // Particles and Sound
+        /*
         val xCord = eventDamager.location.x - 1.25
         val yCord = eventDamager.location.y + 1
         val zCord = eventDamager.location.z
@@ -509,6 +524,8 @@ object MeleeListeners : Listener {
                 eventDamager.world.spawnParticle(Particle.EXPLOSION_LARGE, xCord + s, yCord, zCord - q, 1)
             }
         }
+         */
+        eventDamager.world.spawnParticle(Particle.EXPLOSION_LARGE, eventLocation, 10, 1.25, 0.75, 1.25)
         eventDamager.world.playSound(eventLocation, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1.2F, 0.7F)
         eventDamager.world.playSound(eventLocation, Sound.ITEM_SHIELD_BLOCK, 1.2F, 0.6F)
         eventDamager.world.playSound(eventLocation, Sound.ITEM_TRIDENT_RIPTIDE_3, 1.2F, 0.6F)
@@ -531,7 +548,7 @@ object MeleeListeners : Listener {
         }
     }
 
-    fun h() {
+    fun todo() {
         TODO("Check if glowing then do more damage" +
                 "Echo Enchant")
     }

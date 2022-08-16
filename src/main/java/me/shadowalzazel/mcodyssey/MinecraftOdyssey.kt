@@ -65,25 +65,26 @@ class MinecraftOdyssey : JavaPlugin() {
             server.pluginManager.registerEvents(DailyPhenomenaListeners, this)
             server.pluginManager.registerEvents(NightlyPhenomenaListener, this)
         }
-        // Boss Listeners
+        // Odyssey Boss Listeners
         server.pluginManager.registerEvents(AmbassadorListeners, this)
         server.pluginManager.registerEvents(HogRiderListeners, this)
-        // Join and Leave Messages
-        server.pluginManager.registerEvents(OdysseyPlayerJoinListener, this)
-        server.pluginManager.registerEvents(OdysseyPlayerLeaveListener, this)
-        // Enchantment listeners
+        // Odyssey Server Listeners
+        server.pluginManager.registerEvents(OdysseyServerListeners, this)
+        // Odyssey Enchantment listeners
         server.pluginManager.registerEvents(ArmorListeners, this)
         server.pluginManager.registerEvents(MeleeListeners, this)
         server.pluginManager.registerEvents(MiscListeners, this)
         server.pluginManager.registerEvents(RangedListeners, this)
-        // Mob drops
+        // Odyssey Mob drops
         server.pluginManager.registerEvents(OdysseyDropsListeners, this)
         // Odyssey Food
         server.pluginManager.registerEvents(OdysseyFoodListeners, this)
-        // Items
+        // Odyssey Items
         server.pluginManager.registerEvents(OdysseyItemListeners, this)
+        // Odyssey Misc Listeners
+        server.pluginManager.registerEvents(OdysseyMiscListeners, this)
 
-        // Custom Recipes
+        // Gilding Recipes
         Bukkit.addRecipe(GildingRecipes.ODYSSEY_NAMING)
         Bukkit.addRecipe(GildingRecipes.ODYSSEY_GILDED_SMITHING)
         Bukkit.addRecipe(GildingRecipes.GILDED_BOOK_COMBINING)
@@ -96,7 +97,6 @@ class MinecraftOdyssey : JavaPlugin() {
         for (cookingRecipe in CookingRecipes.recipeSet) {
             Bukkit.addRecipe(cookingRecipe)
         }
-
 
         // Register Commands
         getCommand("SpawnAmbassador")?.setExecutor(SpawnAmbassador)

@@ -9,7 +9,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 
-object OdysseyPlayerJoinListener : Listener {
+object OdysseyServerListeners : Listener {
 
     // Join Messages
     @EventHandler
@@ -20,10 +20,6 @@ object OdysseyPlayerJoinListener : Listener {
         event.joinMessage = ("${ChatColor.GOLD}${player.name} ${ChatColor.YELLOW}has logged into $serverName")
     }
 
-}
-
-object OdysseyPlayerLeaveListener : Listener {
-
     // Leave Message
     @EventHandler
     fun onPlayerLeave(event: PlayerQuitEvent) {
@@ -33,8 +29,5 @@ object OdysseyPlayerLeaveListener : Listener {
 
 }
 
-object OdysseyPlayerDeathListener : Listener {
 
-    // Death Message
-}
 

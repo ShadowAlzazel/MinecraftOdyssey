@@ -33,7 +33,7 @@ object OdysseyAlchemyListeners : Listener {
 
     private val alchemyCustomEffectPotions = listOf("§eBottle o' Decay", "§eBottle o' Frost", "§eBottle o' Douse", "§eBottle o' Ablaze")
 
-    // Get time in seconds
+    // helper function that converts a char sequence (M:SS) to time Int
     private fun loreToSeconds(timeSequence: CharSequence): Int {
         val minute = timeSequence[1].toString().toInt()
         val decimalSecond = timeSequence[3].toString().toInt()
@@ -41,7 +41,7 @@ object OdysseyAlchemyListeners : Listener {
         return (minute * 60) + (decimalSecond * 10) + (second)
     }
 
-    // time to char
+    // helper function that converts time to lore String
     private fun timeToLore(time: Int): CharSequence {
         val seconds = time % 60
         val minutes = time / 60
@@ -49,6 +49,7 @@ object OdysseyAlchemyListeners : Listener {
         return if (seconds < 9) { "($minutes:0$seconds)" } else { "($minutes:$seconds)" }
     }
 
+    // Main function for Cauldron recipes
     @EventHandler
     fun bottleCauldron(event: CauldronLevelChangeEvent) {
         if (event.entity is Player) {
@@ -94,14 +95,14 @@ object OdysseyAlchemyListeners : Listener {
     }
 
 
+    // Main function regarding brewing stand
     @EventHandler
     fun brewingPotion(event: BrewEvent) {
         if (event.contents.ingredient!!.type == Material.GUNPOWDER || event.contents.ingredient!!.type == Material.DRAGON_BREATH) {
             val resultType = if (event.contents.ingredient!!.type == Material.GUNPOWDER) Material.SPLASH_POTION else Material.LINGERING_POTION
             val brewerSlots = event.contents.contents!!
             // function for final potion result
-
-
+            // Change Result to corresponding slot
             fun createResultingPotion(brewingIndex: Int) {
                 val oldPotion = brewerSlots[brewingIndex]!!
                 val newPotion = ItemStack(resultType, 1)
@@ -110,8 +111,7 @@ object OdysseyAlchemyListeners : Listener {
                 event.results[brewingIndex] = newPotion
             }
 
-
-            // get per slot in result
+            // Get per slot in result
             for (x in 0..2) {
                 if (brewerSlots[x] != null) {
                     if (brewerSlots[x]!!.type != Material.AIR) {
@@ -125,9 +125,11 @@ object OdysseyAlchemyListeners : Listener {
                                 if (somePotionMeta.basePotionData.type == PotionType.UNCRAFTABLE) {
                                     // Dragon Breath
                                     if (resultType == Material.LINGERING_POTION) {
+                                        // Potions without timers
                                         if (somePotionMeta.displayName == "§3Bottled Souls") {
                                             createResultingPotion(x)
                                         }
+                                        // Potions that have timers
                                         else {
                                             val newPotion = ItemStack(resultType, 1)
                                             val newPotionMeta: PotionMeta = someBrewedPotion.itemMeta as PotionMeta
@@ -135,12 +137,9 @@ object OdysseyAlchemyListeners : Listener {
                                             val potionLore = newPotionMeta.lore!![0]
                                             val i = potionLore.lastIndex
                                             val potionLoreTimer = potionLore.subSequence((i - 5)..i)
-                                            //println(potionLoreTimer)
                                             val potionTimerSeconds = loreToSeconds(potionLoreTimer)
-                                            //println(potionTimerSeconds)
                                             val newPotionTimer = potionTimerSeconds / 4
                                             val newPotionLoreTimer = timeToLore(newPotionTimer)
-                                            //println(newPotionTimer)
                                             val potionLoreEffect = potionLore.subSequence(0..(i - 6))
                                             val newPotionLore = potionLoreEffect.toString() + newPotionLoreTimer
                                             val newLore = newPotionMeta.lore
@@ -160,6 +159,7 @@ object OdysseyAlchemyListeners : Listener {
                                 else {
                                     createResultingPotion(x)
                                 }
+                                // End Loop for this slot
                                 break
                             }
                         }
@@ -191,6 +191,7 @@ object OdysseyAlchemyListeners : Listener {
     }
 
 
+    // Main function regarding splash potions
     @Suppress("DEPRECATION")
     @EventHandler
     fun alchemyPotionSplash(event: PotionSplashEvent) {
@@ -273,6 +274,7 @@ object OdysseyAlchemyListeners : Listener {
 
     }
 
+    // Main function regarding lingering potions
     @EventHandler
     fun alchemyPotionLingering(event: LingeringPotionSplashEvent) {
         if (event.entity.item.hasItemMeta()) {
@@ -333,6 +335,7 @@ object OdysseyAlchemyListeners : Listener {
         }
     }
 
+    // Main function for detecting entity clouds from alchemy potions
     @EventHandler
     fun alchemyPotionCloud(event: AreaEffectCloudApplyEvent) {
         val somePotionCloud = event.entity

@@ -14,7 +14,7 @@ class AmbassadorHijackTasks(private val ambassadorEntity: Illusioner) : BukkitRu
         for (somePlayer in playersNearAmbassador) {
             // arrow
             val someArrow = ambassadorEntity.world.spawnEntity(ambassadorEntity.location.add(0.0, 2.5, 0.0), EntityType.ARROW)
-            someArrow.velocity = somePlayer.location.subtract(someArrow.location).toVector().multiply(2.0)
+            someArrow.velocity = somePlayer.location.subtract(someArrow.location).toVector().multiply(1.0)
         }
 
         counter += 1

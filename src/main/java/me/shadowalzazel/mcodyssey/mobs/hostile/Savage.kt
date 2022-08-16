@@ -53,7 +53,7 @@ object Savage : OdysseyMob("Savage") {
         val savageAxeMeta = savageAxe.itemMeta
         savageAxeMeta.setDisplayName("${ChatColor.GRAY}Norinthian Axe")
         savageAxeMeta.addEnchant(Enchantment.DURABILITY, 3, true)
-        savageAxeMeta.addEnchant(Enchantment.DAMAGE_ALL, 7, true)
+        savageAxeMeta.addEnchant(Enchantment.DAMAGE_ALL, 5, true)
         savageAxeMeta.addEnchant(Enchantment.KNOCKBACK, 3, true)
         savageAxe.itemMeta = savageAxeMeta
 

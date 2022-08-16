@@ -20,7 +20,7 @@ object NightlyPhenomenaListener : Listener {
     private val cooldownTimer = 10000 //10000 -> 10 sec
 
     private var cooldownNightPhenomenon: Long = 0
-    private val cooldownNightTimer = 6 * 20 // 10 minutes -> 600 * 20
+    private val cooldownNightTimer = 600 * 20 // 10 minutes -> 600 * 20
 
     @EventHandler
     fun onNightTime(event: PlayerBedEnterEvent) {
@@ -65,8 +65,11 @@ object NightlyPhenomenaListener : Listener {
         }
     }
 
+
+
+    // Main function for creature related spawns regarding phenomena
     @EventHandler
-    fun entitySpawning(event: CreatureSpawnEvent) {
+    fun mainEntityPhenomenaSpawning(event: CreatureSpawnEvent) {
         if (MinecraftOdyssey.instance.nightlyPhenomenonActive) {
             val someWorld = event.entity.world
             val timeElapsedWorld = someWorld.fullTime - cooldownNightPhenomenon

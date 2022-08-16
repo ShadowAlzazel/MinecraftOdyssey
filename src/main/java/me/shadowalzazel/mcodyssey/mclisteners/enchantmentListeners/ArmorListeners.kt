@@ -61,7 +61,7 @@ object ArmorListeners : Listener {
                     val fruitfulFareFactor = someArmor.itemMeta.getEnchantLevel(OdysseyEnchantments.FRUITFUL_FARE)
                     if (somePlayer.gameMode != GameMode.SPECTATOR) {
                         // ADD later all with keys for more heal
-                        val someFoods = listOf(Material.APPLE, Material.PUMPKIN_PIE, Material.HONEY_BOTTLE, Material.DRIED_KELP)
+                        val someFoods = listOf(Material.APPLE, Material.PUMPKIN_PIE, Material.HONEY_BOTTLE, Material.DRIED_KELP, Material.GOLDEN_CARROT)
 
                         if (event.item.type in someFoods) {
                             if (!playersFruitfulFareCooldown.containsKey(somePlayer.uniqueId)) {
@@ -82,7 +82,6 @@ object ArmorListeners : Listener {
                                 else {
                                     somePlayer.health += (1 + fruitfulFareFactor)
                                 }
-
                                 // Particles
                                 somePlayer.world.spawnParticle(Particle.HEART, somePlayer.location, 35, 0.5, 0.5, 0.5)
                                 somePlayer.world.spawnParticle(Particle.VILLAGER_HAPPY, somePlayer.location, 35, 0.5, 0.5, 0.5)

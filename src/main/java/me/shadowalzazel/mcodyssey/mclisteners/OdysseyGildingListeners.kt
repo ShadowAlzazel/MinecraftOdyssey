@@ -28,7 +28,7 @@ object OdysseyGildingListeners : Listener {
     private var smithingCooldown: Long = 0
     private var gildingCooldown: Long = 0
 
-    // Gilded for ONLY smithing
+    // Function that disables anvil gilding
     @EventHandler
     fun cancelAnvilGilding(event: PrepareAnvilEvent) {
         if (event.inventory.firstItem != null && event.inventory.secondItem != null) {
@@ -55,7 +55,7 @@ object OdysseyGildingListeners : Listener {
                             event.viewers.forEach {somePlayer -> (somePlayer as Player).updateInventory()}
                         }
                     }
-
+                    // Check if Odyssey Enchants
                     for (enchant in secondEnchants?.keys!!) {
                         if (enchant in OdysseyEnchantments.enchantmentSet) {
                             event.result = ItemStack(Material.AIR, 1)
@@ -67,9 +67,8 @@ object OdysseyGildingListeners : Listener {
         }
     }
 
-    //Make BOOK + material for gilded later
 
-    // Odyssey Smithing
+    // Main Function that handles Odyssey Smithing
     @Suppress("DEPRECATION")
     @EventHandler
     fun odysseySmithing(event: PrepareSmithingEvent) {
@@ -141,7 +140,6 @@ object OdysseyGildingListeners : Listener {
                 for (viewer in event.viewers) {
                     if (viewer is Player) {
                         forgerName.add("${ChatColor.DARK_GRAY}${ChatColor.ITALIC}Created by ${viewer.name}")
-                        println("$forgerName")
                         if (timeElapsed > 20) {
                             smithingCooldown = System.currentTimeMillis()
                             viewer.sendMessage("This is a permanent engraving. Once engraved this item can no longer be modified!")
@@ -162,7 +160,6 @@ object OdysseyGildingListeners : Listener {
                 }
                 event.result = namedEquipment
                 event.viewers.forEach { somePlayer -> (somePlayer as Player).updateInventory() }
-                println("${event.result}")
             }
             // GILDED SMITHING
             else if (event.inventory.inputMineral!!.type == Material.ENCHANTED_BOOK && event.inventory.inputEquipment!!.type != Material.ENCHANTED_BOOK) {
@@ -192,7 +189,6 @@ object OdysseyGildingListeners : Listener {
                     // Numbers
                     val romanNumeralList = mapOf(1 to "I", 2 to "II", 3 to "III", 4 to "IV", 5 to "V", 6 to "VI", 7 to "VII", 8 to "VIII", 9 to "IX", 10 to "X")
                     // Checks for enchantment counter
-                    println("Has Gilded!")
                     if (gildedEnchantmentBook.itemMeta.hasLore() && hasOdysseyEnchant) {
                         var odysseyEnchantCounter = 0
                         var gildedPower = 0
@@ -230,14 +226,11 @@ object OdysseyGildingListeners : Listener {
                             if (equipmentEnchantLevel > bookEnchantLevel) {
                                 return
                             }
-
                             val newLevel: Int = if (bookEnchantLevel == equipmentEnchantLevel) bookEnchantLevel + 1 else max(equipmentEnchantLevel, bookEnchantLevel)
-
                             // Check Max Level
                             if (newLevel <= someBookGildedEnchant.maxLevel) {
                                 val oldBookEnchant = "${ChatColor.GOLD}${someBookGildedEnchant.name} ${romanNumeralList[bookEnchantLevel]}"
                                 val newLevelEnchant = "${ChatColor.GOLD}${someBookGildedEnchant.name} ${romanNumeralList[newLevel]}"
-                                //val someIndex = gildedEnchantmentBook.itemMeta.lore!!.indexOf(oldBookEnchant)
 
                                 // Enchantments
                                 val copiedEnchants = gildedBookEnchants.toMutableMap()
@@ -272,6 +265,7 @@ object OdysseyGildingListeners : Listener {
                             }
                             // Adds Lore
                             val gildedEquipmentMeta = gildedEquipment.itemMeta.clone()
+                            // If has lore
                             if (gildedEquipmentMeta.hasLore()) {
                                 // Check if same
                                 if (sameGildedEnchant) {
@@ -295,12 +289,12 @@ object OdysseyGildingListeners : Listener {
                                     gildedEquipment.itemMeta = gildedEquipmentMeta
                                 }
                             }
+                            // Copy lore
                             else {
                                 val newLore = gildedEnchantmentBook.itemMeta.lore!!
                                 gildedEquipmentMeta.lore = newLore
                                 gildedEquipment.itemMeta = gildedEquipmentMeta
                             }
-                            println("${gildedEquipment.itemMeta.lore}")
                             // Add Enchantments
                             gildedEquipment.addUnsafeEnchantments(gildedBookEnchants)
                             if (gildedEquipment.itemMeta.hasEnchant(GildedPower)) {
@@ -374,32 +368,6 @@ object OdysseyGildingListeners : Listener {
             */
         }
     }
-
-
-
-    // Create new boss
-    @EventHandler
-    fun newBoss(event: TimeSkipEvent) {
-        if (!MinecraftOdyssey.instance.activeBoss) {
-            val timeElapsed = System.currentTimeMillis() - MinecraftOdyssey.instance.timeSinceBoss
-            if (timeElapsed >= 90000000) {
-                when ((0..4).random()) {
-                    //for all bosses later 1, 2 ,3
-                    0 -> {
-                        MinecraftOdyssey.instance.currentBoss = AmbassadorBoss()
-                        MinecraftOdyssey.instance.activeBoss = true
-                        val ambassadorBoss = MinecraftOdyssey.instance.currentBoss as AmbassadorBoss
-                        ambassadorBoss.createBoss(event.world)
-                        println("${event.world.name}Spawned the Ambassador")
-                    }
-                    else -> {
-
-                    }
-                }
-            }
-        }
-    }
-
 
 
 }

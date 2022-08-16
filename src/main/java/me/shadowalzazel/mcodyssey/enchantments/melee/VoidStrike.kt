@@ -10,7 +10,7 @@ object VoidStrike : OdysseyEnchantmentWrapper("voidstrike", "Void Strike", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            SWEEPING_EDGE, OdysseyEnchantments.EXPLODING, OdysseyEnchantments.GUARDING_STRIKE, OdysseyEnchantments.BACKSTABBER, DAMAGE_ALL, DAMAGE_UNDEAD, DAMAGE_ARTHROPODS -> {
+            SWEEPING_EDGE, OdysseyEnchantments.BACKSTABBER, DAMAGE_ALL, DAMAGE_UNDEAD, DAMAGE_ARTHROPODS, OdysseyEnchantments.BANE_OF_THE_SEA, OdysseyEnchantments.BANE_OF_THE_SWINE, OdysseyEnchantments.BANE_OF_THE_ILLAGER -> {
                 true
             }
             else -> {
