@@ -27,6 +27,7 @@ object OdysseyEnchantments {
     val COWARDICE: Enchantment = Cowardice
     val DECAYING_TOUCH: Enchantment = DecayingTouch
     val DOUSE: Enchantment = Douse
+    val ECHO: Enchantment = Echo
     val EXPLODING: Enchantment = Exploding
     val FREEZING_ASPECT : Enchantment = FreezingAspect
     val FROG_FRIGHT: Enchantment = FrogFright
@@ -48,7 +49,7 @@ object OdysseyEnchantments {
     val WHIRLWIND: Enchantment = Whirlwind
 
     // Set of all enchantments
-    val enchantmentSet = setOf(GILDED_POWER, ALCHEMY_ARTILLERY, BANE_OF_THE_ILLAGER, BANE_OF_THE_SEA, BANE_OF_THE_SWINE, BUZZY_BEES, COWARDICE, DECAYING_TOUCH, DOUSE,
+    val enchantmentSet = setOf(GILDED_POWER, ALCHEMY_ARTILLERY, BACKSTABBER, BANE_OF_THE_ILLAGER, BANE_OF_THE_SEA, BANE_OF_THE_SWINE, BUZZY_BEES, COWARDICE, DECAYING_TOUCH, DOUSE, ECHO,
         EXPLODING, FREEZING_ASPECT, FROG_FRIGHT, FRUITFUL_FARE, GRAVITY_WELL, GUARDING_STRIKE, HEMORRHAGE, HOOK_SHOT, LUCKY_DRAW, MIRROR_FORCE, POTION_BARRIER, SOUL_REND, SPEEDY_SPURS, SQUIDIFY, VOID_STRIKE, WARP_JUMP, WHIRLWIND)
 
     // Register
@@ -59,7 +60,7 @@ object OdysseyEnchantments {
         }
     }
 
-    fun registerEnchantment(enchantment: Enchantment?) {
+    private fun registerEnchantment(enchantment: Enchantment?) {
         var registered = true
         try {
             val f = Enchantment::class.java.getDeclaredField("acceptingNew")

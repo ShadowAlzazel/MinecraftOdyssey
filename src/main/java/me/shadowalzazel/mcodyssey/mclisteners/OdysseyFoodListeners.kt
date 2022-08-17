@@ -10,6 +10,7 @@ import org.bukkit.potion.PotionEffectType
 
 object OdysseyFoodListeners : Listener {
 
+    // Main Function for food related consumption events
     @EventHandler
     fun eatingOdysseyFood(event: PlayerItemConsumeEvent) {
         if (event.item.hasItemMeta()) {
@@ -21,6 +22,7 @@ object OdysseyFoodListeners : Listener {
 
                 when (event.item.type) {
                     Material.COOKIE -> {
+                        // Cookie match
                         when (foodLore) {
                             "§7A beetroot cookie!" -> {
                                 val someCookieEffect = PotionEffect(PotionEffectType.INCREASE_DAMAGE, 4 * 20, 0)

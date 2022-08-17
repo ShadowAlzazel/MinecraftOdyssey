@@ -144,7 +144,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
             somePlayer.sendMessage("${ChatColor.YELLOW}${ChatColor.ITALIC}With ${ChatColor.GOLD}${vanquisher.name} ${ChatColor.RESET}${ChatColor.YELLOW}${ChatColor.ITALIC}taking the final blow!")
             somePlayer.playSound(somePlayer, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0F, 1.0F)
             if (somePlayer in nearbyPlayers) {
-                somePlayer.giveExp(2500)
+                somePlayer.giveExp(2750)
             }
         }
     }
@@ -191,7 +191,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         for (somePlayer in somePlayers) {
             // IDK TO SPAWN AT PLAYER WITH 0 VEL OR WHAT
             createSuperFirework(somePlayer)
-            somePlayer.damage(24.5)
+            somePlayer.damage(21.5)
             somePlayer.playSound(somePlayer.location, Sound.AMBIENT_BASALT_DELTAS_MOOD, 2.5F, 0.8F)
             somePlayer.playSound(somePlayer.location, Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 2.5F, 0.8F)
             somePlayer.playSound(somePlayer.location, Sound.ENTITY_IRON_GOLEM_DEATH, 2.0F, 0.8F)
@@ -244,7 +244,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         for (somePlayer in somePlayers) {
             // Do damage, apply effects and teleport
             somePlayer.addPotionEffects(gravityWaveEffects)
-            somePlayer.damage(18.5)
+            somePlayer.damage(16.5)
             val gravityAttract = somePlayer.location
             gravityAttract.add(0.0, 12.5, 0.0)
             //superFirework.velocity = targetPlayer.location.direction.subtract(bossEntity!!.location.direction)
@@ -298,7 +298,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
             // arrow
             val someArrow = ambassadorEntity.world.spawnEntity(hijackAttract.add(0.0, 2.5, 0.0), EntityType.ARROW)
             someArrow.velocity = somePlayer.location.subtract(someArrow.location).toVector().multiply(1.0)
-            somePlayer.damage(11.0)
+            somePlayer.damage(9.0)
             somePlayer.attack(randomPlayer)
 
             //pull
@@ -381,7 +381,6 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                     2 -> {
                         gravityWaveAttack(someDamager)
                     }
-
                 }
             }
         }
@@ -465,7 +464,6 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         }
     }
 
-
     // Appeasement Mechanic
     fun appeasementCheck(somePlayer: Player, someItem: Item) {
         // Check if players in gift cooldown map
@@ -542,7 +540,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward + 1))
             }
             Material.COPPER_INGOT, Material.IRON_INGOT, Material.GOLD_INGOT -> {
-                giftLikeness += 1
+                giftLikeness += 2
                 givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}The tribute of raw materials express the loyalty and growth of this world...")
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward))
             }
@@ -594,8 +592,8 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 }
             }
             Material.BOOK, Material.PAINTING -> {
-                giftLikeness += 2
-                if (appeasement < 45) {
+                giftLikeness += 4
+                if (appeasement < 55) {
                     givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Hopefully this culture is not so dull as other test-s... Never mind...")
                     givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward))
                 }
@@ -645,7 +643,8 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 giftLikeness += 45
                 bossEntity?.world!!.spawnParticle(Particle.VILLAGER_HAPPY, givingPlayer.location, 15, 1.0, 1.0, 1.0)
                 givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Primitive music... Something I find amusing...")
-                val randomEnchantments = listOf(OdysseyEnchantments.BANE_OF_THE_ILLAGER, OdysseyEnchantments.BANE_OF_THE_SWINE, OdysseyEnchantments.BACKSTABBER, OdysseyEnchantments.BUZZY_BEES, OdysseyEnchantments.GUARDING_STRIKE)
+                val randomEnchantments = listOf(OdysseyEnchantments.BANE_OF_THE_ILLAGER, OdysseyEnchantments.BANE_OF_THE_SWINE, OdysseyEnchantments.BACKSTABBER, OdysseyEnchantments.BUZZY_BEES,
+                    OdysseyEnchantments.GUARDING_STRIKE, OdysseyEnchantments.FRUITFUL_FARE, OdysseyEnchantments.DOUSE, OdysseyEnchantments.POTION_BARRIER)
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 5))
                 if (appeasement >= 35) {
                     givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}These are some relics I have collected from previous visits...")
@@ -681,7 +680,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 bossEntity?.world!!.spawnParticle(Particle.SPELL_WITCH, givingPlayer.location, 35, 1.0, 1.0, 1.0)
                 giftLikeness += 45
                 givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Follow the path of doubt...and not blinding light")
-                val randomEnchantments = listOf(OdysseyEnchantments.BANE_OF_THE_ILLAGER, OdysseyEnchantments.BANE_OF_THE_SWINE, OdysseyEnchantments.BACKSTABBER, OdysseyEnchantments.BUZZY_BEES, OdysseyEnchantments.VOID_STRIKE)
+                val randomEnchantments = listOf(OdysseyEnchantments.WARP_JUMP, OdysseyEnchantments.ECHO, OdysseyEnchantments.VOID_STRIKE, OdysseyEnchantments.SOUL_REND, OdysseyEnchantments.BACKSTABBER)
                 val randomBook = OdysseyItems.GILDED_BOOK.createGildedBook(randomEnchantments.random(), 1)
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))

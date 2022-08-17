@@ -10,7 +10,7 @@ object Vengeful : OdysseyEnchantmentWrapper("vengeful", "Vengeful", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            THORNS, OdysseyEnchantments.FRUITFUL_FARE, OdysseyEnchantments.POTION_BARRIER -> {
+            OdysseyEnchantments.FRUITFUL_FARE, OdysseyEnchantments.POTION_BARRIER -> {
                 true
             }
             else -> {

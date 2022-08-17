@@ -10,7 +10,7 @@ object Douse : OdysseyEnchantmentWrapper("douse", "Douse", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.GUARDING_STRIKE -> {
+            OdysseyEnchantments.DECAYING_TOUCH, OdysseyEnchantments.BUZZY_BEES -> {
                 true
             }
             else -> {

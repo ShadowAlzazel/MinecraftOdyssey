@@ -19,58 +19,33 @@ import java.util.*
 
 object OdysseyItemListeners : Listener {
 
-    // Internal Timers
-    //private var unstableAntimatterCountdown = mutableMapOf<UUID, Long>()
-
+    // Main Function dealing with Odyssey Crafting
     @EventHandler
-    fun craftingWithAntimatter(event: CraftItemEvent) {
+    fun odysseyCrafting(event: CraftItemEvent) {
         if (event.whoClicked is Player) {
             val somePlayer = event.whoClicked as Player
             if (somePlayer.gameMode != GameMode.SPECTATOR) {
-                /*
-                println(event.recipe)
-                println(event.result)
-                println(event.inventory.size)
-                println(event.inventory.result)
-                 */
-
-                if (event.inventory.result == OdysseyRecipes.PURE_ANTIMATTER_CRYSTAL_RECIPE.result) {
-                    println("C")
-                    somePlayer.playSound(somePlayer.location, Sound.ENTITY_WITHER_SPAWN, 1.5F, 0.2F)
-                    /*
-                    if (!this.unstableAntimatterCountdown.containsKey(somePlayer.uniqueId)) {
-                        this.unstableAntimatterCountdown[somePlayer.uniqueId] = 0L
+                // Match
+                when (event.inventory.result) {
+                    OdysseyRecipes.PURE_ANTIMATTER_CRYSTAL_RECIPE.result -> {
+                        pureAntiMatterCrystalCrafting(somePlayer)
                     }
-                    */
-                    //val timeElapsed: Long = System.currentTimeMillis() - this.unstableAntimatterCountdown[somePlayer.uniqueId]!!
-                    if ("Unstable_Crafting" !in somePlayer.scoreboardTags) {
-                        somePlayer.scoreboardTags.add("Unstable_Crafting")
-                        val antimatterCraftingTask = UnstableAntimatterTask(somePlayer)
-                        antimatterCraftingTask.runTaskTimer(MinecraftOdyssey.instance, 0, 1)
-                        println("Countdown Started!")
+                    OdysseyRecipes.FRUIT_OF_ERISHKIGAL_RECIPE.result -> {
+                        fruitOfErishkigalCrafting(somePlayer)
                     }
                 }
-
-                // Clear taq
-                else if (event.inventory.result == OdysseyRecipes.FRUIT_OF_ERISHKIGAL_RECIPE.result) {
-                    somePlayer.playSound(somePlayer.location, Sound.ENTITY_ENDER_EYE_DEATH, 1.5F, 0.15F)
-                    if ("Unstable_Crafting" in somePlayer.scoreboardTags) {
-                        somePlayer.scoreboardTags.remove("Unstable_Crafting")
-                        somePlayer.scoreboardTags.add("Clear_Instability")
-                    }
-                }
-
             }
         }
     }
 
-
+    // Main function when dealing with custom items and their effects and not food
     @EventHandler
     fun consumingItem(event: PlayerItemConsumeEvent) {
         if (event.item.hasItemMeta()) {
             if (event.item.itemMeta.hasLore()) {
                 val somePlayer = event.player
                 val someStackValue = event.item.amount
+                // Match items
                 when (event.item) {
                     // Fruit Of Erishkigal Health Boosts
                     OdysseyItems.FRUIT_OF_ERISHKIGAL.createItemStack(someStackValue) -> {
@@ -78,14 +53,13 @@ object OdysseyItemListeners : Listener {
                         val playerHealth = somePlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!
                         var hasExtraHealth = false
                         var someHealthModifier: AttributeModifier? = null
-
+                        // Check modifiers
                         for (someModifier in playerHealth.modifiers) {
                             if (someModifier.name == "odyssey_extra_health_erishkigal") {
                                 hasExtraHealth = true
                                 someHealthModifier = someModifier
                             }
                         }
-
                         // Check if same boosts
                         if (hasExtraHealth) {
                             val healthCount = someHealthModifier!!.amount
@@ -129,5 +103,25 @@ object OdysseyItemListeners : Listener {
             somePlayer.damage(314.15)
             println("Tried to leave!")
         }
+    }
+
+    // PURE_ANTI_MATTER_CRYSTAL_RECIPE_CRAFTING
+    private fun pureAntiMatterCrystalCrafting(eventPlayer: Player) {
+        eventPlayer.playSound(eventPlayer.location, Sound.ENTITY_WITHER_SPAWN, 1.5F, 0.2F)
+        if ("Unstable_Crafting" !in eventPlayer.scoreboardTags) {
+            eventPlayer.scoreboardTags.add("Unstable_Crafting")
+            val antimatterCraftingTask = UnstableAntimatterTask(eventPlayer)
+            antimatterCraftingTask.runTaskTimer(MinecraftOdyssey.instance, 0, 1)
+        }
+    }
+
+    // FRUIT_OF_ERISHKIGAL_RECIPE_CRAFTING
+    private fun fruitOfErishkigalCrafting(eventPlayer: Player) {
+        eventPlayer.playSound(eventPlayer.location, Sound.ENTITY_ENDER_EYE_DEATH, 1.5F, 0.15F)
+        if ("Unstable_Crafting" in eventPlayer.scoreboardTags) {
+            eventPlayer.scoreboardTags.remove("Unstable_Crafting")
+            eventPlayer.scoreboardTags.add("Clear_Instability")
+        }
+
     }
 }

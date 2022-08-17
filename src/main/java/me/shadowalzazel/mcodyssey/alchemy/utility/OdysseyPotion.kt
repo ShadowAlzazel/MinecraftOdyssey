@@ -12,17 +12,21 @@ import org.bukkit.potion.PotionType
 //
 open class OdysseyPotion(itemName: String, private val potionEffects: List<PotionEffect>, private val potionColor: Color?) : OdysseyItem(itemName, Material.POTION) {
 
+    // Creates and Item Stack
     override fun createItemStack(amount: Int): ItemStack {
         val somePotionStack = super.createItemStack(amount)
         val somePotionMeta = somePotionStack.itemMeta as PotionMeta
+        // Check if list not empty for non-custom effects
         if (potionEffects.isNotEmpty()) {
             for (effect in potionEffects) {
                 somePotionMeta.addCustomEffect(effect, true)
             }
         }
+        // If custom effects then un-craft-able type
         else {
             somePotionMeta.basePotionData = PotionData(PotionType.UNCRAFTABLE)
         }
+        // Potion color and meta assigning
         if (potionColor != null) somePotionMeta.color = potionColor
         somePotionStack.itemMeta = somePotionMeta
         return somePotionStack
