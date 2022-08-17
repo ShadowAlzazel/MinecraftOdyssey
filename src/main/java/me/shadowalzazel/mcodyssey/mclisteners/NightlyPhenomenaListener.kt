@@ -75,41 +75,51 @@ object NightlyPhenomenaListener : Listener {
             val timeElapsedWorld = someWorld.fullTime - cooldownNightPhenomenon
             if (someWorld.time > 12000 && timeElapsedWorld <= cooldownNightTimer && someWorld.isBedWorks) {
                 when (MinecraftOdyssey.instance.currentNightlyPhenomenon) {
+                    // Blue Moon
                     NightlyPhenomena.BLUE_MOON -> {
                         if (event.spawnReason == CreatureSpawnEvent.SpawnReason.NATURAL || event.spawnReason == CreatureSpawnEvent.SpawnReason.REINFORCEMENTS) {
                             event.isCancelled
                         }
                     }
+                    // Blood Moon
                     NightlyPhenomena.BLOOD_MOON -> {
+                        // Effects
                         val bloodMoonEffects = listOf(
                             PotionEffect(PotionEffectType.INCREASE_DAMAGE, 300 * 20,1),
                             PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 300 * 20,1),
-                            PotionEffect(PotionEffectType.HEALTH_BOOST, 300 * 20,4))
+                            PotionEffect(PotionEffectType.HEALTH_BOOST, 300 * 20,4)
+                        )
+                        // Check Spawn Reason
                         if (event.spawnReason == CreatureSpawnEvent.SpawnReason.NATURAL || event.spawnReason == CreatureSpawnEvent.SpawnReason.REINFORCEMENTS) {
+                            // Naming and Tagging
                             val someEntity = event.entity
                             val someName = someEntity.name
-                            someEntity.addPotionEffects(bloodMoonEffects)
-                            someEntity.health += 20
                             val newName = "§4Blood Moon $someName"
                             someEntity.customName = newName
                             someEntity.scoreboardTags.add("Blood_Moon_Mob")
+                            // Effects and Health
+                            someEntity.addPotionEffects(bloodMoonEffects)
+                            someEntity.health += 20
+                            // Random Upgrade
                             val randomUpgrade = (0..100).random()
                             if (60 < randomUpgrade) {
                                 val spawnLocation = someEntity.location.clone()
-                                var someMob: LivingEntity? = null
-                                when (someEntity) {
-                                    is Zombie -> {
-                                        someEntity.remove()
-                                        someMob = if (90 < randomUpgrade) OdysseyMobs.SAVAGE.createKnight(someWorld, spawnLocation) else OdysseyMobs.SAVAGE.createMob(someWorld, spawnLocation)
+                                if (spawnLocation.y > 68.0) {
+                                    var someMob: LivingEntity? = null
+                                    when (someEntity) {
+                                        is Zombie -> {
+                                            someEntity.remove()
+                                            someMob = if (90 < randomUpgrade) OdysseyMobs.SAVAGE.createKnight(someWorld, spawnLocation) else OdysseyMobs.SAVAGE.createMob(someWorld, spawnLocation)
+                                        }
+                                        is Skeleton -> {
+                                            someEntity.remove()
+                                            someMob = if (90 < randomUpgrade) OdysseyMobs.VANGUARD.createKnight(someWorld, spawnLocation) else OdysseyMobs.VANGUARD.createMob(someWorld, spawnLocation)
+                                        }
+                                        else -> {
+                                        }
                                     }
-                                    is Skeleton -> {
-                                        someEntity.remove()
-                                        someMob = if (90 < randomUpgrade) OdysseyMobs.VANGUARD.createKnight(someWorld, spawnLocation) else OdysseyMobs.VANGUARD.createMob(someWorld, spawnLocation)
-                                    }
-                                    else -> {
-                                    }
+                                    someMob?.scoreboardTags?.add("Blood_Moon_Mob")
                                 }
-                                someMob?.scoreboardTags?.add("Blood_Moon_Mob")
                             }
                         }
                     }

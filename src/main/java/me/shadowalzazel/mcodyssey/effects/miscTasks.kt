@@ -4,6 +4,9 @@ import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Player
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
 
@@ -97,5 +100,14 @@ class HemorrhageTask(hemorrhagingEntity: LivingEntity, private val hemorrhageFac
             this.cancel()
         }
     }
+}
 
+class SpeedySpursTask(private val mountedPlayer: LivingEntity, private val mountEntity: LivingEntity, private val spursFactor: Int) : BukkitRunnable() {
+    override fun run() {
+        if (mountedPlayer !in mountEntity.passengers) {
+            this.cancel()
+        }
+        val speedEffect = PotionEffect(PotionEffectType.SPEED, 10 * 20 , spursFactor - 1)
+        mountEntity.addPotionEffect(speedEffect)
+    }
 }

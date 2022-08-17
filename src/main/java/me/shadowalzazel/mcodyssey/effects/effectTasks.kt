@@ -195,12 +195,3 @@ class HoneyedTask(honeyedEntity: LivingEntity, private val honeyFactor: Int, pri
     }
 }
 
-class SpeedySpursTask(private val mountedPlayer: Player, private val mountEntity: LivingEntity, private val spursFactor: Int) : BukkitRunnable() {
-    override fun run() {
-        if (mountedPlayer !in mountEntity.passengers) {
-            this.cancel()
-        }
-        val speedEffect = PotionEffect(PotionEffectType.SPEED, 10 * 20 , spursFactor - 1)
-        mountEntity.addPotionEffect(speedEffect)
-    }
-}

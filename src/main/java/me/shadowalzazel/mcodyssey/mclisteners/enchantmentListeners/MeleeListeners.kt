@@ -40,7 +40,7 @@ object MeleeListeners : Listener {
 
     // Main function for enchantments relating to entity damage
     @EventHandler
-    fun mainDamageHandler(event: EntityDamageByEntityEvent) {
+    fun mainMeleeDamageHandler(event: EntityDamageByEntityEvent) {
         // Check if event damager and damaged is living entity
         if (event.damager is LivingEntity && event.entity is LivingEntity && event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK) { // Make thorns bug new enchant apply ranged effects
             val someDamager = event.damager as LivingEntity
@@ -50,87 +50,84 @@ object MeleeListeners : Listener {
                 val someWeapon = someDamager.equipment?.itemInMainHand
                 // Loop for all enchants
                 for (enchant in someWeapon!!.enchantments) {
-                    // Check if Gilded Enchantment
-                    if (enchant.key in OdysseyEnchantments.enchantmentSet) { // IDK if this faster
-                        // Check when
-                        when (enchant.key) {
-                            OdysseyEnchantments.BACKSTABBER -> {
-                                if (!backstabberCooldown.containsKey(someDamager.uniqueId)) { backstabberCooldown[someDamager.uniqueId] = 0L }
-                                val timeElapsed: Long = System.currentTimeMillis() - backstabberCooldown[someDamager.uniqueId]!!
-                                if (timeElapsed > 6.0 * 1000) {
-                                    backstabberCooldown[someDamager.uniqueId] = System.currentTimeMillis()
-                                    backstabberEnchantment(event, someWeapon, someVictim)
-                                }
+                    // When match
+                    when (enchant.key) {
+                        OdysseyEnchantments.BACKSTABBER -> {
+                            if (!backstabberCooldown.containsKey(someDamager.uniqueId)) { backstabberCooldown[someDamager.uniqueId] = 0L }
+                            val timeElapsed: Long = System.currentTimeMillis() - backstabberCooldown[someDamager.uniqueId]!!
+                            if (timeElapsed > 6.0 * 1000) {
+                                backstabberCooldown[someDamager.uniqueId] = System.currentTimeMillis()
+                                backstabberEnchantment(event, someWeapon, someVictim)
                             }
-                            OdysseyEnchantments.BANE_OF_THE_ILLAGER -> {
-                                baneOfTheIllagerEnchantment(event, someWeapon, someVictim)
+                        }
+                        OdysseyEnchantments.BANE_OF_THE_ILLAGER -> {
+                            baneOfTheIllagerEnchantment(event, someWeapon, someVictim)
+                        }
+                        OdysseyEnchantments.BANE_OF_THE_SEA -> {
+                            baneOfTheSeaEnchantment(event, someWeapon, someVictim)
+                        }
+                        OdysseyEnchantments.BANE_OF_THE_SWINE -> {
+                            baneOfTheSwineEnchantment(event, someWeapon, someVictim)
+                        }
+                        OdysseyEnchantments.BUZZY_BEES -> {
+                            if (!buzzyBeesCooldown.containsKey(someDamager.uniqueId)) { buzzyBeesCooldown[someDamager.uniqueId] = 0L }
+                            val timeElapsed: Long = System.currentTimeMillis() - buzzyBeesCooldown[someDamager.uniqueId]!!
+                            if (timeElapsed > 2.5 * 1000) {
+                                buzzyBeesCooldown[someDamager.uniqueId] = System.currentTimeMillis()
+                                buzzyBeesEnchantment(event, someWeapon, someVictim)
                             }
-                            OdysseyEnchantments.BANE_OF_THE_SEA -> {
-                                baneOfTheSeaEnchantment(event, someWeapon, someVictim)
+                        }
+                        OdysseyEnchantments.DECAYING_TOUCH -> {
+                            if (!decayingTouchCooldown.containsKey(someDamager.uniqueId)) { decayingTouchCooldown[someDamager.uniqueId] = 0L }
+                            val timeElapsed: Long = System.currentTimeMillis() - decayingTouchCooldown[someDamager.uniqueId]!!
+                            if (timeElapsed > 3.0 * 1000) {
+                                decayingTouchCooldown[someDamager.uniqueId] = System.currentTimeMillis()
+                                decayingTouchEnchantment(someWeapon, someVictim)
                             }
-                            OdysseyEnchantments.BANE_OF_THE_SWINE -> {
-                                baneOfTheSwineEnchantment(event, someWeapon, someVictim)
+                        }
+                        OdysseyEnchantments.DOUSE -> {
+                            douseEnchantment(someWeapon, someVictim)
+                        }
+                        OdysseyEnchantments.ECHO -> {
+                            echoEnchantment(someWeapon, someDamager, someVictim)
+                        }
+                        OdysseyEnchantments.FREEZING_ASPECT -> {
+                            freezingAspectEnchantment(someWeapon, someVictim)
+                        }
+                        OdysseyEnchantments.FROG_FRIGHT -> {
+                            frogFrightEnchantment(event, someWeapon, someVictim)
+                        }
+                        OdysseyEnchantments.GRAVITY_WELL -> {
+                            if (!gravityWellCooldown.containsKey(someDamager.uniqueId)) { gravityWellCooldown[someDamager.uniqueId] = 0L }
+                            val timeElapsed: Long = System.currentTimeMillis() - gravityWellCooldown[someDamager.uniqueId]!!
+                            if (timeElapsed > 8.0 * 1000) {
+                                gravityWellCooldown[someDamager.uniqueId] = System.currentTimeMillis()
+                                gravityWellEnchantment(event, someWeapon, someVictim)
                             }
-                            OdysseyEnchantments.BUZZY_BEES -> {
-                                if (!buzzyBeesCooldown.containsKey(someDamager.uniqueId)) { buzzyBeesCooldown[someDamager.uniqueId] = 0L }
-                                val timeElapsed: Long = System.currentTimeMillis() - buzzyBeesCooldown[someDamager.uniqueId]!!
-                                if (timeElapsed > 2.5 * 1000) {
-                                    buzzyBeesCooldown[someDamager.uniqueId] = System.currentTimeMillis()
-                                    buzzyBeesEnchantment(event, someWeapon, someVictim)
-                                }
+                        }
+                        OdysseyEnchantments.HEMORRHAGE -> {
+                            if (!hemorrhageCooldown.containsKey(someDamager.uniqueId)) { hemorrhageCooldown[someDamager.uniqueId] = 0L }
+                            val timeElapsed: Long = System.currentTimeMillis() - hemorrhageCooldown[someDamager.uniqueId]!!
+                            if (timeElapsed > 3.5 * 1000) {
+                                hemorrhageCooldown[someDamager.uniqueId] = System.currentTimeMillis()
+                                hemorrhageEnchantment(someWeapon, someVictim)
                             }
-                            OdysseyEnchantments.DECAYING_TOUCH -> {
-                                if (!decayingTouchCooldown.containsKey(someDamager.uniqueId)) { decayingTouchCooldown[someDamager.uniqueId] = 0L }
-                                val timeElapsed: Long = System.currentTimeMillis() - decayingTouchCooldown[someDamager.uniqueId]!!
-                                if (timeElapsed > 3.0 * 1000) {
-                                    decayingTouchCooldown[someDamager.uniqueId] = System.currentTimeMillis()
-                                    decayingTouchEnchantment(someWeapon, someVictim)
-                                }
+                        }
+                        OdysseyEnchantments.VOID_STRIKE -> {
+                            if (!voidStrikeCooldown.containsKey(someDamager.uniqueId)) { voidStrikeCooldown[someDamager.uniqueId] = 0L }
+                            val timeElapsed: Long = System.currentTimeMillis() - voidStrikeCooldown[someDamager.uniqueId]!!
+                            //val attackSpeedAttribute = someDamager.getAttribute(Attribute.GENERIC_ATTACK_SPEED)
+                            if (timeElapsed > 0.75 * 1000) {
+                                voidStrikeCooldown[someDamager.uniqueId] = System.currentTimeMillis()
+                                voidStrikeEnchantment(event, someWeapon, someVictim)
                             }
-                            OdysseyEnchantments.DOUSE -> {
-                                douseEnchantment(someWeapon, someVictim)
-                            }
-                            OdysseyEnchantments.ECHO -> {
-                                echoEnchantment(someWeapon, someDamager, someVictim)
-                            }
-                            OdysseyEnchantments.FREEZING_ASPECT -> {
-                                freezingAspectEnchantment(someWeapon, someVictim)
-                            }
-                            OdysseyEnchantments.FROG_FRIGHT -> {
-                                frogFrightEnchantment(event, someWeapon, someVictim)
-                            }
-                            OdysseyEnchantments.GRAVITY_WELL -> {
-                                if (!gravityWellCooldown.containsKey(someDamager.uniqueId)) { gravityWellCooldown[someDamager.uniqueId] = 0L }
-                                val timeElapsed: Long = System.currentTimeMillis() - gravityWellCooldown[someDamager.uniqueId]!!
-                                if (timeElapsed > 8.0 * 1000) {
-                                    gravityWellCooldown[someDamager.uniqueId] = System.currentTimeMillis()
-                                    gravityWellEnchantment(event, someWeapon, someVictim)
-                                }
-                            }
-                            OdysseyEnchantments.HEMORRHAGE -> {
-                                if (!hemorrhageCooldown.containsKey(someDamager.uniqueId)) { hemorrhageCooldown[someDamager.uniqueId] = 0L }
-                                val timeElapsed: Long = System.currentTimeMillis() - hemorrhageCooldown[someDamager.uniqueId]!!
-                                if (timeElapsed > 3.5 * 1000) {
-                                    hemorrhageCooldown[someDamager.uniqueId] = System.currentTimeMillis()
-                                    hemorrhageEnchantment(someWeapon, someVictim)
-                                }
-                            }
-                            OdysseyEnchantments.VOID_STRIKE -> {
-                                if (!voidStrikeCooldown.containsKey(someDamager.uniqueId)) { voidStrikeCooldown[someDamager.uniqueId] = 0L }
-                                val timeElapsed: Long = System.currentTimeMillis() - voidStrikeCooldown[someDamager.uniqueId]!!
-                                //val attackSpeedAttribute = someDamager.getAttribute(Attribute.GENERIC_ATTACK_SPEED)
-                                if (timeElapsed > 0.75 * 1000) {
-                                    voidStrikeCooldown[someDamager.uniqueId] = System.currentTimeMillis()
-                                    voidStrikeEnchantment(event, someWeapon, someVictim)
-                                }
-                            }
-                            OdysseyEnchantments.WHIRLWIND -> {
-                                if (!whirlwindCooldown.containsKey(someDamager.uniqueId)) { whirlwindCooldown[someDamager.uniqueId] = 0L }
-                                val timeElapsed: Long = System.currentTimeMillis() - whirlwindCooldown[someDamager.uniqueId]!!
-                                if (timeElapsed > 3.5 * 1000) {
-                                    whirlwindCooldown[someDamager.uniqueId] = System.currentTimeMillis()
-                                    whirlwindEnchantment(event, someDamager, someVictim, someWeapon)
-                                }
+                        }
+                        OdysseyEnchantments.WHIRLWIND -> {
+                            if (!whirlwindCooldown.containsKey(someDamager.uniqueId)) { whirlwindCooldown[someDamager.uniqueId] = 0L }
+                            val timeElapsed: Long = System.currentTimeMillis() - whirlwindCooldown[someDamager.uniqueId]!!
+                            if (timeElapsed > 3.5 * 1000) {
+                                whirlwindCooldown[someDamager.uniqueId] = System.currentTimeMillis()
+                                whirlwindEnchantment(event, someDamager, someVictim, someWeapon)
                             }
                         }
                     }
@@ -141,7 +138,7 @@ object MeleeListeners : Listener {
 
     // Main function for enchantments relating to entity deaths
     @EventHandler
-    fun mainDeathHandler(event: EntityDeathEvent) {
+    fun mainMeleeDeathHandler(event: EntityDeathEvent) {
         // Check if event killer and entity are living entity
         if (event.entity.killer is LivingEntity) { // Make thorns bug new enchant apply ranged effects
             val someKiller = event.entity.killer as LivingEntity
@@ -151,25 +148,22 @@ object MeleeListeners : Listener {
                 val someWeapon = someKiller.equipment?.itemInMainHand
                 // Loop for all enchants
                 for (enchant in someWeapon!!.enchantments) {
-                    // Check if Gilded Enchantment
-                    if (enchant.key in OdysseyEnchantments.enchantmentSet) { // IDK if this faster
-                        // Check when
-                        when (enchant.key) {
-                            OdysseyEnchantments.EXPLODING -> {
-                                if (!explodingCooldown.containsKey(someKiller.uniqueId)) { explodingCooldown[someKiller.uniqueId] = 0L }
-                                val timeElapsed: Long = System.currentTimeMillis() - explodingCooldown[someKiller.uniqueId]!!
-                                if (timeElapsed > 1.25 * 1000) {
-                                    explodingCooldown[someKiller.uniqueId] = System.currentTimeMillis()
-                                    explodingEnchantment(event, someWeapon, someVictim)
-                                }
+                    // When Match
+                    when (enchant.key) {
+                        OdysseyEnchantments.EXPLODING -> {
+                            if (!explodingCooldown.containsKey(someKiller.uniqueId)) { explodingCooldown[someKiller.uniqueId] = 0L }
+                            val timeElapsed: Long = System.currentTimeMillis() - explodingCooldown[someKiller.uniqueId]!!
+                            if (timeElapsed > 1.25 * 1000) {
+                                explodingCooldown[someKiller.uniqueId] = System.currentTimeMillis()
+                                explodingEnchantment(event, someWeapon, someVictim)
                             }
-                            OdysseyEnchantments.GUARDING_STRIKE -> {
-                                if (!guardingStrikeCooldown.containsKey(someKiller.uniqueId)) { guardingStrikeCooldown[someKiller.uniqueId] = 0L }
-                                val timeElapsed: Long = System.currentTimeMillis() - guardingStrikeCooldown[someKiller.uniqueId]!!
-                                if (timeElapsed > 8 * 1000) {
-                                    guardingStrikeCooldown[someKiller.uniqueId] = System.currentTimeMillis()
-                                    guardingStrikeEnchantment(someWeapon, someVictim, someKiller)
-                                }
+                        }
+                        OdysseyEnchantments.GUARDING_STRIKE -> {
+                            if (!guardingStrikeCooldown.containsKey(someKiller.uniqueId)) { guardingStrikeCooldown[someKiller.uniqueId] = 0L }
+                            val timeElapsed: Long = System.currentTimeMillis() - guardingStrikeCooldown[someKiller.uniqueId]!!
+                            if (timeElapsed > 8 * 1000) {
+                                guardingStrikeCooldown[someKiller.uniqueId] = System.currentTimeMillis()
+                                guardingStrikeEnchantment(someWeapon, someVictim, someKiller)
                             }
                         }
                     }
@@ -547,11 +541,5 @@ object MeleeListeners : Listener {
             closeEntity.velocity = someNewVector
         }
     }
-
-    fun todo() {
-        TODO("Check if glowing then do more damage" +
-                "Echo Enchant")
-    }
-
 
 }

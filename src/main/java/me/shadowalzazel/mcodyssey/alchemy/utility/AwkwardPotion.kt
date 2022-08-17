@@ -8,6 +8,7 @@ import org.bukkit.potion.PotionType
 
 object AwkwardPotion {
 
+    // Some Awkward Potion
     fun createAwkwardPotion(): ItemStack {
         val potionItem = ItemStack(Material.POTION, 1)
         val somePotionMeta = potionItem.itemMeta as PotionMeta

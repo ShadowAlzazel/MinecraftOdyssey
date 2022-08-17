@@ -12,22 +12,24 @@ class AlchemyTask(private val cauldronBlock: Block, private val someResult: Item
     private var someCooldown = System.currentTimeMillis()
     private var counter = 0
     //get int  to 0.5
-    private val someLocation = cauldronBlock.location.clone()
+    private val someLocation = cauldronBlock.location.clone().toCenterLocation().add(0.0, 0.15, 0.0)
 
     override fun run() {
-        // some timer
+        // Some timer
         counter += 1
-
         val timeElapsed = System.currentTimeMillis() - someCooldown
 
-        //WATer Cauldron
+        // Water Cauldron
         if (someLocation.world.getBlockAt(someLocation).type != Material.WATER_CAULDRON) {
             println(someLocation.world.getBlockAt(someLocation).type)
             println("Destroyed!")
             this.cancel()
         }
+        // Static Particles
         someLocation.world.spawnParticle(Particle.WATER_BUBBLE, someLocation.clone().add(0.0, 0.25, 0.0), 5, 0.45, 0.25, 0.45)
-        someLocation.world.spawnParticle(Particle.BUBBLE_POP, someLocation.clone().add(0.0, 0.5, 0.0), 1)
+        // Directional Particles
+        val randomLocation = someLocation.clone().add((0..10).random() * 0.3, 0.0, (0..10).random() * 0.3)
+        someLocation.world.spawnParticle(Particle.BUBBLE_POP, randomLocation, 0, 0.0, 0.2, 0.0)
 
         if (20 * 10 < counter || timeElapsed > 10 * 1000) {
             println("Finished!")

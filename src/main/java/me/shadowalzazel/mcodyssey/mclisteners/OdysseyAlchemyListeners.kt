@@ -259,6 +259,7 @@ object OdysseyAlchemyListeners : Listener {
                                 // Souls will not kill only escape
                                 if (soulDamagedEntity.health > 3.0) {
                                     soulDamagedEntity.health -= 3.0
+                                    soulDamagedEntity.damage(0.01)
                                     soulDamagedEntity.world.spawnParticle(Particle.SCULK_SOUL, soulDamagedEntity.location, 25, 0.25, 0.35, 0.25)
                                 }
                             }
@@ -385,6 +386,7 @@ object OdysseyAlchemyListeners : Listener {
                         // Souls will not kill only escape
                         if (soulDamagedEntity.health > 3.0) {
                             soulDamagedEntity.health - 3.0
+                            soulDamagedEntity.damage(0.01)
                             soulDamagedEntity.world.spawnParticle(Particle.SCULK_SOUL, soulDamagedEntity.location, 25, 0.25, 0.35, 0.25)
                         }
                     }
