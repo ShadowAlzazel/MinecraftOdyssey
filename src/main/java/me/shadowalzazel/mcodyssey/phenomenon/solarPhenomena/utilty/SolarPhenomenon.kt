@@ -1,10 +1,10 @@
-package me.shadowalzazel.mcodyssey.phenomenon.dailyPhenomena.utilty
+package me.shadowalzazel.mcodyssey.phenomenon.solarPhenomena.utilty
 
 import me.shadowalzazel.mcodyssey.phenomenon.utility.Phenomenon
 import org.bukkit.ChatColor
 import org.bukkit.World
 
-open class DailyPhenomenon(name: String, rate: Int, growthRate: Int, warning: Int) : Phenomenon(name, rate, growthRate, warning) {
+open class SolarPhenomenon(name: String, rate: Int, growthRate: Int, warning: Int) : Phenomenon(name, rate, growthRate, warning) {
 
     private val dayMessages = listOf("An uneventful day proceeds...", "Looks like nothing is happening today...", "MULTIPLE HOSTILES INCOM.. False alarm. Nothing is going on.",
         "What is next...", "Hello World!", "Just another ordinary day...", "The forecast predicts... Nothing.",
@@ -14,8 +14,6 @@ open class DailyPhenomenon(name: String, rate: Int, growthRate: Int, warning: In
 
     // Activation Check function
     override fun phenomenonActivation(phenomenonWorld: World, rollRate: Int): Boolean {
-
-        //val dayMessages = MinecraftOdyssey.instance.config.getStringList("day-messages")
         val randomMessage = dayMessages.random()
 
         // Activate Effects if rolled
@@ -32,7 +30,6 @@ open class DailyPhenomenon(name: String, rate: Int, growthRate: Int, warning: In
             }
             // Grow Fail Rate
             occurrenceRate += occurranceFailGrowthRate
-
             // Check if event has a warning
             if (hasWarning){
                 if (occurrenceRate >= warningThreshold) {
@@ -51,4 +48,3 @@ open class DailyPhenomenon(name: String, rate: Int, growthRate: Int, warning: In
     }
 
 }
-//Make drinking milk cancellable event to prevent players from disabling potion effects and add new item to prevent phenomenon

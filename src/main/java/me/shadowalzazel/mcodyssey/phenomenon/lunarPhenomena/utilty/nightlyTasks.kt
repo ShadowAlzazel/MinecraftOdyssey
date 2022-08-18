@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.phenomenon.nightlyPhenomena.utilty
+package me.shadowalzazel.mcodyssey.phenomenon.lunarPhenomena.utilty
 
 import org.bukkit.World
 import org.bukkit.scheduler.BukkitRunnable

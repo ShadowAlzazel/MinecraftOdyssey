@@ -1,12 +1,12 @@
-package me.shadowalzazel.mcodyssey.phenomenon.nightlyPhenomena
+package me.shadowalzazel.mcodyssey.phenomenon.lunarPhenomena
 
-import me.shadowalzazel.mcodyssey.phenomenon.nightlyPhenomena.utilty.NightlyPhenomenon
+import me.shadowalzazel.mcodyssey.phenomenon.lunarPhenomena.utilty.LunarPhenomenon
 import org.bukkit.ChatColor
 import org.bukkit.World
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object BlueMoon : NightlyPhenomenon("Blue_Moon", 14, 3, 0) {
+object BlueMoon : LunarPhenomenon("Blue_Moon", 14, 3, 0) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("A blue moon is happening at ${phenomenonWorld.name}!")

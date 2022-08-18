@@ -2,7 +2,8 @@ package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.mobs.OdysseyMobs
-import me.shadowalzazel.mcodyssey.phenomenon.*
+import me.shadowalzazel.mcodyssey.phenomenon.LunarPhenomena
+import org.bukkit.World
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Skeleton
 import org.bukkit.entity.Zombie
@@ -13,51 +14,16 @@ import org.bukkit.event.player.PlayerBedEnterEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object NightlyPhenomenaListener : Listener {
+object OdysseyPhenomenaListener : Listener {
 
-    // Cool Down timers
-    private var cooldown : Long = 0
-    private val cooldownTimer = 10000 //10000 -> 10 sec
-
-    private var cooldownNightPhenomenon: Long = 0
-    private val cooldownNightTimer = 600 * 20 // 10 minutes -> 600 * 20
-
+    // Function to prevent players from sleeping
     @EventHandler
-    fun onNightTime(event: PlayerBedEnterEvent) {
+    fun playerPreventSleep(event: PlayerBedEnterEvent) {
         // Check if ambassador defeated
         if (MinecraftOdyssey.instance.ambassadorDefeated) {
-            // Check if new day
-            val dayElapsed = event.player.world.fullTime - cooldownNightPhenomenon
-            if (dayElapsed > cooldownNightTimer) {
-                MinecraftOdyssey.instance.nightlyPhenomenonActive = false
-                MinecraftOdyssey.instance.currentNightlyPhenomenon = null
-            }
-            // Check current world time
-            val currentWorld = event.player.world
-            if (currentWorld.time > 12000) {
-                // Check if nightly active
-                if (!MinecraftOdyssey.instance.nightlyPhenomenonActive) {
-                    // Nightly Event Change
-                    val timeElapsedMC = event.player.world.fullTime - cooldownNightPhenomenon
-                    if (timeElapsedMC > cooldownNightTimer) {
-                        cooldownNightPhenomenon = currentWorld.fullTime
-                        // Event Cool down timer
-                        val timeElapsed = System.currentTimeMillis() - cooldown
-                        if (timeElapsed >= cooldownTimer) {
-                            cooldown = System.currentTimeMillis()
-                            // Calculate if nightly phenomenon
-                            val randomNightlyPhenomenon = NightlyPhenomena.phenomenaList.random()
-                            val rolledRate = (0..100).random()
-                            val phenomenonActivated: Boolean = randomNightlyPhenomenon.phenomenonActivation(currentWorld, rolledRate)
-                            if (phenomenonActivated) {
-                                MinecraftOdyssey.instance.nightlyPhenomenonActive = true
-                                MinecraftOdyssey.instance.currentNightlyPhenomenon = randomNightlyPhenomenon
-                                event.isCancelled = true
-                            }
-                        }
-                    }
-                }
-                else {
+            if (MinecraftOdyssey.instance.lunarPhenomenonActive) {
+                val someWorld = event.player.world
+                if (someWorld.environment == World.Environment.NORMAL) {
                     event.isCancelled = true
                     event.player.sendMessage("The night prevents you from sleeping.")
                 }
@@ -66,23 +32,21 @@ object NightlyPhenomenaListener : Listener {
     }
 
 
-
     // Main function for creature related spawns regarding phenomena
     @EventHandler
     fun mainEntityPhenomenaSpawning(event: CreatureSpawnEvent) {
-        if (MinecraftOdyssey.instance.nightlyPhenomenonActive) {
+        if (MinecraftOdyssey.instance.lunarPhenomenonActive) {
             val someWorld = event.entity.world
-            val timeElapsedWorld = someWorld.fullTime - cooldownNightPhenomenon
-            if (someWorld.time > 12000 && timeElapsedWorld <= cooldownNightTimer && someWorld.isBedWorks) {
-                when (MinecraftOdyssey.instance.currentNightlyPhenomenon) {
+            if (someWorld.environment == World.Environment.NORMAL) {
+                when (MinecraftOdyssey.instance.currentLunarPhenomenon) {
                     // Blue Moon
-                    NightlyPhenomena.BLUE_MOON -> {
+                    LunarPhenomena.BLUE_MOON -> {
                         if (event.spawnReason == CreatureSpawnEvent.SpawnReason.NATURAL || event.spawnReason == CreatureSpawnEvent.SpawnReason.REINFORCEMENTS) {
-                            event.isCancelled
+                            event.isCancelled = true
                         }
                     }
                     // Blood Moon
-                    NightlyPhenomena.BLOOD_MOON -> {
+                    LunarPhenomena.BLOOD_MOON -> {
                         // Effects
                         val bloodMoonEffects = listOf(
                             PotionEffect(PotionEffectType.INCREASE_DAMAGE, 300 * 20,1),

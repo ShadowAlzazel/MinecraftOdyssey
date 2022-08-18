@@ -6,13 +6,13 @@ import me.shadowalzazel.mcodyssey.alchemy.AlchemyPotions
 import me.shadowalzazel.mcodyssey.alchemy.AlchemyRecipes
 import me.shadowalzazel.mcodyssey.alchemy.utility.OdysseyAlchemyCauldronRecipe
 import me.shadowalzazel.mcodyssey.alchemy.utility.OdysseyPotion
-import me.shadowalzazel.mcodyssey.coroutines.BottleCauldronEvents
 import me.shadowalzazel.mcodyssey.effects.BlazingTask
 import me.shadowalzazel.mcodyssey.effects.DecayingTask
 import me.shadowalzazel.mcodyssey.effects.DousedTask
 import me.shadowalzazel.mcodyssey.effects.FreezingTask
 import org.bukkit.Material
 import org.bukkit.Particle
+import org.bukkit.Sound
 import org.bukkit.entity.Item
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
@@ -30,7 +30,6 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.potion.PotionType
 
-@OptIn(DelicateCoroutinesApi::class)
 object OdysseyAlchemyListeners : Listener {
 
     private val alchemyCustomEffectPotions = listOf("§eBottle o' Decay", "§eBottle o' Frost", "§eBottle o' Douse", "§eBottle o' Ablaze")
@@ -92,6 +91,7 @@ object OdysseyAlchemyListeners : Listener {
                                 }
                             }
                             if (allItems) {
+                                /*
                                 // Launch Coroutine
                                 GlobalScope.launch {
                                     val validRecipe: OdysseyAlchemyCauldronRecipe? = validateFun(itemsToCheck, blockUnderneath)
@@ -102,10 +102,9 @@ object OdysseyAlchemyListeners : Listener {
                                         BottleCauldronEvents.eventMap[cauldronLocation] = recipeMap
                                     }
                                 }
-                                //val validRecipe: OdysseyAlchemyCauldronRecipe? = validateFun(itemsToCheck, blockUnderneath)
-                                //?.alchemicalAntithesis(itemsToCheck)
-                                //if (validRecipe!= null) somePlayer.playSound(somePlayer.location, Sound.ITEM_BOTTLE_FILL, 2.5F, 0.8F)
-                                /*
+                                 */
+
+
                                 for (someRecipe in AlchemyRecipes.alchemyRecipeSet) {
                                     val validated: Boolean = someRecipe.validateRecipe(itemsToCheck, blockUnderneath)
                                     if (validated) {
@@ -115,7 +114,7 @@ object OdysseyAlchemyListeners : Listener {
                                         break
                                     }
                                 }
-                                 */
+
                             }
                         }
                     }
@@ -239,6 +238,7 @@ object OdysseyAlchemyListeners : Listener {
                         val i = potionLore.lastIndex
                         val potionLoreTimer = potionLore.subSequence((i - 5)..i)
                         potionDuration = loreToSeconds(potionLoreTimer)
+                        println(potionDuration)
                     }
                     when (potionName) {
                         "§eBottle o' Decay" -> {
@@ -262,10 +262,10 @@ object OdysseyAlchemyListeners : Listener {
                                 }
                             }
                         }
+                        // Fix for ablaze combo
                         "§eBottle o' Douse" -> {
                             for (dousedEntity: LivingEntity in event.affectedEntities) {
                                 if ("Doused" !in dousedEntity.scoreboardTags) {
-                                    dousedEntity.fireTicks = 20 * potionDuration
                                     val dousedTask = DousedTask(dousedEntity, potionDuration)
                                     dousedEntity.addScoreboardTag("Doused")
                                     dousedTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20)

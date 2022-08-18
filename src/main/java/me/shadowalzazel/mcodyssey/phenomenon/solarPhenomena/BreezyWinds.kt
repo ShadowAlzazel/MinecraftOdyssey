@@ -1,12 +1,12 @@
-package me.shadowalzazel.mcodyssey.phenomenon.dailyPhenomena
+package me.shadowalzazel.mcodyssey.phenomenon.solarPhenomena
 
-import me.shadowalzazel.mcodyssey.phenomenon.dailyPhenomena.utilty.DailyPhenomenon
+import me.shadowalzazel.mcodyssey.phenomenon.solarPhenomena.utilty.SolarPhenomenon
 import org.bukkit.ChatColor
 import org.bukkit.World
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object BreezyWinds : DailyPhenomenon("Breezy_Winds", 45, 5, 50) {
+object BreezyWinds : SolarPhenomenon("Breezy_Winds", 45, 5, 50) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("A swift wind is happening at ${phenomenonWorld.name}!")

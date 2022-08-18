@@ -1,12 +1,12 @@
 package me.shadowalzazel.mcodyssey.phenomenon
 
-import me.shadowalzazel.mcodyssey.phenomenon.dailyPhenomena.utilty.DailyPhenomenon
+import me.shadowalzazel.mcodyssey.phenomenon.solarPhenomena.utilty.SolarPhenomenon
 import org.bukkit.ChatColor
 import org.bukkit.World
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object DrawOfFortunes : DailyPhenomenon("Draw_Of_Fortunes", 100, 0, 0) {
+object DrawOfFortunes : SolarPhenomenon("Draw_Of_Fortunes", 100, 0, 0) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("Fortunes have been drawn at $serverName")

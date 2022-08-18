@@ -1,12 +1,12 @@
-package me.shadowalzazel.mcodyssey.phenomenon.dailyPhenomena
+package me.shadowalzazel.mcodyssey.phenomenon.solarPhenomena
 
-import me.shadowalzazel.mcodyssey.phenomenon.dailyPhenomena.utilty.DailyPhenomenon
+import me.shadowalzazel.mcodyssey.phenomenon.solarPhenomena.utilty.SolarPhenomenon
 import org.bukkit.ChatColor
 import org.bukkit.World
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object Earthquake : DailyPhenomenon("Earthquake", 20, 4, 0) {
+object Earthquake : SolarPhenomenon("Earthquake", 20, 4, 0) {
 
     // No Warning
     override val hasWarning: Boolean = false

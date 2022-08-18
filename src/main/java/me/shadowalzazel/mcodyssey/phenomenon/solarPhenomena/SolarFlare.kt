@@ -1,12 +1,12 @@
-package me.shadowalzazel.mcodyssey.phenomenon.dailyPhenomena
+package me.shadowalzazel.mcodyssey.phenomenon.solarPhenomena
 
-import me.shadowalzazel.mcodyssey.phenomenon.dailyPhenomena.utilty.DailyPhenomenon
+import me.shadowalzazel.mcodyssey.phenomenon.solarPhenomena.utilty.SolarPhenomenon
 import org.bukkit.ChatColor
 import org.bukkit.World
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object SolarFlare : DailyPhenomenon("Solar_Flare", 25, 4, 40) {
+object SolarFlare : SolarPhenomenon("Solar_Flare", 25, 4, 40) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("A Solar Flare has hit $serverName!")

@@ -1,12 +1,12 @@
-package me.shadowalzazel.mcodyssey.phenomenon.dailyPhenomena
+package me.shadowalzazel.mcodyssey.phenomenon.solarPhenomena
 
-import me.shadowalzazel.mcodyssey.phenomenon.dailyPhenomena.utilty.DailyPhenomenon
+import me.shadowalzazel.mcodyssey.phenomenon.solarPhenomena.utilty.SolarPhenomenon
 import org.bukkit.ChatColor
 import org.bukkit.World
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object BlazingSouls : DailyPhenomenon("Blazing_Souls", 40, 5, 50) {
+object BlazingSouls : SolarPhenomenon("Blazing_Souls", 40, 5, 50) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("The players soul's are ablaze at ${phenomenonWorld.name}!")

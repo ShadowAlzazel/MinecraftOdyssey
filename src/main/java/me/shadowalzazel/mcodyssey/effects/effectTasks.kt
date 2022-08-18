@@ -122,7 +122,7 @@ class DousedTask(private val dousedVictim: LivingEntity, private val douseCount:
 
         // Timing
         val timeElapsed = System.currentTimeMillis() - dousingCooldown
-        if (douseCount < counter || dousedVictim.health <= 0.50 || timeElapsed > (douseCount / 2) * 1000) {
+        if (douseCount < counter || dousedVictim.health <= 0.50 || timeElapsed > (douseCount) * 1000) {
             var removeDouse = false
             if ("Doused" in dousedVictim.scoreboardTags) {
                 removeDouse = true

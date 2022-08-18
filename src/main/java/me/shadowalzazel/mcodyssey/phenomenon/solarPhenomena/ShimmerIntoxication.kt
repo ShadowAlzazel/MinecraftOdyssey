@@ -1,12 +1,12 @@
-package me.shadowalzazel.mcodyssey.phenomenon.dailyPhenomena
+package me.shadowalzazel.mcodyssey.phenomenon.solarPhenomena
 
-import me.shadowalzazel.mcodyssey.phenomenon.dailyPhenomena.utilty.DailyPhenomenon
+import me.shadowalzazel.mcodyssey.phenomenon.solarPhenomena.utilty.SolarPhenomenon
 import org.bukkit.ChatColor
 import org.bukkit.World
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object ShimmerIntoxication : DailyPhenomenon("Shimmer_Intoxication", 35, 6, 50) {
+object ShimmerIntoxication : SolarPhenomenon("Shimmer_Intoxication", 35, 6, 50) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("There is shimmer appearing at ${phenomenonWorld.name}!")

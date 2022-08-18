@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.phenomenon.nightlyPhenomena
+package me.shadowalzazel.mcodyssey.phenomenon.lunarPhenomena
 
 object StarryNight {
     fun g() {

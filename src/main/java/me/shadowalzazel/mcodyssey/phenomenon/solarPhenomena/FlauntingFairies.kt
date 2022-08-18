@@ -1,12 +1,12 @@
-package me.shadowalzazel.mcodyssey.phenomenon.dailyPhenomena
+package me.shadowalzazel.mcodyssey.phenomenon.solarPhenomena
 
-import me.shadowalzazel.mcodyssey.phenomenon.dailyPhenomena.utilty.DailyPhenomenon
+import me.shadowalzazel.mcodyssey.phenomenon.solarPhenomena.utilty.SolarPhenomenon
 import org.bukkit.ChatColor
 import org.bukkit.World
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object FlauntingFairies : DailyPhenomenon("Flaunting_Fairies", 45, 5, 50) {
+object FlauntingFairies : SolarPhenomenon("Flaunting_Fairies", 45, 5, 50) {
 
     fun todo() {
         TODO("Sine Wave fairy particle")
