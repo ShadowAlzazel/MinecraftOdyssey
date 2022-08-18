@@ -1,8 +1,12 @@
 package me.shadowalzazel.mcodyssey.mclisteners
 
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.alchemy.AlchemyPotions
 import me.shadowalzazel.mcodyssey.alchemy.AlchemyRecipes
+import me.shadowalzazel.mcodyssey.alchemy.utility.OdysseyAlchemyCauldronRecipe
 import me.shadowalzazel.mcodyssey.alchemy.utility.OdysseyPotion
 import me.shadowalzazel.mcodyssey.effects.BlazingTask
 import me.shadowalzazel.mcodyssey.effects.DecayingTask
@@ -28,6 +32,7 @@ import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.potion.PotionType
+import java.util.function.BinaryOperator
 
 object OdysseyAlchemyListeners : Listener {
 
@@ -47,6 +52,24 @@ object OdysseyAlchemyListeners : Listener {
         val minutes = time / 60
         // add 0 if less than 9
         return if (seconds < 9) { "($minutes:0$seconds)" } else { "($minutes:$seconds)" }
+    }
+
+    // Helper Async Function
+    private fun validateFun(someItemSet: MutableSet<Item>, someFuelBlock: Material): OdysseyAlchemyCauldronRecipe? = runBlocking {
+        val recipeJob: Deferred<OdysseyAlchemyCauldronRecipe?> = async {
+            for (recipe in AlchemyRecipes.alchemyRecipeSet) {
+                val validated: Boolean = recipe.validateRecipe(someItemSet, someFuelBlock)
+                if (validated) {
+                    return@async recipe
+                }
+            }
+            return@async null
+        }
+       recipeJob.await()
+    }
+
+    private suspend fun validateR() {
+
     }
 
     // Main function for Cauldron recipes
@@ -76,18 +99,52 @@ object OdysseyAlchemyListeners : Listener {
                                 }
                             }
                             if (allItems) {
+                                // Launch Coroutine
+                                /*
+                                fun validateFun() = runBlocking {
+                                    val recipeJob: Deferred<OdysseyAlchemyCauldronRecipe?> = async {
+                                        for (recipe in AlchemyRecipes.alchemyRecipeSet) {
+                                            val validated: Boolean = recipe.validateRecipe(itemsToCheck, blockUnderneath)
+                                            if (validated) {
+                                                return@async recipe
+                                            }
+                                        }
+                                        return@async null
+                                    }
+                                    validRecipe = recipeJob.await()
+
+                                }
+
+                                 */
+                                val t1 = System.nanoTime()
+
+                                //
+
+
+
+
+                                // Await
+
+                                val validRecipe: OdysseyAlchemyCauldronRecipe? = validateFun(itemsToCheck, blockUnderneath)
+                                validRecipe?.alchemicalAntithesis(itemsToCheck)
+                                if (validRecipe!= null) somePlayer.playSound(somePlayer.location, Sound.ITEM_BOTTLE_FILL, 2.5F, 0.8F)
+                                /*
                                 for (someRecipe in AlchemyRecipes.alchemyRecipeSet) {
                                     val validated: Boolean = someRecipe.validateRecipe(itemsToCheck, blockUnderneath)
                                     if (validated) {
                                         somePlayer.playSound(somePlayer.location, Sound.ITEM_BOTTLE_FILL, 2.5F, 0.8F)
-                                        val newState = event.newState.blockData as Levelled
-                                        println(newState.level)
+                                        someRecipe.alchemicalAntithesis(itemsToCheck)
+                                        //val newState = event.newState.blockData as Levelled
                                         break
                                     }
                                 }
+
+                                 */
+                                val t2 = System.nanoTime()
+                                println("Time Elapsed: ${t2 - t1}")
+
                             }
                         }
-                        //println(nearbyEntities)
                     }
                 }
             }
@@ -346,9 +403,9 @@ object OdysseyAlchemyListeners : Listener {
         for (tag in somePotionCloud.scoreboardTags) {
             when (tag) {
                 "Decaying_Cloud" -> {
-                    for (decayinEntity: LivingEntity in someEntities) {
-                        val decayingTask = DecayingTask(decayinEntity, 1, (20 / 4) / 2)
-                        decayinEntity.addScoreboardTag("Decaying")
+                    for (decayingEntity: LivingEntity in someEntities) {
+                        val decayingTask = DecayingTask(decayingEntity, 1, (20 / 4) / 2)
+                        decayingEntity.addScoreboardTag("Decaying")
                         decayingTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20 * 2)
                     }
                 }

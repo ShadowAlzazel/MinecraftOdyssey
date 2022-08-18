@@ -21,14 +21,13 @@ open class OdysseyAlchemyCauldronRecipe(private val odysseyPotion: OdysseyPotion
             valid = true
         }
         if (valid) {
-            alchemicalAntithesis(someItemEntities)
             println("Alchemy!")
         }
         return valid
     }
 
     // Called on a successful validation
-    private fun alchemicalAntithesis(someMaterials: MutableCollection<Item>) {
+    fun alchemicalAntithesis(someMaterials: MutableCollection<Item>) {
         val someLocation = someMaterials.elementAt(0).location.clone()
         val someBlock = someLocation.block
         // removes items
