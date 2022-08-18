@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.mclisteners.utility
+package me.shadowalzazel.mcodyssey.listeners.utility
 
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable

@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.mclisteners.enchantmentListeners
+package me.shadowalzazel.mcodyssey.listeners.enchantmentListeners
 
 import io.papermc.paper.event.entity.EntityLoadCrossbowEvent
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments

@@ -2,6 +2,7 @@ package me.shadowalzazel.mcodyssey.alchemy.utility
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import org.bukkit.Material
+import org.bukkit.Sound
 import org.bukkit.entity.Item
 import org.bukkit.inventory.ItemStack
 
@@ -29,6 +30,7 @@ open class OdysseyAlchemyCauldronRecipe(private val odysseyPotion: OdysseyPotion
     // Called on a successful validation
     fun alchemicalAntithesis(someMaterials: MutableCollection<Item>) {
         val someLocation = someMaterials.elementAt(0).location.clone()
+        someLocation.world.playSound(someLocation, Sound.ITEM_BOTTLE_FILL, 2.5F, 0.8F)
         val someBlock = someLocation.block
         // removes items
         for (itemEntity in someMaterials) {

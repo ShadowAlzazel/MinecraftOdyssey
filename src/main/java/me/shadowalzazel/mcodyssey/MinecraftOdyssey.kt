@@ -5,11 +5,11 @@ import me.shadowalzazel.mcodyssey.bosses.theAmbassador.AmbassadorListeners
 import me.shadowalzazel.mcodyssey.bosses.utility.OdysseyBoss
 import me.shadowalzazel.mcodyssey.commands.*
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.mclisteners.*
-import me.shadowalzazel.mcodyssey.mclisteners.enchantmentListeners.ArmorListeners
-import me.shadowalzazel.mcodyssey.mclisteners.enchantmentListeners.MeleeListeners
-import me.shadowalzazel.mcodyssey.mclisteners.enchantmentListeners.MiscListeners
-import me.shadowalzazel.mcodyssey.mclisteners.enchantmentListeners.RangedListeners
+import me.shadowalzazel.mcodyssey.listeners.*
+import me.shadowalzazel.mcodyssey.listeners.enchantmentListeners.ArmorListeners
+import me.shadowalzazel.mcodyssey.listeners.enchantmentListeners.MeleeListeners
+import me.shadowalzazel.mcodyssey.listeners.enchantmentListeners.MiscListeners
+import me.shadowalzazel.mcodyssey.listeners.enchantmentListeners.RangedListeners
 import me.shadowalzazel.mcodyssey.phenomenon.dailyPhenomena.utilty.DailyPhenomenon
 import me.shadowalzazel.mcodyssey.phenomenon.nightlyPhenomena.utilty.NightlyPhenomenon
 import me.shadowalzazel.mcodyssey.recipes.CookingRecipes
@@ -20,6 +20,10 @@ import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 
 class MinecraftOdyssey : JavaPlugin() {
+
+    // Coroutines and Async variables and values
+    var didStuff: Boolean = false
+    var stuffThatHappened: MutableSet<String> = mutableSetOf()
 
     var dailyPhenomenonActive: Boolean = false
     var currentDailyPhenomenon: DailyPhenomenon? = null
@@ -107,11 +111,17 @@ class MinecraftOdyssey : JavaPlugin() {
         getCommand("SpawnTestMob")?.setExecutor(SpawnTestMob)
         getCommand("SpawnTestKnight")?.setExecutor(SpawnTestKnight)
 
+        val odysseyTickTimer = OdysseyCoroutineDetector()
+        odysseyTickTimer.runTaskTimer(this, 0, 1)
+
+
         // Hello World!
         logger.info("The Odyssey has just begun!")
     }
 
     override fun onDisable() {
+
+
 
         // Plugin shutdown logic
         logger.info("The Odyssey can wait another day...")

@@ -1,8 +1,6 @@
 
-package me.shadowalzazel.mcodyssey.mclisteners
+package me.shadowalzazel.mcodyssey.listeners
 
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
-import me.shadowalzazel.mcodyssey.bosses.theAmbassador.AmbassadorBoss
 import me.shadowalzazel.mcodyssey.enchantments.utility.GildedPower
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.items.OdysseyItems
@@ -16,7 +14,6 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.event.inventory.PrepareSmithingEvent
-import org.bukkit.event.world.TimeSkipEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta

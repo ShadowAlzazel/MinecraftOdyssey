@@ -1,21 +1,18 @@
-package me.shadowalzazel.mcodyssey.mclisteners
+package me.shadowalzazel.mcodyssey.listeners
 
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.alchemy.AlchemyPotions
 import me.shadowalzazel.mcodyssey.alchemy.AlchemyRecipes
 import me.shadowalzazel.mcodyssey.alchemy.utility.OdysseyAlchemyCauldronRecipe
 import me.shadowalzazel.mcodyssey.alchemy.utility.OdysseyPotion
+import me.shadowalzazel.mcodyssey.coroutines.BottleCauldronEvents
 import me.shadowalzazel.mcodyssey.effects.BlazingTask
 import me.shadowalzazel.mcodyssey.effects.DecayingTask
 import me.shadowalzazel.mcodyssey.effects.DousedTask
 import me.shadowalzazel.mcodyssey.effects.FreezingTask
 import org.bukkit.Material
 import org.bukkit.Particle
-import org.bukkit.Sound
-import org.bukkit.block.data.Levelled
 import org.bukkit.entity.Item
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
@@ -32,8 +29,8 @@ import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.potion.PotionType
-import java.util.function.BinaryOperator
 
+@OptIn(DelicateCoroutinesApi::class)
 object OdysseyAlchemyListeners : Listener {
 
     private val alchemyCustomEffectPotions = listOf("§eBottle o' Decay", "§eBottle o' Frost", "§eBottle o' Douse", "§eBottle o' Ablaze")
@@ -54,8 +51,8 @@ object OdysseyAlchemyListeners : Listener {
         return if (seconds < 9) { "($minutes:0$seconds)" } else { "($minutes:$seconds)" }
     }
 
-    // Helper Async Function
-    private fun validateFun(someItemSet: MutableSet<Item>, someFuelBlock: Material): OdysseyAlchemyCauldronRecipe? = runBlocking {
+    // Helper Coroutine Function for validating recipes
+    private suspend fun validateFun(someItemSet: MutableSet<Item>, someFuelBlock: Material): OdysseyAlchemyCauldronRecipe? = runBlocking {
         val recipeJob: Deferred<OdysseyAlchemyCauldronRecipe?> = async {
             for (recipe in AlchemyRecipes.alchemyRecipeSet) {
                 val validated: Boolean = recipe.validateRecipe(someItemSet, someFuelBlock)
@@ -66,10 +63,6 @@ object OdysseyAlchemyListeners : Listener {
             return@async null
         }
        recipeJob.await()
-    }
-
-    private suspend fun validateR() {
-
     }
 
     // Main function for Cauldron recipes
@@ -100,34 +93,18 @@ object OdysseyAlchemyListeners : Listener {
                             }
                             if (allItems) {
                                 // Launch Coroutine
-                                /*
-                                fun validateFun() = runBlocking {
-                                    val recipeJob: Deferred<OdysseyAlchemyCauldronRecipe?> = async {
-                                        for (recipe in AlchemyRecipes.alchemyRecipeSet) {
-                                            val validated: Boolean = recipe.validateRecipe(itemsToCheck, blockUnderneath)
-                                            if (validated) {
-                                                return@async recipe
-                                            }
-                                        }
-                                        return@async null
+                                GlobalScope.launch {
+                                    val validRecipe: OdysseyAlchemyCauldronRecipe? = validateFun(itemsToCheck, blockUnderneath)
+                                    if (validRecipe!= null) {
+                                        MinecraftOdyssey.instance.didStuff = true
+                                        MinecraftOdyssey.instance.stuffThatHappened.add("Bottle_Cauldron_Event")
+                                        val recipeMap = mapOf(validRecipe to itemsToCheck)
+                                        BottleCauldronEvents.eventMap[cauldronLocation] = recipeMap
                                     }
-                                    validRecipe = recipeJob.await()
-
                                 }
-
-                                 */
-                                val t1 = System.nanoTime()
-
-                                //
-
-
-
-
-                                // Await
-
-                                val validRecipe: OdysseyAlchemyCauldronRecipe? = validateFun(itemsToCheck, blockUnderneath)
-                                validRecipe?.alchemicalAntithesis(itemsToCheck)
-                                if (validRecipe!= null) somePlayer.playSound(somePlayer.location, Sound.ITEM_BOTTLE_FILL, 2.5F, 0.8F)
+                                //val validRecipe: OdysseyAlchemyCauldronRecipe? = validateFun(itemsToCheck, blockUnderneath)
+                                //?.alchemicalAntithesis(itemsToCheck)
+                                //if (validRecipe!= null) somePlayer.playSound(somePlayer.location, Sound.ITEM_BOTTLE_FILL, 2.5F, 0.8F)
                                 /*
                                 for (someRecipe in AlchemyRecipes.alchemyRecipeSet) {
                                     val validated: Boolean = someRecipe.validateRecipe(itemsToCheck, blockUnderneath)
@@ -138,11 +115,7 @@ object OdysseyAlchemyListeners : Listener {
                                         break
                                     }
                                 }
-
                                  */
-                                val t2 = System.nanoTime()
-                                println("Time Elapsed: ${t2 - t1}")
-
                             }
                         }
                     }

@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.mclisteners
+package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.bosses.theAmbassador.AmbassadorBoss

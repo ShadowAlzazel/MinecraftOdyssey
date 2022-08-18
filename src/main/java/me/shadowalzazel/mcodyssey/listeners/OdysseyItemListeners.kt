@@ -1,7 +1,7 @@
-package me.shadowalzazel.mcodyssey.mclisteners
+package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
-import me.shadowalzazel.mcodyssey.mclisteners.utility.UnstableAntimatterTask
+import me.shadowalzazel.mcodyssey.listeners.utility.UnstableAntimatterTask
 import me.shadowalzazel.mcodyssey.items.OdysseyItems
 import me.shadowalzazel.mcodyssey.recipes.OdysseyRecipes
 import org.bukkit.ChatColor

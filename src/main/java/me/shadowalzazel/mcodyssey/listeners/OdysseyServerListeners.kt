@@ -1,6 +1,6 @@
 @file:Suppress("DEPRECATION")
 
-package me.shadowalzazel.mcodyssey.mclisteners
+package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import org.bukkit.ChatColor

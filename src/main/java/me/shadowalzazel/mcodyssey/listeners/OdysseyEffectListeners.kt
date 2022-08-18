@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.mclisteners
+package me.shadowalzazel.mcodyssey.listeners
 
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
