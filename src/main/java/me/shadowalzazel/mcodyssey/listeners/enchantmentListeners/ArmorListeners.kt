@@ -166,7 +166,10 @@ object ArmorListeners : Listener {
         // Movement Math
         val nearbyEnemies = eventDefender.world.getNearbyLivingEntities(eventDefender.location, 2.5)
         if (event.damager in nearbyEnemies) {
-            eventDefender.velocity = eventDefender.location.clone().add(0.0, 0.35, 0.0).subtract(event.damager.location).toVector().normalize().multiply(1.0)
+            //eventDefender.velocity = eventDefender.location.clone().add(0.0, 0.35, 0.0).subtract(event.damager.location).toVector().normalize().multiply(1.0)
+            val newVector = eventDefender.location.clone().subtract(event.damager.location).toVector().normalize()
+            newVector.y = 0.0
+            eventDefender.velocity = newVector.multiply(1.5)
         }
     }
 

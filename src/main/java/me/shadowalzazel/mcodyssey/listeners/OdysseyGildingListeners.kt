@@ -4,6 +4,8 @@ package me.shadowalzazel.mcodyssey.listeners
 import me.shadowalzazel.mcodyssey.enchantments.utility.GildedPower
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.items.OdysseyItems
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.TextComponent
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
@@ -28,17 +30,20 @@ object OdysseyGildingListeners : Listener {
     // Function that disables anvil gilding
     @EventHandler
     fun cancelAnvilGilding(event: PrepareAnvilEvent) {
+        // BOTH ITEM SLOTS OCCUPIED
         if (event.inventory.firstItem != null && event.inventory.secondItem != null) {
-
             //BASE CASE!
             if (event.inventory.firstItem!!.type == Material.ENCHANTED_GOLDEN_APPLE && event.inventory.secondItem!!.type == Material.GOLD_INGOT) {
                 event.result = ItemStack(Material.GOLDEN_HOE)
                 event.viewers.forEach {somePlayer -> (somePlayer as Player).updateInventory()}
                 println("${event.result}")
             }
-
             // Check if items have odyssey enchants
             else if (event.inventory.firstItem!!.hasItemMeta() || event.inventory.secondItem!!.hasItemMeta()) {
+                // For repair
+                // ger durability clone it
+                // check of greater
+                // clone item meta
                 val firstItem = event.inventory.firstItem
                 val secondItem = event.inventory.secondItem
                 if (firstItem!!.itemMeta.hasEnchants() || secondItem!!.itemMeta.hasEnchants()) {
@@ -62,6 +67,33 @@ object OdysseyGildingListeners : Listener {
                 }
             }
         }
+        else if (event.inventory.firstItem != null && event.inventory.secondItem == null) {
+            val itemToRename = event.inventory.firstItem
+            if ((event.inventory.renameText != null) && (itemToRename?.enchantments?.containsKey(OdysseyEnchantments.GILDED_POWER) == true))  {
+                /*
+                val newMeta: ItemMeta = itemToRename.itemMeta.clone()
+                val newName: String? = event.inventory.renameText
+                // Change content of text component
+                if (newMeta.hasDisplayName()) {
+                    val displayComponent: TextComponent = newMeta.displayName() as TextComponent
+                    displayComponent.content(newName!!)
+                    newMeta.displayName(displayComponent)
+                }
+                else {
+                    val newComponent = Component.text(newName!!)
+                    newMeta.displayName(newComponent)
+                }
+                val newResult = itemToRename.clone()
+                itemToRename.itemMeta = newMeta
+                event.result = newResult
+                event.viewers.forEach {somePlayer -> (somePlayer as Player).updateInventory()}
+                 */
+                event.result = ItemStack(Material.AIR, 1)
+                event.viewers.forEach {somePlayer -> (somePlayer as Player).updateInventory()}
+            }
+        }
+        //
+
     }
 
 
@@ -262,7 +294,7 @@ object OdysseyGildingListeners : Listener {
                             }
                             // Adds Lore
                             val gildedEquipmentMeta = gildedEquipment.itemMeta.clone()
-                            // If has lore
+                            // Check if item has lore
                             if (gildedEquipmentMeta.hasLore()) {
                                 // Check if same
                                 if (sameGildedEnchant) {
