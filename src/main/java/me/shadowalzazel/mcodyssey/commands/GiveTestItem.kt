@@ -30,7 +30,7 @@ object GiveTestItem : CommandExecutor {
             //sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.POTION_BARRIER, 2))
             //sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.ALCHEMY_ARTILLERY, 2))
             sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.ECHO, 2))
-            sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.DOUSE, 2))
+            sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BANE_OF_THE_ILLAGER, 2))
             //sender.inventory.addItem(AlchemyPotions.POTION_OF_LEVITATION.createItemStack(1))
             //sender.inventory.addItem(AlchemyPotions.POTION_OF_WITHERING.createItemStack(1))
             //sender.inventory.addItem(AlchemyPotions.POTION_OF_BIOLUMINESCENCE.createItemStack(1))

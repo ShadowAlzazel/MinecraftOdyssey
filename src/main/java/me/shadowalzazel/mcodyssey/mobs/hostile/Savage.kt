@@ -17,8 +17,8 @@ object Savage : OdysseyMob("Savage") {
 
     fun createKnight(odysseyWorld: World, spawningLocation: Location): Zombie {
         val zombieSteed = odysseyWorld.spawnEntity(spawningLocation, EntityType.ZOMBIE_HORSE) as ZombieHorse
-        val enhancedHealth = PotionEffect(PotionEffectType.HEALTH_BOOST, 99999, 25)
-        val enhancedSpeed = PotionEffect(PotionEffectType.SPEED, 99999, 2)
+        val enhancedHealth = PotionEffect(PotionEffectType.HEALTH_BOOST, 20 * 300, 25)
+        val enhancedSpeed = PotionEffect(PotionEffectType.SPEED, 20 * 300, 2)
         zombieSteed.addPotionEffect(enhancedHealth)
         zombieSteed.addPotionEffect(enhancedSpeed)
         //skeletonSteed.inventory.saddle = ItemStack(Material.SADDLE, 1)
