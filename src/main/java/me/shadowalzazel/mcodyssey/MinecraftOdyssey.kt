@@ -4,6 +4,7 @@ import me.shadowalzazel.mcodyssey.bosses.hogRider.HogRiderListeners
 import me.shadowalzazel.mcodyssey.bosses.theAmbassador.AmbassadorListeners
 import me.shadowalzazel.mcodyssey.bosses.utility.OdysseyBoss
 import me.shadowalzazel.mcodyssey.commands.*
+import me.shadowalzazel.mcodyssey.commands.spells.Necronomicon
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.listeners.*
 import me.shadowalzazel.mcodyssey.listeners.enchantmentListeners.ArmorListeners
@@ -127,6 +128,11 @@ class MinecraftOdyssey : JavaPlugin() {
         getCommand("GiveTestItem")?.setExecutor(GiveTestItem)
         getCommand("SpawnTestMob")?.setExecutor(SpawnTestMob)
         getCommand("SpawnTestKnight")?.setExecutor(SpawnTestKnight)
+
+        // Spell Commands
+        getCommand("necronomicon")?.setExecutor(Necronomicon)
+
+
 
         // Experimental coroutine stuff
         /*

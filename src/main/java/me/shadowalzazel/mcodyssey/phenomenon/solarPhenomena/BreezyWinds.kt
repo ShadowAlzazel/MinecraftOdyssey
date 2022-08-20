@@ -1,6 +1,9 @@
 package me.shadowalzazel.mcodyssey.phenomenon.solarPhenomena
 
 import me.shadowalzazel.mcodyssey.phenomenon.solarPhenomena.utilty.SolarPhenomenon
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.TextComponent
+import net.kyori.adventure.text.format.TextColor
 import org.bukkit.ChatColor
 import org.bukkit.World
 import org.bukkit.potion.PotionEffect
@@ -13,10 +16,11 @@ object BreezyWinds : SolarPhenomenon("Breezy_Winds", 45, 5, 50) {
         // Effect for Breezy Day
         val breezeStrength = (0..2).random()
         val breezeEffect = PotionEffect(PotionEffectType.SPEED, 12000, breezeStrength)
+        val messageComponent: TextComponent = Component.text("A swift wind follows your side...", TextColor.color(6, 57, 112))
 
         for (aPlayer in phenomenonWorld.players) {
             aPlayer.addPotionEffect(breezeEffect)
-            aPlayer.sendMessage("${ChatColor.BLUE}A swift winds follows your side...")
+            aPlayer.sendMessage(messageComponent)
         }
     }
 

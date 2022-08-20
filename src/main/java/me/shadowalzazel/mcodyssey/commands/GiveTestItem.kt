@@ -4,6 +4,7 @@ import me.shadowalzazel.mcodyssey.alchemy.AlchemyPotions
 import me.shadowalzazel.mcodyssey.alchemy.utility.AwkwardPotion
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.items.OdysseyItems
+import me.shadowalzazel.mcodyssey.items.OdysseyWeapons
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -29,7 +30,7 @@ object GiveTestItem : CommandExecutor {
             //sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.HEMORRHAGE, 2))
             //sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.POTION_BARRIER, 2))
             //sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.ALCHEMY_ARTILLERY, 2))
-            sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.ECHO, 2))
+            sender.inventory.addItem(OdysseyWeapons.NECRONOMICON.createItemStack(1))
             sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BANE_OF_THE_ILLAGER, 2))
             //sender.inventory.addItem(AlchemyPotions.POTION_OF_LEVITATION.createItemStack(1))
             //sender.inventory.addItem(AlchemyPotions.POTION_OF_WITHERING.createItemStack(1))

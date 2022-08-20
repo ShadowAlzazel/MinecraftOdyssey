@@ -17,7 +17,6 @@ object BlazingSouls : SolarPhenomenon("Blazing_Souls", 40, 5, 50) {
         val blazingSoulEffect = PotionEffect(PotionEffectType.GLOWING, 12000, 1)
         val blazingSoulEffect2 = PotionEffect(PotionEffectType.INCREASE_DAMAGE, 12000, 1)
 
-
         for (aPlayer in phenomenonWorld.players) {
             aPlayer.sendMessage("${ChatColor.ITALIC}You sense the crackling embers...")
             // roll for each effect

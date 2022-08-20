@@ -26,3 +26,5 @@ commands:
     description: ""
     usage: /<command>
     permission: op
+  necronomicon:
+    description: "Lol"
