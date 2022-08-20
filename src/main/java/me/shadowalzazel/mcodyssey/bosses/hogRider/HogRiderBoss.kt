@@ -2,6 +2,8 @@ package me.shadowalzazel.mcodyssey.bosses.hogRider
 
 import me.shadowalzazel.mcodyssey.bosses.utility.OdysseyBoss
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
+import net.kyori.adventure.bossbar.BossBar
+import net.kyori.adventure.text.Component
 import org.bukkit.*
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.*
@@ -17,6 +19,7 @@ class HogRiderBoss : OdysseyBoss("Hog Rider", "Piglin") {
     var bossEntityMount: Hoglin? = null
     var despawnTimer: Long = 1
     var hogJumpAttackCooldown: Long = 0L
+    var hogRiderBossBar: BossBar? = null
 
     fun g() {
         TODO("Finish")
@@ -118,6 +121,9 @@ class HogRiderBoss : OdysseyBoss("Hog Rider", "Piglin") {
         // Change boss class
         bossEntityRider = hogRider
         bossEntityMount = warthog
+        //
+        hogRiderBossBar = BossBar.bossBar(Component.text("HOG RIDA"), 1F, BossBar.Color.YELLOW, BossBar.Overlay.PROGRESS)
+
     }
 
 

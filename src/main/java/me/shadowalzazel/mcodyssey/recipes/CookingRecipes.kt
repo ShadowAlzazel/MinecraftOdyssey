@@ -141,18 +141,20 @@ object CookingRecipes {
     // CAMPFIRE
     private fun createBaconRecipe(): CampfireRecipe {
         val someResult = OdysseyFood.BACON.createItemStack(1)
-        val someRecipe = CampfireRecipe(NamespacedKey(MinecraftOdyssey.instance, "bacon"),
-            someResult, Material.COOKED_PORKCHOP, 1.0F, 10 * 20)
-        return someRecipe
+        return CampfireRecipe(
+            NamespacedKey(MinecraftOdyssey.instance, "bacon"),
+            someResult, Material.COOKED_PORKCHOP, 1.0F, 10 * 20
+        )
     }
 
     // SMOKING
     private fun createFrenchToastRecipe(): SmokingRecipe {
         val someResult = OdysseyFood.FRENCH_TOAST.createItemStack(1)
         val someExactIngredient = OdysseyFood.SUGARY_BREAD.createItemStack(1)
-        val someRecipe = SmokingRecipe(NamespacedKey(MinecraftOdyssey.instance, "frenchtoast"),
-            someResult, RecipeChoice.ExactChoice(someExactIngredient), 3.5F, 15 * 20)
-        return someRecipe
+        return SmokingRecipe(
+            NamespacedKey(MinecraftOdyssey.instance, "frenchtoast"),
+            someResult, RecipeChoice.ExactChoice(someExactIngredient), 3.5F, 15 * 20
+        )
     }
 
 

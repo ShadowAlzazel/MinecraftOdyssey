@@ -15,6 +15,7 @@ import me.shadowalzazel.mcodyssey.listeners.OdysseyPhenomenaListener
 import me.shadowalzazel.mcodyssey.phenomenon.PhenomenonTimer
 import me.shadowalzazel.mcodyssey.phenomenon.solarPhenomena.utilty.SolarPhenomenon
 import me.shadowalzazel.mcodyssey.phenomenon.lunarPhenomena.utilty.LunarPhenomenon
+import me.shadowalzazel.mcodyssey.recipes.BrandingRecipes
 import me.shadowalzazel.mcodyssey.recipes.CookingRecipes
 import me.shadowalzazel.mcodyssey.recipes.GildingRecipes
 import me.shadowalzazel.mcodyssey.recipes.OdysseyRecipes
@@ -81,7 +82,7 @@ class MinecraftOdyssey : JavaPlugin() {
         }
         if (mainWorld != null ) {
             val phenomenonTimer = PhenomenonTimer(mainWorld!!)
-            val someTime = mainWorld?.time
+            //val someTime = mainWorld?.time
             //val timerDelay = if (someTime!! < 23500) { 23500 - someTime } else { (24000 - someTime) + 23500 }
             val timerDelay = 20 * 10L
             phenomenonTimer.runTaskTimer(this, timerDelay, 20 * 10)
@@ -109,7 +110,7 @@ class MinecraftOdyssey : JavaPlugin() {
         server.pluginManager.registerEvents(OdysseyMiscListeners, this)
 
         // Gilding Recipes
-        Bukkit.addRecipe(GildingRecipes.ODYSSEY_NAMING)
+        Bukkit.addRecipe(BrandingRecipes.ODYSSEY_NAMING)
         Bukkit.addRecipe(GildingRecipes.ODYSSEY_GILDED_SMITHING)
         Bukkit.addRecipe(GildingRecipes.GILDED_BOOK_COMBINING)
         Bukkit.addRecipe(GildingRecipes.GILDED_ITEM_UPGRADING)
