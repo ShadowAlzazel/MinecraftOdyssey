@@ -6,10 +6,8 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 
 @Suppress("DEPRECATION")
-open class OdysseyItem(itemName: String, itemMaterial: Material) {
-    val name = itemName
+open class OdysseyItem(val name: String, private val material: Material, private val customModel: Int? = null) {
     val romanNumeralList = mapOf(1 to "I", 2 to "II", 3 to "III", 4 to "IV", 5 to "V", 6 to "VI", 7 to "VII", 8 to "VIII", 9 to "IX", 10 to "X")
-    private val material = itemMaterial
     open val odysseyDisplayName: String? = null
     open val odysseyLore: List<String> = listOf()
     open val isEnchanted: Boolean = false
@@ -27,7 +25,11 @@ open class OdysseyItem(itemName: String, itemMaterial: Material) {
             }
         }
         newOdysseyMeta.lore = odysseyLore
+        // Change to Component
         newOdysseyMeta.setDisplayName(odysseyDisplayName)
+        //
+        newOdysseyMeta.setCustomModelData(customModel)
+
         newOdysseyItemStack.itemMeta = newOdysseyMeta
         return newOdysseyItemStack
     }

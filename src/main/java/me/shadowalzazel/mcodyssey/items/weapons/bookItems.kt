@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.items.weapons
 
 import me.shadowalzazel.mcodyssey.items.utilty.OdysseyItem
+import me.shadowalzazel.mcodyssey.resources.CustomModels
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.event.ClickEvent
@@ -11,7 +12,7 @@ import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BookMeta
 
-object Necronomicon : OdysseyItem("Necronomicon", Material.WRITTEN_BOOK) {
+object Necronomicon : OdysseyItem("Necronomicon", Material.WRITTEN_BOOK, customModel = CustomModels.NECRONOMICON_BOOK) {
     override val odysseyDisplayName: String = "${ChatColor.BLUE}${ChatColor.ITALIC}$name"
     override val odysseyLore = listOf("${ChatColor.GOLD}${ChatColor.ITALIC}A book with forsaken abilities...")
 
@@ -43,7 +44,7 @@ object Necronomicon : OdysseyItem("Necronomicon", Material.WRITTEN_BOOK) {
 
         // Build
         val newBookMeta = necronomiconBookBuilder.build()
-        newBookMeta.setCustomModelData(6905066)
+        newBookMeta.setCustomModelData(CustomModels.NECRONOMICON_BOOK)
         newBookMeta.generation = BookMeta.Generation.TATTERED
         necronomiconBook.itemMeta = newBookMeta
         return necronomiconBook

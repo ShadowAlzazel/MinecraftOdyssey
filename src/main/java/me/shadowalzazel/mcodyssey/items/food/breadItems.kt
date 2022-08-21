@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.items.food
 
 import me.shadowalzazel.mcodyssey.items.utilty.OdysseyItem
+import me.shadowalzazel.mcodyssey.resources.CustomModels
 import org.bukkit.ChatColor
 import org.bukkit.Material
 
@@ -11,7 +12,7 @@ object FrenchToast : OdysseyItem("French Toast", Material.BREAD) {
 }
 
 // SUGARY_BREAD
-object SugaryBread : OdysseyItem("Sugary Bread", Material.BREAD) {
+object SugaryBread : OdysseyItem("Sugary Bread", Material.BREAD, CustomModels.SUGARY_BREAD) {
     override val odysseyDisplayName: String = "${ChatColor.RED}${ChatColor.ITALIC}$name"
     override val odysseyLore = listOf("${ChatColor.GRAY}Sugary Bread!")
 }
