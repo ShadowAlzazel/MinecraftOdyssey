@@ -10,7 +10,7 @@ object GuardingStrike : OdysseyEnchantmentWrapper("guardingstrike", "Guarding St
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.VOID_STRIKE, OdysseyEnchantments.EXPLODING, KNOCKBACK-> {
+            KNOCKBACK-> {
                 true
             }
             else -> {

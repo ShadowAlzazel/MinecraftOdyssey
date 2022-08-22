@@ -10,7 +10,7 @@ object Hemorrhage : OdysseyEnchantmentWrapper("hemorrhage", "Hemorrhage", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            SWEEPING_EDGE, OdysseyEnchantments.VOID_STRIKE -> {
+            OdysseyEnchantments.BUZZY_BEES -> {
                 true
             }
             else -> {

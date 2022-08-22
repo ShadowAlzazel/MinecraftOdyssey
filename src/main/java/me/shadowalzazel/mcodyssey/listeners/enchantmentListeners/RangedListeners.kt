@@ -1,11 +1,15 @@
 package me.shadowalzazel.mcodyssey.listeners.enchantmentListeners
 
 import io.papermc.paper.event.entity.EntityLoadCrossbowEvent
+import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.effects.DecayingTask
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
+import me.shadowalzazel.mcodyssey.listeners.utility.BurstBarrageTask
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.*
+import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityShootBowEvent
@@ -19,7 +23,8 @@ object RangedListeners : Listener {
 
     private var entityAlchemyArtilleryAmmo = mutableMapOf<UUID, ItemStack?>()
     private var entityAlchemyArtilleryCounter = mutableMapOf<UUID, Int>()
-
+    //
+    private var burstBarrageCooldown = mutableMapOf<UUID, Long>()
 
     // Main function for enchantments relating to shooting bows
     @EventHandler
@@ -35,6 +40,9 @@ object RangedListeners : Listener {
                 when (enchant.key) {
                     OdysseyEnchantments.ALCHEMY_ARTILLERY -> {
                         alchemyArtilleryEnchantmentShoot(event, someShooter, someBow)
+                    }
+                    OdysseyEnchantments.BURST_BARRAGE -> {
+                        burstBarrageEnchantment(someProjectile, someBow, someShooter)
                     }
                     OdysseyEnchantments.LUCKY_DRAW -> {
                         luckyDrawEnchantment(event, someBow)
@@ -55,6 +63,7 @@ object RangedListeners : Listener {
                 val someShooter: LivingEntity = event.entity.shooter as LivingEntity
                 val someProjectile: Projectile = event.entity
                 val someHitEntity: LivingEntity = event.hitEntity as LivingEntity
+                // make odyssey enchants work with each other
                 for (projectileTag in event.entity.scoreboardTags) {
                     when (projectileTag) {
                         "Soul_Rend_Arrow" -> {
@@ -64,6 +73,22 @@ object RangedListeners : Listener {
                 }
             }
             // For Ricochet hitting anything
+        }
+    }
+
+    // Main function for enchantments relating to loading crossbows
+    @EventHandler
+    fun crossbowLoadingHandler(event: EntityLoadCrossbowEvent) {
+        val someEntity = event.entity
+        if (event.crossbow?.hasItemMeta() == true) {
+            val someCrossbow = event.crossbow!!
+            for (enchant in someCrossbow.enchantments) {
+                when (enchant.key) {
+                    OdysseyEnchantments.ALCHEMY_ARTILLERY -> {
+                        alchemyArtilleryEnchantmentLoad(event, someEntity, someCrossbow)
+                    }
+                }
+            }
         }
     }
 
@@ -98,34 +123,38 @@ object RangedListeners : Listener {
 
     }
 
-    // ALCHEMY_ARTILLERY enchantment effects
-    @EventHandler
-    fun alchemyArtilleryEnchantmentLoad(event: EntityLoadCrossbowEvent) {
-        val someEntity = event.entity
-        if (someEntity.equipment!!.itemInMainHand.type == Material.CROSSBOW) {
-            val someCrossbow = someEntity.equipment!!.itemInMainHand
-            if (someCrossbow.hasItemMeta()) {
-                if (someCrossbow.itemMeta.hasEnchant(OdysseyEnchantments.ALCHEMY_ARTILLERY)) {
-                    if (someEntity.equipment!!.itemInOffHand.type == Material.SPLASH_POTION || someEntity.equipment!!.itemInOffHand.type == Material.LINGERING_POTION) {
-                        val someOffHandPotion = someEntity.equipment!!.itemInOffHand
-                        if ("Alchemy_Artillery_Loaded" !in someEntity.scoreboardTags) {
-                            someEntity.scoreboardTags.add("Alchemy_Artillery_Loaded")
-                            if (!entityAlchemyArtilleryAmmo.containsKey(someEntity.uniqueId)) entityAlchemyArtilleryAmmo[someEntity.uniqueId] = someOffHandPotion else entityAlchemyArtilleryAmmo[someEntity.uniqueId] = someOffHandPotion
-                            val multiCounter = if (someCrossbow.itemMeta.hasEnchant(Enchantment.MULTISHOT)) 3 else 1
-                            if (!entityAlchemyArtilleryCounter.containsKey(someEntity.uniqueId)) entityAlchemyArtilleryCounter[someEntity.uniqueId] = multiCounter else entityAlchemyArtilleryCounter[someEntity.uniqueId] = multiCounter
-                            someEntity.equipment!!.setItemInOffHand(ItemStack(Material.AIR, 1))
-                            println("Loaded")
-                        }
-                        else {
-                            event.isCancelled = true
-                            println("Full!")
-                        }
-                    }
-                }
+    // ALCHEMY_ARTILLERY enchantment function regarding loading
+    private fun alchemyArtilleryEnchantmentLoad(event: EntityLoadCrossbowEvent, eventEntity: LivingEntity, eventCrossbow: ItemStack) {
+        if (eventEntity.equipment!!.itemInOffHand.type == Material.SPLASH_POTION || eventEntity.equipment!!.itemInOffHand.type == Material.LINGERING_POTION) {
+            val someOffHandPotion = eventEntity.equipment!!.itemInOffHand
+            if ("Alchemy_Artillery_Loaded" !in eventEntity.scoreboardTags) {
+                eventEntity.scoreboardTags.add("Alchemy_Artillery_Loaded")
+                if (!entityAlchemyArtilleryAmmo.containsKey(eventEntity.uniqueId)) entityAlchemyArtilleryAmmo[eventEntity.uniqueId] = someOffHandPotion else entityAlchemyArtilleryAmmo[eventEntity.uniqueId] = someOffHandPotion
+                val multiCounter = if (eventCrossbow.itemMeta.hasEnchant(Enchantment.MULTISHOT)) 3 else 1
+                if (!entityAlchemyArtilleryCounter.containsKey(eventEntity.uniqueId)) entityAlchemyArtilleryCounter[eventEntity.uniqueId] = multiCounter else entityAlchemyArtilleryCounter[eventEntity.uniqueId] = multiCounter
+                eventEntity.equipment!!.setItemInOffHand(ItemStack(Material.AIR, 1))
+                println("Loaded")
+            }
+            else {
+                event.isCancelled = true
+                println("Full!")
             }
         }
     }
 
+    // BURST_BARRAGE enchantment function
+    private fun burstBarrageEnchantment(eventProjectile: Entity, eventBow: ItemStack, eventShooter: LivingEntity) {
+        // Check enchantment Strength
+        val enchantmentStrength = eventBow.itemMeta.getEnchantLevel(OdysseyEnchantments.BURST_BARRAGE)
+        //
+        if (!eventShooter.scoreboardTags.contains("Burst_Shooting"))  {
+            eventShooter.addScoreboardTag("Burst_Shooting")
+            val initialVelocity = eventProjectile.velocity.clone()
+            val burstBarrageTask = BurstBarrageTask(eventShooter, enchantmentStrength, initialVelocity, eventProjectile) // Every 0.25 secs
+            burstBarrageTask.runTaskTimer(MinecraftOdyssey.instance, 5, 5)
+        }
+
+    }
 
     // LUCKY_DRAW enchantment function
     private fun luckyDrawEnchantment(event: EntityShootBowEvent, eventBow: ItemStack) {
@@ -166,65 +195,6 @@ object RangedListeners : Listener {
         eventProjectile.addScoreboardTag("Soul_Rend_Arrow")
         eventProjectile.addScoreboardTag("Soul_Rend_Modifier_$enchantmentStrength")
     }
-
-
-    // REND enchantment effects
-
-    fun rendEnchantment(event: ProjectileHitEvent) {
-        if (event.hitEntity != null) {
-            if (event.hitEntity is LivingEntity) {
-                val rendedEntity = event.hitEntity
-                if (event.entity.shooter is LivingEntity) {
-                    val someEntity = event.entity.shooter as LivingEntity
-                    if (someEntity.equipment!!.itemInMainHand.type == Material.BOW || someEntity.equipment!!.itemInMainHand.type == Material.CROSSBOW) {
-                        val someWeapon = someEntity.equipment!!.itemInMainHand
-                        if (someWeapon.hasItemMeta()) {
-                            if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.SOUL_REND)) {
-                                if ("Rended_${someEntity.name}" !in rendedEntity!!.scoreboardTags) {
-                                    rendedEntity.scoreboardTags.add("Rended_${someEntity.name}")
-                                    //Effects
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-    // REND enchantment effects
-
-    fun rendEnchantmentActivation(event: PlayerSwapHandItemsEvent) {
-        val somePlayer = event.player
-        if (event.offHandItem!!.type == Material.BOW || event.offHandItem!!.type == Material.CROSSBOW) {
-            val someWeapon = event.offHandItem!!
-            if (someWeapon.hasItemMeta()) {
-                if (someWeapon.itemMeta.hasEnchant(OdysseyEnchantments.SOUL_REND)) {
-                    val nearbyEnemies = somePlayer.world.getNearbyLivingEntities(somePlayer.location, 25.0)
-                    //println(System.nanoTime())
-                    val rendLevel = someWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.SOUL_REND)
-
-                    for (someEntity in nearbyEnemies) {
-                        if ("Rended_${somePlayer.name}" in someEntity.scoreboardTags) {
-                            val rendStacks = someEntity.arrowsInBody
-                            someEntity.damage((rendStacks * rendLevel * 1) + 1.0)
-                            someEntity.world.spawnParticle(Particle.SOUL, someEntity.location, 25, 0.05, 0.35, 0.05)
-                            someEntity.world.spawnParticle(Particle.SCULK_SOUL, someEntity.location, 25, 0.25, 0.35, 0.25)
-                            println(rendStacks)
-                            someEntity.scoreboardTags.remove("Rended_${somePlayer.name}")
-                            //Effects
-                        }
-                    }
-                    //println(System.nanoTime())
-                }
-            }
-        }
-    }
-
-
-
-
 
 
 }

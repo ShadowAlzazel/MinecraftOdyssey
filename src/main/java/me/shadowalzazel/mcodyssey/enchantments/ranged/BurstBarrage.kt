@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.enchantments.melee
+package me.shadowalzazel.mcodyssey.enchantments.ranged
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantmentWrapper
@@ -6,11 +6,11 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object DecayingTouch : OdysseyEnchantmentWrapper("decayingtouch", "Decaying Touch", 3) {
+object BurstBarrage : OdysseyEnchantmentWrapper("burstbarrage", "Burst Barrage", 5) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            FIRE_ASPECT, OdysseyEnchantments.DOUSE -> {
+            OdysseyEnchantments.ALCHEMY_ARTILLERY -> { //?
                 true
             }
             else -> {
@@ -21,8 +21,7 @@ object DecayingTouch : OdysseyEnchantmentWrapper("decayingtouch", "Decaying Touc
 
     override fun canEnchantItem(item: ItemStack): Boolean {
         return when (item.type) {
-            Material.ENCHANTED_BOOK, Material.NETHERITE_SWORD, Material.DIAMOND_SWORD, Material.IRON_SWORD, Material.GOLDEN_SWORD, Material.STONE_SWORD, Material.WOODEN_SWORD,
-            Material.NETHERITE_AXE, Material.DIAMOND_AXE, Material.IRON_AXE, Material.GOLDEN_AXE, Material.STONE_AXE, Material.WOODEN_AXE -> {
+            Material.ENCHANTED_BOOK, Material.BOW, Material.CROSSBOW -> {
                 true
             }
             else -> {

@@ -40,6 +40,9 @@ object GiveTestItem : CommandExecutor {
                     "bane_of_the_illager" -> {
                         sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BANE_OF_THE_ILLAGER, 3))
                     }
+                    "burst_barrage" -> {
+                        sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BURST_BARRAGE, 3))
+                    }
                     else -> {
                         return false
                     }
