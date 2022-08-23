@@ -2,6 +2,7 @@ package me.shadowalzazel.mcodyssey.effects
 
 object OdysseyEffectTags {
 
-    val FREEZING: String = "Freezing"
+    const val FREEZING: String = "Freezing"
+    const val DECAYING: String = "Decaying"
 
 }

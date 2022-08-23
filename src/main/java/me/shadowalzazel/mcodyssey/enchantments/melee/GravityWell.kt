@@ -10,7 +10,7 @@ object GravityWell : OdysseyEnchantmentWrapper("gravitywell", "Gravity Well", 3)
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            KNOCKBACK, OdysseyEnchantments.FROG_FRIGHT -> {
+            OdysseyEnchantments.FROG_FRIGHT, SWEEPING_EDGE, OdysseyEnchantments.WHIRLWIND -> {
                 true
             }
             else -> {

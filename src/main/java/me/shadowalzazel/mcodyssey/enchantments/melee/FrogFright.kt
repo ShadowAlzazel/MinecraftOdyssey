@@ -10,7 +10,7 @@ object FrogFright : OdysseyEnchantmentWrapper("frogfright", "Frog Fright", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.VOID_STRIKE, OdysseyEnchantments.EXPLODING, KNOCKBACK -> {
+            OdysseyEnchantments.GRAVITY_WELL -> {
                 true
             }
             else -> {

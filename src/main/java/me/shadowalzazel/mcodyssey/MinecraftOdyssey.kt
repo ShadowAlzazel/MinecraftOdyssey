@@ -4,6 +4,7 @@ import me.shadowalzazel.mcodyssey.bosses.hogRider.HogRiderListeners
 import me.shadowalzazel.mcodyssey.bosses.theAmbassador.AmbassadorListeners
 import me.shadowalzazel.mcodyssey.bosses.utility.OdysseyBoss
 import me.shadowalzazel.mcodyssey.commands.*
+import me.shadowalzazel.mcodyssey.commands.spells.Necronomicon
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.listeners.*
 import me.shadowalzazel.mcodyssey.listeners.enchantmentListeners.ArmorListeners
@@ -14,9 +15,7 @@ import me.shadowalzazel.mcodyssey.listeners.OdysseyPhenomenaListener
 import me.shadowalzazel.mcodyssey.phenomenon.PhenomenonTimer
 import me.shadowalzazel.mcodyssey.phenomenon.solarPhenomena.utilty.SolarPhenomenon
 import me.shadowalzazel.mcodyssey.phenomenon.lunarPhenomena.utilty.LunarPhenomenon
-import me.shadowalzazel.mcodyssey.recipes.CookingRecipes
-import me.shadowalzazel.mcodyssey.recipes.GildingRecipes
-import me.shadowalzazel.mcodyssey.recipes.OdysseyRecipes
+import me.shadowalzazel.mcodyssey.recipes.*
 import org.bukkit.Bukkit
 import org.bukkit.World
 
@@ -80,7 +79,7 @@ class MinecraftOdyssey : JavaPlugin() {
         }
         if (mainWorld != null ) {
             val phenomenonTimer = PhenomenonTimer(mainWorld!!)
-            val someTime = mainWorld?.time
+            //val someTime = mainWorld?.time
             //val timerDelay = if (someTime!! < 23500) { 23500 - someTime } else { (24000 - someTime) + 23500 }
             val timerDelay = 20 * 10L
             phenomenonTimer.runTaskTimer(this, timerDelay, 20 * 10)
@@ -108,7 +107,7 @@ class MinecraftOdyssey : JavaPlugin() {
         server.pluginManager.registerEvents(OdysseyMiscListeners, this)
 
         // Gilding Recipes
-        Bukkit.addRecipe(GildingRecipes.ODYSSEY_NAMING)
+        Bukkit.addRecipe(BrandingRecipes.ODYSSEY_NAMING)
         Bukkit.addRecipe(GildingRecipes.ODYSSEY_GILDED_SMITHING)
         Bukkit.addRecipe(GildingRecipes.GILDED_BOOK_COMBINING)
         Bukkit.addRecipe(GildingRecipes.GILDED_ITEM_UPGRADING)
@@ -120,6 +119,10 @@ class MinecraftOdyssey : JavaPlugin() {
         for (cookingRecipe in CookingRecipes.recipeSet) {
             Bukkit.addRecipe(cookingRecipe)
         }
+        // Weapon Recipes
+        for (weaponRecipe in WeaponRecipes.recipeSet) {
+            Bukkit.addRecipe(weaponRecipe)
+        }
 
         // Register Commands
         getCommand("SpawnAmbassador")?.setExecutor(SpawnAmbassador)
@@ -127,6 +130,11 @@ class MinecraftOdyssey : JavaPlugin() {
         getCommand("GiveTestItem")?.setExecutor(GiveTestItem)
         getCommand("SpawnTestMob")?.setExecutor(SpawnTestMob)
         getCommand("SpawnTestKnight")?.setExecutor(SpawnTestKnight)
+
+        // Spell Commands
+        getCommand("necronomicon")?.setExecutor(Necronomicon)
+
+
 
         // Experimental coroutine stuff
         /*

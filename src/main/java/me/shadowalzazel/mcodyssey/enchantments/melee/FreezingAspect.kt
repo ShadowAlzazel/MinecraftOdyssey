@@ -10,7 +10,7 @@ object FreezingAspect : OdysseyEnchantmentWrapper("frezzingaspect", "Freezing As
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            FIRE_ASPECT, OdysseyEnchantments.GUARDING_STRIKE -> {
+            FIRE_ASPECT, OdysseyEnchantments.DOUSE -> {
                 true
             }
             else -> {

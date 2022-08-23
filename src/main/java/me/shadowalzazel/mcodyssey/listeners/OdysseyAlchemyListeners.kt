@@ -10,6 +10,7 @@ import me.shadowalzazel.mcodyssey.effects.BlazingTask
 import me.shadowalzazel.mcodyssey.effects.DecayingTask
 import me.shadowalzazel.mcodyssey.effects.DousedTask
 import me.shadowalzazel.mcodyssey.effects.FreezingTask
+import net.kyori.adventure.text.TextComponent
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
@@ -148,14 +149,16 @@ object OdysseyAlchemyListeners : Listener {
                         // Check for all names
                         for (someOdysseyPotion: OdysseyPotion in AlchemyPotions.potionSet) {
                             // Name Check
-                            if (someOdysseyPotion.odysseyDisplayName == someBrewedPotion.itemMeta.displayName) {
+                            val somePotionNameComponent = someBrewedPotion.itemMeta.displayName() as TextComponent
+                            val odysseyPotionNameComponent = someOdysseyPotion.potionDisplayName
+                            if (odysseyPotionNameComponent.content() == somePotionNameComponent.content()) {
                                 val somePotionMeta = someBrewedPotion.itemMeta as PotionMeta
                                 // If Custom Effects
                                 if (somePotionMeta.basePotionData.type == PotionType.UNCRAFTABLE) {
                                     // Dragon Breath
                                     if (resultType == Material.LINGERING_POTION) {
                                         // Potions without timers
-                                        if (somePotionMeta.displayName == "§3Bottled Souls") {
+                                        if (somePotionNameComponent.content() == "§3Bottled Souls") {
                                             createResultingPotion(x)
                                         }
                                         // Potions that have timers
@@ -221,15 +224,15 @@ object OdysseyAlchemyListeners : Listener {
 
 
     // Main function regarding splash potions
-    @Suppress("DEPRECATION")
     @EventHandler
     fun alchemyPotionSplash(event: PotionSplashEvent) {
         if (event.potion.item.hasItemMeta()) {
             val somePotion = event.potion.item
-            if (somePotion.itemMeta.hasLore()) {
+            if (somePotion.itemMeta.hasLore() && somePotion.itemMeta.hasDisplayName()) {
+                val somePotionNameComponent = somePotion.displayName() as TextComponent
                 val somePotionMeta = somePotion.itemMeta as PotionMeta
                 if (somePotionMeta.basePotionData.type == PotionType.UNCRAFTABLE) {
-                    val potionName = somePotionMeta.displayName
+                    val potionName = somePotionNameComponent.content()
                     var potionDuration = 0
                     // Check if in class list
                     if (potionName in alchemyCustomEffectPotions) {

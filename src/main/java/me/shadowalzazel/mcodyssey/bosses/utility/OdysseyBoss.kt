@@ -1,8 +1,6 @@
 package me.shadowalzazel.mcodyssey.bosses.utility
 
-open class OdysseyBoss(name: String, entityTypeName: String) {
-    val bossName: String = name
-    val entityTypeName: String = entityTypeName
+open class OdysseyBoss(val bossName: String, val entityTypeName: String) {
     var active: Boolean = false
 
 }

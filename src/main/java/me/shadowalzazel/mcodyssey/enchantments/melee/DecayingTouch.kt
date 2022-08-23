@@ -10,7 +10,7 @@ object DecayingTouch : OdysseyEnchantmentWrapper("decayingtouch", "Decaying Touc
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            FIRE_ASPECT, OdysseyEnchantments.GUARDING_STRIKE, OdysseyEnchantments.FREEZING_ASPECT, OdysseyEnchantments.VOID_STRIKE -> {
+            FIRE_ASPECT, OdysseyEnchantments.DOUSE -> {
                 true
             }
             else -> {

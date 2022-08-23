@@ -15,9 +15,13 @@ object OdysseyServerListeners : Listener {
     @EventHandler
     fun onPlayerJoin(event: PlayerJoinEvent) {
         val player = event.player
+        // Resource Pack
+        player.setResourcePack("https://www.dropbox.com/s/6hob8iad499vz95/odyssey-resource-pack-test.zip?dl=1")
         val serverName: String = MinecraftOdyssey.instance.config.getString("names.server-name") ?: return
         player.sendMessage("${ChatColor.GRAY}Hello ${player.name}! Welcome!")
         event.joinMessage = ("${ChatColor.GOLD}${player.name} ${ChatColor.YELLOW}has logged into $serverName")
+
+
     }
 
     // Leave Message
