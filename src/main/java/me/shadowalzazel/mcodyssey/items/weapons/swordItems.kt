@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack
 import java.util.*
 
 // NEUTRONIUM_BARK_SWORD
+/*
 object NeutroniumBarkSword : OdysseyItem("Neutronium-Bark Sword", Material.NETHERITE_SWORD) {
     override val odysseyDisplayName: String = "${ChatColor.AQUA}${ChatColor.ITALIC}$name"
     override val odysseyLore = listOf("${ChatColor.GOLD}${ChatColor.ITALIC}A sword made from neutronium bark")
@@ -31,3 +32,5 @@ object NeutroniumBarkSword : OdysseyItem("Neutronium-Bark Sword", Material.NETHE
     }
 
 }
+
+ */

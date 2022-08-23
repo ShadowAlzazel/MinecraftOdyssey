@@ -15,10 +15,7 @@ import me.shadowalzazel.mcodyssey.listeners.OdysseyPhenomenaListener
 import me.shadowalzazel.mcodyssey.phenomenon.PhenomenonTimer
 import me.shadowalzazel.mcodyssey.phenomenon.solarPhenomena.utilty.SolarPhenomenon
 import me.shadowalzazel.mcodyssey.phenomenon.lunarPhenomena.utilty.LunarPhenomenon
-import me.shadowalzazel.mcodyssey.recipes.BrandingRecipes
-import me.shadowalzazel.mcodyssey.recipes.CookingRecipes
-import me.shadowalzazel.mcodyssey.recipes.GildingRecipes
-import me.shadowalzazel.mcodyssey.recipes.OdysseyRecipes
+import me.shadowalzazel.mcodyssey.recipes.*
 import org.bukkit.Bukkit
 import org.bukkit.World
 
@@ -121,6 +118,10 @@ class MinecraftOdyssey : JavaPlugin() {
         // Cooking Recipes
         for (cookingRecipe in CookingRecipes.recipeSet) {
             Bukkit.addRecipe(cookingRecipe)
+        }
+        // Weapon Recipes
+        for (weaponRecipe in WeaponRecipes.recipeSet) {
+            Bukkit.addRecipe(weaponRecipe)
         }
 
         // Register Commands

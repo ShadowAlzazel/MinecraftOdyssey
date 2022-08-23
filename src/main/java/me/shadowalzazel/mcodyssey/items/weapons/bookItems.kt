@@ -12,10 +12,11 @@ import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BookMeta
 
-object Necronomicon : OdysseyItem("Necronomicon", Material.WRITTEN_BOOK, customModel = CustomModels.NECRONOMICON_BOOK) {
-    override val odysseyDisplayName: String = "${ChatColor.BLUE}${ChatColor.ITALIC}$name"
-    override val odysseyLore = listOf("${ChatColor.GOLD}${ChatColor.ITALIC}A book with forsaken abilities...")
-
+object Necronomicon : OdysseyItem("Necronomicon",
+    Material.WRITTEN_BOOK,
+    displayName = Component.text("Necronomicon", TextColor.color(39, 19, 92)),
+    odysseyLore = null,
+    customModel = CustomModels.NECRONOMICON_BOOK) {
 
     override fun createItemStack(amount: Int): ItemStack {
         val necronomiconBook = super.createItemStack(amount)

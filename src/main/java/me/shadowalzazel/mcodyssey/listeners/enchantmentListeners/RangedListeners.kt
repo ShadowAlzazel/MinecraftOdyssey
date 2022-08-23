@@ -1,20 +1,18 @@
 package me.shadowalzazel.mcodyssey.listeners.enchantmentListeners
 
+import com.destroystokyo.paper.event.player.PlayerReadyArrowEvent
 import io.papermc.paper.event.entity.EntityLoadCrossbowEvent
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
-import me.shadowalzazel.mcodyssey.effects.DecayingTask
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.listeners.utility.BurstBarrageTask
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.*
-import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityShootBowEvent
 import org.bukkit.event.entity.ProjectileHitEvent
-import org.bukkit.event.player.PlayerSwapHandItemsEvent
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
@@ -24,7 +22,7 @@ object RangedListeners : Listener {
     private var entityAlchemyArtilleryAmmo = mutableMapOf<UUID, ItemStack?>()
     private var entityAlchemyArtilleryCounter = mutableMapOf<UUID, Int>()
     //
-    private var burstBarrageCooldown = mutableMapOf<UUID, Long>()
+    private var overchargeRampingTime = mutableMapOf<UUID, Long>()
 
     // Main function for enchantments relating to shooting bows
     @EventHandler
@@ -44,8 +42,14 @@ object RangedListeners : Listener {
                     OdysseyEnchantments.BURST_BARRAGE -> {
                         burstBarrageEnchantment(someProjectile, someBow, someShooter)
                     }
+                    OdysseyEnchantments.CHAIN_REACTION -> {
+                        chainReactionEnchantmentShoot(someProjectile, someBow)
+                    }
                     OdysseyEnchantments.LUCKY_DRAW -> {
                         luckyDrawEnchantment(event, someBow)
+                    }
+                    OdysseyEnchantments.OVERCHARGE -> {
+
                     }
                     OdysseyEnchantments.SOUL_REND -> {
                         soulRendEnchantmentShoot(someProjectile, someBow)
@@ -68,6 +72,9 @@ object RangedListeners : Listener {
                     when (projectileTag) {
                         "Soul_Rend_Arrow" -> {
                             soulRendEnchantmentHit(someShooter, someProjectile, someHitEntity)
+                        }
+                        "Chain_Reaction_Arrow" -> {
+                            chainReactionEnchantmentHit(someShooter, someProjectile, someHitEntity)
                         }
                     }
                 }
@@ -92,8 +99,43 @@ object RangedListeners : Listener {
         }
     }
 
+    // Main function for readying arrows
+    @EventHandler
+    fun bowReadyHandler(event: PlayerReadyArrowEvent) {
+        if (event.bow.hasItemMeta()) {
+            val someBow = event.bow
+            for (enchant in someBow.enchantments) {
+                when (enchant.key) {
+                    OdysseyEnchantments.OVERCHARGE -> {
+
+                    }
+                }
+            }
+        }
+    }
+
+
 
     /*----------------------------------------------------------------------------------*/
+
+    // ALCHEMY_ARTILLERY enchantment function regarding loading
+    private fun alchemyArtilleryEnchantmentLoad(event: EntityLoadCrossbowEvent, eventEntity: LivingEntity, eventCrossbow: ItemStack) {
+        if (eventEntity.equipment!!.itemInOffHand.type == Material.SPLASH_POTION || eventEntity.equipment!!.itemInOffHand.type == Material.LINGERING_POTION) {
+            val someOffHandPotion = eventEntity.equipment!!.itemInOffHand
+            if ("Alchemy_Artillery_Loaded" !in eventEntity.scoreboardTags) {
+                eventEntity.scoreboardTags.add("Alchemy_Artillery_Loaded")
+                if (!entityAlchemyArtilleryAmmo.containsKey(eventEntity.uniqueId)) entityAlchemyArtilleryAmmo[eventEntity.uniqueId] = someOffHandPotion else entityAlchemyArtilleryAmmo[eventEntity.uniqueId] = someOffHandPotion
+                val multiCounter = if (eventCrossbow.itemMeta.hasEnchant(Enchantment.MULTISHOT)) 3 else 1
+                if (!entityAlchemyArtilleryCounter.containsKey(eventEntity.uniqueId)) entityAlchemyArtilleryCounter[eventEntity.uniqueId] = multiCounter else entityAlchemyArtilleryCounter[eventEntity.uniqueId] = multiCounter
+                eventEntity.equipment!!.setItemInOffHand(ItemStack(Material.AIR, 1))
+                println("Loaded")
+            }
+            else {
+                event.isCancelled = true
+                println("Full!")
+            }
+        }
+    }
 
     // ALCHEMY_ARTILLERY enchantment function regarding shooting
     private fun alchemyArtilleryEnchantmentShoot(event: EntityShootBowEvent, eventShooter: LivingEntity, eventBow: ItemStack) {
@@ -123,25 +165,6 @@ object RangedListeners : Listener {
 
     }
 
-    // ALCHEMY_ARTILLERY enchantment function regarding loading
-    private fun alchemyArtilleryEnchantmentLoad(event: EntityLoadCrossbowEvent, eventEntity: LivingEntity, eventCrossbow: ItemStack) {
-        if (eventEntity.equipment!!.itemInOffHand.type == Material.SPLASH_POTION || eventEntity.equipment!!.itemInOffHand.type == Material.LINGERING_POTION) {
-            val someOffHandPotion = eventEntity.equipment!!.itemInOffHand
-            if ("Alchemy_Artillery_Loaded" !in eventEntity.scoreboardTags) {
-                eventEntity.scoreboardTags.add("Alchemy_Artillery_Loaded")
-                if (!entityAlchemyArtilleryAmmo.containsKey(eventEntity.uniqueId)) entityAlchemyArtilleryAmmo[eventEntity.uniqueId] = someOffHandPotion else entityAlchemyArtilleryAmmo[eventEntity.uniqueId] = someOffHandPotion
-                val multiCounter = if (eventCrossbow.itemMeta.hasEnchant(Enchantment.MULTISHOT)) 3 else 1
-                if (!entityAlchemyArtilleryCounter.containsKey(eventEntity.uniqueId)) entityAlchemyArtilleryCounter[eventEntity.uniqueId] = multiCounter else entityAlchemyArtilleryCounter[eventEntity.uniqueId] = multiCounter
-                eventEntity.equipment!!.setItemInOffHand(ItemStack(Material.AIR, 1))
-                println("Loaded")
-            }
-            else {
-                event.isCancelled = true
-                println("Full!")
-            }
-        }
-    }
-
     // BURST_BARRAGE enchantment function
     private fun burstBarrageEnchantment(eventProjectile: Entity, eventBow: ItemStack, eventShooter: LivingEntity) {
         // Check enchantment Strength
@@ -156,10 +179,68 @@ object RangedListeners : Listener {
 
     }
 
+    // CHAIN_REACTION enchantment function regarding shooting
+    private fun chainReactionEnchantmentShoot(eventProjectile: Entity, eventBow: ItemStack) {
+        val enchantmentStrength = eventBow.itemMeta.getEnchantLevel(OdysseyEnchantments.CHAIN_REACTION)
+        eventProjectile.addScoreboardTag("Chain_Reaction_Arrow")
+        eventProjectile.addScoreboardTag("Chain_Reaction_Modifier_$enchantmentStrength")
+    }
+
+    // CHAIN_REACTION enchantment function
+    private fun chainReactionEnchantmentHit(eventShooter: LivingEntity, eventProjectile: Projectile, eventHitEntity: LivingEntity) {
+        val baseVelocity = eventProjectile.velocity.clone()
+        val baseUnitVector = baseVelocity.clone().normalize()
+        baseUnitVector.y = 0.0
+        val baseLocation = eventProjectile.location.clone()
+        var amount: Int = 0
+        for (x in 1..5) {
+            if (eventProjectile.scoreboardTags.contains("Chain_Reaction_Modifier_$x")) {
+                amount = x
+                break
+            }
+        }
+        // remove tag after
+
+        for (p in 1..amount) {
+            val someRotation = (360.0 / amount) * p
+            val newProjectile = eventProjectile.world.spawnEntity(baseLocation, eventProjectile.type)
+            // copy item data later
+            val newVelocity = baseVelocity.clone().multiply(baseVelocity.length() - 0.5).rotateAroundY(someRotation)
+            newProjectile.velocity = newVelocity
+        }
+
+    }
+
+
     // LUCKY_DRAW enchantment function
     private fun luckyDrawEnchantment(event: EntityShootBowEvent, eventBow: ItemStack) {
         val luckyFactor = eventBow.itemMeta.getEnchantLevel(OdysseyEnchantments.LUCKY_DRAW)
         if ((0..100).random() <= (luckyFactor * 10) + 5) { event.setConsumeItem(false) }
+    }
+
+    // OVERCHARGE enchantment function
+    private fun overchargeEnchantmentLoad(event: PlayerReadyArrowEvent, eventBow: ItemStack, eventPlayer: Player) {
+        val enchantmentStrength = eventBow.itemMeta.getEnchantLevel(OdysseyEnchantments.OVERCHARGE)
+        //
+        if (!overchargeRampingTime.containsKey(eventPlayer.uniqueId)) { overchargeRampingTime[eventPlayer.uniqueId] = 0L }
+        val timeElapsed = System.currentTimeMillis() - overchargeRampingTime[eventPlayer.uniqueId]!!
+
+        if (!eventPlayer.scoreboardTags.contains("Overcharge_1") && timeElapsed > 1.5) {
+
+        }
+        else {
+
+        }
+
+    }
+
+
+
+    // SOUL_REND enchantment function regarding shooting
+    private fun soulRendEnchantmentShoot(eventProjectile: Entity, eventBow: ItemStack) {
+        val enchantmentStrength = eventBow.itemMeta.getEnchantLevel(OdysseyEnchantments.SOUL_REND)
+        eventProjectile.addScoreboardTag("Soul_Rend_Arrow")
+        eventProjectile.addScoreboardTag("Soul_Rend_Modifier_$enchantmentStrength")
     }
 
     // SOUL_REND enchantment function
@@ -187,13 +268,6 @@ object RangedListeners : Listener {
             }
         }
 
-    }
-
-    // SOUL_REND enchantment function regarding shooting
-    private fun soulRendEnchantmentShoot(eventProjectile: Entity, eventBow: ItemStack) {
-        val enchantmentStrength = eventBow.itemMeta.getEnchantLevel(OdysseyEnchantments.SOUL_REND)
-        eventProjectile.addScoreboardTag("Soul_Rend_Arrow")
-        eventProjectile.addScoreboardTag("Soul_Rend_Modifier_$enchantmentStrength")
     }
 
 

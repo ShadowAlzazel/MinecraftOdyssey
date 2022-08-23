@@ -10,7 +10,7 @@ object BurstBarrage : OdysseyEnchantmentWrapper("burstbarrage", "Burst Barrage",
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.ALCHEMY_ARTILLERY -> { //?
+            ARROW_INFINITE -> {
                 true
             }
             else -> {

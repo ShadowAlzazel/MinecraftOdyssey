@@ -1,6 +1,8 @@
 package me.shadowalzazel.mcodyssey.alchemy.utility
 
 import me.shadowalzazel.mcodyssey.items.utilty.OdysseyItem
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.TextComponent
 import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
@@ -10,7 +12,8 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionType
 
 //
-open class OdysseyPotion(itemName: String, private val potionEffects: List<PotionEffect>, private val potionColor: Color?) : OdysseyItem(itemName, Material.POTION) {
+open class OdysseyPotion(potionName: String, val potionDisplayName: TextComponent, potionLore: List<String>? = null, private val potionEffects: List<PotionEffect>, private val potionColor: Color?) :
+    OdysseyItem(potionName, Material.POTION, potionDisplayName, potionLore) {
 
     // Creates and Item Stack
     override fun createItemStack(amount: Int): ItemStack {

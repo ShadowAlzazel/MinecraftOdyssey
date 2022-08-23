@@ -10,7 +10,7 @@ object ChainReaction : OdysseyEnchantmentWrapper("chainreaction", "Chain Reactio
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.ALCHEMY_ARTILLERY -> { //?
+            OdysseyEnchantments.ECHO -> { //?
                 true
             }
             else -> {

@@ -5,10 +5,7 @@ import me.shadowalzazel.mcodyssey.enchantments.melee.*
 import me.shadowalzazel.mcodyssey.enchantments.other.HookShot
 import me.shadowalzazel.mcodyssey.enchantments.other.MirrorForce
 import me.shadowalzazel.mcodyssey.enchantments.other.WarpJump
-import me.shadowalzazel.mcodyssey.enchantments.ranged.AlchemyArtillery
-import me.shadowalzazel.mcodyssey.enchantments.ranged.BurstBarrage
-import me.shadowalzazel.mcodyssey.enchantments.ranged.LuckyDraw
-import me.shadowalzazel.mcodyssey.enchantments.ranged.SoulRend
+import me.shadowalzazel.mcodyssey.enchantments.ranged.*
 import me.shadowalzazel.mcodyssey.enchantments.utility.GildedPower
 import org.bukkit.enchantments.Enchantment
 import java.util.*
@@ -26,6 +23,7 @@ object OdysseyEnchantments {
     val BANE_OF_THE_SWINE: Enchantment = BaneOfTheSwine
     val BURST_BARRAGE: Enchantment = BurstBarrage
     val BUZZY_BEES: Enchantment = BuzzyBees
+    val CHAIN_REACTION: Enchantment = ChainReaction
     val COWARDICE: Enchantment = Cowardice
     val DECAYING_TOUCH: Enchantment = DecayingTouch
     val DOUSE: Enchantment = Douse
@@ -40,6 +38,7 @@ object OdysseyEnchantments {
     val HOOK_SHOT: Enchantment = HookShot
     val LUCKY_DRAW: Enchantment = LuckyDraw
     val MIRROR_FORCE: Enchantment = MirrorForce
+    val OVERCHARGE: Enchantment = Overcharge
     val POTION_BARRIER: Enchantment = PotionBarrier
     val SOUL_REND: Enchantment = SoulRend
     val SPEEDY_SPURS: Enchantment = SpeedySpurs
@@ -51,8 +50,8 @@ object OdysseyEnchantments {
     val WHIRLWIND: Enchantment = Whirlwind
 
     // Set of all enchantments
-    val enchantmentSet = setOf(GILDED_POWER, ALCHEMY_ARTILLERY, BACKSTABBER, BANE_OF_THE_ILLAGER, BANE_OF_THE_SEA, BANE_OF_THE_SWINE, BURST_BARRAGE, BUZZY_BEES, COWARDICE, DECAYING_TOUCH, DOUSE, ECHO,
-        EXPLODING, FREEZING_ASPECT, FROG_FRIGHT, FRUITFUL_FARE, GRAVITY_WELL, GUARDING_STRIKE, HEMORRHAGE, HOOK_SHOT, LUCKY_DRAW, MIRROR_FORCE, POTION_BARRIER, SOUL_REND, SPEEDY_SPURS, SQUIDIFY, VOID_STRIKE, WARP_JUMP, WHIRLWIND)
+    val enchantmentSet = setOf(GILDED_POWER, ALCHEMY_ARTILLERY, BACKSTABBER, BANE_OF_THE_ILLAGER, BANE_OF_THE_SEA, BANE_OF_THE_SWINE, BURST_BARRAGE, BUZZY_BEES, CHAIN_REACTION, COWARDICE, DECAYING_TOUCH, DOUSE, ECHO,
+        EXPLODING, FREEZING_ASPECT, FROG_FRIGHT, FRUITFUL_FARE, GRAVITY_WELL, GUARDING_STRIKE, HEMORRHAGE, HOOK_SHOT, LUCKY_DRAW, MIRROR_FORCE, OVERCHARGE, POTION_BARRIER, SOUL_REND, SPEEDY_SPURS, SQUIDIFY, VOID_STRIKE, WARP_JUMP, WHIRLWIND)
 
     // Register
     fun register() {

@@ -2,14 +2,24 @@ package me.shadowalzazel.mcodyssey.items
 
 import me.shadowalzazel.mcodyssey.items.weapons.*
 
-
 //IDK IF CLASS OR OBJECT
 object OdysseyWeapons {
 
-    val NEUTRONIUM_BARK_SWORD = NeutroniumBarkSword
+    //val NEUTRONIUM_BARK_SWORD = NeutroniumBarkSword
 
     //
     val NECRONOMICON = Necronomicon
-}
 
-// FIX
+
+
+    // Katanas
+    val WOODEN_KATANA = WoodenKatana
+    val GOLDEN_KATANA = GoldenKatana
+    val STONE_KATANA = StoneKatana
+    val IRON_KATANA = IronKatana
+    val DIAMOND_KATANA = DiamondKatana
+    val NETHERITE_KATANA = NetheriteKatana
+
+
+
+}

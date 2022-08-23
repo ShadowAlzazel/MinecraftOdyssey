@@ -1,7 +1,5 @@
 package me.shadowalzazel.mcodyssey.commands
 
-import me.shadowalzazel.mcodyssey.alchemy.AlchemyPotions
-import me.shadowalzazel.mcodyssey.alchemy.utility.AwkwardPotion
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.items.OdysseyItems
 import me.shadowalzazel.mcodyssey.items.OdysseyWeapons
@@ -42,6 +40,9 @@ object GiveTestItem : CommandExecutor {
                     }
                     "burst_barrage" -> {
                         sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BURST_BARRAGE, 3))
+                    }
+                    "chain_reaction" -> {
+                        sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.CHAIN_REACTION, 3))
                     }
                     else -> {
                         return false
