@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.items.utilty
 
 import net.kyori.adventure.text.Component
+//import net.kyori.adventure.text.TextComponent
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -8,7 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta
 
 open class OdysseyItem(val name: String,
                        internal val material: Material,
-                       internal val displayName: Component? = null,
+                       internal val odysseyDisplayName: Component? = null,
                        internal val odysseyLore: List<String>? = null,
                        internal val customModel: Int? = null,
                        private val itemEnchantments: Map<Enchantment, Int>? = null) {
@@ -17,14 +18,16 @@ open class OdysseyItem(val name: String,
 
     open fun createItemStack(amount: Int): ItemStack {
         val newOdysseyItemStack = ItemStack(material, amount)
-        val newOdysseyMeta: ItemMeta = newOdysseyItemStack.itemMeta
-        //
-        if (itemEnchantments != null) { for (enchant in itemEnchantments) { newOdysseyMeta.addEnchant(enchant.key, enchant.value, true) } }
-        if (odysseyLore != null) { newOdysseyMeta.lore = odysseyLore } //FIX
-        if (displayName != null) { newOdysseyMeta.displayName(displayName) }
-        newOdysseyMeta.setCustomModelData(customModel)
-        //
-        newOdysseyItemStack.itemMeta = newOdysseyMeta
+
+        // Assign item meta
+        newOdysseyItemStack.itemMeta = (newOdysseyItemStack.itemMeta as ItemMeta).also {
+            // Add enchantments, lore, display name, and custom model if applicable
+            if (itemEnchantments != null) { for (enchant in itemEnchantments) { it.addEnchant(enchant.key, enchant.value, true) } }
+            if (odysseyLore != null) { it.lore = odysseyLore } // FIX
+            if (odysseyDisplayName != null) { it.displayName(odysseyDisplayName) }
+            it.setCustomModelData(customModel)
+        }
+
         return newOdysseyItemStack
     }
 

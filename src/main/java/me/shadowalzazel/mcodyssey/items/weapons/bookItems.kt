@@ -7,14 +7,13 @@ import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
-import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BookMeta
 
 object Necronomicon : OdysseyItem("Necronomicon",
     Material.WRITTEN_BOOK,
-    displayName = Component.text("Necronomicon", TextColor.color(39, 19, 92)),
+    odysseyDisplayName = Component.text("Necronomicon", TextColor.color(39, 19, 92)),
     odysseyLore = null,
     customModel = CustomModels.NECRONOMICON_BOOK) {
 

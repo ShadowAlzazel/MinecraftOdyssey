@@ -16,20 +16,22 @@ open class Katana(katanaName: String, katanaMaterial: Material, katanaCustomMode
 
     //
     override fun createItemStack(amount: Int): ItemStack {
-        val newItem = super.createItemStack(amount)
-        val newItemMeta = newItem.itemMeta
+        val newKatana = super.createItemStack(amount)
 
-        val odysseyAttackDamageUUID: UUID = UUID.fromString("CB3F55D3-645C-4F38-A497-9C13A646B5CF")
-        val odysseyAttackSpeedUUID: UUID = UUID.fromString("FA233E1C-4180-4865-B01B-BCCE9464ACA3")
-        val someAttackSpeedStat = AttributeModifier(odysseyAttackSpeedUUID, "generic.attack_speed", attackSpeed, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND)
-        val someAttackDamageStat = AttributeModifier(odysseyAttackDamageUUID, "generic.attack_damage", attackDamage, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND)
+        // Assign item meta
+        newKatana.itemMeta = newKatana.itemMeta.also {
+            val odysseyAttackDamageUUID: UUID = UUID.fromString("CB3F55D3-645C-4F38-A497-9C13A646B5CF")
+            val odysseyAttackSpeedUUID: UUID = UUID.fromString("FA233E1C-4180-4865-B01B-BCCE9464ACA3")
+            val someAttackSpeedStat = AttributeModifier(odysseyAttackSpeedUUID, "generic.attack_speed", attackSpeed, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND)
+            val someAttackDamageStat = AttributeModifier(odysseyAttackDamageUUID, "generic.attack_damage", attackDamage, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND)
 
-        newItemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, someAttackSpeedStat)
-        newItemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, someAttackDamageStat)
-        newItemMeta.setCustomModelData(customModel)
-        println(newItemMeta.attributeModifiers)
-        newItem.itemMeta = newItemMeta
-        return newItem
+            it.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, someAttackSpeedStat)
+            it.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, someAttackDamageStat)
+            it.setCustomModelData(customModel)
+            println(it.attributeModifiers)
+        }
+
+        return newKatana
     }
 
 }

@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.phenomenon.solarPhenomena.utilty
 
+import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.phenomenon.utility.Phenomenon
 import org.bukkit.ChatColor
 import org.bukkit.World
@@ -19,17 +20,17 @@ open class SolarPhenomenon(name: String, rate: Int, growthRate: Int, warning: In
         // Activate Effects if rolled
         if (rollRate < occurrenceRate) {
             phenomenonEffect(phenomenonWorld)
-            occurrenceRate = occurranceRestartRate
+            occurrenceRate = occurrenceRestartRate
             return true
         }
         else {
-            println("$phenomenonName Daily Phenomenon Did Not Occur")
+            MinecraftOdyssey.instance.logger.info("$phenomenonName Solar Phenomenon Did Not Occur")
             // Send daily fail message
             for (aPlayer in phenomenonWorld.players) {
                 aPlayer.sendMessage("${ChatColor.ITALIC}$randomMessage")
             }
             // Grow Fail Rate
-            occurrenceRate += occurranceFailGrowthRate
+            occurrenceRate += occurrenceFailGrowthRate
             // Check if event has a warning
             if (hasWarning){
                 if (occurrenceRate >= warningThreshold) {

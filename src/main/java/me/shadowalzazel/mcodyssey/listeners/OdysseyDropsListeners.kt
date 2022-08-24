@@ -15,6 +15,19 @@ import org.bukkit.potion.PotionEffectType
 object OdysseyDropsListeners : Listener {
 
     private fun droppedItemSound(somePlayer: Player) {
+
+        with(somePlayer) {
+            playSound(this.location, Sound.BLOCK_AMETHYST_BLOCK_CHIME, 1.5F, 0.9F)
+            playSound(this.location, Sound.BLOCK_AMETHYST_CLUSTER_PLACE, 1.5F, 0.9F)
+            playSound(this.location, Sound.BLOCK_AMETHYST_BLOCK_PLACE, 1.5F, 0.9F)
+            playSound(this.location, Sound.BLOCK_ENCHANTMENT_TABLE_USE, 1.5F, 0.9F)
+            world.spawnParticle(Particle.TOTEM, this.location, 25, 2.0, 1.0, 2.0)
+            world.spawnParticle(Particle.END_ROD, this.location, 25, 2.0, 1.0, 2.0)
+            world.spawnParticle(Particle.GLOW, this.location, 35, 2.0, 1.0, 2.0)
+            println("Dropped Item Gilded ${this.name}")
+        }
+
+        /*
         somePlayer.playSound(somePlayer.location, Sound.BLOCK_AMETHYST_BLOCK_CHIME, 1.5F, 0.9F)
         somePlayer.playSound(somePlayer.location, Sound.BLOCK_AMETHYST_CLUSTER_PLACE, 1.5F, 0.9F)
         somePlayer.playSound(somePlayer.location, Sound.BLOCK_AMETHYST_BLOCK_PLACE, 1.5F, 0.9F)
@@ -23,6 +36,8 @@ object OdysseyDropsListeners : Listener {
         somePlayer.world.spawnParticle(Particle.END_ROD, somePlayer.location, 25, 2.0, 1.0, 2.0)
         somePlayer.world.spawnParticle(Particle.GLOW, somePlayer.location, 35, 2.0, 1.0, 2.0)
         println("Dropped Item Gilded ${somePlayer.name}")
+
+         */
     }
 
     @EventHandler

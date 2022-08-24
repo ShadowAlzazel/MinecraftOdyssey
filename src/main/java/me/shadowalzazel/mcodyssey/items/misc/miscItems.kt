@@ -21,7 +21,7 @@ object GildedBook : OdysseyItem("Gilded Book", Material.ENCHANTED_BOOK, Componen
 
         val someBookLore = listOf("${ChatColor.GOLD}${gildedEnchantment.name} ${romanNumeralList[level]}")
         gildedMeta.lore = someBookLore
-        gildedMeta.displayName(displayName)
+        gildedMeta.displayName(odysseyDisplayName)
         newGildedBook.itemMeta = gildedMeta
         return newGildedBook
     }

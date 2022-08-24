@@ -14,7 +14,7 @@ import org.bukkit.event.player.PlayerBedEnterEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object OdysseyPhenomenaListener : Listener {
+object OdysseyPhenomenaListeners : Listener {
 
     // Function to prevent players from sleeping
     @EventHandler
