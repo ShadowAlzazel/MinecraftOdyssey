@@ -55,8 +55,8 @@ object CustomModels {
     /* --------------------------------EXOTIC-ITEMS--------------------------------- */
 
     //
-    const val RHO_ANNULUS_SCHEMATICS: Int = 6900068
-    const val ARTIFICIAL_STAR_UNIT: Int = 6900069
+    const val BABEL_ANNULUS_SCHEMATICS: Int = 6900068
+    const val DORMANT_SENTIENT_STAR: Int = 6900069
     //
     const val IMPURE_ANTI_MATTER_SHARD: Int = 6900088
     const val PURE_ANTIMATTER_CRYSTAL: Int = 6900089

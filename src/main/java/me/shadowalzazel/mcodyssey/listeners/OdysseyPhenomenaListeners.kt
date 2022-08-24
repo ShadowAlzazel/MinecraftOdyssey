@@ -3,6 +3,8 @@ package me.shadowalzazel.mcodyssey.listeners
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.mobs.OdysseyMobs
 import me.shadowalzazel.mcodyssey.phenomenon.LunarPhenomena
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
 import org.bukkit.World
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Skeleton
@@ -16,16 +18,23 @@ import org.bukkit.potion.PotionEffectType
 
 object OdysseyPhenomenaListeners : Listener {
 
+    private val bloodMoonEffects = listOf(
+        PotionEffect(PotionEffectType.INCREASE_DAMAGE, 300 * 20,1),
+        PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 300 * 20,1),
+        PotionEffect(PotionEffectType.HEALTH_BOOST, 300 * 20,4)
+    )
+
+
     // Function to prevent players from sleeping
     @EventHandler
     fun playerPreventSleep(event: PlayerBedEnterEvent) {
         // Check if ambassador defeated
-        if (MinecraftOdyssey.instance.ambassadorDefeated) {
+        if (MinecraftOdyssey.instance.enderDragonDefeated) {
             if (MinecraftOdyssey.instance.lunarPhenomenonActive) {
                 val someWorld = event.player.world
                 if (someWorld.environment == World.Environment.NORMAL) {
-                    event.isCancelled = true
                     event.player.sendMessage("The night prevents you from sleeping.")
+                    event.isCancelled = true
                 }
             }
         }
@@ -47,44 +56,8 @@ object OdysseyPhenomenaListeners : Listener {
                     }
                     // Blood Moon
                     LunarPhenomena.BLOOD_MOON -> {
-                        // Effects
-                        val bloodMoonEffects = listOf(
-                            PotionEffect(PotionEffectType.INCREASE_DAMAGE, 300 * 20,1),
-                            PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 300 * 20,1),
-                            PotionEffect(PotionEffectType.HEALTH_BOOST, 300 * 20,4)
-                        )
-                        // Check Spawn Reason
                         if (event.spawnReason == CreatureSpawnEvent.SpawnReason.NATURAL || event.spawnReason == CreatureSpawnEvent.SpawnReason.REINFORCEMENTS) {
-                            // Naming and Tagging
-                            val someEntity = event.entity
-                            val someName = someEntity.name
-                            val newName = "§4Blood Moon $someName"
-                            someEntity.customName = newName
-                            someEntity.scoreboardTags.add("Blood_Moon_Mob")
-                            // Effects and Health
-                            someEntity.addPotionEffects(bloodMoonEffects)
-                            someEntity.health += 20
-                            // Random Upgrade
-                            val randomUpgrade = (0..100).random()
-                            if (60 < randomUpgrade) {
-                                val spawnLocation = someEntity.location.clone()
-                                if (spawnLocation.y > 68.0) {
-                                    var someMob: LivingEntity? = null
-                                    when (someEntity) {
-                                        is Zombie -> {
-                                            someEntity.remove()
-                                            someMob = if (90 < randomUpgrade) OdysseyMobs.SAVAGE.createKnight(someWorld, spawnLocation) else OdysseyMobs.SAVAGE.createMob(someWorld, spawnLocation)
-                                        }
-                                        is Skeleton -> {
-                                            someEntity.remove()
-                                            someMob = if (90 < randomUpgrade) OdysseyMobs.VANGUARD.createKnight(someWorld, spawnLocation) else OdysseyMobs.VANGUARD.createMob(someWorld, spawnLocation)
-                                        }
-                                        else -> {
-                                        }
-                                    }
-                                    someMob?.scoreboardTags?.add("Blood_Moon_Mob")
-                                }
-                            }
+                            bloodMoonPhenomenonSpawning(event.entity)
                         }
                     }
                     else -> {
@@ -93,6 +66,41 @@ object OdysseyPhenomenaListeners : Listener {
             }
         }
     }
+
+    /*---------------------------------------------------------*/
+    private fun bloodMoonPhenomenonSpawning(someEntity: LivingEntity) {
+        someEntity.also {
+            // Naming and Tagging
+            it.customName(Component.text("Blood Moon ${it.name}", TextColor.color(65, 0, 0)))
+            it.scoreboardTags.add("Blood_Moon_Mob")
+            // Effects and Health
+            it.addPotionEffects(bloodMoonEffects)
+            it.health += 20
+            // Random Upgrade
+            val randomUpgrade = (0..100).random()
+            if (60 < randomUpgrade) {
+                val spawnLocation = it.location.clone()
+                val someWorld = it.world
+                if (spawnLocation.y > 68.0) {
+                    var someMob: LivingEntity? = null
+                    when (it) {
+                        is Zombie -> {
+                            it.remove()
+                            someMob = if (90 < randomUpgrade) OdysseyMobs.SAVAGE.createKnight(someWorld, spawnLocation) else OdysseyMobs.SAVAGE.createMob(someWorld, spawnLocation)
+                        }
+                        is Skeleton -> {
+                            it.remove()
+                            someMob = if (90 < randomUpgrade) OdysseyMobs.VANGUARD.createKnight(someWorld, spawnLocation) else OdysseyMobs.VANGUARD.createMob(someWorld, spawnLocation)
+                        }
+                        else -> {
+                        }
+                    }
+                    someMob?.scoreboardTags?.add("Blood_Moon_Mob")
+                }
+            }
+        }
+    }
+
 
 
 }

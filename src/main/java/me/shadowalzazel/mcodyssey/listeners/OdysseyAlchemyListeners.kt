@@ -93,8 +93,6 @@ object OdysseyAlchemyListeners : Listener {
                 val newTimerLore = timerLore.subSequence(0..(i - 6)).toString() + timeToLore(oldTime / 4)
                 println("Old Time: $timerLore | New time: $newTimerLore")
                 it.lore = mutableListOf(newTimerLore)
-                //it.lore!!.remove(timerLore)
-                println(it.lore)
             }
             brewingNewResults[brewingIndex] = newPotion
         }
@@ -198,96 +196,12 @@ object OdysseyAlchemyListeners : Listener {
         if (event.contents.ingredient!!.type == Material.GUNPOWDER || event.contents.ingredient!!.type == Material.DRAGON_BREATH) {
 
             val brewingContents = event.contents.contents!!
-            val brewingStandLocation = event.block.location.clone().toCenterLocation()
-            val q = event.results
-
             GlobalScope.launch {
                 val newBrewingStandResults = brewCustomAlchemyPotion(brewingContents, event.contents.ingredient!!.type)
                 val synchroBrewingTask: BukkitRunnable = BrewingEventSynchro(newBrewingStandResults, event.contents!!)
                 synchroBrewingTask.runTask(MinecraftOdyssey.instance)
 
             }
-            /*
-            val resultType = if (event.contents.ingredient!!.type == Material.GUNPOWDER) Material.SPLASH_POTION else Material.LINGERING_POTION
-            val brewerSlots = event.contents.contents!!
-
-            val qqq = event.results
-            event.results
-
-            // Helper function for creating result
-            fun createResultingPotion(brewingIndex: Int) {
-                val oldPotion = brewerSlots[brewingIndex]!!
-                val newPotion = ItemStack(resultType, 1)
-                val newPotionMeta: PotionMeta = oldPotion.itemMeta as PotionMeta
-                newPotion.itemMeta = newPotionMeta
-                qqq[brewingIndex] = newPotion
-            }
-
-
-            // Get per slot in result
-            for (x in 0..2) {
-                if (brewerSlots[x] != null) {
-                    if (brewerSlots[x]!!.type != Material.AIR) {
-
-
-                        val someBrewedPotion = brewerSlots[x]!!
-                        // Check for all names
-                        for (someOdysseyPotion: OdysseyPotion in AlchemyPotions.potionSet) {
-
-                            // Name Check
-                            val somePotionNameComponent = someBrewedPotion.itemMeta.displayName() as TextComponent
-                            val odysseyPotionNameComponent = someOdysseyPotion.potionDisplayName as TextComponent
-                            //
-
-                            if (odysseyPotionNameComponent.content() == somePotionNameComponent.content()) {
-                                val somePotionMeta = someBrewedPotion.itemMeta as PotionMeta
-                                // If Custom Effects
-                                if (somePotionMeta.basePotionData.type == PotionType.UNCRAFTABLE) {
-                                    // Dragon Breath
-                                    if (resultType == Material.LINGERING_POTION) {
-                                        // Potions without timers
-                                        if (somePotionNameComponent.content() == "§3Bottled Souls") {
-                                            createResultingPotion(x)
-                                        }
-                                        // Potions that have timers
-                                        else {
-                                            val newPotion = ItemStack(resultType, 1)
-                                            val newPotionMeta: PotionMeta = someBrewedPotion.itemMeta as PotionMeta
-                                            // Logic
-                                            val potionLore = newPotionMeta.lore!![0]
-                                            val i = potionLore.lastIndex
-                                            val potionLoreTimer = potionLore.subSequence((i - 5)..i)
-                                            val potionTimerSeconds = loreToSeconds(potionLoreTimer)
-                                            val newPotionTimer = potionTimerSeconds / 4
-                                            val newPotionLoreTimer = timeToLore(newPotionTimer)
-                                            val potionLoreEffect = potionLore.subSequence(0..(i - 6))
-                                            val newPotionLore = potionLoreEffect.toString() + newPotionLoreTimer
-                                            val newLore = newPotionMeta.lore
-                                            newLore!!.remove(potionLore)
-                                            newLore.add(0, newPotionLore)
-                                            newPotionMeta.lore = newLore
-                                            newPotion.itemMeta = newPotionMeta
-                                            event.results[x] = newPotion
-                                        }
-                                    }
-                                    // Gunpowder
-                                    else {
-                                        createResultingPotion(x)
-                                    }
-                                }
-                                // If not custom potion
-                                else {
-                                    createResultingPotion(x)
-                                }
-                                // End Loop for this slot
-                                break
-                            }
-                        }
-                    }
-                }
-            }
-
-             */
         }
     }
 

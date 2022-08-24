@@ -18,12 +18,12 @@ object OdysseyItems {
     val HAWKING_ENTANGLED_UNIT: OdysseyItem = HawkingEntangledUnit
     val IDESCINE_SAPLING: OdysseyItem = IdescineSaplings
     val IDESCINE_ESSENCE: OdysseyItem = IdescineEssence
-    val KUGELBLITZ_CONTAINMENT_SILO: OdysseyItem = KugelblitzContainmentSilo
-    val RHO_ANNULUS_SCHEMATICS: OdysseyItem = RhoAnnulusSchematics
+    val KUGELBLITZ_CONTAINMENT_UNIT: OdysseyItem = KugelblitzContainmentUnit
+    val BABEL_ANNULUS_SCHEMATICS: OdysseyItem = BabelAnnulusSchematics
     val REFINED_NEPTUNIAN_DIAMONDS: OdysseyItem = RefinedNeptunianDiamonds
     val REFINED_IOJOVIAN_EMERALDS: OdysseyItem = RefinedIojovianEmeralds
     val POLYMORPHIC_GLUE: OdysseyItem = PolymorphicGlue
-    val ARTIFICIAL_STAR_UNIT: OdysseyItem = ArtificialStarUnit
+    val DORMANT_SENTIENT_STAR: OdysseyItem = DormantSentientStar
     val IMPURE_ANTIMATTER_SHARD: OdysseyItem = ImpureAntiMatterShard
     val NEUTRONIUM_BARK_INGOT: OdysseyItem = NeutroniumBarkIngot
     val PURE_ANTIMATTER_CRYSTAL: OdysseyItem = PureAntimatterCrystal

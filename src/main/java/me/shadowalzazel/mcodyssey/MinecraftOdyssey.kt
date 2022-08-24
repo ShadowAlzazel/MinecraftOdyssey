@@ -38,6 +38,7 @@ class MinecraftOdyssey : JavaPlugin() {
 
     // Boss Progression
     // Change This LATER to read from storage
+    var enderDragonDefeated: Boolean = true
     var ambassadorDefeated: Boolean = true
 
     // Boss Mechanics

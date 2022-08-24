@@ -7,13 +7,9 @@ import org.bukkit.scheduler.BukkitRunnable
 
 class BrewingEventSynchro(private val synchroBrews: MutableMap<Int, ItemStack?>, private val synchroInventory: BrewerInventory) : BukkitRunnable() {
 
-
     override fun run() {
-        for (brew in synchroBrews) {
-            println("Key ${brew.key}: ${brew.value}")
-            synchroInventory.setItem(brew.key, brew.value)
-        }
-
+        for (brew in synchroBrews) { synchroInventory.setItem(brew.key, brew.value) }
+        this.cancel()
     }
 
 }

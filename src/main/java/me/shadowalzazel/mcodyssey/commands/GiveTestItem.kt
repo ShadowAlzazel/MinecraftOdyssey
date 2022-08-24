@@ -12,18 +12,6 @@ object GiveTestItem : CommandExecutor {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender is Player) {
-            /*
-            val someBook = ItemStack(Material.ENCHANTED_BOOK, 1)
-            someBook.addUnsafeEnchantment(OdysseyEnchantments.BUZZY_BEES, 2)
-            // Make Enchantment Lore
-            val someBookMeta = someBook.itemMeta
-            val someBookLore = listOf("${ChatColor.GOLD}${OdysseyEnchantments.BUZZY_BEES.name} II")
-            println(OdysseyEnchantments.BUZZY_BEES.displayName(1))
-            someBookMeta.lore = someBookLore
-            someBook.itemMeta = someBookMeta
-            // Give
-            sender.inventory.addItem(someBook)
-             */
             if (args.size == 1) {
                 when (args[0]) {
                     "neptunian_diamond" -> {
@@ -31,6 +19,12 @@ object GiveTestItem : CommandExecutor {
                     }
                     "iojovian_emerald" -> {
                         sender.inventory.addItem(OdysseyItems.REFINED_IOJOVIAN_EMERALDS.createItemStack(1))
+                    }
+                    "stuff" -> {
+                        sender.inventory.addItem(OdysseyItems.IMPURE_ANTIMATTER_SHARD.createItemStack(1))
+                        sender.inventory.addItem(OdysseyItems.IDESCINE_ESSENCE.createItemStack(1))
+                        sender.inventory.addItem(OdysseyItems.NEUTRONIUM_BARK_SCRAPS.createItemStack(1))
+                        sender.inventory.addItem(OdysseyItems.REFINED_NEPTUNIAN_DIAMONDS.createItemStack(1))
                     }
                     "necronomicon" -> {
                         sender.inventory.addItem(OdysseyWeapons.NECRONOMICON.createItemStack(1))
