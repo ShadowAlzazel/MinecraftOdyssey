@@ -91,8 +91,10 @@ object OdysseyAlchemyListeners : Listener {
                 val oldTime = loreToSeconds(timerLore.subSequence((i - 5)..i))
                 // Create lore by getting old effect and adding new time
                 val newTimerLore = timerLore.subSequence(0..(i - 6)).toString() + timeToLore(oldTime / 4)
-                it.lore!!.remove(timerLore)
-                it.lore!!.add(0, newTimerLore)
+                println("Old Time: $timerLore | New time: $newTimerLore")
+                it.lore = mutableListOf(newTimerLore)
+                //it.lore!!.remove(timerLore)
+                println(it.lore)
             }
             brewingNewResults[brewingIndex] = newPotion
         }
@@ -132,7 +134,6 @@ object OdysseyAlchemyListeners : Listener {
                     }
                     println("Potion at Slot $x: ${brewingNewResults[x]}")
                 }
-                brewingNewResults[x] = somePotion
             }
             else {
                 brewingNewResults[x] = null
@@ -202,7 +203,7 @@ object OdysseyAlchemyListeners : Listener {
 
             GlobalScope.launch {
                 val newBrewingStandResults = brewCustomAlchemyPotion(brewingContents, event.contents.ingredient!!.type)
-                val synchroBrewingTask: BukkitRunnable = BrewingEventSynchro(newBrewingStandResults, brewingStandLocation, event)
+                val synchroBrewingTask: BukkitRunnable = BrewingEventSynchro(newBrewingStandResults, event.contents!!)
                 synchroBrewingTask.runTask(MinecraftOdyssey.instance)
 
             }
