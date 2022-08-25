@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.items.weapons
 
 import me.shadowalzazel.mcodyssey.items.utilty.OdysseyItem
-import me.shadowalzazel.mcodyssey.resources.CustomModels
+import me.shadowalzazel.mcodyssey.models.CustomModels
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.event.ClickEvent

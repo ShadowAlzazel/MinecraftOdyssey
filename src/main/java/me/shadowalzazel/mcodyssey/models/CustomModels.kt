@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.resources
+package me.shadowalzazel.mcodyssey.models
 
 object CustomModels {
 
@@ -82,11 +82,20 @@ object CustomModels {
 
     // Katanas
     const val WOODEN_KATANA: Int = 6905744
-    const val GOLDEN_KATANA: Int = 6905745
-    const val STONE_KATANA: Int = 6905746
-    const val IRON_KATANA: Int = 6905747
-    const val DIAMOND_KATANA: Int = 6905748
-    const val NETHERITE_KATANA: Int = 6905749
+    const val GOLDEN_KATANA: Int = 6905744
+    const val STONE_KATANA: Int = 6905744
+    const val IRON_KATANA: Int = 6905744
+    const val DIAMOND_KATANA: Int = 6905744
+    const val NETHERITE_KATANA: Int = 6905744
+
+    // Claymores
+    const val WOODEN_CLAYMORE: Int = 6905745
+    const val GOLDEN_CLAYMORE: Int = 6905745
+    const val STONE_CLAYMORE: Int = 6905745
+    const val IRON_CLAYMORE: Int = 6905745
+    const val DIAMOND_CLAYMORE: Int = 6905745
+    const val NETHERITE_CLAYMORE: Int = 6905745
+
 
 
 }

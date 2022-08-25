@@ -10,15 +10,21 @@ import org.bukkit.inventory.ShapedRecipe
 
 object WeaponRecipes {
 
+    // Katana Recipes
     private val WOODEN_KATANA_RECIPE = createWoodenKatanaRecipe()
     private val GOLDEN_KATANA_RECIPE = createGoldenKatanaRecipe()
     private val STONE_KATANA_RECIPE = createStoneKatanaRecipe()
     private val IRON_KATANA_RECIPE = createIronKatanaRecipe()
     private val DIAMOND_KATANA_RECIPE = createDiamondKatanaRecipe()
     private val NETHERITE_KATANA_RECIPE = createNetheriteKatanaRecipe()
+    // Claymore Recipes
+    private val IRON_CLAYMORE = createIronClaymoreRecipe()
 
-    val recipeSet: Set<Recipe> = setOf(WOODEN_KATANA_RECIPE, GOLDEN_KATANA_RECIPE, STONE_KATANA_RECIPE, IRON_KATANA_RECIPE, DIAMOND_KATANA_RECIPE, NETHERITE_KATANA_RECIPE)
 
+    val recipeSet: Set<Recipe> = setOf(WOODEN_KATANA_RECIPE, GOLDEN_KATANA_RECIPE, STONE_KATANA_RECIPE, IRON_KATANA_RECIPE, DIAMOND_KATANA_RECIPE, NETHERITE_KATANA_RECIPE,
+        IRON_CLAYMORE)
+
+    /*----------------------------------------KATANAS-----------------------------------------*/
 
     private fun createWoodenKatanaRecipe(): ShapedRecipe {
         val someResult = OdysseyWeapons.WOODEN_KATANA.createItemStack(1)
@@ -83,9 +89,20 @@ object WeaponRecipes {
 
         someRecipe.shape("  X", " X ", "YZ ")
         someRecipe.setIngredient('X', Material.NETHERITE_INGOT)
-        someRecipe.setIngredient('Y', Material.STICK)
+        someRecipe.setIngredient('Y', Material.BLAZE_ROD)
         return someRecipe
     }
 
+    /*----------------------------------------KATANAS-----------------------------------------*/
+
+    private fun createIronClaymoreRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.IRON_CLAYMORE.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "ironclaymore"), someResult)
+
+        someRecipe.shape(" X ", "XXX", " Y ")
+        someRecipe.setIngredient('X', RecipeChoice.MaterialChoice(Material.IRON_INGOT))
+        someRecipe.setIngredient('Y', Material.STICK)
+        return someRecipe
+    }
 
 }

@@ -5,6 +5,7 @@
 #
 #
 
+# Server Names
 names:
   server-name: "Vailcraft"
 
@@ -22,3 +23,6 @@ end-game:
 
 # Server Join Message
 server-join: true
+
+# If server requires resource pack
+server-resource-pack-force: true

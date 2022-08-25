@@ -67,16 +67,15 @@ class MinecraftOdyssey : JavaPlugin() {
 
         // Registering Server related events
         server.also {
+            // Odyssey Server Listeners
+            it.pluginManager.registerEvents(OdysseyServerListeners, this)
             // Register Alchemy
             it.pluginManager.registerEvents(OdysseyAlchemyListeners, this)
-            // Register Utility Listeners
+            // Register Gilding Listeners
             it.pluginManager.registerEvents(OdysseyGildingListeners, this)
-            // Daily Phenomenon listeners
             // Odyssey Boss Listeners
             it.pluginManager.registerEvents(AmbassadorListeners, this)
             it.pluginManager.registerEvents(HogRiderListeners, this)
-            // Odyssey Server Listeners
-            it.pluginManager.registerEvents(OdysseyServerListeners, this)
             // Odyssey Enchantment listeners
             it.pluginManager.registerEvents(ArmorListeners, this)
             it.pluginManager.registerEvents(MeleeListeners, this)
