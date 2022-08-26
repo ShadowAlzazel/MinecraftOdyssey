@@ -86,7 +86,7 @@ object CustomModels {
     const val STONE_KATANA: Int = 6905744
     const val IRON_KATANA: Int = 6905744
     const val DIAMOND_KATANA: Int = 6905744
-    const val NETHERITE_KATANA: Int = 6905744
+    const val NETHERITE_KATANA: Int = 6905744 //
 
     // Claymores
     const val WOODEN_CLAYMORE: Int = 6905745
@@ -94,7 +94,26 @@ object CustomModels {
     const val STONE_CLAYMORE: Int = 6905745
     const val IRON_CLAYMORE: Int = 6905745
     const val DIAMOND_CLAYMORE: Int = 6905745
-    const val NETHERITE_CLAYMORE: Int = 6905745
+    const val NETHERITE_CLAYMORE: Int = 6905745 //
+
+    // Daggers
+    const val WOODEN_DAGGER: Int = 6905746
+    const val GOLDEN_DAGGER: Int = 6905746
+    const val STONE_DAGGER: Int = 6905746
+    const val IRON_DAGGER: Int = 6905746
+    const val DIAMOND_DAGGER: Int = 6905746
+    const val NETHERITE_DAGGER: Int = 6905746 //
+
+
+    /* ------------------------------SPEARS----------------------------------------*/
+
+    // Spears
+    const val WOODEN_SPEAR: Int = 6905774
+    const val GOLDEN_SPEAR: Int = 6905774
+    const val STONE_SPEAR: Int = 6905774
+    const val IRON_SPEAR: Int = 6905774
+    const val DIAMOND_SPEAR: Int = 6905774
+    const val NETHERITE_SPEAR: Int = 6905774 //
 
 
 

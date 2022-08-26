@@ -33,7 +33,7 @@ open class Claymore (claymoreName: String, claymoreMaterial: Material, claymoreC
             it.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, odysseyAttackSpeedStat)
             //it.addAttributeModifier(Attribute.GENERIC_ATTACK_KNOCKBACK, odysseyAttackKnockBackStat)
             it.setCustomModelData(customModel)
-            println(it.attributeModifiers)
+            //println(it.attributeModifiers)
         }
 
         return newClaymore

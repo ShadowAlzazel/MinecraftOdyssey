@@ -55,6 +55,7 @@ class MinecraftOdyssey : JavaPlugin() {
         instance = this
     }
 
+
     // Plugin startup logic
     override fun onEnable() {
 
@@ -89,6 +90,8 @@ class MinecraftOdyssey : JavaPlugin() {
             it.pluginManager.registerEvents(OdysseyFoodListeners, this)
             // Odyssey Items Listeners
             it.pluginManager.registerEvents(OdysseyItemListeners, this)
+            // Odyssey Weapon Listeners
+            it.pluginManager.registerEvents(OdysseyWeaponListeners, this)
             // Odyssey Misc Listeners
             it.pluginManager.registerEvents(OdysseyMiscListeners, this)
             // Config
@@ -140,6 +143,8 @@ class MinecraftOdyssey : JavaPlugin() {
 
         // Hello World!
         logger.info("The Odyssey has just begun!")
+
+
     }
 
     override fun onDisable() {

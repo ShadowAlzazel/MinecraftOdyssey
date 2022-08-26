@@ -142,6 +142,9 @@ object OdysseyAlchemyListeners : Listener {
         brewingNewResults
     }
 
+
+    /*----------------------------------------------------------------------------------------------------------*/
+
     // Main function for Cauldron recipes
     @EventHandler
     fun bottleCauldron(event: CauldronLevelChangeEvent) {

@@ -4,7 +4,7 @@ import com.destroystokyo.paper.event.player.PlayerReadyArrowEvent
 import io.papermc.paper.event.entity.EntityLoadCrossbowEvent
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.listeners.utility.BurstBarrageTask
+import me.shadowalzazel.mcodyssey.listeners.tasks.BurstBarrageTask
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.enchantments.Enchantment

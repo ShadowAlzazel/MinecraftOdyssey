@@ -28,6 +28,12 @@ object OdysseyWeapons {
     val DIAMOND_CLAYMORE = DiamondClaymore
     val NETHERITE_CLAYMORE = NetheriteClaymore
 
+    // Spear
+    val WOODEN_SPEAR = WoodenSpear
+    val GOLDEN_SPEAR = GoldenSpear
+    val STONE_SPEAR = StoneSpear
+    val IRON_SPEAR = IronSpear
+    val DIAMOND_SPEAR = DiamondSpear
 
 
 }

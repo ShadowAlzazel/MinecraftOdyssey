@@ -97,7 +97,7 @@ object OdysseyGildingListeners : Listener {
     }
 
 
-    // Main Function that handles Odyssey Smithing
+    // Main Function that handles Odyssey Smithing make it call on certain gilding table, smithing will be for weapons smiths
     @Suppress("DEPRECATION")
     @EventHandler
     fun odysseySmithing(event: PrepareSmithingEvent) {

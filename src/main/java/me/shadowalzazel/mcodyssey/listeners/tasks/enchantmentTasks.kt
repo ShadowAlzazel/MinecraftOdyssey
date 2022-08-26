@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.listeners.utility
+package me.shadowalzazel.mcodyssey.listeners.tasks
 
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
