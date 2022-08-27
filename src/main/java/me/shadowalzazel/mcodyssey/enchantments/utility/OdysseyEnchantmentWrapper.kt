@@ -20,6 +20,7 @@ open class OdysseyEnchantmentWrapper(namespace: String?, private val name: Strin
         TODO("Not yet implemented")
     }
 
+    @Deprecated("Deprecated in Java")
     override fun getName(): String {
         return name
     }

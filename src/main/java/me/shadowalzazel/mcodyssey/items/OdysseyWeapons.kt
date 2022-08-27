@@ -10,8 +10,6 @@ object OdysseyWeapons {
     //
     val NECRONOMICON = Necronomicon
 
-
-
     // Katanas
     val WOODEN_KATANA = WoodenKatana
     val GOLDEN_KATANA = GoldenKatana
@@ -34,6 +32,16 @@ object OdysseyWeapons {
     val STONE_SPEAR = StoneSpear
     val IRON_SPEAR = IronSpear
     val DIAMOND_SPEAR = DiamondSpear
+
+    // Dagger
+    val WOODEN_DAGGER = WoodenDagger
+    val GOLDEN_DAGGER = GoldenDagger
+    val STONE_DAGGER = StoneDagger
+    val IRON_DAGGER = IronDagger
+    val DIAMOND_DAGGER = DiamondDagger
+
+    // Staff
+    val BAMBOO_STAFF = BambooStaff
 
 
 }

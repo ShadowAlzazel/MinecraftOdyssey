@@ -1,14 +1,5 @@
 package me.shadowalzazel.mcodyssey.items.weapons
 
-import me.shadowalzazel.mcodyssey.items.utilty.OdysseyItem
-import org.bukkit.ChatColor
-import org.bukkit.Material
-import org.bukkit.attribute.Attribute
-import org.bukkit.attribute.AttributeModifier
-import org.bukkit.inventory.EquipmentSlot
-import org.bukkit.inventory.ItemStack
-import java.util.*
-
 // NEUTRONIUM_BARK_SWORD
 /*
 object NeutroniumBarkSword : OdysseyItem("Neutronium-Bark Sword", Material.NETHERITE_SWORD) {

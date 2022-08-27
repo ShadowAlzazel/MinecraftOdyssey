@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.items.weapons
 
 import me.shadowalzazel.mcodyssey.items.weaponTypes.Claymore
-import me.shadowalzazel.mcodyssey.models.CustomModels
+import me.shadowalzazel.mcodyssey.resources.CustomModels
 import org.bukkit.Material
 
 object WoodenClaymore: Claymore("Wooden Claymore", Material.WOODEN_SWORD, CustomModels.WOODEN_CLAYMORE, 7.75, 0.7)

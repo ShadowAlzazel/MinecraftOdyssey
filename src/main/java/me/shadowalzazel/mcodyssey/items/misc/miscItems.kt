@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.items.misc
 
 import me.shadowalzazel.mcodyssey.items.utilty.OdysseyItem
-import me.shadowalzazel.mcodyssey.models.CustomModels
+import me.shadowalzazel.mcodyssey.resources.CustomModels
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration

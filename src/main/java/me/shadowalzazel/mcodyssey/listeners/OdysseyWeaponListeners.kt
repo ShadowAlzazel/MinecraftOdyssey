@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.listeners
 
-import me.shadowalzazel.mcodyssey.models.CustomModels
+import me.shadowalzazel.mcodyssey.resources.CustomModels
+import me.shadowalzazel.mcodyssey.resources.WeaponStats.weaponReachMap
 
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
@@ -13,9 +14,6 @@ import org.bukkit.util.RayTraceResult
 
 
 object OdysseyWeaponListeners : Listener {
-
-    private val weaponReachMap = mapOf(CustomModels.STONE_SPEAR to 6.0, CustomModels.IRON_CLAYMORE to 4.67)
-
 
     // Entities have custom dual and range wield mechanics!!!!!
 
@@ -50,19 +48,39 @@ object OdysseyWeaponListeners : Listener {
             // Check if active item has custom model data
             if (someDamager.equipment.itemInMainHand.itemMeta?.hasCustomModelData() == true) {
                 val someWeapon = someDamager.equipment.itemInMainHand
-
-                // Dagger Check
-                if (someWeapon.itemMeta.customModelData == CustomModels.DIAMOND_DAGGER) {
-                    if (someDamager.equipment.itemInOffHand.itemMeta?.hasCustomModelData() == true) {
-                        if (someDamager.equipment.itemInOffHand.itemMeta.customModelData == CustomModels.DIAMOND_DAGGER) {
-                            println("X")
-
+                when (someWeapon.itemMeta.customModelData) {
+                    CustomModels.DIAMOND_DAGGER -> {
+                        if (someVictim !in someDamager.getNearbyEntities(1.25, 1.25, 1.25)) {
+                            event.isCancelled = true
+                            return
                         }
+                        if (someDamager.equipment.itemInOffHand.itemMeta?.hasCustomModelData() == true) {
+                            if (someDamager.equipment.itemInOffHand.itemMeta.customModelData == CustomModels.DIAMOND_DAGGER) {
+                                println("X")
+                                someDamager.swingOffHand()
+
+                            }
+                        }
+                    }
+                    CustomModels.BAMBOO_STAFF -> {
+                        for (entity in someDamager.getNearbyEntities(1.75, 1.75, 1.75)) {
+                            if (entity is LivingEntity) {
+                                println("Q")
+                                someDamager.attack(entity)
+                            }
+                        }
+                    }
+                    CustomModels.DIAMOND_KATANA -> {
+                        //if (someVictim !in someDamager.getNearbyEntities(3.5, 3.5, 3.5)) { event.isCancelled = true }
+
                     }
                 }
             }
         }
     }
+
+
+    // Enchantment
 
 
 

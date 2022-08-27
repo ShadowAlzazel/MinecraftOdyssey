@@ -1,0 +1,12 @@
+package me.shadowalzazel.mcodyssey.resources
+
+import java.util.UUID
+
+object ModifiersUUIDs {
+
+    val ATTACK_SPEED_RESET_UUID: UUID = UUID.fromString("FA233E1C-4180-4865-B01B-BCCE9565ACA3")
+    val ATTACK_SPEED_UUID: UUID = UUID.fromString("FA233E1C-4180-4865-B01B-BCCE9985ACA3")
+    val ATTACK_DAMAGE_UUID: UUID = UUID.fromString("CB3F55D3-645C-4F38-A497-9C13A34DB5CF")
+    val SHARPNESS_DAMAGE_UUID: UUID = UUID.fromString("CB3F55D3-645C-4F38-A497-9C13A34DB4CF")
+
+}

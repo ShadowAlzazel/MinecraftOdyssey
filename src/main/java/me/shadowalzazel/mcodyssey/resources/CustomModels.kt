@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.models
+package me.shadowalzazel.mcodyssey.resources
 
 object CustomModels {
 
@@ -116,5 +116,9 @@ object CustomModels {
     const val NETHERITE_SPEAR: Int = 6905774 //
 
 
+    /* ------------------------------STAFF----------------------------------------*/
+
+    // Staffs
+    const val BAMBOO_STAFF: Int = 6905793
 
 }
