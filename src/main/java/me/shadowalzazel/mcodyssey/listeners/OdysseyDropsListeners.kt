@@ -15,14 +15,16 @@ import org.bukkit.potion.PotionEffectType
 object OdysseyDropsListeners : Listener {
 
     private fun droppedItemSound(somePlayer: Player) {
-        somePlayer.playSound(somePlayer.location, Sound.BLOCK_AMETHYST_BLOCK_CHIME, 1.5F, 0.9F)
-        somePlayer.playSound(somePlayer.location, Sound.BLOCK_AMETHYST_CLUSTER_PLACE, 1.5F, 0.9F)
-        somePlayer.playSound(somePlayer.location, Sound.BLOCK_AMETHYST_BLOCK_PLACE, 1.5F, 0.9F)
-        somePlayer.playSound(somePlayer.location, Sound.BLOCK_ENCHANTMENT_TABLE_USE, 1.5F, 0.9F)
-        somePlayer.world.spawnParticle(Particle.TOTEM, somePlayer.location, 25, 2.0, 1.0, 2.0)
-        somePlayer.world.spawnParticle(Particle.END_ROD, somePlayer.location, 25, 2.0, 1.0, 2.0)
-        somePlayer.world.spawnParticle(Particle.GLOW, somePlayer.location, 35, 2.0, 1.0, 2.0)
-        println("Dropped Item Gilded ${somePlayer.name}")
+        with(somePlayer) {
+            playSound(this.location, Sound.BLOCK_AMETHYST_BLOCK_CHIME, 1.5F, 0.9F)
+            playSound(this.location, Sound.BLOCK_AMETHYST_CLUSTER_PLACE, 1.5F, 0.9F)
+            playSound(this.location, Sound.BLOCK_AMETHYST_BLOCK_PLACE, 1.5F, 0.9F)
+            playSound(this.location, Sound.BLOCK_ENCHANTMENT_TABLE_USE, 1.5F, 0.9F)
+            world.spawnParticle(Particle.TOTEM, this.location, 25, 2.0, 1.0, 2.0)
+            world.spawnParticle(Particle.END_ROD, this.location, 25, 2.0, 1.0, 2.0)
+            world.spawnParticle(Particle.GLOW, this.location, 35, 2.0, 1.0, 2.0)
+            println("Dropped Item Gilded ${this.name}")
+        }
     }
 
     @EventHandler
@@ -32,7 +34,7 @@ object OdysseyDropsListeners : Listener {
                 val somePlayer: Player = event.entity.killer as Player
                 if (event.entity.hasLineOfSight(somePlayer)) {
                     val randomEnchantList = listOf(OdysseyEnchantments.HEMORRHAGE, OdysseyEnchantments.WHIRLWIND, OdysseyEnchantments.SPEEDY_SPURS, OdysseyEnchantments.WARP_JUMP, OdysseyEnchantments.SPEEDY_SPURS, OdysseyEnchantments.ECHO,
-                        OdysseyEnchantments.COWARDICE, OdysseyEnchantments.LUCKY_DRAW, OdysseyEnchantments.SOUL_REND, OdysseyEnchantments.SPOREFUL, OdysseyEnchantments.FRUITFUL_FARE, OdysseyEnchantments.POTION_BARRIER)
+                        OdysseyEnchantments.COWARDICE, OdysseyEnchantments.LUCKY_DRAW, OdysseyEnchantments.SOUL_REND, OdysseyEnchantments.SPOREFUL, OdysseyEnchantments.FRUITFUL_FARE, OdysseyEnchantments.POTION_BARRIER, OdysseyEnchantments.BURST_BARRAGE)
 
                     // Looting and luck
                     var looting = 0.0
@@ -122,9 +124,22 @@ object OdysseyDropsListeners : Listener {
                         }
                         is Shulker -> {
                             if ((2.5 + luck + looting + misc) * 10 > (0..1000).random()) {
+                                somePlayer.world.dropItem(event.entity.location, (OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.VOID_STRIKE, 1))) // change
+                                droppedItemSound(somePlayer)
+                            }
+                        }
+                        is Endermite -> {
+                            if ((3.0 + luck + looting + misc) * 10 > (0..1000).random()) {
                                 somePlayer.world.dropItem(event.entity.location, (OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.VOID_STRIKE, 1)))
                                 droppedItemSound(somePlayer)
                             }
+                        }
+                        is Enderman -> {
+                            if ((2.0 + luck + looting + misc) * 10 > (0..1000).random()) {
+                                somePlayer.world.dropItem(event.entity.location, (OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.WARP_JUMP, 1)))
+                                droppedItemSound(somePlayer)
+                            }
+
                         }
                         is Skeleton -> {
                             if (hasBloodMoon) {

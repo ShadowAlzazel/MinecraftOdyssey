@@ -21,9 +21,6 @@ open class OdysseyAlchemyCauldronRecipe(private val odysseyPotion: OdysseyPotion
             }
             valid = true
         }
-        if (valid) {
-            println("Alchemy!")
-        }
         return valid
     }
 
@@ -39,6 +36,5 @@ open class OdysseyAlchemyCauldronRecipe(private val odysseyPotion: OdysseyPotion
         // Runs alchemy task ticking every 0.5 seconds
         val alchemyTask = AlchemyTask(someBlock, odysseyPotion.createItemStack(1))
         alchemyTask.runTaskTimer(MinecraftOdyssey.instance, 0, 2)
-
     }
 }

@@ -8,8 +8,8 @@ open class Phenomenon(name: String, rate: Int, growthRate: Int, warning: Int) {
     var occurrenceRate = rate
     // variables for calculating rates
     val phenomenonName = name
-    var occurranceFailGrowthRate = growthRate
-    var occurranceRestartRate = rate - 10
+    var occurrenceFailGrowthRate = growthRate
+    var occurrenceRestartRate = rate - 10
     var warningThreshold = warning
     open val hasWarning: Boolean = false
     open val currentlyActive = true

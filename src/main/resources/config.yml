@@ -5,36 +5,24 @@
 #
 #
 
+# Server Names
 names:
   server-name: "Vailcraft"
 
-# enables or disables daily world events
+# Enables or disables daily world events
 daily-world-phenomenon:
   enabled: true
-  slime-day-enabled: true
-  blood-moon-enabled: true
-  breezy-day-enabled: true
+  player-minimum-for-luck: 4
+
+# Enables or disables mega events
+mega-events: true
 
 # dictates whether the end game is disabled
 end-game:
   enabled: true
 
-player-minimum-for-luck: 4
-
-mega-events: true
-
+# Server Join Message
 server-join: true
 
-# Day messages
-day-messages:
-  msg-1: "An uneventful day proceeds..."
-  msg-2: "Looks like nothing is happening today..."
-  msg-3: "MULTIPLE HOSTILES INCOM.. False alarm. Nothing is going on."
-  msg-4: "There are rumors that the Ambassador is on route to this test world..."
-  msg-5: "Hello World!"
-  msg-6: "Just another ordinary day..."
-  msg-7: "The forecast predicts... Nothing."
-  msg-8: "No distinct events are Schedu-Predicted for today."
-  msg-9: "The standard cycle was not disturbed..."
-  msg-10: "A normal day follows..."
-  msg-11: "Just plain Today..."
+# If server requires resource pack
+server-resource-pack-force: true

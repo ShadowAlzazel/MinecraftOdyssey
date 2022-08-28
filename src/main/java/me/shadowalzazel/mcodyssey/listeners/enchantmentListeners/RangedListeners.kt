@@ -4,7 +4,7 @@ import com.destroystokyo.paper.event.player.PlayerReadyArrowEvent
 import io.papermc.paper.event.entity.EntityLoadCrossbowEvent
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.listeners.utility.BurstBarrageTask
+import me.shadowalzazel.mcodyssey.listeners.tasks.BurstBarrageTask
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.enchantments.Enchantment
@@ -124,9 +124,9 @@ object RangedListeners : Listener {
             val someOffHandPotion = eventEntity.equipment!!.itemInOffHand
             if ("Alchemy_Artillery_Loaded" !in eventEntity.scoreboardTags) {
                 eventEntity.scoreboardTags.add("Alchemy_Artillery_Loaded")
-                if (!entityAlchemyArtilleryAmmo.containsKey(eventEntity.uniqueId)) entityAlchemyArtilleryAmmo[eventEntity.uniqueId] = someOffHandPotion else entityAlchemyArtilleryAmmo[eventEntity.uniqueId] = someOffHandPotion
+                if (!entityAlchemyArtilleryAmmo.containsKey(eventEntity.uniqueId)) { entityAlchemyArtilleryAmmo[eventEntity.uniqueId] = someOffHandPotion } else { entityAlchemyArtilleryAmmo[eventEntity.uniqueId] = someOffHandPotion }
                 val multiCounter = if (eventCrossbow.itemMeta.hasEnchant(Enchantment.MULTISHOT)) 3 else 1
-                if (!entityAlchemyArtilleryCounter.containsKey(eventEntity.uniqueId)) entityAlchemyArtilleryCounter[eventEntity.uniqueId] = multiCounter else entityAlchemyArtilleryCounter[eventEntity.uniqueId] = multiCounter
+                if (!entityAlchemyArtilleryCounter.containsKey(eventEntity.uniqueId)) { entityAlchemyArtilleryCounter[eventEntity.uniqueId] = multiCounter } else { entityAlchemyArtilleryCounter[eventEntity.uniqueId] = multiCounter }
                 eventEntity.equipment!!.setItemInOffHand(ItemStack(Material.AIR, 1))
                 println("Loaded")
             }

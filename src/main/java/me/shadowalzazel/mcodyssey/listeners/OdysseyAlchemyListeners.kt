@@ -2,18 +2,18 @@ package me.shadowalzazel.mcodyssey.listeners
 
 import kotlinx.coroutines.*
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
-import me.shadowalzazel.mcodyssey.alchemy.AlchemyPotions
 import me.shadowalzazel.mcodyssey.alchemy.AlchemyRecipes
 import me.shadowalzazel.mcodyssey.alchemy.utility.OdysseyAlchemyCauldronRecipe
-import me.shadowalzazel.mcodyssey.alchemy.utility.OdysseyPotion
 import me.shadowalzazel.mcodyssey.effects.BlazingTask
 import me.shadowalzazel.mcodyssey.effects.DecayingTask
 import me.shadowalzazel.mcodyssey.effects.DousedTask
 import me.shadowalzazel.mcodyssey.effects.FreezingTask
+import me.shadowalzazel.mcodyssey.synchronizers.BrewingEventSynchro
+import me.shadowalzazel.mcodyssey.synchronizers.CauldronEventSynchro
 import net.kyori.adventure.text.TextComponent
 import org.bukkit.Material
 import org.bukkit.Particle
-import org.bukkit.Sound
+import org.bukkit.block.BrewingStand
 import org.bukkit.entity.Item
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
@@ -30,12 +30,14 @@ import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.potion.PotionType
+import org.bukkit.scheduler.BukkitRunnable
 
 object OdysseyAlchemyListeners : Listener {
 
-    private val alchemyCustomEffectPotions = listOf("§eBottle o' Decay", "§eBottle o' Frost", "§eBottle o' Douse", "§eBottle o' Ablaze")
+    private val odysseyTimedPotions = listOf("Bottle o' Ablaze", "Bottle o' Frost", "Bottle o' Decay", "Bottle o' Douse")
+    private val odysseyTimelessPotions = listOf("Bottled Souls")
 
-    // helper function that converts a char sequence (M:SS) to time Int
+    // Helper function that converts a char sequence (M:SS) to time Int
     private fun loreToSeconds(timeSequence: CharSequence): Int {
         val minute = timeSequence[1].toString().toInt()
         val decimalSecond = timeSequence[3].toString().toInt()
@@ -43,7 +45,7 @@ object OdysseyAlchemyListeners : Listener {
         return (minute * 60) + (decimalSecond * 10) + (second)
     }
 
-    // helper function that converts time to lore String
+    // Helper function that converts time to lore String
     private fun timeToLore(time: Int): CharSequence {
         val seconds = time % 60
         val minutes = time / 60
@@ -51,8 +53,8 @@ object OdysseyAlchemyListeners : Listener {
         return if (seconds < 9) { "($minutes:0$seconds)" } else { "($minutes:$seconds)" }
     }
 
-    // Helper Coroutine Function for validating recipes
-    private suspend fun validateFun(someItemSet: MutableSet<Item>, someFuelBlock: Material): OdysseyAlchemyCauldronRecipe? = runBlocking {
+    // Helper Coroutine Function for validating cauldron recipes
+    private suspend fun validateCauldronRecipe(someItemSet: MutableSet<Item>, someFuelBlock: Material): OdysseyAlchemyCauldronRecipe? = runBlocking {
         val recipeJob: Deferred<OdysseyAlchemyCauldronRecipe?> = async {
             for (recipe in AlchemyRecipes.alchemyRecipeSet) {
                 val validated: Boolean = recipe.validateRecipe(someItemSet, someFuelBlock)
@@ -65,57 +67,123 @@ object OdysseyAlchemyListeners : Listener {
        recipeJob.await()
     }
 
+    // Helper Coroutine Function for brewing odyssey potions
+    private fun brewCustomAlchemyPotion(brewerSlots: Array<ItemStack?>, ingredientMaterial: Material): MutableMap<Int, ItemStack?> = runBlocking {
+        // Get Result
+        val resultType = if (ingredientMaterial == Material.GUNPOWDER) { Material.SPLASH_POTION } else { Material.LINGERING_POTION }
+        val brewingNewResults: MutableMap<Int, ItemStack?> = mutableMapOf()
+
+        // Helper function for creating new potions
+        fun createResultingPotion(brewingIndex: Int, oldPotion: ItemStack) {
+            val newPotion = ItemStack(resultType, 1)
+            newPotion.itemMeta = oldPotion.itemMeta as PotionMeta
+            brewingNewResults[brewingIndex] = newPotion
+        }
+
+        // Helper function to create lingering timed potions
+        fun createLingeringTimedPotion(brewingIndex: Int, oldPotion: ItemStack) {
+            val newPotion = ItemStack(resultType, 1)
+            // Modify potion meta
+            newPotion.itemMeta = (oldPotion.itemMeta as PotionMeta).also {
+                val timerLore = it.lore!![0]
+                val i = timerLore.lastIndex
+                // Get the time in seconds form String in "(M:SS)" format
+                val oldTime = loreToSeconds(timerLore.subSequence((i - 5)..i))
+                // Create lore by getting old effect and adding new time
+                val newTimerLore = timerLore.subSequence(0..(i - 6)).toString() + timeToLore(oldTime / 4)
+                println("Old Time: $timerLore | New time: $newTimerLore")
+                it.lore = mutableListOf(newTimerLore)
+            }
+            brewingNewResults[brewingIndex] = newPotion
+        }
+
+
+        // Check each slot
+        for (x in 0..2) {
+            if (brewerSlots[x] != null && brewerSlots[x]?.type != Material.AIR) {
+                val somePotion = brewerSlots[x]!!
+                // Checks if potion has display name and display color
+                if (somePotion.itemMeta.hasDisplayName() && somePotion.itemMeta.displayName()?.color() != null) {
+                    // Get potion Meta
+                    val somePotionMeta = somePotion.itemMeta as PotionMeta
+                    // Checks if Potion has custom effects via un-craftable and lore
+                    if (somePotionMeta.basePotionData.type == PotionType.UNCRAFTABLE && somePotionMeta.hasLore()) {
+                        // Get Name
+                        val potionName = (somePotionMeta.displayName() as TextComponent).content()
+                        // Check if Lingering Potion to modify time values
+                        if (resultType == Material.LINGERING_POTION) {
+                            // Potions without timers
+                            if (potionName in odysseyTimelessPotions) {
+                                createResultingPotion(x, somePotion)
+                            }
+                            // Potions that have timers
+                            else {
+                                createLingeringTimedPotion(x, somePotion)
+                            }
+                        }
+                        // Creates custom effect splash potion
+                        else {
+                            createResultingPotion(x, somePotion)
+                        }
+                    }
+                    // Creates odyssey potion without custom effects
+                    else {
+                        createResultingPotion(x, somePotion)
+                    }
+                    println("Potion at Slot $x: ${brewingNewResults[x]}")
+                }
+            }
+            else {
+                brewingNewResults[x] = null
+            }
+        }
+
+        //delay(1000)
+        brewingNewResults
+    }
+
+
+    /*----------------------------------------------------------------------------------------------------------*/
+
     // Main function for Cauldron recipes
     @EventHandler
     fun bottleCauldron(event: CauldronLevelChangeEvent) {
         if (event.entity is Player) {
-            val somePlayer = event.entity as Player
             if (event.reason == CauldronLevelChangeEvent.ChangeReason.BOTTLE_EMPTY || event.reason == CauldronLevelChangeEvent.ChangeReason.BUCKET_EMPTY) {
                 val someCauldron = event.block
-                // Check if Empty
+                // Check if Empty cauldron
                 if (event.newState.type == Material.WATER_CAULDRON) {
-                    val cauldronLocation = someCauldron.location
-                    val blockUnderneath = cauldronLocation.clone().subtract(0.0, 1.0, 0.0).block.type
-                    // Maybe campfire
+                    val blockUnderneath = someCauldron.location.clone().subtract(0.0, 1.0, 0.0).block.type
+                    // Checks the blocks underneath if fuel source
                     if (blockUnderneath == Material.FIRE || blockUnderneath == Material.SOUL_FIRE) {
+                        // Get entities within cauldron
                         val nearbyEntities = someCauldron.world.getNearbyEntities(someCauldron.boundingBox)
-                        if (nearbyEntities.size <= 5) {
+                        // Launch Coroutine to check entities and items off main thread
+                        GlobalScope.launch {
+                            // Create coroutine variables
                             var allItems = true
                             val itemsToCheck: MutableSet<Item> = mutableSetOf()
-                            for (someEntity in nearbyEntities) {
-                                if (someEntity is Item) {
-                                    itemsToCheck.add(someEntity)
-                                }
-                                else {
-                                    allItems = false
-                                    break
-                                }
-                            }
-                            if (allItems) {
-                                /*
-                                // Launch Coroutine
-                                GlobalScope.launch {
-                                    val validRecipe: OdysseyAlchemyCauldronRecipe? = validateFun(itemsToCheck, blockUnderneath)
-                                    if (validRecipe!= null) {
-                                        MinecraftOdyssey.instance.didStuff = true
-                                        MinecraftOdyssey.instance.stuffThatHappened.add("Bottle_Cauldron_Event")
-                                        val recipeMap = mapOf(validRecipe to itemsToCheck)
-                                        BottleCauldronEvents.eventMap[cauldronLocation] = recipeMap
+                            // Checks if size less than 6
+                            if (nearbyEntities.size < 6) {
+                                // Checks if all entities are Items
+                                for (someEntity in nearbyEntities) {
+                                    if (someEntity is Item) {
+                                        itemsToCheck.add(someEntity)
                                     }
-                                }
-                                 */
-
-
-                                for (someRecipe in AlchemyRecipes.alchemyRecipeSet) {
-                                    val validated: Boolean = someRecipe.validateRecipe(itemsToCheck, blockUnderneath)
-                                    if (validated) {
-                                        somePlayer.playSound(somePlayer.location, Sound.ITEM_BOTTLE_FILL, 2.5F, 0.8F)
-                                        someRecipe.alchemicalAntithesis(itemsToCheck)
-                                        //val newState = event.newState.blockData as Levelled
+                                    else {
+                                        allItems = false
                                         break
                                     }
                                 }
-
+                            }
+                            // Runs validation if all items
+                            if (allItems) {
+                                val validRecipe: OdysseyAlchemyCauldronRecipe? = validateCauldronRecipe(itemsToCheck, blockUnderneath)
+                                // If valid recipe then sync back to main thread
+                                if (validRecipe != null) {
+                                    val synchroCauldronTask: BukkitRunnable = CauldronEventSynchro(validRecipe, itemsToCheck)
+                                    synchroCauldronTask.runTask(MinecraftOdyssey.instance)
+                                }
                             }
                         }
                     }
@@ -125,78 +193,17 @@ object OdysseyAlchemyListeners : Listener {
     }
 
 
-    // Main function regarding brewing stand
+    // Main function regarding brewing stand upgrades
     @EventHandler
     fun brewingPotion(event: BrewEvent) {
         if (event.contents.ingredient!!.type == Material.GUNPOWDER || event.contents.ingredient!!.type == Material.DRAGON_BREATH) {
-            val resultType = if (event.contents.ingredient!!.type == Material.GUNPOWDER) Material.SPLASH_POTION else Material.LINGERING_POTION
-            val brewerSlots = event.contents.contents!!
-            // function for final potion result
-            // Change Result to corresponding slot
-            fun createResultingPotion(brewingIndex: Int) {
-                val oldPotion = brewerSlots[brewingIndex]!!
-                val newPotion = ItemStack(resultType, 1)
-                val newPotionMeta: PotionMeta = oldPotion.itemMeta as PotionMeta
-                newPotion.itemMeta = newPotionMeta
-                event.results[brewingIndex] = newPotion
-            }
 
-            // Get per slot in result
-            for (x in 0..2) {
-                if (brewerSlots[x] != null) {
-                    if (brewerSlots[x]!!.type != Material.AIR) {
-                        val someBrewedPotion = brewerSlots[x]!!
-                        // Check for all names
-                        for (someOdysseyPotion: OdysseyPotion in AlchemyPotions.potionSet) {
-                            // Name Check
-                            val somePotionNameComponent = someBrewedPotion.itemMeta.displayName() as TextComponent
-                            val odysseyPotionNameComponent = someOdysseyPotion.potionDisplayName
-                            if (odysseyPotionNameComponent.content() == somePotionNameComponent.content()) {
-                                val somePotionMeta = someBrewedPotion.itemMeta as PotionMeta
-                                // If Custom Effects
-                                if (somePotionMeta.basePotionData.type == PotionType.UNCRAFTABLE) {
-                                    // Dragon Breath
-                                    if (resultType == Material.LINGERING_POTION) {
-                                        // Potions without timers
-                                        if (somePotionNameComponent.content() == "§3Bottled Souls") {
-                                            createResultingPotion(x)
-                                        }
-                                        // Potions that have timers
-                                        else {
-                                            val newPotion = ItemStack(resultType, 1)
-                                            val newPotionMeta: PotionMeta = someBrewedPotion.itemMeta as PotionMeta
-                                            // Logic
-                                            val potionLore = newPotionMeta.lore!![0]
-                                            val i = potionLore.lastIndex
-                                            val potionLoreTimer = potionLore.subSequence((i - 5)..i)
-                                            val potionTimerSeconds = loreToSeconds(potionLoreTimer)
-                                            val newPotionTimer = potionTimerSeconds / 4
-                                            val newPotionLoreTimer = timeToLore(newPotionTimer)
-                                            val potionLoreEffect = potionLore.subSequence(0..(i - 6))
-                                            val newPotionLore = potionLoreEffect.toString() + newPotionLoreTimer
-                                            val newLore = newPotionMeta.lore
-                                            newLore!!.remove(potionLore)
-                                            newLore.add(0, newPotionLore)
-                                            newPotionMeta.lore = newLore
-                                            newPotion.itemMeta = newPotionMeta
-                                            event.results[x] = newPotion
-                                        }
-                                    }
-                                    // Gunpowder
-                                    else {
-                                        createResultingPotion(x)
-                                    }
-                                }
-                                // If not custom potion
-                                else {
-                                    createResultingPotion(x)
-                                }
-                                // End Loop for this slot
-                                break
-                            }
-                        }
-                    }
-                }
+            val brewingContents = event.contents.contents!!
+            GlobalScope.launch {
+                val newBrewingStandResults = brewCustomAlchemyPotion(brewingContents, event.contents.ingredient!!.type)
+                val synchroBrewingTask: BukkitRunnable = BrewingEventSynchro(newBrewingStandResults, event.contents!!)
+                synchroBrewingTask.runTask(MinecraftOdyssey.instance)
+
             }
         }
     }
@@ -228,23 +235,27 @@ object OdysseyAlchemyListeners : Listener {
     fun alchemyPotionSplash(event: PotionSplashEvent) {
         if (event.potion.item.hasItemMeta()) {
             val somePotion = event.potion.item
+            // Checks if potion has lore and display component
             if (somePotion.itemMeta.hasLore() && somePotion.itemMeta.hasDisplayName()) {
-                val somePotionNameComponent = somePotion.displayName() as TextComponent
+                // Get potion Meta
                 val somePotionMeta = somePotion.itemMeta as PotionMeta
-                if (somePotionMeta.basePotionData.type == PotionType.UNCRAFTABLE) {
-                    val potionName = somePotionNameComponent.content()
+                // Checks if Potion Meta Un-craftable and Colored Name
+                if (somePotionMeta.basePotionData.type == PotionType.UNCRAFTABLE && somePotionMeta.displayName()?.color() != null) {
+                    // Get Name
+                    val potionName = (somePotionMeta.displayName() as TextComponent).content()
+
+                    // Check custom potion has a timer
                     var potionDuration = 0
-                    // Check if in class list
-                    if (potionName in alchemyCustomEffectPotions) {
+                    if (potionName in odysseyTimedPotions) {
                         // Logic
                         val potionLore = somePotionMeta.lore!![0]
                         val i = potionLore.lastIndex
                         val potionLoreTimer = potionLore.subSequence((i - 5)..i)
                         potionDuration = loreToSeconds(potionLoreTimer)
-                        println(potionDuration)
                     }
+                    // Match Names
                     when (potionName) {
-                        "§eBottle o' Decay" -> {
+                        "Bottle o' Decay" -> {
                             val hungerDecay = PotionEffect(PotionEffectType.HUNGER, potionDuration * 20, 0)
                             somePotionMeta.addCustomEffect(hungerDecay, true)
                             for (decayingEntity: LivingEntity in event.affectedEntities) {
@@ -253,20 +264,20 @@ object OdysseyAlchemyListeners : Listener {
                                 decayingTask.runTaskTimer(MinecraftOdyssey.instance, 0, 40)
                             }
                         }
-                        "§eBottle o' Frost" -> {
+                        "Bottle o' Frost" -> {
                             val freezingSlow = PotionEffect(PotionEffectType.SLOW, potionDuration * 20, 0)
                             somePotionMeta.addCustomEffect(freezingSlow, true)
                             for (freezingEntity: LivingEntity in event.affectedEntities) {
                                 if ("Freezing" !in freezingEntity.scoreboardTags) {
-                                    freezingEntity.addPotionEffect(freezingSlow)
                                     val freezingTask = FreezingTask(freezingEntity, 1, potionDuration)
+                                    freezingEntity.addPotionEffect(freezingSlow)
                                     freezingEntity.addScoreboardTag("Freezing")
                                     freezingTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20)
                                 }
                             }
                         }
                         // Fix for ablaze combo
-                        "§eBottle o' Douse" -> {
+                        "Bottle o' Douse" -> {
                             for (dousedEntity: LivingEntity in event.affectedEntities) {
                                 if ("Doused" !in dousedEntity.scoreboardTags) {
                                     val dousedTask = DousedTask(dousedEntity, potionDuration)
@@ -275,7 +286,7 @@ object OdysseyAlchemyListeners : Listener {
                                 }
                             }
                         }
-                        "§eBottle o' Ablaze" -> {
+                        "Bottle o' Ablaze" -> {
                             for (blazingEntity: LivingEntity in event.affectedEntities) {
                                 if ("Ablaze" !in blazingEntity.scoreboardTags) {
                                     blazingEntity.fireTicks = 20 * potionDuration
@@ -285,7 +296,7 @@ object OdysseyAlchemyListeners : Listener {
                                 }
                             }
                         }
-                        "§3Bottled Souls" -> {
+                        "Bottled Souls" -> {
                             // AOE soul particles
                             event.potion.world.spawnParticle(Particle.SCULK_SOUL, event.potion.location, 145, 2.5, 0.75, 2.55)
                             for (soulDamagedEntity: LivingEntity in event.affectedEntities) {
@@ -298,10 +309,8 @@ object OdysseyAlchemyListeners : Listener {
                             }
                         }
                         else -> {
-
                         }
                     }
-                    println(event.affectedEntities)
                 }
             }
         }
@@ -311,58 +320,65 @@ object OdysseyAlchemyListeners : Listener {
     // Main function regarding lingering potions
     @EventHandler
     fun alchemyPotionLingering(event: LingeringPotionSplashEvent) {
-        if (event.entity.item.hasItemMeta()) {
-            val somePotion = event.entity.item
-            if (somePotion.itemMeta.hasLore()) {
-                val somePotionMeta = somePotion.itemMeta as PotionMeta
-                if (somePotionMeta.basePotionData.type == PotionType.UNCRAFTABLE) {
-                    val potionName = somePotionMeta.displayName
-                    var potionDuration = 0
-                    if (potionName in alchemyCustomEffectPotions) {
-                        // Logic
-                        val potionLore = somePotionMeta.lore!![0]
-                        val i = potionLore.lastIndex
-                        val potionLoreTimer = potionLore.subSequence((i - 5)..i)
-                        potionDuration = loreToSeconds(potionLoreTimer)
-                    }
-                    val potionCloud = event.areaEffectCloud
+        // Checks if potion has item meta and lore
+        if (event.entity.item.hasItemMeta() && event.entity.item.itemMeta?.hasLore() == true) {
+            // Gets Potion Meta
+            val somePotionMeta = event.entity.item.itemMeta as PotionMeta
+            // Checks if Potion Meta Un-craftable and Colored Name
+            if (somePotionMeta.basePotionData.type == PotionType.UNCRAFTABLE && somePotionMeta.displayName()?.color() != null) {
+                // Get Name
+                val potionName = (somePotionMeta.displayName() as TextComponent).content()
 
-                    var tagToAdd: String? = null
-                    var applicationDelay = 20
-                    var customEffectToAdd: PotionEffect? = null
-                    when (potionName) {
-                        "§eBottle o' Decay" -> {
-                            customEffectToAdd = PotionEffect(PotionEffectType.HUNGER, potionDuration * 20, 0)
-                            applicationDelay = 40
-                            tagToAdd = "Decaying_Cloud"
-                        }
-                        "§eBottle o' Frost" -> {
-                            customEffectToAdd = PotionEffect(PotionEffectType.SLOW, potionDuration * 20, 0)
-                            tagToAdd = "Frost_Cloud"
-                        }
-                        "§eBottle o' Douse" -> {
-                            customEffectToAdd = PotionEffect(PotionEffectType.UNLUCK, potionDuration * 20, 0)
-                            tagToAdd = "Douse_Cloud"
-                        }
-                        "§eBottle o' Ablaze" -> {
-                            customEffectToAdd = PotionEffect(PotionEffectType.WEAKNESS, potionDuration * 20, 0)
-                            tagToAdd = "Blazing_Cloud"
-                        }
-                        "§3Bottled Souls" -> {
-                            customEffectToAdd = PotionEffect(PotionEffectType.UNLUCK, potionDuration * 20, 0)
-                            tagToAdd = "Escaping_Souls_Cloud"
-                        }
-                        else -> {
+                // Check if Potion has timer
+                var potionDuration = 0
+                if (potionName in odysseyTimedPotions) {
+                    // Logic
+                    val potionLore = somePotionMeta.lore!![0]
+                    val i = potionLore.lastIndex
+                    val potionLoreTimer = potionLore.subSequence((i - 5)..i)
+                    potionDuration = loreToSeconds(potionLoreTimer)
+                }
 
-                        }
+                // Potion Cloud modifiers
+                var tagToAdd: String? = null
+                var applicationDelay = 20
+                var customEffectToAdd: PotionEffect? = null
+                // Match names
+                when (potionName) {
+                    "Bottle o' Decay" -> {
+                        customEffectToAdd = PotionEffect(PotionEffectType.HUNGER, potionDuration * 20, 0)
+                        applicationDelay = 40
+                        tagToAdd = "Decaying_Cloud"
                     }
-                    if (tagToAdd != null) {
+                    "Bottle o' Frost" -> {
+                        customEffectToAdd = PotionEffect(PotionEffectType.SLOW, potionDuration * 20, 0)
+                        tagToAdd = "Frost_Cloud"
+                    }
+                    "Bottle o' Douse" -> {
+                        customEffectToAdd = PotionEffect(PotionEffectType.UNLUCK, potionDuration * 20, 0)
+                        tagToAdd = "Douse_Cloud"
+                    }
+                    "Bottle o' Ablaze" -> {
+                        customEffectToAdd = PotionEffect(PotionEffectType.WEAKNESS, potionDuration * 20, 0)
+                        tagToAdd = "Blazing_Cloud"
+                    }
+                    "Bottled Souls" -> {
+                        customEffectToAdd = PotionEffect(PotionEffectType.UNLUCK, potionDuration * 20, 0)
+                        tagToAdd = "Escaping_Souls_Cloud"
+                    }
+                    else -> {
+
+                    }
+                }
+                // Add Tags and Effects to potion cloud
+                if (tagToAdd != null) {
+                    (event.areaEffectCloud).also {
                         somePotionMeta.addCustomEffect(customEffectToAdd!!, true)
-                        potionCloud.addCustomEffect(customEffectToAdd, true)
-                        potionCloud.duration = 20 * 20
-                        potionCloud.reapplicationDelay = applicationDelay
-                        potionCloud.addScoreboardTag(tagToAdd)
-                        potionCloud.addScoreboardTag("Timed_Cloud")
+                        it.addCustomEffect(customEffectToAdd, true)
+                        it.duration = 20 * 20
+                        it.reapplicationDelay = applicationDelay
+                        it.addScoreboardTag(tagToAdd)
+                        it.addScoreboardTag("Timed_Cloud")
                     }
                 }
             }
@@ -374,7 +390,6 @@ object OdysseyAlchemyListeners : Listener {
     fun alchemyPotionCloud(event: AreaEffectCloudApplyEvent) {
         val somePotionCloud = event.entity
         val someEntities = event.affectedEntities
-        println(someEntities)
         // For now base timers then string manipulation
         for (tag in somePotionCloud.scoreboardTags) {
             when (tag) {
@@ -423,7 +438,6 @@ object OdysseyAlchemyListeners : Listener {
                             soulDamagedEntity.world.spawnParticle(Particle.SCULK_SOUL, soulDamagedEntity.location, 25, 0.25, 0.35, 0.25)
                         }
                     }
-
                 }
                 else -> {
 

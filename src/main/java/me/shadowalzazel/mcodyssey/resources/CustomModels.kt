@@ -55,8 +55,8 @@ object CustomModels {
     /* --------------------------------EXOTIC-ITEMS--------------------------------- */
 
     //
-    const val RHO_ANNULUS_SCHEMATICS: Int = 6900068
-    const val ARTIFICIAL_STAR_UNIT: Int = 6900069
+    const val BABEL_ANNULUS_SCHEMATICS: Int = 6900068
+    const val DORMANT_SENTIENT_STAR: Int = 6900069
     //
     const val IMPURE_ANTI_MATTER_SHARD: Int = 6900088
     const val PURE_ANTIMATTER_CRYSTAL: Int = 6900089
@@ -82,11 +82,46 @@ object CustomModels {
 
     // Katanas
     const val WOODEN_KATANA: Int = 6905744
-    const val GOLDEN_KATANA: Int = 6905745
-    const val STONE_KATANA: Int = 6905746
-    const val IRON_KATANA: Int = 6905747
-    const val DIAMOND_KATANA: Int = 6905748
-    const val NETHERITE_KATANA: Int = 6905749
+    const val GOLDEN_KATANA: Int = 6905744
+    const val STONE_KATANA: Int = 6905744
+    const val IRON_KATANA: Int = 6905744
+    const val DIAMOND_KATANA: Int = 6905744
+    const val NETHERITE_KATANA: Int = 6905744 //
 
+    // Claymores
+    const val WOODEN_CLAYMORE: Int = 6905745
+    const val GOLDEN_CLAYMORE: Int = 6905745
+    const val STONE_CLAYMORE: Int = 6905745
+    const val IRON_CLAYMORE: Int = 6905745
+    const val DIAMOND_CLAYMORE: Int = 6905745
+    const val NETHERITE_CLAYMORE: Int = 6905745 //
+
+    // Daggers
+    const val WOODEN_DAGGER: Int = 6905746
+    const val GOLDEN_DAGGER: Int = 6905746
+    const val STONE_DAGGER: Int = 6905746
+    const val IRON_DAGGER: Int = 6905746
+    const val DIAMOND_DAGGER: Int = 6905746
+    const val NETHERITE_DAGGER: Int = 6905746 //
+
+
+    /* ------------------------------SPEARS----------------------------------------*/
+
+    // Spears
+    const val WOODEN_SPEAR: Int = 6905774
+    const val GOLDEN_SPEAR: Int = 6905774
+    const val STONE_SPEAR: Int = 6905774
+    const val IRON_SPEAR: Int = 6905774
+    const val DIAMOND_SPEAR: Int = 6905774
+    const val NETHERITE_SPEAR: Int = 6905774 //
+
+
+    /* ------------------------------STAFF----------------------------------------*/
+
+    // Staffs
+    const val BAMBOO_STAFF: Int = 6905793
+    const val BONE_STAFF: Int = 6905794
+    const val WOODEN_STAFF: Int = 6905795
+    const val BLAZE_ROD_STAFF: Int = 6905796
 
 }

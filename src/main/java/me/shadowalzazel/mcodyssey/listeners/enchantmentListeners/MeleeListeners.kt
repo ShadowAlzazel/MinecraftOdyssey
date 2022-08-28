@@ -42,9 +42,10 @@ object MeleeListeners : Listener {
     @EventHandler
     fun mainMeleeDamageHandler(event: EntityDamageByEntityEvent) {
         // Check if event damager and damaged is living entity
-        if (event.damager is LivingEntity && event.entity is LivingEntity && event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK) { // Make thorns bug new enchant apply ranged effects
+        if (event.damager is LivingEntity && event.entity is LivingEntity && event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
             val someDamager = event.damager as LivingEntity
             val someVictim = event.entity as LivingEntity
+            // Make thorns bug new enchant apply ranged effects !!!!!
             // Check if active item has lore
             if (someDamager.equipment?.itemInMainHand?.hasItemMeta() == true)  {
                 val someWeapon = someDamager.equipment?.itemInMainHand
@@ -182,11 +183,13 @@ object MeleeListeners : Listener {
         val victimTarget = eventVictim.getTargetEntity(10)
         if (victimTarget != event.damager) {
             // Particles and sounds
-            eventVictim.world.spawnParticle(Particle.CRIT_MAGIC, eventVictim.location, 95, 0.5, 0.5, 0.5)
-            eventVictim.world.spawnParticle(Particle.WARPED_SPORE, eventVictim.location, 95, 0.5, 0.5, 0.5)
-            eventVictim.world.spawnParticle(Particle.ELECTRIC_SPARK, eventVictim.location, 65, 0.5, 0.5, 0.5)
-            eventVictim.world.spawnParticle(Particle.CRIT, eventVictim.location, 65, 0.5, 0.5, 0.5)
-            eventVictim.world.playSound(eventVictim.location, Sound.BLOCK_HONEY_BLOCK_FALL, 2.5F, 0.9F)
+            with(eventVictim.world) {
+                spawnParticle(Particle.CRIT_MAGIC, eventVictim.location, 95, 0.5, 0.5, 0.5)
+                spawnParticle(Particle.WARPED_SPORE, eventVictim.location, 95, 0.5, 0.5, 0.5)
+                spawnParticle(Particle.ELECTRIC_SPARK, eventVictim.location, 65, 0.5, 0.5, 0.5)
+                spawnParticle(Particle.CRIT, eventVictim.location, 65, 0.5, 0.5, 0.5)
+                playSound(eventVictim.location, Sound.BLOCK_HONEY_BLOCK_FALL, 2.5F, 0.9F)
+            }
             // Damage
             event.damage += (3 + (enchantmentStrength * 3))
         }
@@ -257,11 +260,13 @@ object MeleeListeners : Listener {
         decayingTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20 * 2)
 
         // Particles and sounds
-        eventVictim.world.spawnParticle(Particle.SPORE_BLOSSOM_AIR , eventVictim.location, 40, 0.25, 0.4, 0.25)
-        eventVictim.world.spawnParticle(Particle.GLOW, eventVictim.location, 20, 0.25, 0.4, 0.25)
-        eventVictim.world.spawnParticle(Particle.GLOW_SQUID_INK, eventVictim.location, 15, 0.25, 0.25, 0.25)
-        eventVictim.world.spawnParticle(Particle.SNEEZE, eventVictim.location, 40, 0.25, 0.25, 0.25)
-        eventVictim.world.spawnParticle(Particle.SCRAPE, eventVictim.location, 20, 0.5, 1.0, 0.5)
+        with(eventVictim.world) {
+            spawnParticle(Particle.SPORE_BLOSSOM_AIR , eventVictim.location, 40, 0.25, 0.4, 0.25)
+            spawnParticle(Particle.GLOW, eventVictim.location, 20, 0.25, 0.4, 0.25)
+            spawnParticle(Particle.GLOW_SQUID_INK, eventVictim.location, 15, 0.25, 0.25, 0.25)
+            spawnParticle(Particle.SNEEZE, eventVictim.location, 40, 0.25, 0.25, 0.25)
+            spawnParticle(Particle.SCRAPE, eventVictim.location, 20, 0.5, 1.0, 0.5)
+        }
 
     }
 
@@ -381,6 +386,9 @@ object MeleeListeners : Listener {
         val guardingPose = PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, (2 + (enchantmentStrength * 2)) * 20, 0)
         eventKiller.addPotionEffect(guardingPose)
         // Particles and Sounds
+
+
+
         eventKiller.world.spawnParticle(Particle.SCRAPE, eventVictim.location, 35, 1.0, 0.5, 1.0)
         eventKiller.world.spawnParticle(Particle.ELECTRIC_SPARK, eventVictim.location, 35, 1.0, 0.5, 1.0)
         eventKiller.world.playSound(eventVictim.location, Sound.ITEM_SHIELD_BLOCK, 1.5F, 0.5F)
@@ -471,18 +479,23 @@ object MeleeListeners : Listener {
             }
             // Add tags if not voided
             else {
-                eventVictim.scoreboardTags.add("Void_Touched")
-                eventVictim.scoreboardTags.add("Void_Touched_By_${voidDamagerID}")
-                eventVictim.scoreboardTags.add("Void_Struck_0")
+                (eventVictim.scoreboardTags).also {
+                    it.add("Void_Touched")
+                    it.add("Void_Touched_By_${voidDamagerID}")
+                    it.add("Void_Struck_0")
+                }
             }
 
             // Particles and Sounds
-            eventVictim.world.spawnParticle(Particle.PORTAL, eventVictim.location, 85, 1.15, 0.85, 1.15)
-            eventVictim.world.spawnParticle(Particle.WAX_OFF, eventVictim.location, 45, 1.0, 0.75, 1.0)
-            eventVictim.world.spawnParticle(Particle.SPELL_WITCH, eventVictim.location, 50, 1.0, 0.75, 1.0)
-            eventVictim.world.playSound(eventVictim.location, Sound.BLOCK_BEACON_DEACTIVATE, 1.5F, 0.5F)
-            eventVictim.world.playSound(eventVictim.location, Sound.BLOCK_AMETHYST_BLOCK_BREAK, 1.7F, 0.2F)
-            eventVictim.world.playSound(eventVictim.location, Sound.ENTITY_ENDER_EYE_DEATH, 3.5F, 0.4F)
+            with(eventVictim.world) {
+                val someLocation = eventVictim.location
+                spawnParticle(Particle.PORTAL, someLocation, 85, 1.15, 0.85, 1.15)
+                spawnParticle(Particle.WAX_OFF, someLocation, 45, 1.0, 0.75, 1.0)
+                spawnParticle(Particle.SPELL_WITCH, someLocation, 50, 1.0, 0.75, 1.0)
+                playSound(someLocation, Sound.BLOCK_BEACON_DEACTIVATE, 1.5F, 0.5F)
+                playSound(someLocation, Sound.BLOCK_AMETHYST_BLOCK_BREAK, 1.7F, 0.2F)
+                playSound(someLocation, Sound.ENTITY_ENDER_EYE_DEATH, 3.5F, 0.4F)
+            }
 
             // Damage
             event.damage += voidDamage
@@ -519,11 +532,13 @@ object MeleeListeners : Listener {
             }
         }
          */
-        eventDamager.world.spawnParticle(Particle.EXPLOSION_LARGE, eventLocation, 10, 1.25, 0.75, 1.25)
-        eventDamager.world.playSound(eventLocation, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1.2F, 0.7F)
-        eventDamager.world.playSound(eventLocation, Sound.ITEM_SHIELD_BLOCK, 1.2F, 0.6F)
-        eventDamager.world.playSound(eventLocation, Sound.ITEM_TRIDENT_RIPTIDE_3, 1.2F, 0.6F)
-        eventDamager.world.playSound(eventLocation, Sound.ITEM_TRIDENT_RIPTIDE_2, 1.2F, 1.2F)
+        with(eventDamager.world) {
+            spawnParticle(Particle.EXPLOSION_LARGE, eventLocation, 10, 1.25, 0.75, 1.25)
+            playSound(eventLocation, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1.2F, 0.7F)
+            playSound(eventLocation, Sound.ITEM_SHIELD_BLOCK, 1.2F, 0.6F)
+            playSound(eventLocation, Sound.ITEM_TRIDENT_RIPTIDE_3, 1.2F, 0.6F)
+            playSound(eventLocation, Sound.ITEM_TRIDENT_RIPTIDE_2, 1.2F, 1.2F)
+        }
 
         // Damage Calculation
         val someDamage = event.damage

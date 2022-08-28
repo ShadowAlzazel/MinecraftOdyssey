@@ -4,8 +4,7 @@ package me.shadowalzazel.mcodyssey.listeners
 import me.shadowalzazel.mcodyssey.enchantments.utility.GildedPower
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.items.OdysseyItems
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.TextComponent
+import me.shadowalzazel.mcodyssey.resources.ModifiersUUIDs
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
@@ -19,7 +18,7 @@ import org.bukkit.event.inventory.PrepareSmithingEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
-import java.util.*
+import java.util.UUID
 import kotlin.math.max
 
 object OdysseyGildingListeners : Listener {
@@ -29,36 +28,78 @@ object OdysseyGildingListeners : Listener {
 
     // Function that disables anvil gilding
     @EventHandler
-    fun cancelAnvilGilding(event: PrepareAnvilEvent) {
+    fun anvilHandler(event: PrepareAnvilEvent) {
         // BOTH ITEM SLOTS OCCUPIED
         if (event.inventory.firstItem != null && event.inventory.secondItem != null) {
             //BASE CASE!
             if (event.inventory.firstItem!!.type == Material.ENCHANTED_GOLDEN_APPLE && event.inventory.secondItem!!.type == Material.GOLD_INGOT) {
                 event.result = ItemStack(Material.GOLDEN_HOE)
                 event.viewers.forEach {somePlayer -> (somePlayer as Player).updateInventory()}
-                println("${event.result}")
             }
-            // Check if items have odyssey enchants
+            // Check if items have meta
             else if (event.inventory.firstItem!!.hasItemMeta() || event.inventory.secondItem!!.hasItemMeta()) {
-                // For repair
-                // ger durability clone it
-                // check of greater
-                // clone item meta
+                println("Q")
                 val firstItem = event.inventory.firstItem
                 val secondItem = event.inventory.secondItem
-                if (firstItem!!.itemMeta.hasEnchants() || secondItem!!.itemMeta.hasEnchants()) {
-                    val firstEnchants = firstItem.enchantments
-                    val secondEnchants = secondItem?.enchantments
+
+                // Check if custom model and sharpness
+                // DOES NOT SHOW SHARPNESS META!
+                /*
+                if (firstItem!!.itemMeta.hasCustomModelData()) {
+                    println("X")
+                    // Check if result has sharpness
+                    if (event.result?.itemMeta?.hasEnchant(Enchantment.DAMAGE_ALL) == true) {
+                        val eventResult = event.result!!
+                        // Check sharpness values
+                        val sharpnessValue = eventResult.itemMeta!!.enchants[Enchantment.DAMAGE_ALL]!!
+                        if (sharpnessValue <= 5) {
+                            var isOdysseyWeapon = false
+                            var sharpnessModifier: AttributeModifier? = null
+                            // Check modifiers
+                            val attackAttribute = eventResult.itemMeta.getAttributeModifiers(Attribute.GENERIC_ATTACK_DAMAGE)
+                            if (attackAttribute != null) {
+                                for (modifier in attackAttribute) {
+                                    if (modifier.uniqueId == ModifiersUUIDs.ATTACK_DAMAGE_UUID) {
+                                        isOdysseyWeapon = true
+                                    }
+                                    else if (modifier.uniqueId == ModifiersUUIDs.SHARPNESS_DAMAGE_UUID) {
+                                        sharpnessModifier = modifier
+                                    }
+                                }
+                            }
+                            // Change damage
+                            if (isOdysseyWeapon) {
+                                eventResult.itemMeta = eventResult.clone().itemMeta.also {
+                                    val newDamageValue = ((sharpnessValue + 1) * 0.5)
+                                    println(newDamageValue)
+                                    val newSharpnessModifier = AttributeModifier(ModifiersUUIDs.SHARPNESS_DAMAGE_UUID, "sharpness.attack_damage", newDamageValue, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND)
+                                    if (sharpnessModifier != null) {
+                                        it.removeAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, sharpnessModifier)
+                                    }
+                                    it.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, newSharpnessModifier)
+                                }
+                                event.viewers.forEach { somePlayer -> (somePlayer as Player).updateInventory() }
+                                println(eventResult.itemMeta.attributeModifiers)
+                            }
+
+                        }
+                    }
+                }
+
+                 */
+
+                // Checks for items with odyssey enchants
+                if (firstItem?.itemMeta?.hasEnchants() == true || secondItem?.itemMeta?.hasEnchants() == true) {
 
                     // Check if Odyssey Enchants
-                    for (enchant in firstEnchants.keys) {
+                    for (enchant in firstItem?.enchantments?.keys!!) {
                         if (enchant in OdysseyEnchantments.enchantmentSet) {
                             event.result = ItemStack(Material.AIR, 1)
                             event.viewers.forEach {somePlayer -> (somePlayer as Player).updateInventory()}
                         }
                     }
                     // Check if Odyssey Enchants
-                    for (enchant in secondEnchants?.keys!!) {
+                    for (enchant in secondItem?.enchantments?.keys!!) {
                         if (enchant in OdysseyEnchantments.enchantmentSet) {
                             event.result = ItemStack(Material.AIR, 1)
                             event.viewers.forEach {somePlayer -> (somePlayer as Player).updateInventory()}
@@ -97,10 +138,10 @@ object OdysseyGildingListeners : Listener {
     }
 
 
-    // Main Function that handles Odyssey Smithing
+    // Main Function that handles Odyssey Smithing make it call on certain gilding table, smithing will be for weapons smiths
     @Suppress("DEPRECATION")
     @EventHandler
-    fun odysseySmithing(event: PrepareSmithingEvent) {
+    fun odysseySmithingHandler(event: PrepareSmithingEvent) {
         if (event.inventory.inputEquipment != null && event.inventory.inputMineral != null) {
             val timeElapsed = System.currentTimeMillis() - smithingCooldown
 
@@ -204,7 +245,6 @@ object OdysseyGildingListeners : Listener {
                     var hasOdysseyEnchant = false
                     var someBookGildedEnchant: Enchantment? = null
                     for (someEnchant in gildedBookEnchants.keys) {
-                        println("CHECKING...")
                         // Check gilded power
                         if (someEnchant in OdysseyEnchantments.enchantmentSet) {
                             hasOdysseyEnchant = true
@@ -273,7 +313,6 @@ object OdysseyGildingListeners : Listener {
                                 someBookMeta.lore = newBookLore
                                 combinedBookEnchantMeta = someBookMeta
                                 combinedBookEnchantMeta.lore = newBookLore
-                                println(combinedBookEnchantMeta)
                             }
                             else {
                                 return
@@ -281,11 +320,9 @@ object OdysseyGildingListeners : Listener {
                         }
                         // Check if power allows new enchants
                         if (gildedPower > odysseyEnchantCounter || gildedPower == 0) {
-                            println("Passed Check!")
                             // Viewer warning
                             for (viewer in event.viewers) {
                                 if (viewer is Player) {
-                                    println("Gilding Equipment!")
                                     if (timeElapsed > 20) {
                                         gildingCooldown = System.currentTimeMillis()
                                         viewer.sendMessage("This is a permanent gilded enchantment!")
@@ -304,10 +341,8 @@ object OdysseyGildingListeners : Listener {
                                     val equipmentEnchantString = "${ChatColor.GOLD}${someBookGildedEnchant.name} ${romanNumeralList[equipmentEnchantLevel]}"
                                     val gildedEquipmentLore = gildedEquipmentMeta.lore!!
                                     gildedEquipmentLore.remove(equipmentEnchantString)
-                                    println(gildedEquipmentLore)
                                     // Add new lore
                                     newLore!!.addAll(gildedEquipmentLore)
-                                    println(newLore)
                                     gildedEquipmentMeta.lore = newLore
                                     gildedEquipment.itemMeta = gildedEquipmentMeta
                                 }
@@ -385,16 +420,6 @@ object OdysseyGildingListeners : Listener {
                     }
                 }
             }
-
-
-            // Check
-            /*
-            else {
-                event.result = ItemStack(Material.AIR, 1)
-                event.viewers.forEach {somePlayer -> (somePlayer as Player).updateInventory()}
-                println("${event.result}")
-            }
-            */
         }
     }
 

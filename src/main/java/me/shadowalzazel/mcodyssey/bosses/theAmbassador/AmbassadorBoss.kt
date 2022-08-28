@@ -515,7 +515,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 bossEntity?.world!!.spawnParticle(Particle.SPELL_WITCH, givingPlayer.location, 35, 1.0, 1.0, 1.0)
                 giftLikeness += 45
                 givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}An unborn Unit-${ChatColor.MAGIC}092412X.${ChatColor.RESET}. I shall start its sentience activation cycle for you...")
-                givingPlayer.inventory.addItem(OdysseyItems.ARTIFICIAL_STAR_UNIT.createItemStack(1))
+                givingPlayer.inventory.addItem(OdysseyItems.DORMANT_SENTIENT_STAR.createItemStack(1))
                 val gravityBook = OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.GRAVITY_WELL, (1..3).random())
                 givingPlayer.inventory.addItem(gravityBook)
             }
@@ -524,7 +524,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 giftLikeness += 6
                 if (appeasement > 50) {
                     givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Hmm casted Neutronium Bark... Here take this special Unit-${ChatColor.MAGIC}092412X.")
-                    givingPlayer.inventory.addItem(OdysseyItems.ARTIFICIAL_STAR_UNIT.createItemStack(1))
+                    givingPlayer.inventory.addItem(OdysseyItems.DORMANT_SENTIENT_STAR.createItemStack(1))
                 }
                 else {
                     givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Hmm casted Neutronium Bark... Here are some quantum-entangled vacuums repurposed as storage " +
@@ -551,7 +551,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
                 if (appeasement > 50) {
                     givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}This will help you towards mechanization...")
-                    givingPlayer.inventory.addItem(OdysseyItems.KUGELBLITZ_CONTAINMENT_SILO.createItemStack(1))
+                    givingPlayer.inventory.addItem(OdysseyItems.KUGELBLITZ_CONTAINMENT_UNIT.createItemStack(1))
                 }
             }
             Material.ACACIA_LOG, Material.OAK_LOG, Material.SPRUCE_LOG, Material.DARK_OAK_LOG, Material.BIRCH_LOG, Material.JUNGLE_LOG, Material.MANGROVE_LOG,
@@ -614,7 +614,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 giftLikeness += 50
                 givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}How did you get this?... I did not hear that Vail planted Aether roots from Lupercal...")
                 givingPlayer.sendMessage("${ChatColor.DARK_GRAY}${ChatColor.ITALIC}Do not alert the others... Here take this. Keep it safe, it will help you soon to come...")
-                givingPlayer.inventory.addItem(OdysseyItems.RHO_ANNULUS_SCHEMATICS.createItemStack(1))
+                givingPlayer.inventory.addItem(OdysseyItems.BABEL_ANNULUS_SCHEMATICS.createItemStack(1))
             }
             Material.DANDELION, Material.POPPY, Material.BLUE_ORCHID, Material.ALLIUM, Material.AZURE_BLUET, Material.ORANGE_TULIP,
             Material.RED_TULIP, Material.WHITE_TULIP, Material.PINK_TULIP, Material.CORNFLOWER, Material.LILY_OF_THE_VALLEY, Material.SUNFLOWER,
@@ -696,7 +696,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward + 1))
                 if (appeasement >= 65) {
                     givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}This is what a present look like however...")
-                    givingPlayer.inventory.addItem(OdysseyItems.KUGELBLITZ_CONTAINMENT_SILO.createItemStack(1))
+                    givingPlayer.inventory.addItem(OdysseyItems.KUGELBLITZ_CONTAINMENT_UNIT.createItemStack(1))
                 }
             }
             else -> {

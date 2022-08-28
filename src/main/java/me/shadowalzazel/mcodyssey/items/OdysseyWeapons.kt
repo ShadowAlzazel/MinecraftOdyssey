@@ -10,8 +10,6 @@ object OdysseyWeapons {
     //
     val NECRONOMICON = Necronomicon
 
-
-
     // Katanas
     val WOODEN_KATANA = WoodenKatana
     val GOLDEN_KATANA = GoldenKatana
@@ -20,6 +18,33 @@ object OdysseyWeapons {
     val DIAMOND_KATANA = DiamondKatana
     val NETHERITE_KATANA = NetheriteKatana
 
+    // Claymores
+    val WOODEN_CLAYMORE = WoodenClaymore
+    val GOLDEN_CLAYMORE = GoldenClaymore
+    val STONE_CLAYMORE = StoneClaymore
+    val IRON_CLAYMORE = IronClaymore
+    val DIAMOND_CLAYMORE = DiamondClaymore
+    val NETHERITE_CLAYMORE = NetheriteClaymore
+
+    // Spear
+    val WOODEN_SPEAR = WoodenSpear
+    val GOLDEN_SPEAR = GoldenSpear
+    val STONE_SPEAR = StoneSpear
+    val IRON_SPEAR = IronSpear
+    val DIAMOND_SPEAR = DiamondSpear
+
+    // Dagger
+    val WOODEN_DAGGER = WoodenDagger
+    val GOLDEN_DAGGER = GoldenDagger
+    val STONE_DAGGER = StoneDagger
+    val IRON_DAGGER = IronDagger
+    val DIAMOND_DAGGER = DiamondDagger
+
+    // Staff
+    val BAMBOO_STAFF = BambooStaff
+    val BONE_STAFF = BoneStaff
+    val WOODEN_STAFF = WoodenStaff
+    val BLAZE_ROD_STAFF = BlazeRodStaff
 
 
 }

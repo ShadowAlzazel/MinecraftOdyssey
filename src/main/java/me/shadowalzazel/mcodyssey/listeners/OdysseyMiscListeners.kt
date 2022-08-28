@@ -31,21 +31,22 @@ object OdysseyMiscListeners : Listener {
     // Main function for calling a new boss
     @EventHandler
     fun newBoss(event: TimeSkipEvent) {
-        if (!MinecraftOdyssey.instance.activeBoss) {
-            val timeElapsed = System.currentTimeMillis() - MinecraftOdyssey.instance.timeSinceBoss
-            if (timeElapsed >= 90000000) {
-                when ((0..4).random()) {
-                    // For all boss RNG
-                    0 -> {
-                        MinecraftOdyssey.instance.timeSinceBoss = System.currentTimeMillis()
-                        MinecraftOdyssey.instance.currentBoss = AmbassadorBoss()
-                        MinecraftOdyssey.instance.activeBoss = true
-                        val ambassadorBoss = MinecraftOdyssey.instance.currentBoss as AmbassadorBoss
-                        ambassadorBoss.createBoss(event.world)
-                        println("${event.world.name}Spawned the Ambassador")
-                    }
-                    else -> {
+        MinecraftOdyssey.instance.run {
+            if (!activeBoss) {
+                val timeElapsed = System.currentTimeMillis() - timeSinceBoss
+                if (timeElapsed >= 90000000) {
+                    when ((0..4).random()) {
+                        // For all boss RNG
+                        0 -> {
+                            timeSinceBoss = System.currentTimeMillis()
+                            currentBoss = AmbassadorBoss()
+                            activeBoss = true
+                            (currentBoss as AmbassadorBoss).createBoss(mainWorld!!)
+                            println("${mainWorld!!.name}Spawned the Ambassador")
+                        }
+                        else -> {
 
+                        }
                     }
                 }
             }
