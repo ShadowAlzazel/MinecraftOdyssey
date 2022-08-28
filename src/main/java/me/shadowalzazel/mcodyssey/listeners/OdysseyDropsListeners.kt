@@ -34,7 +34,7 @@ object OdysseyDropsListeners : Listener {
                 val somePlayer: Player = event.entity.killer as Player
                 if (event.entity.hasLineOfSight(somePlayer)) {
                     val randomEnchantList = listOf(OdysseyEnchantments.HEMORRHAGE, OdysseyEnchantments.WHIRLWIND, OdysseyEnchantments.SPEEDY_SPURS, OdysseyEnchantments.WARP_JUMP, OdysseyEnchantments.SPEEDY_SPURS, OdysseyEnchantments.ECHO,
-                        OdysseyEnchantments.COWARDICE, OdysseyEnchantments.LUCKY_DRAW, OdysseyEnchantments.SOUL_REND, OdysseyEnchantments.SPOREFUL, OdysseyEnchantments.FRUITFUL_FARE, OdysseyEnchantments.POTION_BARRIER)
+                        OdysseyEnchantments.COWARDICE, OdysseyEnchantments.LUCKY_DRAW, OdysseyEnchantments.SOUL_REND, OdysseyEnchantments.SPOREFUL, OdysseyEnchantments.FRUITFUL_FARE, OdysseyEnchantments.POTION_BARRIER, OdysseyEnchantments.BURST_BARRAGE)
 
                     // Looting and luck
                     var looting = 0.0
@@ -124,9 +124,22 @@ object OdysseyDropsListeners : Listener {
                         }
                         is Shulker -> {
                             if ((2.5 + luck + looting + misc) * 10 > (0..1000).random()) {
+                                somePlayer.world.dropItem(event.entity.location, (OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.VOID_STRIKE, 1))) // change
+                                droppedItemSound(somePlayer)
+                            }
+                        }
+                        is Endermite -> {
+                            if ((3.0 + luck + looting + misc) * 10 > (0..1000).random()) {
                                 somePlayer.world.dropItem(event.entity.location, (OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.VOID_STRIKE, 1)))
                                 droppedItemSound(somePlayer)
                             }
+                        }
+                        is Enderman -> {
+                            if ((2.0 + luck + looting + misc) * 10 > (0..1000).random()) {
+                                somePlayer.world.dropItem(event.entity.location, (OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.WARP_JUMP, 1)))
+                                droppedItemSound(somePlayer)
+                            }
+
                         }
                         is Skeleton -> {
                             if (hasBloodMoon) {

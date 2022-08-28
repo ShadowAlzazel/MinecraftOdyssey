@@ -6,7 +6,7 @@ import org.bukkit.Material
 
 object WoodenClaymore: Claymore("Wooden Claymore", Material.WOODEN_SWORD, CustomModels.WOODEN_CLAYMORE, 7.75, 0.7)
 
-object GoldenClaymore: Claymore("Golden Claymore", Material.GOLDEN_SWORD, CustomModels.GOLDEN_CLAYMORE, 8.75, 0.76)
+object GoldenClaymore: Claymore("Golden Claymore", Material.GOLDEN_SWORD, CustomModels.GOLDEN_CLAYMORE, 8.75, 0.7)
 
 object StoneClaymore: Claymore("Stone Claymore", Material.STONE_SWORD, CustomModels.STONE_CLAYMORE, 9.75, 0.7)
 

@@ -16,6 +16,7 @@ import me.shadowalzazel.mcodyssey.phenomenon.PhenomenonTimer
 import me.shadowalzazel.mcodyssey.phenomenon.solarPhenomena.utilty.SolarPhenomenon
 import me.shadowalzazel.mcodyssey.phenomenon.lunarPhenomena.utilty.LunarPhenomenon
 import me.shadowalzazel.mcodyssey.recipes.*
+import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.World
 
@@ -110,6 +111,7 @@ class MinecraftOdyssey : JavaPlugin() {
                     }
                 }
             }
+            it.broadcast(Component.text("The Odyssey Awaits!"))
         }
 
         // Gilding Recipes
@@ -140,6 +142,7 @@ class MinecraftOdyssey : JavaPlugin() {
 
         // Spell Commands
         getCommand("necronomicon")?.setExecutor(Necronomicon)
+
 
         // Hello World!
         logger.info("The Odyssey has just begun!")

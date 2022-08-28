@@ -41,6 +41,10 @@ object WeaponRecipes {
 
     // Staff Recipes
     private val BAMBOO_STAFF_RECIPE = createBambooStaffRecipe()
+    private val BONE_STAFF_RECIPE = createBoneStaffRecipe()
+    private val WOODEN_STAFF_RECIPE = createWoodenStaffRecipe()
+    private val BLAZE_ROD_STAFF_RECIPE = createBlazeRodStaffRecipe()
+
 
 
     // Recipes
@@ -48,7 +52,7 @@ object WeaponRecipes {
         WOODEN_CLAYMORE_RECIPE, GOLDEN_CLAYMORE_RECIPE, STONE_CLAYMORE_RECIPE, IRON_CLAYMORE_RECIPE, DIAMOND_CLAYMORE_RECIPE,
         WOODEN_SPEAR_RECIPE, GOLDEN_SPEAR_RECIPE, STONE_SPEAR_RECIPE, IRON_SPEAR_RECIPE, DIAMOND_SPEAR_RECIPE,
         WOODEN_DAGGER_RECIPE, GOLDEN_DAGGER_RECIPE, STONE_DAGGER_RECIPE, IRON_DAGGER_RECIPE, DIAMOND_DAGGER_RECIPE,
-        BAMBOO_STAFF_RECIPE
+        BAMBOO_STAFF_RECIPE, BONE_STAFF_RECIPE, WOODEN_STAFF_RECIPE, BLAZE_ROD_STAFF_RECIPE
     )
 
     /*----------------------------------------KATANAS-----------------------------------------*/
@@ -296,6 +300,39 @@ object WeaponRecipes {
             shape(" Y ", "XYX", " Y ")
             setIngredient('X', Material.RABBIT_HIDE)
             setIngredient('Y', Material.BAMBOO)
+        }
+        return someRecipe
+    }
+
+
+    private fun createBoneStaffRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.BONE_STAFF.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "bonestaff"), someResult).apply {
+            shape(" Y ", "XYX", " Y ")
+            setIngredient('X', Material.RABBIT_HIDE)
+            setIngredient('Y', Material.BONE)
+        }
+        return someRecipe
+    }
+
+
+    private fun createWoodenStaffRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.WOODEN_STAFF.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "woodenstaff"), someResult).apply {
+            shape(" Y ", "XYX", " Y ")
+            setIngredient('X', Material.RABBIT_HIDE)
+            setIngredient('Y', Material.STICK)
+        }
+        return someRecipe
+    }
+
+
+    private fun createBlazeRodStaffRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.BLAZE_ROD_STAFF.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "blazerodstaff"), someResult).apply {
+            shape(" Y ", "XYX", " Y ")
+            setIngredient('X', Material.RABBIT_HIDE)
+            setIngredient('Y', Material.BLAZE_ROD)
         }
         return someRecipe
     }

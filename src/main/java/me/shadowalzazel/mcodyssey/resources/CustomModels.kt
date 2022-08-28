@@ -120,5 +120,8 @@ object CustomModels {
 
     // Staffs
     const val BAMBOO_STAFF: Int = 6905793
+    const val BONE_STAFF: Int = 6905794
+    const val WOODEN_STAFF: Int = 6905795
+    const val BLAZE_ROD_STAFF: Int = 6905796
 
 }

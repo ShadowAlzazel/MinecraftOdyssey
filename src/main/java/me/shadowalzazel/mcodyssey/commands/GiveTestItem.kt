@@ -32,6 +32,21 @@ object GiveTestItem : CommandExecutor {
                     "bane_of_the_illager" -> {
                         sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BANE_OF_THE_ILLAGER, 3))
                     }
+                    "soul_rend" -> {
+                        sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.SOUL_REND, 1))
+                    }
+                    "decaying_touch" -> {
+                        sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.DECAYING_TOUCH, 1))
+                    }
+                    "gravity_well" -> {
+                        sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.GRAVITY_WELL, 1))
+                    }
+                    "freezing_aspect" -> {
+                        sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.FREEZING_ASPECT, 1))
+                    }
+                    "exploding" -> {
+                        sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.FREEZING_ASPECT, 1))
+                    }
                     "burst_barrage" -> {
                         sender.inventory.addItem(OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BURST_BARRAGE, 3))
                     }

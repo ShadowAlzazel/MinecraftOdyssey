@@ -2,7 +2,7 @@ package me.shadowalzazel.mcodyssey.resources
 
 object WeaponStats {
 
-    val weaponReachMap = mapOf(CustomModels.STONE_SPEAR to 6.0, CustomModels.IRON_CLAYMORE to 4.67)
+    val weaponReachMap = mapOf(CustomModels.STONE_SPEAR to 7.5, CustomModels.IRON_CLAYMORE to 5.2, CustomModels.DIAMOND_DAGGER to 2.95)
 
 
 }
