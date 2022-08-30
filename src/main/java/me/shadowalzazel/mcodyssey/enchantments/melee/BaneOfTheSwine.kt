@@ -2,12 +2,12 @@ package me.shadowalzazel.mcodyssey.enchantments.melee
 
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantmentWrapper
+import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantment
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object BaneOfTheSwine : OdysseyEnchantmentWrapper("baneoftheswine", "Bane of the Swine", 5) {
+object BaneOfTheSwine : OdysseyEnchantment("baneoftheswine", "Bane of the Swine", 5) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {

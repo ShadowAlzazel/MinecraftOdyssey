@@ -4,7 +4,7 @@ import io.papermc.paper.enchantments.EnchantmentRarity
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
-import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
@@ -13,8 +13,10 @@ import org.bukkit.entity.EntityCategory
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 
-open class OdysseyEnchantmentWrapper(namespace: String?, private val name: String, private val maxLevel: Int) :
+open class OdysseyEnchantment(namespace: String?, private val name: String, private val maxLevel: Int) :
     Enchantment(NamespacedKey(MinecraftOdyssey.instance, namespace!!)) {
+
+    private val romanNumeralList = mapOf(1 to "I", 2 to "II", 3 to "III", 4 to "IV", 5 to "V", 6 to "VI", 7 to "VII", 8 to "VIII", 9 to "IX", 10 to "X")
 
     override fun translationKey(): String {
         TODO("Not yet implemented")
@@ -61,9 +63,12 @@ open class OdysseyEnchantmentWrapper(namespace: String?, private val name: Strin
     }
 
     override fun displayName(level: Int): Component {
-        var displayComponent: TextComponent = Component.text("$name $level").color(NamedTextColor.GOLD)
-        return displayComponent
+        return Component.text("name", TextColor.color(255, 170, 0))
 
+    }
+
+    fun enchantLore(level: Int): TextComponent {
+        return Component.text("$name ${romanNumeralList[level]}", TextColor.color(255, 170, 0))
     }
 
     override fun isTradeable(): Boolean {
@@ -75,7 +80,7 @@ open class OdysseyEnchantmentWrapper(namespace: String?, private val name: Strin
     }
 
     override fun getRarity(): EnchantmentRarity {
-        return EnchantmentRarity.UNCOMMON
+        return EnchantmentRarity.RARE
     }
 
     override fun getDamageIncrease(level: Int, entityCategory: EntityCategory): Float {

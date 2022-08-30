@@ -1,11 +1,11 @@
 package me.shadowalzazel.mcodyssey.enchantments.armor
 
-import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantmentWrapper
+import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantment
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object SpeedySpurs : OdysseyEnchantmentWrapper("speedyspurs", "Speedy Spurs", 3) {
+object SpeedySpurs : OdysseyEnchantment("speedyspurs", "Speedy Spurs", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
