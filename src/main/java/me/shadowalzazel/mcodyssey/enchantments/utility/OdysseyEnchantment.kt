@@ -63,8 +63,7 @@ open class OdysseyEnchantment(namespace: String?, private val name: String, priv
     }
 
     override fun displayName(level: Int): Component {
-        return Component.text("name", TextColor.color(255, 170, 0))
-
+        return Component.text("$name ${romanNumeralList[level]}", TextColor.color(255, 170, 0))
     }
 
     fun enchantLore(level: Int): TextComponent {

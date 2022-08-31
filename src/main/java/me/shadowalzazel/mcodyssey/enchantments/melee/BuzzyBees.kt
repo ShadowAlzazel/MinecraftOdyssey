@@ -10,7 +10,7 @@ object BuzzyBees : OdysseyEnchantment("buzzybees", "Buzzy Bees", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            SWEEPING_EDGE, OdysseyEnchantments.DOUSE -> {
+            OdysseyEnchantments.DOUSE -> {
                 true
             }
             else -> {
