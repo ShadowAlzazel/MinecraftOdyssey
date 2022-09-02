@@ -5,7 +5,9 @@ import com.destroystokyo.paper.event.inventory.PrepareResultEvent
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantment
+import me.shadowalzazel.mcodyssey.items.OdysseyBooks
 import me.shadowalzazel.mcodyssey.items.misc.GildedBook
+import me.shadowalzazel.mcodyssey.resources.CustomModels
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
@@ -21,6 +23,8 @@ import org.bukkit.inventory.EnchantingInventory
 import org.bukkit.inventory.GrindstoneInventory
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.EnchantmentStorageMeta
+import org.bukkit.inventory.meta.Repairable
 import kotlin.math.max
 
 object OdysseyGildingListeners : Listener {
@@ -288,7 +292,7 @@ object OdysseyGildingListeners : Listener {
                         // Add book if slotted
                         else if (firstItem!!.lore()?.contains(loreSeparator) == true) {
                             // Checks if item has gilded enchant
-                            if (itemOneGilded) { event.result!!.addUnsafeEnchantments(currentGildedEnchants) }
+                            if (itemOneGilded) { event.result!!.addUnsafeEnchantments(currentGildedEnchants) } // TODO: remove tome detect
                             //
                             val newLore = firstItem!!.clone().lore()!!.also { lore ->
                                 // Index
@@ -353,18 +357,35 @@ object OdysseyGildingListeners : Listener {
     // Main Handler that handles Odyssey Smithing: Needs corresponding smithing recipe
     @EventHandler
     fun odysseySmithingHandler(event: PrepareSmithingEvent) {
+        // TODO: Rose Gold Armor upgrades
+        // TODO: Smithing table for attributes and modifiers
         // With event inventory
-        // TODO: Rose Gold Armor
         with(event.inventory) {
             if (inputEquipment != null && inputMineral != null) {
-
+                // -----------------------------------------------CUSTOM NON-NETHERITE--------------------------------------------------
                 // Checks if an odyssey weapon is going to be upgraded to cancel it
                 if (inputMineral!!.type == Material.NETHERITE_INGOT) {
                     if (inputEquipment!!.itemMeta?.hasCustomModelData() == true) {
                         event.result = ItemStack(Material.AIR, 1)
-                        event.viewers.forEach { if (it is Player) { it.updateInventory() } }
+                        event.viewers.forEach { viewer -> if (viewer is Player) { viewer.updateInventory() } }
                     }
                 }
+                // -----------------------------------------------LEGACY BOOK ACTIVATION--------------------------------------------------
+                // Activate model for book
+                else if (inputEquipment!!.type == Material.ENCHANTED_BOOK && inputMineral!!.type == Material.GOLD_INGOT) {
+                    var createGilded = false
+                    for (enchant in inputEquipment!!.enchantments) {
+                        if (enchant.key is OdysseyEnchantment) {
+                            createGilded = true
+                            break
+                        }
+                    }
+                    if (createGilded) {
+                        event.result = inputEquipment!!.clone().apply { itemMeta.setCustomModelData(CustomModels.GILDED_BOOK) }
+                        event.viewers.forEach { viewer -> if (viewer is Player) { viewer.updateInventory() } }
+                    }
+                }
+                // -----------------------------------------------BRANDING WITH AMETHYST--------------------------------------------------
                 // Custom Branding for items not books
                 else if (inputEquipment!!.type != Material.ENCHANTED_BOOK && inputMineral!!.type == Material.AMETHYST_SHARD) {
                     val namedMeta = inputEquipment!!.itemMeta.clone().also {
@@ -377,102 +398,307 @@ object OdysseyGildingListeners : Listener {
                     event.result = inputEquipment!!.clone().apply { itemMeta = namedMeta }
                     event.viewers.forEach { viewer -> if (viewer is Player) { viewer.updateInventory() } }
                 }
-                // Gilded Book Combine
+                // -----------------------------------------------ADDING BOOKS TOGETHER--------------------------------------------------
                 // TODO: Make this runic table check later
                 else if (inputEquipment!!.type == Material.ENCHANTED_BOOK && inputMineral!!.type == Material.ENCHANTED_BOOK) {
-                    if (inputEquipment!!.itemMeta.hasEnchants() && inputMineral!!.itemMeta.hasEnchants()) {
-                        val firstBookEnchants = inputEquipment!!.enchantments
-                        val secondBookEnchants = inputMineral!!.enchantments
-                        for (enchantKey in firstBookEnchants.keys) {
-                            if (secondBookEnchants.containsKey(enchantKey) && enchantKey is OdysseyEnchantment) {
-                                if (firstBookEnchants[enchantKey]!! < enchantKey.maxLevel && secondBookEnchants[enchantKey]!! < enchantKey.maxLevel) {
-                                    val maxLevel = max(firstBookEnchants[enchantKey]!!, secondBookEnchants[enchantKey]!!)
-                                    event.result = GildedBook.createGildedBook(enchantKey, maxLevel + 1)
-                                    event.viewers.forEach { viewer -> if (viewer is Player) { viewer.updateInventory() } }
+                    // Checks custom model book
+                    if (inputMineral!!.itemMeta?.hasCustomModelData() == true) {
+                        when (inputMineral!!.itemMeta!!.customModelData) {
+                            // Gilded Book
+                            CustomModels.GILDED_BOOK -> {
+                                if (inputEquipment!!.itemMeta.hasEnchants() && inputMineral!!.itemMeta.hasEnchants()) {
+                                    val firstBookEnchants = inputEquipment!!.enchantments
+                                    val secondBookEnchants = inputMineral!!.enchantments
+                                    for (enchantKey in firstBookEnchants.keys) {
+                                        if (secondBookEnchants.containsKey(enchantKey) && enchantKey is OdysseyEnchantment) {
+                                            if (firstBookEnchants[enchantKey]!! < enchantKey.maxLevel && secondBookEnchants[enchantKey]!! < enchantKey.maxLevel) {
+                                                val maxLevel = max(firstBookEnchants[enchantKey]!!, secondBookEnchants[enchantKey]!!)
+                                                event.result = GildedBook.createGildedBook(enchantKey, maxLevel + 1)
+                                                event.viewers.forEach { viewer -> if (viewer is Player) { viewer.updateInventory() } }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            // Tome of Promotion
+                            CustomModels.TOME_OF_PROMOTION -> {
+                                // Checks book meta and enchant
+                                val randomEnchant: Pair<Enchantment, Int>? = if (inputEquipment!!.itemMeta.hasEnchants()) {
+                                    inputEquipment!!.enchantments.toList().random() }
+                                else if ((inputEquipment!!.itemMeta as EnchantmentStorageMeta).hasStoredEnchants()) {
+                                    (inputEquipment!!.itemMeta as EnchantmentStorageMeta).storedEnchants.toList().random() }
+                                else {
+                                    null
+                                }
+                                if (randomEnchant != null) {
+                                    if (randomEnchant.first.maxLevel > randomEnchant.second) {
+                                        event.result = inputEquipment!!.clone().apply {
+                                            if (randomEnchant.first is OdysseyEnchantment) {
+                                                val oldLore = randomEnchant.first.displayName(randomEnchant.second).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                                                val someIndex = lore()!!.indexOf(oldLore)
+                                                val newLore = lore()!!.also { it[someIndex] = randomEnchant.first.displayName(randomEnchant.second + 1).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE) }
+                                                lore(newLore)
+                                                removeEnchantment(randomEnchant.first)
+                                                addEnchantment(randomEnchant.first, randomEnchant.second + 1)
+                                            }
+                                            else {
+                                                val newMeta = itemMeta.clone() as EnchantmentStorageMeta
+                                                newMeta.removeStoredEnchant(randomEnchant.first)
+                                                newMeta.addStoredEnchant(randomEnchant.first, randomEnchant.second + 1, false)
+                                                itemMeta = newMeta
+                                            }
+                                        }
+                                        event.viewers.forEach { viewer -> if (viewer is Player) { viewer.updateInventory() } }
+                                    }
+                                }
+                            }
+                            // Tome of Replication
+                            CustomModels.TOME_OF_REPLICATION -> {
+                                if (inputEquipment!!.itemMeta.hasEnchants() || (inputEquipment!!.itemMeta as EnchantmentStorageMeta).hasStoredEnchants()) {
+                                    inputMineral = inputEquipment!!.clone()
                                 }
                             }
                         }
                     }
                 }
-                // TODO: Smithing table for attributes and modifiers
-                // -------------------
-                // Gilded Book Enchant
+                // --------------------------------------------------ADDING BOOKS TO ITEMS---------------------------------------------------------
                 // TODO: Make this runic table check later
                 else if (inputEquipment!!.type != Material.ENCHANTED_BOOK && inputMineral!!.type == Material.ENCHANTED_BOOK) {
-                    // Gilded books can only have 1 enchant !
-                    var gildedEnchant: OdysseyEnchantment? = null
-                    var gildedValue = 0
-                    val bookEnchants = inputMineral!!.enchantments
-                    var upgradableEnchant = false
-                    var oldValue = 0
-                    // Checks if odyssey enchant has no conflicts or max level
-                    for (enchant in bookEnchants) {
-                        val enchantKey = enchant.key
-                        if (enchantKey is OdysseyEnchantment && enchantKey.canEnchantItem(inputEquipment!!)) {
-                            // Checks if equipment has gilded enchant
-                            inputEquipment!!.enchantments.let { equipmentEnchants ->
-                                if (enchantKey in equipmentEnchants.keys) {
-                                    val proposedLevel = if (bookEnchants[enchantKey]!! == equipmentEnchants[enchantKey]!!) {
-                                        bookEnchants[enchantKey]!! + 1
-                                    } else {
-                                        maxOf(bookEnchants[enchantKey]!!, equipmentEnchants[enchantKey]!!)
-                                    }
-                                    if (proposedLevel <= enchantKey.maxLevel) {
-                                        upgradableEnchant = true
-                                        oldValue = equipmentEnchants[enchantKey]!!
-                                        gildedEnchant = enchantKey
-                                        gildedValue = proposedLevel
+                    // Checks for books and tomes
+                    if (inputMineral!!.itemMeta?.hasCustomModelData() == true) {
+                        when (inputMineral!!.itemMeta!!.customModelData) {
+                            // Gilded book
+                            CustomModels.GILDED_BOOK -> {
+                                // Gilded books can only have 1 enchant !
+                                var gildedEnchant: OdysseyEnchantment? = null
+                                var gildedValue = 0
+                                val bookEnchants = inputMineral!!.enchantments
+                                var upgradableEnchant = false
+                                var oldValue = 0
+                                // Checks if odyssey enchant has no conflicts or max level
+                                for (enchant in bookEnchants) {
+                                    val enchantKey = enchant.key
+                                    if (enchantKey is OdysseyEnchantment && enchantKey.canEnchantItem(inputEquipment!!)) {
+                                        // Checks if equipment has gilded enchant
+                                        inputEquipment!!.enchantments.let { equipmentEnchants ->
+                                            if (enchantKey in equipmentEnchants.keys) {
+                                                val proposedLevel = if (bookEnchants[enchantKey]!! == equipmentEnchants[enchantKey]!!) {
+                                                    bookEnchants[enchantKey]!! + 1
+                                                } else {
+                                                    maxOf(bookEnchants[enchantKey]!!, equipmentEnchants[enchantKey]!!)
+                                                }
+                                                if (proposedLevel <= enchantKey.maxLevel) {
+                                                    upgradableEnchant = true
+                                                    oldValue = equipmentEnchants[enchantKey]!!
+                                                    gildedEnchant = enchantKey
+                                                    gildedValue = proposedLevel
+                                                }
+                                            }
+                                            else {
+                                                gildedEnchant = enchantKey
+                                                gildedValue = enchant.value
+                                            }
+                                            // Checks for conflict
+                                            for (itemEnchantKey in equipmentEnchants.keys) {
+                                                if (enchantKey.conflictsWith(itemEnchantKey)) {
+                                                    gildedEnchant = null
+                                                    break
+                                                }
+                                            }
+                                        }
                                     }
                                 }
-                                else {
-                                    gildedEnchant = enchantKey
-                                    gildedValue = enchant.value
+                                // Checks if gilded enchant passed tests
+                                if (gildedEnchant != null) {
+                                    if (inputEquipment!!.lore()?.contains(loreSeparator) == true) {
+                                        // Copy and modify lore components
+                                        val newLore = inputEquipment!!.clone().lore()!!.also { lore ->
+                                            // If same enchant
+                                            if (upgradableEnchant) {
+                                                val gildedLore = gildedEnchant!!.displayName(oldValue).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                                                val someIndex = lore.indexOf(gildedLore)
+                                                lore[someIndex] = gildedEnchant!!.displayName(gildedValue).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                                            }
+                                            // New application
+                                            else {
+                                                val emptyGildedSlots = lore.count{ it == emptyGildedSlot }
+                                                if (emptyGildedSlots > 0) {
+                                                    val slotIndex = lore.indexOf(emptyGildedSlot)
+                                                    lore[slotIndex] = gildedEnchant!!.displayName(gildedValue).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                                                }
+                                            }
+                                            // Change info
+                                            val infoIndex = lore.indexOf(loreSeparator) - 1
+                                            val totalSlots = lore.count{ it == emptyGildedSlot } + lore.count{ it == emptyEnchantSlot } + inputEquipment!!.enchantments.size + 1
+                                            lore[infoIndex] = Component.text("Enchantment Slots: [${inputEquipment!!.enchantments.size + 1}/$totalSlots]", experienceEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                                        }
+                                        event.result = inputEquipment!!.clone().apply {
+                                            lore(newLore)
+                                            if (upgradableEnchant) { removeEnchantment(gildedEnchant!!) }
+                                            addUnsafeEnchantment(gildedEnchant!!, gildedValue)
+                                        }
+                                        println(event.result!!.enchantments)
+                                        event.viewers.forEach { viewer -> if (viewer is Player) { viewer.updateInventory() } }
+                                    }
+                                    // Set to air if no slots activated
+                                    else {
+                                        event.result = ItemStack(Material.AIR, 1)
+                                        event.viewers.forEach { viewer -> if (viewer is Player) { viewer.updateInventory() } }
+                                    }
                                 }
-                                // Checks for conflict
-                                for (itemEnchantKey in equipmentEnchants.keys) {
-                                    if (enchantKey.conflictsWith(itemEnchantKey)) {
 
-                                        gildedEnchant = null
-                                        break
+                            }
+                            // Tome of Embrace
+                            CustomModels.TOME_OF_EMBRACE -> {
+                                if (inputEquipment!!.lore()?.contains(loreSeparator) == true) {
+                                    val newLore = inputEquipment!!.clone().lore()!!.also { lore ->
+                                        // Change info
+                                        val infoIndex = lore.indexOf(loreSeparator) - 1
+                                        val totalSlots = lore.count{ it == emptyGildedSlot } + lore.count{ it == emptyEnchantSlot } + inputEquipment!!.enchantments.size
+                                        lore[infoIndex] = Component.text("Enchantment Slots: [${inputEquipment!!.enchantments.size}/${totalSlots + 1}]", experienceEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                                        // Add Slot
+                                        lore[infoIndex + 1 + totalSlots + 1] = emptyEnchantSlot
+                                    }
+                                    event.result = inputEquipment!!.clone().apply {
+                                        lore(newLore)
                                     }
                                 }
                             }
+                            // Tome of Banishment
+                            CustomModels.TOME_OF_BANISHMENT -> {
+                                if (inputEquipment!!.lore()?.contains(loreSeparator) == true) {
+                                    val newLore = inputEquipment!!.clone().lore()!!.also { lore ->
+                                        // Change info
+                                        val infoIndex = lore.indexOf(loreSeparator) - 1
+                                        val totalSlots = lore.count{ it == emptyGildedSlot } + lore.count{ it == emptyEnchantSlot } + inputEquipment!!.enchantments.size
+                                        //
+                                        val newTotal = totalSlots - 1
+                                        if (newTotal > inputEquipment!!.enchantments.size) {
+                                            val randomEnchant = inputEquipment!!.enchantments.toList().random()
+                                            val odysseyEnchanted = randomEnchant.first is OdysseyEnchantment
+                                            // Checks book meta and enchant
+                                            val randomLore = if (odysseyEnchanted) {
+                                                randomEnchant.first.displayName(randomEnchant.second).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE) }
+                                            else {
+                                                randomEnchant.first.displayName(randomEnchant.second).color(experienceEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                                            }
+                                            lore.remove(randomLore)
+                                            lore[infoIndex] = Component.text("Enchantment Slots: [${inputEquipment!!.enchantments.size - 1}/$newTotal]", experienceEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                                        }
+                                        else {
+                                            val banishedIndex = if (lore.count { it == emptyEnchantSlot } > 1) { lore.indexOf(emptyEnchantSlot) } else { lore.indexOf(emptyGildedSlot) }
+                                            lore.removeAt(banishedIndex)
+                                            lore[infoIndex] = Component.text("Enchantment Slots: [${inputEquipment!!.enchantments.size}/$newTotal]", experienceEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                                        }
+                                    }
+                                    event.result = inputEquipment!!.clone().apply {
+                                        lore(newLore)
+                                    }
+                                }
+                            }
+                            // Tome of Discharge
+                            CustomModels.TOME_OF_DISCHARGE -> {
+                                if (inputEquipment!!.lore()?.contains(loreSeparator) == true && inputEquipment!!.itemMeta?.hasEnchants() == true)  {
+                                    // Gets random enchant and replaces with an empty slot
+                                    val randomEnchant = inputEquipment!!.enchantments.toList().random()
+                                    val newLore = inputEquipment!!.clone().lore()!!.also { lore ->
+                                        // Change info
+                                        val infoIndex = lore.indexOf(loreSeparator) - 1
+                                        val totalSlots = lore.count{ it == emptyGildedSlot } + lore.count{ it == emptyEnchantSlot } + inputEquipment!!.enchantments.size
+                                        lore[infoIndex] = Component.text("Enchantment Slots: [${inputEquipment!!.enchantments.size - 1}/$totalSlots]", experienceEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                                        // Change slot
+                                        val odysseyEnchanted = randomEnchant.first is OdysseyEnchantment
+                                        val randomLore = if (odysseyEnchanted) {
+                                            randomEnchant.first.displayName(randomEnchant.second).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE) }
+                                        else {
+                                            randomEnchant.first.displayName(randomEnchant.second).color(experienceEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                                        }
+
+                                        val someIndex = lore.indexOf(randomLore)
+                                        lore[someIndex] = if (odysseyEnchanted) { emptyGildedSlot } else { emptyEnchantSlot }
+                                    }
+                                    event.result = inputEquipment!!.clone().apply {
+                                        lore(newLore)
+                                        removeEnchantment(randomEnchant.first)
+                                    }
+                                    event.viewers.forEach { viewer -> if (viewer is Player) { viewer.updateInventory() } }
+                                }
+                            }
+                            // Tome of Promotion
+                            CustomModels.TOME_OF_PROMOTION -> {
+                                if (inputEquipment!!.lore()?.contains(loreSeparator) == true && inputEquipment!!.itemMeta?.hasEnchants() == true)  {
+                                    // Gets random enchant and tries to promote it
+                                    // Checks book meta and enchant
+                                    var randomEnchant: Pair<Enchantment, Int>? = null
+                                    if (inputEquipment!!.itemMeta.hasEnchants()) {
+                                        randomEnchant = inputEquipment!!.enchantments.toList().random()
+
+                                    }
+                                    else if ((inputEquipment!!.itemMeta as EnchantmentStorageMeta).hasStoredEnchants()) {
+                                        randomEnchant = (inputEquipment!!.itemMeta as EnchantmentStorageMeta).storedEnchants.toList().random()
+                                    }
+
+                                    if (randomEnchant != null) {
+                                        if (randomEnchant.first.maxLevel > randomEnchant.second) {
+                                            val newLore = inputEquipment!!.clone().lore()!!.also { lore ->
+                                                // Change info
+                                                val infoIndex = lore.indexOf(loreSeparator) - 1
+                                                val totalSlots = lore.count{ it == emptyGildedSlot } + lore.count{ it == emptyEnchantSlot } + inputEquipment!!.enchantments.size
+                                                lore[infoIndex] = Component.text("Enchantment Slots: [${inputEquipment!!.enchantments.size}/$totalSlots]", experienceEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                                                // Change slot
+                                                val odysseyEnchanted = randomEnchant.first is OdysseyEnchantment
+                                                val randomLore = if (odysseyEnchanted) {
+                                                    randomEnchant.first.displayName(randomEnchant.second).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE) }
+                                                else {
+                                                    randomEnchant.first.displayName(randomEnchant.second).color(experienceEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                                                }
+
+                                                val someIndex = lore.indexOf(randomLore)
+                                                lore[someIndex] = if (odysseyEnchanted) { randomEnchant.first.displayName(randomEnchant.second + 1).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE) }
+                                                else {
+                                                    randomEnchant.first.displayName(randomEnchant.second + 1).color(experienceEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                                                }
+                                            }
+                                            event.result = inputEquipment!!.clone().apply {
+                                                lore(newLore)
+                                                removeEnchantment(randomEnchant.first)
+                                                addEnchantment(randomEnchant.first, randomEnchant.second + 1)
+                                            }
+                                            event.viewers.forEach { viewer -> if (viewer is Player) { viewer.updateInventory() } }
+                                        }
+                                    }
+                                }
+                            }
+                            // Tome of Harmony
+                            CustomModels.TOME_OF_HARMONY -> {
+                                if (inputEquipment!!.lore()?.contains(loreSeparator) == true) {
+                                    event.result = inputEquipment!!.clone().apply {
+                                        if (itemMeta is Repairable) {
+                                            (itemMeta as Repairable).repairCost = 0
+                                        }
+                                    }
+                                }
+                            }
+                            // Tome Of Infusion
+                            CustomModels.TOME_OF_EXPENDITURE -> {
+                                if (inputEquipment!!.itemMeta?.hasEnchants() == true) {
+                                    val randomEnchant = inputEquipment!!.enchantments.toList().random()
+
+                                    // Creates a book based on gilded or not
+                                    event.result = if (randomEnchant.first is OdysseyEnchantment) { OdysseyBooks.GILDED_BOOK.createGildedBook(randomEnchant.first as OdysseyEnchantment, randomEnchant.second) }
+                                    else {
+                                        ItemStack(Material.ENCHANTED_BOOK, 1).clone().apply {
+                                            val newMeta = itemMeta.clone() as EnchantmentStorageMeta
+                                            newMeta.removeStoredEnchant(randomEnchant.first)
+                                            newMeta.addStoredEnchant(randomEnchant.first, randomEnchant.second, false)
+                                            itemMeta = newMeta
+                                        }
+                                    }
+                                    event.viewers.forEach { viewer -> if (viewer is Player) { viewer.updateInventory() } }
+                                }
+                            }
                         }
-                    }
-                    // Checks if gilded enchant passed tests
-                    if (gildedEnchant != null) {
                         //
-                        if (inputEquipment!!.lore()?.contains(loreSeparator) == true) {
-                            // Copy and modify lore components
-                            val newLore = inputEquipment!!.clone().lore()!!.also { lore ->
-                                // If same enchant
-                                if (upgradableEnchant) {
-                                    val gildedLore = gildedEnchant!!.displayName(oldValue).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-                                    val someIndex = lore.indexOf(gildedLore)
-                                    lore[someIndex] = gildedEnchant!!.displayName(gildedValue).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-                                }
-                                // New application
-                                else {
-                                    val emptyGildedSlots = lore.count{ it == emptyGildedSlot }
-                                    if (emptyGildedSlots > 0) {
-                                        val slotIndex = lore.indexOf(emptyGildedSlot)
-                                        lore[slotIndex] = gildedEnchant!!.displayName(gildedValue).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-                                    }
-                                }
-                            }
-                            event.result = inputEquipment!!.clone().apply {
-                                lore(newLore)
-                                if (upgradableEnchant) { removeEnchantment(gildedEnchant!!) }
-                                addUnsafeEnchantment(gildedEnchant!!, gildedValue)
-                            }
-                            println(event.result!!.enchantments)
-                            event.viewers.forEach { viewer -> if (viewer is Player) { viewer.updateInventory() } }
-                        }
-                        // Set to air if no slots activated
-                        else {
-                            event.result = ItemStack(Material.AIR, 1)
-                            event.viewers.forEach { viewer -> if (viewer is Player) { viewer.updateInventory() } }
-                        }
                     }
                 }
             }

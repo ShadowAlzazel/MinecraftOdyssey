@@ -211,6 +211,13 @@ object RangedListeners : Listener {
 
     }
 
+    // CHAIN_REACTION enchantment function regarding shooting
+    private fun ricochetEnchantmentShoot(eventProjectile: Entity, eventBow: ItemStack) {
+        val enchantmentStrength = eventBow.itemMeta.getEnchantLevel(OdysseyEnchantments.CHAIN_REACTION)
+        eventProjectile.addScoreboardTag("Ricochet_Arrow")
+        eventProjectile.addScoreboardTag("Chain_Reaction_Modifier_$enchantmentStrength")
+    }
+
 
     // LUCKY_DRAW enchantment function
     private fun luckyDrawEnchantment(event: EntityShootBowEvent, eventBow: ItemStack) {

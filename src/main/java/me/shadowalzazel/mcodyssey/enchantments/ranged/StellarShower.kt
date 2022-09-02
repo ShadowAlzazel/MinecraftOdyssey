@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.enchantments.ranged
 
-object StarMark {
+object StellarShower {
     fun todo() {
         TODO("If hit spawn falling star damage")
     }

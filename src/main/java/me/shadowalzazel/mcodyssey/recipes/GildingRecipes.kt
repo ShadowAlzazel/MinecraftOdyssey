@@ -13,7 +13,8 @@ object GildingRecipes {
     var GILDED_BOOK_COMBINING: SmithingRecipe = SmithingRecipe(
         NamespacedKey(MinecraftOdyssey.instance, "gildedbookcombining"),
         ItemStack(Material.AIR),
-        RecipeChoice.MaterialChoice(Material.ENCHANTED_BOOK), RecipeChoice.MaterialChoice(Material.ENCHANTED_BOOK)
+        RecipeChoice.MaterialChoice(Material.ENCHANTED_BOOK),
+        RecipeChoice.MaterialChoice(Material.ENCHANTED_BOOK)
     )
 
     // Main for gilded books to equipment

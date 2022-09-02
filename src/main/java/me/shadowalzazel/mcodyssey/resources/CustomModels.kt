@@ -74,6 +74,14 @@ object CustomModels {
 
     // Enchanted Books
     const val GILDED_BOOK: Int = 6906066
+    const val TOME_OF_DISCHARGE: Int = 6906067
+    const val TOME_OF_PROMOTION: Int = 6906068
+    const val TOME_OF_REPLICATION: Int = 6906069
+    const val TOME_OF_HARMONY: Int = 6906070
+    const val TOME_OF_BANISHMENT: Int = 6906071
+    const val TOME_OF_EMBRACE: Int = 6906072
+    const val TOME_OF_EXPENDITURE: Int = 6906073
+    const val TOME_OF_INFUSION: Int = 6906074
 
     // Written Books
     const val NECRONOMICON_BOOK: Int = 6905066
