@@ -381,8 +381,7 @@ object OdysseyGildingListeners : Listener {
                         }
                     }
                     if (createGilded) {
-                        event.result = inputEquipment!!.clone().apply { itemMeta.setCustomModelData(CustomModels.GILDED_BOOK) }
-                        event.viewers.forEach { viewer -> if (viewer is Player) { viewer.updateInventory() } }
+                        inputEquipment.also { it!!.itemMeta.setCustomModelData(CustomModels.GILDED_BOOK) }
                     }
                 }
                 // -----------------------------------------------BRANDING WITH AMETHYST--------------------------------------------------
@@ -557,7 +556,7 @@ object OdysseyGildingListeners : Listener {
                                         val totalSlots = lore.count{ it == emptyGildedSlot } + lore.count{ it == emptyEnchantSlot } + inputEquipment!!.enchantments.size
                                         lore[infoIndex] = Component.text("Enchantment Slots: [${inputEquipment!!.enchantments.size}/${totalSlots + 1}]", experienceEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                                         // Add Slot
-                                        lore[infoIndex + 1 + totalSlots + 1] = emptyEnchantSlot
+                                        lore.add(infoIndex + 1 + lore.count{ it == emptyEnchantSlot } + inputEquipment!!.enchantments.size + 1, emptyEnchantSlot)
                                     }
                                     event.result = inputEquipment!!.clone().apply {
                                         lore(newLore)
@@ -565,15 +564,17 @@ object OdysseyGildingListeners : Listener {
                                 }
                             }
                             // Tome of Banishment
+                            // TODO: Fix
                             CustomModels.TOME_OF_BANISHMENT -> {
                                 if (inputEquipment!!.lore()?.contains(loreSeparator) == true) {
+                                    var extraEnchant: Enchantment? = null
                                     val newLore = inputEquipment!!.clone().lore()!!.also { lore ->
                                         // Change info
                                         val infoIndex = lore.indexOf(loreSeparator) - 1
                                         val totalSlots = lore.count{ it == emptyGildedSlot } + lore.count{ it == emptyEnchantSlot } + inputEquipment!!.enchantments.size
                                         //
                                         val newTotal = totalSlots - 1
-                                        if (newTotal > inputEquipment!!.enchantments.size) {
+                                        if (newTotal < inputEquipment!!.enchantments.size) {
                                             val randomEnchant = inputEquipment!!.enchantments.toList().random()
                                             val odysseyEnchanted = randomEnchant.first is OdysseyEnchantment
                                             // Checks book meta and enchant
@@ -583,16 +584,18 @@ object OdysseyGildingListeners : Listener {
                                                 randomEnchant.first.displayName(randomEnchant.second).color(experienceEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                                             }
                                             lore.remove(randomLore)
+                                            extraEnchant = randomEnchant.first
                                             lore[infoIndex] = Component.text("Enchantment Slots: [${inputEquipment!!.enchantments.size - 1}/$newTotal]", experienceEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                                         }
                                         else {
-                                            val banishedIndex = if (lore.count { it == emptyEnchantSlot } > 1) { lore.indexOf(emptyEnchantSlot) } else { lore.indexOf(emptyGildedSlot) }
+                                            val banishedIndex = if (lore.count { it == emptyEnchantSlot } >= 1) { lore.indexOf(emptyEnchantSlot) } else { lore.indexOf(emptyGildedSlot) }
                                             lore.removeAt(banishedIndex)
                                             lore[infoIndex] = Component.text("Enchantment Slots: [${inputEquipment!!.enchantments.size}/$newTotal]", experienceEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                                         }
                                     }
                                     event.result = inputEquipment!!.clone().apply {
                                         lore(newLore)
+                                        if (extraEnchant != null) { removeEnchantment(extraEnchant!!) }
                                     }
                                 }
                             }

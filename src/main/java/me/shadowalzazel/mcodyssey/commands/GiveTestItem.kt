@@ -66,8 +66,13 @@ object GiveTestItem : CommandExecutor {
                     "tome_of_harmony" -> {
                         sender.inventory.addItem(OdysseyBooks.TOME_OF_HARMONY.createItemStack(1))
                     }
-                    //
-                    "tome_of_infusion" -> {
+                    "tome_of_banishment" -> {
+                        sender.inventory.addItem(OdysseyBooks.TOME_OF_BANISHMENT.createItemStack(1))
+                    }
+                    "tome_of_embrace" -> {
+                        sender.inventory.addItem(OdysseyBooks.TOME_OF_EMBRACE.createItemStack(1))
+                    }
+                    "tome_of_expenditure" -> {
                         sender.inventory.addItem(OdysseyBooks.TOME_OF_EXPENDITURE.createItemStack(1))
                     }
                     else -> {

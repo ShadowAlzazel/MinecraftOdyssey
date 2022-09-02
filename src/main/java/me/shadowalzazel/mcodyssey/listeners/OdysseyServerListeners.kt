@@ -25,7 +25,7 @@ object OdysseyServerListeners : Listener {
 
             player.setResourcePack(
                 "https://www.dropbox.com/s/6hob8iad499vz95/odyssey-resource-pack-test.zip?dl=1",
-                "7cd1dc63b37ab4030988e51466dd75f9689506fe",
+                "1a7654ab12ee6d6212e6279d67b00541a06375d1",
                 true,
                 Component.text("Minecraft Odyssey requires its respective resource pack to operate! Please download it to begin your journey!", TextColor.color(255, 170, 0))
             )
