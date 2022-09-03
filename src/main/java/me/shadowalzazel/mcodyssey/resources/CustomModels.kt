@@ -72,7 +72,8 @@ object CustomModels {
     /* --------------------------------BOOKS--------------------------------- */
 
 
-    // Enchanted Books
+    // Enchanted Books\
+    const val ARCANE_BOOK: Int = 6906065
     const val GILDED_BOOK: Int = 6906066
     const val TOME_OF_DISCHARGE: Int = 6906067
     const val TOME_OF_PROMOTION: Int = 6906068
@@ -94,7 +95,7 @@ object CustomModels {
     const val STONE_KATANA: Int = 6905744
     const val IRON_KATANA: Int = 6905744
     const val DIAMOND_KATANA: Int = 6905744
-    const val NETHERITE_KATANA: Int = 6905744 //
+    const val NETHERITE_KATANA: Int = 6905744
 
     // Claymores
     const val WOODEN_CLAYMORE: Int = 6905745
@@ -102,7 +103,7 @@ object CustomModels {
     const val STONE_CLAYMORE: Int = 6905745
     const val IRON_CLAYMORE: Int = 6905745
     const val DIAMOND_CLAYMORE: Int = 6905745
-    const val NETHERITE_CLAYMORE: Int = 6905745 //
+    const val NETHERITE_CLAYMORE: Int = 6905745
 
     // Daggers
     const val WOODEN_DAGGER: Int = 6905746
@@ -110,7 +111,15 @@ object CustomModels {
     const val STONE_DAGGER: Int = 6905746
     const val IRON_DAGGER: Int = 6905746
     const val DIAMOND_DAGGER: Int = 6905746
-    const val NETHERITE_DAGGER: Int = 6905746 //
+    const val NETHERITE_DAGGER: Int = 6905746
+
+    // Rapiers
+    const val WOODEN_RAPIER: Int = 6905747
+    const val GOLDEN_RAPIER: Int = 6905747
+    const val STONE_RAPIER: Int = 6905747
+    const val IRON_RAPIER: Int = 6905747
+    const val DIAMOND_RAPIER: Int = 6905747
+    const val NETHERITE_RAPIER: Int = 6905747
 
 
     /* ------------------------------SPEARS----------------------------------------*/

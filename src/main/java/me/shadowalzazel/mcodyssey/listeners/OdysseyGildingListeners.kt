@@ -7,11 +7,14 @@ import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.items.OdysseyBooks
 import me.shadowalzazel.mcodyssey.items.misc.GildedBook
+import me.shadowalzazel.mcodyssey.items.utilty.OdysseyItem
 import me.shadowalzazel.mcodyssey.resources.CustomModels
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
+import org.bukkit.Particle
+import org.bukkit.Sound
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -214,19 +217,20 @@ object OdysseyGildingListeners : Listener {
                     item!!.lore(createEnchantSlotsLore(enchantSlots, gildedSlots, newEnchants))
                 }
                 // Adds enchants to slots
-                // TODO: Add gilded enchants
                 else if (item!!.lore()?.contains(loreSeparator) == true) {
                     val newLore = item!!.lore()!!.also { lore ->
                         val enchantSlots = lore.count{ it == emptyEnchantSlot }
-                        val totalSlots = enchantSlots + lore.count{ it == emptyGildedSlot }
+                        val gildedSlots = lore.count{ it == emptyGildedSlot }
+                        val totalSlots = enchantSlots + gildedSlots
                         val infoIndex = lore.indexOf(loreSeparator) - 1
 
                         // Loop over all enchants to either add lore or add to removal enchants if over enchant slots
                         val enchantsToRemove = mutableListOf<Enchantment>()
+                        val enchantsToAdd = event.enchantsToAdd
                         var counter = 0
                         var usedSlots = 0
                         // For non odyssey enchants
-                        for (enchant in event.enchantsToAdd) {
+                        for (enchant in enchantsToAdd) {
                             if (usedSlots < enchantSlots) {
                                 if (enchant.key !is OdysseyEnchantment && lore[infoIndex + 2 + counter] == emptyEnchantSlot) {
                                     lore[infoIndex + 2 + counter] = enchant.key.displayName(enchant.value).color(experienceEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
@@ -239,9 +243,60 @@ object OdysseyGildingListeners : Listener {
                             counter += 1
                         }
                         for (removed in enchantsToRemove) { event.enchantsToAdd.remove(removed) }
+                        // Do a rng check for gilded enchant if empty slot
+                        if (gildedSlots > 1) {
+                            if ((25 + (gildedSlots * 25) >= (0..100).random()) && MinecraftOdyssey.instance.ambassadorDefeated) {
+                                // TODO: Separate Sets per item
+                                val possibleEnchant = OdysseyEnchantments.meleeSet.random()
+                                var conflict = false
+                                for (newKey in enchantsToAdd.keys) { if (possibleEnchant.conflictsWith(newKey)) { conflict = true } }
+                                if (possibleEnchant.canEnchantItem(item!!) && !conflict) {
+                                    val randomValue =  (1..possibleEnchant.maxLevel).random()
+                                    enchantsToAdd[possibleEnchant] = randomValue
+                                    val emptyGildedIndex = lore.indexOf(emptyGildedSlot)
+                                    lore[emptyGildedIndex] = possibleEnchant.displayName(randomValue).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                                    usedSlots += 1
+                                }
+                            }
+                        }
                         lore[infoIndex] = Component.text("Enchantment Slots: [$usedSlots/$totalSlots]", experienceEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                     }
                     item!!.lore(newLore)
+                }
+            }
+            // TODO: Make soul/infusion table later check structure
+            else if (item!!.type == Material.BOOK) {
+                if (item!!.itemMeta?.hasCustomModelData() == true && event.enchanter.level > 30) {
+                    if (item!!.itemMeta!!.customModelData == CustomModels.ARCANE_BOOK) {
+                        var randomTome: OdysseyItem? = null
+                        when ((0..100).random()) {
+                            in 0..15 -> {
+                                randomTome = listOf(OdysseyBooks.TOME_OF_EXPENDITURE, OdysseyBooks.TOME_OF_REPLICATION).random()
+                            }
+                            in 16..40 -> {
+                                randomTome = listOf(OdysseyBooks.TOME_OF_HARMONY, OdysseyBooks.TOME_OF_PROMOTION).random()
+                            }
+                            in 41..71 -> {
+                                randomTome = listOf(OdysseyBooks.TOME_OF_BANISHMENT, OdysseyBooks.TOME_OF_EMBRACE).random()
+                            }
+                            in 71..100 -> {
+                                randomTome = listOf(OdysseyBooks.TOME_OF_DISCHARGE).random()
+                            }
+                        }
+                        item = randomTome?.createItemStack(1)
+                        // Particles and sounds
+                        with(event.enchantBlock.world) {
+                            val enchantLocation = event.enchantBlock.location.clone().toCenterLocation()
+                            spawnParticle(Particle.CRIT_MAGIC, enchantLocation, 125, 0.5, 0.5, 0.5)
+                            spawnParticle(Particle.VILLAGER_HAPPY, enchantLocation, 65, 0.5, 0.5, 0.5)
+                            spawnParticle(Particle.ELECTRIC_SPARK, enchantLocation, 65, 0.5, 0.5, 0.5)
+                            playSound(enchantLocation, Sound.BLOCK_ENCHANTMENT_TABLE_USE, 2.5F, 0.9F)
+                            playSound(enchantLocation, Sound.BLOCK_AMETHYST_BLOCK_CHIME, 2.5F, 1.3F)
+                            playSound(enchantLocation, Sound.ENTITY_ARROW_HIT_PLAYER, 2.5F, 1.6F)
+                        }
+                        event.enchanter.level -= 4
+                        event.isCancelled = true
+                    }
                 }
             }
         }
@@ -255,7 +310,7 @@ object OdysseyGildingListeners : Listener {
             // Anvil Combination
             if (firstItem != null && secondItem != null) {
                 if (firstItem!!.itemMeta?.hasEnchants() == true || secondItem!!.itemMeta?.hasEnchants() == true) {
-                    //
+                    // Checks if has gilded enchant
                     var itemOneGilded = false
                     val currentGildedEnchants: MutableMap<Enchantment, Int> = mutableMapOf()
                     // If first enchant has gilded enchants add to map
@@ -373,15 +428,18 @@ object OdysseyGildingListeners : Listener {
                 // -----------------------------------------------LEGACY BOOK ACTIVATION--------------------------------------------------
                 // Activate model for book
                 else if (inputEquipment!!.type == Material.ENCHANTED_BOOK && inputMineral!!.type == Material.GOLD_INGOT) {
-                    var createGilded = false
+                    var gildedEnchant: OdysseyEnchantment? = null
+                    var gildedLevel = 0
                     for (enchant in inputEquipment!!.enchantments) {
                         if (enchant.key is OdysseyEnchantment) {
-                            createGilded = true
+                            gildedEnchant = enchant.key as OdysseyEnchantment
+                            gildedLevel = enchant.value
                             break
                         }
                     }
-                    if (createGilded) {
-                        inputEquipment.also { it!!.itemMeta.setCustomModelData(CustomModels.GILDED_BOOK) }
+                    if (gildedEnchant != null) {
+                        event.result = OdysseyBooks.GILDED_BOOK.createGildedBook(gildedEnchant, gildedLevel)
+                        event.viewers.forEach { viewer -> if (viewer is Player) { viewer.updateInventory() } }
                     }
                 }
                 // -----------------------------------------------BRANDING WITH AMETHYST--------------------------------------------------
@@ -545,7 +603,6 @@ object OdysseyGildingListeners : Listener {
                                         event.viewers.forEach { viewer -> if (viewer is Player) { viewer.updateInventory() } }
                                     }
                                 }
-
                             }
                             // Tome of Embrace
                             CustomModels.TOME_OF_EMBRACE -> {
@@ -674,13 +731,10 @@ object OdysseyGildingListeners : Listener {
                             }
                             // Tome of Harmony
                             CustomModels.TOME_OF_HARMONY -> {
-                                if (inputEquipment!!.lore()?.contains(loreSeparator) == true) {
-                                    event.result = inputEquipment!!.clone().apply {
-                                        if (itemMeta is Repairable) {
-                                            (itemMeta as Repairable).repairCost = 0
-                                        }
-                                    }
+                                val newMeta = inputEquipment!!.clone().itemMeta.also {
+                                    if (it is Repairable) { it.repairCost = 10 }
                                 }
+                                event.result = inputEquipment!!.clone().apply { itemMeta = newMeta }
                             }
                             // Tome Of Infusion
                             CustomModels.TOME_OF_EXPENDITURE -> {

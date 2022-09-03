@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.recipes
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.items.OdysseyBooks
 import me.shadowalzazel.mcodyssey.items.OdysseyItems
 import me.shadowalzazel.mcodyssey.items.OdysseyWeapons
 import org.bukkit.Material
@@ -11,12 +12,13 @@ import org.bukkit.inventory.ShapedRecipe
 
 object OdysseyRecipes {
 
-    private val NEUTRONIUM_BARK_INGOT_RECIPE: ShapedRecipe = createNeutroniumIngot()
     //private val NEUTRONIUM_BARK_SWORD_RECIPE: ShapedRecipe = createNeutroniumSword() // Disabled
-    val PURE_ANTIMATTER_CRYSTAL_RECIPE: ShapedRecipe = createPurelyUnstableAntimatterCrystalRecipe()
-    val FRUIT_OF_ERISHKIGAL_RECIPE: ShapedRecipe = createFruitOfErishkigal()
+    private val ARCANE_BOOK = createArcaneBook()
+    private val NEUTRONIUM_BARK_INGOT_RECIPE = createNeutroniumIngot()
+    val PURE_ANTIMATTER_CRYSTAL_RECIPE = createPurelyUnstableAntimatterCrystalRecipe()
+    val FRUIT_OF_ERISHKIGAL_RECIPE = createFruitOfErishkigal()
 
-    val recipeSet = setOf<Recipe>(NEUTRONIUM_BARK_INGOT_RECIPE, PURE_ANTIMATTER_CRYSTAL_RECIPE, FRUIT_OF_ERISHKIGAL_RECIPE)
+    val recipeSet = setOf<Recipe>(ARCANE_BOOK, PURE_ANTIMATTER_CRYSTAL_RECIPE, FRUIT_OF_ERISHKIGAL_RECIPE)
 
 
     //
@@ -76,6 +78,18 @@ object OdysseyRecipes {
         return someRecipe
     }
 
+    // ARCANE_BOOK
+    private fun createArcaneBook(): ShapedRecipe {
+        val someResult = OdysseyBooks.ARCANE_BOOK.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "arcanebook"), someResult)
+
+        someRecipe.shape("DDB", "DAB", "BBC")
+        someRecipe.setIngredient('A', Material.ENCHANTED_BOOK)
+        someRecipe.setIngredient('B', Material.AMETHYST_SHARD)
+        someRecipe.setIngredient('C', Material.DIAMOND)
+        someRecipe.setIngredient('D', Material.CHORUS_FLOWER)
+        return someRecipe
+    }
 
 
 

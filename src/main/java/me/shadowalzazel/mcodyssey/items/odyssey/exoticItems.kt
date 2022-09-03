@@ -13,7 +13,12 @@ import org.bukkit.enchantments.Enchantment
 object BabelAnnulusSchematics : OdysseyItem("Babel Annulus Schematics",
     Material.PAPER,
     Component.text("Babel Annulus", TextColor.color(255, 255, 85), TextDecoration.ITALIC).append(Component.text("-Schematics").decorate(TextDecoration.OBFUSCATED).color(TextColor.color(255, 255, 85))),
-    listOf("${ChatColor.MAGIC}Keple${ChatColor.RESET}r-186f", "Babel Sys${ChatColor.MAGIC}tem. Vail's Test Site... Section A2${ChatColor.RESET}002"),
+    listOf(Component.text("Keple", TextColor.color(255, 255, 85))
+        .append(Component.text("r-186f").decorate(TextDecoration.OBFUSCATED).color(TextColor.color(255, 255, 85)))
+        .append(Component.text("Babel Sys").color(TextColor.color(255, 255, 85)))
+        .append(Component.text("tem. Vail's Test Site... Section A2").decorate(TextDecoration.OBFUSCATED).color(TextColor.color(255, 255, 85)))
+        .append(Component.text("002").decorate(TextDecoration.OBFUSCATED).color(TextColor.color(255, 255, 85)))
+        .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     CustomModels.BABEL_ANNULUS_SCHEMATICS)
 
 // FIX!!
@@ -21,7 +26,7 @@ object BabelAnnulusSchematics : OdysseyItem("Babel Annulus Schematics",
 object DormantSentientStar : OdysseyItem("Dormant Star System",
     Material.NETHER_STAR,
     Component.text("Dormant Star System-", TextColor.color(255, 255, 85), TextDecoration.ITALIC).append(Component.text("Mini-Matrioshka").decorate(TextDecoration.OBFUSCATED).color(TextColor.color(255, 255, 85))),
-    listOf("${ChatColor.GOLD}${ChatColor.ITALIC}Something is speaking to you..."),
+    listOf(Component.text("Something is speaking to you...", TextColor.color(80, 60, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     CustomModels.DORMANT_SENTIENT_STAR,
     mapOf(Enchantment.LOYALTY to 5))
 
@@ -30,7 +35,7 @@ object DormantSentientStar : OdysseyItem("Dormant Star System",
 object ImpureAntiMatterShard : OdysseyItem("Impure Anti-matter Shard",
     Material.PRISMARINE_SHARD,
     Component.text("Impure Anti-matter Shard", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
-    listOf("${ChatColor.GOLD}${ChatColor.ITALIC}An impure yet stabilized shard of anti-matter..."),
+    listOf(Component.text("An impure yet stabilized shard of anti-matter...", TextColor.color(80, 60, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     CustomModels.IMPURE_ANTI_MATTER_SHARD,
     mapOf(Enchantment.ARROW_INFINITE to 1))
 
@@ -39,7 +44,10 @@ object ImpureAntiMatterShard : OdysseyItem("Impure Anti-matter Shard",
 object PureAntimatterCrystal : OdysseyItem("Pure Anti-matter Crystal",
     Material.PRISMARINE_SHARD,
     Component.text("Pure Anti-matter Shard", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
-    listOf("${ChatColor.DARK_PURPLE}${ChatColor.ITALIC}DANGER! DANGER! DANGER! ${ChatColor.MAGIC}DANGER!", "${ChatColor.DARK_PURPLE}${ChatColor.ITALIC}Purely Unstable! Atomic Disintegration Imminent!"),
+    listOf(Component.text("DANGER! DANGER! DANGER!", TextColor.color(80, 60, 170))
+        .append(Component.text("DANGER! DANGER!").decorate(TextDecoration.OBFUSCATED).color(TextColor.color(80, 60, 170)))
+        .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE),
+        Component.text("Purely Unstable!!! Quantum Disintegration Imminent!", TextColor.color(80, 60, 170))),
     CustomModels.PURE_ANTIMATTER_CRYSTAL,
     mapOf(Enchantment.ARROW_INFINITE to 1))
 
@@ -48,7 +56,7 @@ object PureAntimatterCrystal : OdysseyItem("Pure Anti-matter Crystal",
 object NeutroniumBarkIngot: OdysseyItem("Neutronium-Bark Ingot",
     Material.NETHERITE_INGOT,
     Component.text("Neutronium-Bark Ingot", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
-    listOf("${ChatColor.GOLD}${ChatColor.ITALIC}A refined plank of very dense matter..."),
+    listOf(Component.text("A refined plank of very dense matter...", TextColor.color(80, 60, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     CustomModels.NEUTRONIUM_BARK_INGOT,
     mapOf(Enchantment.DURABILITY to 5))
 
@@ -57,7 +65,8 @@ object NeutroniumBarkIngot: OdysseyItem("Neutronium-Bark Ingot",
 object FruitOfErishkigal : OdysseyItem("Fruit of Erishkigal",
     Material.ENCHANTED_GOLDEN_APPLE,
     Component.text("Fruit of Erishkigal", TextColor.color(255, 84, 255), TextDecoration.ITALIC),
-    listOf("${ChatColor.GREEN}${ChatColor.ITALIC}A fruit engineered at the atomic level", "${ChatColor.RED}${ChatColor.ITALIC}With the power to alter one's life..."),
+    listOf(Component.text("A fruit engineered at the atomic level", TextColor.color(80, 60, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE),
+            Component.text("With the power to alter one's life...", TextColor.color(255, 41, 119)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     CustomModels.FRUIT_OF_ERISHKIGAL,
     mapOf(Enchantment.MENDING to 1))
 
@@ -66,6 +75,7 @@ object FruitOfErishkigal : OdysseyItem("Fruit of Erishkigal",
 object SilmarilOfYggladiel : OdysseyItem("Silmaril Of Yggladiel",
     Material.AMETHYST_CLUSTER,
     Component.text("Silmaril Of Yggladiel", TextColor.color(255, 84, 255), TextDecoration.ITALIC),
-    listOf("${ChatColor.GOLD}A jewel fruit grown by the world tree on Lupercal","${ChatColor.GOLD}Shining with stellar light..."),
+    listOf(Component.text("A jewel fruit grown by the world tree on Lupercal", TextColor.color(192, 152, 255 )).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE),
+        Component.text("Shining with stellar light...", TextColor.color(255, 227, 125)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     CustomModels.SILMARIL_OF_YGGLADIEL,
     mapOf(Enchantment.MENDING to 1))

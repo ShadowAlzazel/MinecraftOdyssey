@@ -10,6 +10,14 @@ import org.bukkit.inventory.SmithingRecipe
 object GildingRecipes {
 
     // Main for combining books
+    var GILDED_BOOK_LEGACY_ACTIVATION: SmithingRecipe = SmithingRecipe(
+        NamespacedKey(MinecraftOdyssey.instance, "gildedbooklegacyactiation"),
+        ItemStack(Material.AIR),
+        RecipeChoice.MaterialChoice(Material.ENCHANTED_BOOK),
+        RecipeChoice.MaterialChoice(Material.GOLD_INGOT)
+    )
+
+    // Main for combining books
     var GILDED_BOOK_COMBINING: SmithingRecipe = SmithingRecipe(
         NamespacedKey(MinecraftOdyssey.instance, "gildedbookcombining"),
         ItemStack(Material.AIR),

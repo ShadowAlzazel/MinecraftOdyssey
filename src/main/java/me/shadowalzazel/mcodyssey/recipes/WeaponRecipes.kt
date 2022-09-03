@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.recipes
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.items.OdysseyBooks
 import me.shadowalzazel.mcodyssey.items.OdysseyWeapons
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
@@ -39,6 +40,13 @@ object WeaponRecipes {
     private val IRON_DAGGER_RECIPE = createIronDaggerRecipe()
     private val DIAMOND_DAGGER_RECIPE = createDiamondDaggerRecipe()
 
+    // Dagger Recipes
+    private val WOODEN_RAPIER_RECIPE = createWoodenRapierRecipe()
+    private val GOLDEN_RAPIER_RECIPE = createGoldenRapierRecipe()
+    private val STONE_RAPIER_RECIPE = createStoneRapierRecipe()
+    private val IRON_RAPIER_RECIPE = createIronRapierRecipe()
+    private val DIAMOND_RAPIER_RECIPE = createDiamondRapierRecipe()
+
     // Staff Recipes
     private val BAMBOO_STAFF_RECIPE = createBambooStaffRecipe()
     private val BONE_STAFF_RECIPE = createBoneStaffRecipe()
@@ -48,10 +56,12 @@ object WeaponRecipes {
 
 
     // Recipes
-    val recipeSet: Set<Recipe> = setOf(WOODEN_KATANA_RECIPE, GOLDEN_KATANA_RECIPE, STONE_KATANA_RECIPE, IRON_KATANA_RECIPE, DIAMOND_KATANA_RECIPE, NETHERITE_KATANA_RECIPE,
+    val recipeSet: Set<Recipe> = setOf(
+        WOODEN_KATANA_RECIPE, GOLDEN_KATANA_RECIPE, STONE_KATANA_RECIPE, IRON_KATANA_RECIPE, DIAMOND_KATANA_RECIPE,
         WOODEN_CLAYMORE_RECIPE, GOLDEN_CLAYMORE_RECIPE, STONE_CLAYMORE_RECIPE, IRON_CLAYMORE_RECIPE, DIAMOND_CLAYMORE_RECIPE,
         WOODEN_SPEAR_RECIPE, GOLDEN_SPEAR_RECIPE, STONE_SPEAR_RECIPE, IRON_SPEAR_RECIPE, DIAMOND_SPEAR_RECIPE,
         WOODEN_DAGGER_RECIPE, GOLDEN_DAGGER_RECIPE, STONE_DAGGER_RECIPE, IRON_DAGGER_RECIPE, DIAMOND_DAGGER_RECIPE,
+        WOODEN_RAPIER_RECIPE, GOLDEN_RAPIER_RECIPE, STONE_RAPIER_RECIPE, IRON_RAPIER_RECIPE, DIAMOND_RAPIER_RECIPE,
         BAMBOO_STAFF_RECIPE, BONE_STAFF_RECIPE, WOODEN_STAFF_RECIPE, BLAZE_ROD_STAFF_RECIPE
     )
 
@@ -291,6 +301,63 @@ object WeaponRecipes {
         }
         return someRecipe
     }
+
+
+    /*----------------------------------------RAPIERS-----------------------------------------*/
+
+    private fun createWoodenRapierRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.WOODEN_RAPIER.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "woodenrapier"), someResult).apply {
+            shape("  X", " X ", "Y  ")
+            setIngredient('X', RecipeChoice.MaterialChoice(Material.ACACIA_PLANKS, Material.BIRCH_PLANKS, Material.DARK_OAK_PLANKS, Material.OAK_PLANKS, Material.SPRUCE_PLANKS, Material.JUNGLE_PLANKS))
+            setIngredient('Y', Material.STICK)
+        }
+        return someRecipe
+    }
+
+    private fun createGoldenRapierRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.GOLDEN_RAPIER.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "goldenrapier"), someResult).apply {
+            shape("  X", " X ", "Y  ")
+            setIngredient('X', Material.GOLD_INGOT)
+            setIngredient('Y', Material.STICK)
+        }
+        return someRecipe
+    }
+
+
+    private fun createStoneRapierRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.STONE_RAPIER.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "stonerapier"), someResult).apply {
+            shape("  X", " X ", "Y  ")
+            setIngredient('X', Material.COBBLESTONE)
+            setIngredient('Y', Material.STICK)
+        }
+        return someRecipe
+    }
+
+
+    private fun createIronRapierRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.IRON_RAPIER.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "ironrapier"), someResult).apply {
+            shape("  X", " X ", "Y  ")
+            setIngredient('X', Material.IRON_INGOT)
+            setIngredient('Y', Material.STICK)
+        }
+        return someRecipe
+    }
+
+
+    private fun createDiamondRapierRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.DIAMOND_RAPIER.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "diamondrapier"), someResult).apply {
+            shape("  X", " X ", "Y  ")
+            setIngredient('X', Material.DIAMOND)
+            setIngredient('Y', Material.STICK)
+        }
+        return someRecipe
+    }
+
 
     /*----------------------------------------STAFFS-----------------------------------------*/
 

@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.listeners
 
+import net.kyori.adventure.text.TextComponent
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.event.EventHandler
@@ -7,6 +8,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerItemConsumeEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+
 
 object OdysseyFoodListeners : Listener {
 
@@ -17,46 +19,46 @@ object OdysseyFoodListeners : Listener {
             if (event.item.itemMeta.hasLore()) {
                 val somePlayer = event.player
                 val someFood = event.item
-                val foodLore = someFood.itemMeta.lore!!.first()
+                val foodLore = (someFood.lore()!!.first() as TextComponent).content()
                 var satisfyingFood = true
 
                 when (event.item.type) {
                     Material.COOKIE -> {
                         // Cookie match
                         when (foodLore) {
-                            "§7A beetroot cookie!" -> {
+                            "A beetroot cookie!" -> {
                                 val someCookieEffect = PotionEffect(PotionEffectType.INCREASE_DAMAGE, 4 * 20, 0)
                                 somePlayer.addPotionEffect(someCookieEffect)
                             }
-                            "§7A pumpkin cookie!" -> {
+                            "A pumpkin cookie!" -> {
                                 val someCookieEffect = PotionEffect(PotionEffectType.FAST_DIGGING, 5 * 20, 0)
                                 somePlayer.addPotionEffect(someCookieEffect)
                             }
-                            "§7A honey cookie!" -> {
+                            "A honey cookie!" -> {
                                 val someCookieEffect = PotionEffect(PotionEffectType.ABSORPTION, 4 * 20, 0)
                                 somePlayer.addPotionEffect(someCookieEffect)
                             }
-                            "§7An apple cookie!" -> {
+                            "An apple cookie!" -> {
                                 val someCookieEffect = PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 4 * 20, 0)
                                 somePlayer.addPotionEffect(someCookieEffect)
                             }
-                            "§7A berry cookie!" -> {
+                            "A berry cookie!" -> {
                                 val someCookieEffect = PotionEffect(PotionEffectType.INCREASE_DAMAGE, 2 * 20, 0)
                                 somePlayer.addPotionEffect(someCookieEffect)
                             }
-                            "§7A glow-berry cookie!" -> {
+                            "A glow-berry cookie!" -> {
                                 val someCookieEffect = PotionEffect(PotionEffectType.GLOWING, 2 * 20, 0)
                                 somePlayer.addPotionEffect(someCookieEffect)
                             }
-                            "§7A melon cookie!" -> {
+                            "A melon cookie!" -> {
                                 val someCookieEffect = PotionEffect(PotionEffectType.REGENERATION, 3 * 20, 0)
                                 somePlayer.addPotionEffect(someCookieEffect)
                             }
-                            "§7A sugar cookie!" -> {
+                            "A sugar cookie!" -> {
                                 val someCookieEffect = PotionEffect(PotionEffectType.SPEED, 5 * 20, 0)
                                 somePlayer.addPotionEffect(someCookieEffect)
                             }
-                            "§7A golden cookie!" -> {
+                            "A golden cookie!" -> {
                                 val someCookieEffect = PotionEffect(PotionEffectType.ABSORPTION, 15 * 20, 1)
                                 somePlayer.addPotionEffect(someCookieEffect)
                             }

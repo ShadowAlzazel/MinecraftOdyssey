@@ -12,12 +12,12 @@ import org.bukkit.Material
 object FrenchToast : OdysseyItem("French Toast",
     Material.BREAD,
     Component.text("French Toast", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
-    listOf("${ChatColor.GRAY}French Toast!"),
+    listOf(Component.text("French Toast!", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     CustomModels.FRENCH_TOAST)
 
 // SUGARY_BREAD
 object SugaryBread : OdysseyItem("Sugary Bread",
     Material.BREAD,
     Component.text("Sugary Bread", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
-    listOf("${ChatColor.GRAY}Sugary Bread!"),
+    listOf(Component.text("Sugary Bread!", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     CustomModels.SUGARY_BREAD)

@@ -99,6 +99,12 @@ object OdysseyDropsListeners : Listener {
                                 droppedItemSound(somePlayer)
                             }
                         }
+                        is Pillager -> {
+                            if ((2.25 + luck + looting + misc) * 10 > (0..1000).random()) {
+                                somePlayer.world.dropItem(event.entity.location, (OdysseyBooks.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BURST_BARRAGE, 1)))
+                                droppedItemSound(somePlayer)
+                            }
+                        }
                         is Ravager -> {
                             if ((4.25 + luck + looting + misc) * 10 > (0..1000).random()) {
                                 somePlayer.world.dropItem(event.entity.location, (OdysseyBooks.GILDED_BOOK.createGildedBook(OdysseyEnchantments.WHIRLWIND, 1)))
@@ -140,7 +146,6 @@ object OdysseyDropsListeners : Listener {
                                 somePlayer.world.dropItem(event.entity.location, (OdysseyBooks.GILDED_BOOK.createGildedBook(OdysseyEnchantments.WARP_JUMP, 1)))
                                 droppedItemSound(somePlayer)
                             }
-
                         }
                         is Skeleton -> {
                             if (hasBloodMoon) {

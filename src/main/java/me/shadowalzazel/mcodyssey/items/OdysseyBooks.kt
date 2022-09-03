@@ -5,6 +5,7 @@ import me.shadowalzazel.mcodyssey.items.misc.*
 object OdysseyBooks {
 
     //
+    val ARCANE_BOOK = ArcaneBook
     val GILDED_BOOK = GildedBook
 
     // Tomes
@@ -15,5 +16,8 @@ object OdysseyBooks {
     val TOME_OF_BANISHMENT = TomeOfBanishment
     val TOME_OF_EMBRACE = TomeOfEmbrace
     val TOME_OF_EXPENDITURE = TomeOfExpenditure
+
+    // Recipe Books
+    val WEAPON_ENCYCLOPEDIA = WeaponEncyclopedia
 
 }

@@ -113,7 +113,7 @@ object OdysseyWeaponListeners : Listener {
                 // Make crit and still combos !!
                 when (someWeapon.itemMeta.customModelData) {
                     CustomModels.DIAMOND_DAGGER -> {
-                        if (someVictim !in someDamager.getNearbyEntities(1.65, 1.65, 1.65)) {
+                        if (someVictim !in someDamager.getNearbyEntities(1.75, 1.75, 1.75)) {
                             event.isCancelled = true
                             return
                         }
