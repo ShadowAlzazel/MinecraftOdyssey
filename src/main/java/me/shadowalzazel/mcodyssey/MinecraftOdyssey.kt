@@ -71,8 +71,10 @@ class MinecraftOdyssey : JavaPlugin() {
         server.also {
             // Odyssey Server Listeners
             it.pluginManager.registerEvents(OdysseyServerListeners, this)
-            // Register Alchemy
+            // Odyssey Alchemy Listeners
             it.pluginManager.registerEvents(OdysseyAlchemyListeners, this)
+            // Odyssey Enigmatic Listeners
+            it.pluginManager.registerEvents(OdysseyEnigmaticListeners, this)
             // Register Gilding Listeners
             it.pluginManager.registerEvents(OdysseyGildingListeners, this)
             // Odyssey Boss Listeners
@@ -119,19 +121,17 @@ class MinecraftOdyssey : JavaPlugin() {
         Bukkit.addRecipe(GildingRecipes.ODYSSEY_GILDED_SMITHING)
         Bukkit.addRecipe(GildingRecipes.GILDED_BOOK_COMBINING)
         Bukkit.addRecipe(GildingRecipes.GILDED_ITEM_UPGRADING)
+        Bukkit.addRecipe(GildingRecipes.GILDED_BOOK_LEGACY_ACTIVATION)
 
         // Item Recipes
-        for (itemRecipe in OdysseyRecipes.recipeSet) {
-            Bukkit.addRecipe(itemRecipe)
-        }
-        // Cooking Recipes
-        for (cookingRecipe in CookingRecipes.recipeSet) {
-            Bukkit.addRecipe(cookingRecipe)
-        }
+        for (itemRecipe in OdysseyRecipes.recipeSet) { Bukkit.addRecipe(itemRecipe) }
         // Weapon Recipes
-        for (weaponRecipe in WeaponRecipes.recipeSet) {
-            Bukkit.addRecipe(weaponRecipe)
-        }
+        for (weaponRecipe in WeaponRecipes.recipeSet) { Bukkit.addRecipe(weaponRecipe) }
+        // Cooking Recipes
+        for (cookingRecipe in CookingRecipes.recipeSet) { Bukkit.addRecipe(cookingRecipe) }
+        // Final Recipes
+        // TODO: Fix
+        // for (someRecipe in FinalRecipes.recipeSet) { Bukkit.addRecipe(someRecipe) }
 
         // Register Commands
         getCommand("SpawnAmbassador")?.setExecutor(SpawnAmbassador)
@@ -143,11 +143,8 @@ class MinecraftOdyssey : JavaPlugin() {
         // Spell Commands
         getCommand("necronomicon")?.setExecutor(Necronomicon)
 
-
         // Hello World!
         logger.info("The Odyssey has just begun!")
-
-
     }
 
     override fun onDisable() {

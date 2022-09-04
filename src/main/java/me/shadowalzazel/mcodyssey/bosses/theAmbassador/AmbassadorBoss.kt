@@ -137,7 +137,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
     fun defeatedBoss(ambassadorEntity: Illusioner, vanquisher: Player) {
         val nearbyPlayers = ambassadorEntity.world.getNearbyPlayers(ambassadorEntity.location, 64.0)
 
-        vanquisher.world.dropItem(ambassadorEntity.location, (OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.GRAVITY_WELL, 1)))
+        vanquisher.world.dropItem(ambassadorEntity.location, (OdysseyBooks.GILDED_BOOK.createGildedBook(OdysseyEnchantments.GRAVITY_WELL, 1)))
 
         for (somePlayer in ambassadorEntity.world.players) {
             somePlayer.sendMessage("${ChatColor.YELLOW}${ChatColor.ITALIC}The Ambassador has departed ungracefully!")
@@ -516,7 +516,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 giftLikeness += 45
                 givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}An unborn Unit-${ChatColor.MAGIC}092412X.${ChatColor.RESET}. I shall start its sentience activation cycle for you...")
                 givingPlayer.inventory.addItem(OdysseyItems.DORMANT_SENTIENT_STAR.createItemStack(1))
-                val gravityBook = OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.GRAVITY_WELL, (1..3).random())
+                val gravityBook = OdysseyBooks.GILDED_BOOK.createGildedBook(OdysseyEnchantments.GRAVITY_WELL, (1..3).random())
                 givingPlayer.inventory.addItem(gravityBook)
             }
             Material.NETHERITE_INGOT -> {
@@ -599,7 +599,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 }
                 else {
                     val randomEnchantments = listOf(OdysseyEnchantments.SPOREFUL, OdysseyEnchantments.SQUIDIFY, OdysseyEnchantments.BACKSTABBER, OdysseyEnchantments.BUZZY_BEES, OdysseyEnchantments.FRUITFUL_FARE, OdysseyEnchantments.POTION_BARRIER)
-                    val randomBook = OdysseyItems.GILDED_BOOK.createGildedBook(randomEnchantments.random(), 1)
+                    val randomBook = OdysseyBooks.GILDED_BOOK.createGildedBook(randomEnchantments.random(), 1)
                     givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}So far I can say I am enjoying this...")
                     givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward + 1))
                     givingPlayer.inventory.addItem(randomBook)
@@ -648,7 +648,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 5))
                 if (appeasement >= 35) {
                     givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}These are some relics I have collected from previous visits...")
-                    val randomBook = OdysseyItems.GILDED_BOOK.createGildedBook(randomEnchantments.random(), 1)
+                    val randomBook = OdysseyBooks.GILDED_BOOK.createGildedBook(randomEnchantments.random(), 1)
                     givingPlayer.inventory.addItem(randomBook)
                 }
             }
@@ -657,7 +657,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 bossEntity?.world!!.spawnParticle(Particle.SPELL_WITCH, givingPlayer.location, 35, 1.0, 1.0, 1.0)
                 givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}The ocean is essential to this world's stability! Though, power does not give you an excuse to butcher.")
                 giftLikeness += 45
-                val seaBook = OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BANE_OF_THE_SEA, 4)
+                val seaBook = OdysseyBooks.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BANE_OF_THE_SEA, 4)
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
                 if (appeasement >= 45) {
@@ -670,7 +670,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 bossEntity?.world!!.spawnParticle(Particle.SPELL_WITCH, givingPlayer.location, 35, 1.0, 1.0, 1.0)
                 givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Do no be afraid of the sea or its monsters...")
                 giftLikeness += 30
-                val seaBook = OdysseyItems.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BANE_OF_THE_SEA, (1..3).random())
+                val seaBook = OdysseyBooks.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BANE_OF_THE_SEA, (1..3).random())
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
                 givingPlayer.inventory.addItem(seaBook)
@@ -681,7 +681,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 giftLikeness += 45
                 givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Follow the path of doubt...and not blinding light")
                 val randomEnchantments = listOf(OdysseyEnchantments.WARP_JUMP, OdysseyEnchantments.ECHO, OdysseyEnchantments.VOID_STRIKE, OdysseyEnchantments.SOUL_REND, OdysseyEnchantments.BACKSTABBER)
-                val randomBook = OdysseyItems.GILDED_BOOK.createGildedBook(randomEnchantments.random(), 1)
+                val randomBook = OdysseyBooks.GILDED_BOOK.createGildedBook(randomEnchantments.random(), 1)
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
                 if (appeasement >= 45) {

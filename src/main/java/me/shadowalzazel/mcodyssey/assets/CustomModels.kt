@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.resources
+package me.shadowalzazel.mcodyssey.assets
 
 object CustomModels {
 
@@ -40,15 +40,10 @@ object CustomModels {
 
 
     /* --------------------------------RARE-ITEMS--------------------------------- */
-    // Diamonds
+    //
     const val NEPTUNIAN_DIAMOND: Int = 6905006
-
-    // Emeralds
     const val IOJOVIAN_EMERALD: Int = 6905105
-
-    //
     const val NEUTRONIUM_BARK_SCRAPS: Int = 6905333
-    //
     const val IDESCINE_SAPLINGS: Int = 6905464
     const val IDESCINE_ESSENCE: Int = 6905465
 
@@ -57,23 +52,34 @@ object CustomModels {
     //
     const val BABEL_ANNULUS_SCHEMATICS: Int = 6900068
     const val DORMANT_SENTIENT_STAR: Int = 6900069
-    //
     const val IMPURE_ANTI_MATTER_SHARD: Int = 6900088
     const val PURE_ANTIMATTER_CRYSTAL: Int = 6900089
-    //
     const val NEUTRONIUM_BARK_INGOT: Int = 6900565
-    //
     const val FRUIT_OF_ERISHKIGAL: Int = 6900555
     const val SILMARIL_OF_YGGLADIEL: Int = 6900556
 
+
+    /* --------------------------------SOUL--------------------------------------*/
+
+    const val SOUL_CRYSTAL: Int = 6906613
+    const val ECTOPLASM: Int = 6906614
 
 
 
     /* --------------------------------BOOKS--------------------------------- */
 
-
+    // Books
+    const val ARCANE_BOOK: Int = 6906065
     // Enchanted Books
     const val GILDED_BOOK: Int = 6906066
+    const val TOME_OF_DISCHARGE: Int = 6906067
+    const val TOME_OF_PROMOTION: Int = 6906068
+    const val TOME_OF_REPLICATION: Int = 6906069
+    const val TOME_OF_HARMONY: Int = 6906070
+    const val TOME_OF_BANISHMENT: Int = 6906071
+    const val TOME_OF_EMBRACE: Int = 6906072
+    const val TOME_OF_EXPENDITURE: Int = 6906073
+    const val TOME_OF_INFUSION: Int = 6906074
 
     // Written Books
     const val NECRONOMICON_BOOK: Int = 6905066
@@ -86,7 +92,7 @@ object CustomModels {
     const val STONE_KATANA: Int = 6905744
     const val IRON_KATANA: Int = 6905744
     const val DIAMOND_KATANA: Int = 6905744
-    const val NETHERITE_KATANA: Int = 6905744 //
+    const val NETHERITE_KATANA: Int = 6905744
 
     // Claymores
     const val WOODEN_CLAYMORE: Int = 6905745
@@ -94,7 +100,7 @@ object CustomModels {
     const val STONE_CLAYMORE: Int = 6905745
     const val IRON_CLAYMORE: Int = 6905745
     const val DIAMOND_CLAYMORE: Int = 6905745
-    const val NETHERITE_CLAYMORE: Int = 6905745 //
+    const val NETHERITE_CLAYMORE: Int = 6905745
 
     // Daggers
     const val WOODEN_DAGGER: Int = 6905746
@@ -102,7 +108,15 @@ object CustomModels {
     const val STONE_DAGGER: Int = 6905746
     const val IRON_DAGGER: Int = 6905746
     const val DIAMOND_DAGGER: Int = 6905746
-    const val NETHERITE_DAGGER: Int = 6905746 //
+    const val NETHERITE_DAGGER: Int = 6905746
+
+    // Rapiers
+    const val WOODEN_RAPIER: Int = 6905747
+    const val GOLDEN_RAPIER: Int = 6905747
+    const val STONE_RAPIER: Int = 6905747
+    const val IRON_RAPIER: Int = 6905747
+    const val DIAMOND_RAPIER: Int = 6905747
+    const val NETHERITE_RAPIER: Int = 6905747
 
 
     /* ------------------------------SPEARS----------------------------------------*/
@@ -123,5 +137,13 @@ object CustomModels {
     const val BONE_STAFF: Int = 6905794
     const val WOODEN_STAFF: Int = 6905795
     const val BLAZE_ROD_STAFF: Int = 6905796
+
+
+
+
+    /* -------------------------------FLOWERS------------------------------- */
+
+    const val VIOLET: Int = 6905123
+
 
 }

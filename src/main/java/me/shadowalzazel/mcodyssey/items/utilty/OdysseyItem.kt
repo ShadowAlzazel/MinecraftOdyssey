@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.items.utilty
 
-import me.shadowalzazel.mcodyssey.resources.ModifiersUUIDs
+import me.shadowalzazel.mcodyssey.assets.ModifiersUUIDs
 import net.kyori.adventure.text.Component
 //import net.kyori.adventure.text.TextComponent
 import org.bukkit.Material
@@ -14,7 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta
 open class OdysseyItem(val name: String,
                        internal val material: Material,
                        internal val odysseyDisplayName: Component? = null,
-                       internal val odysseyLore: List<String>? = null,
+                       internal val odysseyLore: List<Component>? = null,
                        internal val customModel: Int? = null,
                        private val itemEnchantments: Map<Enchantment, Int>? = null) {
 
@@ -27,7 +27,7 @@ open class OdysseyItem(val name: String,
         newOdysseyItemStack.itemMeta = (newOdysseyItemStack.itemMeta as ItemMeta).also {
             // Add enchantments, lore, display name, and custom model if applicable
             if (itemEnchantments != null) { for (enchant in itemEnchantments) { it.addEnchant(enchant.key, enchant.value, true) } }
-            if (odysseyLore != null) { it.lore = odysseyLore } // FIX
+            if (odysseyLore != null) { it.lore(odysseyLore) } // FIX
             if (odysseyDisplayName != null) { it.displayName(odysseyDisplayName) }
             it.setCustomModelData(customModel)
         }

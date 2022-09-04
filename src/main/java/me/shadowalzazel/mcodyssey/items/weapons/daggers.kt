@@ -1,8 +1,7 @@
 package me.shadowalzazel.mcodyssey.items.weapons
 
 import me.shadowalzazel.mcodyssey.items.weaponTypes.Dagger
-import me.shadowalzazel.mcodyssey.items.weaponTypes.Katana
-import me.shadowalzazel.mcodyssey.resources.CustomModels
+import me.shadowalzazel.mcodyssey.assets.CustomModels
 import org.bukkit.Material
 
 object WoodenDagger: Dagger("Wooden Dagger", Material.WOODEN_SWORD, CustomModels.WOODEN_DAGGER, 1.25, 3.0)

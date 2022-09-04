@@ -1,12 +1,12 @@
 package me.shadowalzazel.mcodyssey.enchantments.other
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantmentWrapper
+import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantment
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object MirrorForce : OdysseyEnchantmentWrapper("mirrorforce", "Mirror Force", 3) {
+object MirrorForce : OdysseyEnchantment("mirrorforce", "Mirror Force", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {

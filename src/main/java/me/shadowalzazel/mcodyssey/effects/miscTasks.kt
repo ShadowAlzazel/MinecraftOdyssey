@@ -37,11 +37,9 @@ class GravitationalAttract(private val gravityWellVictim: LivingEntity, private 
             val nearbyVictims = with(it.world) {
                 val someLocation = it.location.clone().add(0.0, 0.25, 0.0)
                 spawnParticle(Particle.END_ROD, someLocation, 15, 0.5, 0.5, 0.5)
-                spawnParticle(Particle.LAVA, someLocation, 10, 0.5, 0.5, 0.5)
                 spawnParticle(Particle.CRIT_MAGIC, someLocation, 45, 0.5, 0.40, 0.5)
-                spawnParticle(Particle.SMOKE_LARGE, someLocation, 35, 0.1, 0.1, 0.1)
                 spawnParticle(Particle.PORTAL, someLocation, 55, 0.5, 0.4, 0.5)
-                spawnParticle(Particle.FLASH, someLocation, 3, 0.1, 0.3, 0.1)
+                spawnParticle(Particle.SONIC_BOOM, someLocation, 2, 0.0, 0.0, 0.0)
                 getNearbyLivingEntities(singularityLocation, gravityFactor.toDouble())
             }
             // remove collapser

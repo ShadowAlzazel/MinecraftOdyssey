@@ -10,10 +10,11 @@ import me.shadowalzazel.mcodyssey.effects.DousedTask
 import me.shadowalzazel.mcodyssey.effects.FreezingTask
 import me.shadowalzazel.mcodyssey.synchronizers.BrewingEventSynchro
 import me.shadowalzazel.mcodyssey.synchronizers.CauldronEventSynchro
+import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
+import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.Particle
-import org.bukkit.block.BrewingStand
 import org.bukkit.entity.Item
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
@@ -85,14 +86,21 @@ object OdysseyAlchemyListeners : Listener {
             val newPotion = ItemStack(resultType, 1)
             // Modify potion meta
             newPotion.itemMeta = (oldPotion.itemMeta as PotionMeta).also {
-                val timerLore = it.lore!![0]
+                val oldTextComponent = it.lore()!!.first() as TextComponent
+                val oldColor = oldTextComponent.color()
+                val timerLore = oldTextComponent.content()
                 val i = timerLore.lastIndex
                 // Get the time in seconds form String in "(M:SS)" format
                 val oldTime = loreToSeconds(timerLore.subSequence((i - 5)..i))
                 // Create lore by getting old effect and adding new time
-                val newTimerLore = timerLore.subSequence(0..(i - 6)).toString() + timeToLore(oldTime / 4)
-                println("Old Time: $timerLore | New time: $newTimerLore")
-                it.lore = mutableListOf(newTimerLore)
+                val newTimerString = timerLore.subSequence(0..(i - 6)).toString() + timeToLore(oldTime / 4)
+                println("Old Time: $timerLore | New time: $newTimerString")
+
+                val newTextComponent = Component.text(newTimerString, oldColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                val newLore = it.lore()!!
+                newLore.remove(oldTextComponent)
+                newLore.add(0, newTextComponent)
+                it.lore(newLore)
             }
             brewingNewResults[brewingIndex] = newPotion
         }
@@ -146,6 +154,7 @@ object OdysseyAlchemyListeners : Listener {
     /*----------------------------------------------------------------------------------------------------------*/
 
     // Main function for Cauldron recipes
+    @OptIn(DelicateCoroutinesApi::class)
     @EventHandler
     fun bottleCauldron(event: CauldronLevelChangeEvent) {
         if (event.entity is Player) {
@@ -194,6 +203,7 @@ object OdysseyAlchemyListeners : Listener {
 
 
     // Main function regarding brewing stand upgrades
+    @OptIn(DelicateCoroutinesApi::class)
     @EventHandler
     fun brewingPotion(event: BrewEvent) {
         if (event.contents.ingredient!!.type == Material.GUNPOWDER || event.contents.ingredient!!.type == Material.DRAGON_BREATH) {
@@ -248,7 +258,7 @@ object OdysseyAlchemyListeners : Listener {
                     var potionDuration = 0
                     if (potionName in odysseyTimedPotions) {
                         // Logic
-                        val potionLore = somePotionMeta.lore!![0]
+                        val potionLore = (somePotionMeta.lore()!![0] as TextComponent).content()
                         val i = potionLore.lastIndex
                         val potionLoreTimer = potionLore.subSequence((i - 5)..i)
                         potionDuration = loreToSeconds(potionLoreTimer)
@@ -333,7 +343,7 @@ object OdysseyAlchemyListeners : Listener {
                 var potionDuration = 0
                 if (potionName in odysseyTimedPotions) {
                     // Logic
-                    val potionLore = somePotionMeta.lore!![0]
+                    val potionLore = (somePotionMeta.lore()!!.first() as TextComponent).content()
                     val i = potionLore.lastIndex
                     val potionLoreTimer = potionLore.subSequence((i - 5)..i)
                     potionDuration = loreToSeconds(potionLoreTimer)

@@ -11,7 +11,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionType
 
 //
-open class OdysseyPotion(potionName: String, val potionDisplayName: Component, potionLore: List<String>? = null, private val potionEffects: List<PotionEffect>, private val potionColor: Color?) :
+open class OdysseyPotion(potionName: String, val potionDisplayName: Component, potionLore: List<Component>? = null, private val potionEffects: List<PotionEffect>, private val potionColor: Color?) :
     OdysseyItem(potionName, Material.POTION, potionDisplayName, potionLore) {
 
     // Creates and Item Stack

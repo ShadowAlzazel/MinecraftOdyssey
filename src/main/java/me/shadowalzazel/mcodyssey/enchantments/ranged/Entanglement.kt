@@ -1,15 +1,16 @@
-package me.shadowalzazel.mcodyssey.enchantments.other
+package me.shadowalzazel.mcodyssey.enchantments.ranged
 
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantment
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object HookShot : OdysseyEnchantment("hookshot", "Hook Shot", 2) {
+object Entanglement : OdysseyEnchantment("entanglement", "Entanglement", 2) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            ARROW_INFINITE -> {
+            OdysseyEnchantments.CHAIN_REACTION, OdysseyEnchantments.BURST_BARRAGE -> {
                 true
             }
             else -> {
@@ -20,7 +21,7 @@ object HookShot : OdysseyEnchantment("hookshot", "Hook Shot", 2) {
 
     override fun canEnchantItem(item: ItemStack): Boolean {
         return when (item.type) {
-            Material.ENCHANTED_BOOK, Material.FISHING_ROD -> {
+            Material.ENCHANTED_BOOK, Material.BOW, Material.CROSSBOW -> {
                 true
             }
             else -> {
@@ -28,9 +29,7 @@ object HookShot : OdysseyEnchantment("hookshot", "Hook Shot", 2) {
             }
         }
     }
-
-
-    fun todo() {
-        TODO("Temporarily Disabled")
+    fun g() {
+        TODO("If shoot twice TP?")
     }
 }

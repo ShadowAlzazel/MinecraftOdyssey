@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.listeners
 
-import me.shadowalzazel.mcodyssey.resources.CustomModels
-import me.shadowalzazel.mcodyssey.resources.WeaponStats.weaponReachMap
+import me.shadowalzazel.mcodyssey.assets.CustomModels
+import me.shadowalzazel.mcodyssey.assets.WeaponStats.weaponReachMap
 
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
@@ -113,7 +113,7 @@ object OdysseyWeaponListeners : Listener {
                 // Make crit and still combos !!
                 when (someWeapon.itemMeta.customModelData) {
                     CustomModels.DIAMOND_DAGGER -> {
-                        if (someVictim !in someDamager.getNearbyEntities(1.65, 1.65, 1.65)) {
+                        if (someVictim !in someDamager.getNearbyEntities(1.75, 1.75, 1.75)) {
                             event.isCancelled = true
                             return
                         }

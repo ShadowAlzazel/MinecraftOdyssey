@@ -1,12 +1,12 @@
 package me.shadowalzazel.mcodyssey.enchantments.melee
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantmentWrapper
+import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantment
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object Douse : OdysseyEnchantmentWrapper("douse", "Douse", 3) {
+object Douse : OdysseyEnchantment("douse", "Douse", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {

@@ -32,7 +32,7 @@ object OdysseyPhenomenaListeners : Listener {
         if (MinecraftOdyssey.instance.enderDragonDefeated) {
             if (MinecraftOdyssey.instance.lunarPhenomenonActive) {
                 val someWorld = event.player.world
-                if (someWorld.environment == World.Environment.NORMAL) {
+                if (someWorld.isBedWorks) {
                     event.player.sendMessage("The night prevents you from sleeping.")
                     event.isCancelled = true
                 }

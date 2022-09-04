@@ -8,6 +8,7 @@ import me.shadowalzazel.mcodyssey.enchantments.other.MirrorForce
 import me.shadowalzazel.mcodyssey.enchantments.other.WarpJump
 import me.shadowalzazel.mcodyssey.enchantments.ranged.*
 import me.shadowalzazel.mcodyssey.enchantments.utility.GildedPower
+import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantment
 import org.bukkit.enchantments.Enchantment
 import java.util.*
 import java.util.stream.Collectors
@@ -15,50 +16,57 @@ import java.util.stream.Collectors
 object OdysseyEnchantments {
 
     // Utility
-    val GILDED_POWER: Enchantment = GildedPower
+    val GILDED_POWER: OdysseyEnchantment = GildedPower
     // Enchantments
-    val ALCHEMY_ARTILLERY: Enchantment = AlchemyArtillery
-    val BACKSTABBER: Enchantment = Backstabber
-    val BANE_OF_THE_ILLAGER: Enchantment = BaneOfTheIllager
-    val BANE_OF_THE_SEA: Enchantment = BaneOfTheSea
-    val BANE_OF_THE_SWINE: Enchantment = BaneOfTheSwine
-    val BURST_BARRAGE: Enchantment = BurstBarrage
-    val BUZZY_BEES: Enchantment = BuzzyBees
-    val CHAIN_REACTION: Enchantment = ChainReaction
-    val COWARDICE: Enchantment = Cowardice
-    val DECAYING_TOUCH: Enchantment = DecayingTouch
-    val DOUSE: Enchantment = Douse
-    val ECHO: Enchantment = Echo
-    val EXPLODING: Enchantment = Exploding
-    val FREEZING_ASPECT : Enchantment = FreezingAspect
-    val FROG_FRIGHT: Enchantment = FrogFright
-    val FRUITFUL_FARE: Enchantment = FruitfulFare
-    val GRAVITY_WELL: Enchantment = GravityWell
-    val GUARDING_STRIKE: Enchantment = GuardingStrike
-    val HEMORRHAGE: Enchantment = Hemorrhage
-    val HOOK_SHOT: Enchantment = HookShot
-    val LUCKY_DRAW: Enchantment = LuckyDraw
-    val MIRROR_FORCE: Enchantment = MirrorForce
-    val OVERCHARGE: Enchantment = Overcharge
-    val POTION_BARRIER: Enchantment = PotionBarrier
-    val SOUL_REND: Enchantment = SoulRend
-    val SPEEDY_SPURS: Enchantment = SpeedySpurs
-    val SPOREFUL: Enchantment = Sporeful
-    val SQUIDIFY: Enchantment = Squidify
-    val VENGEFUL: Enchantment = Vengeful
-    val VOID_STRIKE: Enchantment = VoidStrike
-    val WARP_JUMP: Enchantment = WarpJump
-    val WHIRLWIND: Enchantment = Whirlwind
+    val ALCHEMY_ARTILLERY: OdysseyEnchantment = AlchemyArtillery
+    val BACKSTABBER: OdysseyEnchantment = Backstabber
+    val BANE_OF_THE_ILLAGER: OdysseyEnchantment = BaneOfTheIllager
+    val BANE_OF_THE_SEA: OdysseyEnchantment = BaneOfTheSea
+    val BANE_OF_THE_SWINE: OdysseyEnchantment = BaneOfTheSwine
+    val BURST_BARRAGE: OdysseyEnchantment = BurstBarrage
+    val BUZZY_BEES: OdysseyEnchantment = BuzzyBees
+    val CHAIN_REACTION: OdysseyEnchantment = ChainReaction
+    val COWARDICE: OdysseyEnchantment = Cowardice
+    val DECAYING_TOUCH: OdysseyEnchantment = DecayingTouch
+    val DOUSE: OdysseyEnchantment = Douse
+    val ECHO: OdysseyEnchantment = Echo
+    val ENTANGLEMENT: OdysseyEnchantment = Entanglement
+    val EXPLODING: OdysseyEnchantment = Exploding
+    val FREEZING_ASPECT : OdysseyEnchantment = FreezingAspect
+    val FROG_FRIGHT: OdysseyEnchantment = FrogFright
+    val FRUITFUL_FARE: OdysseyEnchantment = FruitfulFare
+    val GRAVITY_WELL: OdysseyEnchantment = GravityWell
+    val GUARDING_STRIKE: OdysseyEnchantment = GuardingStrike
+    val HEMORRHAGE: OdysseyEnchantment = Hemorrhage
+    val HOOK_SHOT: OdysseyEnchantment = HookShot
+    val LUCKY_DRAW: OdysseyEnchantment = LuckyDraw
+    val MIRROR_FORCE: OdysseyEnchantment = MirrorForce
+    val OVERCHARGE: OdysseyEnchantment = Overcharge
+    val POTION_BARRIER: OdysseyEnchantment = PotionBarrier
+    val SOUL_REND: OdysseyEnchantment = SoulRend
+    val SPEEDY_SPURS: OdysseyEnchantment = SpeedySpurs
+    val SPOREFUL: OdysseyEnchantment = Sporeful
+    val SQUIDIFY: OdysseyEnchantment = Squidify
+    val VENGEFUL: OdysseyEnchantment = Vengeful
+    val VOID_STRIKE: OdysseyEnchantment = VoidStrike
+    val WARP_JUMP: OdysseyEnchantment = WarpJump
+    val WHIRLWIND: OdysseyEnchantment = Whirlwind
 
     // Set of all enchantments
     val enchantmentSet = setOf(GILDED_POWER, ALCHEMY_ARTILLERY, BACKSTABBER, BANE_OF_THE_ILLAGER, BANE_OF_THE_SEA, BANE_OF_THE_SWINE, BURST_BARRAGE, BUZZY_BEES, CHAIN_REACTION, COWARDICE, DECAYING_TOUCH, DOUSE, ECHO,
         EXPLODING, FREEZING_ASPECT, FROG_FRIGHT, FRUITFUL_FARE, GRAVITY_WELL, GUARDING_STRIKE, HEMORRHAGE, HOOK_SHOT, LUCKY_DRAW, MIRROR_FORCE, OVERCHARGE, POTION_BARRIER, SOUL_REND, SPEEDY_SPURS, SQUIDIFY, VOID_STRIKE, WARP_JUMP, WHIRLWIND)
 
+    val meleeSet = setOf(BACKSTABBER, BANE_OF_THE_ILLAGER, BANE_OF_THE_SEA, BANE_OF_THE_SWINE, DECAYING_TOUCH, DOUSE, ECHO, EXPLODING, FREEZING_ASPECT, FROG_FRIGHT, GUARDING_STRIKE, HEMORRHAGE, VOID_STRIKE, WHIRLWIND)
+    val armorSet = setOf(COWARDICE, FRUITFUL_FARE, POTION_BARRIER, SPEEDY_SPURS, SPOREFUL, SQUIDIFY, VENGEFUL)
+    val rangedSet = setOf(ALCHEMY_ARTILLERY, BURST_BARRAGE, CHAIN_REACTION, ENTANGLEMENT, LUCKY_DRAW, OVERCHARGE)
+
+
+
     // Register
     fun register() {
         for (odysseyEnchant in enchantmentSet) {
             val registered = Arrays.stream(Enchantment.values()).collect(Collectors.toList()).contains(odysseyEnchant)
-            if (!registered) registerEnchantment(odysseyEnchant)
+            if (!registered) registerEnchantment(odysseyEnchant as Enchantment)
         }
     }
 

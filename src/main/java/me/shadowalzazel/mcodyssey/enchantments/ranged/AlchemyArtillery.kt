@@ -1,12 +1,12 @@
 package me.shadowalzazel.mcodyssey.enchantments.ranged
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantmentWrapper
+import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantment
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object AlchemyArtillery : OdysseyEnchantmentWrapper("alchemyartillery", "Alchemy Artillery", 3) {
+object AlchemyArtillery : OdysseyEnchantment("alchemyartillery", "Alchemy Artillery", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
