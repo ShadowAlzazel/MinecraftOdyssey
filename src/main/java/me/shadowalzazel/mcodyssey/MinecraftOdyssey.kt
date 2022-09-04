@@ -71,8 +71,10 @@ class MinecraftOdyssey : JavaPlugin() {
         server.also {
             // Odyssey Server Listeners
             it.pluginManager.registerEvents(OdysseyServerListeners, this)
-            // Register Alchemy
+            // Odyssey Alchemy Listeners
             it.pluginManager.registerEvents(OdysseyAlchemyListeners, this)
+            // Odyssey Enigmatic Listeners
+            it.pluginManager.registerEvents(OdysseyEnigmaticListeners, this)
             // Register Gilding Listeners
             it.pluginManager.registerEvents(OdysseyGildingListeners, this)
             // Odyssey Boss Listeners
@@ -141,11 +143,8 @@ class MinecraftOdyssey : JavaPlugin() {
         // Spell Commands
         getCommand("necronomicon")?.setExecutor(Necronomicon)
 
-
         // Hello World!
         logger.info("The Odyssey has just begun!")
-
-
     }
 
     override fun onDisable() {

@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.listeners
 
-import me.shadowalzazel.mcodyssey.resources.CustomModels
-import me.shadowalzazel.mcodyssey.resources.WeaponStats.weaponReachMap
+import me.shadowalzazel.mcodyssey.assets.CustomModels
+import me.shadowalzazel.mcodyssey.assets.WeaponStats.weaponReachMap
 
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity

@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.items.weapons
 
 import me.shadowalzazel.mcodyssey.items.weaponTypes.Rapier
-import me.shadowalzazel.mcodyssey.resources.CustomModels
+import me.shadowalzazel.mcodyssey.assets.CustomModels
 import org.bukkit.Material
 
 object WoodenRapier: Rapier("Wooden Rapier", Material.WOODEN_SWORD, CustomModels.WOODEN_RAPIER, 1.25, 3.5)

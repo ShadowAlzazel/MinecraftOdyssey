@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.resources
+package me.shadowalzazel.mcodyssey.assets
 
 object WeaponStats {
 

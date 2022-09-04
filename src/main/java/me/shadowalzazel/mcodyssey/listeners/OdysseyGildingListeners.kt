@@ -8,7 +8,7 @@ import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.items.OdysseyBooks
 import me.shadowalzazel.mcodyssey.items.misc.GildedBook
 import me.shadowalzazel.mcodyssey.items.utilty.OdysseyItem
-import me.shadowalzazel.mcodyssey.resources.CustomModels
+import me.shadowalzazel.mcodyssey.assets.CustomModels
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
@@ -266,8 +266,9 @@ object OdysseyGildingListeners : Listener {
             }
             // TODO: Make soul/infusion table later check structure
             else if (item!!.type == Material.BOOK) {
-                if (item!!.itemMeta?.hasCustomModelData() == true && event.enchanter.level > 30) {
+                if (item!!.itemMeta?.hasCustomModelData() == true) {
                     if (item!!.itemMeta!!.customModelData == CustomModels.ARCANE_BOOK) {
+                        if (event.expLevelCost != 3) { event.isCancelled = true }
                         var randomTome: OdysseyItem? = null
                         when ((0..100).random()) {
                             in 0..15 -> {
@@ -294,7 +295,7 @@ object OdysseyGildingListeners : Listener {
                             playSound(enchantLocation, Sound.BLOCK_AMETHYST_BLOCK_CHIME, 2.5F, 1.3F)
                             playSound(enchantLocation, Sound.ENTITY_ARROW_HIT_PLAYER, 2.5F, 1.6F)
                         }
-                        event.enchanter.level -= 4
+                        event.enchanter.level -= event.expLevelCost
                         event.isCancelled = true
                     }
                 }

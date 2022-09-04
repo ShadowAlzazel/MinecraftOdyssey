@@ -266,6 +266,7 @@ object RangedListeners : Listener {
                     break
                 }
             }
+            // TODO: Fix
             if (eventShooter.equipment?.itemInMainHand?.containsEnchantment(OdysseyEnchantments.SOUL_REND) == false) {
                 val soulRendDamage = (eventHitEntity.arrowsInBody * soulRendMultiplier) + soulRendMultiplier + 0.0
                 eventHitEntity.scoreboardTags.remove("Rended_${eventShooter.uniqueId}")

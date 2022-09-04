@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.items.utilty
 
-import me.shadowalzazel.mcodyssey.resources.ModifiersUUIDs
+import me.shadowalzazel.mcodyssey.assets.ModifiersUUIDs
 import net.kyori.adventure.text.Component
 //import net.kyori.adventure.text.TextComponent
 import org.bukkit.Material

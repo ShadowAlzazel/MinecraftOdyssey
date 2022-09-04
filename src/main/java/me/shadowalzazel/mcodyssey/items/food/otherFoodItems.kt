@@ -1,11 +1,10 @@
 package me.shadowalzazel.mcodyssey.items.food
 
 import me.shadowalzazel.mcodyssey.items.utilty.OdysseyItem
-import me.shadowalzazel.mcodyssey.resources.CustomModels
+import me.shadowalzazel.mcodyssey.assets.CustomModels
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
-import org.bukkit.ChatColor
 import org.bukkit.Material
 
 // BACON
