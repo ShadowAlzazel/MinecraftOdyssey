@@ -12,7 +12,16 @@ object SpawnTestKnight : CommandExecutor {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender is Player) {
-            OdysseyMobs.SAVAGE.createKnight(sender.world, sender.location)
+            if (args.size == 1) {
+                when (args[0]) {
+                    "savage" -> {
+                        OdysseyMobs.SAVAGE.createKnight(sender.world, sender.location)
+                    }
+                    "vanguard" -> {
+                        OdysseyMobs.VANGUARD.createKnight(sender.world, sender.location)
+                    }
+                }
+            }
         }
         return true
     }

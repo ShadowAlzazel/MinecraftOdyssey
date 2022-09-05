@@ -12,7 +12,22 @@ object SpawnTestMob : CommandExecutor {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender is Player) {
-            OdysseyMobs.SCULK_CRAWLER.createMob(sender.world, sender.location)
+            if (args.size == 1) {
+                when (args[0]) {
+                    "savage" -> {
+                        OdysseyMobs.SAVAGE.createMob(sender.world, sender.location)
+                    }
+                    "vanguard" -> {
+                        OdysseyMobs.VANGUARD.createMob(sender.world, sender.location)
+                    }
+                    "sculk_crawler" -> {
+                        OdysseyMobs.SCULK_CRAWLER.createMob(sender.world, sender.location)
+                    }
+                    "treasure_pig" -> {
+                        OdysseyMobs.TREASURE_PIG.createMob(sender.world, sender.location)
+                    }
+                }
+            }
         }
         return true
     }

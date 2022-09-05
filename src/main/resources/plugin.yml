@@ -28,3 +28,6 @@ commands:
     permission: op
   necronomicon:
     description: "Lol"
+  TriggerPhenomenon:
+    usage: /<command>
+    permission: op

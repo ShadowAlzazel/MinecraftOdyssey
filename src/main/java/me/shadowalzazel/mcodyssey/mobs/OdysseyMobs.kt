@@ -4,6 +4,7 @@ import me.shadowalzazel.mcodyssey.mobs.hostile.Mimic
 import me.shadowalzazel.mcodyssey.mobs.hostile.Savage
 import me.shadowalzazel.mcodyssey.mobs.hostile.SculkCrawler
 import me.shadowalzazel.mcodyssey.mobs.hostile.Vanguard
+import me.shadowalzazel.mcodyssey.mobs.other.RottingSummon
 import me.shadowalzazel.mcodyssey.mobs.other.WanderingSoul
 import me.shadowalzazel.mcodyssey.mobs.passive.TreasurePig
 
@@ -17,7 +18,8 @@ object OdysseyMobs {
     val VANGUARD = Vanguard
     val WANDERING_SOUL = WanderingSoul
 
-    fun g() {
-        TODO("Make Sculked mobs that quiet")
-    }
+    val ROTTING_SUMMON = RottingSummon
+
+    // TODO
+
 }

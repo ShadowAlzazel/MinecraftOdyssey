@@ -49,24 +49,24 @@ class PhenomenonTimer(private val mainWorld: World) : BukkitRunnable() {
 
     // Main function call for moon phenomenon activations
     private fun lunarPhenomenonActivation() {
-        with(MinecraftOdyssey.instance) {
-            lunarPhenomenonActive = false
-            solarPhenomenonActive = false
-            currentLunarPhenomenon = null
-            currentSolarPhenomenon = null
+        MinecraftOdyssey.instance.also {
+            it.lunarPhenomenonActive = false
+            it.solarPhenomenonActive = false
+            it.currentLunarPhenomenon = null
+            it.currentSolarPhenomenon = null
             // Event Cool down timer
             val timeElapsed = System.currentTimeMillis() - lunarPhenomenonCallCooldown
             if (timeElapsed >= lunarPhenomenonTimerConstant) {
                 lunarPhenomenonCallCooldown = System.currentTimeMillis()
                 // Check if end game
-                if ((endGame) && (!lunarPhenomenonActive)) {
+                if ((it.endGame) && (!it.lunarPhenomenonActive)) {
                     // Roll for random phenomenon
                     val rolledRate = (0..100).random()
                     val randomNightlyPhenomenon = LunarPhenomena.phenomenaList.random()
-                    val phenomenonActivated: Boolean = randomNightlyPhenomenon.phenomenonActivation(mainWorld!!, rolledRate)
+                    val phenomenonActivated: Boolean = randomNightlyPhenomenon.phenomenonActivation(mainWorld, rolledRate)
                     if (phenomenonActivated) {
-                        lunarPhenomenonActive = true
-                        currentLunarPhenomenon = randomNightlyPhenomenon
+                        it.lunarPhenomenonActive = true
+                        it.currentLunarPhenomenon = randomNightlyPhenomenon
                     }
                 }
             }

@@ -129,6 +129,8 @@ class MinecraftOdyssey : JavaPlugin() {
         for (weaponRecipe in WeaponRecipes.recipeSet) { Bukkit.addRecipe(weaponRecipe) }
         // Cooking Recipes
         for (cookingRecipe in CookingRecipes.recipeSet) { Bukkit.addRecipe(cookingRecipe) }
+        // Enigmatic Recipes
+        for (enigmaticRecipe in EnigmaticRecipes.recipeSet) { Bukkit.addRecipe(enigmaticRecipe) }
         // Final Recipes
         // TODO: Fix
         // for (someRecipe in FinalRecipes.recipeSet) { Bukkit.addRecipe(someRecipe) }
@@ -139,6 +141,7 @@ class MinecraftOdyssey : JavaPlugin() {
         getCommand("GiveTestItem")?.setExecutor(GiveTestItem)
         getCommand("SpawnTestMob")?.setExecutor(SpawnTestMob)
         getCommand("SpawnTestKnight")?.setExecutor(SpawnTestKnight)
+        getCommand("TriggerPhenomenon")?.setExecutor(TriggerPhenomenon)
 
         // Spell Commands
         getCommand("necronomicon")?.setExecutor(Necronomicon)

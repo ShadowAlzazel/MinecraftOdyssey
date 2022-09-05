@@ -268,10 +268,11 @@ object OdysseyGildingListeners : Listener {
             else if (item!!.type == Material.BOOK) {
                 if (item!!.itemMeta?.hasCustomModelData() == true) {
                     if (item!!.itemMeta!!.customModelData == CustomModels.ARCANE_BOOK) {
-                        if (event.expLevelCost != 3) { event.isCancelled = true }
+                        // TODO: Make level 1-3 each do common, rare, exotic arcane books
+                        event.isCancelled = true
                         var randomTome: OdysseyItem? = null
-                        when ((0..100).random()) {
-                            in 0..15 -> {
+                        when ((0..100).random() - event.expLevelCost) {
+                            in -30..15 -> {
                                 randomTome = listOf(OdysseyBooks.TOME_OF_EXPENDITURE, OdysseyBooks.TOME_OF_REPLICATION).random()
                             }
                             in 16..40 -> {
@@ -295,7 +296,7 @@ object OdysseyGildingListeners : Listener {
                             playSound(enchantLocation, Sound.BLOCK_AMETHYST_BLOCK_CHIME, 2.5F, 1.3F)
                             playSound(enchantLocation, Sound.ENTITY_ARROW_HIT_PLAYER, 2.5F, 1.6F)
                         }
-                        event.enchanter.level -= event.expLevelCost
+                        event.enchanter.level -= (3 + (event.expLevelCost / 10))
                         event.isCancelled = true
                     }
                 }
@@ -614,7 +615,7 @@ object OdysseyGildingListeners : Listener {
                                         val totalSlots = lore.count{ it == emptyGildedSlot } + lore.count{ it == emptyEnchantSlot } + inputEquipment!!.enchantments.size
                                         lore[infoIndex] = Component.text("Enchantment Slots: [${inputEquipment!!.enchantments.size}/${totalSlots + 1}]", experienceEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                                         // Add Slot
-                                        lore.add(infoIndex + 1 + lore.count{ it == emptyEnchantSlot } + inputEquipment!!.enchantments.size + 1, emptyEnchantSlot)
+                                        lore.add(infoIndex + 1, emptyEnchantSlot)
                                     }
                                     event.result = inputEquipment!!.clone().apply {
                                         lore(newLore)

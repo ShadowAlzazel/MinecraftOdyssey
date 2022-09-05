@@ -66,11 +66,11 @@ object OdysseyEnchantments {
     fun register() {
         for (odysseyEnchant in enchantmentSet) {
             val registered = Arrays.stream(Enchantment.values()).collect(Collectors.toList()).contains(odysseyEnchant)
-            if (!registered) registerEnchantment(odysseyEnchant as Enchantment)
+            if (!registered) registerOdysseyEnchantment(odysseyEnchant as Enchantment)
         }
     }
 
-    private fun registerEnchantment(enchantment: Enchantment?) {
+    private fun registerOdysseyEnchantment(enchantment: Enchantment?) {
         var registered = true
         try {
             val f = Enchantment::class.java.getDeclaredField("acceptingNew")

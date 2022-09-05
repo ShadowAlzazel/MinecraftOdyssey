@@ -59,11 +59,11 @@ object CustomModels {
     const val SILMARIL_OF_YGGLADIEL: Int = 6900556
 
 
-    /* --------------------------------SOUL--------------------------------------*/
+    /* --------------------------------ENIGMATIC--------------------------------------*/
 
     const val SOUL_CRYSTAL: Int = 6906613
     const val ECTOPLASM: Int = 6906614
-
+    const val SORROWING_SOUL: Int = 6906615
 
 
     /* --------------------------------BOOKS--------------------------------- */

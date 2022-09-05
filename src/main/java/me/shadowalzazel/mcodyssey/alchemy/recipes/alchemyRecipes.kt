@@ -3,6 +3,7 @@ package me.shadowalzazel.mcodyssey.alchemy.recipes
 import me.shadowalzazel.mcodyssey.alchemy.AlchemyPotions
 import me.shadowalzazel.mcodyssey.alchemy.utility.AwkwardPotion
 import me.shadowalzazel.mcodyssey.alchemy.utility.OdysseyAlchemyCauldronRecipe
+import me.shadowalzazel.mcodyssey.items.OdysseyItems
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
@@ -137,8 +138,8 @@ object PotionOfAblazeRecipe : OdysseyAlchemyCauldronRecipe(
 object BottledSoulsRecipe : OdysseyAlchemyCauldronRecipe(
     AlchemyPotions.BOTTLED_SOULS,
     listOf(
-        ItemStack(Material.SOUL_LANTERN, 6),
-        ItemStack(Material.SCULK_VEIN, 8),
+        OdysseyItems.ECTOPLASM.createItemStack(3),
+        OdysseyItems.SOUL_CRYSTAL.createItemStack(4),
         ItemStack(Material.CRYING_OBSIDIAN, 4),
         AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1)),
     4, Material.SOUL_FIRE)
