@@ -312,7 +312,7 @@ object OdysseyGildingListeners : Listener {
             // Anvil Combination
             if (firstItem != null && secondItem != null) {
                 if (firstItem!!.itemMeta?.hasEnchants() == true || secondItem!!.itemMeta?.hasEnchants() == true) {
-                    // Checks if has gilded enchant
+                    // Checks if it has gilded enchant
                     var itemOneGilded = false
                     val currentGildedEnchants: MutableMap<Enchantment, Int> = mutableMapOf()
                     // If first enchant has gilded enchants add to map
@@ -615,7 +615,10 @@ object OdysseyGildingListeners : Listener {
                                         val totalSlots = lore.count{ it == emptyGildedSlot } + lore.count{ it == emptyEnchantSlot } + inputEquipment!!.enchantments.size
                                         lore[infoIndex] = Component.text("Enchantment Slots: [${inputEquipment!!.enchantments.size}/${totalSlots + 1}]", experienceEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                                         // Add Slot
-                                        lore.add(infoIndex + 1, emptyEnchantSlot)
+                                        var nonOdysseyCount = 0
+                                        for (enchant in inputEquipment!!.enchantments) { if (enchant !is OdysseyEnchantment) {nonOdysseyCount += 1 } }
+                                        val newSlotIndex = infoIndex + 3 + nonOdysseyCount
+                                        lore.add(newSlotIndex, emptyEnchantSlot)
                                     }
                                     event.result = inputEquipment!!.clone().apply {
                                         lore(newLore)

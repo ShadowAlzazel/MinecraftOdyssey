@@ -29,6 +29,12 @@ object OdysseyItems {
     val SILMARIL_OF_YGGLADIEL = SilmarilOfYggladiel
 
     /* ---------------------------------------------------------------------- */
+    val IRRADIATED_SHARD = IrradiatedShard
+    val IRRADIATED_ROD = IrradiatedRod
+    val IRRADIATED_FRUIT = IrradiatedFruit
+
+
+    /* ---------------------------------------------------------------------- */
     val SOUL_CRYSTAL = SoulCrystal
     val ECTOPLASM = Ectoplasm
     val SORROWING_SOUL = SorrowingSoul

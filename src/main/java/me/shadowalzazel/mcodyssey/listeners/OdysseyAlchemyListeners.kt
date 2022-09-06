@@ -203,6 +203,7 @@ object OdysseyAlchemyListeners : Listener {
 
 
     // Main function regarding brewing stand upgrades
+    // TODO: Fix
     @OptIn(DelicateCoroutinesApi::class)
     @EventHandler
     fun brewingPotion(event: BrewEvent) {

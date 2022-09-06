@@ -31,11 +31,9 @@ object OdysseyPhenomenaListeners : Listener {
     fun playerPreventSleep(event: PlayerBedEnterEvent) {
         // Check if ambassador defeated
         if (MinecraftOdyssey.instance.enderDragonDefeated) {
-            println("S")
             if (MinecraftOdyssey.instance.lunarPhenomenonActive) {
-                println("Q")
                 val someWorld = event.player.world
-                if (someWorld.isBedWorks) {
+                if (someWorld == MinecraftOdyssey.instance.mainWorld) {
                     event.player.sendMessage("The night prevents you from sleeping.")
                     event.isCancelled = true
                 }
@@ -61,8 +59,6 @@ object OdysseyPhenomenaListeners : Listener {
                     LunarPhenomena.BLOOD_MOON -> {
                         if (event.spawnReason == CreatureSpawnEvent.SpawnReason.NATURAL || event.spawnReason == CreatureSpawnEvent.SpawnReason.REINFORCEMENTS) {
                             // TODO: Light Level and Y level
-                            println(event.location.block.lightFromSky)
-                            println(event.entity)
                             bloodMoonPhenomenonSpawning(event.entity)
                         }
                     }

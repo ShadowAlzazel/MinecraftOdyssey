@@ -40,12 +40,15 @@ object WeaponRecipes {
     private val IRON_DAGGER_RECIPE = createIronDaggerRecipe()
     private val DIAMOND_DAGGER_RECIPE = createDiamondDaggerRecipe()
 
-    // Dagger Recipes
+    // Rapier Recipes
     private val WOODEN_RAPIER_RECIPE = createWoodenRapierRecipe()
     private val GOLDEN_RAPIER_RECIPE = createGoldenRapierRecipe()
     private val STONE_RAPIER_RECIPE = createStoneRapierRecipe()
     private val IRON_RAPIER_RECIPE = createIronRapierRecipe()
     private val DIAMOND_RAPIER_RECIPE = createDiamondRapierRecipe()
+
+    // Warhammer Recipes
+    private val IRON_WARHAMMER_RECIPE = createIronWarhammerRecipe()
 
     // Staff Recipes
     private val BAMBOO_STAFF_RECIPE = createBambooStaffRecipe()
@@ -62,6 +65,7 @@ object WeaponRecipes {
         WOODEN_SPEAR_RECIPE, GOLDEN_SPEAR_RECIPE, STONE_SPEAR_RECIPE, IRON_SPEAR_RECIPE, DIAMOND_SPEAR_RECIPE,
         WOODEN_DAGGER_RECIPE, GOLDEN_DAGGER_RECIPE, STONE_DAGGER_RECIPE, IRON_DAGGER_RECIPE, DIAMOND_DAGGER_RECIPE,
         WOODEN_RAPIER_RECIPE, GOLDEN_RAPIER_RECIPE, STONE_RAPIER_RECIPE, IRON_RAPIER_RECIPE, DIAMOND_RAPIER_RECIPE,
+        IRON_WARHAMMER_RECIPE,
         BAMBOO_STAFF_RECIPE, BONE_STAFF_RECIPE, WOODEN_STAFF_RECIPE, BLAZE_ROD_STAFF_RECIPE
     )
 
@@ -122,7 +126,6 @@ object WeaponRecipes {
         return someRecipe
     }
 
-
     // ?? TEMP
     private fun createNetheriteKatanaRecipe(): ShapedRecipe {
         val someResult = OdysseyWeapons.NETHERITE_KATANA.createItemStack(1)
@@ -147,7 +150,6 @@ object WeaponRecipes {
         return someRecipe
     }
 
-
     private fun createGoldenClaymoreRecipe(): ShapedRecipe {
         val someResult = OdysseyWeapons.GOLDEN_CLAYMORE.createItemStack(1)
         val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "goldenclaymore"), someResult)
@@ -157,7 +159,6 @@ object WeaponRecipes {
         someRecipe.setIngredient('Y', Material.STICK)
         return someRecipe
     }
-
 
     private fun createStoneClaymoreRecipe(): ShapedRecipe {
         val someResult = OdysseyWeapons.STONE_CLAYMORE.createItemStack(1)
@@ -169,7 +170,6 @@ object WeaponRecipes {
         return someRecipe
     }
 
-
     private fun createIronClaymoreRecipe(): ShapedRecipe {
         val someResult = OdysseyWeapons.IRON_CLAYMORE.createItemStack(1)
         val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "ironclaymore"), someResult)
@@ -179,7 +179,6 @@ object WeaponRecipes {
         someRecipe.setIngredient('Y', Material.STICK)
         return someRecipe
     }
-
 
     private fun createDiamondClaymoreRecipe(): ShapedRecipe {
         val someResult = OdysseyWeapons.DIAMOND_CLAYMORE.createItemStack(1)
@@ -214,7 +213,6 @@ object WeaponRecipes {
         return someRecipe
     }
 
-
     private fun createStoneSpearRecipe(): ShapedRecipe {
         val someResult = OdysseyWeapons.STONE_SPEAR.createItemStack(1)
         val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "stonespear"), someResult).apply {
@@ -225,7 +223,6 @@ object WeaponRecipes {
         return someRecipe
     }
 
-
     private fun createIronSpearRecipe(): ShapedRecipe {
         val someResult = OdysseyWeapons.IRON_SPEAR.createItemStack(1)
         val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "ironspear"), someResult).apply {
@@ -235,7 +232,6 @@ object WeaponRecipes {
         }
         return someRecipe
     }
-
 
     private fun createDiamondSpearRecipe(): ShapedRecipe {
         val someResult = OdysseyWeapons.DIAMOND_SPEAR.createItemStack(1)
@@ -269,7 +265,6 @@ object WeaponRecipes {
         return someRecipe
     }
 
-
     private fun createStoneDaggerRecipe(): ShapedRecipe {
         val someResult = OdysseyWeapons.STONE_DAGGER.createItemStack(1)
         val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "stonedagger"), someResult).apply {
@@ -280,7 +275,6 @@ object WeaponRecipes {
         return someRecipe
     }
 
-
     private fun createIronDaggerRecipe(): ShapedRecipe {
         val someResult = OdysseyWeapons.IRON_DAGGER.createItemStack(1)
         val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "irondagger"), someResult).apply {
@@ -290,7 +284,6 @@ object WeaponRecipes {
         }
         return someRecipe
     }
-
 
     private fun createDiamondDaggerRecipe(): ShapedRecipe {
         val someResult = OdysseyWeapons.DIAMOND_DAGGER.createItemStack(1)
@@ -325,7 +318,6 @@ object WeaponRecipes {
         return someRecipe
     }
 
-
     private fun createStoneRapierRecipe(): ShapedRecipe {
         val someResult = OdysseyWeapons.STONE_RAPIER.createItemStack(1)
         val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "stonerapier"), someResult).apply {
@@ -335,7 +327,6 @@ object WeaponRecipes {
         }
         return someRecipe
     }
-
 
     private fun createIronRapierRecipe(): ShapedRecipe {
         val someResult = OdysseyWeapons.IRON_RAPIER.createItemStack(1)
@@ -347,13 +338,25 @@ object WeaponRecipes {
         return someRecipe
     }
 
-
     private fun createDiamondRapierRecipe(): ShapedRecipe {
         val someResult = OdysseyWeapons.DIAMOND_RAPIER.createItemStack(1)
         val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "diamondrapier"), someResult).apply {
             shape("  X", " X ", "Y  ")
             setIngredient('X', Material.DIAMOND)
             setIngredient('Y', Material.STICK)
+        }
+        return someRecipe
+    }
+
+    /*----------------------------------------RAPIERS-----------------------------------------*/
+
+    private fun createIronWarhammerRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.IRON_WARHAMMER.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "ironwarhammer"), someResult).apply {
+            shape("XXX", "XZX", " Y ")
+            setIngredient('X', Material.IRON_INGOT)
+            setIngredient('Y', Material.STICK)
+            setIngredient('Z', Material.RABBIT_HIDE)
         }
         return someRecipe
     }
@@ -371,7 +374,6 @@ object WeaponRecipes {
         return someRecipe
     }
 
-
     private fun createBoneStaffRecipe(): ShapedRecipe {
         val someResult = OdysseyWeapons.BONE_STAFF.createItemStack(1)
         val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "bonestaff"), someResult).apply {
@@ -382,7 +384,6 @@ object WeaponRecipes {
         return someRecipe
     }
 
-
     private fun createWoodenStaffRecipe(): ShapedRecipe {
         val someResult = OdysseyWeapons.WOODEN_STAFF.createItemStack(1)
         val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "woodenstaff"), someResult).apply {
@@ -392,7 +393,6 @@ object WeaponRecipes {
         }
         return someRecipe
     }
-
 
     private fun createBlazeRodStaffRecipe(): ShapedRecipe {
         val someResult = OdysseyWeapons.BLAZE_ROD_STAFF.createItemStack(1)

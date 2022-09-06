@@ -90,8 +90,8 @@ object PotionOfFrost : OdysseyPotion("Bottle o' Frost",
 
 
 object PotionOfDouse : OdysseyPotion("Bottle o' Douse",
-    Component.text("Bottle o' Douse", TextColor.color(36, 36, 38)),
-    listOf(Component.text("Douse (0:30)", TextColor.color(36, 36, 38)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+    Component.text("Bottle o' Douse", TextColor.color(66, 66, 38)),
+    listOf(Component.text("Douse (0:30)", TextColor.color(66, 66, 38)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     potionEffects = emptyList(),
     potionColor = Color.fromRGB(36, 36, 38))
 

@@ -18,29 +18,29 @@ class PhenomenonTimer(private val mainWorld: World) : BukkitRunnable() {
 
     // Main function call for sun phenomenon activations
     private fun solarPhenomenonActivation() {
-        with(MinecraftOdyssey.instance) {
-            solarPhenomenonActive = false
-            lunarPhenomenonActive = false
-            currentSolarPhenomenon = null
-            currentLunarPhenomenon = null
+        MinecraftOdyssey.instance.also {
             // Event Cool down timer
             val timeElapsed = System.currentTimeMillis() - solarPhenomenonCallCooldown
             if (timeElapsed >= solarPhenomenonTimerConstant) {
                 solarPhenomenonCallCooldown = System.currentTimeMillis()
+                // Reset Night
+                it.lunarPhenomenonActive = false
+                it.currentLunarPhenomenon = null
                 // Check if end game
-                if ((endGame) && (!solarPhenomenonActive)) {
+                if ((it.endGame) && (!it.solarPhenomenonActive)) {
                     val rolledRate = (0..100).random()
                     // Daily luck is not a true daily phenomenon
                     //val luckConfigAmount = MinecraftOdyssey.instance.config.getInt("player-minimum-for-luck")
-                    if (mainWorld!!.players.size >= playersRequiredForLuck) {
-                        DrawOfFortunes.phenomenonEffect(mainWorld!!)
+                    if (it.mainWorld!!.players.size >= it.playersRequiredForLuck) {
+                        DrawOfFortunes.phenomenonEffect(it.mainWorld!!)
                     }
                     // Roll for random phenomenon
                     val randomDailyPhenomenon = SolarPhenomena.phenomenaList.random()
-                    val phenomenonActivated: Boolean = randomDailyPhenomenon.phenomenonActivation(mainWorld!!, rolledRate)
+                    val phenomenonActivated: Boolean = randomDailyPhenomenon.phenomenonActivation(it.mainWorld!!, rolledRate)
                     if (phenomenonActivated) {
-                        solarPhenomenonActive = true
-                        currentSolarPhenomenon = randomDailyPhenomenon
+                        it.solarPhenomenonActive = true
+                        it.currentSolarPhenomenon = randomDailyPhenomenon
+                        println("Activated $randomDailyPhenomenon")
                     }
                 }
             }
@@ -50,14 +50,13 @@ class PhenomenonTimer(private val mainWorld: World) : BukkitRunnable() {
     // Main function call for moon phenomenon activations
     private fun lunarPhenomenonActivation() {
         MinecraftOdyssey.instance.also {
-            it.lunarPhenomenonActive = false
-            it.solarPhenomenonActive = false
-            it.currentLunarPhenomenon = null
-            it.currentSolarPhenomenon = null
             // Event Cool down timer
             val timeElapsed = System.currentTimeMillis() - lunarPhenomenonCallCooldown
             if (timeElapsed >= lunarPhenomenonTimerConstant) {
                 lunarPhenomenonCallCooldown = System.currentTimeMillis()
+                // Reset Day
+                it.solarPhenomenonActive = false
+                it.currentSolarPhenomenon = null
                 // Check if end game
                 if ((it.endGame) && (!it.lunarPhenomenonActive)) {
                     // Roll for random phenomenon
@@ -67,6 +66,7 @@ class PhenomenonTimer(private val mainWorld: World) : BukkitRunnable() {
                     if (phenomenonActivated) {
                         it.lunarPhenomenonActive = true
                         it.currentLunarPhenomenon = randomNightlyPhenomenon
+                        println("Activated $randomNightlyPhenomenon")
                     }
                 }
             }

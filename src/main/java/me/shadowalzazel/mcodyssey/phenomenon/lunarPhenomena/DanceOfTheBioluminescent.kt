@@ -1,12 +1,12 @@
-package me.shadowalzazel.mcodyssey.phenomenon.solarPhenomena
+package me.shadowalzazel.mcodyssey.phenomenon.lunarPhenomena
 
-import me.shadowalzazel.mcodyssey.phenomenon.solarPhenomena.utilty.SolarPhenomenon
+import me.shadowalzazel.mcodyssey.phenomenon.lunarPhenomena.utilty.LunarPhenomenon
 import org.bukkit.ChatColor
 import org.bukkit.World
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object DanceOfTheBioluminescent : SolarPhenomenon("Dance_Of_The_Bioluminescent", 45, 5, 55) {
+object DanceOfTheBioluminescent : LunarPhenomenon("Dance_Of_The_Bioluminescent", 45, 5, 55) {
 
     override fun phenomenonEffect(phenomenonWorld: World) {
         println("The nano-lifeforms glow at ${phenomenonWorld.name}!")

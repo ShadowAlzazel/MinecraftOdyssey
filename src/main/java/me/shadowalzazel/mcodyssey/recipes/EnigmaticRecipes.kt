@@ -21,7 +21,7 @@ object EnigmaticRecipes {
         val exactEctoplasm = OdysseyItems.ECTOPLASM.createItemStack(1)
 
         someRecipe.shape("XZX", "XYX", "XZX")
-        someRecipe.setIngredient('X', Material.PAPER)
+        someRecipe.setIngredient('Z', Material.PAPER)
         someRecipe.setIngredient('X', Material.ROTTEN_FLESH)
         someRecipe.setIngredient('Y', RecipeChoice.ExactChoice(exactEctoplasm))
         return someRecipe

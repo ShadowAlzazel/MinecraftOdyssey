@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.phenomenon
 
+import me.shadowalzazel.mcodyssey.phenomenon.lunarPhenomena.DanceOfTheBioluminescent
 import me.shadowalzazel.mcodyssey.phenomenon.solarPhenomena.*
 import me.shadowalzazel.mcodyssey.phenomenon.solarPhenomena.utilty.SolarPhenomenon
 
@@ -8,7 +9,6 @@ object SolarPhenomena {
     val BLAZING_SOUL: SolarPhenomenon = BlazingSouls
     val BREEZY_WINDS: SolarPhenomenon = BreezyWinds
     val COMET_SIGHTING: SolarPhenomenon = CometSighting
-    val DANCE_OF_THE_BIOLUMINESCENT: SolarPhenomenon = DanceOfTheBioluminescent
     val EARTHQUAKE: SolarPhenomenon = Earthquake
     val FAMINE: SolarPhenomenon = Famine
     val FLAUNTING_FAIRIES: SolarPhenomenon = FlauntingFairies
@@ -19,7 +19,7 @@ object SolarPhenomena {
     val SPIRITS_RELEASE: SolarPhenomenon = SpiritsRelease
     val STONE_FLASH: SolarPhenomenon = StoneFlash
     //
-    val phenomenaList = listOf(BLAZING_SOUL, BREEZY_WINDS, COMET_SIGHTING, DANCE_OF_THE_BIOLUMINESCENT, EARTHQUAKE, FAMINE, FLAUNTING_FAIRIES, GRAVITY_SHIFT, SHIMMER_INTOXICATION, SLIME_STORM, SOLAR_FLARE,
+    val phenomenaList = listOf(BLAZING_SOUL, BREEZY_WINDS, COMET_SIGHTING, EARTHQUAKE, FAMINE, FLAUNTING_FAIRIES, GRAVITY_SHIFT, SHIMMER_INTOXICATION, SLIME_STORM, SOLAR_FLARE,
             SPIRITS_RELEASE, STONE_FLASH)
 
 }

@@ -11,6 +11,8 @@ import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BookMeta
 
+// TODO: Make Pages that can add to personal necronomicon using components
+// Original from Vail is to powerful to use
 object Necronomicon : OdysseyItem("Necronomicon",
     Material.WRITTEN_BOOK,
     odysseyDisplayName = Component.text("Necronomicon", TextColor.color(39, 19, 92)),

@@ -28,7 +28,7 @@ object CustomModels {
     const val SALMON_ROLL: Int = 6908048
 
     /* --------------------------------COMMON-ITEMS--------------------------------- */
-    //
+
     const val PAPERS_OF_ARCUS: Int = 6905070
     const val GALVANIZED_STEEL: Int = 6905071
     const val PURE_ALLOY_COPPER: Int = 6905072
@@ -37,19 +37,19 @@ object CustomModels {
     const val KUGELBLITZ_CONTAINMENT_UNIT: Int = 6905075
     const val POLYMORPHIC_GLUE: Int = 6905076
 
-
-
     /* --------------------------------RARE-ITEMS--------------------------------- */
-    //
+
     const val NEPTUNIAN_DIAMOND: Int = 6905006
     const val IOJOVIAN_EMERALD: Int = 6905105
     const val NEUTRONIUM_BARK_SCRAPS: Int = 6905333
     const val IDESCINE_SAPLINGS: Int = 6905464
     const val IDESCINE_ESSENCE: Int = 6905465
+    const val IRRADIATED_SHARD: Int = 6905466
+    const val IRRADIATED_ROD: Int = 6905467
+    const val IRRADIATED_FRUIT: Int = 6905468
 
     /* --------------------------------EXOTIC-ITEMS--------------------------------- */
 
-    //
     const val BABEL_ANNULUS_SCHEMATICS: Int = 6900068
     const val DORMANT_SENTIENT_STAR: Int = 6900069
     const val IMPURE_ANTI_MATTER_SHARD: Int = 6900088
@@ -58,13 +58,11 @@ object CustomModels {
     const val FRUIT_OF_ERISHKIGAL: Int = 6900555
     const val SILMARIL_OF_YGGLADIEL: Int = 6900556
 
-
     /* --------------------------------ENIGMATIC--------------------------------------*/
 
     const val SOUL_CRYSTAL: Int = 6906613
     const val ECTOPLASM: Int = 6906614
     const val SORROWING_SOUL: Int = 6906615
-
 
     /* --------------------------------BOOKS--------------------------------- */
 
@@ -139,6 +137,14 @@ object CustomModels {
     const val BLAZE_ROD_STAFF: Int = 6905796
 
 
+    /* ------------------------------HAMMER----------------------------------------*/
+
+    // Warhammers
+    const val WOODEN_WARHAMMER: Int = 6905802
+    const val GOLDEN_WARHAMMER: Int = 6905802
+    const val STONE_WARHAMMER: Int = 6905802
+    const val IRON_WARHAMMER: Int = 6905802
+    const val DIAMOND_WARHAMMER: Int = 6905802
 
 
     /* -------------------------------FLOWERS------------------------------- */

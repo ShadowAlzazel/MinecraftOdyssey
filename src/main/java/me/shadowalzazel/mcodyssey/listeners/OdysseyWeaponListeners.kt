@@ -2,6 +2,7 @@ package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.assets.CustomModels
 import me.shadowalzazel.mcodyssey.assets.WeaponStats.weaponReachMap
+import org.bukkit.Material
 
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
@@ -63,13 +64,9 @@ object OdysseyWeaponListeners : Listener {
                                 if (it.itemMeta.hasCustomModelData()) {
                                     it.itemMeta.customModelData == CustomModels.DIAMOND_DAGGER
                                 }
-                                else {
-                                    false
-                                }
+                                else { false }
                             }
-                            else {
-                                false
-                            }
+                            else { false }
                         }
                         if (dualWieldingDaggers) {
                             val reachedEntity = reachFunction(somePlayer, weaponReachMap[mainWeapon.itemMeta.customModelData])
@@ -84,6 +81,20 @@ object OdysseyWeaponListeners : Listener {
                                     setItemInMainHand(mainHand)
                                     setItemInOffHand(offHand)
                                 }
+                            }
+                        }
+                    }
+                    // Staff
+                    CustomModels.WOODEN_STAFF -> {
+
+                    }
+                    // Warhammer
+                    CustomModels.IRON_WARHAMMER -> {
+                        if (somePlayer.equipment.itemInOffHand.type == Material.AIR) {
+                            val nearbyEnemies = somePlayer.getNearbyEntities(1.5, 1.5, 1.5).also { it.remove(somePlayer) }
+                            for (enemy in nearbyEnemies) {
+                                somePlayer.attack(enemy)
+                                somePlayer.swingMainHand()
                             }
                         }
                     }

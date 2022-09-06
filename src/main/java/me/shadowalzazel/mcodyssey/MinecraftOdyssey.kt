@@ -24,7 +24,7 @@ import org.bukkit.plugin.java.JavaPlugin
 
 class MinecraftOdyssey : JavaPlugin() {
 
-    //
+    // Main
     var mainWorld: World? = null
 
     // Phenomenon Stuff
