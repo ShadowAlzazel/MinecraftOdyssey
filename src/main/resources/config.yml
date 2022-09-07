@@ -10,7 +10,7 @@ names:
   server-name: "Vailcraft"
 
 # Enables or disables daily world events
-daily-world-phenomenon:
+world-phenomenon:
   enabled: true
   player-minimum-for-luck: 4
 

@@ -1,11 +1,8 @@
 package me.shadowalzazel.mcodyssey.commands
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
-import me.shadowalzazel.mcodyssey.phenomenon.LunarPhenomena
-import me.shadowalzazel.mcodyssey.phenomenon.SolarPhenomena
-import me.shadowalzazel.mcodyssey.phenomenon.lunarPhenomena.utilty.LunarPhenomenon
-import me.shadowalzazel.mcodyssey.phenomenon.solarPhenomena.utilty.SolarPhenomenon
-import me.shadowalzazel.mcodyssey.phenomenon.utility.Phenomenon
+import me.shadowalzazel.mcodyssey.phenomenon.SuenPhenomena
+import me.shadowalzazel.mcodyssey.phenomenon.UtuPhenomena
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -23,11 +20,11 @@ object TriggerPhenomenon : CommandExecutor {
                 when (args[0]) {
                     "blood_moon" -> {
                         if (someWorld.time > 12000) {
-                            somePhenomenon = LunarPhenomena.BLOOD_MOON
+                            somePhenomenon = SuenPhenomena.BLOOD_MOON
                         }
                     }
                     "breezy_winds" -> {
-                        somePhenomenon = SolarPhenomena.BREEZY_WINDS
+                        somePhenomenon = UtuPhenomena.BREEZY_WINDS
                     }
                 }
                 if (somePhenomenon is LunarPhenomenon) {

@@ -13,8 +13,7 @@ import me.shadowalzazel.mcodyssey.listeners.enchantmentListeners.MiscListeners
 import me.shadowalzazel.mcodyssey.listeners.enchantmentListeners.RangedListeners
 import me.shadowalzazel.mcodyssey.listeners.OdysseyPhenomenaListeners
 import me.shadowalzazel.mcodyssey.phenomenon.PhenomenonTimer
-import me.shadowalzazel.mcodyssey.phenomenon.solarPhenomena.utilty.SolarPhenomenon
-import me.shadowalzazel.mcodyssey.phenomenon.lunarPhenomena.utilty.LunarPhenomenon
+import me.shadowalzazel.mcodyssey.phenomenon.utility.OdysseyPhenomenon
 import me.shadowalzazel.mcodyssey.recipes.*
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
@@ -29,10 +28,11 @@ class MinecraftOdyssey : JavaPlugin() {
 
     // Phenomenon Stuff
     var solarPhenomenonActive: Boolean = false
-    var currentSolarPhenomenon: SolarPhenomenon? = null
+    var currentSolarPhenomenon: OdysseyPhenomenon? = null
     var lunarPhenomenonActive: Boolean = false
-    var currentLunarPhenomenon: LunarPhenomenon? = null
+    var currentLunarPhenomenon: OdysseyPhenomenon? = null
     var playersRequiredForLuck: Int = 99
+    var phenomenonList: MutableSet<OdysseyPhenomenon> = mutableSetOf()
 
     // Config variables
     var endGame: Boolean = true
@@ -98,10 +98,10 @@ class MinecraftOdyssey : JavaPlugin() {
             // Odyssey Misc Listeners
             it.pluginManager.registerEvents(OdysseyMiscListeners, this)
             // Config
-            if (config.getBoolean("daily-world-phenomenon.enabled")) {
+            if (config.getBoolean("world-phenomenon.enabled")) {
                 // Register Daily Events
                 it.pluginManager.registerEvents(OdysseyPhenomenaListeners, this)
-                playersRequiredForLuck = config.getInt("daily-world-phenomenon.player-minimum-for-luck")
+                playersRequiredForLuck = config.getInt("world-phenomenon.player-minimum-for-luck")
                 // Getting main world for phenomenon timer
                 for (world in it.worlds) {
                     if (world.environment == World.Environment.NORMAL) {
@@ -112,6 +112,7 @@ class MinecraftOdyssey : JavaPlugin() {
                         break
                     }
                 }
+
             }
             it.broadcast(Component.text("The Odyssey Awaits!"))
         }

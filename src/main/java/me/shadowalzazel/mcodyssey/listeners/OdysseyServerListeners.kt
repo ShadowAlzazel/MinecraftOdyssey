@@ -9,10 +9,7 @@ import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.event.player.PlayerKickEvent
 import org.bukkit.event.player.PlayerQuitEvent
-import org.bukkit.event.player.PlayerResourcePackStatusEvent
-import java.awt.TextComponent
 
 object OdysseyServerListeners : Listener {
 
@@ -52,7 +49,6 @@ object OdysseyServerListeners : Listener {
         val serverName: String = MinecraftOdyssey.instance.config.getString("names.server-name") ?: return
         player.sendMessage("${ChatColor.GRAY}Hello ${player.name}! Welcome!")
         event.joinMessage = ("${ChatColor.GOLD}${player.name} ${ChatColor.YELLOW}has logged into $serverName")
-
 
     }
 

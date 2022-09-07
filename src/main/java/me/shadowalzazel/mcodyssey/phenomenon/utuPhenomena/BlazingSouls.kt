@@ -1,20 +1,26 @@
-package me.shadowalzazel.mcodyssey.phenomenon.solarPhenomena
+package me.shadowalzazel.mcodyssey.phenomenon.utuPhenomena
 
-import me.shadowalzazel.mcodyssey.phenomenon.solarPhenomena.utilty.SolarPhenomenon
+import me.shadowalzazel.mcodyssey.phenomenon.utility.OdysseyPhenomenon
+import me.shadowalzazel.mcodyssey.phenomenon.utility.PhenomenonTypes
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
-import org.bukkit.ChatColor
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.World
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object BlazingSouls : SolarPhenomenon("Blazing_Souls", 40, 5, 50) {
+object BlazingSouls : OdysseyPhenomenon("Starry Night",
+    PhenomenonTypes.UTU,
+    35,
+    5,
+    55,
+    Component.text("There is a faint glow emanating from the flora...")) {
 
-    override fun phenomenonEffect(phenomenonWorld: World) {
-        phenomenonWorld.sendMessage(Component.text("The players soul's are ablaze!"))
-        println("The players soul's are ablaze at ${phenomenonWorld.name}!")
+    override fun successfulActivation(someWorld: World) {
+        super.successfulActivation(someWorld)
+        someWorld.sendMessage(Component.text("The players soul's are ablaze!"))
+        println("The players soul's are ablaze at ${someWorld.name}!")
 
         val blazingBodyEffects = listOf(
             PotionEffect(PotionEffectType.FIRE_RESISTANCE, 12000, 0),
@@ -26,7 +32,7 @@ object BlazingSouls : SolarPhenomenon("Blazing_Souls", 40, 5, 50) {
             PotionEffect(PotionEffectType.INCREASE_DAMAGE, 12000, 1))
 
         // Player Effects
-        for (somePlayer in phenomenonWorld.players) {
+        for (somePlayer in someWorld.players) {
             with(somePlayer) {
                 sendMessage(Component.text("You sense the crackling embers...", TextColor.color(255, 110, 30)))
                 // Blazing Body
@@ -51,10 +57,6 @@ object BlazingSouls : SolarPhenomenon("Blazing_Souls", 40, 5, 50) {
                 playSound(somePlayer.location, Sound.BLOCK_FURNACE_FIRE_CRACKLE, 2.5F, 1.2F)
             }
         }
-    }
-
-    override fun phenomenonWarning(phenomenonWorld: World): String {
-        return "You have visions of burning embers..."
     }
 
 }

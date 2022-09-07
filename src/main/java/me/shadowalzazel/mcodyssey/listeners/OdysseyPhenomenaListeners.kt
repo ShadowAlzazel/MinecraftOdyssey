@@ -2,7 +2,7 @@ package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.mobs.OdysseyMobs
-import me.shadowalzazel.mcodyssey.phenomenon.LunarPhenomena
+import me.shadowalzazel.mcodyssey.phenomenon.SuenPhenomena
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.TextColor
@@ -50,13 +50,13 @@ object OdysseyPhenomenaListeners : Listener {
             if (someWorld.environment == World.Environment.NORMAL) {
                 when (MinecraftOdyssey.instance.currentLunarPhenomenon) {
                     // Blue Moon
-                    LunarPhenomena.BLUE_MOON -> {
+                    SuenPhenomena.BLUE_MOON -> {
                         if (event.spawnReason == CreatureSpawnEvent.SpawnReason.NATURAL || event.spawnReason == CreatureSpawnEvent.SpawnReason.REINFORCEMENTS) {
                             event.isCancelled = true
                         }
                     }
                     // Blood Moon
-                    LunarPhenomena.BLOOD_MOON -> {
+                    SuenPhenomena.BLOOD_MOON -> {
                         if (event.spawnReason == CreatureSpawnEvent.SpawnReason.NATURAL || event.spawnReason == CreatureSpawnEvent.SpawnReason.REINFORCEMENTS) {
                             // TODO: Light Level and Y level
                             bloodMoonPhenomenonSpawning(event.entity)

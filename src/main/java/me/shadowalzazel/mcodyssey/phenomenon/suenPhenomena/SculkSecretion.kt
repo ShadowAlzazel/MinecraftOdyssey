@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.phenomenon.lunarPhenomena
+package me.shadowalzazel.mcodyssey.phenomenon.suenPhenomena
 
 object SculkSecretion {
     fun g() {

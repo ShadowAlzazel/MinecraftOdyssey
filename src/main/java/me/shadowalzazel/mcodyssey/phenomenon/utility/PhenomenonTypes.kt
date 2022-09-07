@@ -2,7 +2,9 @@ package me.shadowalzazel.mcodyssey.phenomenon.utility
 
 enum class PhenomenonTypes {
 
-    LUNAR
-
+    SUEN,  // Moon
+    UTU,   // Sun
+    ANKI,  // Universal
+    ABZU   // Void
 
 }
