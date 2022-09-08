@@ -12,7 +12,7 @@ import me.shadowalzazel.mcodyssey.listeners.enchantmentListeners.MeleeListeners
 import me.shadowalzazel.mcodyssey.listeners.enchantmentListeners.MiscListeners
 import me.shadowalzazel.mcodyssey.listeners.enchantmentListeners.RangedListeners
 import me.shadowalzazel.mcodyssey.listeners.OdysseyPhenomenaListeners
-import me.shadowalzazel.mcodyssey.phenomenon.PhenomenonTimer
+import me.shadowalzazel.mcodyssey.phenomenon.PhenomenonCycle
 import me.shadowalzazel.mcodyssey.phenomenon.utility.OdysseyPhenomenon
 import me.shadowalzazel.mcodyssey.recipes.*
 import net.kyori.adventure.text.Component
@@ -27,12 +27,11 @@ class MinecraftOdyssey : JavaPlugin() {
     var mainWorld: World? = null
 
     // Phenomenon Stuff
-    var solarPhenomenonActive: Boolean = false
-    var currentSolarPhenomenon: OdysseyPhenomenon? = null
-    var lunarPhenomenonActive: Boolean = false
-    var currentLunarPhenomenon: OdysseyPhenomenon? = null
+    var utuPhenomenonActive: Boolean = false
+    var suenPhenomenonActive: Boolean = false
+    var currentSuenPhenomenon: OdysseyPhenomenon? = null
+    var currentUtuPhenomenon: OdysseyPhenomenon? = null
     var playersRequiredForLuck: Int = 99
-    var phenomenonList: MutableSet<OdysseyPhenomenon> = mutableSetOf()
 
     // Config variables
     var endGame: Boolean = true
@@ -106,9 +105,9 @@ class MinecraftOdyssey : JavaPlugin() {
                 for (world in it.worlds) {
                     if (world.environment == World.Environment.NORMAL) {
                         mainWorld = world
-                        val phenomenonTimer = PhenomenonTimer(mainWorld!!)
+                        val phenomenonCycle = PhenomenonCycle(mainWorld!!)
                         val timerDelay = 20 * 10L
-                        phenomenonTimer.runTaskTimer(this, timerDelay, 20 * 10)
+                        phenomenonCycle.runTaskTimer(this, timerDelay, 20 * 10)
                         break
                     }
                 }

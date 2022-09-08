@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.phenomenon.utuPhenomena
 
+import me.shadowalzazel.mcodyssey.phenomenon.suenPhenomena.DanceOfTheBioluminescent
 import me.shadowalzazel.mcodyssey.phenomenon.utility.OdysseyPhenomenon
 import me.shadowalzazel.mcodyssey.phenomenon.utility.PhenomenonTypes
 import net.kyori.adventure.text.Component
@@ -7,6 +8,7 @@ import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.World
+import org.bukkit.entity.LivingEntity
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
@@ -36,5 +38,6 @@ object StoneFlash : OdysseyPhenomenon("Starry Night",
             }
         }
     }
+
 
 }

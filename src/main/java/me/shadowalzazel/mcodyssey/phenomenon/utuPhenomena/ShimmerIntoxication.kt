@@ -23,9 +23,9 @@ object ShimmerIntoxication : OdysseyPhenomenon("Starry Night",
 
         // Low Gravity Effects
         val shimmerEffects = listOf(
-            PotionEffect(PotionEffectType.INCREASE_DAMAGE, 12000, 0),
+            PotionEffect(PotionEffectType.INCREASE_DAMAGE, 12000, 1),
             PotionEffect(PotionEffectType.CONFUSION, 120, 0),
-            PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 12000, 0))
+            PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 12000, 1))
         for (somePlayer in someWorld.players) {
             with(somePlayer) {
                 addPotionEffects(shimmerEffects)

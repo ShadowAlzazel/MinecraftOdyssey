@@ -3,6 +3,8 @@ package me.shadowalzazel.mcodyssey.phenomenon.utility
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import net.kyori.adventure.text.Component
 import org.bukkit.World
+import org.bukkit.entity.Entity
+import org.bukkit.entity.LivingEntity
 
 open class OdysseyPhenomenon(internal val phenomenonName: String,
                              val phenomenonType: PhenomenonTypes,
@@ -54,14 +56,20 @@ open class OdysseyPhenomenon(internal val phenomenonName: String,
         }
     }
 
-    open fun persistentActives() {
+    open fun persistentPlayerActives() {
         // IF persistent call this
         // timer delay var and tick speed
     }
 
-    open fun spawningActives() {
+    open fun persistentSpawningActives(someEntity: LivingEntity) {
+        // IF persistent call this
+        // timer delay var and tick speed
+    }
+
+    open fun timedActives() {
 
     }
+
 
 
 }

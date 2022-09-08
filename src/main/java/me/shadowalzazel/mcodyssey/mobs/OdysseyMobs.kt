@@ -1,9 +1,6 @@
 package me.shadowalzazel.mcodyssey.mobs
 
-import me.shadowalzazel.mcodyssey.mobs.hostile.Mimic
-import me.shadowalzazel.mcodyssey.mobs.hostile.Savage
-import me.shadowalzazel.mcodyssey.mobs.hostile.SculkCrawler
-import me.shadowalzazel.mcodyssey.mobs.hostile.Vanguard
+import me.shadowalzazel.mcodyssey.mobs.hostile.*
 import me.shadowalzazel.mcodyssey.mobs.other.RottingSummon
 import me.shadowalzazel.mcodyssey.mobs.other.WanderingSoul
 import me.shadowalzazel.mcodyssey.mobs.passive.TreasurePig
@@ -17,6 +14,7 @@ object OdysseyMobs {
     val TREASURE_PIG = TreasurePig
     val VANGUARD = Vanguard
     val WANDERING_SOUL = WanderingSoul
+    val PREACHER_OF_THE_ABYSS = PreacherOfTheAbyss
 
     val ROTTING_SUMMON = RottingSummon
 

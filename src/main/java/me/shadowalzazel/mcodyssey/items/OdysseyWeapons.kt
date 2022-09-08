@@ -60,5 +60,8 @@ object OdysseyWeapons {
     val WOODEN_STAFF = WoodenStaff
     val BLAZE_ROD_STAFF = BlazeRodStaff
 
+    // Exotics
+    val ABZU_BLADE = AbzuBlade
+
 
 }
