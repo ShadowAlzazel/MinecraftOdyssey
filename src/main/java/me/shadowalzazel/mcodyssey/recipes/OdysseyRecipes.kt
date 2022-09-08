@@ -17,8 +17,9 @@ object OdysseyRecipes {
     private val NEUTRONIUM_BARK_INGOT_RECIPE = createNeutroniumIngot()
     val PURE_ANTIMATTER_CRYSTAL_RECIPE = createPurelyUnstableAntimatterCrystalRecipe()
     val FRUIT_OF_ERISHKIGAL_RECIPE = createFruitOfErishkigal()
+    val IRRADIATED_FRUIT_RECIPE = createIrradiatedFruitRecipe()
 
-    val recipeSet = setOf<Recipe>(ARCANE_BOOK, PURE_ANTIMATTER_CRYSTAL_RECIPE, FRUIT_OF_ERISHKIGAL_RECIPE)
+    val recipeSet = setOf<Recipe>(ARCANE_BOOK, PURE_ANTIMATTER_CRYSTAL_RECIPE, FRUIT_OF_ERISHKIGAL_RECIPE, IRRADIATED_FRUIT_RECIPE)
 
 
     //
@@ -64,7 +65,7 @@ object OdysseyRecipes {
         return someRecipe
     }
 
-    //
+    // FRUIT_OF_ERISHKIGAL
     private fun createFruitOfErishkigal(): ShapedRecipe {
         val someResult = OdysseyItems.FRUIT_OF_ERISHKIGAL.createItemStack(1)
         val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "fruitoferishkigal"), someResult)
@@ -75,6 +76,19 @@ object OdysseyRecipes {
         someRecipe.setIngredient('X', RecipeChoice.ExactChoice(exactIdescineEssence))
         someRecipe.setIngredient('Y', Material.ENCHANTED_GOLDEN_APPLE)
         someRecipe.setIngredient('Z', RecipeChoice.ExactChoice(exactPureAntimatter))
+        return someRecipe
+    }
+
+    // IRRADIATED_FRUIT
+    private fun createIrradiatedFruitRecipe(): ShapedRecipe {
+        val someResult = OdysseyItems.IRRADIATED_FRUIT.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "irradiatedfruit"), someResult)
+        val exactIrradiatedRod = OdysseyItems.IRRADIATED_ROD.createItemStack(1)
+
+        someRecipe.shape("XZX", "ZYZ", "XZX")
+        someRecipe.setIngredient('X', RecipeChoice.ExactChoice(exactIrradiatedRod))
+        someRecipe.setIngredient('Y', Material.GLOW_BERRIES)
+        someRecipe.setIngredient('Z', Material.TINTED_GLASS)
         return someRecipe
     }
 

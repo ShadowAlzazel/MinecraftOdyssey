@@ -7,7 +7,7 @@ import me.shadowalzazel.mcodyssey.items.utilty.OdysseyItem
 // MAKE OBJECTS LATER
 object OdysseyItems {
 
-    /* -------------------------------- */
+    /* ------------------------------------------------------------------------- */
     val PAPERS_OF_ARCUS: OdysseyItem =  PapersOfArcus
     val GALVANIZED_STEEL: OdysseyItem = GalvanizedSteel
     val PURE_ALLOY_COPPER: OdysseyItem = PureAlloyCopper
@@ -27,9 +27,17 @@ object OdysseyItems {
     val PURE_ANTIMATTER_CRYSTAL: OdysseyItem = PureAntimatterCrystal
     val FRUIT_OF_ERISHKIGAL: OdysseyItem = FruitOfErishkigal
     val SILMARIL_OF_YGGLADIEL = SilmarilOfYggladiel
-    /* -------------------------------- */
+
+    /* ---------------------------------------------------------------------- */
+    val IRRADIATED_SHARD = IrradiatedShard
+    val IRRADIATED_ROD = IrradiatedRod
+    val IRRADIATED_FRUIT = IrradiatedFruit
+
+
+    /* ---------------------------------------------------------------------- */
     val SOUL_CRYSTAL = SoulCrystal
     val ECTOPLASM = Ectoplasm
+    val SORROWING_SOUL = SorrowingSoul
 
 
 }

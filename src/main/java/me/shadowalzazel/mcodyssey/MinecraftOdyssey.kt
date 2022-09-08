@@ -12,9 +12,8 @@ import me.shadowalzazel.mcodyssey.listeners.enchantmentListeners.MeleeListeners
 import me.shadowalzazel.mcodyssey.listeners.enchantmentListeners.MiscListeners
 import me.shadowalzazel.mcodyssey.listeners.enchantmentListeners.RangedListeners
 import me.shadowalzazel.mcodyssey.listeners.OdysseyPhenomenaListeners
-import me.shadowalzazel.mcodyssey.phenomenon.PhenomenonTimer
-import me.shadowalzazel.mcodyssey.phenomenon.solarPhenomena.utilty.SolarPhenomenon
-import me.shadowalzazel.mcodyssey.phenomenon.lunarPhenomena.utilty.LunarPhenomenon
+import me.shadowalzazel.mcodyssey.phenomenon.PhenomenonCycle
+import me.shadowalzazel.mcodyssey.phenomenon.utility.OdysseyPhenomenon
 import me.shadowalzazel.mcodyssey.recipes.*
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
@@ -24,14 +23,14 @@ import org.bukkit.plugin.java.JavaPlugin
 
 class MinecraftOdyssey : JavaPlugin() {
 
-    //
+    // Main
     var mainWorld: World? = null
 
     // Phenomenon Stuff
-    var solarPhenomenonActive: Boolean = false
-    var currentSolarPhenomenon: SolarPhenomenon? = null
-    var lunarPhenomenonActive: Boolean = false
-    var currentLunarPhenomenon: LunarPhenomenon? = null
+    var utuPhenomenonActive: Boolean = false
+    var suenPhenomenonActive: Boolean = false
+    var currentSuenPhenomenon: OdysseyPhenomenon? = null
+    var currentUtuPhenomenon: OdysseyPhenomenon? = null
     var playersRequiredForLuck: Int = 99
 
     // Config variables
@@ -98,20 +97,21 @@ class MinecraftOdyssey : JavaPlugin() {
             // Odyssey Misc Listeners
             it.pluginManager.registerEvents(OdysseyMiscListeners, this)
             // Config
-            if (config.getBoolean("daily-world-phenomenon.enabled")) {
+            if (config.getBoolean("world-phenomenon.enabled")) {
                 // Register Daily Events
                 it.pluginManager.registerEvents(OdysseyPhenomenaListeners, this)
-                playersRequiredForLuck = config.getInt("daily-world-phenomenon.player-minimum-for-luck")
+                playersRequiredForLuck = config.getInt("world-phenomenon.player-minimum-for-luck")
                 // Getting main world for phenomenon timer
                 for (world in it.worlds) {
                     if (world.environment == World.Environment.NORMAL) {
                         mainWorld = world
-                        val phenomenonTimer = PhenomenonTimer(mainWorld!!)
+                        val phenomenonCycle = PhenomenonCycle(mainWorld!!)
                         val timerDelay = 20 * 10L
-                        phenomenonTimer.runTaskTimer(this, timerDelay, 20 * 10)
+                        phenomenonCycle.runTaskTimer(this, timerDelay, 20 * 10)
                         break
                     }
                 }
+
             }
             it.broadcast(Component.text("The Odyssey Awaits!"))
         }
@@ -129,6 +129,8 @@ class MinecraftOdyssey : JavaPlugin() {
         for (weaponRecipe in WeaponRecipes.recipeSet) { Bukkit.addRecipe(weaponRecipe) }
         // Cooking Recipes
         for (cookingRecipe in CookingRecipes.recipeSet) { Bukkit.addRecipe(cookingRecipe) }
+        // Enigmatic Recipes
+        for (enigmaticRecipe in EnigmaticRecipes.recipeSet) { Bukkit.addRecipe(enigmaticRecipe) }
         // Final Recipes
         // TODO: Fix
         // for (someRecipe in FinalRecipes.recipeSet) { Bukkit.addRecipe(someRecipe) }
@@ -139,6 +141,7 @@ class MinecraftOdyssey : JavaPlugin() {
         getCommand("GiveTestItem")?.setExecutor(GiveTestItem)
         getCommand("SpawnTestMob")?.setExecutor(SpawnTestMob)
         getCommand("SpawnTestKnight")?.setExecutor(SpawnTestKnight)
+        getCommand("TriggerPhenomenon")?.setExecutor(TriggerPhenomenon)
 
         // Spell Commands
         getCommand("necronomicon")?.setExecutor(Necronomicon)

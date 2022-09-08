@@ -11,7 +11,7 @@ import org.bukkit.enchantments.Enchantment
 // Refined Neptunian Diamond
 object RefinedNeptunianDiamonds : OdysseyItem("Refined Neptunian-Diamond",
     Material.DIAMOND,
-    Component.text("Refined Neptunian-Diamond", TextColor.color(85, 255, 255), TextDecoration.ITALIC),
+    Component.text("Refined Neptunian-Diamond", TextColor.color(47, 122, 228), TextDecoration.ITALIC),
     listOf(Component.text("A diamond forged inside a colossal planet refined to an impressive caliber", TextColor.color(47, 122, 228)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     CustomModels.NEPTUNIAN_DIAMOND,
     mapOf(Enchantment.LOOT_BONUS_BLOCKS to 1))
@@ -19,7 +19,7 @@ object RefinedNeptunianDiamonds : OdysseyItem("Refined Neptunian-Diamond",
 // Refined Iojovian Emerald
 object RefinedIojovianEmeralds : OdysseyItem("Refined Iojovian-Emerald",
     Material.EMERALD,
-    Component.text("Refined Iojovian-Emerald", TextColor.color(85, 255, 255), TextDecoration.ITALIC),
+    Component.text("Refined Iojovian-Emerald", TextColor.color(210, 234, 64), TextDecoration.ITALIC),
     listOf(Component.text("An emerald grown near a Jovian super-planet to unmatched pristine", TextColor.color(210, 234, 64)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     CustomModels.IOJOVIAN_EMERALD,
     mapOf(Enchantment.LOOT_BONUS_BLOCKS to 1))
@@ -45,3 +45,17 @@ object IdescineEssence : OdysseyItem("Idescine Essence",
     Component.text("Idescine Essence", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
     listOf(Component.text("A sappy substance brimming with life", TextColor.color(160, 45, 160)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     CustomModels.IDESCINE_ESSENCE)
+
+// Irradiated Shard
+object IrradiatedShard : OdysseyItem("Irradiated Shard",
+    Material.PRISMARINE_SHARD,
+    Component.text("Irradiated Shard", TextColor.color(198, 196, 178), TextDecoration.ITALIC),
+    listOf(Component.text("A shard dangerous to handle...", TextColor.color(191, 126, 85)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+    CustomModels.IRRADIATED_SHARD)
+
+// Irradiated Rod
+object IrradiatedRod : OdysseyItem("Irradiated Rod",
+    Material.PRISMARINE_SHARD,
+    Component.text("Irradiated Rod", TextColor.color(58, 50, 95), TextDecoration.ITALIC),
+    listOf(Component.text("A mechanical piece, dangerous to handle...", TextColor.color(191, 126, 85)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+    CustomModels.IRRADIATED_ROD)

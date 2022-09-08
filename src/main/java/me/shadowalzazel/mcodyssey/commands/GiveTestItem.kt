@@ -75,6 +75,9 @@ object GiveTestItem : CommandExecutor {
                     "tome_of_expenditure" -> {
                         sender.inventory.addItem(OdysseyBooks.TOME_OF_EXPENDITURE.createItemStack(1))
                     }
+                    "abzu_blade" -> {
+                        sender.inventory.addItem(OdysseyWeapons.ABZU_BLADE.createItemStack(1))
+                    }
                     else -> {
                         return false
                     }

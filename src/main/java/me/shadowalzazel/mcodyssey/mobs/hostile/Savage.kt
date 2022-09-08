@@ -1,79 +1,91 @@
 package me.shadowalzazel.mcodyssey.mobs.hostile
 
+import me.shadowalzazel.mcodyssey.items.OdysseyWeapons
 import me.shadowalzazel.mcodyssey.mobs.utility.OdysseyMob
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
 import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.World
+import org.bukkit.attribute.Attribute
+import org.bukkit.attribute.AttributeModifier
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.entity.EntityType
-import org.bukkit.entity.Zombie
-import org.bukkit.entity.ZombieHorse
+import org.bukkit.entity.*
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import java.util.*
 
-object Savage : OdysseyMob("Savage") {
+object Savage : OdysseyMob("Savage", EntityType.ZOMBIE, 30.0) {
 
-    fun createKnight(odysseyWorld: World, spawningLocation: Location): Zombie {
-        val zombieSteed = odysseyWorld.spawnEntity(spawningLocation, EntityType.ZOMBIE_HORSE) as ZombieHorse
-        val enhancedHealth = PotionEffect(PotionEffectType.HEALTH_BOOST, 20 * 300, 25)
-        val enhancedSpeed = PotionEffect(PotionEffectType.SPEED, 20 * 300, 2)
-        zombieSteed.addPotionEffect(enhancedHealth)
-        zombieSteed.addPotionEffect(enhancedSpeed)
-        //skeletonSteed.inventory.saddle = ItemStack(Material.SADDLE, 1)
-        val someKnight = createMob(odysseyWorld, spawningLocation)
-        someKnight.customName = "Savage Knight"
-        zombieSteed.isTamed = true
-        zombieSteed.addPassenger(someKnight)
-        zombieSteed.health = 100.0
-        return someKnight
+    fun createKnight(odysseyWorld: World, spawningLocation: Location): Pair<Zombie, ZombieHorse> {
+        // Modify Savage to Knight
+        val someKnight = createMob(odysseyWorld, spawningLocation).apply {
+            // Name
+            customName(Component.text("Savage Knight"))
+            // Claymore
+            val newClaymore = OdysseyWeapons.IRON_CLAYMORE.createItemStack(1).apply {
+                addUnsafeEnchantment(Enchantment.DURABILITY, 3)
+                addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5)
+                addUnsafeEnchantment(Enchantment.KNOCKBACK, 3)
+                itemMeta.displayName(Component.text("Norinthian Claymore"))
+            }
+            clearActiveItem()
+            equipment.setItemInOffHand(ItemStack(Material.AIR, 1))
+            equipment.setItemInMainHand(newClaymore)
+        }
 
+        // Knight Steed
+        val zombieSteed = (odysseyWorld.spawnEntity(spawningLocation, EntityType.ZOMBIE_HORSE) as ZombieHorse).apply {
+            isTamed = true
+            addPassenger(someKnight)
+            addPotionEffects(listOf(
+                PotionEffect(PotionEffectType.HEALTH_BOOST, 20 * 300, 25),
+                PotionEffect(PotionEffectType.SPEED, 20 * 300, 2)
+            ))
+            health = 100.0
+        }
+        return Pair(someKnight, zombieSteed)
     }
 
 
-    fun createMob(odysseyWorld: World, spawningLocation: Location): Zombie {
-
-        // Vanguard Entity
-        val savageEntity = odysseyWorld.spawnEntity(spawningLocation, EntityType.ZOMBIE) as Zombie
-        val enhancedHealth = PotionEffect(PotionEffectType.HEALTH_BOOST, 99999, 8)
-        val enhancedStrength = PotionEffect(PotionEffectType.INCREASE_DAMAGE, 99999, 4)
-        val enhancedSpeed = PotionEffect(PotionEffectType.FAST_DIGGING, 99999, 8)
-        savageEntity.addPotionEffect(enhancedStrength)
-        savageEntity.addPotionEffect(enhancedHealth)
-        savageEntity.addPotionEffect(enhancedSpeed)
-
-        savageEntity.canPickupItems = true
-        savageEntity.health = 50.0
-        savageEntity.customName = "Savage"
-        savageEntity.clearActiveItem()
-
-        // Spear
-        val savageAxe = ItemStack(Material.IRON_AXE, 1)
-        val savageAxeMeta = savageAxe.itemMeta
-        savageAxeMeta.setDisplayName("${ChatColor.GRAY}Norinthian Axe")
-        savageAxeMeta.addEnchant(Enchantment.DURABILITY, 3, true)
-        savageAxeMeta.addEnchant(Enchantment.DAMAGE_ALL, 5, true)
-        savageAxeMeta.addEnchant(Enchantment.KNOCKBACK, 3, true)
-        savageAxe.itemMeta = savageAxeMeta
-
-        // Add Item
-        savageEntity.equipment.setItemInMainHand(savageAxe)
-        savageEntity.equipment.setItemInOffHand(savageAxe)
-        savageEntity.equipment.helmet = ItemStack(Material.CHAINMAIL_HELMET, 1)
-        savageEntity.equipment.chestplate = ItemStack(Material.CHAINMAIL_CHESTPLATE, 1)
-        savageEntity.equipment.leggings = ItemStack(Material.CHAINMAIL_LEGGINGS, 1)
-        savageEntity.equipment.boots = ItemStack(Material.CHAINMAIL_BOOTS, 1)
-        savageEntity.equipment.itemInMainHandDropChance = 0F
-        savageEntity.equipment.itemInOffHandDropChance = 0F
-        savageEntity.equipment.helmetDropChance = 0F
-        savageEntity.equipment.chestplateDropChance = 0F
-        savageEntity.equipment.leggingsDropChance = 0F
-        savageEntity.equipment.bootsDropChance = 0F
-
+    override fun createMob(someWorld: World, spawningLocation: Location): Zombie {
+        val savageEntity = (super.createMob(someWorld, spawningLocation) as Zombie).apply {
+            // Effects
+            addPotionEffects(listOf(
+                PotionEffect(PotionEffectType.INCREASE_DAMAGE, 99999, 4),
+                PotionEffect(PotionEffectType.FAST_DIGGING, 99999, 8)))
+            // Misc
+            health = 50.0
+            canPickupItems = true
+            clearActiveItem()
+            customName(Component.text(this@Savage.odysseyName, TextColor.color(220, 216, 75)))
+            // Dagger
+            val newDagger = OdysseyWeapons.IRON_DAGGER.createItemStack(1).apply {
+                addUnsafeEnchantment(Enchantment.DURABILITY, 3)
+                addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5)
+                addUnsafeEnchantment(Enchantment.KNOCKBACK, 3)
+                itemMeta.displayName(Component.text("Norinthian Dagger"))
+            }
+            // Add Items
+            equipment.also {
+                // TODO: Custom Models
+                it.setItemInMainHand(newDagger)
+                it.setItemInOffHand(newDagger)
+                it.helmet = ItemStack(Material.CHAINMAIL_HELMET, 1)
+                it.chestplate = ItemStack(Material.CHAINMAIL_CHESTPLATE, 1)
+                it.leggings = ItemStack(Material.CHAINMAIL_LEGGINGS, 1)
+                it.boots = ItemStack(Material.CHAINMAIL_BOOTS, 1)
+                it.itemInMainHandDropChance = 0F
+                it.itemInOffHandDropChance = 0F
+                it.helmetDropChance = 0F
+                it.chestplateDropChance = 0F
+                it.leggingsDropChance = 0F
+                it.bootsDropChance = 0F
+            }
+        }
         return savageEntity
     }
-
-
 
 }

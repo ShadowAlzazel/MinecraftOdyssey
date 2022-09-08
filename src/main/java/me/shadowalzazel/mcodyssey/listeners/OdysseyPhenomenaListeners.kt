@@ -2,8 +2,10 @@ package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.mobs.OdysseyMobs
-import me.shadowalzazel.mcodyssey.phenomenon.LunarPhenomena
+import me.shadowalzazel.mcodyssey.phenomenon.SuenPhenomena
+import me.shadowalzazel.mcodyssey.phenomenon.utility.PhenomenonTypes
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.World
 import org.bukkit.entity.LivingEntity
@@ -18,21 +20,14 @@ import org.bukkit.potion.PotionEffectType
 
 object OdysseyPhenomenaListeners : Listener {
 
-    private val bloodMoonEffects = listOf(
-        PotionEffect(PotionEffectType.INCREASE_DAMAGE, 300 * 20,1),
-        PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 300 * 20,1),
-        PotionEffect(PotionEffectType.HEALTH_BOOST, 300 * 20,4)
-    )
-
-
     // Function to prevent players from sleeping
     @EventHandler
     fun playerPreventSleep(event: PlayerBedEnterEvent) {
         // Check if ambassador defeated
         if (MinecraftOdyssey.instance.enderDragonDefeated) {
-            if (MinecraftOdyssey.instance.lunarPhenomenonActive) {
+            if (MinecraftOdyssey.instance.suenPhenomenonActive) {
                 val someWorld = event.player.world
-                if (someWorld.isBedWorks) {
+                if (someWorld == MinecraftOdyssey.instance.mainWorld) {
                     event.player.sendMessage("The night prevents you from sleeping.")
                     event.isCancelled = true
                 }
@@ -44,58 +39,31 @@ object OdysseyPhenomenaListeners : Listener {
     // Main function for creature related spawns regarding phenomena
     @EventHandler
     fun mainEntityPhenomenaSpawning(event: CreatureSpawnEvent) {
-        if (MinecraftOdyssey.instance.lunarPhenomenonActive) {
+        if (MinecraftOdyssey.instance.suenPhenomenonActive) {
             val someWorld = event.entity.world
             if (someWorld.environment == World.Environment.NORMAL) {
-                when (MinecraftOdyssey.instance.currentLunarPhenomenon) {
+                when (MinecraftOdyssey.instance.currentSuenPhenomenon) {
                     // Blue Moon
-                    LunarPhenomena.BLUE_MOON -> {
+                    SuenPhenomena.BLUE_MOON -> {
                         if (event.spawnReason == CreatureSpawnEvent.SpawnReason.NATURAL || event.spawnReason == CreatureSpawnEvent.SpawnReason.REINFORCEMENTS) {
                             event.isCancelled = true
                         }
                     }
                     // Blood Moon
-                    LunarPhenomena.BLOOD_MOON -> {
+                    SuenPhenomena.BLOOD_MOON -> {
                         if (event.spawnReason == CreatureSpawnEvent.SpawnReason.NATURAL || event.spawnReason == CreatureSpawnEvent.SpawnReason.REINFORCEMENTS) {
-                            bloodMoonPhenomenonSpawning(event.entity)
+                            // TODO: Light Level and Y level
+                            SuenPhenomena.BLOOD_MOON.persistentSpawningActives(event.entity)
+                        }
+                    }
+                    SuenPhenomena.DANCE_OF_THE_BIOLUMINESCENT -> {
+                        if (event.spawnReason == CreatureSpawnEvent.SpawnReason.NATURAL || event.spawnReason == CreatureSpawnEvent.SpawnReason.REINFORCEMENTS) {
+                            // TODO: Light Level and Y level
+                            SuenPhenomena.DANCE_OF_THE_BIOLUMINESCENT.persistentSpawningActives(event.entity)
                         }
                     }
                     else -> {
                     }
-                }
-            }
-        }
-    }
-
-    /*---------------------------------------------------------*/
-    private fun bloodMoonPhenomenonSpawning(someEntity: LivingEntity) {
-        someEntity.also {
-            // Naming and Tagging
-            it.customName(Component.text("Blood Moon ${it.name}", TextColor.color(65, 0, 0)))
-            it.scoreboardTags.add("Blood_Moon_Mob")
-            // Effects and Health
-            it.addPotionEffects(bloodMoonEffects)
-            it.health += 20
-            // Random Upgrade
-            val randomUpgrade = (0..100).random()
-            if (60 < randomUpgrade) {
-                val spawnLocation = it.location.clone()
-                val someWorld = it.world
-                if (spawnLocation.y > 68.0) {
-                    var someMob: LivingEntity? = null
-                    when (it) {
-                        is Zombie -> {
-                            it.remove()
-                            someMob = if (90 < randomUpgrade) OdysseyMobs.SAVAGE.createKnight(someWorld, spawnLocation) else OdysseyMobs.SAVAGE.createMob(someWorld, spawnLocation)
-                        }
-                        is Skeleton -> {
-                            it.remove()
-                            someMob = if (90 < randomUpgrade) OdysseyMobs.VANGUARD.createKnight(someWorld, spawnLocation) else OdysseyMobs.VANGUARD.createMob(someWorld, spawnLocation)
-                        }
-                        else -> {
-                        }
-                    }
-                    someMob?.scoreboardTags?.add("Blood_Moon_Mob")
                 }
             }
         }

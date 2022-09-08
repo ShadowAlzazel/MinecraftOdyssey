@@ -15,6 +15,8 @@ import org.bukkit.event.Listener
 import org.bukkit.event.inventory.CraftItemEvent
 import org.bukkit.event.player.PlayerItemConsumeEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 import java.util.*
 
 object OdysseyItemListeners : Listener {
@@ -32,6 +34,15 @@ object OdysseyItemListeners : Listener {
                     }
                     OdysseyRecipes.FRUIT_OF_ERISHKIGAL_RECIPE.result -> {
                         fruitOfErishkigalCrafting(somePlayer)
+                    }
+                    OdysseyRecipes.IRRADIATED_FRUIT_RECIPE.result -> {
+                        with(somePlayer) {
+                            addPotionEffects(listOf(
+                                PotionEffect(PotionEffectType.HUNGER, 20 * 30, 1),
+                                PotionEffect(PotionEffectType.WITHER, 20 * 30, 0),
+                                PotionEffect(PotionEffectType.SLOW_DIGGING, 20 * 30, 1)
+                            ))
+                        }
                     }
                 }
             }
@@ -79,6 +90,43 @@ object OdysseyItemListeners : Listener {
                         else {
                             val erishkigalHealthBoost = AttributeModifier(UUID.fromString("c994412e-9e72-4881-a55f-1f2d1c95f125"), "odyssey_extra_health_erishkigal", 4.0, AttributeModifier.Operation.ADD_NUMBER)
                             playerHealth.addModifier(erishkigalHealthBoost)
+                            // Sound
+                            somePlayer.playSound(somePlayer.location, Sound.UI_TOAST_CHALLENGE_COMPLETE, 2.5F, 0.25F)
+                            somePlayer.playSound(somePlayer.location, Sound.BLOCK_BEACON_ACTIVATE, 2.5F, 0.25F)
+                        }
+                        println(playerHealth.modifiers)
+                    }
+                    OdysseyItems.IRRADIATED_FRUIT.createItemStack(someStackValue) -> {
+                        // Get
+                        val playerHealth = somePlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!
+                        var hasExtraHealth = false
+                        var someHealthModifier: AttributeModifier? = null
+                        // Check modifiers
+                        for (someModifier in playerHealth.modifiers) {
+                            if (someModifier.name == "odyssey_extra_health_irradiated_fruit") {
+                                hasExtraHealth = true
+                                someHealthModifier = someModifier
+                            }
+                        }
+                        // Check if same boosts
+                        if (hasExtraHealth) {
+                            val healthCount = someHealthModifier!!.amount
+                            if (healthCount <= 8.0) {
+                                val irradiatedHealthBoost = AttributeModifier(UUID.fromString("c994412e-9e72-4881-a55f-1f2d1c95f129"), "odyssey_extra_health_irradiated_fruit", 2.0 + healthCount, AttributeModifier.Operation.ADD_NUMBER)
+                                playerHealth.removeModifier(someHealthModifier)
+                                playerHealth.addModifier(irradiatedHealthBoost)
+                                // Sound
+                                somePlayer.playSound(somePlayer.location, Sound.UI_TOAST_CHALLENGE_COMPLETE, 2.5F, 0.25F)
+                                somePlayer.playSound(somePlayer.location, Sound.BLOCK_BEACON_ACTIVATE, 2.5F, 0.25F)
+                            }
+                            else {
+                                somePlayer.sendMessage("${ChatColor.GOLD}You can not consume any more of this substance...")
+                                event.isCancelled = true
+                            }
+                        }
+                        else {
+                            val irradiatedHealthBoost = AttributeModifier(UUID.fromString("c994412e-9e72-4881-a55f-1f2d1c95f129"), "odyssey_extra_health_irradiated_fruit", 2.0, AttributeModifier.Operation.ADD_NUMBER)
+                            playerHealth.addModifier(irradiatedHealthBoost)
                             // Sound
                             somePlayer.playSound(somePlayer.location, Sound.UI_TOAST_CHALLENGE_COMPLETE, 2.5F, 0.25F)
                             somePlayer.playSound(somePlayer.location, Sound.BLOCK_BEACON_ACTIVATE, 2.5F, 0.25F)

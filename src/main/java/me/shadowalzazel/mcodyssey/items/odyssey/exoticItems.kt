@@ -70,6 +70,15 @@ object FruitOfErishkigal : OdysseyItem("Fruit of Erishkigal",
     mapOf(Enchantment.MENDING to 1))
 
 
+// IRRADIATED_FRUIT
+object IrradiatedFruit : OdysseyItem("Irradiated Fruit",
+    Material.APPLE,
+    Component.text("Irradiated Fruit", TextColor.color(255, 84, 255), TextDecoration.ITALIC),
+    listOf(Component.text("A fruit with unusual properties...", TextColor.color(87, 67, 96)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+    CustomModels.IRRADIATED_FRUIT,
+    mapOf(Enchantment.MENDING to 1))
+
+
 // SILMARIL_OF_YGGLADIEL
 object SilmarilOfYggladiel : OdysseyItem("Silmaril Of Yggladiel",
     Material.AMETHYST_CLUSTER,

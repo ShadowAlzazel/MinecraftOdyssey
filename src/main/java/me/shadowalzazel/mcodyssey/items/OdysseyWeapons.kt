@@ -47,11 +47,21 @@ object OdysseyWeapons {
     val IRON_RAPIER = IronRapier
     val DIAMOND_RAPIER = DiamondRapier
 
+    // War hammer
+    val WOODEN_WARHAMMER = WoodenWarhammer
+    val GOLDEN_WARHAMMER = GoldenWarhammer
+    val STONE_WARHAMMER = StoneWarhammer
+    val IRON_WARHAMMER = IronWarhammer
+    val DIAMOND_WARHAMMER = DiamondWarhammer
+
     // Staff
     val BAMBOO_STAFF = BambooStaff
     val BONE_STAFF = BoneStaff
     val WOODEN_STAFF = WoodenStaff
     val BLAZE_ROD_STAFF = BlazeRodStaff
+
+    // Exotics
+    val ABZU_BLADE = AbzuBlade
 
 
 }

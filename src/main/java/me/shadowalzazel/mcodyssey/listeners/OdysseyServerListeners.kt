@@ -9,10 +9,7 @@ import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.event.player.PlayerKickEvent
 import org.bukkit.event.player.PlayerQuitEvent
-import org.bukkit.event.player.PlayerResourcePackStatusEvent
-import java.awt.TextComponent
 
 object OdysseyServerListeners : Listener {
 
@@ -25,7 +22,7 @@ object OdysseyServerListeners : Listener {
 
             player.setResourcePack(
                 "https://www.dropbox.com/s/6hob8iad499vz95/odyssey-resource-pack-test.zip?dl=1",
-                "5b83022a4a142ebee0e39acb4cd00d9a35f41b21",
+                "ba5fd3639f0ab74738198c2cf8390a2d75dceaef",
                 true,
                 Component.text("Minecraft Odyssey requires its respective resource pack to operate! Please download it to begin your journey!", TextColor.color(255, 170, 0))
             )
@@ -52,7 +49,6 @@ object OdysseyServerListeners : Listener {
         val serverName: String = MinecraftOdyssey.instance.config.getString("names.server-name") ?: return
         player.sendMessage("${ChatColor.GRAY}Hello ${player.name}! Welcome!")
         event.joinMessage = ("${ChatColor.GOLD}${player.name} ${ChatColor.YELLOW}has logged into $serverName")
-
 
     }
 
