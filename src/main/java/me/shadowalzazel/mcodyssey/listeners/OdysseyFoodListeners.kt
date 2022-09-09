@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.listeners
 
+import me.shadowalzazel.mcodyssey.assets.CustomModels
 import net.kyori.adventure.text.TextComponent
 import org.bukkit.Material
 import org.bukkit.Particle
@@ -15,52 +16,45 @@ object OdysseyFoodListeners : Listener {
     // Main Function for food related consumption events
     @EventHandler
     fun eatingOdysseyFood(event: PlayerItemConsumeEvent) {
-        if (event.item.hasItemMeta()) {
-            if (event.item.itemMeta.hasLore()) {
+        if (event.item.itemMeta.hasLore()) {
+            if (event.item.itemMeta.hasCustomModelData()) {
                 val somePlayer = event.player
                 val someFood = event.item
                 val foodLore = (someFood.lore()!!.first() as TextComponent).content()
                 var satisfyingFood = true
-
-                when (event.item.type) {
+                when (someFood.type) {
                     Material.COOKIE -> {
                         // Cookie match
-                        when (foodLore) {
-                            "A beetroot cookie!" -> {
-                                val someCookieEffect = PotionEffect(PotionEffectType.INCREASE_DAMAGE, 4 * 20, 0)
-                                somePlayer.addPotionEffect(someCookieEffect)
+                        when (someFood.itemMeta.customModelData) {
+                            CustomModels.BEETROOT_COOKIE -> {
+                                somePlayer.addPotionEffect(PotionEffect(PotionEffectType.INCREASE_DAMAGE, 4 * 20, 0))
                             }
-                            "A pumpkin cookie!" -> {
-                                val someCookieEffect = PotionEffect(PotionEffectType.FAST_DIGGING, 5 * 20, 0)
-                                somePlayer.addPotionEffect(someCookieEffect)
+                            CustomModels.PUMPKIN_COOKIE -> {
+                                somePlayer.addPotionEffect(PotionEffect(PotionEffectType.FAST_DIGGING, 5 * 20, 0))
                             }
-                            "A honey cookie!" -> {
-                                val someCookieEffect = PotionEffect(PotionEffectType.ABSORPTION, 4 * 20, 0)
-                                somePlayer.addPotionEffect(someCookieEffect)
+                            CustomModels.HONEY_COOKIE -> {
+                                somePlayer.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION, 4 * 20, 0))
                             }
-                            "An apple cookie!" -> {
-                                val someCookieEffect = PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 4 * 20, 0)
-                                somePlayer.addPotionEffect(someCookieEffect)
+                            CustomModels.APPLE_COOKIE -> {
+                                somePlayer.addPotionEffect(PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 4 * 20, 0))
                             }
-                            "A berry cookie!" -> {
-                                val someCookieEffect = PotionEffect(PotionEffectType.INCREASE_DAMAGE, 2 * 20, 0)
-                                somePlayer.addPotionEffect(someCookieEffect)
+                            CustomModels.BERRY_COOKIE -> {
+                                somePlayer.addPotionEffect(PotionEffect(PotionEffectType.INCREASE_DAMAGE, 2 * 20, 0))
                             }
-                            "A glow-berry cookie!" -> {
-                                val someCookieEffect = PotionEffect(PotionEffectType.GLOWING, 2 * 20, 0)
-                                somePlayer.addPotionEffect(someCookieEffect)
+                            CustomModels.GLOWBERRY_COOKIE -> {
+                                somePlayer.addPotionEffect(PotionEffect(PotionEffectType.GLOWING, 2 * 20, 0))
                             }
-                            "A melon cookie!" -> {
-                                val someCookieEffect = PotionEffect(PotionEffectType.REGENERATION, 3 * 20, 0)
-                                somePlayer.addPotionEffect(someCookieEffect)
+                            CustomModels.MELON_COOKIE -> {
+                                somePlayer.addPotionEffect(PotionEffect(PotionEffectType.REGENERATION, 3 * 20, 0))
                             }
-                            "A sugar cookie!" -> {
-                                val someCookieEffect = PotionEffect(PotionEffectType.SPEED, 5 * 20, 0)
-                                somePlayer.addPotionEffect(someCookieEffect)
+                            CustomModels.SUGAR_COOKIE -> {
+                                somePlayer.addPotionEffect(PotionEffect(PotionEffectType.SPEED, 5 * 20, 0))
                             }
-                            "A golden cookie!" -> {
-                                val someCookieEffect = PotionEffect(PotionEffectType.ABSORPTION, 15 * 20, 1)
-                                somePlayer.addPotionEffect(someCookieEffect)
+                            CustomModels.GOLDEN_COOKIE -> {
+                                somePlayer.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION, 15 * 20, 1))
+                            }
+                            CustomModels.CHORUS_COOKIE -> {
+                                somePlayer.teleport(somePlayer.location.clone().add(((0..50).random().div(10.0)), 8.0, ((0..50).random().div(10.0))))
                             }
                         }
                     }

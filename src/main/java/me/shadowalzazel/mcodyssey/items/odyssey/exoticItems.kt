@@ -71,6 +71,13 @@ object FruitOfErishkigal : OdysseyItem("Fruit of Erishkigal",
 
 
 // IRRADIATED_FRUIT
+object TotemOfVexing : OdysseyItem("Totem of Vexing",
+    Material.MILK_BUCKET,
+    Component.text("Totem of Vexing", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
+    listOf(Component.text("A totem with vexing properties", TextColor.color(112, 123, 153)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+    CustomModels.TOTEM_OF_VEXING)
+
+
 object IrradiatedFruit : OdysseyItem("Irradiated Fruit",
     Material.APPLE,
     Component.text("Irradiated Fruit", TextColor.color(255, 84, 255), TextDecoration.ITALIC),

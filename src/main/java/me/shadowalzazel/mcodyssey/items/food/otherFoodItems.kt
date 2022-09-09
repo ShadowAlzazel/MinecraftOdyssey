@@ -20,3 +20,9 @@ object SalmonRollSushi : OdysseyItem("Salmon Roll",
     Component.text("Salmon Roll", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
     listOf(Component.text("Salmon Roll Sushi!", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     CustomModels.SALMON_ROLL)
+
+object CrystalCandy: OdysseyItem("Crystal Candy",
+    Material.SWEET_BERRIES,
+    Component.text("Crystal Candy", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
+    listOf(Component.text("A crystalline candy...", TextColor.color(179, 142, 243)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+    CustomModels.CRYSTAL_CANDY)

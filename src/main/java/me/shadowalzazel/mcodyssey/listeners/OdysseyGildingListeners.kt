@@ -2,13 +2,12 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import com.destroystokyo.paper.event.inventory.PrepareResultEvent
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.assets.CustomModels
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.items.OdysseyBooks
 import me.shadowalzazel.mcodyssey.items.misc.GildedBook
 import me.shadowalzazel.mcodyssey.items.utilty.OdysseyItem
-import me.shadowalzazel.mcodyssey.assets.CustomModels
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
@@ -44,7 +43,7 @@ object OdysseyGildingListeners : Listener {
 
 
     // Get slots based on material
-    private fun createSlotCounts(itemType: Material): List<Int> {
+    private fun createSlotCounts(itemType: Material): Pair<Int, Int> {
         var gildedSlots = 0
         val enchantSlots = when(itemType) {
             Material.STONE_SWORD, Material.STONE_AXE, Material.STONE_PICKAXE, Material.STONE_SHOVEL, Material.STONE_HOE,
@@ -89,8 +88,7 @@ object OdysseyGildingListeners : Listener {
                 2
             }
         }
-        println(listOf(enchantSlots, gildedSlots))
-        return listOf(enchantSlots, gildedSlots)
+        return Pair(enchantSlots, gildedSlots)
     }
 
     // Create new lore
@@ -138,6 +136,56 @@ object OdysseyGildingListeners : Listener {
         return fullLore
     }
 
+    // Get Compatible sets
+    private fun compatibleSet(itemType: Material): Set<OdysseyEnchantment> {
+        when(itemType) {
+            Material.NETHERITE_SWORD, Material.DIAMOND_SWORD, Material.IRON_SWORD, Material.GOLDEN_SWORD, Material.STONE_SWORD, Material.WOODEN_SWORD,
+            Material.NETHERITE_AXE, Material.DIAMOND_AXE, Material.IRON_AXE, Material.GOLDEN_AXE, Material.STONE_AXE, Material.WOODEN_AXE -> {
+                return OdysseyEnchantments.meleeSet
+            }
+            Material.NETHERITE_LEGGINGS, Material.DIAMOND_LEGGINGS, Material.IRON_LEGGINGS, Material.CHAINMAIL_LEGGINGS, Material.LEATHER_LEGGINGS -> {
+                return OdysseyEnchantments.armorSet
+            }
+            Material.NETHERITE_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.IRON_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, Material.LEATHER_CHESTPLATE -> {
+                return OdysseyEnchantments.armorSet
+            }
+            Material.NETHERITE_BOOTS, Material.DIAMOND_BOOTS, Material.IRON_BOOTS, Material.CHAINMAIL_BOOTS, Material.LEATHER_BOOTS -> {
+                return OdysseyEnchantments.armorSet
+            }
+            Material.NETHERITE_HELMET, Material.DIAMOND_HELMET, Material.IRON_HELMET, Material.CHAINMAIL_HELMET, Material.LEATHER_HELMET -> {
+                return OdysseyEnchantments.armorSet
+            }
+            Material.BOW, Material.CROSSBOW -> {
+                return OdysseyEnchantments.rangedSet
+            }
+            Material.ELYTRA, Material.SHIELD -> {
+                return OdysseyEnchantments.miscSet
+            }
+            else -> {
+                return OdysseyEnchantments.miscSet
+            }
+        }
+    }
+
+    // Rolls for gilded enchants
+    private fun rollGilded(enchantingItem: ItemStack, gildedSlots: Int, tableEnchants: Map<Enchantment, Int>): MutableMap<Enchantment, Int> {
+        val addedEnchants = tableEnchants.toMutableMap()
+        val newGildedEnchants = mutableMapOf<Enchantment, Int>()
+        for (x in 1..gildedSlots) {
+            if (5 >= (1..10).random()) {
+                val possibleEnchant = compatibleSet(enchantingItem.type).random()
+                if (possibleEnchant in addedEnchants) { break }
+                var conflict = false
+                addedEnchants.keys.forEach { if (possibleEnchant.conflictsWith(it)) { conflict = true } }
+                if (possibleEnchant.canEnchantItem(enchantingItem) && !conflict) {
+                    val randomInt = (1..possibleEnchant.maxLevel).random()
+                    addedEnchants[possibleEnchant] = randomInt
+                    newGildedEnchants[possibleEnchant] = randomInt
+                }
+            }
+        }
+        return newGildedEnchants
+    }
 
     // Main handler for grindstone
     @EventHandler
@@ -181,7 +229,6 @@ object OdysseyGildingListeners : Listener {
     // TODO: Reveal/Apply Slots on _ table
     // Bug where if added name before slots removes name
 
-
     // Main handler for enchant event
     @EventHandler
     fun odysseyEnchantmentHandler(event: EnchantItemEvent) {
@@ -191,77 +238,48 @@ object OdysseyGildingListeners : Listener {
             if (item!!.type != Material.BOOK) {
                 if (item!!.lore()?.contains(loreSeparator) != true) {
                     // Create new slots
-                    val slotList = createSlotCounts(item!!.type)
-                    val enchantSlots = slotList[0]
-                    val gildedSlots = slotList[1]
+                    val someSlots = createSlotCounts(item!!.type)
                     // Remove excess enchants
-                    val newEnchants = event.enchantsToAdd.also {
+                    val newEnchants = event.enchantsToAdd.also { enchants ->
                         var counter = 0
                         val enchantsToRemove = mutableListOf<Enchantment>()
-                        for (enchant in it) {
-                            if (counter >= enchantSlots) { enchantsToRemove.add(enchant.key) }
+                        enchants.keys.forEach { enchantKey ->
+                            if (counter >= someSlots.first) { enchantsToRemove.add(enchantKey) }
                             counter += 1
                         }
-                        for (removed in enchantsToRemove) { it.remove(removed) }
-                    }
-                    if ((25 + (gildedSlots * 25) >= (0..100).random()) && MinecraftOdyssey.instance.ambassadorDefeated && gildedSlots > 1) {
-                        val possibleEnchant = OdysseyEnchantments.meleeSet.random()
-                        var conflict = false
-                        for (newKey in newEnchants.keys) { if (possibleEnchant.conflictsWith(newKey)) { conflict = true } }
-                        if (possibleEnchant.canEnchantItem(item!!) && !conflict) {
-                            newEnchants[possibleEnchant] = (1..possibleEnchant.maxLevel).random()
-                        }
+                        for (removed in enchantsToRemove) { enchants.remove(removed) }
+                        if (someSlots.second >= 1) { rollGilded(item!!, someSlots.second, enchants).forEach { gilded -> enchants[gilded.key] = gilded.value } }
                     }
                     // Create new lore and hide vanilla enchant display
                     item!!.addItemFlags(ItemFlag.HIDE_ENCHANTS)
-                    item!!.lore(createEnchantSlotsLore(enchantSlots, gildedSlots, newEnchants))
+                    item!!.lore(createEnchantSlotsLore(someSlots.first, someSlots.second, newEnchants))
                 }
                 // Adds enchants to slots
                 else if (item!!.lore()?.contains(loreSeparator) == true) {
-                    val newLore = item!!.lore()!!.also { lore ->
-                        val enchantSlots = lore.count{ it == emptyEnchantSlot }
-                        val gildedSlots = lore.count{ it == emptyGildedSlot }
-                        val totalSlots = enchantSlots + gildedSlots
-                        val infoIndex = lore.indexOf(loreSeparator) - 1
-
-                        // Loop over all enchants to either add lore or add to removal enchants if over enchant slots
-                        val enchantsToRemove = mutableListOf<Enchantment>()
-                        val enchantsToAdd = event.enchantsToAdd
+                    val itemLore = item!!.lore()!!
+                    val enchantSlots = itemLore.count{ it == emptyEnchantSlot }
+                    val gildedSlots = itemLore.count{ it == emptyGildedSlot }
+                    println("Unmodified Enchants: ${event.enchantsToAdd}")
+                    val newEnchants = event.enchantsToAdd.also { enchants ->
                         var counter = 0
-                        var usedSlots = 0
-                        // For non odyssey enchants
-                        for (enchant in enchantsToAdd) {
-                            if (usedSlots < enchantSlots) {
-                                if (enchant.key !is OdysseyEnchantment && lore[infoIndex + 2 + counter] == emptyEnchantSlot) {
-                                    lore[infoIndex + 2 + counter] = enchant.key.displayName(enchant.value).color(experienceEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-                                }
-                                usedSlots += 1
-                            }
-                            else {
-                                enchantsToRemove.add(enchant.key)
-                            }
+                        val enchantsToRemove = mutableListOf<Enchantment>()
+                        enchants.keys.forEach { enchantKey ->
+                            if (counter >= gildedSlots) { enchantsToRemove.add(enchantKey) }
                             counter += 1
                         }
-                        for (removed in enchantsToRemove) { event.enchantsToAdd.remove(removed) }
-                        // Do a rng check for gilded enchant if empty slot
-                        if (gildedSlots > 1) {
-                            if ((25 + (gildedSlots * 25) >= (0..100).random()) && MinecraftOdyssey.instance.ambassadorDefeated) {
-                                // TODO: Separate Sets per item
-                                val possibleEnchant = OdysseyEnchantments.meleeSet.random()
-                                var conflict = false
-                                for (newKey in enchantsToAdd.keys) { if (possibleEnchant.conflictsWith(newKey)) { conflict = true } }
-                                if (possibleEnchant.canEnchantItem(item!!) && !conflict) {
-                                    val randomValue =  (1..possibleEnchant.maxLevel).random()
-                                    enchantsToAdd[possibleEnchant] = randomValue
-                                    val emptyGildedIndex = lore.indexOf(emptyGildedSlot)
-                                    lore[emptyGildedIndex] = possibleEnchant.displayName(randomValue).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-                                    usedSlots += 1
-                                }
-                            }
+                        for (removed in enchantsToRemove) { enchants.remove(removed) }
+                        if (gildedSlots >= 1) { rollGilded(item!!, gildedSlots, enchants).forEach { gilded -> enchants[gilded.key] = gilded.value } }
+                    }
+                    // Create new lore and hide vanilla enchant display
+                    item!!.addItemFlags(ItemFlag.HIDE_ENCHANTS)
+                    val newLore = (createEnchantSlotsLore(enchantSlots, gildedSlots, newEnchants).toMutableList()).also {
+                        if (itemLore.contains(Component.text(""))) {
+                            it.add(Component.text(""))
+                            it.add(itemLore.last())
                         }
-                        lore[infoIndex] = Component.text("Enchantment Slots: [$usedSlots/$totalSlots]", experienceEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                     }
                     item!!.lore(newLore)
+                    println("New Enchants: $newEnchants")
                 }
             }
             // TODO: Make soul/infusion table later check structure
@@ -272,16 +290,16 @@ object OdysseyGildingListeners : Listener {
                         event.isCancelled = true
                         var randomTome: OdysseyItem? = null
                         when ((0..100).random() - event.expLevelCost) {
-                            in -30..15 -> {
+                            in -30..5 -> {
                                 randomTome = listOf(OdysseyBooks.TOME_OF_EXPENDITURE, OdysseyBooks.TOME_OF_REPLICATION).random()
                             }
-                            in 16..40 -> {
+                            in 6..30 -> {
                                 randomTome = listOf(OdysseyBooks.TOME_OF_HARMONY, OdysseyBooks.TOME_OF_PROMOTION).random()
                             }
-                            in 41..71 -> {
+                            in 31..65 -> {
                                 randomTome = listOf(OdysseyBooks.TOME_OF_BANISHMENT, OdysseyBooks.TOME_OF_EMBRACE).random()
                             }
-                            in 71..100 -> {
+                            in 66..100 -> {
                                 randomTome = listOf(OdysseyBooks.TOME_OF_DISCHARGE).random()
                             }
                         }

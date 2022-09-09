@@ -6,7 +6,7 @@ object CustomModels {
 
     // Apples
     const val GREEN_APPLE: Int = 6904511
-    const val CANDY_APPLE: Int = 6904512
+    const val CANDY_APPLE: Int = 6904512 // Weird effects required crystal candy, sweet, glow, chorus
 
     // Breads
     const val SUGARY_BREAD: Int = 6904710
@@ -22,8 +22,10 @@ object CustomModels {
     const val MELON_COOKIE: Int = 6905046
     const val SUGAR_COOKIE: Int = 6905047
     const val GOLDEN_COOKIE: Int = 6905048
+    const val CHORUS_COOKIE: Int = 6905049
 
     // Other
+    const val CRYSTAL_CANDY: Int = 6905868
     const val BACON: Int = 6908047
     const val SALMON_ROLL: Int = 6908048
 
@@ -46,8 +48,6 @@ object CustomModels {
     const val IDESCINE_ESSENCE: Int = 6905465
     const val IRRADIATED_SHARD: Int = 6905466
     const val IRRADIATED_ROD: Int = 6905467
-    const val IRRADIATED_FRUIT: Int = 6905468
-
     /* --------------------------------EXOTIC-ITEMS--------------------------------- */
 
     const val BABEL_ANNULUS_SCHEMATICS: Int = 6900068
@@ -57,12 +57,15 @@ object CustomModels {
     const val NEUTRONIUM_BARK_INGOT: Int = 6900565
     const val FRUIT_OF_ERISHKIGAL: Int = 6900555
     const val SILMARIL_OF_YGGLADIEL: Int = 6900556
+    const val IRRADIATED_FRUIT: Int = 6905468
+    const val TOTEM_OF_VEXING: Int = 6905303
 
     /* --------------------------------ENIGMATIC--------------------------------------*/
 
     const val SOUL_CRYSTAL: Int = 6906613
     const val ECTOPLASM: Int = 6906614
     const val SORROWING_SOUL: Int = 6906615
+    const val COAGULATED_BLOOD: Int = 6906616
 
     /* --------------------------------BOOKS--------------------------------- */
 

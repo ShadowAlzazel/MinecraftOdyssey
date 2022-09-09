@@ -11,16 +11,15 @@ import org.bukkit.potion.PotionEffectType
 object BlueMoon : OdysseyPhenomenon("Blood Moon",
     PhenomenonTypes.SUEN,
     12,
-    3) {
+    3,
+    10) {
 
     override fun successfulActivation(someWorld: World) {
         super.successfulActivation(someWorld)
         println("A blue moon is happening at ${someWorld.name}!")
 
         // Blood Moon Effects
-        val blueMoonEffects = listOf(
-            PotionEffect(PotionEffectType.NIGHT_VISION, 12000, 0),
-            PotionEffect(PotionEffectType.LUCK, 12000, 1))
+        val blueMoonEffects = listOf(PotionEffect(PotionEffectType.NIGHT_VISION, 12000, 0))
         for (somePlayer in someWorld.players) {
             with(somePlayer) {
                 addPotionEffects(blueMoonEffects)

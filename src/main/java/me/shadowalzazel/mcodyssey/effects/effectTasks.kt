@@ -1,16 +1,9 @@
 package me.shadowalzazel.mcodyssey.effects
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
-import org.bukkit.Color
-import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Particle
-import org.bukkit.Particle.DustOptions
 import org.bukkit.entity.LivingEntity
-import org.bukkit.entity.Player
-import org.bukkit.util.Vector
-import org.bukkit.potion.PotionEffect
-import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
 
 // ABLAZE task
@@ -175,13 +168,13 @@ class FreezingTask(private val freezingVictim: LivingEntity, private val freezeF
 
 // HONEYED task
 class HoneyedTask(private val honeyedVictim: LivingEntity, private val honeyFactor: Int, private val honeyCount: Int) : BukkitRunnable() {
-    private var honeyCooldown = System.currentTimeMillis()
+    private var honeyCooldown = System.currentTimeMillis() // TODO: IS this shared??
     private var counter = 0
     override fun run() {
         honeyedVictim.also {
             counter += 1
             // Check if still honeyed
-            if ("Honeyed" !in honeyedVictim.scoreboardTags) { this.cancel() }
+            if ("Honeyed" !in it.scoreboardTags) { this.cancel() }
 
             // Particles
             with(it.world) {
@@ -196,8 +189,8 @@ class HoneyedTask(private val honeyedVictim: LivingEntity, private val honeyFact
 
             // Timing
             val timeElapsed = System.currentTimeMillis() - honeyCooldown
-            if (honeyCount < counter || honeyedVictim.health <= 1.0 || timeElapsed > (honeyCount / 2 ) * 1000) {
-                if (!honeyedVictim.isDead) { honeyedVictim.scoreboardTags.remove("Honeyed") }
+            if (honeyCount < counter || it.health <= 1.0 || timeElapsed > (honeyCount / 2 ) * 1000) {
+                if (!it.isDead) { it.scoreboardTags.remove("Honeyed") }
                 this.cancel()
             }
 
@@ -206,3 +199,42 @@ class HoneyedTask(private val honeyedVictim: LivingEntity, private val honeyFact
     }
 }
 
+
+// THORNS TASK
+class ThornsTask(private val thornEntity: LivingEntity, private val thornCount: Int) : BukkitRunnable() {
+    private var thornsCooldown = System.currentTimeMillis()
+    private var counter = 0
+
+    override fun run() {
+        thornEntity.also {
+            counter += 1
+            if (OdysseyEffectTags.THORNY !in it.scoreboardTags) { this.cancel() }
+            val timeElapsed = System.currentTimeMillis() - thornsCooldown
+            if (thornCount < counter || timeElapsed > thornCount * 1000) {
+                it.scoreboardTags.remove(OdysseyEffectTags.THORNY)
+                this.cancel()
+            }
+        }
+    }
+
+}
+
+
+// PUFFY N PRICKLY TASK
+class PuffyPricklyTask(private val thornEntity: LivingEntity, private val puffyPricklyCount: Int) : BukkitRunnable() {
+    private var puffyPricklyCooldown = System.currentTimeMillis()
+    private var counter = 0
+
+    override fun run() {
+        thornEntity.also {
+            counter += 1
+            if (OdysseyEffectTags.PUFFY_PRICKLY !in it.scoreboardTags) { this.cancel() }
+            val timeElapsed = System.currentTimeMillis() - puffyPricklyCooldown
+            if (puffyPricklyCount < counter || timeElapsed > puffyPricklyCount * 1000) {
+                it.scoreboardTags.remove(OdysseyEffectTags.PUFFY_PRICKLY)
+                this.cancel()
+            }
+        }
+    }
+
+}

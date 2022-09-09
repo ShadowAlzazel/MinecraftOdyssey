@@ -10,10 +10,11 @@ import org.bukkit.World
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object BlazingSouls : OdysseyPhenomenon("Starry Night",
+object BlazingSouls : OdysseyPhenomenon("Blazing Souls",
     PhenomenonTypes.UTU,
     35,
     5,
+    20,
     55,
     Component.text("There is a faint glow emanating from the flora...")) {
 

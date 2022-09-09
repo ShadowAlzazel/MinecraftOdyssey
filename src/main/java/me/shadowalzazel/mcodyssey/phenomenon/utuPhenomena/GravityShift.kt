@@ -11,10 +11,11 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object GravityShift : OdysseyPhenomenon("Starry Night",
+object GravityShift : OdysseyPhenomenon("Gravity shift",
     PhenomenonTypes.SUEN,
     30,
     4,
+    10,
     55,
     Component.text("It is as the world is pulling on you less...")) {
 

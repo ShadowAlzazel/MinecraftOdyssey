@@ -122,7 +122,7 @@ object PotionOfDouseRecipe : OdysseyAlchemyCauldronRecipe(
         ItemStack(Material.CHARCOAL, 4),
         ItemStack(Material.NETHERRACK, 4),
         AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1)),
-    3, Material.SOUL_FIRE)
+    3, Material.FIRE)
 
 // POTION_OF_ABLAZE_RECIPE
 object PotionOfAblazeRecipe : OdysseyAlchemyCauldronRecipe(
@@ -133,6 +133,24 @@ object PotionOfAblazeRecipe : OdysseyAlchemyCauldronRecipe(
         ItemStack(Material.HONEY_BLOCK, 1),
         AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1)),
     4, Material.FIRE)
+
+// POTION_OF_THORNS_RECIPE
+object PotionOfThornsRecipe : OdysseyAlchemyCauldronRecipe(
+    AlchemyPotions.POTION_OF_THORNS,
+    listOf(
+        ItemStack(Material.PRISMARINE_SHARD, 6),
+        ItemStack(Material.CACTUS, 4),
+        AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1)),
+    3, Material.FIRE)
+
+// PUFFY_PRICKLY_POTION_RECIPE
+object PuffyPricklyPotionRecipe : OdysseyAlchemyCauldronRecipe(
+    AlchemyPotions.PUFFY_PRICKLY_POTION,
+    listOf(
+        ItemStack(Material.PUFFERFISH, 2),
+        ItemStack(Material.YELLOW_WOOL, 2),
+        AlchemyPotions.POTION_OF_THORNS.createItemStack(1)),
+    3, Material.SOUL_FIRE)
 
 // BOTTLED_SOULS_RECIPE
 object BottledSoulsRecipe : OdysseyAlchemyCauldronRecipe(

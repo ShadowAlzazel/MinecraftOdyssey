@@ -10,10 +10,11 @@ import org.bukkit.World
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object CometSighting : OdysseyPhenomenon("Starry Night",
+object CometSighting : OdysseyPhenomenon("Comet Sighting",
     PhenomenonTypes.UTU,
     40,
     5,
+    25,
     55,
     Component.text("A faint object is seen in the sky...")) {
 

@@ -3,15 +3,17 @@ package me.shadowalzazel.mcodyssey.phenomenon.utility
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import net.kyori.adventure.text.Component
 import org.bukkit.World
-import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Player
 
-open class OdysseyPhenomenon(internal val phenomenonName: String,
-                             val phenomenonType: PhenomenonTypes,
-                             private var occurrenceRate: Int,
-                             private val growthRate: Int,
-                             private val warningThreshold: Int? = null,
-                             private val warningMessage: Component? = null) {
+open class OdysseyPhenomenon(
+    private val phenomenonName: String,
+    val phenomenonType: PhenomenonTypes,
+    private var occurrenceRate: Int,
+    private val growthRate: Int,
+    private val resetRate: Int,
+    private val warningThreshold: Int? = null,
+    private val warningMessage: Component? = null) {
 
     private val failMessages: Map<PhenomenonTypes, List<String>> = mutableMapOf(
         PhenomenonTypes.UTU to listOf("An uneventful day proceeds...",
@@ -24,8 +26,12 @@ open class OdysseyPhenomenon(internal val phenomenonName: String,
         PhenomenonTypes.ABZU to listOf("No events follow...")
     )
 
+    fun criticalWarning(): Boolean {
+        return if (warningThreshold != null) { occurrenceRate > warningThreshold } else { false }
+    }
 
-    fun rollActivation(someWorld: World, modifier: Int): Boolean {
+
+    fun rollActivation(someWorld: World, modifier: Int = 0): Boolean {
         return if (occurrenceRate > ((0..100).random() + modifier)) {
             println("$phenomenonName ${phenomenonType}-Phenomenon activated at $someWorld")
             successfulActivation(someWorld)
@@ -38,6 +44,7 @@ open class OdysseyPhenomenon(internal val phenomenonName: String,
     }
 
     open fun successfulActivation(someWorld: World) {
+        occurrenceRate = resetRate
         return
     }
 
@@ -49,11 +56,12 @@ open class OdysseyPhenomenon(internal val phenomenonName: String,
         occurrenceRate += growthRate
 
         // Check if event has great chance of occurring
-        if (warningThreshold != null) {
-            if (occurrenceRate > warningThreshold) {
-                for (somePlayer in someWorld.players) { somePlayer.sendMessage(warningMessage!!) }
-            }
-        }
+        if (criticalWarning()) { criticalityActivation(someWorld.players) }
+
+    }
+
+    open fun criticalityActivation(somePlayers: MutableList<Player>) {
+        somePlayers.forEach { it.sendMessage(warningMessage!!) }
     }
 
     open fun persistentPlayerActives() {

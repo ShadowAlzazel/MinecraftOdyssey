@@ -10,10 +10,11 @@ import org.bukkit.World
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object SpiritsRelease : OdysseyPhenomenon("Starry Night",
+object SpiritsRelease : OdysseyPhenomenon("Spirits Release",
     PhenomenonTypes.SUEN,
     45,
     5,
+    9,
     55,
     Component.text("The animals seem restless...")) {
 

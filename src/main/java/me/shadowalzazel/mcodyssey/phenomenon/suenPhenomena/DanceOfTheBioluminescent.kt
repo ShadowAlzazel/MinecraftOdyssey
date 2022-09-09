@@ -15,6 +15,7 @@ object DanceOfTheBioluminescent : OdysseyPhenomenon("Dance of the Bioluminescent
     PhenomenonTypes.SUEN,
     45,
     5,
+    30,
     55,
     Component.text("There is a faint glow emanating from the flora...")) {
 

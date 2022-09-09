@@ -70,3 +70,10 @@ object GoldenCookie : OdysseyItem("Golden Cookie",
     Component.text("Golden Cookie", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
     listOf(Component.text("A golden cookie!", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     CustomModels.GOLDEN_COOKIE)
+
+// CHORUS_COOKIE
+object ChorusCookie : OdysseyItem("Chorus Cookie",
+    Material.COOKIE,
+    Component.text("Chorus Cookie", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
+    listOf(Component.text("A chorus cookie!", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+    CustomModels.CHORUS_COOKIE)

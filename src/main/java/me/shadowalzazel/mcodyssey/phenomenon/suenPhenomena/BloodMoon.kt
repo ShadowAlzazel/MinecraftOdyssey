@@ -19,7 +19,8 @@ import org.bukkit.potion.PotionEffectType
 object BloodMoon : OdysseyPhenomenon("Blood Moon",
     PhenomenonTypes.SUEN,
     12,
-    3) {
+    3,
+    10) {
 
     private val bloodMoonMobEffects = listOf(
         PotionEffect(PotionEffectType.INCREASE_DAMAGE, 300 * 20,1),
