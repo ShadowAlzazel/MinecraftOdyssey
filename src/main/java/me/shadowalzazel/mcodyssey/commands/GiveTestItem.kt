@@ -4,6 +4,7 @@ import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.items.OdysseyBooks
 import me.shadowalzazel.mcodyssey.items.OdysseyItems
 import me.shadowalzazel.mcodyssey.items.OdysseyWeapons
+import me.shadowalzazel.mcodyssey.items.misc.ArcaneBook
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -77,6 +78,12 @@ object GiveTestItem : CommandExecutor {
                     }
                     "abzu_blade" -> {
                         sender.inventory.addItem(OdysseyWeapons.ABZU_BLADE.createItemStack(1))
+                    }
+                    "totem_of_vexing" -> {
+                        sender.inventory.addItem(OdysseyItems.TOTEM_OF_VEXING.createItemStack(1))
+                    }
+                    "arcane_book" -> {
+                        sender.inventory.addItem(OdysseyBooks.ARCANE_BOOK.createItemStack(1))
                     }
                     else -> {
                         return false

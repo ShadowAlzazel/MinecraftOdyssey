@@ -5,7 +5,7 @@ import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
-// Katana
+// Rapier
 open class Rapier(rapierName: String, rapierMaterial: Material, rapierCustomModel: Int, private val attackDamage: Double, private val attackSpeed: Double) :
     OdysseyItem(rapierName, rapierMaterial, Component.text(rapierName), customModel = rapierCustomModel) {
 

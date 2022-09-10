@@ -47,6 +47,14 @@ object WeaponRecipes {
     private val IRON_RAPIER_RECIPE = createIronRapierRecipe()
     private val DIAMOND_RAPIER_RECIPE = createDiamondRapierRecipe()
 
+
+    private val IRON_CUTLASS_RECIPE = createIronCutlassRecipe()
+
+    private val IRON_SABER_RECIPE = createIronSaberRecipe()
+
+    private val IRON_HALBERD_RECIPE = createIronHalberdRecipe()
+
+
     // Warhammer Recipes
     private val IRON_WARHAMMER_RECIPE = createIronWarhammerRecipe()
 
@@ -65,6 +73,9 @@ object WeaponRecipes {
         WOODEN_SPEAR_RECIPE, GOLDEN_SPEAR_RECIPE, STONE_SPEAR_RECIPE, IRON_SPEAR_RECIPE, DIAMOND_SPEAR_RECIPE,
         WOODEN_DAGGER_RECIPE, GOLDEN_DAGGER_RECIPE, STONE_DAGGER_RECIPE, IRON_DAGGER_RECIPE, DIAMOND_DAGGER_RECIPE,
         WOODEN_RAPIER_RECIPE, GOLDEN_RAPIER_RECIPE, STONE_RAPIER_RECIPE, IRON_RAPIER_RECIPE, DIAMOND_RAPIER_RECIPE,
+        IRON_CUTLASS_RECIPE,
+        IRON_SABER_RECIPE,
+        IRON_HALBERD_RECIPE,
         IRON_WARHAMMER_RECIPE,
         BAMBOO_STAFF_RECIPE, BONE_STAFF_RECIPE, WOODEN_STAFF_RECIPE, BLAZE_ROD_STAFF_RECIPE
     )
@@ -348,7 +359,44 @@ object WeaponRecipes {
         return someRecipe
     }
 
-    /*----------------------------------------RAPIERS-----------------------------------------*/
+
+    /*----------------------------------------CUTLASSES-----------------------------------------*/
+    private fun createIronCutlassRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.IRON_CUTLASS.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "ironcutlass"), someResult).apply {
+            shape("  X", " X ", "YZ ")
+            setIngredient('X', Material.IRON_INGOT)
+            setIngredient('Y', Material.STICK)
+            setIngredient('Z', Material.GOLD_INGOT)
+        }
+        return someRecipe
+    }
+
+    /*----------------------------------------SABERS-----------------------------------------*/
+    private fun createIronSaberRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.IRON_SABER.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "ironsaber"), someResult).apply {
+            shape("X  ", " X ", " Y ")
+            setIngredient('X', Material.IRON_INGOT)
+            setIngredient('Y', Material.STICK)
+        }
+        return someRecipe
+    }
+
+    /*----------------------------------------HALBERDS-----------------------------------------*/
+    private fun createIronHalberdRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.IRON_HALBERD.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "ironhalberd"), someResult).apply {
+            shape(" ZX", " YZ", "Y  ")
+            setIngredient('X', Material.IRON_INGOT)
+            setIngredient('Z', Material.IRON_NUGGET)
+            setIngredient('Y', Material.STICK)
+        }
+        return someRecipe
+    }
+
+
+    /*----------------------------------------WARHAMMERS-----------------------------------------*/
 
     private fun createIronWarhammerRecipe(): ShapedRecipe {
         val someResult = OdysseyWeapons.IRON_WARHAMMER.createItemStack(1)

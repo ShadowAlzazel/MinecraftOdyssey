@@ -4,16 +4,19 @@ import me.shadowalzazel.mcodyssey.phenomenon.utility.OdysseyPhenomenon
 import me.shadowalzazel.mcodyssey.phenomenon.utility.PhenomenonTypes
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
+import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.World
+import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object ShimmerIntoxication : OdysseyPhenomenon("Starry Night",
+object ShimmerIntoxication : OdysseyPhenomenon("Shimmer Intoxication",
     PhenomenonTypes.SUEN,
     35,
     5,
+    15,
     55,
     Component.text("There are rumors of Shimmer being traded nearby...")) {
 
@@ -29,10 +32,11 @@ object ShimmerIntoxication : OdysseyPhenomenon("Starry Night",
         for (somePlayer in someWorld.players) {
             with(somePlayer) {
                 addPotionEffects(shimmerEffects)
-                sendMessage(Component.text("You don't remember what happened but there are empty bottles of shimmer in you hand", TextColor.color(56, 127, 232)))
-                spawnParticle(Particle.SPIT, location, 15, 0.5, 0.5, 0.5)
-                spawnParticle(Particle.EXPLOSION_NORMAL, location, 5, 0.5, 0.5, 0.5)
-                playSound(location, Sound.ITEM_TRIDENT_RIPTIDE_3, 2.5F, 1.5F)
+                sendMessage(Component.text("You don't remember what happened but there are empty bottles of shimmer in you hand", TextColor.color(78, 0, 161)))
+                somePlayer.inventory.addItem(ItemStack(Material.GLASS_BOTTLE, 2))
+                spawnParticle(Particle.SPELL_WITCH, location, 55, 0.5, 0.5, 0.5)
+                spawnParticle(Particle.SPELL_MOB_AMBIENT, location, 35, 0.5, 0.5, 0.5)
+                playSound(location, Sound.ENTITY_GENERIC_DRINK, 2.5F, 1.5F)
             }
         }
     }

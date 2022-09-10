@@ -109,7 +109,7 @@ object MeleeListeners : Listener {
                         OdysseyEnchantments.HEMORRHAGE -> {
                             if (!hemorrhageCooldown.containsKey(someDamager.uniqueId)) { hemorrhageCooldown[someDamager.uniqueId] = 0L }
                             val timeElapsed: Long = System.currentTimeMillis() - hemorrhageCooldown[someDamager.uniqueId]!!
-                            if (timeElapsed > 3.5 * 1000) {
+                            if (timeElapsed > 3.0 * 1000) {
                                 hemorrhageCooldown[someDamager.uniqueId] = System.currentTimeMillis()
                                 hemorrhageEnchantment(someWeapon, someVictim)
                             }
@@ -126,7 +126,7 @@ object MeleeListeners : Listener {
                         OdysseyEnchantments.WHIRLWIND -> {
                             if (!whirlwindCooldown.containsKey(someDamager.uniqueId)) { whirlwindCooldown[someDamager.uniqueId] = 0L }
                             val timeElapsed: Long = System.currentTimeMillis() - whirlwindCooldown[someDamager.uniqueId]!!
-                            if (timeElapsed > 3.5 * 1000) {
+                            if (timeElapsed > 3.0 * 1000) {
                                 whirlwindCooldown[someDamager.uniqueId] = System.currentTimeMillis()
                                 whirlwindEnchantment(event, someDamager, someVictim, someWeapon)
                             }
@@ -383,11 +383,9 @@ object MeleeListeners : Listener {
         val enchantmentStrength = damagerWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.GUARDING_STRIKE)
 
         // Effects
-        val guardingPose = PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, (2 + (enchantmentStrength * 2)) * 20, 0)
+        val guardingPose = PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, (2 + (enchantmentStrength * 3)) * 20, 0)
         eventKiller.addPotionEffect(guardingPose)
         // Particles and Sounds
-
-
 
         eventKiller.world.spawnParticle(Particle.SCRAPE, eventVictim.location, 35, 1.0, 0.5, 1.0)
         eventKiller.world.spawnParticle(Particle.ELECTRIC_SPARK, eventVictim.location, 35, 1.0, 0.5, 1.0)

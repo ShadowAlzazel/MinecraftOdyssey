@@ -14,6 +14,7 @@ object SolarFlare : OdysseyPhenomenon("Starry Night",
     PhenomenonTypes.SUEN,
     25,
     4,
+    7,
     55,
     Component.text("The day star seems brighter than usual...")) {
 
@@ -22,13 +23,13 @@ object SolarFlare : OdysseyPhenomenon("Starry Night",
         println("A Solar Flare has hit at ${someWorld.name}!")
 
         // Solar Flare Effects
-        val shimmerEffects = listOf(
+        val solarFlareEffects = listOf(
             PotionEffect(PotionEffectType.WEAKNESS, 12000, 0),
             PotionEffect(PotionEffectType.FIRE_RESISTANCE, 12000, 0))
         for (somePlayer in someWorld.players) {
             with(somePlayer) {
-                addPotionEffects(shimmerEffects)
-                sendMessage(Component.text("The day star scorches your body...", TextColor.color(56, 127, 232)))
+                addPotionEffects(solarFlareEffects)
+                sendMessage(Component.text("A minor solar flare just hit the world!", TextColor.color(176, 147, 82)))
                 spawnParticle(Particle.SPIT, location, 15, 0.5, 0.5, 0.5)
                 spawnParticle(Particle.EXPLOSION_NORMAL, location, 5, 0.5, 0.5, 0.5)
                 playSound(location, Sound.ITEM_TRIDENT_RIPTIDE_3, 2.5F, 1.5F)

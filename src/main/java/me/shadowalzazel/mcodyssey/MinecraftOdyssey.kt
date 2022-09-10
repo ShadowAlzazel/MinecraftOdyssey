@@ -85,7 +85,7 @@ class MinecraftOdyssey : JavaPlugin() {
             it.pluginManager.registerEvents(MiscListeners, this)
             it.pluginManager.registerEvents(RangedListeners, this)
             // Odyssey Effect Listeners
-            it.pluginManager.registerEvents(OdysseyEffectListeners, this)
+            it.pluginManager.registerEvents(OdysseyEffectTagListeners, this)
             // Odyssey Mob Drops Listeners
             it.pluginManager.registerEvents(OdysseyDropsListeners, this)
             // Odyssey Food Listeners

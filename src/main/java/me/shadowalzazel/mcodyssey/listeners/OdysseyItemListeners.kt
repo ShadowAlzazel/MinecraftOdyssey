@@ -4,17 +4,20 @@ import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.listeners.tasks.UnstableAntimatterTask
 import me.shadowalzazel.mcodyssey.items.OdysseyItems
 import me.shadowalzazel.mcodyssey.recipes.OdysseyRecipes
-import org.bukkit.ChatColor
-import org.bukkit.GameMode
-import org.bukkit.Sound
+import org.bukkit.*
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
+import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.inventory.CraftItemEvent
+import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerItemConsumeEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import java.util.*
@@ -140,6 +143,31 @@ object OdysseyItemListeners : Listener {
             }
         }
     }
+
+
+    @EventHandler(priority = EventPriority.HIGH)
+    fun takingDamageItem(event: EntityDamageEvent) {
+        if (event.entity is LivingEntity) {
+            val someEntity = event.entity as LivingEntity
+            if (someEntity.equipment?.itemInOffHand != null) {
+                if (someEntity.equipment?.itemInOffHand == OdysseyItems.TOTEM_OF_VEXING.createItemStack(1)) {
+                    event.damage = 0.0
+                    if ((1..3).random() != 1) { someEntity.equipment!!.setItemInOffHand(ItemStack(Material.AIR, 1)) }
+                    someEntity.world.playSound(someEntity.location, Sound.ITEM_TOTEM_USE, 2.5F, 0.2F)
+                    someEntity.world.spawnParticle(Particle.CRIT_MAGIC, someEntity.location, 100, 0.5, 0.5, 0.5)
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    fun itemInteract(event: PlayerDropItemEvent) {
+
+    }
+
+
+
+
 
 
     @EventHandler

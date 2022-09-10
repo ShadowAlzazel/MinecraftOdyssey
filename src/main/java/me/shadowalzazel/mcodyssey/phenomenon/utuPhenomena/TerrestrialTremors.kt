@@ -10,12 +10,11 @@ import org.bukkit.World
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object TerrestrialTremors : OdysseyPhenomenon("Starry Night",
+object TerrestrialTremors : OdysseyPhenomenon("Terrestrial Tremors",
     PhenomenonTypes.ANKI,
-    20,
-    4,
-    null,
-    Component.text("There is a faint glow emanating from the flora...")) {
+    5,
+    3,
+    5) {
 
     override fun successfulActivation(someWorld: World) {
         super.successfulActivation(someWorld)
@@ -38,31 +37,31 @@ object TerrestrialTremors : OdysseyPhenomenon("Starry Night",
                     if (!somePlayer.isFlying) {
                         // Math
                         val distanceFromEpicenter = randomEpicenter.distance(somePlayer.location)
-                        val distanceFactor = tremorMagnitude / ((distanceFromEpicenter / 100) + 1)
+                        val distanceFactor: Double = tremorMagnitude.div((((distanceFromEpicenter - 1000) / 100) + 1))
 
-
-
-                        if (true) {
-
-
+                        if (distanceFromEpicenter < 40) {
+                            damage(tremorMagnitude.toDouble())
+                            addPotionEffects(listOf(tremorEffect, trembleConfusionEffect, trembleWeaknessEffect, trembleFatigueEffect))
+                            sendMessage(Component.text("THE GROUND TREMBLES UNDER YOU!!!", TextColor.color(67, 67, 67)))
+                            spawnParticle(Particle.CRIT, somePlayer.location, 65, 0.5, 0.5, 0.5)
+                            playSound(somePlayer.location, Sound.BLOCK_BASALT_BREAK, 5.5F, 1.2F)
+                        }
+                        else if (distanceFromEpicenter < 800) {
+                            damage(tremorMagnitude.toDouble() * distanceFactor)
+                            addPotionEffects(listOf(shakeEffect, trembleConfusionEffect))
+                            sendMessage(Component.text("Your at the mercy of a tremor!", TextColor.color(67, 67, 67)))
+                            spawnParticle(Particle.CRIT, somePlayer.location, 15, 0.5, 0.5, 0.5)
                         }
                         else {
-                            sendMessage(Component.text("The ground seems to ripple from this height...", TextColor.color(67, 67, 67)))
+                            sendMessage(Component.text("You hear tremors from afar", TextColor.color(67, 67, 67)))
                         }
                     }
                     else {
                         sendMessage(Component.text("The ground seems to ripple from this height...", TextColor.color(67, 67, 67)))
                     }
                 }
-                with(somePlayer.world) {
-                    spawnParticle(Particle.CRIT, somePlayer.location, 15, 0.5, 0.5, 0.5)
-                    playSound(somePlayer.location, Sound.ENTITY_ARROW_HIT_PLAYER, 2.5F, 1.5F)
-                }
-
             }
-
         }
-
     }
 
 }

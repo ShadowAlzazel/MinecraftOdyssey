@@ -32,6 +32,7 @@ object OdysseyItems {
     val IRRADIATED_SHARD = IrradiatedShard
     val IRRADIATED_ROD = IrradiatedRod
     val IRRADIATED_FRUIT = IrradiatedFruit
+    val TOTEM_OF_VEXING = TotemOfVexing
 
 
     /* ---------------------------------------------------------------------- */

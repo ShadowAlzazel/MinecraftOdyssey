@@ -4,12 +4,14 @@ import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.items.OdysseyBooks
 import me.shadowalzazel.mcodyssey.items.OdysseyItems
+import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.block.BlockDropItemEvent
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.potion.PotionEffectType
 
@@ -72,6 +74,24 @@ object OdysseyDropsListeners : Listener {
                                     }
                                 }
                             }
+                            is Husk -> {
+                                if ((1.5 + luck + looting + misc) * 10 > (0..1000).random()) {
+                                    it.world.dropItem(it.location, (OdysseyBooks.GILDED_BOOK.createGildedBook(OdysseyEnchantments.DECAYING_TOUCH, 1)))
+                                    droppedItemSound(somePlayer)
+                                }
+                            }
+                            is Drowned -> {
+                                if ((1.5 + luck + looting + misc) * 10 > (0..1000).random()) {
+                                    it.world.dropItem(it.location, (OdysseyBooks.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BANE_OF_THE_SEA, 1)))
+                                    droppedItemSound(somePlayer)
+                                }
+                            }
+                            is PigZombie -> {
+                                if ((1.5 + luck + looting + misc) * 10 > (0..1000).random()) {
+                                    it.world.dropItem(it.location, (OdysseyBooks.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BANE_OF_THE_SWINE, 1)))
+                                    droppedItemSound(somePlayer)
+                                }
+                            }
                             is Zombie -> {
                                 if (hasBloodMoon) {
                                     if ((2.5 + luck + looting + misc) * 10 > (0..1000).random()) {
@@ -104,12 +124,6 @@ object OdysseyDropsListeners : Listener {
                                     droppedItemSound(somePlayer)
                                 }
                             }
-                            is PigZombie -> {
-                                if ((1.5 + luck + looting + misc) * 10 > (0..1000).random()) {
-                                    it.world.dropItem(it.location, (OdysseyBooks.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BANE_OF_THE_SWINE, 1)))
-                                    droppedItemSound(somePlayer)
-                                }
-                            }
                             is Vindicator -> {
                                 if ((3.25 + luck + looting + misc) * 10 > (0..1000).random()) {
                                     it.world.dropItem(it.location, (OdysseyBooks.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BANE_OF_THE_ILLAGER, 1)))
@@ -134,18 +148,6 @@ object OdysseyDropsListeners : Listener {
                                     droppedItemSound(somePlayer)
                                 }
                             }
-                            is Husk -> {
-                                if ((1.5 + luck + looting + misc) * 10 > (0..1000).random()) {
-                                    it.world.dropItem(it.location, (OdysseyBooks.GILDED_BOOK.createGildedBook(OdysseyEnchantments.DECAYING_TOUCH, 1)))
-                                    droppedItemSound(somePlayer)
-                                }
-                            }
-                            is Drowned -> {
-                                if ((1.5 + luck + looting + misc) * 10 > (0..1000).random()) {
-                                    it.world.dropItem(it.location, (OdysseyBooks.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BANE_OF_THE_SEA, 1)))
-                                    droppedItemSound(somePlayer)
-                                }
-                            }
                             is Shulker -> {
                                 if ((2.5 + luck + looting + misc) * 10 > (0..1000).random()) {
                                     it.world.dropItem(it.location, (OdysseyBooks.GILDED_BOOK.createGildedBook(OdysseyEnchantments.VOID_STRIKE, 1))) // change
@@ -164,6 +166,11 @@ object OdysseyDropsListeners : Listener {
                                     droppedItemSound(somePlayer)
                                 }
                             }
+                            is Vex -> {
+                                if ((1.5 + luck + looting + misc) * 10 > (0..1000).random()) {
+                                    it.world.dropItem(it.location, (OdysseyItems.TOTEM_OF_VEXING.createItemStack(1)))
+                                }
+                            }
                             is ElderGuardian -> {
                                 it.world.dropItem(it.location, (OdysseyItems.IRRADIATED_ROD.createItemStack((1..3).random())))
                                 it.world.dropItem(it.location, (OdysseyItems.IRRADIATED_SHARD.createItemStack((2..5).random())))
@@ -177,5 +184,23 @@ object OdysseyDropsListeners : Listener {
             }
         }
     }
+
+
+    @EventHandler
+    fun blockDrops(event: BlockDropItemEvent) {
+        when(event.block.type) {
+            Material.AMETHYST_CLUSTER -> {
+                event.items.forEach {
+                    if (it.itemStack.type == Material.AMETHYST_SHARD) {
+                        it.world.dropItem(it.location, (OdysseyItems.IRRADIATED_ROD.createItemStack((0..2).random())))
+                    }
+                }
+            }
+            else -> {
+
+            }
+        }
+    }
+
 
 }

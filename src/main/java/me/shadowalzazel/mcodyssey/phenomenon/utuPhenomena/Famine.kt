@@ -10,10 +10,11 @@ import org.bukkit.World
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object Famine : OdysseyPhenomenon("Starry Night",
+object Famine : OdysseyPhenomenon("Famine",
     PhenomenonTypes.SUEN,
     15,
     4,
+    7,
     40,
     Component.text("The food tastes much more sour...")) {
 

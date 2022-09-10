@@ -13,7 +13,8 @@ import org.bukkit.potion.PotionEffectType
 object AbyssalNight : OdysseyPhenomenon("Abyssal Night",
     PhenomenonTypes.SUEN,
     15,
-    5) {
+    4,
+    10) {
 
     override fun successfulActivation(someWorld: World) {
         super.successfulActivation(someWorld)

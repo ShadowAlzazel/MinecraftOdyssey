@@ -10,10 +10,11 @@ import org.bukkit.World
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object FlauntingFairies : OdysseyPhenomenon("Starry Night",
+object FlauntingFairies : OdysseyPhenomenon("Flaunting Fairies",
     PhenomenonTypes.SUEN,
     45,
     5,
+    15,
     55,
     Component.text("You think you spot a fairy whizzing through the air but it soon vanishes...")) {
 

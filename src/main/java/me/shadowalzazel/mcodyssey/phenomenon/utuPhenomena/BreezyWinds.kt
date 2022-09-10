@@ -10,10 +10,11 @@ import org.bukkit.World
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object BreezyWinds : OdysseyPhenomenon("Starry Night",
+object BreezyWinds : OdysseyPhenomenon("Breezy Winds",
     PhenomenonTypes.UTU,
     45,
     5,
+    30,
     55,
     Component.text("The winds seem to howl...")) {
 

@@ -14,11 +14,11 @@ object OdysseyFood {
     val GOLDEN_COOKIE = GoldenCookie
 
     val FRENCH_TOAST = FrenchToast
-
     val SUGARY_BREAD = SugaryBread
 
-    val BACON = Bacon
 
+    val CRYSTAL_CANDY = CrystalCandy
+    val BACON = Bacon
     val SALMON_ROLL = SalmonRollSushi
 
 }

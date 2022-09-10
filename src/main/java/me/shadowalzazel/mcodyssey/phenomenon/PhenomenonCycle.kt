@@ -2,6 +2,7 @@ package me.shadowalzazel.mcodyssey.phenomenon
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.phenomenon.ankiPhenomena.DrawOfFortunes
+import me.shadowalzazel.mcodyssey.phenomenon.utility.OdysseyPhenomenon
 import org.bukkit.World
 import org.bukkit.scheduler.BukkitRunnable
 
@@ -15,7 +16,9 @@ class PhenomenonCycle(private val mainWorld: World) : BukkitRunnable() {
     private var utuPhenomenonTimerConstant: Long = 100000L // 100000 ms -> 100 sec
     private var suenPhenomenonCallCooldown: Long = 0
     private var suenPhenomenonTimerConstant: Long = 100000L // 100000 ms -> 100 sec
-
+    //
+    private val suenSet: MutableList<OdysseyPhenomenon> = SuenPhenomena.phenomenaList.shuffled().toMutableList()
+    private val utuSet: MutableList<OdysseyPhenomenon> = UtuPhenomena.phenomenaList.shuffled().toMutableList()
 
     // Main function call for sun phenomenon activations
     private fun utuPhenomenonActivation() {
@@ -35,13 +38,20 @@ class PhenomenonCycle(private val mainWorld: World) : BukkitRunnable() {
                     if (it.mainWorld!!.players.size >= it.playersRequiredForLuck) {
                         DrawOfFortunes.successfulActivation(it.mainWorld!!)
                     }
-                    // Roll for random phenomenon
-                    val randomDailyPhenomenon = UtuPhenomena.phenomenaList.random()
-                    val phenomenonActivated: Boolean = randomDailyPhenomenon.rollActivation(it.mainWorld!!, rolledRate)
-                    if (phenomenonActivated) {
+
+                    val leadingPhenomenon = utuSet[0]
+                    val activated: Boolean = leadingPhenomenon.rollActivation(it.mainWorld!!)
+                    if (activated) {
                         it.utuPhenomenonActive = true
-                        it.currentUtuPhenomenon = randomDailyPhenomenon
-                        println("Activated $randomDailyPhenomenon")
+                        it.currentUtuPhenomenon = leadingPhenomenon
+                        utuSet.remove(leadingPhenomenon)
+                        utuSet.add(leadingPhenomenon)
+                        if (utuSet[0].criticalWarning()) { utuSet[0].criticalityActivation(it.mainWorld!!.players) }
+                    }
+                    else {
+                        utuSet.remove(leadingPhenomenon)
+                        if (!leadingPhenomenon.criticalWarning()) { utuSet.add(3, leadingPhenomenon) }
+                        else { utuSet.add(1, leadingPhenomenon) }
                     }
                 }
             }
@@ -60,14 +70,19 @@ class PhenomenonCycle(private val mainWorld: World) : BukkitRunnable() {
                 it.currentUtuPhenomenon = null
                 // Check if end game
                 if ((it.endGame) && (!it.suenPhenomenonActive)) {
-                    // Roll for random phenomenon
-                    val rolledRate = (0..100).random()
-                    val randomNightlyPhenomenon = SuenPhenomena.phenomenaList.random()
-                    val phenomenonActivated: Boolean = randomNightlyPhenomenon.rollActivation(mainWorld, rolledRate)
-                    if (phenomenonActivated) {
-                        it.suenPhenomenonActive = true
-                        it.currentSuenPhenomenon = randomNightlyPhenomenon
-                        println("Activated $randomNightlyPhenomenon")
+                    val leadingPhenomenon = suenSet[0]
+                    val activated: Boolean = leadingPhenomenon.rollActivation(it.mainWorld!!)
+                    if (activated) {
+                        it.utuPhenomenonActive = true
+                        it.currentUtuPhenomenon = leadingPhenomenon
+                        suenSet.remove(leadingPhenomenon)
+                        suenSet.add(leadingPhenomenon)
+                        if (suenSet[0].criticalWarning()) { suenSet[0].criticalityActivation(it.mainWorld!!.players) }
+                    }
+                    else {
+                        suenSet.remove(leadingPhenomenon)
+                        if (!leadingPhenomenon.criticalWarning()) { suenSet.add(3, leadingPhenomenon) }
+                        else { suenSet.add(1, leadingPhenomenon) }
                     }
                 }
             }

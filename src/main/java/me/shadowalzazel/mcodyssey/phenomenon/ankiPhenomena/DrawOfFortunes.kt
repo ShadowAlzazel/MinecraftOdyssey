@@ -11,8 +11,8 @@ import org.bukkit.potion.PotionEffectType
 object DrawOfFortunes : OdysseyPhenomenon("Draw Of Fortunes",
     PhenomenonTypes.ANKI,
     100,
+    100,
     100) {
-
     override fun successfulActivation(someWorld: World) {
         super.successfulActivation(someWorld)
         println("Fortunes have been drawn at ${someWorld.name}!")

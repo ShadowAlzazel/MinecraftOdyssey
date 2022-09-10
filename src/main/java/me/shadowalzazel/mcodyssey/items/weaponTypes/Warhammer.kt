@@ -10,10 +10,10 @@ open class Warhammer (warhammerName: String, warhammerMaterial: Material, warham
 
     //
     override fun createItemStack(amount: Int): ItemStack {
-        val newStaff = super.createItemStack(amount)
+        val newWarhammer = super.createItemStack(amount)
         // Assign item meta
-        newStaff.itemMeta = this.attributeWeaponMeta(newStaff.itemMeta, attackDamage, attackSpeed)
-        return newStaff
+        newWarhammer.itemMeta = this.attributeWeaponMeta(newWarhammer.itemMeta, attackDamage, attackSpeed)
+        return newWarhammer
     }
 
 }
