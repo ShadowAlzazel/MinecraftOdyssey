@@ -1,8 +1,10 @@
 package me.shadowalzazel.mcodyssey.assets
 
-object CustomModels {
+object ItemModels {
 
     /* --------------------------------FOOD--------------------------------- */
+    // 69045XX
+    // 6905XXX
 
     // Apples
     const val GREEN_APPLE: Int = 6904511
@@ -49,6 +51,7 @@ object CustomModels {
     const val IRRADIATED_SHARD: Int = 6905466
     const val IRRADIATED_ROD: Int = 6905467
     /* --------------------------------EXOTIC-ITEMS--------------------------------- */
+    // 6900XXX
 
     const val BABEL_ANNULUS_SCHEMATICS: Int = 6900068
     const val DORMANT_SENTIENT_STAR: Int = 6900069
@@ -61,13 +64,16 @@ object CustomModels {
     const val TOTEM_OF_VEXING: Int = 6905303
 
     /* --------------------------------ENIGMATIC--------------------------------------*/
+    // 69066XX
 
     const val SOUL_CRYSTAL: Int = 6906613
     const val ECTOPLASM: Int = 6906614
     const val SORROWING_SOUL: Int = 6906615
     const val COAGULATED_BLOOD: Int = 6906616
+    const val BREEZE_IN_A_BOTTLE: Int = 6906617
 
     /* --------------------------------BOOKS--------------------------------- */
+    // 69060XX
 
     // Books
     const val ARCANE_BOOK: Int = 6906065
@@ -88,6 +94,7 @@ object CustomModels {
     /*--------------------------------------------------------------------------------------------------------------------*/
     /*-------------------------------------------------W E A P O N S------------------------------------------------------*/
     /*--------------------------------------------------------------------------------------------------------------------*/
+    // 69057XX
 
     /* --------------------------------SWORDS--------------------------------- */
 
@@ -123,8 +130,24 @@ object CustomModels {
     const val DIAMOND_RAPIER: Int = 6905747
     const val NETHERITE_RAPIER: Int = 6905747
 
+    // Cutlasses
+    const val WOODEN_CUTLASS: Int = 6905748
+    const val GOLDEN_CUTLASS: Int = 6905748
+    const val STONE_CUTLASS: Int = 6905748
+    const val IRON_CUTLASS: Int = 6905748
+    const val DIAMOND_CUTLASS: Int = 6905748
+    const val NETHERITE_CUTLASS: Int = 6905748
 
-    /* ------------------------------SPEARS----------------------------------------*/
+    // Sabers
+    const val WOODEN_SABER: Int = 6905749
+    const val GOLDEN_SABER: Int = 6905749
+    const val STONE_SABER: Int = 6905749
+    const val IRON_SABER: Int = 6905749
+    const val DIAMOND_SABER: Int = 6905749
+    const val NETHERITE_SABER: Int = 6905749
+
+
+    /* ------------------------------PIKES----------------------------------------*/
 
     // Spears
     const val WOODEN_SPEAR: Int = 6905774
@@ -132,10 +155,18 @@ object CustomModels {
     const val STONE_SPEAR: Int = 6905774
     const val IRON_SPEAR: Int = 6905774
     const val DIAMOND_SPEAR: Int = 6905774
-    const val NETHERITE_SPEAR: Int = 6905774 //
+    const val NETHERITE_SPEAR: Int = 6905774
+
+    // Halberds
+    const val WOODEN_HALBERD: Int = 6905775
+    const val GOLDEN_HALBERD: Int = 6905775
+    const val STONE_HALBERD: Int = 6905775
+    const val IRON_HALBERD: Int = 6905775
+    const val DIAMOND_HALBERD: Int = 6905775
+    const val NETHERITE_HALBERD: Int = 6905775
 
 
-    /* ------------------------------STAFF----------------------------------------*/
+    /* ------------------------------STAFFS----------------------------------------*/
 
     // Staffs
     const val BAMBOO_STAFF: Int = 6905793
@@ -144,7 +175,7 @@ object CustomModels {
     const val BLAZE_ROD_STAFF: Int = 6905796
 
 
-    /* ------------------------------HAMMER----------------------------------------*/
+    /* ------------------------------HAMMERS----------------------------------------*/
 
     // Warhammers
     const val WOODEN_WARHAMMER: Int = 6905802

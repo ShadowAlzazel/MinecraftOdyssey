@@ -12,7 +12,9 @@ import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.Particle
+import org.bukkit.entity.Arrow
 import org.bukkit.entity.Item
+import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -20,6 +22,7 @@ import org.bukkit.event.block.CauldronLevelChangeEvent
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent
 import org.bukkit.event.entity.LingeringPotionSplashEvent
 import org.bukkit.event.entity.PotionSplashEvent
+import org.bukkit.event.entity.ProjectileHitEvent
 import org.bukkit.event.inventory.BrewEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerItemConsumeEvent
@@ -147,29 +150,74 @@ object OdysseyAlchemyListeners : Listener {
         brewingNewResults
     }
 
+    // Function to match potions to names
+    private fun potionNameMatcher(somePotionMeta: PotionMeta, affectedEntities: MutableCollection<LivingEntity>) {
+        // Get Name
+        val potionName = (somePotionMeta.displayName() as TextComponent).content()
+        // Check custom potion has a timer
+        var potionDuration = 0
+        if (potionName in odysseyTimedPotions) {
+            // Logic
+            val potionLore = (somePotionMeta.lore()!![0] as TextComponent).content()
+            val i = potionLore.lastIndex
+            val potionLoreTimer = potionLore.subSequence((i - 5)..i)
+            potionDuration = loreToSeconds(potionLoreTimer)
+        }
+        // Match Names
+        when (potionName) {
+            "Bottle o' Decay" -> { OdysseyEffectFunctions.decayingEffect(affectedEntities, potionDuration) }
+            "Bottle o' Frost" -> { OdysseyEffectFunctions.freezingEffect(affectedEntities, potionDuration) }
+            "Bottle o' Douse" -> { OdysseyEffectFunctions.dousedEffect(affectedEntities, potionDuration, 2) }
+            "Bottle o' Ablaze" -> { OdysseyEffectFunctions.ablazeEffect(affectedEntities, potionDuration, 2) }
+            "Potion of Thorns" -> { OdysseyEffectFunctions.thornsEffect(affectedEntities, potionDuration) }
+            "Puffy n' Prickly Potion" -> { OdysseyEffectFunctions.puffyPricklyEffect(affectedEntities, potionDuration) }
+            "Bottled Souls" -> { OdysseyEffectFunctions.soulDamageEffect(affectedEntities, 1) }
+            else -> {
+            }
+        }
+    }
+
+
 
     /*----------------------------------------------------------------------------------------------------------*/
 
     @EventHandler
     fun tippedArrowTableInteract(event: PlayerInteractEvent) {
-        if (event.material == Material.FLETCHING_TABLE) {
-            println("Arrow Tip")
-        }
+        if (event.clickedBlock != null) {
+            if (event.action.isLeftClick && event.clickedBlock!!.type == Material.FLETCHING_TABLE) {
+                event.player.equipment.also {
+                    if (it.itemInMainHand.type == Material.ARROW && it.itemInOffHand.type == Material.LINGERING_POTION) {
+                        val newArrow = ItemStack(Material.TIPPED_ARROW, 1).also { arrow ->
+                            arrow.itemMeta = it.itemInOffHand.itemMeta as PotionMeta
+                        }
+                        event.player.inventory.addItem(newArrow)
+                        it.itemInMainHand.subtract(1)
 
-        fun todo() {
-            TODO("Make Click")
-            /*
-            if clicked with arrow ->
-            if potion on top within block bounding box ->
-            if applicable ->
-            tip arrow, chance to consume potion
-             */
+                        if (1 == (1..9).random()) { it.setItemInOffHand(ItemStack(Material.AIR, 1)) }
+                        println("V")
+                    }
+                }
+            }
         }
     }
 
-    private fun todo() {
-        TODO("Make Potions custom particles")
+
+    @EventHandler
+    fun tippedArrowHit(event: ProjectileHitEvent) {
+        // Checks if Arrow
+        if (event.entity is Arrow) {
+            val someArrow = event.entity as Arrow
+            // Checks if meta
+            if (someArrow.itemStack.type == Material.TIPPED_ARROW) {
+                // checks if lore and display component
+                if (someArrow.itemStack.itemMeta.hasLore() && someArrow.itemStack.itemMeta.hasDisplayName()) {
+
+                }
+            }
+        }
+
     }
+
 
     @EventHandler
     fun potionConsume(event: PlayerItemConsumeEvent) {
@@ -211,7 +259,6 @@ object OdysseyAlchemyListeners : Listener {
             }
         }
     }
-
 
 
     // Main function for Cauldron recipes
@@ -280,6 +327,7 @@ object OdysseyAlchemyListeners : Listener {
         }
     }
 
+
     // Main function regarding splash potions
     @EventHandler
     fun alchemyPotionSplash(event: PotionSplashEvent) {
@@ -291,34 +339,14 @@ object OdysseyAlchemyListeners : Listener {
                 val somePotionMeta = somePotion.itemMeta as PotionMeta
                 // Checks if Potion Meta Un-craftable and Colored Name
                 if (somePotionMeta.basePotionData.type == PotionType.UNCRAFTABLE && somePotionMeta.displayName()?.color() != null) {
-                    // Get Name
-                    val potionName = (somePotionMeta.displayName() as TextComponent).content()
-                    // Check custom potion has a timer
-                    var potionDuration = 0
-                    if (potionName in odysseyTimedPotions) {
-                        // Logic
-                        val potionLore = (somePotionMeta.lore()!![0] as TextComponent).content()
-                        val i = potionLore.lastIndex
-                        val potionLoreTimer = potionLore.subSequence((i - 5)..i)
-                        potionDuration = loreToSeconds(potionLoreTimer)
-                    }
-                    // Match Names
-                    when (potionName) {
-                        "Bottle o' Decay" -> { OdysseyEffectFunctions.decayingEffect(event.affectedEntities, potionDuration) }
-                        "Bottle o' Frost" -> { OdysseyEffectFunctions.freezingEffect(event.affectedEntities, potionDuration) }
-                        "Bottle o' Douse" -> { OdysseyEffectFunctions.dousedEffect(event.affectedEntities, potionDuration, 2) }
-                        "Bottle o' Ablaze" -> { OdysseyEffectFunctions.ablazeEffect(event.affectedEntities, potionDuration, 2) }
-                        "Potion of Thorns" -> { OdysseyEffectFunctions.thornsEffect(event.affectedEntities, potionDuration) }
-                        "Puffy n' Prickly Potion" -> { OdysseyEffectFunctions.puffyPricklyEffect(event.affectedEntities, potionDuration) }
-                        "Bottled Souls" -> { OdysseyEffectFunctions.soulDamageEffect(event.affectedEntities, 1) }
-                        else -> {
-                        }
-                    }
+                    // Call function
+                    potionNameMatcher(somePotionMeta, event.affectedEntities)
                 }
             }
         }
 
     }
+
 
     // Main function regarding lingering potions
     @EventHandler
@@ -394,6 +422,7 @@ object OdysseyAlchemyListeners : Listener {
             }
         }
     }
+
 
     // Main function for detecting entity clouds from alchemy potions
     @EventHandler

@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.items.odyssey
 
 import me.shadowalzazel.mcodyssey.items.utilty.OdysseyItem
-import me.shadowalzazel.mcodyssey.assets.CustomModels
+import me.shadowalzazel.mcodyssey.assets.ItemModels
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
@@ -18,7 +18,7 @@ object BabelAnnulusSchematics : OdysseyItem("Babel Annulus Schematics",
         .append(Component.text("tem. Vail's Test Site... Section A2").decorate(TextDecoration.OBFUSCATED).color(TextColor.color(255, 255, 85)))
         .append(Component.text("002").decorate(TextDecoration.OBFUSCATED).color(TextColor.color(255, 255, 85)))
         .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-    CustomModels.BABEL_ANNULUS_SCHEMATICS)
+    ItemModels.BABEL_ANNULUS_SCHEMATICS)
 
 // FIX!!
 // DormantSentientStar
@@ -26,7 +26,7 @@ object DormantSentientStar : OdysseyItem("Dormant Star System",
     Material.NETHER_STAR,
     Component.text("Dormant Star System-", TextColor.color(255, 255, 85), TextDecoration.ITALIC).append(Component.text("Mini-Matrioshka").decorate(TextDecoration.OBFUSCATED).color(TextColor.color(255, 255, 85))),
     listOf(Component.text("Something is speaking to you...", TextColor.color(80, 60, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-    CustomModels.DORMANT_SENTIENT_STAR,
+    ItemModels.DORMANT_SENTIENT_STAR,
     mapOf(Enchantment.LOYALTY to 5))
 
 
@@ -35,7 +35,7 @@ object ImpureAntiMatterShard : OdysseyItem("Impure Anti-matter Shard",
     Material.PRISMARINE_SHARD,
     Component.text("Impure Anti-matter Shard", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
     listOf(Component.text("An impure yet stabilized shard of anti-matter...", TextColor.color(80, 60, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-    CustomModels.IMPURE_ANTI_MATTER_SHARD,
+    ItemModels.IMPURE_ANTI_MATTER_SHARD,
     mapOf(Enchantment.ARROW_INFINITE to 1))
 
 
@@ -47,7 +47,7 @@ object PureAntimatterCrystal : OdysseyItem("Pure Anti-matter Crystal",
         .append(Component.text("DANGER! DANGER!").decorate(TextDecoration.OBFUSCATED).color(TextColor.color(80, 60, 170)))
         .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE),
         Component.text("Purely Unstable!!! Quantum Disintegration Imminent!", TextColor.color(80, 60, 170))),
-    CustomModels.PURE_ANTIMATTER_CRYSTAL,
+    ItemModels.PURE_ANTIMATTER_CRYSTAL,
     mapOf(Enchantment.ARROW_INFINITE to 1))
 
 
@@ -56,7 +56,7 @@ object NeutroniumBarkIngot: OdysseyItem("Neutronium-Bark Ingot",
     Material.NETHERITE_INGOT,
     Component.text("Neutronium-Bark Ingot", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
     listOf(Component.text("A refined plank of very dense matter...", TextColor.color(80, 60, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-    CustomModels.NEUTRONIUM_BARK_INGOT,
+    ItemModels.NEUTRONIUM_BARK_INGOT,
     mapOf(Enchantment.DURABILITY to 5))
 
 
@@ -66,7 +66,7 @@ object FruitOfErishkigal : OdysseyItem("Fruit of Erishkigal",
     Component.text("Fruit of Erishkigal", TextColor.color(255, 84, 255), TextDecoration.ITALIC),
     listOf(Component.text("A fruit engineered at the atomic level", TextColor.color(80, 60, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE),
             Component.text("With the power to alter one's life...", TextColor.color(255, 41, 119)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-    CustomModels.FRUIT_OF_ERISHKIGAL,
+    ItemModels.FRUIT_OF_ERISHKIGAL,
     mapOf(Enchantment.MENDING to 1))
 
 
@@ -75,14 +75,14 @@ object TotemOfVexing : OdysseyItem("Totem of Vexing",
     Material.MILK_BUCKET,
     Component.text("Totem of Vexing", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
     listOf(Component.text("A totem with vexing properties", TextColor.color(112, 123, 153)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-    CustomModels.TOTEM_OF_VEXING)
+    ItemModels.TOTEM_OF_VEXING)
 
 
 object IrradiatedFruit : OdysseyItem("Irradiated Fruit",
     Material.APPLE,
     Component.text("Irradiated Fruit", TextColor.color(255, 84, 255), TextDecoration.ITALIC),
     listOf(Component.text("A fruit with unusual properties...", TextColor.color(87, 67, 96)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-    CustomModels.IRRADIATED_FRUIT,
+    ItemModels.IRRADIATED_FRUIT,
     mapOf(Enchantment.MENDING to 1))
 
 
@@ -92,5 +92,5 @@ object SilmarilOfYggladiel : OdysseyItem("Silmaril Of Yggladiel",
     Component.text("Silmaril Of Yggladiel", TextColor.color(255, 84, 255), TextDecoration.ITALIC),
     listOf(Component.text("A jewel fruit grown by the world tree on Lupercal", TextColor.color(192, 152, 255 )).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE),
         Component.text("Shining with stellar light...", TextColor.color(255, 227, 125)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-    CustomModels.SILMARIL_OF_YGGLADIEL,
+    ItemModels.SILMARIL_OF_YGGLADIEL,
     mapOf(Enchantment.MENDING to 1))

@@ -47,6 +47,27 @@ object OdysseyWeapons {
     val IRON_RAPIER = IronRapier
     val DIAMOND_RAPIER = DiamondRapier
 
+    // Cutlass
+    val WOODEN_CUTLASS = WoodenCutlass
+    val GOLDEN_CUTLASS = GoldenCutlass
+    val STONE_CUTLASS = StoneCutlass
+    val IRON_CUTLASS = IronCutlass
+    val DIAMOND_CUTLASS = DiamondCutlass
+
+    // Saber
+    val WOODEN_SABER = WoodenSaber
+    val GOLDEN_SABER = GoldenSaber
+    val STONE_SABER = StoneSaber
+    val IRON_SABER = IronSaber
+    val DIAMOND_SABER = DiamondSaber
+
+    // Spear
+    val WOODEN_HALBERD = WoodenHalberd
+    val GOLDEN_HALBERD = GoldenHalberd
+    val STONE_HALBERD = StoneHalberd
+    val IRON_HALBERD = IronHalberd
+    val DIAMOND_HALBERD = DiamondHalberd
+
     // War hammer
     val WOODEN_WARHAMMER = WoodenWarhammer
     val GOLDEN_WARHAMMER = GoldenWarhammer
