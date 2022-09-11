@@ -61,4 +61,9 @@ object IrradiatedRod : OdysseyItem("Irradiated Rod",
     ItemModels.IRRADIATED_ROD)
 
 // Breeze in a Bottle
-// TODO: Get direction vector, add 2.0 magnitude
+object BreezeInABottle : OdysseyItem("Breeze in a Bottle",
+    Material.GLASS_BOTTLE,
+    Component.text("Breeze in a Bottle", TextColor.color(74, 140, 234), TextDecoration.ITALIC),
+    listOf(Component.text("The wind contained?", TextColor.color(74, 140, 234)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+    ItemModels.BREEZE_IN_A_BOTTLE)
+

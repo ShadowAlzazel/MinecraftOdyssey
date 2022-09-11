@@ -47,12 +47,26 @@ object WeaponRecipes {
     private val IRON_RAPIER_RECIPE = createIronRapierRecipe()
     private val DIAMOND_RAPIER_RECIPE = createDiamondRapierRecipe()
 
-
+    // Cutlasses
+    private val WOODEN_CUTLASS_RECIPE = createWoodenCutlassRecipe()
+    private val GOLDEN_CUTLASS_RECIPE = createGoldenCutlassRecipe()
+    private val STONE_CUTLASS_RECIPE = createStoneCutlassRecipe()
     private val IRON_CUTLASS_RECIPE = createIronCutlassRecipe()
+    private val DIAMOND_CUTLASS_RECIPE = createDiamondCutlassRecipe()
 
+    // Sabers
+    private val WOODEN_SABER_RECIPE = createWoodenSaberRecipe()
+    private val GOLDEN_SABER_RECIPE = createGoldenSaberRecipe()
+    private val STONE_SABER_RECIPE = createStoneSaberRecipe()
     private val IRON_SABER_RECIPE = createIronSaberRecipe()
+    private val DIAMOND_SABER_RECIPE = createDiamondSaberRecipe()
 
+    // Halberds
+    private val WOODEN_HALBERD_RECIPE = createWoodenHalberdRecipe()
+    private val GOLDEN_HALBERD_RECIPE = createGoldenHalberdRecipe()
+    private val STONE_HALBERD_RECIPE = createStoneHalberdRecipe()
     private val IRON_HALBERD_RECIPE = createIronHalberdRecipe()
+    private val DIAMOND_HALBERD_RECIPE = createDiamondHalberdRecipe()
 
 
     // Warhammer Recipes
@@ -73,9 +87,9 @@ object WeaponRecipes {
         WOODEN_SPEAR_RECIPE, GOLDEN_SPEAR_RECIPE, STONE_SPEAR_RECIPE, IRON_SPEAR_RECIPE, DIAMOND_SPEAR_RECIPE,
         WOODEN_DAGGER_RECIPE, GOLDEN_DAGGER_RECIPE, STONE_DAGGER_RECIPE, IRON_DAGGER_RECIPE, DIAMOND_DAGGER_RECIPE,
         WOODEN_RAPIER_RECIPE, GOLDEN_RAPIER_RECIPE, STONE_RAPIER_RECIPE, IRON_RAPIER_RECIPE, DIAMOND_RAPIER_RECIPE,
-        IRON_CUTLASS_RECIPE,
-        IRON_SABER_RECIPE,
-        IRON_HALBERD_RECIPE,
+        WOODEN_CUTLASS_RECIPE, GOLDEN_CUTLASS_RECIPE, STONE_CUTLASS_RECIPE, IRON_CUTLASS_RECIPE, DIAMOND_CUTLASS_RECIPE,
+        WOODEN_SABER_RECIPE, GOLDEN_SABER_RECIPE, STONE_SABER_RECIPE, IRON_SABER_RECIPE, DIAMOND_SABER_RECIPE,
+        WOODEN_HALBERD_RECIPE, GOLDEN_HALBERD_RECIPE, STONE_HALBERD_RECIPE, IRON_HALBERD_RECIPE, DIAMOND_HALBERD_RECIPE,
         IRON_WARHAMMER_RECIPE,
         BAMBOO_STAFF_RECIPE, BONE_STAFF_RECIPE, WOODEN_STAFF_RECIPE, BLAZE_ROD_STAFF_RECIPE
     )
@@ -361,10 +375,43 @@ object WeaponRecipes {
 
 
     /*----------------------------------------CUTLASSES-----------------------------------------*/
+
+    private fun createWoodenCutlassRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.WOODEN_CUTLASS.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "woodencutlass"), someResult).apply {
+            shape(" X ", " X ", "ZY ")
+            setIngredient('X', RecipeChoice.MaterialChoice(Material.ACACIA_PLANKS, Material.BIRCH_PLANKS, Material.DARK_OAK_PLANKS, Material.OAK_PLANKS, Material.SPRUCE_PLANKS, Material.JUNGLE_PLANKS))
+            setIngredient('Y', Material.STICK)
+            setIngredient('Z', Material.GOLD_INGOT)
+        }
+        return someRecipe
+    }
+
+    private fun createGoldenCutlassRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.GOLDEN_CUTLASS.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "goldencutlass"), someResult).apply {
+            shape(" X ", " X ", "ZY ")
+            setIngredient('X', Material.GOLD_INGOT)
+            setIngredient('Y', Material.STICK)
+            setIngredient('Z', Material.GOLD_INGOT)
+        }
+        return someRecipe
+    }
+
+    private fun createStoneCutlassRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.STONE_CUTLASS.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "stonecutlass"), someResult).apply {
+            shape(" X ", " X ", "ZY ")
+            setIngredient('X', Material.COBBLESTONE)
+            setIngredient('Y', Material.STICK)
+            setIngredient('Z', Material.GOLD_INGOT)
+        }
+        return someRecipe
+    }
     private fun createIronCutlassRecipe(): ShapedRecipe {
         val someResult = OdysseyWeapons.IRON_CUTLASS.createItemStack(1)
         val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "ironcutlass"), someResult).apply {
-            shape("  X", " X ", "YZ ")
+            shape(" X ", " X ", "ZY ")
             setIngredient('X', Material.IRON_INGOT)
             setIngredient('Y', Material.STICK)
             setIngredient('Z', Material.GOLD_INGOT)
@@ -372,7 +419,48 @@ object WeaponRecipes {
         return someRecipe
     }
 
+    private fun createDiamondCutlassRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.DIAMOND_CUTLASS.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "diamondcutlass"), someResult).apply {
+            shape(" X ", " X ", "ZY ")
+            setIngredient('X', Material.DIAMOND)
+            setIngredient('Y', Material.STICK)
+            setIngredient('Z', Material.GOLD_INGOT)
+        }
+        return someRecipe
+    }
+
     /*----------------------------------------SABERS-----------------------------------------*/
+
+    private fun createWoodenSaberRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.WOODEN_SABER.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "woodensaber"), someResult).apply {
+            shape("X  ", " X ", " Y ")
+            setIngredient('X', RecipeChoice.MaterialChoice(Material.ACACIA_PLANKS, Material.BIRCH_PLANKS, Material.DARK_OAK_PLANKS, Material.OAK_PLANKS, Material.SPRUCE_PLANKS, Material.JUNGLE_PLANKS))
+            setIngredient('Y', Material.STICK)
+        }
+        return someRecipe
+    }
+
+    private fun createGoldenSaberRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.GOLDEN_SABER.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "goldensaber"), someResult).apply {
+            shape("X  ", " X ", " Y ")
+            setIngredient('X', Material.GOLD_INGOT)
+            setIngredient('Y', Material.STICK)
+        }
+        return someRecipe
+    }
+
+    private fun createStoneSaberRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.STONE_SABER.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "stonesaber"), someResult).apply {
+            shape("X  ", " X ", " Y ")
+            setIngredient('X', Material.COBBLESTONE)
+            setIngredient('Y', Material.STICK)
+        }
+        return someRecipe
+    }
     private fun createIronSaberRecipe(): ShapedRecipe {
         val someResult = OdysseyWeapons.IRON_SABER.createItemStack(1)
         val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "ironsaber"), someResult).apply {
@@ -383,14 +471,69 @@ object WeaponRecipes {
         return someRecipe
     }
 
+    private fun createDiamondSaberRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.DIAMOND_SABER.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "diamondsaber"), someResult).apply {
+            shape("X  ", " X ", " Y ")
+            setIngredient('X', Material.DIAMOND)
+            setIngredient('Y', Material.STICK)
+        }
+        return someRecipe
+    }
+
     /*----------------------------------------HALBERDS-----------------------------------------*/
+
+    private fun createWoodenHalberdRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.WOODEN_HALBERD.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "woodenhalberd"), someResult).apply {
+            shape(" XZ", " Y ", "Y  ")
+            setIngredient('X', RecipeChoice.MaterialChoice(Material.ACACIA_PLANKS, Material.BIRCH_PLANKS, Material.DARK_OAK_PLANKS, Material.OAK_PLANKS, Material.SPRUCE_PLANKS, Material.JUNGLE_PLANKS))
+            setIngredient('Y', Material.STICK)
+            setIngredient('Z', Material.PRISMARINE_SHARD)
+        }
+        return someRecipe
+    }
+
+    private fun createGoldenHalberdRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.GOLDEN_HALBERD.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "goldenhalberd"), someResult).apply {
+            shape(" XZ", " Y ", "Y  ")
+            setIngredient('X', Material.GOLD_INGOT)
+            setIngredient('Y', Material.STICK)
+            setIngredient('Z', Material.PRISMARINE_SHARD)
+        }
+        return someRecipe
+    }
+
+    private fun createStoneHalberdRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.STONE_HALBERD.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "stonehalberd"), someResult).apply {
+            shape(" XZ", " Y ", "Y  ")
+            setIngredient('X', Material.COBBLESTONE)
+            setIngredient('Y', Material.STICK)
+            setIngredient('Z', Material.PRISMARINE_SHARD)
+        }
+        return someRecipe
+    }
+
     private fun createIronHalberdRecipe(): ShapedRecipe {
         val someResult = OdysseyWeapons.IRON_HALBERD.createItemStack(1)
         val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "ironhalberd"), someResult).apply {
-            shape(" ZX", " YZ", "Y  ")
+            shape(" XZ", " Y ", "Y  ")
             setIngredient('X', Material.IRON_INGOT)
-            setIngredient('Z', Material.IRON_NUGGET)
             setIngredient('Y', Material.STICK)
+            setIngredient('Z', Material.PRISMARINE_SHARD)
+        }
+        return someRecipe
+    }
+
+    private fun createDiamondHalberdRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.DIAMOND_HALBERD.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "diamondhalberd"), someResult).apply {
+            shape(" XZ", " Y ", "Y  ")
+            setIngredient('X', Material.DIAMOND)
+            setIngredient('Y', Material.STICK)
+            setIngredient('Z', Material.PRISMARINE_SHARD)
         }
         return someRecipe
     }

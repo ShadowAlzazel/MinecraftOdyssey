@@ -9,13 +9,14 @@ import org.bukkit.inventory.ShapedRecipe
 
 object EnigmaticRecipes {
 
-    private val SORROWING_SOUL_RECIPE = createSorrowingSoul()
+    private val SORROWING_SOUL_RECIPE = createSorrowingSoulRecipe()
+    private val SOUL_CATALYST_RECIPE = createSoulCatalystRecipe()
 
-    val recipeSet = listOf(SORROWING_SOUL_RECIPE)
+    val recipeSet = listOf(SORROWING_SOUL_RECIPE, SOUL_CATALYST_RECIPE)
 
     /* ---------------------------------------------------------------------------*/
 
-    private fun createSorrowingSoul(): ShapedRecipe {
+    private fun createSorrowingSoulRecipe(): ShapedRecipe {
         val someResult = OdysseyItems.SORROWING_SOUL.createItemStack(1)
         val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "sorrowingsoul"), someResult)
         val exactEctoplasm = OdysseyItems.ECTOPLASM.createItemStack(1)
@@ -26,6 +27,18 @@ object EnigmaticRecipes {
         someRecipe.setIngredient('Y', RecipeChoice.ExactChoice(exactEctoplasm))
         return someRecipe
     }
+
+    private fun createSoulCatalystRecipe(): ShapedRecipe {
+        val someResult = OdysseyItems.SOUL_CATALYST.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "soulcatalyst"), someResult)
+        val exactSoulCrystal = OdysseyItems.SOUL_CRYSTAL.createItemStack(1)
+
+        someRecipe.shape("XXX", "XYX", "XXX")
+        someRecipe.setIngredient('X', RecipeChoice.ExactChoice(exactSoulCrystal))
+        someRecipe.setIngredient('Y', Material.TINTED_GLASS)
+        return someRecipe
+    }
+
 
 
 }

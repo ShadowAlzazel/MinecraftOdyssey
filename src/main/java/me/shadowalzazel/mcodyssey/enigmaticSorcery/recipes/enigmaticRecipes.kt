@@ -21,3 +21,11 @@ object RottingSummonRecipe: OdysseyEnigmaticRecipe(
     setOf(Material.SCULK),
     setOf(Pair(1.0, 0.0), Pair(-1.0, 0.0), Pair(0.0, 1.0), Pair(0.0, -1.0))
 )
+
+object SoulSteelIngotRecipe: OdysseyEnigmaticRecipe(
+    OdysseyItems.SOUL_STEEL_INGOT,
+    null,
+    listOf(OdysseyItems.SOUL_CATALYST.createItemStack(1)),
+    setOf(Material.IRON_BLOCK),
+    setOf(Pair(1.0, 0.0), Pair(-1.0, 0.0), Pair(0.0, 1.0), Pair(0.0, -1.0))
+)

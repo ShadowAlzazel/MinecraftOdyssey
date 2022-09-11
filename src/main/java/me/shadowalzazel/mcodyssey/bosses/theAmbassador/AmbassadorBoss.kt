@@ -144,7 +144,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
             somePlayer.sendMessage("${ChatColor.YELLOW}${ChatColor.ITALIC}With ${ChatColor.GOLD}${vanquisher.name} ${ChatColor.RESET}${ChatColor.YELLOW}${ChatColor.ITALIC}taking the final blow!")
             somePlayer.playSound(somePlayer, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0F, 1.0F)
             if (somePlayer in nearbyPlayers) {
-                somePlayer.giveExp(2750)
+                somePlayer.giveExp(3550)
             }
         }
     }

@@ -2,19 +2,14 @@ package me.shadowalzazel.mcodyssey.assets
 
 object ItemModels {
 
-    /* --------------------------------FOOD--------------------------------- */
-    // 69045XX
-    // 6905XXX
+    /* --------------------------------FOOD--------------------------------- */ // 69045XX, 6905XXX
 
-    // Apples
     const val GREEN_APPLE: Int = 6904511
-    const val CANDY_APPLE: Int = 6904512 // Weird effects required crystal candy, sweet, glow, chorus
+    const val CANDY_APPLE: Int = 6904512
 
-    // Breads
     const val SUGARY_BREAD: Int = 6904710
     const val FRENCH_TOAST: Int = 6904711
 
-    // Cookies
     const val APPLE_COOKIE: Int = 6905040
     const val BEETROOT_COOKIE: Int = 6905041
     const val PUMPKIN_COOKIE: Int = 6905042
@@ -26,7 +21,6 @@ object ItemModels {
     const val GOLDEN_COOKIE: Int = 6905048
     const val CHORUS_COOKIE: Int = 6905049
 
-    // Other
     const val CRYSTAL_CANDY: Int = 6905868
     const val BACON: Int = 6908047
     const val SALMON_ROLL: Int = 6908048
@@ -50,8 +44,8 @@ object ItemModels {
     const val IDESCINE_ESSENCE: Int = 6905465
     const val IRRADIATED_SHARD: Int = 6905466
     const val IRRADIATED_ROD: Int = 6905467
-    /* --------------------------------EXOTIC-ITEMS--------------------------------- */
-    // 6900XXX
+
+    /* --------------------------------EXOTIC-ITEMS--------------------------------- */ // 6900XXX
 
     const val BABEL_ANNULUS_SCHEMATICS: Int = 6900068
     const val DORMANT_SENTIENT_STAR: Int = 6900069
@@ -63,20 +57,28 @@ object ItemModels {
     const val IRRADIATED_FRUIT: Int = 6905468
     const val TOTEM_OF_VEXING: Int = 6905303
 
-    /* --------------------------------ENIGMATIC--------------------------------------*/
-    // 69066XX
+    /* --------------------------------ENIGMATIC--------------------------------------*/ // 69066XX
 
     const val SOUL_CRYSTAL: Int = 6906613
     const val ECTOPLASM: Int = 6906614
     const val SORROWING_SOUL: Int = 6906615
     const val COAGULATED_BLOOD: Int = 6906616
-    const val BREEZE_IN_A_BOTTLE: Int = 6906617
+    const val SOUL_CATALYST: Int = 6906617
+    const val SOUL_STEEL_INGOT: Int = 6906618
 
-    /* --------------------------------BOOKS--------------------------------- */
-    // 69060XX
+    // Weapons
+    const val SOUL_STEEL_KATANA: Int = 6906644
+
+
+    /* --------------------------------OTHER--------------------------------------*/
+
+    const val BREEZE_IN_A_BOTTLE: Int = 6903617
+
+    /* --------------------------------BOOKS--------------------------------- */ // 69060XX
 
     // Books
     const val ARCANE_BOOK: Int = 6906065
+
     // Enchanted Books
     const val GILDED_BOOK: Int = 6906066
     const val TOME_OF_DISCHARGE: Int = 6906067
@@ -91,12 +93,7 @@ object ItemModels {
     // Written Books
     const val NECRONOMICON_BOOK: Int = 6905066
 
-    /*--------------------------------------------------------------------------------------------------------------------*/
-    /*-------------------------------------------------W E A P O N S------------------------------------------------------*/
-    /*--------------------------------------------------------------------------------------------------------------------*/
-    // 69057XX
-
-    /* --------------------------------SWORDS--------------------------------- */
+    /* --------------------------------SWORDS--------------------------------- */ // 69057XX
 
     // Katanas
     const val WOODEN_KATANA: Int = 6905744
