@@ -25,6 +25,14 @@ object GildingRecipes {
         RecipeChoice.MaterialChoice(Material.ENCHANTED_BOOK)
     )
 
+    // Soul Steel
+    var SOUL_STEEL_SMITHING: SmithingRecipe = SmithingRecipe(
+        NamespacedKey(MinecraftOdyssey.instance, "soulsteelsmithing"),
+        ItemStack(Material.AIR),
+        RecipeChoice.MaterialChoice(Material.IRON_SWORD),
+        RecipeChoice.MaterialChoice(Material.IRON_INGOT)
+    )
+
     // Main for gilded books to equipment
     var ODYSSEY_GILDED_SMITHING: SmithingRecipe = SmithingRecipe(
         NamespacedKey(MinecraftOdyssey.instance, "odysseygildedsmithing"),

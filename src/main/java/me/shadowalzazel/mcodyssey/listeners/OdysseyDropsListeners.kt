@@ -189,7 +189,7 @@ object OdysseyDropsListeners : Listener {
     @EventHandler
     fun blockDrops(event: BlockDropItemEvent) {
         when(event.block.type) {
-            Material.AMETHYST_CLUSTER -> {
+            Material.AMETHYST_CLUSTER, Material.LARGE_AMETHYST_BUD -> {
                 event.items.forEach {
                     if (it.itemStack.type == Material.AMETHYST_SHARD) {
                         it.world.dropItem(it.location, (OdysseyItems.IRRADIATED_ROD.createItemStack((0..2).random())))

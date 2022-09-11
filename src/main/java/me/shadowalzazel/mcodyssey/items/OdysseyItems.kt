@@ -39,6 +39,9 @@ object OdysseyItems {
     val SOUL_CRYSTAL = SoulCrystal
     val ECTOPLASM = Ectoplasm
     val SORROWING_SOUL = SorrowingSoul
+    val COAGULATED_BLOOD = CoagulatedBlood
+    val SOUL_CATALYST = SoulCatalyst
+    val SOUL_STEEL_INGOT = SoulSteelIngot
 
 
 }

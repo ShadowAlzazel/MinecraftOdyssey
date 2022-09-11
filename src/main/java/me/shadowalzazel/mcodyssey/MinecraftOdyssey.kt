@@ -122,6 +122,8 @@ class MinecraftOdyssey : JavaPlugin() {
         Bukkit.addRecipe(GildingRecipes.GILDED_BOOK_COMBINING)
         Bukkit.addRecipe(GildingRecipes.GILDED_ITEM_UPGRADING)
         Bukkit.addRecipe(GildingRecipes.GILDED_BOOK_LEGACY_ACTIVATION)
+        Bukkit.addRecipe(GildingRecipes.SOUL_STEEL_SMITHING)
+
 
         // Item Recipes
         for (itemRecipe in OdysseyRecipes.recipeSet) { Bukkit.addRecipe(itemRecipe) }

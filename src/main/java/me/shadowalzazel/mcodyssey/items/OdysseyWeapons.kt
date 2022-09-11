@@ -84,5 +84,8 @@ object OdysseyWeapons {
     // Exotics
     val ABZU_BLADE = AbzuBlade
 
+    // ENIGMATIC
+    val SOUL_STEEL_KATANA = SoulSteelKatana
+
 
 }

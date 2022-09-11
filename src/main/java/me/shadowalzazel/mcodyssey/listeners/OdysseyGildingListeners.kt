@@ -6,6 +6,8 @@ import me.shadowalzazel.mcodyssey.assets.ItemModels
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.items.OdysseyBooks
+import me.shadowalzazel.mcodyssey.items.OdysseyItems
+import me.shadowalzazel.mcodyssey.items.OdysseyWeapons
 import me.shadowalzazel.mcodyssey.items.misc.GildedBook
 import me.shadowalzazel.mcodyssey.items.utilty.OdysseyItem
 import net.kyori.adventure.text.Component
@@ -445,6 +447,25 @@ object OdysseyGildingListeners : Listener {
                         event.viewers.forEach { viewer -> if (viewer is Player) { viewer.updateInventory() } }
                     }
                 }
+                // -----------------------------------------------SOUL-STEEL--------------------------------------------------
+                // TODO: Detect Iron sword not any sword
+                else if (inputMineral!!.type == Material.IRON_INGOT && inputEquipment!!.type == Material.IRON_SWORD) {
+                    if (inputEquipment!!.itemMeta?.hasCustomModelData() == true && inputMineral == OdysseyItems.SOUL_STEEL_INGOT.createItemStack(inputMineral!!.amount)) {
+                        val oldMeta = inputEquipment!!.itemMeta
+                        when (oldMeta.customModelData) {
+                            ItemModels.IRON_KATANA -> {
+                                event.result = OdysseyWeapons.SOUL_STEEL_KATANA.createItemStack(1).also {
+                                   // it.itemMeta = inputEquipment!!.itemMeta
+                                    it.lore(oldMeta.lore())
+                                    for (enchant in oldMeta.enchants) { it.addEnchantment(enchant.key, enchant.value) }
+                                    for (flag in oldMeta.itemFlags) { it.addItemFlags(flag) }
+                                }
+                            }
+                        }
+                        event.viewers.forEach { viewer -> if (viewer is Player) { viewer.updateInventory() } }
+                    }
+                }
+
                 // -----------------------------------------------LEGACY BOOK ACTIVATION--------------------------------------------------
                 // Activate model for book
                 else if (inputEquipment!!.type == Material.ENCHANTED_BOOK && inputMineral!!.type == Material.GOLD_INGOT) {
