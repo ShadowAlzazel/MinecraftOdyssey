@@ -1,10 +1,14 @@
 package me.shadowalzazel.mcodyssey.listeners
 
-import me.shadowalzazel.mcodyssey.assets.ItemModels
-import me.shadowalzazel.mcodyssey.assets.WeaponStats.weaponReachMap
-import org.bukkit.Location
-import org.bukkit.Material
+import me.shadowalzazel.mcodyssey.constants.ItemModels
+import me.shadowalzazel.mcodyssey.constants.WeaponStats.bludgeonMap
+import me.shadowalzazel.mcodyssey.constants.WeaponStats.lacerateMap
+import me.shadowalzazel.mcodyssey.constants.WeaponStats.pierceMap
+import me.shadowalzazel.mcodyssey.constants.WeaponStats.reachMap
+import me.shadowalzazel.mcodyssey.constants.WeaponStats.sweepMap
 
+import org.bukkit.Material
+import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
@@ -14,6 +18,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.player.PlayerInteractEvent
+import kotlin.math.min
 
 
 object OdysseyWeaponListeners : Listener {
@@ -37,9 +42,14 @@ object OdysseyWeaponListeners : Listener {
     }
 
     // Function for critical hits that sweep
-    private fun sweepCombo(someVictim: LivingEntity, someDamager: LivingEntity, radius: Double, centerLocation: Location, eventDamage: Double) {
+    private fun sweepComboFunction(someVictim: LivingEntity, someDamager: LivingEntity, radius: Double, eventDamage: Double) {
+        val midpoint = someDamager.location.clone().set(
+            ((someVictim.location.x + someDamager.location.x) / 2),
+            ((someVictim.location.y + someDamager.location.y) / 2),
+            ((someVictim.location.z + someDamager.location.z) / 2))
+
         someVictim.scoreboardTags.add("Weapon_Comboed")
-        val comboEntities = centerLocation.getNearbyEntities(radius, radius, radius).also {
+        val comboEntities = midpoint.getNearbyEntities(radius, radius, radius).also {
             it.remove(someVictim)
             it.remove(someDamager)
         }
@@ -52,7 +62,32 @@ object OdysseyWeaponListeners : Listener {
         }
     }
 
-    // TODO: Weapon Piercing, Cleaving, Bludgeoning Damage
+    // Stat handler
+    private fun weaponArmorFunction(weaponData: Int, someVictim: LivingEntity): Pair<Double, Double> {
+        return if (!someVictim.isDead && someVictim.getAttribute(Attribute.GENERIC_ARMOR)?.value != null) {
+            // Armor Point
+            val armorPoints = someVictim.getAttribute(Attribute.GENERIC_ARMOR)!!.value
+            println(armorPoints)
+
+            // Bludgeon
+            val bludgeoningDamage = if (bludgeonMap[weaponData] != null) { min(armorPoints, bludgeonMap[weaponData]!!) }  else { 0.0 }
+            // Lacerate
+            val laceratingDamage = if (lacerateMap[weaponData] != null) {
+                if (armorPoints <= 1.0) { lacerateMap[weaponData]!! } else { 0.0 }
+            }  else { 0.0 }
+            // Pierce
+            val piercingDamage = if (pierceMap[weaponData] != null) { min(armorPoints, pierceMap[weaponData]!!) + 1.0 }  else { 0.0 }
+
+            // Extra damage, True Damage
+            Pair(bludgeoningDamage + laceratingDamage, piercingDamage)
+        } else {
+            Pair(0.0, 0.0)
+        }
+    }
+
+
+    // ----------------------------------------------------------------------------------------------------
+
 
     // Main function regarding interactions
     @EventHandler(priority = EventPriority.HIGH)
@@ -63,9 +98,9 @@ object OdysseyWeaponListeners : Listener {
             val mainWeapon = somePlayer.equipment.itemInMainHand
             // Main Damage Click
             if (event.action.isLeftClick) {
-                reachFunction(somePlayer, weaponReachMap[mainWeapon.itemMeta.customModelData])
+                reachFunction(somePlayer, reachMap[mainWeapon.itemMeta.customModelData])
                 // Get If entity reached
-                val reachedEntity = reachFunction(somePlayer, weaponReachMap[mainWeapon.itemMeta.customModelData])
+                val reachedEntity = reachFunction(somePlayer, reachMap[mainWeapon.itemMeta.customModelData])
                 if (reachedEntity is LivingEntity) {
                     somePlayer.attack(reachedEntity)
                 }
@@ -84,7 +119,7 @@ object OdysseyWeaponListeners : Listener {
                             else { false }
                         }
                         if (dualWieldingDaggers) {
-                            val reachedEntity = reachFunction(somePlayer, weaponReachMap[mainWeapon.itemMeta.customModelData])
+                            val reachedEntity = reachFunction(somePlayer, reachMap[mainWeapon.itemMeta.customModelData])
                             if (reachedEntity is LivingEntity) {
                                 somePlayer.swingOffHand()
                                 with(somePlayer.equipment) {
@@ -138,8 +173,9 @@ object OdysseyWeaponListeners : Listener {
             if (someDamager.equipment.itemInMainHand.itemMeta?.hasCustomModelData() == true) {
                 val someWeapon = someDamager.equipment.itemInMainHand
                 val someOffHand = someDamager.equipment.itemInOffHand
+
                 // Make crit and still combos !!
-                when (someWeapon.itemMeta.customModelData) {
+                when (val weaponData = someWeapon.itemMeta.customModelData) {
                     ItemModels.DIAMOND_DAGGER -> {
                         if (someVictim !in someDamager.getNearbyEntities(1.8, 1.8, 1.8)) {
                             event.isCancelled = true
@@ -153,14 +189,14 @@ object OdysseyWeaponListeners : Listener {
                         }
                     }
                     ItemModels.IRON_HALBERD -> {
-                        if (someVictim in someDamager.getNearbyEntities(1.5, 1.5, 1.5) || someOffHand.type != Material.AIR) {
+                        if (someVictim in someDamager.getNearbyEntities(1.5, 1.5, 1.5) || (someOffHand.type != Material.AIR && someOffHand.type != Material.SHIELD)) {
                             event.isCancelled = true
                             return
                         }
                     }
                     ItemModels.BAMBOO_STAFF, ItemModels.WOODEN_STAFF, ItemModels.BONE_STAFF, ItemModels.BLAZE_ROD_STAFF -> {
-                        if (event.isCritical) { sweepCombo(someVictim, someDamager, 1.75, someDamager.location, event.damage + 2) }
-                        else { sweepCombo(someVictim, someDamager, 1.75, someDamager.location, event.damage - 1) }
+                        if (event.isCritical) { sweepComboFunction(someVictim, someDamager, sweepMap[weaponData]!!, event.damage + 2) }
+                        else { sweepComboFunction(someVictim, someDamager, sweepMap[weaponData]!!, event.damage - 1) }
 
                     }
                     ItemModels.GOLDEN_SABER -> {
@@ -168,11 +204,8 @@ object OdysseyWeaponListeners : Listener {
 
                     ItemModels.DIAMOND_KATANA, ItemModels.SOUL_STEEL_KATANA -> {
                         // Rabbit Hide -> Sheath
-                        if (event.isCritical && someOffHand.type == Material.AIR || someOffHand.type == Material.RABBIT_HIDE) {
-                            val dLocation = someDamager.location
-                            val eLocation = someVictim.location
-                            val midLocation = someDamager.location.clone().set(((dLocation.x + eLocation.x) / 2), ((dLocation.y + eLocation.y) / 2), ((dLocation.z + eLocation.z) / 2))
-                            sweepCombo(someVictim, someDamager, 0.75, midLocation, event.damage)
+                        if (event.isCritical && (someOffHand.type == Material.AIR || someOffHand.type == Material.RABBIT_HIDE)) {
+                            sweepComboFunction(someVictim, someDamager, sweepMap[weaponData]!!, event.damage)
                         }
                         else if (someOffHand.type != Material.AIR && someOffHand.type != Material.RABBIT_HIDE) {
                             event.damage -= 3.0
@@ -185,14 +218,18 @@ object OdysseyWeaponListeners : Listener {
                         }
                         else if (someDamager.equipment.itemInOffHand.type == Material.AIR) {
                             val sweepDamage = if (event.isCritical) { event.damage } else { event.damage - 3.0 }
-                            val dLocation = someDamager.location
-                            val eLocation = someVictim.location
-                            val midLocation = someDamager.location.clone().set(((dLocation.x + eLocation.x) / 2), ((dLocation.y + eLocation.y) / 2), ((dLocation.z + eLocation.z) / 2))
-                            sweepCombo(someVictim, someDamager, 1.25, midLocation, sweepDamage)
+                            sweepComboFunction(someVictim, someDamager, sweepMap[weaponData]!!, sweepDamage)
                         }
                             // SWEEP PARTICLES!!!
                     }
                 }
+                println("Original Damage: ${event.damage}")
+                val extraDamage = weaponArmorFunction(someWeapon.itemMeta.customModelData, someVictim)
+                event.damage += extraDamage.first
+                someVictim.health -= extraDamage.second
+                println("New Damage: ${event.damage}")
+                println("Extra Damage: ${extraDamage.first}")
+                println("True Damage: ${extraDamage.second}")
             }
         }
     }

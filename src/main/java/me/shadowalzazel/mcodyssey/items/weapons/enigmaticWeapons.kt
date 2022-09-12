@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.items.weapons
 
-import me.shadowalzazel.mcodyssey.assets.ItemModels
-import me.shadowalzazel.mcodyssey.assets.ModifiersUUIDs
+import me.shadowalzazel.mcodyssey.constants.ItemModels
+import me.shadowalzazel.mcodyssey.constants.ModifiersUUIDs
 import me.shadowalzazel.mcodyssey.items.weaponTypes.Katana
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute

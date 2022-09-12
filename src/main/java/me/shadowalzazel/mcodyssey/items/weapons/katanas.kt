@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.items.weapons
 
 import me.shadowalzazel.mcodyssey.items.weaponTypes.Katana
-import me.shadowalzazel.mcodyssey.assets.ItemModels
+import me.shadowalzazel.mcodyssey.constants.ItemModels
 import org.bukkit.Material
 
 object WoodenKatana: Katana("Wooden Katana", Material.WOODEN_SWORD, ItemModels.WOODEN_KATANA, 4.0, 1.5)

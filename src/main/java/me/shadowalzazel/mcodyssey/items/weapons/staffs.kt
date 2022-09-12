@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.items.weapons
 
 import me.shadowalzazel.mcodyssey.items.weaponTypes.Staff
-import me.shadowalzazel.mcodyssey.assets.ItemModels
+import me.shadowalzazel.mcodyssey.constants.ItemModels
 import org.bukkit.Material
 
 object BambooStaff: Staff("Bamboo Staff", Material.WOODEN_SHOVEL, ItemModels.BAMBOO_STAFF, 2.5, 1.75)
