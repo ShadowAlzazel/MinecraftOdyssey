@@ -1,6 +1,12 @@
 package me.shadowalzazel.mcodyssey.situations.utility
 
-class OdysseySituation {
+open class OdysseySituation {
+
+
+
+
+
+
 
     fun todo() {
         TODO("If new day/ something else " +

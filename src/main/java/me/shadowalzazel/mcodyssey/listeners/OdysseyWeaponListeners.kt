@@ -63,7 +63,7 @@ object OdysseyWeaponListeners : Listener {
     }
 
     // Stat handler
-    private fun weaponArmorFunction(weaponData: Int, someVictim: LivingEntity): Pair<Double, Double> {
+    private fun weaponArmorFunction(weaponData: Int, someVictim: LivingEntity, oldDamage: Double): Pair<Double, Double> {
         return if (!someVictim.isDead && someVictim.getAttribute(Attribute.GENERIC_ARMOR)?.value != null) {
             // Armor Point
             val armorPoints = someVictim.getAttribute(Attribute.GENERIC_ARMOR)!!.value
@@ -73,10 +73,10 @@ object OdysseyWeaponListeners : Listener {
             val bludgeoningDamage = if (bludgeonMap[weaponData] != null) { min(armorPoints, bludgeonMap[weaponData]!!) }  else { 0.0 }
             // Lacerate
             val laceratingDamage = if (lacerateMap[weaponData] != null) {
-                if (armorPoints <= 1.0) { lacerateMap[weaponData]!! } else { 0.0 }
+                if (armorPoints <= 1.0) { min(oldDamage, lacerateMap[weaponData]!!) } else { 0.0 }
             }  else { 0.0 }
             // Pierce
-            val piercingDamage = if (pierceMap[weaponData] != null) { min(armorPoints, pierceMap[weaponData]!!) + 1.0 }  else { 0.0 }
+            val piercingDamage = if (pierceMap[weaponData] != null) { min(armorPoints, min(pierceMap[weaponData]!!, oldDamage)) }  else { 0.0 }
 
             // Extra damage, True Damage
             Pair(bludgeoningDamage + laceratingDamage, piercingDamage)
@@ -224,7 +224,7 @@ object OdysseyWeaponListeners : Listener {
                     }
                 }
                 println("Original Damage: ${event.damage}")
-                val extraDamage = weaponArmorFunction(someWeapon.itemMeta.customModelData, someVictim)
+                val extraDamage = weaponArmorFunction(someWeapon.itemMeta.customModelData, someVictim, event.damage)
                 event.damage += extraDamage.first
                 someVictim.health -= extraDamage.second
                 println("New Damage: ${event.damage}")

@@ -17,9 +17,11 @@ import me.shadowalzazel.mcodyssey.phenomenon.utility.OdysseyPhenomenon
 import me.shadowalzazel.mcodyssey.recipes.*
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
+import org.bukkit.NamespacedKey
 import org.bukkit.World
 
 import org.bukkit.plugin.java.JavaPlugin
+import java.io.File
 
 class MinecraftOdyssey : JavaPlugin() {
 
@@ -144,9 +146,19 @@ class MinecraftOdyssey : JavaPlugin() {
         getCommand("SpawnTestMob")?.setExecutor(SpawnTestMob)
         getCommand("SpawnTestKnight")?.setExecutor(SpawnTestKnight)
         getCommand("TriggerPhenomenon")?.setExecutor(TriggerPhenomenon)
+        getCommand("LocateStructureAsync")?.setExecutor(LocateStructureAsync)
 
         // Spell Commands
         getCommand("necronomicon")?.setExecutor(Necronomicon)
+
+        // Structures
+        server.structureManager
+
+        val pillars = server.structureManager.loadStructure(File("/data/mcodyssey/structures/stone_pillars_1.nbt"))
+        server.structureManager.registerStructure(NamespacedKey(instance, "stone_pillars_1"), pillars)
+
+        // TODO: MAKE METHODS!!
+
 
         // Hello World!
         logger.info("The Odyssey has just begun!")
