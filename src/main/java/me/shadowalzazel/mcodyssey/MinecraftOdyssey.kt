@@ -19,9 +19,11 @@ import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.NamespacedKey
 import org.bukkit.World
+import org.bukkit.plugin.Plugin
 
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
+import java.io.FileNotFoundException
 
 class MinecraftOdyssey : JavaPlugin() {
 
@@ -152,10 +154,18 @@ class MinecraftOdyssey : JavaPlugin() {
         getCommand("necronomicon")?.setExecutor(Necronomicon)
 
         // Structures
-        server.structureManager
+        try {
+            //val qPillar = server.structureManager.loadStructure(this.getResource("data/mcodyssey/structures/stone_pillars_1.nbt"))
+            val pillarResource = this.getResource("data/mcodyssey/structures/stone_pillars_1.nbt")
+            if (pillarResource != null) {
+                val pillars = server.structureManager.loadStructure(pillarResource)
+                server.structureManager.registerStructure(NamespacedKey(instance, "stone_pillars_1"), pillars)
+            }
+        }
+        catch(ex: FileNotFoundException) {
+            logger.info(ex.message)
+        }
 
-        val pillars = server.structureManager.loadStructure(File("/data/mcodyssey/structures/stone_pillars_1.nbt"))
-        server.structureManager.registerStructure(NamespacedKey(instance, "stone_pillars_1"), pillars)
 
         // TODO: MAKE METHODS!!
 

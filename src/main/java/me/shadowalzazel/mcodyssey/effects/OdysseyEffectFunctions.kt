@@ -92,6 +92,16 @@ object OdysseyEffectFunctions {
         }
     }
 
+    // Thorns
+    fun accursedEffect(victimList: MutableCollection<LivingEntity>, duration: Int) {
+        victimList.forEach {
+            if (OdysseyEffectTags.ACCURSED !in it.scoreboardTags) {
+                it.addScoreboardTag(OdysseyEffectTags.ACCURSED)
+                val accursedTask = AccursedTask(it, duration)
+                accursedTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20)
+            }
+        }
+    }
 
 
 }

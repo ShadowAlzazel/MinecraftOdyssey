@@ -121,6 +121,11 @@ object BottledSouls : OdysseyPotion("Bottled Souls",
     potionEffects = emptyList(),
     potionColor = Color.fromRGB(94, 210, 215))
 
+object PoltergeistBrew : OdysseyPotion("Poltergeist Brew",
+    Component.text("Poltergeist Brew", TextColor.color(137, 24, 40)),
+    listOf(Component.text("Accursed (0:30)", TextColor.color(137, 24, 40)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+    potionEffects = emptyList(),
+    potionColor = Color.fromRGB(137, 24, 40))
 
 object PotionOfShimmer : OdysseyPotion("Bottle o' Shimmer",
     Component.text("Bottle o' Shimmer", TextColor.color(78, 0, 161)),

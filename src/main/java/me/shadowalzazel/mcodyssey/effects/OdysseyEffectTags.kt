@@ -8,5 +8,6 @@ object OdysseyEffectTags {
     const val ABLAZE: String = "Ablaze"
     const val THORNY: String = "Thorny"
     const val PUFFY_PRICKLY: String = "Puffy_Prickly"
+    const val ACCURSED: String = "Accursed"
 
 }

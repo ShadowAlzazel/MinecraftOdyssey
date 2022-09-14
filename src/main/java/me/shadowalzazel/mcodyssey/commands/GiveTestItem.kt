@@ -85,6 +85,9 @@ object GiveTestItem : CommandExecutor {
                     "arcane_book" -> {
                         sender.inventory.addItem(OdysseyBooks.ARCANE_BOOK.createItemStack(1))
                     }
+                    "coagulated_blood" -> {
+                        sender.inventory.addItem(OdysseyItems.COAGULATED_BLOOD.createItemStack(1))
+                    }
                     else -> {
                         return false
                     }

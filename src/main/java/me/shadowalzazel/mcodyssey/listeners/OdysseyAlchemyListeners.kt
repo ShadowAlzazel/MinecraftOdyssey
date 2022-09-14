@@ -35,7 +35,7 @@ import org.bukkit.scheduler.BukkitRunnable
 
 object OdysseyAlchemyListeners : Listener {
 
-    private val odysseyTimedPotions = listOf("Bottle o' Ablaze", "Bottle o' Frost", "Bottle o' Decay", "Bottle o' Douse", "Potion of Thorns", "Puffy n' Prickly Potion")
+    private val odysseyTimedPotions = listOf("Bottle o' Ablaze", "Bottle o' Frost", "Bottle o' Decay", "Bottle o' Douse", "Potion of Thorns", "Puffy n' Prickly Potion", "Poltergeist Brew")
     private val odysseyTimelessPotions = listOf("Bottled Souls")
 
     // Helper function that converts a char sequence (M:SS) to time Int
@@ -171,6 +171,7 @@ object OdysseyAlchemyListeners : Listener {
             "Bottle o' Ablaze" -> { OdysseyEffectFunctions.ablazeEffect(affectedEntities, potionDuration, 2) }
             "Potion of Thorns" -> { OdysseyEffectFunctions.thornsEffect(affectedEntities, potionDuration) }
             "Puffy n' Prickly Potion" -> { OdysseyEffectFunctions.puffyPricklyEffect(affectedEntities, potionDuration) }
+            "Poltergeist Brew" -> { OdysseyEffectFunctions.accursedEffect(affectedEntities, potionDuration) }
             "Bottled Souls" -> { OdysseyEffectFunctions.soulDamageEffect(affectedEntities, 1) }
             else -> {
             }
@@ -249,6 +250,7 @@ object OdysseyAlchemyListeners : Listener {
                         "Bottle o' Ablaze" -> { OdysseyEffectFunctions.ablazeEffect(mutableListOf(somePlayer), potionDuration, 2) }
                         "Potion of Thorns" -> { OdysseyEffectFunctions.thornsEffect(mutableListOf(somePlayer), potionDuration) }
                         "Puffy n' Prickly Potion" -> { OdysseyEffectFunctions.puffyPricklyEffect(mutableListOf(somePlayer), potionDuration) }
+                        "Poltergeist Brew" -> { OdysseyEffectFunctions.accursedEffect(mutableListOf(somePlayer), potionDuration) }
                         "Bottled Souls" -> { OdysseyEffectFunctions.soulDamageEffect(mutableListOf(somePlayer), 1) }
                         else -> {
                         }
@@ -406,6 +408,10 @@ object OdysseyAlchemyListeners : Listener {
                         customEffectToAdd = PotionEffect(PotionEffectType.UNLUCK, potionDuration * 20, 0)
                         tagToAdd = "Escaping_Souls_Cloud"
                     }
+                    "Poltergeist Brew" -> {
+                        customEffectToAdd = PotionEffect(PotionEffectType.UNLUCK, potionDuration * 20, 0)
+                        tagToAdd = "Poltergeist_Accursed_Cloud"
+                    }
                     else -> {
                     }
                 }
@@ -441,6 +447,7 @@ object OdysseyAlchemyListeners : Listener {
                 "Escaping_Souls_Cloud" -> { OdysseyEffectFunctions.soulDamageEffect(event.affectedEntities, 1)
                     with(somePotionCloud) { world.spawnParticle(Particle.SCULK_SOUL, location, (radius * 40).toInt(), radius.toDouble(), 0.25, radius.toDouble()) }
                 }
+                "Poltergeist_Accursed_Cloud" -> { OdysseyEffectFunctions.accursedEffect(event.affectedEntities, 30 / 4) }
                 else -> {
                 }
             }
