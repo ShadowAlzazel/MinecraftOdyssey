@@ -156,10 +156,12 @@ class MinecraftOdyssey : JavaPlugin() {
         // Structures
         try {
             //val qPillar = server.structureManager.loadStructure(this.getResource("data/mcodyssey/structures/stone_pillars_1.nbt"))
-            val pillarResource = this.getResource("data/mcodyssey/structures/stone_pillars_1.nbt")
+            val pillarResource = this.getResource("data/mcodyssey/structures/stone_pillars/stone_pillars_1.nbt")
             if (pillarResource != null) {
+                println("Input Stream: $pillarResource")
                 val pillars = server.structureManager.loadStructure(pillarResource)
                 server.structureManager.registerStructure(NamespacedKey(instance, "stone_pillars_1"), pillars)
+                println("Success!")
             }
         }
         catch(ex: FileNotFoundException) {
