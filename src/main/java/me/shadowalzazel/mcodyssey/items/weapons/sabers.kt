@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.items.weapons
 
-import me.shadowalzazel.mcodyssey.assets.ItemModels
+import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.items.weaponTypes.Saber
 import org.bukkit.Material
 

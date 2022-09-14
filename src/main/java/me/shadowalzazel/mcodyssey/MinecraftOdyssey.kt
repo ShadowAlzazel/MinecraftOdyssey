@@ -17,9 +17,13 @@ import me.shadowalzazel.mcodyssey.phenomenon.utility.OdysseyPhenomenon
 import me.shadowalzazel.mcodyssey.recipes.*
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
+import org.bukkit.NamespacedKey
 import org.bukkit.World
+import org.bukkit.plugin.Plugin
 
 import org.bukkit.plugin.java.JavaPlugin
+import java.io.File
+import java.io.FileNotFoundException
 
 class MinecraftOdyssey : JavaPlugin() {
 
@@ -144,9 +148,29 @@ class MinecraftOdyssey : JavaPlugin() {
         getCommand("SpawnTestMob")?.setExecutor(SpawnTestMob)
         getCommand("SpawnTestKnight")?.setExecutor(SpawnTestKnight)
         getCommand("TriggerPhenomenon")?.setExecutor(TriggerPhenomenon)
+        getCommand("LocateStructureAsync")?.setExecutor(LocateStructureAsync)
 
         // Spell Commands
         getCommand("necronomicon")?.setExecutor(Necronomicon)
+
+        // Structures
+        try {
+            //val qPillar = server.structureManager.loadStructure(this.getResource("data/mcodyssey/structures/stone_pillars_1.nbt"))
+            val pillarResource = this.getResource("data/mcodyssey/structures/stone_pillars/stone_pillars_1.nbt")
+            if (pillarResource != null) {
+                println("Input Stream: $pillarResource")
+                val pillars = server.structureManager.loadStructure(pillarResource)
+                server.structureManager.registerStructure(NamespacedKey(instance, "stone_pillars_1"), pillars)
+                println("Success!")
+            }
+        }
+        catch(ex: FileNotFoundException) {
+            logger.info(ex.message)
+        }
+
+
+        // TODO: MAKE METHODS!!
+
 
         // Hello World!
         logger.info("The Odyssey has just begun!")

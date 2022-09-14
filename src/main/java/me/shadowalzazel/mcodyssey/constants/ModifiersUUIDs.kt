@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.assets
+package me.shadowalzazel.mcodyssey.constants
 
 import java.util.UUID
 

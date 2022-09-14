@@ -35,7 +35,7 @@ import org.bukkit.scheduler.BukkitRunnable
 
 object OdysseyAlchemyListeners : Listener {
 
-    private val odysseyTimedPotions = listOf("Bottle o' Ablaze", "Bottle o' Frost", "Bottle o' Decay", "Bottle o' Douse", "Potion of Thorns", "Puffy n' Prickly Potion")
+    private val odysseyTimedPotions = listOf("Bottle o' Ablaze", "Bottle o' Frost", "Bottle o' Decay", "Bottle o' Douse", "Potion of Thorns", "Puffy n' Prickly Potion", "Poltergeist Brew")
     private val odysseyTimelessPotions = listOf("Bottled Souls")
 
     // Helper function that converts a char sequence (M:SS) to time Int
@@ -69,7 +69,7 @@ object OdysseyAlchemyListeners : Listener {
     }
 
     // Helper Coroutine Function for brewing odyssey potions
-    private fun brewCustomAlchemyPotion(brewerSlots: Array<ItemStack?>, ingredientMaterial: Material): MutableMap<Int, ItemStack?> = runBlocking {
+    private suspend fun brewCustomAlchemyPotion(brewerSlots: Array<ItemStack?>, ingredientMaterial: Material): MutableMap<Int, ItemStack?> = runBlocking {
         // Get Result
         val resultType = if (ingredientMaterial == Material.GUNPOWDER) { Material.SPLASH_POTION } else { Material.LINGERING_POTION }
         val brewingNewResults: MutableMap<Int, ItemStack?> = mutableMapOf()
@@ -108,7 +108,7 @@ object OdysseyAlchemyListeners : Listener {
 
         // Check each slot
         for (x in 0..2) {
-            if (brewerSlots[x] != null && brewerSlots[x]?.type != Material.AIR) {
+            if (brewerSlots[x] != null) {
                 val somePotion = brewerSlots[x]!!
                 // Checks if potion has display name and display color
                 if (somePotion.itemMeta.hasDisplayName() && somePotion.itemMeta.displayName()?.color() != null) {
@@ -165,12 +165,13 @@ object OdysseyAlchemyListeners : Listener {
         }
         // Match Names
         when (potionName) {
-            "Bottle o' Decay" -> { OdysseyEffectFunctions.decayingEffect(affectedEntities, potionDuration) }
-            "Bottle o' Frost" -> { OdysseyEffectFunctions.freezingEffect(affectedEntities, potionDuration) }
+            "Bottle o' Decay" -> { OdysseyEffectFunctions.decayingEffect(affectedEntities, potionDuration, 1) }
+            "Bottle o' Frost" -> { OdysseyEffectFunctions.freezingEffect(affectedEntities, potionDuration, 1) }
             "Bottle o' Douse" -> { OdysseyEffectFunctions.dousedEffect(affectedEntities, potionDuration, 2) }
             "Bottle o' Ablaze" -> { OdysseyEffectFunctions.ablazeEffect(affectedEntities, potionDuration, 2) }
             "Potion of Thorns" -> { OdysseyEffectFunctions.thornsEffect(affectedEntities, potionDuration) }
             "Puffy n' Prickly Potion" -> { OdysseyEffectFunctions.puffyPricklyEffect(affectedEntities, potionDuration) }
+            "Poltergeist Brew" -> { OdysseyEffectFunctions.accursedEffect(affectedEntities, potionDuration) }
             "Bottled Souls" -> { OdysseyEffectFunctions.soulDamageEffect(affectedEntities, 1) }
             else -> {
             }
@@ -243,12 +244,13 @@ object OdysseyAlchemyListeners : Listener {
                     // Match Names
                     // TODO: Reapply
                     when (potionName) {
-                        "Bottle o' Decay" -> { OdysseyEffectFunctions.decayingEffect(mutableListOf(somePlayer), potionDuration) }
-                        "Bottle o' Frost" -> { OdysseyEffectFunctions.freezingEffect(mutableListOf(somePlayer), potionDuration) }
+                        "Bottle o' Decay" -> { OdysseyEffectFunctions.decayingEffect(mutableListOf(somePlayer), potionDuration, 1) }
+                        "Bottle o' Frost" -> { OdysseyEffectFunctions.freezingEffect(mutableListOf(somePlayer), potionDuration, 1) }
                         "Bottle o' Douse" -> { OdysseyEffectFunctions.dousedEffect(mutableListOf(somePlayer), potionDuration, 2) }
                         "Bottle o' Ablaze" -> { OdysseyEffectFunctions.ablazeEffect(mutableListOf(somePlayer), potionDuration, 2) }
                         "Potion of Thorns" -> { OdysseyEffectFunctions.thornsEffect(mutableListOf(somePlayer), potionDuration) }
                         "Puffy n' Prickly Potion" -> { OdysseyEffectFunctions.puffyPricklyEffect(mutableListOf(somePlayer), potionDuration) }
+                        "Poltergeist Brew" -> { OdysseyEffectFunctions.accursedEffect(mutableListOf(somePlayer), potionDuration) }
                         "Bottled Souls" -> { OdysseyEffectFunctions.soulDamageEffect(mutableListOf(somePlayer), 1) }
                         else -> {
                         }
@@ -317,10 +319,11 @@ object OdysseyAlchemyListeners : Listener {
     fun brewingPotion(event: BrewEvent) {
         if (event.contents.ingredient!!.type == Material.GUNPOWDER || event.contents.ingredient!!.type == Material.DRAGON_BREATH) {
 
-            val brewingContents = event.contents.contents!!
+            val brewingContents = event.contents.contents.clone()
             GlobalScope.launch {
-                val newBrewingStandResults = brewCustomAlchemyPotion(brewingContents, event.contents.ingredient!!.type)
-                val synchroBrewingTask: BukkitRunnable = BrewingEventSynchro(newBrewingStandResults, event.contents!!)
+
+                val newBrewingStandSlots = brewCustomAlchemyPotion(brewingContents, event.contents.ingredient!!.type)
+                val synchroBrewingTask: BukkitRunnable = BrewingEventSynchro(newBrewingStandSlots, event.contents)
                 synchroBrewingTask.runTask(MinecraftOdyssey.instance)
 
             }
@@ -405,6 +408,10 @@ object OdysseyAlchemyListeners : Listener {
                         customEffectToAdd = PotionEffect(PotionEffectType.UNLUCK, potionDuration * 20, 0)
                         tagToAdd = "Escaping_Souls_Cloud"
                     }
+                    "Poltergeist Brew" -> {
+                        customEffectToAdd = PotionEffect(PotionEffectType.UNLUCK, potionDuration * 20, 0)
+                        tagToAdd = "Poltergeist_Accursed_Cloud"
+                    }
                     else -> {
                     }
                 }
@@ -431,8 +438,8 @@ object OdysseyAlchemyListeners : Listener {
         // For now base timers then string manipulation
         for (tag in somePotionCloud.scoreboardTags) {
             when (tag) {
-                "Decaying_Cloud" -> { OdysseyEffectFunctions.decayingEffect(event.affectedEntities, (30 / 4) / 2) }
-                "Frost_Cloud" -> { OdysseyEffectFunctions.freezingEffect(event.affectedEntities, 30 / 4) }
+                "Decaying_Cloud" -> { OdysseyEffectFunctions.decayingEffect(event.affectedEntities, (30 / 4) / 2, 1) }
+                "Frost_Cloud" -> { OdysseyEffectFunctions.freezingEffect(event.affectedEntities, 30 / 4, 1) }
                 "Douse_Cloud" -> { OdysseyEffectFunctions.dousedEffect(event.affectedEntities, 40 / 4, 2) }
                 "Blazing_Cloud" -> { OdysseyEffectFunctions.ablazeEffect(event.affectedEntities, 30 / 4, 2) }
                 "Potion of Thorns" -> { OdysseyEffectFunctions.thornsEffect(event.affectedEntities, 50 / 4) }
@@ -440,6 +447,7 @@ object OdysseyAlchemyListeners : Listener {
                 "Escaping_Souls_Cloud" -> { OdysseyEffectFunctions.soulDamageEffect(event.affectedEntities, 1)
                     with(somePotionCloud) { world.spawnParticle(Particle.SCULK_SOUL, location, (radius * 40).toInt(), radius.toDouble(), 0.25, radius.toDouble()) }
                 }
+                "Poltergeist_Accursed_Cloud" -> { OdysseyEffectFunctions.accursedEffect(event.affectedEntities, 30 / 4) }
                 else -> {
                 }
             }

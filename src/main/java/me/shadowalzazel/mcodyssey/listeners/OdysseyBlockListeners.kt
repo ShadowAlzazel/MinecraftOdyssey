@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.listeners
 
-import me.shadowalzazel.mcodyssey.assets.ItemModels
+import me.shadowalzazel.mcodyssey.constants.ItemModels
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockPlaceEvent

@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.items.weapons
 
 import me.shadowalzazel.mcodyssey.items.weaponTypes.Spear
-import me.shadowalzazel.mcodyssey.assets.ItemModels
+import me.shadowalzazel.mcodyssey.constants.ItemModels
 import org.bukkit.Material
 
 object WoodenSpear: Spear("Wooden Spear", Material.WOODEN_SHOVEL, ItemModels.WOODEN_SPEAR, 2.5, 0.85)

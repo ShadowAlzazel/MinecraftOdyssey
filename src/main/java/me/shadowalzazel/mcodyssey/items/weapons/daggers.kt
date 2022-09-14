@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.items.weapons
 
 import me.shadowalzazel.mcodyssey.items.weaponTypes.Dagger
-import me.shadowalzazel.mcodyssey.assets.ItemModels
+import me.shadowalzazel.mcodyssey.constants.ItemModels
 import org.bukkit.Material
 
 object WoodenDagger: Dagger("Wooden Dagger", Material.WOODEN_SWORD, ItemModels.WOODEN_DAGGER, 1.25, 3.0)

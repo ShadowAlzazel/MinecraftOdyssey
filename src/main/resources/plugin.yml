@@ -31,3 +31,6 @@ commands:
   TriggerPhenomenon:
     usage: /<command>
     permission: op
+  LocateStructureAsync:
+    usage: /<command>
+    permission: op

@@ -162,6 +162,16 @@ object BottledSoulsRecipe : OdysseyAlchemyCauldronRecipe(
         AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1)),
     4, Material.SOUL_FIRE)
 
+// POLTERGEIST_BREW
+object PoltergeistBrewRecipe : OdysseyAlchemyCauldronRecipe(
+    AlchemyPotions.POLTERGEIST_BREW,
+    listOf(
+        OdysseyItems.ECTOPLASM.createItemStack(2),
+        OdysseyItems.COAGULATED_BLOOD.createItemStack(4),
+        ItemStack(Material.ROTTEN_FLESH, 8),
+        AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1)),
+    4, Material.SOUL_FIRE)
+
 // POTION_OF_SHIMMER_RECIPE
 object PotionOfShimmerRecipe : OdysseyAlchemyCauldronRecipe(
     AlchemyPotions.POTION_OF_SHIMMER,

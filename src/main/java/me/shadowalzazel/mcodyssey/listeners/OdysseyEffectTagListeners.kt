@@ -1,10 +1,16 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.effects.OdysseyEffectTags
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
+import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Villager
+import org.bukkit.entity.Zombie
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
@@ -50,6 +56,34 @@ object OdysseyEffectTagListeners : Listener {
             tagsToRemove.forEach { someVictim.scoreboardTags.remove(it) }
         }
     }
+
+    @EventHandler
+    fun mainTagAndEffectDeathHandler(event: EntityDeathEvent) {
+        val someVictim = event.entity
+        someVictim.scoreboardTags.forEach {
+            when (it) {
+                OdysseyEffectTags.ACCURSED -> {
+                    if (someVictim.type == EntityType.VILLAGER) {
+                        (someVictim as Villager).zombify()
+                        someVictim.scoreboardTags.remove(it)
+                    }
+                    else if (someVictim.type == EntityType.PLAYER) {
+                        val accursedZombie = (someVictim.world.spawnEntity(someVictim.location, EntityType.ZOMBIE) as Zombie).apply {
+                            setShouldBurnInDay(false)
+                            canPickupItems = true
+                            isPersistent = true
+                            customName(Component.text("Accursed Poltergeist", TextColor.color(137, 24, 40)))
+                            isCustomNameVisible = true
+                            addPotionEffect(PotionEffect(PotionEffectType.HEALTH_BOOST, 20 * 9999, 4))
+                        }
+                        someVictim.scoreboardTags.remove(it)
+                    }
+                }
+            }
+        }
+    }
+
+
 
     fun todo() {
         TODO("Check if glowing then do more damage")

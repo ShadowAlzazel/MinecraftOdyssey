@@ -11,7 +11,7 @@ object OdysseyEffectFunctions {
 
 
     // Decaying
-    fun decayingEffect(victimList: MutableCollection<LivingEntity>, duration: Int, amplifier: Int = 0) {
+    fun decayingEffect(victimList: MutableCollection<LivingEntity>, duration: Int, amplifier: Int) {
         val decayingPotionEffect = PotionEffect(PotionEffectType.HUNGER, duration * 20, amplifier)
         victimList.forEach {
             it.addPotionEffect(decayingPotionEffect)
@@ -22,7 +22,7 @@ object OdysseyEffectFunctions {
     }
 
     // Freezing
-    fun freezingEffect(victimList: MutableCollection<LivingEntity>, duration: Int, amplifier: Int = 0) {
+    fun freezingEffect(victimList: MutableCollection<LivingEntity>, duration: Int, amplifier: Int) {
         val freezingPotionEffect = PotionEffect(PotionEffectType.SLOW, duration * 20, amplifier)
         victimList.forEach {
             if (OdysseyEffectTags.FREEZING !in it.scoreboardTags) {
@@ -35,7 +35,7 @@ object OdysseyEffectFunctions {
     }
 
     // Doused
-    fun dousedEffect(victimList: MutableCollection<LivingEntity>, duration: Int, amplifier: Int = 0) {
+    fun dousedEffect(victimList: MutableCollection<LivingEntity>, duration: Int, amplifier: Int = 1) {
         victimList.forEach {
             if (OdysseyEffectTags.DOUSED !in it.scoreboardTags) {
                 it.addScoreboardTag(OdysseyEffectTags.DOUSED)
@@ -47,7 +47,7 @@ object OdysseyEffectFunctions {
     }
 
     // Ablaze
-    fun ablazeEffect(victimList: MutableCollection<LivingEntity>, duration: Int, amplifier: Int = 0) {
+    fun ablazeEffect(victimList: MutableCollection<LivingEntity>, duration: Int, amplifier: Int = 1) {
         victimList.forEach {
             if (OdysseyEffectTags.ABLAZE !in it.scoreboardTags) {
                 it.fireTicks = duration * 20
@@ -92,6 +92,16 @@ object OdysseyEffectFunctions {
         }
     }
 
+    // Thorns
+    fun accursedEffect(victimList: MutableCollection<LivingEntity>, duration: Int) {
+        victimList.forEach {
+            if (OdysseyEffectTags.ACCURSED !in it.scoreboardTags) {
+                it.addScoreboardTag(OdysseyEffectTags.ACCURSED)
+                val accursedTask = AccursedTask(it, duration)
+                accursedTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20)
+            }
+        }
+    }
 
 
 }

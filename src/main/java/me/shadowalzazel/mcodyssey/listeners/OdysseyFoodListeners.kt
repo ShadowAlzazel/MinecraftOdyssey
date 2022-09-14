@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.listeners
 
-import me.shadowalzazel.mcodyssey.assets.ItemModels
+import me.shadowalzazel.mcodyssey.constants.ItemModels
 import net.kyori.adventure.text.TextComponent
 import org.bukkit.Material
 import org.bukkit.Particle

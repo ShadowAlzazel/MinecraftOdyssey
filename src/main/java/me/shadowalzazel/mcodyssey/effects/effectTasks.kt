@@ -206,14 +206,12 @@ class ThornsTask(private val thornEntity: LivingEntity, private val thornCount: 
     private var counter = 0
 
     override fun run() {
-        thornEntity.also {
-            counter += 1
-            if (OdysseyEffectTags.THORNY !in it.scoreboardTags) { this.cancel() }
-            val timeElapsed = System.currentTimeMillis() - thornsCooldown
-            if (thornCount < counter || timeElapsed > thornCount * 1000) {
-                it.scoreboardTags.remove(OdysseyEffectTags.THORNY)
-                this.cancel()
-            }
+        counter += 1
+        if (OdysseyEffectTags.THORNY !in thornEntity.scoreboardTags) { this.cancel() }
+        val timeElapsed = System.currentTimeMillis() - thornsCooldown
+        if (thornCount < counter || timeElapsed > thornCount * 1000) {
+            thornEntity.scoreboardTags.remove(OdysseyEffectTags.THORNY)
+            this.cancel()
         }
     }
 
@@ -226,14 +224,30 @@ class PuffyPricklyTask(private val thornEntity: LivingEntity, private val puffyP
     private var counter = 0
 
     override fun run() {
-        thornEntity.also {
-            counter += 1
-            if (OdysseyEffectTags.PUFFY_PRICKLY !in it.scoreboardTags) { this.cancel() }
-            val timeElapsed = System.currentTimeMillis() - puffyPricklyCooldown
-            if (puffyPricklyCount < counter || timeElapsed > puffyPricklyCount * 1000) {
-                it.scoreboardTags.remove(OdysseyEffectTags.PUFFY_PRICKLY)
-                this.cancel()
-            }
+        counter += 1
+        if (OdysseyEffectTags.PUFFY_PRICKLY !in thornEntity.scoreboardTags) { this.cancel() }
+        val timeElapsed = System.currentTimeMillis() - puffyPricklyCooldown
+        if (puffyPricklyCount < counter || timeElapsed > puffyPricklyCount * 1000) {
+            thornEntity.scoreboardTags.remove(OdysseyEffectTags.PUFFY_PRICKLY)
+            this.cancel()
+        }
+    }
+
+}
+
+
+// Accursed TASK
+class AccursedTask(private val accursedEntity: LivingEntity, private val accursedCounter: Int) : BukkitRunnable() {
+    private var accursedCooldown = System.currentTimeMillis()
+    private var counter = 0
+
+    override fun run() {
+        counter += 1
+        if (OdysseyEffectTags.THORNY !in accursedEntity.scoreboardTags) { this.cancel() }
+        val timeElapsed = System.currentTimeMillis() - accursedCooldown
+        if (accursedCounter < counter || timeElapsed > accursedCounter * 1000) {
+            accursedEntity.scoreboardTags.remove(OdysseyEffectTags.THORNY)
+            this.cancel()
         }
     }
 

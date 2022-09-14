@@ -27,11 +27,13 @@ class PhenomenonCycle(private val mainWorld: World) : BukkitRunnable() {
             val timeElapsed = System.currentTimeMillis() - utuPhenomenonCallCooldown
             if (timeElapsed >= utuPhenomenonTimerConstant) {
                 utuPhenomenonCallCooldown = System.currentTimeMillis()
-                // Reset Night
+                // Reset
+                //it.utuPhenomenonActive = false
+                //it.currentUtuPhenomenon = null
                 it.suenPhenomenonActive = false
                 it.currentSuenPhenomenon = null
                 // Check if end game
-                if ((it.endGame) && (!it.utuPhenomenonActive)) {
+                if (it.endGame && !it.utuPhenomenonActive) {
                     val rolledRate = (0..100).random()
                     // Daily luck is not a true daily phenomenon
                     //val luckConfigAmount = MinecraftOdyssey.instance.config.getInt("player-minimum-for-luck")
@@ -65,16 +67,18 @@ class PhenomenonCycle(private val mainWorld: World) : BukkitRunnable() {
             val timeElapsed = System.currentTimeMillis() - suenPhenomenonCallCooldown
             if (timeElapsed >= suenPhenomenonTimerConstant) {
                 suenPhenomenonCallCooldown = System.currentTimeMillis()
-                // Reset Day
+                // Reset
                 it.utuPhenomenonActive = false
                 it.currentUtuPhenomenon = null
+                //it.suenPhenomenonActive = false
+                //it.currentSuenPhenomenon = null
                 // Check if end game
-                if ((it.endGame) && (!it.suenPhenomenonActive)) {
+                if (it.endGame && !it.suenPhenomenonActive) {
                     val leadingPhenomenon = suenSet[0]
                     val activated: Boolean = leadingPhenomenon.rollActivation(it.mainWorld!!)
                     if (activated) {
-                        it.utuPhenomenonActive = true
-                        it.currentUtuPhenomenon = leadingPhenomenon
+                        it.suenPhenomenonActive = true
+                        it.currentSuenPhenomenon = leadingPhenomenon
                         suenSet.remove(leadingPhenomenon)
                         suenSet.add(leadingPhenomenon)
                         if (suenSet[0].criticalWarning()) { suenSet[0].criticalityActivation(it.mainWorld!!.players) }

@@ -20,6 +20,11 @@ object TriggerPhenomenon : CommandExecutor {
                 val someWorld = sender.location.world
                 var somePhenomenon: OdysseyPhenomenon? = null
                 when (args[0]) {
+                    "blue_moon" -> {
+                        if (someWorld.time > 12000) {
+                            somePhenomenon = SuenPhenomena.BLUE_MOON
+                        }
+                    }
                     "blood_moon" -> {
                         if (someWorld.time > 12000) {
                             somePhenomenon = SuenPhenomena.BLOOD_MOON
