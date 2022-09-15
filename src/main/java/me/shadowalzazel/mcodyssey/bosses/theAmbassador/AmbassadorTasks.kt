@@ -2,6 +2,8 @@ package me.shadowalzazel.mcodyssey.bosses.theAmbassador
 
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Illusioner
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
 
 class AmbassadorHijackTasks(private val ambassadorEntity: Illusioner) : BukkitRunnable() {
@@ -19,6 +21,7 @@ class AmbassadorHijackTasks(private val ambassadorEntity: Illusioner) : BukkitRu
 
         counter += 1
         if (counter > 6) {
+            ambassadorEntity.addPotionEffect(PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 10, 1))
             ambassadorEntity.teleport(ambassadorEntity.location.add(0.0, 5.0, 0.0))
             this.cancel()
         }

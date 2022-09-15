@@ -185,7 +185,7 @@ object ItemModels {
 
     //
     const val ABZU_BLADE: Int = 6905002
-
+    const val KINETIC_BLASTER: Int = 6905003
 
 
 
