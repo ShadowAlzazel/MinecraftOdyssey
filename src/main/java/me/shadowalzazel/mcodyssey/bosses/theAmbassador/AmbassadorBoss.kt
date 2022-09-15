@@ -12,7 +12,6 @@ import org.bukkit.*
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.entity.*
-import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import java.util.*
@@ -44,7 +43,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         "${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Just stop... Your attacks are worthless!")
 
 
-    // Spawn boss near players
+    // Spawn entity
     private fun spawnBossEntity(spawningLocation: Location): Illusioner {
         val newAmbassadorEntity: Illusioner = (spawningLocation.world.spawnEntity(spawningLocation, EntityType.ILLUSIONER) as Illusioner).apply {
             // Potion Effects
@@ -55,7 +54,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 PotionEffect(PotionEffectType.SPEED, 99999, 2)))
 
             // Change Default Behaviour
-            customName(Component.text("The Ambassador", TextColor.color(138, 67, 255)))
+            customName(Component.text("The Ambassador", TextColor.color(255, 85, 255)))
             isCustomNameVisible = true
             removeWhenFarAway = false
             isCanJoinRaid = false
@@ -75,8 +74,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         return newAmbassadorEntity
     }
 
-
-    // Create Ambassador Boss Entity
+    // Create Ambassador Boss in instance
     fun createBoss(odysseyWorld: World) {
         despawnTimer = System.currentTimeMillis()
         //
@@ -104,10 +102,10 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
     // Defeat Boss
     fun defeatedBoss(ambassadorEntity: Illusioner, vanquisher: Player) {
         if (ambassadorEntity == bossEntity) {
-            // Spawn loot
-            vanquisher.world.dropItem(ambassadorEntity.location, (OdysseyBooks.GILDED_BOOK.createGildedBook(OdysseyEnchantments.GRAVITY_WELL, 1)))
+            // Spawn loot near vanquisher
+            vanquisher.world.dropItem(vanquisher.location, (OdysseyBooks.GILDED_BOOK.createGildedBook(OdysseyEnchantments.GRAVITY_WELL, 1)))
             vanquisher.giveExpLevels(10)
-
+            // Nearby player get xp and text
             ambassadorEntity.world.getNearbyPlayers(ambassadorEntity.location, 64.0).forEach {
                 it.sendMessage(Component.text("The Ambassador has departed ungracefully!", TextColor.color(255, 255, 85), TextDecoration.ITALIC))
                 it.sendMessage(Component.text("With", TextColor.color(255, 255, 85), TextDecoration.ITALIC)
@@ -119,13 +117,13 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         }
     }
 
+    // Despawn boss
     fun departBoss() {
         bossEntity!!.world.players.forEach {
             it.sendMessage(Component.text("The Ambassador has left...!", TextColor.color(255, 255, 85), TextDecoration.ITALIC))
             it.playSound(it, Sound.ENTITY_ELDER_GUARDIAN_CURSE, 1.0F, 1.0F)
         }
     }
-
 
     // activate boss
     private fun activateBoss(someTarget: Entity) {
@@ -135,140 +133,111 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         }
     }
 
+    // Spawn a dummy clone
+    private fun spawnDummy() {
+        val randomLocation = bossEntity!!.location.clone().add((-8..8).random().toDouble(), 3.0, (-8..8).random().toDouble())
+        (bossEntity!!.world.spawnEntity(randomLocation, EntityType.ILLUSIONER) as Illusioner).apply {
+            customName(Component.text("The Ambassador", TextColor.color(255, 85, 255)))
+            isCustomNameVisible = true
+            isCanJoinRaid = false
+            isAware = true
+            lootTable = null
+            addPotionEffects(listOf(
+                PotionEffect(PotionEffectType.REGENERATION, 20 * 300, 0),
+                PotionEffect(PotionEffectType.SLOW, 20 * 300, 1)))
+            // Add Item
+            clearActiveItem()
+            equipment.setItemInMainHand(OdysseyWeapons.KINETIC_BLASTER.createItemStack(1))
+        }
+    }
 
     // Create a new firework entity
     private fun createSuperFirework(targetLocation: Location): Firework {
         val randomColors = listOf(Color.BLUE, Color.RED, Color.YELLOW, Color.FUCHSIA, Color.AQUA)
-        //
         val superFirework: Firework = (bossEntity!!.world.spawnEntity(targetLocation, EntityType.FIREWORK) as Firework).apply {
-            fireworkMeta.addEffect(FireworkEffect.builder().with(FireworkEffect.Type.BALL_LARGE).withColor(randomColors.random()).withFade(randomColors.random()).trail(true).flicker(true).build())
+            fireworkMeta.also {
+                it.addEffect(FireworkEffect.builder()
+                    .with(FireworkEffect.Type.BALL_LARGE)
+                    .withColor(randomColors.random())
+                    .withFade(randomColors.random())
+                    .trail(true)
+                    .flicker(true)
+                    .build()
+                )
+            }
             fireworkMeta.power = 120
-            velocity = targetLocation.clone().add(0.0, -2.0, 0.0).subtract(targetLocation).toVector()
+            velocity = targetLocation.clone().add(0.0, -1.618, 0.0).subtract(targetLocation).toVector()
             addScoreboardTag("super_firework")
         }
         return superFirework
     }
 
 
-    // Firework Attack Call
-    private fun fireworkAttack(targetPlayer: Player) {
-        // Find players for splash
-        val playersNearTarget = targetPlayer.world.getNearbyPlayers(targetPlayer.location, 4.5)
-        for (x in playersNearTarget) {
-            createSuperFirework(x.location.clone().add(0.0, 20.0, 0.0))
+    // Calls fireworks from the sky
+    private fun skyBombardAttack(targetLocation: Location) {
+        // Spawn 5 random fireworks
+        repeat(5) {
+            createSuperFirework(targetLocation.clone().add((-5..5).random().toDouble(), (35..45).random().toDouble(), (-5..5).random().toDouble()))
         }
     }
 
-
-    // Spawn a dummy clone
-    private fun spawnDummy() {
-        // Find Location
-        val currentLocation = bossEntity!!.location
-        val randomXZLocation = (-5..5).random()
-        currentLocation.x += randomXZLocation
-        currentLocation.z += randomXZLocation
-        currentLocation.y += 3
-
-        // Create Dummy
-        val ambassadorDummy = bossEntity!!.world.spawnEntity(currentLocation, EntityType.ILLUSIONER) as Illusioner
-        ambassadorDummy.customName = "${ChatColor.LIGHT_PURPLE}$bossName"
-        ambassadorDummy.isCustomNameVisible = true
-        ambassadorDummy.isCanJoinRaid = false
-        ambassadorDummy.isAware = true
-        ambassadorDummy.lootTable = null
-        ambassadorDummy.health = 25.0
-
-        // Add Item
-        val ambassadorWeapon: ItemStack = OdysseyWeapons.KINETIC_BLASTER.createItemStack(1)
-        ambassadorDummy.clearActiveItem()
-        ambassadorDummy.equipment.setItemInMainHand(ambassadorWeapon)
+    // Falling Singularity that attracts
+    private fun fallingSingularityAttack(targetLocation: Location) {
+        // Spawn falling armor stand wearing singularity thingy
 
     }
 
 
-    // Do Gravity Wave Damage
-    private fun doGravityWaveDamage(somePlayers: MutableCollection<Player>, someWorld: World) {
-        val gravityDistort = PotionEffect(PotionEffectType.SLOW_FALLING, 200, 0)
-        val gravityShatter = PotionEffect(PotionEffectType.WEAKNESS, 100, 0)
-        val gravityWaveEffects = listOf(gravityDistort, gravityShatter)
 
-        for (somePlayer in somePlayers) {
-            // Do damage, apply effects and teleport
-            somePlayer.addPotionEffects(gravityWaveEffects)
-            somePlayer.damage(16.5)
-            val gravityAttract = somePlayer.location
-            gravityAttract.add(0.0, 12.5, 0.0)
-            //superFirework.velocity = targetPlayer.location.direction.subtract(bossEntity!!.location.direction)
-            somePlayer.velocity = gravityAttract.subtract(somePlayer.location).toVector().multiply(0.2)
+    // Spawn a vortex that launches players
+    private fun gravityLaunchAttack(targetLocation: Location) {
+        val gravityWaveEffects = listOf(
+            PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 10, 0),
+            PotionEffect(PotionEffectType.WEAKNESS, 20 * 5, 0))
 
-            // Apply sound and particles
-            somePlayer.playSound(somePlayer, Sound.ENTITY_EVOKER_PREPARE_WOLOLO, 1.3F, 1.1F)
-            somePlayer.playSound(somePlayer, Sound.ITEM_TRIDENT_THUNDER, 2.5F, 0.8F)
-            somePlayer.playSound(somePlayer, Sound.BLOCK_ANVIL_LAND, 1.0F, 0.5F)
-            somePlayer.playSound(somePlayer, Sound.BLOCK_ANVIL_BREAK, 1.0F, 0.8F)
-            somePlayer.playSound(somePlayer, Sound.ITEM_TRIDENT_RIPTIDE_3, 1.0F, 1.0F)
-            somePlayer.playSound(somePlayer, Sound.ENTITY_EVOKER_PREPARE_ATTACK, 1.5F, 1.0F)
-            someWorld.spawnParticle(Particle.DAMAGE_INDICATOR, somePlayer.location, 15, 1.5, 0.5, 1.5)
-            someWorld.spawnParticle(Particle.CRIT, somePlayer.location, 15, 2.5, 0.5, 2.5)
-            someWorld.spawnParticle(Particle.END_ROD, somePlayer.location, 15, 2.0, 1.0, 2.0)
-            someWorld.spawnParticle(Particle.FLASH, somePlayer.location, 5, 1.0, 1.0, 1.0)
-            someWorld.spawnParticle(Particle.EXPLOSION_NORMAL, somePlayer.location, 10, 2.0, 1.0, 2.0)
+        targetLocation.getNearbyPlayers(7.5).forEach {
+            it.addPotionEffects(gravityWaveEffects)
+            it.damage(15.5, bossEntity!!)
+            it.velocity.setX(0.0).setY(1.0).setZ(0.0).multiply(1.0)
+
+            // Sounds and Effects
+            it.playSound(it, Sound.ENTITY_EVOKER_PREPARE_WOLOLO, 1.3F, 1.1F)
+            it.playSound(it, Sound.ITEM_TRIDENT_THUNDER, 2.5F, 0.8F)
+            it.playSound(it, Sound.BLOCK_BEACON_POWER_SELECT, 1.5F, 0.3F)
+            it.playSound(it, Sound.ITEM_TRIDENT_RIPTIDE_3, 1.0F, 1.0F)
+            it.spawnParticle(Particle.DAMAGE_INDICATOR, it.location, 35, 1.5, 0.5, 1.5)
+            it.spawnParticle(Particle.ELECTRIC_SPARK, it.location, 55, 2.5, 0.5, 2.5)
+            it.spawnParticle(Particle.END_ROD, it.location, 35, 2.0, 1.0, 2.0)
+            it.spawnParticle(Particle.SPELL_WITCH, it.location, 55, 1.0, 1.0, 1.0)
+            it.spawnParticle(Particle.EXPLOSION_NORMAL, it.location, 10, 2.0, 1.0, 2.0)
         }
     }
 
+    // Hijack and Clone Attack
+    private fun hijackAttack(someTarget: Player) {
+        // Target is hijacked player
+        someTarget.teleport(bossEntity!!.location)
+        someTarget.world.getNearbyPlayers(someTarget.location, 22.0).forEach {
+            if (it != someTarget) {
+                // Arrow and Vectors
+                val someArrow = it.world.spawnEntity(it.location, EntityType.ARROW) as Arrow
+                val arrowUnitVector = someTarget.location.subtract(someArrow.location).toVector().normalize()
+                someArrow.velocity = arrowUnitVector.clone().multiply(3.14)
+                it.eyeLocation.direction = arrowUnitVector
 
-    // Gravity Wave Attack Call
-    private fun gravityWaveAttack(targetPlayer: Entity) {
-        val voidFall = PotionEffect(PotionEffectType.SLOW_FALLING, 120, 1)
-        // Find Players Near Attacker
-        if (targetPlayer is Player) {
-            val teleportHigh = targetPlayer.location
-            teleportHigh.y += 14
-            bossEntity!!.teleport(teleportHigh)
-            bossEntity!!.addPotionEffect(voidFall)
+                // Sounds and Effects
+                it.playSound(it, Sound.ENTITY_ENDERMAN_TELEPORT, 0.8F, 1.0F)
+                it.playSound(it, Sound.ENTITY_EVOKER_PREPARE_WOLOLO, 1.0F, 1.1F)
+                it.playSound(it, Sound.ENTITY_ELDER_GUARDIAN_CURSE, 0.8F, 0.9F)
+                it.spawnParticle(Particle.DAMAGE_INDICATOR, it.location, 43, 1.5, 0.5, 1.5)
+                it.spawnParticle(Particle.PORTAL, it.location, 42, 2.5, 0.5, 2.5)
+                it.spawnParticle(Particle.END_ROD, it.location, 35, 2.0, 1.0, 2.0)
+                it.spawnParticle(Particle.SPELL_WITCH, it.location, 25, 1.0, 1.0, 1.0)
+            }
         }
-        val playersNearTarget = targetPlayer.world.getNearbyPlayers(targetPlayer.location, 9.5)
-        doGravityWaveDamage(playersNearTarget, targetPlayer.world)
-        // Spawn Dummies
-        spawnDummy()
-        spawnDummy()
-    }
-
-    // hijack
-    private fun hijackAttack(ambassadorEntity: Illusioner) {
-        val playersNearAmbassador = ambassadorEntity.world.getNearbyPlayers(ambassadorEntity.location, 24.5)
-        val randomPlayer = playersNearAmbassador.random()
-
-        if (playersNearAmbassador.size > 1) {
-            playersNearAmbassador.remove(randomPlayer)
-        }
-
-        randomPlayer.teleport(ambassadorEntity.location)
-        val hijackAttract = randomPlayer.location
-        for (somePlayer in playersNearAmbassador) {
-            // arrow
-            val someArrow = ambassadorEntity.world.spawnEntity(hijackAttract.add(0.0, 2.5, 0.0), EntityType.ARROW)
-            someArrow.velocity = somePlayer.location.subtract(someArrow.location).toVector().multiply(1.0)
-            somePlayer.damage(9.0)
-            somePlayer.attack(randomPlayer)
-
-            //pull
-            somePlayer.velocity = hijackAttract.subtract(somePlayer.location).toVector().multiply(0.20)
-
-            //sounds and particles
-            somePlayer.playSound(somePlayer, Sound.ENTITY_ENDERMAN_TELEPORT, 0.8F, 1.0F)
-            somePlayer.playSound(somePlayer, Sound.ENTITY_EVOKER_PREPARE_WOLOLO, 1.0F, 1.1F)
-            somePlayer.playSound(somePlayer, Sound.ENTITY_ELDER_GUARDIAN_CURSE, 0.8F, 0.9F)
-            somePlayer.world.spawnParticle(Particle.DAMAGE_INDICATOR, somePlayer.location, 13, 1.5, 0.5, 1.5)
-            somePlayer.world.spawnParticle(Particle.PORTAL, somePlayer.location, 32, 2.5, 0.5, 2.5)
-            somePlayer.world.spawnParticle(Particle.END_ROD, somePlayer.location, 15, 2.0, 1.0, 2.0)
-            somePlayer.spawnParticle(Particle.FLASH, somePlayer.location, 5, 1.0, 1.0, 1.0)
-
-        }
-
-        val hijackedPlayer = playersNearAmbassador.random()
-        hijackedPlayer.setPassenger(ambassadorEntity)
-        val hijackTask = AmbassadorHijackTasks(ambassadorEntity)
+        // Hijack
+        someTarget.addPassenger(bossEntity!!)
+        val hijackTask = AmbassadorHijackTasks(bossEntity!!)
         hijackTask.runTaskTimer(MinecraftOdyssey.instance, 0, 10)
 
     }
@@ -276,22 +245,24 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
 
     // Pull player and do damage
     fun voidPullBackAttack(targetPlayer: Player) {
-        val voidSlow = PotionEffect(PotionEffectType.SLOW, 200, 0)
-        val voidRise = PotionEffect(PotionEffectType.LEVITATION, 200, 0)
-        val voidPullEffects = listOf(voidRise, voidSlow)
-
         // Teleport and damage
-        targetPlayer.teleport(bossEntity!!.location)
-        targetPlayer.addPotionEffects(voidPullEffects)
-        targetPlayer.damage(7.5)
+        with(targetPlayer) {
+            teleport(bossEntity!!.location)
+            val voidPullEffects = listOf(
+                PotionEffect(PotionEffectType.LEVITATION, 20 * 10, 1),
+                PotionEffect(PotionEffectType.SLOW, 20 * 10, 2))
+            addPotionEffects(voidPullEffects)
+            damage(7.5)
 
-        // Play sounds and particles
-        targetPlayer.playSound(targetPlayer, Sound.ENTITY_ENDERMAN_TELEPORT, 0.8F, 1.0F)
-        targetPlayer.playSound(targetPlayer, Sound.ENTITY_EVOKER_PREPARE_WOLOLO, 1.0F, 1.1F)
-        targetPlayer.playSound(targetPlayer, Sound.ENTITY_ELDER_GUARDIAN_CURSE, 0.8F, 0.9F)
-        targetPlayer.world.spawnParticle(Particle.DAMAGE_INDICATOR, targetPlayer.location, 5, 1.5, 0.5, 1.5)
-        targetPlayer.world.spawnParticle(Particle.VIBRATION, targetPlayer.location, 15, 2.5, 0.5, 2.5)
-        targetPlayer.world.spawnParticle(Particle.END_ROD, targetPlayer.location, 15, 2.0, 1.0, 2.0)
+            // Sounds and Effects
+            playSound(this, Sound.ENTITY_ENDERMAN_TELEPORT, 0.8F, 1.0F)
+            playSound(this, Sound.ENTITY_EVOKER_PREPARE_WOLOLO, 1.0F, 1.1F)
+            playSound(this, Sound.ENTITY_ELDER_GUARDIAN_CURSE, 0.8F, 0.9F)
+            spawnParticle(Particle.DAMAGE_INDICATOR, this.location, 43, 1.5, 0.5, 1.5)
+            spawnParticle(Particle.PORTAL, this.location, 42, 2.5, 0.5, 2.5)
+            spawnParticle(Particle.END_ROD, this.location, 35, 2.0, 1.0, 2.0)
+            spawnParticle(Particle.SPELL_WITCH, this.location, 25, 1.0, 1.0, 1.0)
+        }
     }
 
 
@@ -310,13 +281,14 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
             for (somePlayer in bossEntity!!.world.getNearbyPlayers(bossEntity!!.location, 17.5)) {
                 somePlayer.sendMessage(randomAttackQuote)
             }
+            /*
             if (someDamager is Player) {
                 when((0..6).random()) {
                     3, 4 -> {
                         gravityWaveAttack(someDamager)
                     }
                     0, 1, 2 -> {
-                        fireworkAttack(someDamager)
+                        skyBombardAttack(someDamager)
                     }
                     5, 6 -> {
                         hijackAttack(bossEntity!!)
@@ -334,6 +306,8 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                     }
                 }
             }
+
+             */
         }
     }
 
@@ -432,6 +406,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         }
     }
 
+    // random delay 2-5
     private fun calculateGiftTable(givingPlayer: Player, giftedItem: Item) {
         val giftedMaterial: Material = giftedItem.itemStack.type
         // Check if item in table

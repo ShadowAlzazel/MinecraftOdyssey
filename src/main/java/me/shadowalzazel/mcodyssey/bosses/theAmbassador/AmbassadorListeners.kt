@@ -37,7 +37,6 @@ object AmbassadorListeners: Listener {
                 spawnParticle(Particle.FLASH, boomLocation, 5, 1.0, 1.0, 1.0)
                 spawnParticle(Particle.LAVA, boomLocation, 35, 1.5, 1.0, 1.5)
             }
-
             event.entity.getNearbyEntities(1.5, 1.5, 1.5).forEach {
                 if (it is LivingEntity) {
                     it.damage(21.5)
