@@ -34,3 +34,6 @@ commands:
   LocateStructureAsync:
     usage: /<command>
     permission: op
+  PlaceOdysseyStructure:
+    usage: /<command>
+    permission: op

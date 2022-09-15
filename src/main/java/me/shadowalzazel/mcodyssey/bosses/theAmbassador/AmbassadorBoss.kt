@@ -2,18 +2,17 @@ package me.shadowalzazel.mcodyssey.bosses.theAmbassador
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.bosses.utility.OdysseyBoss
+import me.shadowalzazel.mcodyssey.constants.ModifiersUUIDs
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.items.*
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
+import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.*
-import org.bukkit.enchantments.Enchantment
-import org.bukkit.entity.EntityType
-import org.bukkit.entity.Firework
-import org.bukkit.entity.Illusioner
-import org.bukkit.entity.Item
-import org.bukkit.entity.Player
-import org.bukkit.entity.Entity
+import org.bukkit.attribute.Attribute
+import org.bukkit.attribute.AttributeModifier
+import org.bukkit.entity.*
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import java.util.*
@@ -35,7 +34,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
     private var playersGiftCooldown = mutableMapOf<UUID, Long>()
     // Gifts
     private val itemLootTable = listOf(OdysseyItems.REFINED_IOJOVIAN_EMERALDS, OdysseyItems.NEUTRONIUM_BARK_SCRAPS, OdysseyItems.PURE_ALLOY_GOLD, OdysseyItems.PAPERS_OF_ARCUS, OdysseyItems.POLYMORPHIC_GLUE,
-        OdysseyItems.PURE_ALLOY_COPPER, OdysseyItems.GALVANIZED_STEEL, OdysseyItems.REFINED_NEPTUNIAN_DIAMONDS, OdysseyItems.HAWKING_ENTANGLED_UNIT)
+        OdysseyItems.PURE_ALLOY_COPPER, OdysseyItems.GALVANIZED_STEEL, OdysseyItems.REFINED_NEPTUNIAN_DIAMONDS)
     // Combat Mechanic
     private var takeDamageCooldown: Long = 0L
     var specialAttacksCooldown = mutableMapOf<String, Long>()
@@ -45,30 +44,42 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         "${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Just stop... Your attacks are worthless!")
 
 
-    // Create Kinetic Weapon
-    private fun createAmbassadorWeapon(): ItemStack {
-        val kineticBlaster = ItemStack(Material.BOW, 1)
+    // Spawn boss near players
+    private fun spawnBossEntity(spawningLocation: Location): Illusioner {
+        val newAmbassadorEntity: Illusioner = (spawningLocation.world.spawnEntity(spawningLocation, EntityType.ILLUSIONER) as Illusioner).apply {
+            // Potion Effects
+            addPotionEffects(listOf(
+                PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 300, 1),
+                PotionEffect(PotionEffectType.GLOWING, 20 * 300, 1),
+                PotionEffect(PotionEffectType.FIRE_RESISTANCE, 99999, 3),
+                PotionEffect(PotionEffectType.SPEED, 99999, 2)))
 
-        // Add lore and name
-        val kineticBlasterMeta: ItemMeta = kineticBlaster.itemMeta
-        kineticBlasterMeta.setDisplayName("${ChatColor.LIGHT_PURPLE}Kinetic Blaster")
-        val kineticBlasterLore = listOf("A weapon commissioned to shoot kinetic darts", "Designed by the current natives")
-        kineticBlasterMeta.lore = kineticBlasterLore
+            // Change Default Behaviour
+            customName(Component.text("The Ambassador", TextColor.color(138, 67, 255)))
+            isCustomNameVisible = true
+            removeWhenFarAway = false
+            isCanJoinRaid = false
+            isAware = false
+            canPickupItems = true
 
-        // Add Enchantments
-        kineticBlasterMeta.addEnchant(Enchantment.ARROW_DAMAGE, 5, true)
-        kineticBlasterMeta.addEnchant(Enchantment.ARROW_INFINITE, 1, true)
-        kineticBlasterMeta.addEnchant(Enchantment.ARROW_KNOCKBACK, 2, true)
-        kineticBlasterMeta.addEnchant(Enchantment.DURABILITY, 3, true)
+            // Health
+            val mobHealth = AttributeModifier(ModifiersUUIDs.ODYSSEY_BOSS_HEALTH_UUID, "odyssey_mob_health", 930.0, AttributeModifier.Operation.ADD_NUMBER)
+            val healthAttribute = getAttribute(Attribute.GENERIC_MAX_HEALTH)
+            healthAttribute!!.addModifier(mobHealth)
+            health = 950.0
 
-        // Create weapon
-        kineticBlaster.itemMeta = kineticBlasterMeta
-        return kineticBlaster
+            // Add Kinetic Blaster
+            clearActiveItem()
+            equipment.setItemInMainHand(OdysseyWeapons.KINETIC_BLASTER.createItemStack(1))
+        }
+        return newAmbassadorEntity
     }
 
 
-    // Spawn boss near players
-    private fun spawnBoss(odysseyWorld: World): Illusioner {
+    // Create Ambassador Boss Entity
+    fun createBoss(odysseyWorld: World) {
+        despawnTimer = System.currentTimeMillis()
+        //
         val worldPlayers = odysseyWorld.players
         val spawningPlayer = worldPlayers.random()
         for (somePlayer in worldPlayers) {
@@ -82,52 +93,9 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         spawningLocation.z += (-28..28).random()
         spawningLocation.y = 300.0
         println("The Ambassador has arrived at ${spawningLocation.x}, ${spawningLocation.z}")
-        return odysseyWorld.spawnEntity(spawningLocation, EntityType.ILLUSIONER) as Illusioner
-    }
 
 
-    // Create Ambassador Boss Entity
-    fun createBoss(odysseyWorld: World) {
-        val ambassadorEntity: Illusioner = spawnBoss(odysseyWorld)
-        // 1200 tks = 60 sec
-        // Add Potion Effects
-        val voidFall = PotionEffect(PotionEffectType.SLOW_FALLING, 2400, 1)
-        val voidGlow = PotionEffect(PotionEffectType.GLOWING, 2400, 1)
-        val voidSolar = PotionEffect(PotionEffectType.FIRE_RESISTANCE, 99999, 3)
-        val bossHealth = PotionEffect(PotionEffectType.HEALTH_BOOST, 99999, 235)
-        val ankiRainEffects = listOf(bossHealth, voidFall, voidSolar, voidGlow)
-        ambassadorEntity.addPotionEffects(ankiRainEffects)
-
-        despawnTimer = System.currentTimeMillis()
-        // Change Default Behaviour
-        ambassadorEntity.customName = "${ChatColor.LIGHT_PURPLE}$bossName"
-        ambassadorEntity.isCustomNameVisible = true
-        ambassadorEntity.removeWhenFarAway = false
-        ambassadorEntity.isCanJoinRaid = false
-        ambassadorEntity.isAware = false
-        ambassadorEntity.canPickupItems = true
-        ambassadorEntity.health = 950.0
-
-        // Add Item
-        val ambassadorWeapon: ItemStack = createAmbassadorWeapon()
-        ambassadorEntity.clearActiveItem()
-        ambassadorEntity.equipment.setItemInMainHand(ambassadorWeapon)
-
-        // Trails
-        /*
-        GlobalScope.launch {
-            var looper = 1
-            var someTimer = System.currentTimeMillis()
-            while (looper < 30) {
-                var timeElapsed = System.currentTimeMillis() - someTimer
-                if (timeElapsed >= 30) {
-                    someTimer = System.currentTimeMillis()
-                    odysseyWorld.spawnEntity(bossEntity!!.location, EntityType.FIREWORK) as Firework
-                    looper += 1
-                }
-            }
-        }
-        */
+        val ambassadorEntity: Illusioner = spawnBossEntity(spawningLocation)
         // Change boss class
         bossEntity = ambassadorEntity
     }
@@ -135,69 +103,50 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
 
     // Defeat Boss
     fun defeatedBoss(ambassadorEntity: Illusioner, vanquisher: Player) {
-        val nearbyPlayers = ambassadorEntity.world.getNearbyPlayers(ambassadorEntity.location, 64.0)
+        if (ambassadorEntity == bossEntity) {
+            // Spawn loot
+            vanquisher.world.dropItem(ambassadorEntity.location, (OdysseyBooks.GILDED_BOOK.createGildedBook(OdysseyEnchantments.GRAVITY_WELL, 1)))
+            vanquisher.giveExpLevels(10)
 
-        vanquisher.world.dropItem(ambassadorEntity.location, (OdysseyBooks.GILDED_BOOK.createGildedBook(OdysseyEnchantments.GRAVITY_WELL, 1)))
-
-        for (somePlayer in ambassadorEntity.world.players) {
-            somePlayer.sendMessage("${ChatColor.YELLOW}${ChatColor.ITALIC}The Ambassador has departed ungracefully!")
-            somePlayer.sendMessage("${ChatColor.YELLOW}${ChatColor.ITALIC}With ${ChatColor.GOLD}${vanquisher.name} ${ChatColor.RESET}${ChatColor.YELLOW}${ChatColor.ITALIC}taking the final blow!")
-            somePlayer.playSound(somePlayer, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0F, 1.0F)
-            if (somePlayer in nearbyPlayers) {
-                somePlayer.giveExp(3550)
+            ambassadorEntity.world.getNearbyPlayers(ambassadorEntity.location, 64.0).forEach {
+                it.sendMessage(Component.text("The Ambassador has departed ungracefully!", TextColor.color(255, 255, 85), TextDecoration.ITALIC))
+                it.sendMessage(Component.text("With", TextColor.color(255, 255, 85), TextDecoration.ITALIC)
+                    .append(Component.text(vanquisher.name).color(TextColor.color(255, 170, 0)))
+                    .append(Component.text("taking the final blow!").color(TextColor.color(255, 255, 85))).decorate(TextDecoration.ITALIC))
+                it.playSound(it, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0F, 1.0F)
+                it.giveExp(3550)
             }
         }
     }
 
     fun departBoss() {
-        for (somePlayer in bossEntity!!.world.players) {
-            somePlayer.sendMessage("${ChatColor.YELLOW}${ChatColor.ITALIC}The Ambassador has left...!")
-            somePlayer.playSound(somePlayer, Sound.ENTITY_ELDER_GUARDIAN_CURSE, 1.0F, 1.0F)
+        bossEntity!!.world.players.forEach {
+            it.sendMessage(Component.text("The Ambassador has left...!", TextColor.color(255, 255, 85), TextDecoration.ITALIC))
+            it.playSound(it, Sound.ENTITY_ELDER_GUARDIAN_CURSE, 1.0F, 1.0F)
         }
     }
 
 
     // activate boss
     private fun activateBoss(someTarget: Entity) {
-        bossEntity!!.isAware = true
-        for (somePlayer in someTarget.world.players) {
-            somePlayer.playSound(somePlayer, Sound.ENTITY_WITHER_SPAWN, 1.0F, 0.8F)
+        bossEntity!!.world.getNearbyPlayers(bossEntity!!.location, 64.0).forEach {
+            //it.sendMessage(Component.text("The Ambassador has left...!", TextColor.color(255, 255, 85), TextDecoration.ITALIC))
+            it.playSound(it, Sound.ENTITY_WITHER_SPAWN, 1.0F, 1.0F)
         }
-
     }
 
 
     // Create a new firework entity
-    private fun createSuperFirework(targetPlayer: Player): Firework {
-        // MAYBE SHOOT FROM SPAWNED AMBASSADOR
-        val superFirework: Firework = targetPlayer.world.spawnEntity(bossEntity!!.location, EntityType.FIREWORK) as Firework
+    private fun createSuperFirework(targetLocation: Location): Firework {
         val randomColors = listOf(Color.BLUE, Color.RED, Color.YELLOW, Color.FUCHSIA, Color.AQUA)
-        val superFireworkMeta = superFirework.fireworkMeta
-
-        // Add Effects and Power
-        superFireworkMeta.addEffect(FireworkEffect.builder().with(FireworkEffect.Type.BALL_LARGE).withColor(randomColors.random()).withFade(randomColors.random()).trail(true).flicker(true).build())
-        superFireworkMeta.power = 120
-        // FIX VELOCITY
-        superFirework.velocity = targetPlayer.location.add(0.0, 5.0, 0.0).subtract(targetPlayer.location).toVector().multiply(1)
-        superFirework.ticksToDetonate = (1..3).random()
-        superFirework.fireworkMeta = superFireworkMeta
-        return superFirework
-    }
-
-
-    // Do Firework damage
-    private fun doFireworkDamage(somePlayers: MutableCollection<Player>) {
-        // Create sounds, particles, and do damage to nearby players
-        for (somePlayer in somePlayers) {
-            // IDK TO SPAWN AT PLAYER WITH 0 VEL OR WHAT
-            createSuperFirework(somePlayer)
-            somePlayer.damage(21.5)
-            somePlayer.playSound(somePlayer.location, Sound.AMBIENT_BASALT_DELTAS_MOOD, 2.5F, 0.8F)
-            somePlayer.playSound(somePlayer.location, Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 2.5F, 0.8F)
-            somePlayer.playSound(somePlayer.location, Sound.ENTITY_IRON_GOLEM_DEATH, 2.0F, 0.8F)
-            somePlayer.world.spawnParticle(Particle.FLASH, somePlayer.location, 5, 1.0, 1.0, 1.0)
-            somePlayer.world.spawnParticle(Particle.LAVA, somePlayer.location, 35, 1.5, 1.0, 1.5)
+        //
+        val superFirework: Firework = (bossEntity!!.world.spawnEntity(targetLocation, EntityType.FIREWORK) as Firework).apply {
+            fireworkMeta.addEffect(FireworkEffect.builder().with(FireworkEffect.Type.BALL_LARGE).withColor(randomColors.random()).withFade(randomColors.random()).trail(true).flicker(true).build())
+            fireworkMeta.power = 120
+            velocity = targetLocation.clone().add(0.0, -2.0, 0.0).subtract(targetLocation).toVector()
+            addScoreboardTag("super_firework")
         }
+        return superFirework
     }
 
 
@@ -205,7 +154,9 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
     private fun fireworkAttack(targetPlayer: Player) {
         // Find players for splash
         val playersNearTarget = targetPlayer.world.getNearbyPlayers(targetPlayer.location, 4.5)
-        doFireworkDamage(playersNearTarget)
+        for (x in playersNearTarget) {
+            createSuperFirework(x.location.clone().add(0.0, 20.0, 0.0))
+        }
     }
 
 
@@ -228,7 +179,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         ambassadorDummy.health = 25.0
 
         // Add Item
-        val ambassadorWeapon: ItemStack = createAmbassadorWeapon()
+        val ambassadorWeapon: ItemStack = OdysseyWeapons.KINETIC_BLASTER.createItemStack(1)
         ambassadorDummy.clearActiveItem()
         ambassadorDummy.equipment.setItemInMainHand(ambassadorWeapon)
 
@@ -605,9 +556,9 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                     givingPlayer.inventory.addItem(randomBook)
                 }
             }
-            Material.ENDER_CHEST -> {
+            Material.ELYTRA -> {
                 giftLikeness += 3
-                givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Sub-Dimensional Storage. A step towards industrialization I see...And excellent presents!")
+                givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Sub-Dimensional Flying. A step towards industrialization I see...And excellent presents!")
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward + 1))
             }
             Material.ENCHANTED_GOLDEN_APPLE -> {

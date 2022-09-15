@@ -3,6 +3,7 @@ package me.shadowalzazel.mcodyssey.listeners
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.items.OdysseyBooks
+import me.shadowalzazel.mcodyssey.items.OdysseyFood
 import me.shadowalzazel.mcodyssey.items.OdysseyItems
 import org.bukkit.Material
 import org.bukkit.Particle
@@ -192,7 +193,7 @@ object OdysseyDropsListeners : Listener {
             Material.AMETHYST_CLUSTER, Material.LARGE_AMETHYST_BUD -> {
                 event.items.forEach {
                     if (it.itemStack.type == Material.AMETHYST_SHARD) {
-                        it.world.dropItem(it.location, (OdysseyItems.IRRADIATED_ROD.createItemStack((0..2).random())))
+                        it.world.dropItem(it.location, (OdysseyFood.CRYSTAL_CANDY.createItemStack((0..2).random())))
                     }
                 }
             }

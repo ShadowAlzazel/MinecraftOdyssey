@@ -23,6 +23,7 @@ import org.bukkit.plugin.Plugin
 
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
+import java.util.zip.GZIPInputStream
 import java.io.FileNotFoundException
 
 class MinecraftOdyssey : JavaPlugin() {
@@ -149,20 +150,39 @@ class MinecraftOdyssey : JavaPlugin() {
         getCommand("SpawnTestKnight")?.setExecutor(SpawnTestKnight)
         getCommand("TriggerPhenomenon")?.setExecutor(TriggerPhenomenon)
         getCommand("LocateStructureAsync")?.setExecutor(LocateStructureAsync)
+        getCommand("PlaceOdysseyStructure")?.setExecutor(PlaceOdysseyStructure)
 
         // Spell Commands
         getCommand("necronomicon")?.setExecutor(Necronomicon)
-
         // Structures
         try {
+            val worldFolder = this.mainWorld!!.worldFolder
+            val datapackDirectory = worldFolder.path + "/datapacks"
+            val datapackFile = File(datapackDirectory)
+            val odysseyPackDirectory = datapackDirectory + "/OdysseyDataPack"
+            val odysseyPackFile = File(odysseyPackDirectory)
+            println(datapackFile)
+            println(odysseyPackFile)
+            //"OdysseyDataPack\\data\\mcodyssey\\structures\\stone_pillars\\stone_pillars_1.nbt"
+
+            val pillarFile = File(odysseyPackDirectory + "/data/mcodyssey/structures/stone_pillars/stone_pillars_1.nbt")
+            val pillarStructure = server.structureManager.loadStructure(pillarFile)
+            server.structureManager.registerStructure(NamespacedKey(instance, "stone_pillars_1"), pillarStructure)
+            //server.structureManager.saveStructure(NamespacedKey(instance, "stone_pillars_1"))
+            println(server.structureManager.getStructureFile(NamespacedKey(instance, "stone_pillars_1")))
+
+            /*
             //val qPillar = server.structureManager.loadStructure(this.getResource("data/mcodyssey/structures/stone_pillars_1.nbt"))
-            val pillarResource = this.getResource("data/mcodyssey/structures/stone_pillars/stone_pillars_1.nbt")
+            //OdysseyDataPack\data\mcodyssey\structures\stone_pillars\stone_pillars_1.nbt
+            val pillarResource = this.getResource("OdysseyDataPack/data/mcodyssey/structures/stone_pillars/stone_pillars_1.nbt")
             if (pillarResource != null) {
-                println("Input Stream: $pillarResource")
                 val pillars = server.structureManager.loadStructure(pillarResource)
                 server.structureManager.registerStructure(NamespacedKey(instance, "stone_pillars_1"), pillars)
                 println("Success!")
             }
+            println("Input Stream: $pillarResource")
+
+             */
         }
         catch(ex: FileNotFoundException) {
             logger.info(ex.message)
