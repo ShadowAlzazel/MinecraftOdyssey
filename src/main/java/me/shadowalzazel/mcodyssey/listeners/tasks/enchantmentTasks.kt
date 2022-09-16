@@ -23,7 +23,7 @@ class BurstBarrageTask(private val someEntity: LivingEntity, private val burstAm
         // Fix for effect arrows !!!!
 
         val timeElapsed = System.currentTimeMillis() - burstCooldown
-        if (burstAmount < counter || timeElapsed > (0.25 * (burstAmount + 1)) * 1000) {
+        if (burstAmount < counter || timeElapsed > (0.2 * (burstAmount + 1)) * 1000) {
             someEntity.removeScoreboardTag("Burst_Shooting")
             this.cancel()
         }

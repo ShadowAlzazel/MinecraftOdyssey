@@ -3,9 +3,11 @@ package me.shadowalzazel.mcodyssey.bosses.theAmbassador
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.bosses.utility.OdysseyBoss
 import me.shadowalzazel.mcodyssey.constants.ModifiersUUIDs
+import me.shadowalzazel.mcodyssey.effects.GravityWellTask
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.items.*
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.*
@@ -25,23 +27,65 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
 
     // Boss Spawning Logic
     var bossEntity: Illusioner? = null
-    var despawnTimer: Long = 1
+    private var despawnTimer: Long = 1
     // Trading Mechanic
-    var patience: Double = 55.0
-    var appeasement: Double = 0.0
-    private var playerLikeness = mutableMapOf<UUID, Double>()
+    private var patience: Double = 55.0
+    private var appeasement: Double = 0.0
     private var playersGiftCooldown = mutableMapOf<UUID, Long>()
+    private var playerLikeness = mutableMapOf<UUID, Double>()
+    //
+    internal var angered: Boolean = false
     // Gifts
     private val itemLootTable = listOf(OdysseyItems.REFINED_IOJOVIAN_EMERALDS, OdysseyItems.NEUTRONIUM_BARK_SCRAPS, OdysseyItems.PURE_ALLOY_GOLD, OdysseyItems.PAPERS_OF_ARCUS, OdysseyItems.POLYMORPHIC_GLUE,
         OdysseyItems.PURE_ALLOY_COPPER, OdysseyItems.GALVANIZED_STEEL, OdysseyItems.REFINED_NEPTUNIAN_DIAMONDS)
     // Combat Mechanic
     private var takeDamageCooldown: Long = 0L
-    var specialAttacksCooldown = mutableMapOf<String, Long>()
-    // Quotes MOVE HERE
-    private val randomMessageList = listOf("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Such Folly, Such Weakness!", "${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}I can not tolerate such incompetence",
-        "${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}The damage you think your inflicting is minimal!", "${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}I am just disappointed...",
-        "${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Just stop... Your attacks are worthless!")
 
+    // MESSAGES
+    private val ambassadorPrefix = Component.text("[The Ambassador] ", TextColor.color(255, 85, 255))
+
+    private val patienceMessages = listOf(
+        Component.text(" threatens your safety...", TextColor.color(255, 255, 255)),
+        Component.text(" is testing my patience!", TextColor.color(255, 255, 255)),
+        Component.text("... The lack of intelligence in this waste is appearance", TextColor.color(255, 255, 255)),
+        Component.text("... I expected more from you...", TextColor.color(255, 255, 255)),
+        Component.text("... Does your honor not amount to anything?!", TextColor.color(255, 255, 255)),
+        Component.text(", that is not an appropriate way to introduce yourself, though what is expected from such a lowlife...", TextColor.color(255, 255, 255)),
+        Component.text("'s insolence has prompted me to teach some basic fundamentals of respect.", TextColor.color(255, 255, 255)),
+        Component.text("... Time to teach these lowlifes basic manners...", TextColor.color(255, 255, 255)),
+        Component.text("Who is doing that?!", TextColor.color(255, 255, 255))
+    )
+
+    private val damagedMessages = listOf(
+        Component.text("Such Folly... Such Weakness...", TextColor.color(255, 255, 255)),
+        Component.text("Any attacks are futile...", TextColor.color(255, 255, 255)),
+        Component.text("The damage you think your inflicting is minimal.", TextColor.color(255, 255, 255)),
+        Component.text("I am just disappointed...", TextColor.color(255, 255, 255)),
+        Component.text("Just stop... Your attacks are worthless.", TextColor.color(255, 255, 255))
+    )
+
+    // Create Ambassador Boss in plugin
+    fun createBoss(odysseyWorld: World) {
+        despawnTimer = System.currentTimeMillis()
+        // Spawning
+        val spawningPlayer = odysseyWorld.players.random()
+        val spawningLocation = spawningPlayer.location.clone().add((-28..28).random().toDouble(), 0.0, (-28..28).random().toDouble())
+        spawningLocation.y = 300.0
+        // Messages
+        with(MinecraftOdyssey.instance.server) {
+            broadcast(vailPrefix.append(Component.text("My Ambassador has arrived!", TextColor.color(255, 255, 85))))
+            broadcast(ambassadorPrefix.append(Component.text("I am descending upon ${spawningPlayer.name}'s land...", TextColor.color(255, 255, 255))))
+            logger.info("The Ambassador has arrived at x:${spawningLocation.x}, y:${spawningLocation.z}")
+        }
+        spawningLocation.world.players.forEach { it.playSound(it.location, Sound.ENTITY_EVOKER_PREPARE_SUMMON, 2.5F, 0.9F) }
+
+        spawningPlayer.sendMessage(ambassadorPrefix.append(Component.text("Be prepared for my arrival ${spawningPlayer.name}...", TextColor.color(85, 85, 85))))
+
+        bossActive = true
+        bossEntity = spawnBossEntity(spawningLocation)
+        val departTimer = AmbassadorDepartTask()
+        departTimer.runTaskLater(MinecraftOdyssey.instance, 20 * 60 * 60 * 1)
+    }
 
     // Spawn entity
     private fun spawnBossEntity(spawningLocation: Location): Illusioner {
@@ -51,6 +95,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 300, 1),
                 PotionEffect(PotionEffectType.GLOWING, 20 * 300, 1),
                 PotionEffect(PotionEffectType.FIRE_RESISTANCE, 99999, 3),
+                PotionEffect(PotionEffectType.WATER_BREATHING, 99999, 3),
                 PotionEffect(PotionEffectType.SPEED, 99999, 2)))
 
             // Change Default Behaviour
@@ -74,63 +119,49 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         return newAmbassadorEntity
     }
 
-    // Create Ambassador Boss in instance
-    fun createBoss(odysseyWorld: World) {
-        despawnTimer = System.currentTimeMillis()
-        //
-        val worldPlayers = odysseyWorld.players
-        val spawningPlayer = worldPlayers.random()
-        for (somePlayer in worldPlayers) {
-            somePlayer.sendMessage("${ChatColor.GOLD}${ChatColor.MAGIC}[Vail]${ChatColor.RESET}${ChatColor.YELLOW} My Ambassador has arrived!")
-            somePlayer.playSound(somePlayer.location, Sound.ENTITY_EVOKER_PREPARE_SUMMON, 2.5F, 0.9F)
-            somePlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}I am descending upon ${spawningPlayer.name}'s land..")
-        }
-        spawningPlayer.sendMessage("${ChatColor.RESET}${ChatColor.DARK_GRAY}${ChatColor.ITALIC}Be prepared for my arrival... ${spawningPlayer.name}")
-        val spawningLocation = spawningPlayer.location
-        spawningLocation.x += (-28..28).random()
-        spawningLocation.z += (-28..28).random()
-        spawningLocation.y = 300.0
-        println("The Ambassador has arrived at ${spawningLocation.x}, ${spawningLocation.z}")
-
-
-        val ambassadorEntity: Illusioner = spawnBossEntity(spawningLocation)
-        // Change boss class
-        bossEntity = ambassadorEntity
-    }
-
-
     // Defeat Boss
-    fun defeatedBoss(ambassadorEntity: Illusioner, vanquisher: Player) {
+    internal fun defeatedBoss(ambassadorEntity: Illusioner, vanquisher: Player?) {
         if (ambassadorEntity == bossEntity) {
-            // Spawn loot near vanquisher
-            vanquisher.world.dropItem(vanquisher.location, (OdysseyBooks.GILDED_BOOK.createGildedBook(OdysseyEnchantments.GRAVITY_WELL, 1)))
-            vanquisher.giveExpLevels(10)
+            if (vanquisher is Player) {
+                // Spawn loot near vanquisher
+                vanquisher.world.dropItem(vanquisher.location, (OdysseyBooks.GILDED_BOOK.createGildedBook(OdysseyEnchantments.GRAVITY_WELL, 1)))
+                vanquisher.giveExpLevels(10)
+            }
+            val vanquisherName = vanquisher?.name ?: "An unknown Hero"
             // Nearby player get xp and text
             ambassadorEntity.world.getNearbyPlayers(ambassadorEntity.location, 64.0).forEach {
                 it.sendMessage(Component.text("The Ambassador has departed ungracefully!", TextColor.color(255, 255, 85), TextDecoration.ITALIC))
-                it.sendMessage(Component.text("With", TextColor.color(255, 255, 85), TextDecoration.ITALIC)
-                    .append(Component.text(vanquisher.name).color(TextColor.color(255, 170, 0)))
-                    .append(Component.text("taking the final blow!").color(TextColor.color(255, 255, 85))).decorate(TextDecoration.ITALIC))
+                it.sendMessage(Component.text("With ", TextColor.color(255, 255, 85), TextDecoration.ITALIC)
+                    .append(Component.text(vanquisherName).color(TextColor.color(255, 170, 0)))
+                    .append(Component.text(" taking the final blow!").color(TextColor.color(255, 255, 85))).decorate(TextDecoration.ITALIC))
                 it.playSound(it, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0F, 1.0F)
                 it.giveExp(3550)
             }
+            bossActive = false
+            removeBoss = true
         }
     }
 
     // Despawn boss
-    fun departBoss() {
+    internal fun departBoss() {
         bossEntity!!.world.players.forEach {
             it.sendMessage(Component.text("The Ambassador has left...!", TextColor.color(255, 255, 85), TextDecoration.ITALIC))
             it.playSound(it, Sound.ENTITY_ELDER_GUARDIAN_CURSE, 1.0F, 1.0F)
         }
+        bossEntity!!.remove()
+        bossActive = false
+        removeBoss = true
     }
 
     // activate boss
-    private fun activateBoss(someTarget: Entity) {
+    private fun activateBoss() {
         bossEntity!!.world.getNearbyPlayers(bossEntity!!.location, 64.0).forEach {
             //it.sendMessage(Component.text("The Ambassador has left...!", TextColor.color(255, 255, 85), TextDecoration.ITALIC))
             it.playSound(it, Sound.ENTITY_WITHER_SPAWN, 1.0F, 1.0F)
         }
+        bossEntity!!.isAware = true
+        val attackCycle = AmbassadorAttackCycle(bossEntity!!)
+        attackCycle.runTaskTimer(MinecraftOdyssey.instance, 0, 20 * 10)
     }
 
     // Spawn a dummy clone
@@ -155,7 +186,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
     private fun createSuperFirework(targetLocation: Location): Firework {
         val randomColors = listOf(Color.BLUE, Color.RED, Color.YELLOW, Color.FUCHSIA, Color.AQUA)
         val superFirework: Firework = (bossEntity!!.world.spawnEntity(targetLocation, EntityType.FIREWORK) as Firework).apply {
-            fireworkMeta.also {
+            fireworkMeta = fireworkMeta.clone().also {
                 it.addEffect(FireworkEffect.builder()
                     .with(FireworkEffect.Type.BALL_LARGE)
                     .withColor(randomColors.random())
@@ -166,12 +197,12 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 )
             }
             fireworkMeta.power = 120
-            velocity = targetLocation.clone().add(0.0, -1.618, 0.0).subtract(targetLocation).toVector()
+            ticksToDetonate = 20 * 2
+            velocity = targetLocation.clone().add(0.0, -1.918, 0.0).subtract(targetLocation).toVector()
             addScoreboardTag("super_firework")
         }
         return superFirework
     }
-
 
     // Calls fireworks from the sky
     private fun skyBombardAttack(targetLocation: Location) {
@@ -184,21 +215,33 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
     // Falling Singularity that attracts
     private fun fallingSingularityAttack(targetLocation: Location) {
         // Spawn falling armor stand wearing singularity thingy
-
+        val fallingSingularity: ArmorStand = (targetLocation.world.spawnEntity(targetLocation, EntityType.ARMOR_STAND) as ArmorStand).apply {
+            isSilent = true
+            isInvisible = true
+            isInvulnerable = true
+            isVisible = false
+            addScoreboardTag("Gravity_Well")
+            addScoreboardTag("Falling_Singularity")
+            addPotionEffect(PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 300, 0))
+        }
+        val gravityWellTask = GravityWellTask(fallingSingularity, bossEntity!!, 4, 30)
+        gravityWellTask.runTaskTimer(MinecraftOdyssey.instance, 0, 10)
+        val standTask = AmbassadorSingularity(fallingSingularity)
+        standTask.runTaskLater(MinecraftOdyssey.instance, 33 * 10)
     }
-
-
 
     // Spawn a vortex that launches players
     private fun gravityLaunchAttack(targetLocation: Location) {
+        // make effect/wave
+
         val gravityWaveEffects = listOf(
-            PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 10, 0),
+            PotionEffect(PotionEffectType.LEVITATION, 20 * 8, 0),
             PotionEffect(PotionEffectType.WEAKNESS, 20 * 5, 0))
 
         targetLocation.getNearbyPlayers(7.5).forEach {
-            it.addPotionEffects(gravityWaveEffects)
             it.damage(15.5, bossEntity!!)
-            it.velocity.setX(0.0).setY(1.0).setZ(0.0).multiply(1.0)
+            //it.velocity.setX(0.0).setY(1.0).setZ(0.0).multiply(2.18)
+            it.addPotionEffects(gravityWaveEffects)
 
             // Sounds and Effects
             it.playSound(it, Sound.ENTITY_EVOKER_PREPARE_WOLOLO, 1.3F, 1.1F)
@@ -216,7 +259,13 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
     // Hijack and Clone Attack
     private fun hijackAttack(someTarget: Player) {
         // Target is hijacked player
-        someTarget.teleport(bossEntity!!.location)
+        with(someTarget) {
+            teleport(bossEntity!!.location)
+            addPassenger(bossEntity!!)
+            playSound(this, Sound.ENTITY_ENDERMAN_TELEPORT, 0.8F, 1.0F)
+            playSound(this, Sound.ENTITY_EVOKER_PREPARE_WOLOLO, 1.0F, 1.1F)
+            playSound(this, Sound.ENTITY_ELDER_GUARDIAN_CURSE, 0.8F, 0.9F)
+        }
         someTarget.world.getNearbyPlayers(someTarget.location, 22.0).forEach {
             if (it != someTarget) {
                 // Arrow and Vectors
@@ -233,18 +282,18 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 it.spawnParticle(Particle.PORTAL, it.location, 42, 2.5, 0.5, 2.5)
                 it.spawnParticle(Particle.END_ROD, it.location, 35, 2.0, 1.0, 2.0)
                 it.spawnParticle(Particle.SPELL_WITCH, it.location, 25, 1.0, 1.0, 1.0)
+                it.swingMainHand()
+                spawnDummy()
             }
         }
         // Hijack
-        someTarget.addPassenger(bossEntity!!)
         val hijackTask = AmbassadorHijackTasks(bossEntity!!)
         hijackTask.runTaskTimer(MinecraftOdyssey.instance, 0, 10)
 
     }
 
-
     // Pull player and do damage
-    fun voidPullBackAttack(targetPlayer: Player) {
+    internal fun voidPullBackAttack(targetPlayer: Player) {
         // Teleport and damage
         with(targetPlayer) {
             teleport(bossEntity!!.location)
@@ -266,140 +315,115 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
     }
 
 
-    private fun attackPatterns(ambassadorEntity: Illusioner) {
-
+    internal fun attackPatterns() {
+        val nearbyPlayers = bossEntity!!.location.getNearbyPlayers(28.0)
+        when((1..10).random()) {
+            in 1..3 -> {
+                if (nearbyPlayers.isNotEmpty()) { skyBombardAttack(nearbyPlayers.random().location) }
+                else { skyBombardAttack(bossEntity!!.location.clone().add((-9..9).random().toDouble(), 0.0, (-9..9).random().toDouble())) }
+                nearbyPlayers.forEach { it.sendMessage(ambassadorPrefix.append(Component.text("Take a gift from the heavens!", TextColor.color(255, 255, 255)))) }
+            }
+            in 4..5 -> {
+                if (nearbyPlayers.isNotEmpty()) { gravityLaunchAttack(nearbyPlayers.random().location) }
+                else { gravityLaunchAttack(bossEntity!!.location.clone().add((-9..9).random().toDouble(), 0.0, (-9..9).random().toDouble())) }
+                nearbyPlayers.forEach { it.sendMessage(ambassadorPrefix.append(Component.text("You can not fathom this...", TextColor.color(255, 255, 255)))) }
+            }
+            in 6..7 -> {
+                if (nearbyPlayers.isNotEmpty()) {
+                    hijackAttack(nearbyPlayers.random())
+                }
+                nearbyPlayers.forEach { it.sendMessage(ambassadorPrefix.append(Component.text("It appears your friends are actually foes...", TextColor.color(255, 255, 255)))) }
+            }
+            in 8..10 -> {
+                if (nearbyPlayers.isNotEmpty()) {
+                    nearbyPlayers.forEach { fallingSingularityAttack(it.location.clone().add(0.0, 15.0, 0.0))  }
+                }
+                nearbyPlayers.forEach { it.sendMessage(ambassadorPrefix.append(Component.text("The points is that its super massive...", TextColor.color(255, 255, 255)))) }
+            }
+        }
     }
 
 
     // Attack damager
-    private fun attackToDamager(someDamager: Entity) {
+    private fun defensiveAttack(someDamager: Entity) {
         // Quotes
         val timeElapsed: Long = System.currentTimeMillis() - takeDamageCooldown
-        if (timeElapsed >= 6000) {
-            val randomAttackQuote = randomMessageList.random()
-            takeDamageCooldown = System.currentTimeMillis()
-            for (somePlayer in bossEntity!!.world.getNearbyPlayers(bossEntity!!.location, 17.5)) {
-                somePlayer.sendMessage(randomAttackQuote)
-            }
-            /*
-            if (someDamager is Player) {
-                when((0..6).random()) {
-                    3, 4 -> {
-                        gravityWaveAttack(someDamager)
-                    }
-                    0, 1, 2 -> {
-                        skyBombardAttack(someDamager)
-                    }
-                    5, 6 -> {
-                        hijackAttack(bossEntity!!)
-                    }
-
-                }
-            }
-            else {
-                when((0..2).random()) {
-                    0, 1 -> {
-                        hijackAttack(bossEntity!!)
-                    }
-                    2 -> {
-                        gravityWaveAttack(someDamager)
-                    }
-                }
-            }
-
-             */
+        if (timeElapsed >= 1000 * 10) {
+            val nearbyPlayers = bossEntity!!.getNearbyEntities(32.0, 32.0, 32.0).filterIsInstance<Player>()
+            nearbyPlayers.forEach { it.sendMessage(ambassadorPrefix.append(damagedMessages[(0..4).random()])) }
         }
     }
 
-
     // Check damage source and current stats
-    fun detectDamage(someDamager: Entity, someDamage: Double) {
-        // Quotes MOVE LATER
-        val criticalMoodQuote = "${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}${someDamager.name} wants to endanger you all!"
-        val patiencePatienceQuote = "${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}${someDamager.name} is testing my patience!"
-        val disrespectQuote = "${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}${someDamager.name} has shown me extreme disrespect!"
-        val disappointedQuote = "${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}${someDamager.name}... I expected more from you..."
-        val dislikeQuote = "${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}${someDamager.name}... Does your honor not mean anything?!"
-        val firstBadContactQuote = "${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}${someDamager.name}, that is not an appropriate way to introduce yourself, though what is expected from such a lowlife..."
-        val activationQuote = "${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Due to ${someDamager.name}'s insolence, You all shall be taught some respect!"
-        val whoActivationQuote = "${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Time to teach these lowlifes basic manners..."
-        val patienceBadMoodQuote = "${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Who is doing that?!"
-
+    internal fun damageHandler(someDamager: Entity, someDamage: Double) {
         // Check if Patience
-        if (patience > 0) {
-            var messageQuote: String?
-
-            // Messages if player damage
+        var messageQuote: TextComponent
+        val nearbyPlayers = bossEntity!!.getNearbyEntities(32.0, 32.0, 32.0).filterIsInstance<Player>()
+        if (!angered) {
             if (someDamager is Player) {
-                println("${someDamager.name} hit player")
                 // Add likeness and bad first contact
                 if (!playerLikeness.containsKey(someDamager.uniqueId)) {
                     playerLikeness[someDamager.uniqueId] = 0.0
-                    messageQuote = firstBadContactQuote
-                }
-                // Check if likability is high
-                else {
+                    messageQuote = ambassadorPrefix.append(someDamager.name().color(TextColor.color(255, 255, 255))).append(patienceMessages[5])
+                } else {
+                    // Check likability
                     messageQuote = if (playerLikeness[someDamager.uniqueId]!! >= 65.0) {
-                        disappointedQuote
+                        ambassadorPrefix.append(someDamager.name().color(TextColor.color(255, 255, 255))).append(patienceMessages[4])
                     } else if (playerLikeness[someDamager.uniqueId]!! >= 25.0) {
-                        dislikeQuote
+                        ambassadorPrefix.append(someDamager.name().color(TextColor.color(255, 255, 255))).append(patienceMessages[3])
                     } else {
-                        patiencePatienceQuote
+                        ambassadorPrefix.append(someDamager.name().color(TextColor.color(255, 255, 255))).append(patienceMessages[1])
                     }
                     playerLikeness[someDamager.uniqueId] = playerLikeness[someDamager.uniqueId]!! - someDamage
                 }
-                // Change his mood
-                appeasement -= (someDamage + 2.0)
-                patience -= someDamage
-                // Check if critical activation
-                if (patience <= 0) {
-                    // Check if activated
-                    messageQuote = activationQuote
-                    activateBoss(someDamager)
-                }
-                else if (patience <= 10) {
-                    // Check if near criticality
-                    messageQuote = criticalMoodQuote
-                }
-                else if (appeasement <= -5) {
-                    // Check if low appeasement
-                    messageQuote = disrespectQuote
-                }
-            }
-            // Entity damages
-            else {
-                messageQuote = patienceBadMoodQuote
-                // Change his mood
-                appeasement -= (someDamage + 2.0)
-                patience -= someDamage
+                // Pre-activation messages
+                nearbyPlayers.forEach { it.sendMessage(messageQuote) }
 
-                // Check if critical activation
-                if (patience <= 0) {
-                    messageQuote = whoActivationQuote
-                    activateBoss(someDamager)
+                // Change mood stats
+                appeasement -= (someDamage + 2.0)
+                patience -= someDamage
+                // Check if critical activation, or low patience
+                messageQuote = if (patience <= 0) {
+                    ambassadorPrefix.append(someDamager.name().color(TextColor.color(255, 255, 255))).append(patienceMessages[6])
+                } else if (appeasement <= -5) {
+                    ambassadorPrefix.append(someDamager.name().color(TextColor.color(255, 255, 255))).append(patienceMessages[2])
+                } else {
+                    ambassadorPrefix.append(someDamager.name().color(TextColor.color(255, 255, 255))).append(patienceMessages[0])
                 }
             }
-            // Send Messages to all
-            for (somePlayer in someDamager.world.players) {
-                somePlayer.sendMessage(messageQuote)
+            else {
+                // Change mood stats
+                appeasement -= (someDamage + 2.0)
+                patience -= someDamage
+                messageQuote = if (patience <= 0) {
+                    ambassadorPrefix.append(someDamager.name().color(TextColor.color(255, 255, 255))).append(patienceMessages[7])
+                } else {
+                    ambassadorPrefix.append(someDamager.name().color(TextColor.color(255, 255, 255))).append(patienceMessages[8])
+                }
+            }
+            // Damage Message
+            nearbyPlayers.forEach { it.sendMessage(messageQuote) }
+            if (patience <= 0) {
+                angered = true
+                activateBoss()
             }
         }
         else {
-            attackToDamager(someDamager)
+            defensiveAttack(someDamager)
         }
     }
 
     // Appeasement Mechanic
-    fun appeasementCheck(somePlayer: Player, someItem: Item) {
+    internal fun appeasementCheck(somePlayer: Player, someItem: Item) {
         // Check if players in gift cooldown map
         if (!playersGiftCooldown.containsKey(somePlayer.uniqueId)) {
             playersGiftCooldown[somePlayer.uniqueId] = System.currentTimeMillis()
             calculateGiftTable(somePlayer, someItem)
         }
         else {
-            val timeElapsed: Long = System.currentTimeMillis() - playersGiftCooldown[somePlayer.uniqueId]!!
             // Gift Cooldown
-            if (timeElapsed >= 5000) {
+            val timeElapsed: Long = System.currentTimeMillis() - playersGiftCooldown[somePlayer.uniqueId]!!
+            if (timeElapsed >= 1000 * 5) {
                 playersGiftCooldown[somePlayer.uniqueId] = System.currentTimeMillis()
                 calculateGiftTable(somePlayer, someItem)
             }
@@ -419,8 +443,8 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
 
         // Check if likeness maxed
         if (playerLikeness[givingPlayer.uniqueId]!! >= 100) {
-            givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}I am sorry. I can not receive any more pleasantries from you.")
-            playerLikeness[givingPlayer.uniqueId]!! + 1
+            givingPlayer.sendMessage(ambassadorPrefix.append(givingPlayer.name()).append(Component.text(", I am sorry. I can not receive any more pleasantries from you.", TextColor.color(255, 255, 255))))
+            playerLikeness[givingPlayer.uniqueId]!! + 5
             return
         }
 

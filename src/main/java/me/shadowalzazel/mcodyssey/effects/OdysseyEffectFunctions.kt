@@ -92,7 +92,7 @@ object OdysseyEffectFunctions {
         }
     }
 
-    // Thorns
+    // Accursed
     fun accursedEffect(victimList: MutableCollection<LivingEntity>, duration: Int) {
         victimList.forEach {
             if (OdysseyEffectTags.ACCURSED !in it.scoreboardTags) {

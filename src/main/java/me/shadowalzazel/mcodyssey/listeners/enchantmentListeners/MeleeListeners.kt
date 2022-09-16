@@ -373,7 +373,7 @@ object MeleeListeners : Listener {
 
         // Every 10 ticks -> 0.5 sec
         eventVictim.addScoreboardTag("Gravity_Well")
-        val gravityWellTask = GravitationalAttract(eventVictim, event.damager as LivingEntity, enchantmentStrength * 1, (enchantmentStrength * 2) + 2)
+        val gravityWellTask = GravityWellTask(eventVictim, event.damager as LivingEntity, enchantmentStrength * 1, (enchantmentStrength * 2) + 2)
         gravityWellTask.runTaskTimer(MinecraftOdyssey.instance, 0, 10)
 
     }

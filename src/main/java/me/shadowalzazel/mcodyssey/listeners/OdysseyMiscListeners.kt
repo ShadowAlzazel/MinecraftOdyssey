@@ -28,30 +28,6 @@ object OdysseyMiscListeners : Listener {
         }
     }
 
-    // Main function for calling a new boss
-    @EventHandler
-    fun newBoss(event: TimeSkipEvent) {
-        MinecraftOdyssey.instance.run {
-            if (!activeBoss) {
-                val timeElapsed = System.currentTimeMillis() - timeSinceBoss
-                if (timeElapsed >= 90000000) {
-                    when ((0..4).random()) {
-                        // For all boss RNG
-                        0 -> {
-                            timeSinceBoss = System.currentTimeMillis()
-                            currentBoss = AmbassadorBoss()
-                            activeBoss = true
-                            (currentBoss as AmbassadorBoss).createBoss(mainWorld!!)
-                            println("${mainWorld!!.name}Spawned the Ambassador")
-                        }
-                        else -> {
-
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     // Misc snow man immunity
     @EventHandler
