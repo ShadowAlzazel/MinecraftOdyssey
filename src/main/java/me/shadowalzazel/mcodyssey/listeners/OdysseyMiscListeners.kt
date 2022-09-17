@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.entity.EntityDeathEvent
+import org.bukkit.event.weather.LightningStrikeEvent
 import org.bukkit.event.world.TimeSkipEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
@@ -50,6 +51,15 @@ object OdysseyMiscListeners : Listener {
         }
     }
 
+
+
+    @EventHandler
+    fun chargeAmethyst(event: LightningStrikeEvent) {
+        if (event.cause != LightningStrikeEvent.Cause.TRIDENT) {
+            // DO CHARGE?
+        }
+
+    }
 
 
 

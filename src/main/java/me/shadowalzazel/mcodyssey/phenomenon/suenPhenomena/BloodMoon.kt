@@ -24,7 +24,7 @@ object BloodMoon : OdysseyPhenomenon("Blood Moon",
 
     private val bloodMoonMobEffects = listOf(
         PotionEffect(PotionEffectType.INCREASE_DAMAGE, 300 * 20,1),
-        PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 300 * 20,1),
+        PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 300 * 20,0),
         PotionEffect(PotionEffectType.HEALTH_BOOST, 300 * 20,4)
     )
 

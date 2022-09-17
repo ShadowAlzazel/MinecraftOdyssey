@@ -99,6 +99,7 @@ object OdysseyDropsListeners : Listener {
                                         it.world.dropItem(it.location, (OdysseyBooks.GILDED_BOOK.createGildedBook(randomEnchantList.random(), 1)))
                                         droppedItemSound(somePlayer)
                                     }
+                                    it.world.dropItem(it.location, (OdysseyItems.COAGULATED_BLOOD.createItemStack((1..3).random())))
                                 }
                             }
                             is Witch -> {

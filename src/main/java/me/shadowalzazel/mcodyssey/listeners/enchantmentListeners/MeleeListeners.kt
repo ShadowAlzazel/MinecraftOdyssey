@@ -118,7 +118,7 @@ object MeleeListeners : Listener {
                             if (!voidStrikeCooldown.containsKey(someDamager.uniqueId)) { voidStrikeCooldown[someDamager.uniqueId] = 0L }
                             val timeElapsed: Long = System.currentTimeMillis() - voidStrikeCooldown[someDamager.uniqueId]!!
                             //val attackSpeedAttribute = someDamager.getAttribute(Attribute.GENERIC_ATTACK_SPEED)
-                            if (timeElapsed > 0.75 * 1000) {
+                            if (timeElapsed > 0.3 * 1000 && someDamager.isHandRaised) {
                                 voidStrikeCooldown[someDamager.uniqueId] = System.currentTimeMillis()
                                 voidStrikeEnchantment(event, someWeapon, someVictim)
                             }
@@ -289,11 +289,18 @@ object MeleeListeners : Listener {
 
     // ECHO Enchantment Function
     private fun echoEnchantment(damagerWeapon: ItemStack, eventDamager: LivingEntity, eventVictim: LivingEntity) {
+        // Prevent recursive call
+        if (eventVictim.scoreboardTags.contains("Echo_Struck")) {
+            eventVictim.scoreboardTags.remove("Echo_Struck")
+            return
+        }
         val enchantmentStrength = damagerWeapon.itemMeta.getEnchantLevel(OdysseyEnchantments.ECHO)
         if ((0..100).random() < enchantmentStrength * 20) {
             if (!eventVictim.isDead) {
                 // Swing
                 eventDamager.swingOffHand()
+                eventVictim.addScoreboardTag("Echo_Struck")
+                eventDamager.attack(eventVictim)
                 // Particles
                 eventVictim.world.spawnParticle(Particle.SWEEP_ATTACK, eventVictim.location, 3, 0.05, 0.05, 0.05)
             }
