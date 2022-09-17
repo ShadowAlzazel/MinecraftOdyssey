@@ -776,7 +776,7 @@ object OdysseyGildingListeners : Listener {
                             // Tome of Harmony
                             ItemModels.TOME_OF_HARMONY -> {
                                 val newMeta = inputEquipment!!.clone().itemMeta.also {
-                                    if (it is Repairable) { it.repairCost = 10 }
+                                    if (it is Repairable) { it.repairCost = 5 }
                                 }
                                 event.result = inputEquipment!!.clone().apply { itemMeta = newMeta }
                             }

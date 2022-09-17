@@ -20,11 +20,11 @@ object KineticBlaster : OdysseyItem("Kinetic Blaster",
 
     override fun createItemStack(amount: Int): ItemStack {
         val newKineticBlaster = super.createItemStack(amount)
-        newKineticBlaster.itemMeta.apply {
-            addEnchant(Enchantment.ARROW_DAMAGE, 5, true)
-            addEnchant(Enchantment.ARROW_INFINITE, 1, true)
-            addEnchant(Enchantment.ARROW_KNOCKBACK, 2, true)
-            addEnchant(Enchantment.DURABILITY, 3, true)
+        newKineticBlaster.itemMeta.also {
+            it.addEnchant(Enchantment.ARROW_DAMAGE, 5, true)
+            it.addEnchant(Enchantment.ARROW_INFINITE, 1, true)
+            it.addEnchant(Enchantment.ARROW_KNOCKBACK, 2, true)
+            it.addEnchant(Enchantment.DURABILITY, 3, true)
         }
         return newKineticBlaster
 

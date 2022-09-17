@@ -22,41 +22,37 @@ class FrogFrightTask(private val toungedEntity: LivingEntity?, private val someV
 }
 
 // GRAVITY_WELL Task
-class GravitationalAttract(private val gravityWellVictim: LivingEntity, private val collapser: LivingEntity, private val gravityFactor: Int, private val gravityWellCounter: Int) : BukkitRunnable() {
+class GravityWellTask(private val gravityWellVictim: LivingEntity, private val collapser: LivingEntity, private val gravityFactor: Int, private val gravityWellCounter: Int) : BukkitRunnable() {
     private var attractCooldown = System.currentTimeMillis()
-    private val singularityLocation = gravityWellVictim.location.clone()
     private var counter = 0
 
     override fun run() {
-        gravityWellVictim.also {
+        gravityWellVictim.also { singularity ->
             counter += 1
             // Check if Gravity Well entity has tag
-            if ("Gravity_Well" !in it.scoreboardTags) { this.cancel() }
+            if ("Gravity_Well" !in singularity.scoreboardTags) { this.cancel() }
 
             // Spawn particles and get nearby entities
-            val nearbyVictims = with(it.world) {
-                val someLocation = it.location.clone().add(0.0, 0.25, 0.0)
+            with(singularity.world) {
+                val someLocation = singularity.location.clone().add(0.0, 0.25, 0.0)
                 spawnParticle(Particle.END_ROD, someLocation, 15, 0.5, 0.5, 0.5)
                 spawnParticle(Particle.CRIT_MAGIC, someLocation, 45, 0.5, 0.40, 0.5)
                 spawnParticle(Particle.PORTAL, someLocation, 55, 0.5, 0.4, 0.5)
                 spawnParticle(Particle.SONIC_BOOM, someLocation, 2, 0.0, 0.0, 0.0)
-                getNearbyLivingEntities(singularityLocation, gravityFactor.toDouble())
             }
-            // remove collapser
-            nearbyVictims.remove(collapser)
 
-            // Pulling
-            for (gravitating in nearbyVictims) {
-                val newLocation = singularityLocation.clone()
-                gravitating.teleport(newLocation.add((-3..3).random() * 0.08, 0.1, (-3..3).random() * 0.08))
-                // Do damage every other tick
-                if (counter % 2 == 0) { gravitating.damage(1.0) }
+            singularity.location.getNearbyLivingEntities(gravityFactor.toDouble()).forEach {
+                if (!it.scoreboardTags.contains("Falling_Singularity") && it != collapser) {
+                    val newLocation = singularity.location.clone()
+                    it.teleport(newLocation.add((-3..3).random() * 0.08, 0.1, (-3..3).random() * 0.08))
+                    if (counter % 2 == 0) { it.damage(0.5 * gravityFactor) }
+                }
             }
 
             // Timer
             val timeElapsed = System.currentTimeMillis() - attractCooldown
-            if (gravityWellCounter < counter || it.health <= 0.25 || timeElapsed > gravityWellCounter * 1000) {
-                if (!it.isDead) { it.scoreboardTags.remove("Gravity_Well") }
+            if (gravityWellCounter < counter || singularity.health <= 0.25 || timeElapsed > (gravityWellCounter / 2) * 1000) {
+                if (!singularity.isDead) { singularity.scoreboardTags.remove("Gravity_Well") }
                 this.cancel()
             }
         }

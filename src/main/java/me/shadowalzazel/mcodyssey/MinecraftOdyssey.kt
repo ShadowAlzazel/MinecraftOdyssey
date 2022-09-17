@@ -82,6 +82,7 @@ class MinecraftOdyssey : JavaPlugin() {
             // Register Gilding Listeners
             it.pluginManager.registerEvents(OdysseyGildingListeners, this)
             // Odyssey Boss Listeners
+            it.pluginManager.registerEvents(OdysseyBossListeners, this)
             it.pluginManager.registerEvents(AmbassadorListeners, this)
             it.pluginManager.registerEvents(HogRiderListeners, this)
             // Odyssey Enchantment listeners

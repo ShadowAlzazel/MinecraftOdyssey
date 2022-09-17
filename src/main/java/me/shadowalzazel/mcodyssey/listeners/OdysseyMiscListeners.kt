@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.entity.EntityDeathEvent
+import org.bukkit.event.weather.LightningStrikeEvent
 import org.bukkit.event.world.TimeSkipEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
@@ -28,30 +29,6 @@ object OdysseyMiscListeners : Listener {
         }
     }
 
-    // Main function for calling a new boss
-    @EventHandler
-    fun newBoss(event: TimeSkipEvent) {
-        MinecraftOdyssey.instance.run {
-            if (!activeBoss) {
-                val timeElapsed = System.currentTimeMillis() - timeSinceBoss
-                if (timeElapsed >= 90000000) {
-                    when ((0..4).random()) {
-                        // For all boss RNG
-                        0 -> {
-                            timeSinceBoss = System.currentTimeMillis()
-                            currentBoss = AmbassadorBoss()
-                            activeBoss = true
-                            (currentBoss as AmbassadorBoss).createBoss(mainWorld!!)
-                            println("${mainWorld!!.name}Spawned the Ambassador")
-                        }
-                        else -> {
-
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     // Misc snow man immunity
     @EventHandler
@@ -74,6 +51,15 @@ object OdysseyMiscListeners : Listener {
         }
     }
 
+
+
+    @EventHandler
+    fun chargeAmethyst(event: LightningStrikeEvent) {
+        if (event.cause != LightningStrikeEvent.Cause.TRIDENT) {
+            // DO CHARGE?
+        }
+
+    }
 
 
 
