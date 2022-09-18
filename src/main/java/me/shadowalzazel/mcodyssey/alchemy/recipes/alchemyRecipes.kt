@@ -93,7 +93,7 @@ object PotionOfWrathRecipe : OdysseyAlchemyCauldronRecipe(
     AlchemyPotions.POTION_OF_WRATH,
     listOf(
         ItemStack(Material.WARPED_FUNGUS, 6),
-        ItemStack(Material.BLAZE_POWDER, 5),
+        OdysseyItems.COAGULATED_BLOOD.createItemStack(1),
         ItemStack(Material.CRIMSON_FUNGUS, 6),
         AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1)),
     4, Material.SOUL_FIRE)
@@ -148,7 +148,7 @@ object PuffyPricklyPotionRecipe : OdysseyAlchemyCauldronRecipe(
     AlchemyPotions.PUFFY_PRICKLY_POTION,
     listOf(
         ItemStack(Material.PUFFERFISH, 2),
-        ItemStack(Material.YELLOW_WOOL, 2),
+        ItemStack(Material.HONEY_BLOCK, 2),
         AlchemyPotions.POTION_OF_THORNS.createItemStack(1)),
     3, Material.SOUL_FIRE)
 

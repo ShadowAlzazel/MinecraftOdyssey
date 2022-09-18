@@ -1,9 +1,10 @@
 package me.shadowalzazel.mcodyssey.listeners
 
+import com.destroystokyo.paper.event.player.PlayerJumpEvent
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.listeners.tasks.UnstableAntimatterTask
 import me.shadowalzazel.mcodyssey.items.OdysseyItems
-import me.shadowalzazel.mcodyssey.recipes.OdysseyRecipes
+import me.shadowalzazel.mcodyssey.listeners.tasks.TemporalStasisTask
 import org.bukkit.*
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
@@ -26,19 +27,19 @@ object OdysseyItemListeners : Listener {
 
     // Main Function dealing with Odyssey Crafting
     @EventHandler
-    fun odysseyCrafting(event: CraftItemEvent) {
+    fun odysseyCraftingHandler(event: CraftItemEvent) {
         if (event.whoClicked is Player) {
             val somePlayer = event.whoClicked as Player
             if (somePlayer.gameMode != GameMode.SPECTATOR) {
                 // Match
                 when (event.inventory.result) {
-                    OdysseyRecipes.PURE_ANTIMATTER_CRYSTAL_RECIPE.result -> {
+                    OdysseyItems.PURE_ANTIMATTER_CRYSTAL.createItemStack(1) -> {
                         pureAntiMatterCrystalCrafting(somePlayer)
                     }
-                    OdysseyRecipes.FRUIT_OF_ERISHKIGAL_RECIPE.result -> {
+                    OdysseyItems.FRUIT_OF_ERISHKIGAL.createItemStack(1) -> {
                         fruitOfErishkigalCrafting(somePlayer)
                     }
-                    OdysseyRecipes.IRRADIATED_FRUIT_RECIPE.result -> {
+                    OdysseyItems.IRRADIATED_FRUIT.createItemStack(1) -> {
                         with(somePlayer) {
                             addPotionEffects(listOf(
                                 PotionEffect(PotionEffectType.HUNGER, 20 * 30, 1),
@@ -47,6 +48,7 @@ object OdysseyItemListeners : Listener {
                             ))
                         }
                     }
+                    //OdysseyRecipes.IRRADIATED_FRUIT_RECIPE.result
                 }
             }
         }
@@ -54,7 +56,7 @@ object OdysseyItemListeners : Listener {
 
     // Main function when dealing with custom items and their effects and not food
     @EventHandler
-    fun consumingItem(event: PlayerItemConsumeEvent) {
+    fun consumingItemHandler(event: PlayerItemConsumeEvent) {
         if (event.item.hasItemMeta()) {
             if (event.item.itemMeta.hasLore()) {
                 val somePlayer = event.player
@@ -135,6 +137,13 @@ object OdysseyItemListeners : Listener {
                             somePlayer.playSound(somePlayer.location, Sound.BLOCK_BEACON_ACTIVATE, 2.5F, 0.25F)
                         }
                         println(playerHealth.modifiers)
+                        with(somePlayer) {
+                            addPotionEffects(listOf(
+                                PotionEffect(PotionEffectType.HUNGER, 20 * 30, 1),
+                                PotionEffect(PotionEffectType.WITHER, 20 * 30, 0),
+                                PotionEffect(PotionEffectType.SLOW_DIGGING, 20 * 30, 1)
+                            ))
+                        }
                     }
                     //
                     else -> {
@@ -146,7 +155,7 @@ object OdysseyItemListeners : Listener {
 
 
     @EventHandler(priority = EventPriority.HIGH)
-    fun takingDamageItem(event: EntityDamageEvent) {
+    fun takingDamageItemHandler(event: EntityDamageEvent) {
         if (event.entity is LivingEntity) {
             val someEntity = event.entity as LivingEntity
             if (someEntity.equipment?.itemInOffHand != null) {
@@ -161,20 +170,49 @@ object OdysseyItemListeners : Listener {
     }
 
     @EventHandler
-    fun itemInteract(event: PlayerDropItemEvent) {
+    fun itemDropHandler(event: PlayerDropItemEvent) {
+        when (event.itemDrop.itemStack) {
+            OdysseyItems.HOURGLASS_FROM_BABEL.createItemStack(1) -> {
+                event.itemDrop.remove()
+                with(event.player.world) {
+                    val blockLight = Particle.DustOptions(Color.fromBGR(231, 166, 95), 1.0F)
+                    val blockBreak = Material.GOLD_BLOCK.createBlockData()
+                    val blockDust = Material.GOLD_BLOCK.createBlockData()
+                    val someLocation = event.player.location.clone().add(0.0, 0.35, 0.0)
+                    spawnParticle(Particle.REDSTONE , someLocation, 75, 0.95, 0.75, 0.95, blockLight)
+                    spawnParticle(Particle.BLOCK_CRACK, someLocation, 95, 0.95, 0.8, 0.95, blockBreak)
+                    spawnParticle(Particle.FALLING_DUST, someLocation, 35, 0.75, 0.25, 0.75, blockDust)
+                    playSound(someLocation, Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0F, 5.0F)
+                }
+                event.player.also {
+                    it.isInvulnerable = true
+                    it.addPotionEffect(PotionEffect(PotionEffectType.SLOW, 20 * 5, 100))
+                    it.addPotionEffect(PotionEffect(PotionEffectType.GLOWING, 20 * 5, 100))
+                    it.addScoreboardTag("Temporal_Stasis")
+                }
+                val temporalStasisTask = TemporalStasisTask(event.player)
+                temporalStasisTask.runTaskLater(MinecraftOdyssey.instance, 20 * 5)
+            }
+        }
+    }
 
+    @EventHandler
+    fun jumpHandler(event: PlayerJumpEvent) {
+        if (event.player.scoreboardTags.contains("Temporal_Stasis")) {
+            event.isCancelled = true
+        }
     }
 
 
-
-
-
-
     @EventHandler
-    fun leftCraftingAntimatter(event: PlayerQuitEvent) {
+    fun playerLeaveHandler(event: PlayerQuitEvent) {
         val somePlayer = event.player
-        if ("Unstable_Crafting" in somePlayer.scoreboardTags) {
-            // add remove
+
+        if (somePlayer.scoreboardTags.contains("Temporal_Stasis")) {
+            somePlayer.scoreboardTags.remove("Temporal_Stasis")
+            somePlayer.isInvulnerable = false
+        }
+        else if (somePlayer.scoreboardTags.contains("Unstable_Crafting")) {
             somePlayer.scoreboardTags.remove("Unstable_Crafting")
             somePlayer.damage(314.15)
             println("Tried to leave!")

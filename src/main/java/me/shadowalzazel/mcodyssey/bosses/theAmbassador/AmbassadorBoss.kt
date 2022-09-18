@@ -3,7 +3,7 @@ package me.shadowalzazel.mcodyssey.bosses.theAmbassador
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.bosses.utility.OdysseyBoss
 import me.shadowalzazel.mcodyssey.constants.ModifiersUUIDs
-import me.shadowalzazel.mcodyssey.effects.GravityWellTask
+import me.shadowalzazel.mcodyssey.listeners.tasks.GravityWellTask
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.items.*
 import net.kyori.adventure.text.Component

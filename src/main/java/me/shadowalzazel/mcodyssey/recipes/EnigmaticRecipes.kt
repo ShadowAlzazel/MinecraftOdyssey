@@ -9,10 +9,13 @@ import org.bukkit.inventory.ShapedRecipe
 
 object EnigmaticRecipes {
 
-    private val SORROWING_SOUL_RECIPE = createSorrowingSoulRecipe()
-    private val SOUL_CATALYST_RECIPE = createSoulCatalystRecipe()
-
-    val recipeSet = listOf(SORROWING_SOUL_RECIPE, SOUL_CATALYST_RECIPE)
+    // Register Recipes
+    fun registerRecipes(): List<ShapedRecipe> {
+        return listOf(
+            createSorrowingSoulRecipe(),
+            createSoulCatalystRecipe()
+        )
+    }
 
     /* ---------------------------------------------------------------------------*/
 

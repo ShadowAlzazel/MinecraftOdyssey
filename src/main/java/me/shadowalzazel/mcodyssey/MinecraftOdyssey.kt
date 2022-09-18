@@ -19,11 +19,9 @@ import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.NamespacedKey
 import org.bukkit.World
-import org.bukkit.plugin.Plugin
 
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
-import java.util.zip.GZIPInputStream
 import java.io.FileNotFoundException
 
 class MinecraftOdyssey : JavaPlugin() {
@@ -63,6 +61,7 @@ class MinecraftOdyssey : JavaPlugin() {
 
     // Plugin startup logic
     override fun onEnable() {
+        val timerStart: Long = System.currentTimeMillis()
 
         // Config start up
         config.options().copyDefaults()
@@ -72,6 +71,7 @@ class MinecraftOdyssey : JavaPlugin() {
         OdysseyEnchantments.register()
 
         // Registering Server related events
+        logger.info("Registering Recipes...")
         server.also {
             // Odyssey Server Listeners
             it.pluginManager.registerEvents(OdysseyServerListeners, this)
@@ -119,31 +119,24 @@ class MinecraftOdyssey : JavaPlugin() {
                 }
 
             }
-            it.broadcast(Component.text("The Odyssey Awaits!"))
         }
 
-        // Gilding Recipes
-        Bukkit.addRecipe(BrandingRecipes.ODYSSEY_NAMING)
-        Bukkit.addRecipe(GildingRecipes.ODYSSEY_GILDED_SMITHING)
-        Bukkit.addRecipe(GildingRecipes.GILDED_BOOK_COMBINING)
-        Bukkit.addRecipe(GildingRecipes.GILDED_ITEM_UPGRADING)
-        Bukkit.addRecipe(GildingRecipes.GILDED_BOOK_LEGACY_ACTIVATION)
-        Bukkit.addRecipe(GildingRecipes.SOUL_STEEL_SMITHING)
-
+        // Register Recipes
+        logger.info("Registering Recipes...")
+        // Smithing Recipes
+        SmithingRecipes.registerRecipes().forEach { Bukkit.addRecipe(it) }
 
         // Item Recipes
-        for (itemRecipe in OdysseyRecipes.recipeSet) { Bukkit.addRecipe(itemRecipe) }
-        // Weapon Recipes
-        for (weaponRecipe in WeaponRecipes.recipeSet) { Bukkit.addRecipe(weaponRecipe) }
-        // Cooking Recipes
-        for (cookingRecipe in CookingRecipes.recipeSet) { Bukkit.addRecipe(cookingRecipe) }
-        // Enigmatic Recipes
-        for (enigmaticRecipe in EnigmaticRecipes.recipeSet) { Bukkit.addRecipe(enigmaticRecipe) }
-        // Final Recipes
-        // TODO: Fix
-        // for (someRecipe in FinalRecipes.recipeSet) { Bukkit.addRecipe(someRecipe) }
+        OdysseyRecipes.registerRecipes().forEach { Bukkit.addRecipe(it) }
+        CookingRecipes.registerRecipes().forEach { Bukkit.addRecipe(it) }
+        EnigmaticRecipes.registerRecipes().forEach { Bukkit.addRecipe(it) }
+        WeaponRecipes.registerRecipes().forEach { Bukkit.addRecipe(it) }
+
+        // Merchant Recipes
+        TradingRecipes.registerRecipes().forEach { Bukkit.addRecipe(it) }
 
         // Register Commands
+        logger.info("Registering Commands...")
         getCommand("SpawnAmbassador")?.setExecutor(SpawnAmbassador)
         getCommand("SpawnHogRider")?.setExecutor(SpawnHogRider)
         getCommand("GiveTestItem")?.setExecutor(GiveTestItem)
@@ -155,7 +148,9 @@ class MinecraftOdyssey : JavaPlugin() {
 
         // Spell Commands
         getCommand("necronomicon")?.setExecutor(Necronomicon)
+
         // Structures
+        logger.info("Registering Structures...")
         try {
             val worldFolder = this.mainWorld!!.worldFolder
             val datapackDirectory = worldFolder.path + "/datapacks"
@@ -194,6 +189,8 @@ class MinecraftOdyssey : JavaPlugin() {
 
 
         // Hello World!
+        val timeElapsed = (System.currentTimeMillis() - timerStart).div(1000.0)
+        logger.info("Odyssey Start Up sequence in ($timeElapsed) seconds!")
         logger.info("The Odyssey has just begun!")
     }
 

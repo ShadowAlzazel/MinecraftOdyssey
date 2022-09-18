@@ -29,6 +29,9 @@ object SpawnTestMob : CommandExecutor {
                     "preacher" -> {
                         OdysseyMobs.PREACHER_OF_THE_ABYSS.createMob(sender.world, sender.location)
                     }
+                    "dealer" -> {
+                        OdysseyMobs.DUBIOUS_DEALER.createMob(sender.world, sender.location)
+                    }
                 }
             }
         }

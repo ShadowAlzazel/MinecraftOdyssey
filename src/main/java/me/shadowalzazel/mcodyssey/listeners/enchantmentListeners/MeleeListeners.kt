@@ -6,6 +6,9 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDeathEvent
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.effects.*
+import me.shadowalzazel.mcodyssey.listeners.tasks.FrogFrightTask
+import me.shadowalzazel.mcodyssey.listeners.tasks.GravityWellTask
+import me.shadowalzazel.mcodyssey.listeners.tasks.HemorrhageTask
 import org.bukkit.*
 import org.bukkit.entity.Bee
 import org.bukkit.entity.EntityType

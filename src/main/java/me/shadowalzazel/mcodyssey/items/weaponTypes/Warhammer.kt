@@ -16,4 +16,6 @@ open class Warhammer (warhammerName: String, warhammerMaterial: Material, warham
         return newWarhammer
     }
 
+
+    // CHANGE TO BIG AND LONG
 }

@@ -88,6 +88,12 @@ object GiveTestItem : CommandExecutor {
                     "coagulated_blood" -> {
                         sender.inventory.addItem(OdysseyItems.COAGULATED_BLOOD.createItemStack(1))
                     }
+                    "hourglass_from_babel" -> {
+                        sender.inventory.addItem(OdysseyItems.HOURGLASS_FROM_BABEL.createItemStack(1))
+                    }
+                    "gemma_primus" -> {
+                        sender.inventory.addItem(OdysseyItems.GEMMA_PRIMUS.createItemStack(1))
+                    }
                     else -> {
                         return false
                     }
