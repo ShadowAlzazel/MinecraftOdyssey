@@ -44,6 +44,8 @@ object OdysseyItems {
 
     val HOURGLASS_FROM_BABEL = HourglassFromBabel
     val ENIGMATIC_ANCHOR = EnigmaticAnchor
+    val WARDEN_ENTRAILS = WardenEntrails
+    val SCULK_HEART = SculkHeart
 
 
 }

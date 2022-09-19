@@ -2,9 +2,12 @@ package me.shadowalzazel.mcodyssey.listeners
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.constants.ModifiersUUIDs
 import me.shadowalzazel.mcodyssey.listeners.tasks.UnstableAntimatterTask
 import me.shadowalzazel.mcodyssey.items.OdysseyItems
 import me.shadowalzazel.mcodyssey.listeners.tasks.TemporalStasisTask
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
 import org.bukkit.*
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
@@ -35,18 +38,13 @@ object OdysseyItemListeners : Listener {
                 when (event.inventory.result) {
                     OdysseyItems.PURE_ANTIMATTER_CRYSTAL.createItemStack(1) -> {
                         pureAntiMatterCrystalCrafting(somePlayer)
+                        // TODO: REMOVE ITEM ON DEATH
                     }
                     OdysseyItems.FRUIT_OF_ERISHKIGAL.createItemStack(1) -> {
                         fruitOfErishkigalCrafting(somePlayer)
                     }
                     OdysseyItems.IRRADIATED_FRUIT.createItemStack(1) -> {
-                        with(somePlayer) {
-                            addPotionEffects(listOf(
-                                PotionEffect(PotionEffectType.HUNGER, 20 * 30, 1),
-                                PotionEffect(PotionEffectType.WITHER, 20 * 30, 0),
-                                PotionEffect(PotionEffectType.SLOW_DIGGING, 20 * 30, 1)
-                            ))
-                        }
+                        irradiatedFruitCrafting(somePlayer)
                     }
                     //OdysseyRecipes.IRRADIATED_FRUIT_RECIPE.result
                 }
@@ -65,87 +63,25 @@ object OdysseyItemListeners : Listener {
                 when (event.item) {
                     // Fruit Of Erishkigal Health Boosts
                     OdysseyItems.FRUIT_OF_ERISHKIGAL.createItemStack(someStackValue) -> {
-                        // Get
-                        val playerHealth = somePlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!
-                        var hasExtraHealth = false
-                        var someHealthModifier: AttributeModifier? = null
-                        // Check modifiers
-                        for (someModifier in playerHealth.modifiers) {
-                            if (someModifier.name == "odyssey_extra_health_erishkigal") {
-                                hasExtraHealth = true
-                                someHealthModifier = someModifier
-                            }
-                        }
-                        // Check if same boosts
-                        if (hasExtraHealth) {
-                            val healthCount = someHealthModifier!!.amount
-                            if (healthCount <= 16.0) {
-                                val erishkigalHealthBoost = AttributeModifier(UUID.fromString("c994412e-9e72-4881-a55f-1f2d1c95f125"), "odyssey_extra_health_erishkigal", 4.0 + healthCount, AttributeModifier.Operation.ADD_NUMBER)
-                                playerHealth.removeModifier(someHealthModifier)
-                                playerHealth.addModifier(erishkigalHealthBoost)
-                                // Sound
-                                somePlayer.playSound(somePlayer.location, Sound.UI_TOAST_CHALLENGE_COMPLETE, 2.5F, 0.25F)
-                                somePlayer.playSound(somePlayer.location, Sound.BLOCK_BEACON_ACTIVATE, 2.5F, 0.25F)
-                            }
-                            else {
-                                somePlayer.sendMessage("${ChatColor.GOLD}You can not consume any more of this substance...")
-                                event.isCancelled = true
-                            }
-                        }
-                        else {
-                            val erishkigalHealthBoost = AttributeModifier(UUID.fromString("c994412e-9e72-4881-a55f-1f2d1c95f125"), "odyssey_extra_health_erishkigal", 4.0, AttributeModifier.Operation.ADD_NUMBER)
-                            playerHealth.addModifier(erishkigalHealthBoost)
-                            // Sound
-                            somePlayer.playSound(somePlayer.location, Sound.UI_TOAST_CHALLENGE_COMPLETE, 2.5F, 0.25F)
-                            somePlayer.playSound(somePlayer.location, Sound.BLOCK_BEACON_ACTIVATE, 2.5F, 0.25F)
-                        }
-                        println(playerHealth.modifiers)
+                        if (!extraHealthCalculator(somePlayer, ModifiersUUIDs.ERISHKIGAL_FRUIT_HEALTH)) { event.isCancelled }
                     }
                     OdysseyItems.IRRADIATED_FRUIT.createItemStack(someStackValue) -> {
-                        // Get
-                        val playerHealth = somePlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!
-                        var hasExtraHealth = false
-                        var someHealthModifier: AttributeModifier? = null
-                        // Check modifiers
-                        for (someModifier in playerHealth.modifiers) {
-                            if (someModifier.name == "odyssey_extra_health_irradiated_fruit") {
-                                hasExtraHealth = true
-                                someHealthModifier = someModifier
-                            }
-                        }
-                        // Check if same boosts
-                        if (hasExtraHealth) {
-                            val healthCount = someHealthModifier!!.amount
-                            if (healthCount <= 8.0) {
-                                val irradiatedHealthBoost = AttributeModifier(UUID.fromString("c994412e-9e72-4881-a55f-1f2d1c95f129"), "odyssey_extra_health_irradiated_fruit", 2.0 + healthCount, AttributeModifier.Operation.ADD_NUMBER)
-                                playerHealth.removeModifier(someHealthModifier)
-                                playerHealth.addModifier(irradiatedHealthBoost)
-                                // Sound
-                                somePlayer.playSound(somePlayer.location, Sound.UI_TOAST_CHALLENGE_COMPLETE, 2.5F, 0.25F)
-                                somePlayer.playSound(somePlayer.location, Sound.BLOCK_BEACON_ACTIVATE, 2.5F, 0.25F)
-                            }
-                            else {
-                                somePlayer.sendMessage("${ChatColor.GOLD}You can not consume any more of this substance...")
-                                event.isCancelled = true
-                            }
-                        }
+                        if (!extraHealthCalculator(somePlayer, ModifiersUUIDs.IRRADIATED_FRUIT_HEALTH)) { event.isCancelled }
                         else {
-                            val irradiatedHealthBoost = AttributeModifier(UUID.fromString("c994412e-9e72-4881-a55f-1f2d1c95f129"), "odyssey_extra_health_irradiated_fruit", 2.0, AttributeModifier.Operation.ADD_NUMBER)
-                            playerHealth.addModifier(irradiatedHealthBoost)
-                            // Sound
-                            somePlayer.playSound(somePlayer.location, Sound.UI_TOAST_CHALLENGE_COMPLETE, 2.5F, 0.25F)
-                            somePlayer.playSound(somePlayer.location, Sound.BLOCK_BEACON_ACTIVATE, 2.5F, 0.25F)
-                        }
-                        println(playerHealth.modifiers)
-                        with(somePlayer) {
-                            addPotionEffects(listOf(
+                            somePlayer.addPotionEffects(listOf(
                                 PotionEffect(PotionEffectType.HUNGER, 20 * 30, 1),
                                 PotionEffect(PotionEffectType.WITHER, 20 * 30, 0),
                                 PotionEffect(PotionEffectType.SLOW_DIGGING, 20 * 30, 1)
                             ))
                         }
                     }
-                    //
+                    OdysseyItems.SCULK_HEART.createItemStack(someStackValue) -> {
+                        if (!extraHealthCalculator(somePlayer, ModifiersUUIDs.SCULK_HEART_HEALTH)) { event.isCancelled }
+                        else {
+                            somePlayer.addPotionEffect(PotionEffect(PotionEffectType.DARKNESS, 20 * 30, 1))
+                            somePlayer.damage(2.0)
+                        }
+                    }
                     else -> {
                     }
                 }
@@ -154,6 +90,7 @@ object OdysseyItemListeners : Listener {
     }
 
 
+    // Main handler for events related to taking damage
     @EventHandler(priority = EventPriority.HIGH)
     fun takingDamageItemHandler(event: EntityDamageEvent) {
         if (event.entity is LivingEntity) {
@@ -169,32 +106,17 @@ object OdysseyItemListeners : Listener {
         }
     }
 
-    @EventHandler
+    // Main handler for events related to dropped items
+    @EventHandler(priority = EventPriority.HIGH)
     fun itemDropHandler(event: PlayerDropItemEvent) {
         when (event.itemDrop.itemStack) {
             OdysseyItems.HOURGLASS_FROM_BABEL.createItemStack(1) -> {
                 event.itemDrop.remove()
-                with(event.player.world) {
-                    val blockLight = Particle.DustOptions(Color.fromBGR(231, 166, 95), 1.0F)
-                    val blockBreak = Material.GOLD_BLOCK.createBlockData()
-                    val blockDust = Material.GOLD_BLOCK.createBlockData()
-                    val someLocation = event.player.location.clone().add(0.0, 0.35, 0.0)
-                    spawnParticle(Particle.REDSTONE , someLocation, 75, 0.95, 0.75, 0.95, blockLight)
-                    spawnParticle(Particle.BLOCK_CRACK, someLocation, 95, 0.95, 0.8, 0.95, blockBreak)
-                    spawnParticle(Particle.FALLING_DUST, someLocation, 35, 0.75, 0.25, 0.75, blockDust)
-                    playSound(someLocation, Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0F, 5.0F)
-                }
-                event.player.also {
-                    it.isInvulnerable = true
-                    it.addPotionEffect(PotionEffect(PotionEffectType.SLOW, 20 * 5, 100))
-                    it.addPotionEffect(PotionEffect(PotionEffectType.GLOWING, 20 * 5, 100))
-                    it.addScoreboardTag("Temporal_Stasis")
-                }
-                val temporalStasisTask = TemporalStasisTask(event.player)
-                temporalStasisTask.runTaskLater(MinecraftOdyssey.instance, 20 * 5)
+                hourglassDrop(event.player)
             }
         }
     }
+
 
     @EventHandler
     fun jumpHandler(event: PlayerJumpEvent) {
@@ -219,10 +141,81 @@ object OdysseyItemListeners : Listener {
         }
     }
 
+    /*------------------------------------------------------------------------*/
+    // Functions for dropped items
+
+    private fun hourglassDrop(eventPlayer: Player) {
+        with(eventPlayer.world) {
+            val blockLight = Particle.DustOptions(Color.fromBGR(231, 166, 95), 1.0F)
+            val blockBreak = Material.GOLD_BLOCK.createBlockData()
+            val blockDust = Material.GOLD_BLOCK.createBlockData()
+            val someLocation = eventPlayer.location.clone().add(0.0, 0.35, 0.0)
+            spawnParticle(Particle.REDSTONE, someLocation, 75, 0.95, 0.75, 0.95, blockLight)
+            spawnParticle(Particle.BLOCK_CRACK, someLocation, 95, 0.95, 0.8, 0.95, blockBreak)
+            spawnParticle(Particle.FALLING_DUST, someLocation, 35, 0.75, 0.25, 0.75, blockDust)
+            playSound(someLocation, Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0F, 5.0F)
+        }
+            eventPlayer.also {
+            it.isInvulnerable = true
+            it.addPotionEffect(PotionEffect(PotionEffectType.SLOW, 20 * 8, 100))
+            it.addPotionEffect(PotionEffect(PotionEffectType.GLOWING, 20 * 8, 100))
+            it.addScoreboardTag("Temporal_Stasis")
+        }
+        val temporalStasisTask = TemporalStasisTask(eventPlayer)
+        temporalStasisTask.runTaskLater(MinecraftOdyssey.instance, 20 * 8)
+    }
+
 
     /*------------------------------------------------------------------------*/
+    // Helper functions for consuming items
 
-    // PURE_ANTI_MATTER_CRYSTAL_RECIPE_CRAFTING
+    private fun extraHealthCalculator(eventPlayer: Player, healthUUID: UUID): Boolean {
+        val healthMap = mapOf(
+            ModifiersUUIDs.ERISHKIGAL_FRUIT_HEALTH to Pair("odyssey_extra_health_erishkigal", 4.0), // * 4
+            ModifiersUUIDs.IRRADIATED_FRUIT_HEALTH to Pair("odyssey_extra_health_erishkigal", 2.0),
+            ModifiersUUIDs.SCULK_HEART_HEALTH to Pair("odyssey_extra_health_sculk_heart", 2.0))
+
+        // Get health
+        val playerHealth = eventPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!
+
+        var healthModifier: AttributeModifier? = null
+        for (someModifier in playerHealth.modifiers) {
+            if (someModifier.uniqueId == healthUUID) {
+                healthModifier = someModifier
+                break
+            }
+        }
+
+        // Add health if new
+        if (healthModifier != null) {
+            // Currently 5 times regular amount
+            return if (healthModifier.amount <= (healthMap[healthUUID]!!.second * 4.0)) {
+                val newHealthModifier = AttributeModifier(healthUUID, healthMap[healthUUID]!!.first, healthModifier.amount + healthMap[healthUUID]!!.second, AttributeModifier.Operation.ADD_NUMBER)
+                playerHealth.removeModifier(healthModifier)
+                playerHealth.addModifier(newHealthModifier)
+                // Sounds
+                eventPlayer.playSound(eventPlayer.location, Sound.UI_TOAST_CHALLENGE_COMPLETE, 2.5F, 0.25F)
+                eventPlayer.playSound(eventPlayer.location, Sound.BLOCK_BEACON_ACTIVATE, 2.5F, 0.25F)
+                true
+            } else {
+                eventPlayer.sendActionBar(Component.text("You can not consume any more of this substance.", TextColor.color(255, 255, 85)))
+                false
+            }
+        }
+        else {
+            val newHealthModifier = AttributeModifier(healthUUID, healthMap[healthUUID]!!.first, healthMap[healthUUID]!!.second, AttributeModifier.Operation.ADD_NUMBER)
+            playerHealth.addModifier(newHealthModifier)
+            // Sounds
+            eventPlayer.playSound(eventPlayer.location, Sound.UI_TOAST_CHALLENGE_COMPLETE, 2.5F, 0.25F)
+            eventPlayer.playSound(eventPlayer.location, Sound.BLOCK_BEACON_ACTIVATE, 2.5F, 0.25F)
+            return true
+        }
+    }
+
+
+    /*------------------------------------------------------------------------*/
+    // Helper functions for completing crafting recipe
+
     private fun pureAntiMatterCrystalCrafting(eventPlayer: Player) {
         eventPlayer.playSound(eventPlayer.location, Sound.ENTITY_WITHER_SPAWN, 1.5F, 0.2F)
         if ("Unstable_Crafting" !in eventPlayer.scoreboardTags) {
@@ -232,7 +225,16 @@ object OdysseyItemListeners : Listener {
         }
     }
 
-    // FRUIT_OF_ERISHKIGAL_RECIPE_CRAFTING
+    private fun irradiatedFruitCrafting(eventPlayer: Player) {
+        with(eventPlayer) {
+            addPotionEffects(listOf(
+                PotionEffect(PotionEffectType.HUNGER, 20 * 30, 1),
+                PotionEffect(PotionEffectType.WITHER, 20 * 30, 0),
+                PotionEffect(PotionEffectType.SLOW_DIGGING, 20 * 30, 1))
+            )
+        }
+    }
+
     private fun fruitOfErishkigalCrafting(eventPlayer: Player) {
         eventPlayer.playSound(eventPlayer.location, Sound.ENTITY_ENDER_EYE_DEATH, 1.5F, 0.15F)
         if ("Unstable_Crafting" in eventPlayer.scoreboardTags) {

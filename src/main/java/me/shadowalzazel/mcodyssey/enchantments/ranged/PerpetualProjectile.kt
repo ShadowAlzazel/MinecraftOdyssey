@@ -5,11 +5,11 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object TemporalTorrent : OdysseyEnchantment("temporaltorrent", "Temporal Torrent", 5) {
+object PerpetualProjectile : OdysseyEnchantment("perpetualprojectile", "Perpetual Projectile", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            ARROW_INFINITE -> {
+            ARROW_FIRE -> {
                 true
             }
             else -> {
@@ -29,8 +29,5 @@ object TemporalTorrent : OdysseyEnchantment("temporaltorrent", "Temporal Torrent
         }
     }
 
-    fun todo() {
-        TODO("Shoots arrows that have slow velocity and ignore gravity, but after 5 shot, all gain double velocity and regain time" +
-                "Incompatible with Singularity Shot?")
-    }
+    // not affected by gravity
 }

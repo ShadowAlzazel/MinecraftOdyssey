@@ -21,8 +21,8 @@ object OdysseyServerListeners : Listener {
         if (MinecraftOdyssey.instance.config.getBoolean("server-resource-pack-force")) {
 
             player.setResourcePack(
-                "https://www.dropbox.com/s/6hob8iad499vz95/odyssey-resource-pack-test.zip?dl=1",
-                "c810b14fd7985198335aa6e0433ad810566715e1",
+                "https://www.dropbox.com/s/2sdfqy76ym39h44/odyssey-resource-pack.zip?dl=1",
+                MinecraftOdyssey.instance.resourcePackHash,
                 true,
                 Component.text("Minecraft Odyssey requires its respective resource pack to operate! Please download it to begin your journey!", TextColor.color(255, 170, 0))
             )

@@ -125,6 +125,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
             if (vanquisher is Player) {
                 // Spawn loot near vanquisher
                 vanquisher.world.dropItem(vanquisher.location, (OdysseyBooks.GILDED_BOOK.createGildedBook(OdysseyEnchantments.GRAVITY_WELL, 1)))
+                vanquisher.world.dropItem(vanquisher.location, (OdysseyItems.GEMMA_PRIMUS.createItemStack(15)))
                 vanquisher.giveExpLevels(10)
             }
             val vanquisherName = vanquisher?.name ?: "An unknown Hero"

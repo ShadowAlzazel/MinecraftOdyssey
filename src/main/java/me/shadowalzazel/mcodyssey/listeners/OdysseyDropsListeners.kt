@@ -177,6 +177,16 @@ object OdysseyDropsListeners : Listener {
                                 it.world.dropItem(it.location, (OdysseyItems.IRRADIATED_ROD.createItemStack((1..3).random())))
                                 it.world.dropItem(it.location, (OdysseyItems.IRRADIATED_SHARD.createItemStack((2..5).random())))
                             }
+                            is Warden -> {
+                                it.world.dropItem(it.location, (OdysseyItems.WARDEN_ENTRAILS.createItemStack(1)))
+                                it.world.dropItem(it.location, (OdysseyItems.GEMMA_PRIMUS.createItemStack((10..15).random())))
+                            }
+                            is Wither -> {
+                                it.world.dropItem(it.location, (OdysseyItems.GEMMA_PRIMUS.createItemStack((8..12).random())))
+                            }
+                            is EnderDragon -> {
+                                it.world.dropItem(it.location, (OdysseyItems.GEMMA_PRIMUS.createItemStack((10..15).random())))
+                            }
                             else -> {
                             }
                         }

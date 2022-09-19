@@ -15,7 +15,6 @@ import me.shadowalzazel.mcodyssey.listeners.OdysseyPhenomenaListeners
 import me.shadowalzazel.mcodyssey.phenomenon.PhenomenonCycle
 import me.shadowalzazel.mcodyssey.phenomenon.utility.OdysseyPhenomenon
 import me.shadowalzazel.mcodyssey.recipes.*
-import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.NamespacedKey
 import org.bukkit.World
@@ -38,6 +37,7 @@ class MinecraftOdyssey : JavaPlugin() {
 
     // Config variables
     var endGame: Boolean = true
+    val resourcePackHash: String = "39bd2b57f97627f8c6b04ff672482cce44262e7b"
 
     // Boss Progression
     // Change This LATER to read from storage

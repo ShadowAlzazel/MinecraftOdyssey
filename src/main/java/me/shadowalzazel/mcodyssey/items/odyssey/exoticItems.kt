@@ -70,7 +70,7 @@ object FruitOfErishkigal : OdysseyItem("Fruit of Erishkigal",
     mapOf(Enchantment.MENDING to 1))
 
 
-// IRRADIATED_FRUIT
+// TOTEM_OF_VEXING
 object TotemOfVexing : OdysseyItem("Totem of Vexing",
     Material.MILK_BUCKET,
     Component.text("Totem of Vexing", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
@@ -78,12 +78,20 @@ object TotemOfVexing : OdysseyItem("Totem of Vexing",
     ItemModels.TOTEM_OF_VEXING)
 
 
+// IRRADIATED_FRUIT
 object IrradiatedFruit : OdysseyItem("Irradiated Fruit",
     Material.APPLE,
     Component.text("Irradiated Fruit", TextColor.color(255, 84, 255), TextDecoration.ITALIC),
     listOf(Component.text("A fruit with unusual properties...", TextColor.color(87, 67, 96)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     ItemModels.IRRADIATED_FRUIT,
     mapOf(Enchantment.MENDING to 1))
+
+// SCULK_HEART
+object SculkHeart : OdysseyItem("Sculk Heart",
+    Material.ROTTEN_FLESH,
+    Component.text("Sculk Heart", TextColor.color(24, 90, 94), TextDecoration.ITALIC),
+    listOf(Component.text("The heart of the sculk...", TextColor.color(24, 130, 154)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+    ItemModels.SCULK_HEART)
 
 
 // SILMARIL_OF_YGGLADIEL

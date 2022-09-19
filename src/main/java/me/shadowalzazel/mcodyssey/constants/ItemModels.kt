@@ -88,6 +88,8 @@ object ItemModels {
     const val BREEZE_IN_A_BOTTLE: Int = 6903617
     const val HOURGLASS_FROM_BABEL: Int = 6903618
     const val ENIGMATIC_ANCHOR: Int = 6903619
+    const val WARDEN_ENTRAILS: Int = 6903620
+    const val SCULK_HEART: Int = 6903621
 
     /* ----------------------------------------------------------- */
     const val SAYA: Int = 6903819

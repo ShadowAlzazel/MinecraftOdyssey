@@ -656,7 +656,7 @@ object OdysseyGildingListeners : Listener {
                                         // Add Slot
                                         var nonOdysseyCount = 0
                                         for (enchant in inputEquipment!!.enchantments) { if (enchant !is OdysseyEnchantment) {nonOdysseyCount += 1 } }
-                                        val newSlotIndex = infoIndex + 3 + nonOdysseyCount
+                                        val newSlotIndex = infoIndex + 1 + 1
                                         lore.add(newSlotIndex, emptyEnchantSlot)
                                     }
                                     event.result = inputEquipment!!.clone().apply {
