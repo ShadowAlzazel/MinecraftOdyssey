@@ -67,3 +67,9 @@ object BreezeInABottle : OdysseyItem("Breeze in a Bottle",
     listOf(Component.text("The wind contained?", TextColor.color(74, 140, 234)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     ItemModels.BREEZE_IN_A_BOTTLE)
 
+// Warden Entrails
+object WardenEntrails : OdysseyItem("Warden Entrails",
+    Material.ROTTEN_FLESH,
+    Component.text("Warden Entrails", TextColor.color(24, 70, 74), TextDecoration.ITALIC),
+    listOf(Component.text("The remains of the ancient warden...", TextColor.color(24, 70, 74)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+    ItemModels.WARDEN_ENTRAILS)

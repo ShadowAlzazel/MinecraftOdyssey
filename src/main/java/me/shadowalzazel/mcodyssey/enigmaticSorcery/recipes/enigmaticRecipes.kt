@@ -29,3 +29,11 @@ object SoulSteelIngotRecipe: OdysseyEnigmaticRecipe(
     setOf(Material.IRON_BLOCK),
     setOf(Pair(1.0, 0.0), Pair(-1.0, 0.0), Pair(0.0, 1.0), Pair(0.0, -1.0))
 )
+
+object SculkHeartRecipe: OdysseyEnigmaticRecipe(
+    OdysseyItems.SCULK_HEART,
+    null,
+    listOf(OdysseyItems.WARDEN_ENTRAILS.createItemStack(1)),
+    setOf(Material.SCULK_CATALYST),
+    setOf(Pair(1.0, 0.0), Pair(-1.0, 0.0), Pair(0.0, 1.0), Pair(0.0, -1.0))
+)

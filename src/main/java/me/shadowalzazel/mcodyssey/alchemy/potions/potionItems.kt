@@ -40,27 +40,27 @@ object PotionOfLuck : OdysseyPotion("Potion of Luck",
 
 object PotionOfResistance : OdysseyPotion("Potion of Resistance",
     Component.text("Potion of Resistance", TextColor.color(85, 255, 255)),
-    potionEffects = listOf(PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 60 * 20 , 0)),
+    potionEffects = listOf(PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 150 * 20 , 0)),
     potionColor = Color.fromRGB(65, 97, 122))
 
 
 object PotionOfHaste : OdysseyPotion("Potion of Haste",
     Component.text("Potion of Haste", TextColor.color(85, 255, 255)),
-    potionEffects = listOf(PotionEffect(PotionEffectType.FAST_DIGGING, 60 * 20 , 0)),
+    potionEffects = listOf(PotionEffect(PotionEffectType.FAST_DIGGING, 150 * 20 , 0)),
     potionColor = Color.fromRGB(255, 233, 133))
 
 
 object PotionOfConstitution : OdysseyPotion("Potion of Constitution",
     Component.text("Potion of Constitution", TextColor.color(85, 255, 255)),
-    potionEffects = listOf(PotionEffect(PotionEffectType.HEALTH_BOOST, 60 * 20 , 0)),
+    potionEffects = listOf(PotionEffect(PotionEffectType.HEALTH_BOOST, 180 * 20 , 0)),
     potionColor = Color.fromRGB(209, 0, 49))
 
 
 object PotionOfStoneSkin : OdysseyPotion("Potion of Stone Skin",
     Component.text("Potion of Stone Skin", TextColor.color(85, 255, 255)),
     potionEffects = listOf(
-        PotionEffect(PotionEffectType.ABSORPTION, 60 * 20 , 2),
-        PotionEffect(PotionEffectType.SLOW, 60 * 20 , 0)
+        PotionEffect(PotionEffectType.ABSORPTION, 180 * 20 , 2),
+        PotionEffect(PotionEffectType.SLOW, 180 * 20 , 0)
     ),
     potionColor = Color.fromRGB(42, 51, 38))
 
@@ -68,8 +68,8 @@ object PotionOfStoneSkin : OdysseyPotion("Potion of Stone Skin",
 object PotionOfWrath : OdysseyPotion("Potion of Wrath",
     Component.text("Potion of Wrath", TextColor.color(85, 255, 255)),
     potionEffects = listOf(
-        PotionEffect(PotionEffectType.INCREASE_DAMAGE, 40 * 20 , 2),
-        PotionEffect(PotionEffectType.HUNGER, 40 * 20 , 1)
+        PotionEffect(PotionEffectType.INCREASE_DAMAGE, 120 * 20 , 2),
+        PotionEffect(PotionEffectType.HUNGER, 120 * 20 , 1)
     ),
     potionColor = Color.fromRGB(250, 60, 17))
 
@@ -104,13 +104,13 @@ object PotionOfAblaze : OdysseyPotion("Bottle o' Ablaze",
 
 object PotionOfThorns : OdysseyPotion("Potion of Thorns",
     Component.text("Potion of Thorns", TextColor.color(0, 207, 112)),
-    listOf(Component.text("Thorns (0:50)", TextColor.color(0, 207, 112)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+    listOf(Component.text("Thorns (2:30)", TextColor.color(0, 207, 112)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     potionEffects = emptyList(),
     potionColor = Color.fromRGB(0, 207, 112))
 
 object PuffyPricklyPotion : OdysseyPotion("Puffy n' Prickly Potion",
     Component.text("Puffy n' Prickly Potion", TextColor.color(208, 247, 166)),
-    listOf(Component.text("Puffy n' Prickly (0:40)", TextColor.color(208, 247, 166)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+    listOf(Component.text("Puffy n' Prickly (2:00)", TextColor.color(208, 247, 166)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     potionEffects = emptyList(),
     potionColor = Color.fromRGB(208, 247, 166))
 
@@ -123,18 +123,18 @@ object BottledSouls : OdysseyPotion("Bottled Souls",
 
 object PoltergeistBrew : OdysseyPotion("Poltergeist Brew",
     Component.text("Poltergeist Brew", TextColor.color(137, 24, 40)),
-    listOf(Component.text("Accursed (0:30)", TextColor.color(137, 24, 40)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+    listOf(Component.text("Accursed (1:30)", TextColor.color(137, 24, 40)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     potionEffects = emptyList(),
     potionColor = Color.fromRGB(137, 24, 40))
 
 object PotionOfShimmer : OdysseyPotion("Bottle o' Shimmer",
     Component.text("Bottle o' Shimmer", TextColor.color(78, 0, 161)),
-    listOf(Component.text("Shimmer (0:20)", TextColor.color(78, 0, 161)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+    listOf(Component.text("Shimmer (2:00)", TextColor.color(78, 0, 161)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     potionEffects = listOf(
-        PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 20, 1),
-        PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20 * 20, 1),
-        PotionEffect(PotionEffectType.GLOWING, 20 * 20, 1),
-        PotionEffect(PotionEffectType.HUNGER, 20 * 20, 0),
-        PotionEffect(PotionEffectType.CONFUSION, 15 * 20, 0),
+        PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 120 * 20, 1),
+        PotionEffect(PotionEffectType.INCREASE_DAMAGE, 120 * 20, 1),
+        PotionEffect(PotionEffectType.GLOWING, 120 * 20, 1),
+        PotionEffect(PotionEffectType.HUNGER, 120 * 20, 0),
+        PotionEffect(PotionEffectType.CONFUSION, 120 * 20, 0),
     ),
     potionColor = Color.fromRGB(78, 0, 161))

@@ -11,88 +11,59 @@ import org.bukkit.inventory.ShapedRecipe
 
 object WeaponRecipes {
 
-    // Katana Recipes
-    private val WOODEN_KATANA_RECIPE = createWoodenKatanaRecipe()
-    private val GOLDEN_KATANA_RECIPE = createGoldenKatanaRecipe()
-    private val STONE_KATANA_RECIPE = createStoneKatanaRecipe()
-    private val IRON_KATANA_RECIPE = createIronKatanaRecipe()
-    private val DIAMOND_KATANA_RECIPE = createDiamondKatanaRecipe()
-    private val NETHERITE_KATANA_RECIPE = createNetheriteKatanaRecipe()
+    // Register Recipes
+    fun registerRecipes(): List<ShapedRecipe> {
+        return listOf(
+            createWoodenKatanaRecipe(),
+            createGoldenKatanaRecipe(),
+            createStoneKatanaRecipe(),
+            createIronKatanaRecipe(),
+            createDiamondKatanaRecipe(),
+            createNetheriteKatanaRecipe(),
+            createWoodenClaymoreRecipe(),
+            createGoldenClaymoreRecipe(),
+            createStoneClaymoreRecipe(),
+            createIronClaymoreRecipe(),
+            createDiamondClaymoreRecipe(),
+            createWoodenSpearRecipe(),
+            createGoldenSpearRecipe(),
+            createStoneSpearRecipe(),
+            createIronSpearRecipe(),
+            createDiamondSpearRecipe(),
+            createWoodenDaggerRecipe(),
+            createGoldenDaggerRecipe(),
+            createStoneDaggerRecipe(),
+            createIronDaggerRecipe(),
+            createDiamondDaggerRecipe(),
+            createWoodenRapierRecipe(),
+            createGoldenRapierRecipe(),
+            createStoneRapierRecipe(),
+            createIronRapierRecipe(),
+            createDiamondRapierRecipe(),
+            createWoodenCutlassRecipe(),
+            createGoldenCutlassRecipe(),
+            createStoneCutlassRecipe(),
+            createIronCutlassRecipe(),
+            createDiamondCutlassRecipe(),
+            createWoodenSaberRecipe(),
+            createGoldenSaberRecipe(),
+            createStoneSaberRecipe(),
+            createIronSaberRecipe(),
+            createDiamondSaberRecipe(),
+            createWoodenHalberdRecipe(),
+            createGoldenHalberdRecipe(),
+            createStoneHalberdRecipe(),
+            createIronHalberdRecipe(),
+            createDiamondHalberdRecipe(),
+            createIronWarhammerRecipe(),
+            createBambooStaffRecipe(),
+            createBoneStaffRecipe(),
+            createWoodenStaffRecipe(),
+            createBlazeRodStaffRecipe()
+        )
+    }
 
-    // Claymore Recipes
-    private val WOODEN_CLAYMORE_RECIPE = createWoodenClaymoreRecipe()
-    private val GOLDEN_CLAYMORE_RECIPE = createGoldenClaymoreRecipe()
-    private val STONE_CLAYMORE_RECIPE = createStoneClaymoreRecipe()
-    private val IRON_CLAYMORE_RECIPE = createIronClaymoreRecipe()
-    private val DIAMOND_CLAYMORE_RECIPE = createDiamondClaymoreRecipe()
-
-    // Spear Recipes
-    private val WOODEN_SPEAR_RECIPE = createWoodenSpearRecipe()
-    private val GOLDEN_SPEAR_RECIPE = createGoldenSpearRecipe()
-    private val STONE_SPEAR_RECIPE = createStoneSpearRecipe()
-    private val IRON_SPEAR_RECIPE = createIronSpearRecipe()
-    private val DIAMOND_SPEAR_RECIPE = createDiamondSpearRecipe()
-
-    // Dagger Recipes
-    private val WOODEN_DAGGER_RECIPE = createWoodenDaggerRecipe()
-    private val GOLDEN_DAGGER_RECIPE = createGoldenDaggerRecipe()
-    private val STONE_DAGGER_RECIPE = createStoneDaggerRecipe()
-    private val IRON_DAGGER_RECIPE = createIronDaggerRecipe()
-    private val DIAMOND_DAGGER_RECIPE = createDiamondDaggerRecipe()
-
-    // Rapier Recipes
-    private val WOODEN_RAPIER_RECIPE = createWoodenRapierRecipe()
-    private val GOLDEN_RAPIER_RECIPE = createGoldenRapierRecipe()
-    private val STONE_RAPIER_RECIPE = createStoneRapierRecipe()
-    private val IRON_RAPIER_RECIPE = createIronRapierRecipe()
-    private val DIAMOND_RAPIER_RECIPE = createDiamondRapierRecipe()
-
-    // Cutlasses
-    private val WOODEN_CUTLASS_RECIPE = createWoodenCutlassRecipe()
-    private val GOLDEN_CUTLASS_RECIPE = createGoldenCutlassRecipe()
-    private val STONE_CUTLASS_RECIPE = createStoneCutlassRecipe()
-    private val IRON_CUTLASS_RECIPE = createIronCutlassRecipe()
-    private val DIAMOND_CUTLASS_RECIPE = createDiamondCutlassRecipe()
-
-    // Sabers
-    private val WOODEN_SABER_RECIPE = createWoodenSaberRecipe()
-    private val GOLDEN_SABER_RECIPE = createGoldenSaberRecipe()
-    private val STONE_SABER_RECIPE = createStoneSaberRecipe()
-    private val IRON_SABER_RECIPE = createIronSaberRecipe()
-    private val DIAMOND_SABER_RECIPE = createDiamondSaberRecipe()
-
-    // Halberds
-    private val WOODEN_HALBERD_RECIPE = createWoodenHalberdRecipe()
-    private val GOLDEN_HALBERD_RECIPE = createGoldenHalberdRecipe()
-    private val STONE_HALBERD_RECIPE = createStoneHalberdRecipe()
-    private val IRON_HALBERD_RECIPE = createIronHalberdRecipe()
-    private val DIAMOND_HALBERD_RECIPE = createDiamondHalberdRecipe()
-
-
-    // Warhammer Recipes
-    private val IRON_WARHAMMER_RECIPE = createIronWarhammerRecipe()
-
-    // Staff Recipes
-    private val BAMBOO_STAFF_RECIPE = createBambooStaffRecipe()
-    private val BONE_STAFF_RECIPE = createBoneStaffRecipe()
-    private val WOODEN_STAFF_RECIPE = createWoodenStaffRecipe()
-    private val BLAZE_ROD_STAFF_RECIPE = createBlazeRodStaffRecipe()
-
-
-
-    // Recipes
-    val recipeSet: Set<Recipe> = setOf(
-        WOODEN_KATANA_RECIPE, GOLDEN_KATANA_RECIPE, STONE_KATANA_RECIPE, IRON_KATANA_RECIPE, DIAMOND_KATANA_RECIPE,
-        WOODEN_CLAYMORE_RECIPE, GOLDEN_CLAYMORE_RECIPE, STONE_CLAYMORE_RECIPE, IRON_CLAYMORE_RECIPE, DIAMOND_CLAYMORE_RECIPE,
-        WOODEN_SPEAR_RECIPE, GOLDEN_SPEAR_RECIPE, STONE_SPEAR_RECIPE, IRON_SPEAR_RECIPE, DIAMOND_SPEAR_RECIPE,
-        WOODEN_DAGGER_RECIPE, GOLDEN_DAGGER_RECIPE, STONE_DAGGER_RECIPE, IRON_DAGGER_RECIPE, DIAMOND_DAGGER_RECIPE,
-        WOODEN_RAPIER_RECIPE, GOLDEN_RAPIER_RECIPE, STONE_RAPIER_RECIPE, IRON_RAPIER_RECIPE, DIAMOND_RAPIER_RECIPE,
-        WOODEN_CUTLASS_RECIPE, GOLDEN_CUTLASS_RECIPE, STONE_CUTLASS_RECIPE, IRON_CUTLASS_RECIPE, DIAMOND_CUTLASS_RECIPE,
-        WOODEN_SABER_RECIPE, GOLDEN_SABER_RECIPE, STONE_SABER_RECIPE, IRON_SABER_RECIPE, DIAMOND_SABER_RECIPE,
-        WOODEN_HALBERD_RECIPE, GOLDEN_HALBERD_RECIPE, STONE_HALBERD_RECIPE, IRON_HALBERD_RECIPE, DIAMOND_HALBERD_RECIPE,
-        IRON_WARHAMMER_RECIPE,
-        BAMBOO_STAFF_RECIPE, BONE_STAFF_RECIPE, WOODEN_STAFF_RECIPE, BLAZE_ROD_STAFF_RECIPE
-    )
+    /* ---------------------------------------------------------------------------*/
 
     /*----------------------------------------KATANAS-----------------------------------------*/
 

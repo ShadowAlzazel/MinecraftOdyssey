@@ -8,6 +8,8 @@ import me.shadowalzazel.mcodyssey.items.utilty.OdysseyItem
 object OdysseyItems {
 
     /* ------------------------------------------------------------------------- */
+    val GEMMA_PRIMUS: OdysseyItem = GemmaPrimus
+
     val PAPERS_OF_ARCUS: OdysseyItem =  PapersOfArcus
     val GALVANIZED_STEEL: OdysseyItem = GalvanizedSteel
     val PURE_ALLOY_COPPER: OdysseyItem = PureAlloyCopper
@@ -28,20 +30,22 @@ object OdysseyItems {
     val FRUIT_OF_ERISHKIGAL: OdysseyItem = FruitOfErishkigal
     val SILMARIL_OF_YGGLADIEL = SilmarilOfYggladiel
 
-    /* ---------------------------------------------------------------------- */
     val IRRADIATED_SHARD = IrradiatedShard
     val IRRADIATED_ROD = IrradiatedRod
     val IRRADIATED_FRUIT = IrradiatedFruit
+
     val TOTEM_OF_VEXING = TotemOfVexing
-
-
-    /* ---------------------------------------------------------------------- */
     val SOUL_CRYSTAL = SoulCrystal
     val ECTOPLASM = Ectoplasm
     val SORROWING_SOUL = SorrowingSoul
     val COAGULATED_BLOOD = CoagulatedBlood
     val SOUL_CATALYST = SoulCatalyst
     val SOUL_STEEL_INGOT = SoulSteelIngot
+
+    val HOURGLASS_FROM_BABEL = HourglassFromBabel
+    val ENIGMATIC_ANCHOR = EnigmaticAnchor
+    val WARDEN_ENTRAILS = WardenEntrails
+    val SCULK_HEART = SculkHeart
 
 
 }

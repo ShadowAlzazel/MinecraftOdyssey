@@ -2,7 +2,10 @@ package me.shadowalzazel.mcodyssey.constants
 
 object ItemModels {
 
-    /* --------------------------------FOOD--------------------------------- */ // 69045XX, 6905XXX
+    /* ---------------------------------------------------------------------------------------------- */
+    /* --------------------------------------------FOODS--------------------------------------------- */
+    /* ---------------------------------------------------------------------------------------------- */
+    // 69045XX, 6905XXX
 
     const val GREEN_APPLE: Int = 6904511
     const val CANDY_APPLE: Int = 6904512
@@ -25,8 +28,13 @@ object ItemModels {
     const val BACON: Int = 6908047
     const val SALMON_ROLL: Int = 6908048
 
-    /* --------------------------------COMMON-ITEMS--------------------------------- */
+    /* ---------------------------------------------------------------------------------------------- */
+    /* --------------------------------------------ITEMS--------------------------------------------- */
+    /* ---------------------------------------------------------------------------------------------- */
 
+    /* ----------------------------------------------------------- */
+
+    // UNCOMMON
     const val PAPERS_OF_ARCUS: Int = 6905070
     const val GALVANIZED_STEEL: Int = 6905071
     const val PURE_ALLOY_COPPER: Int = 6905072
@@ -35,8 +43,9 @@ object ItemModels {
     const val KUGELBLITZ_CONTAINMENT_UNIT: Int = 6905075
     const val POLYMORPHIC_GLUE: Int = 6905076
 
-    /* --------------------------------RARE-ITEMS--------------------------------- */
+    /* ----------------------------------------------------------- */
 
+    // RARE
     const val NEPTUNIAN_DIAMOND: Int = 6905006
     const val IOJOVIAN_EMERALD: Int = 6905105
     const val NEUTRONIUM_BARK_SCRAPS: Int = 6905333
@@ -45,7 +54,12 @@ object ItemModels {
     const val IRRADIATED_SHARD: Int = 6905466
     const val IRRADIATED_ROD: Int = 6905467
 
-    /* --------------------------------EXOTIC-ITEMS--------------------------------- */ // 6900XXX
+
+    /* ----------------------------------------------------------- */
+    // 6900XXX
+
+    // EXOTIC
+    const val GEMMA_PRIMUS: Int = 6900000
 
     const val BABEL_ANNULUS_SCHEMATICS: Int = 6900068
     const val DORMANT_SENTIENT_STAR: Int = 6900069
@@ -57,8 +71,10 @@ object ItemModels {
     const val IRRADIATED_FRUIT: Int = 6905468
     const val TOTEM_OF_VEXING: Int = 6905303
 
-    /* --------------------------------ENIGMATIC--------------------------------------*/ // 69066XX
+    /* ----------------------------------------------------------- */
+    // 69066XX
 
+    // ENIGMATIC
     const val SOUL_CRYSTAL: Int = 6906613
     const val ECTOPLASM: Int = 6906614
     const val SORROWING_SOUL: Int = 6906615
@@ -66,15 +82,20 @@ object ItemModels {
     const val SOUL_CATALYST: Int = 6906617
     const val SOUL_STEEL_INGOT: Int = 6906618
 
-    // Weapons
-    const val SOUL_STEEL_KATANA: Int = 6906644
 
-
-    /* --------------------------------OTHER--------------------------------------*/
+    /* ----------------------------------------------------------- */
 
     const val BREEZE_IN_A_BOTTLE: Int = 6903617
+    const val HOURGLASS_FROM_BABEL: Int = 6903618
+    const val ENIGMATIC_ANCHOR: Int = 6903619
+    const val WARDEN_ENTRAILS: Int = 6903620
+    const val SCULK_HEART: Int = 6903621
 
-    /* --------------------------------BOOKS--------------------------------- */ // 69060XX
+    /* ----------------------------------------------------------- */
+    const val SAYA: Int = 6903819
+
+    /* ----------------------------------------------------------- */
+    // 69060XX
 
     // Books
     const val ARCANE_BOOK: Int = 6906065
@@ -93,7 +114,10 @@ object ItemModels {
     // Written Books
     const val NECRONOMICON_BOOK: Int = 6905066
 
-    /* --------------------------------SWORDS--------------------------------- */ // 69057XX
+    /* ---------------------------------------------------------------------------------------------- */
+    /* -------------------------------------------WEAPONS-------------------------------------------- */
+    /* ---------------------------------------------------------------------------------------------- */
+    // 69057XX
 
     // Katanas
     const val WOODEN_KATANA: Int = 6905744
@@ -143,8 +167,17 @@ object ItemModels {
     const val DIAMOND_SABER: Int = 6905749
     const val NETHERITE_SABER: Int = 6905749
 
+    /* ----------------------------------------------------------- */
 
-    /* ------------------------------PIKES----------------------------------------*/
+    const val WOODEN_SCYTHE: Int = 6905757
+
+    const val WOODEN_SICKLE: Int = 6905758
+
+    /* ----------------------------------------------------------- */
+
+    const val WOODEN_MACE: Int = 6905762
+
+    /* ----------------------------------------------------------- */
 
     // Spears
     const val WOODEN_SPEAR: Int = 6905774
@@ -162,8 +195,16 @@ object ItemModels {
     const val DIAMOND_HALBERD: Int = 6905775
     const val NETHERITE_HALBERD: Int = 6905775
 
+    // Guandao
+    const val WOODEN_GUAN_DAO: Int = 6905776
 
-    /* ------------------------------STAFFS----------------------------------------*/
+    /* ----------------------------------------------------------- */
+    const val WOODEN_BATTLE_AXE: Int = 6905784
+
+    const val WOODEN_LONG_AXE: Int = 6905785
+
+
+    /* ----------------------------------------------------------- */
 
     // Staffs
     const val BAMBOO_STAFF: Int = 6905793
@@ -172,7 +213,7 @@ object ItemModels {
     const val BLAZE_ROD_STAFF: Int = 6905796
 
 
-    /* ------------------------------HAMMERS----------------------------------------*/
+    /* ----------------------------------------------------------- */
 
     // Warhammers
     const val WOODEN_WARHAMMER: Int = 6905802
@@ -181,19 +222,22 @@ object ItemModels {
     const val IRON_WARHAMMER: Int = 6905802
     const val DIAMOND_WARHAMMER: Int = 6905802
 
-    /*---------------------------------EXOTICS--------------------------------------*/
+    /* ----------------------------------------------------------- */
 
-    //
+    // EXOTICS
     const val ABZU_BLADE: Int = 6905002
     const val KINETIC_BLASTER: Int = 6905003
 
+    // Special variants like kame...
+
+    // ENIGMATIC
+    const val SOUL_STEEL_KATANA: Int = 6906644
 
 
 
-
-
-
-    /* -------------------------------FLOWERS------------------------------- */
+    /* ---------------------------------------------------------------------------------------------- */
+    /* --------------------------------------------FLORA--------------------------------------------- */
+    /* ---------------------------------------------------------------------------------------------- */
 
     const val VIOLET: Int = 6905123
 

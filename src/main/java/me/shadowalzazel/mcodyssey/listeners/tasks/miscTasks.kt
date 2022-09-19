@@ -1,4 +1,4 @@
- package me.shadowalzazel.mcodyssey.effects
+ package me.shadowalzazel.mcodyssey.listeners.tasks
 
 import org.bukkit.Color
 import org.bukkit.Material

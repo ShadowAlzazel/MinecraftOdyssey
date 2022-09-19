@@ -13,30 +13,26 @@ import org.bukkit.inventory.SmokingRecipe
 
 object CookingRecipes {
 
-    // Shaped Recipes
-    private val BEETROOT_COOKIE_RECIPE: ShapedRecipe = createBeetrootCookieRecipe()
-    private val PUMPKIN_COOKIE_RECIPE: ShapedRecipe = createPumpkinCookieRecipe()
-    private val HONEY_COOKIE_RECIPE: ShapedRecipe = createHoneyCookieRecipe()
-    private val APPLE_COOKIE_RECIPE: ShapedRecipe = createAppleCookieRecipe()
-    private val BERRY_COOKIE_RECIPE: ShapedRecipe = createBerryCookieRecipe()
-    private val GLOW_BERRY_COOKIE_RECIPE: ShapedRecipe = createGlowBerryCookieRecipe()
-    private val MELON_COOKIE_RECIPE: ShapedRecipe = createMelonCookieRecipe()
-    private val SUGAR_COOKIE_RECIPE: ShapedRecipe = createSugarCookieRecipe()
-    private val GOLDEN_COOKIE_RECIPE: ShapedRecipe = createGoldenCookieRecipe()
+    // Register Recipes
+    fun registerRecipes(): List<Recipe> {
+        return listOf(
+            createBeetrootCookieRecipe(),
+            createPumpkinCookieRecipe(),
+            createHoneyCookieRecipe(),
+            createAppleCookieRecipe(),
+            createBerryCookieRecipe(),
+            createGlowBerryCookieRecipe(),
+            createMelonCookieRecipe(),
+            createSugarCookieRecipe(),
+            createGoldenCookieRecipe(),
+            createSugaryBreadRecipe(),
+            createSalmonRollRecipe(),
+            createBaconRecipe(),
+            createFrenchToastRecipe()
+        )
+    }
 
-    private val SUGARY_BREAD_RECIPE: ShapedRecipe = createSugaryBreadRecipe()
-    private val SALMON_ROLL_RECIPE: ShapedRecipe = createSalmonRollRecipe()
-    // Campfire Recipes
-    private val BACON_RECIPE: CampfireRecipe = createBaconRecipe()
-    // Smoking Recipes
-    private val FRENCH_TOAST_RECIPE: SmokingRecipe = createFrenchToastRecipe()
-
-    val recipeSet = setOf<Recipe>(
-        BEETROOT_COOKIE_RECIPE, PUMPKIN_COOKIE_RECIPE, HONEY_COOKIE_RECIPE, APPLE_COOKIE_RECIPE, BERRY_COOKIE_RECIPE, GLOW_BERRY_COOKIE_RECIPE, MELON_COOKIE_RECIPE, SUGAR_COOKIE_RECIPE, GOLDEN_COOKIE_RECIPE,
-        SUGARY_BREAD_RECIPE, SALMON_ROLL_RECIPE, BACON_RECIPE, FRENCH_TOAST_RECIPE
-    )
-
-    // make function calls on init later
+    /* ---------------------------------------------------------------------------*/
 
     // SHAPED
     private fun createBeetrootCookieRecipe(): ShapedRecipe {
