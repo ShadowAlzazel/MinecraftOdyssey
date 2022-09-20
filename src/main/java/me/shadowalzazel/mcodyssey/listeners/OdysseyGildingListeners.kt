@@ -142,19 +142,22 @@ object OdysseyGildingListeners : Listener {
     private fun compatibleSet(itemType: Material): Set<OdysseyEnchantment> {
         when(itemType) {
             Material.NETHERITE_SWORD, Material.DIAMOND_SWORD, Material.IRON_SWORD, Material.GOLDEN_SWORD, Material.STONE_SWORD, Material.WOODEN_SWORD,
-            Material.NETHERITE_AXE, Material.DIAMOND_AXE, Material.IRON_AXE, Material.GOLDEN_AXE, Material.STONE_AXE, Material.WOODEN_AXE -> {
+            Material.NETHERITE_AXE, Material.DIAMOND_AXE, Material.IRON_AXE, Material.GOLDEN_AXE, Material.STONE_AXE, Material.WOODEN_AXE,
+            Material.NETHERITE_PICKAXE, Material.DIAMOND_PICKAXE, Material.IRON_PICKAXE, Material.GOLDEN_PICKAXE, Material.STONE_PICKAXE, Material.WOODEN_PICKAXE,
+            Material.NETHERITE_SHOVEL, Material.DIAMOND_SHOVEL, Material.IRON_SHOVEL, Material.GOLDEN_SHOVEL, Material.STONE_SHOVEL, Material.WOODEN_SHOVEL,
+            Material.NETHERITE_HOE, Material.DIAMOND_HOE, Material.IRON_HOE, Material.GOLDEN_HOE, Material.STONE_HOE, Material.WOODEN_HOE -> {
                 return OdysseyEnchantments.meleeSet
             }
-            Material.NETHERITE_LEGGINGS, Material.DIAMOND_LEGGINGS, Material.IRON_LEGGINGS, Material.CHAINMAIL_LEGGINGS, Material.LEATHER_LEGGINGS -> {
+            Material.NETHERITE_LEGGINGS, Material.DIAMOND_LEGGINGS, Material.IRON_LEGGINGS, Material.CHAINMAIL_LEGGINGS, Material.GOLDEN_LEGGINGS, Material.LEATHER_LEGGINGS -> {
                 return OdysseyEnchantments.armorSet
             }
-            Material.NETHERITE_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.IRON_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, Material.LEATHER_CHESTPLATE -> {
+            Material.NETHERITE_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.IRON_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, Material.GOLDEN_CHESTPLATE, Material.LEATHER_CHESTPLATE -> {
                 return OdysseyEnchantments.armorSet
             }
-            Material.NETHERITE_BOOTS, Material.DIAMOND_BOOTS, Material.IRON_BOOTS, Material.CHAINMAIL_BOOTS, Material.LEATHER_BOOTS -> {
+            Material.NETHERITE_BOOTS, Material.DIAMOND_BOOTS, Material.IRON_BOOTS, Material.CHAINMAIL_BOOTS, Material.GOLDEN_BOOTS, Material.LEATHER_BOOTS -> {
                 return OdysseyEnchantments.armorSet
             }
-            Material.NETHERITE_HELMET, Material.DIAMOND_HELMET, Material.IRON_HELMET, Material.CHAINMAIL_HELMET, Material.LEATHER_HELMET -> {
+            Material.NETHERITE_HELMET, Material.DIAMOND_HELMET, Material.IRON_HELMET, Material.CHAINMAIL_HELMET, Material.GOLDEN_HELMET, Material.LEATHER_HELMET -> {
                 return OdysseyEnchantments.armorSet
             }
             Material.BOW, Material.CROSSBOW -> {
@@ -289,10 +292,10 @@ object OdysseyGildingListeners : Listener {
                 if (item!!.itemMeta?.hasCustomModelData() == true) {
                     if (item!!.itemMeta!!.customModelData == ItemModels.ARCANE_BOOK) {
                         // TODO: Make level 1-3 each do common, rare, exotic arcane books
-                        event.isCancelled = true
                         var randomTome: OdysseyItem? = null
-                        when ((0..100).random() - event.expLevelCost) {
-                            in -30..5 -> {
+                        val expScaleOffset = minOf(event.expLevelCost + (maxOf(30, event.enchanter.level) - 30), 75)
+                        when ((0..100).random() - expScaleOffset) {
+                            in -500..5 -> {
                                 randomTome = listOf(OdysseyBooks.TOME_OF_EXPENDITURE, OdysseyBooks.TOME_OF_REPLICATION).random()
                             }
                             in 6..30 -> {
@@ -301,7 +304,7 @@ object OdysseyGildingListeners : Listener {
                             in 31..65 -> {
                                 randomTome = listOf(OdysseyBooks.TOME_OF_BANISHMENT, OdysseyBooks.TOME_OF_EMBRACE).random()
                             }
-                            in 66..100 -> {
+                            in 66..200 -> {
                                 randomTome = listOf(OdysseyBooks.TOME_OF_DISCHARGE).random()
                             }
                         }
