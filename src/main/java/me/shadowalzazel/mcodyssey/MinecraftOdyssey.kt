@@ -23,7 +23,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 import java.io.FileNotFoundException
 
-class MinecraftOdyssey : JavaPlugin() {
+class MinecraftOdyssey : JavaPlugin(), DataPackManager {
 
     // Main
     var mainWorld: World? = null
@@ -73,35 +73,39 @@ class MinecraftOdyssey : JavaPlugin() {
         // Registering Server related events
         logger.info("Registering Recipes...")
         server.also {
-            // Odyssey Server Listeners
-            it.pluginManager.registerEvents(OdysseyServerListeners, this)
-            // Odyssey Alchemy Listeners
-            it.pluginManager.registerEvents(OdysseyAlchemyListeners, this)
-            // Odyssey Enigmatic Listeners
-            it.pluginManager.registerEvents(OdysseyEnigmaticListeners, this)
-            // Register Gilding Listeners
-            it.pluginManager.registerEvents(OdysseyGildingListeners, this)
-            // Odyssey Boss Listeners
-            it.pluginManager.registerEvents(OdysseyBossListeners, this)
-            it.pluginManager.registerEvents(AmbassadorListeners, this)
-            it.pluginManager.registerEvents(HogRiderListeners, this)
-            // Odyssey Enchantment listeners
-            it.pluginManager.registerEvents(ArmorListeners, this)
-            it.pluginManager.registerEvents(MeleeListeners, this)
-            it.pluginManager.registerEvents(MiscListeners, this)
-            it.pluginManager.registerEvents(RangedListeners, this)
-            // Odyssey Effect Listeners
-            it.pluginManager.registerEvents(OdysseyEffectTagListeners, this)
-            // Odyssey Mob Drops Listeners
-            it.pluginManager.registerEvents(OdysseyDropsListeners, this)
-            // Odyssey Food Listeners
-            it.pluginManager.registerEvents(OdysseyFoodListeners, this)
-            // Odyssey Items Listeners
-            it.pluginManager.registerEvents(OdysseyItemListeners, this)
-            // Odyssey Weapon Listeners
-            it.pluginManager.registerEvents(OdysseyWeaponListeners, this)
-            // Odyssey Misc Listeners
-            it.pluginManager.registerEvents(OdysseyMiscListeners, this)
+            with(it.pluginManager) {
+                // Odyssey Server Listeners
+                registerEvents(OdysseyServerListeners, this@MinecraftOdyssey)
+                // Odyssey Alchemy Listeners
+                registerEvents(OdysseyAlchemyListeners, this@MinecraftOdyssey)
+                // Odyssey Enigmatic Listeners
+                registerEvents(OdysseyEnigmaticListeners, this@MinecraftOdyssey)
+                // Register Gilding Listeners
+                registerEvents(OdysseyGildingListeners, this@MinecraftOdyssey)
+                // Odyssey Boss Listeners
+                registerEvents(OdysseyBossListeners, this@MinecraftOdyssey)
+                registerEvents(AmbassadorListeners, this@MinecraftOdyssey)
+                registerEvents(HogRiderListeners, this@MinecraftOdyssey)
+                // Odyssey Enchantment listeners
+                registerEvents(ArmorListeners, this@MinecraftOdyssey)
+                registerEvents(MeleeListeners, this@MinecraftOdyssey)
+                registerEvents(MiscListeners, this@MinecraftOdyssey)
+                registerEvents(RangedListeners, this@MinecraftOdyssey)
+                // Odyssey Effect Listeners
+                registerEvents(OdysseyEffectTagListeners, this@MinecraftOdyssey)
+                // Odyssey Mob Drops Listeners
+                registerEvents(OdysseyDropsListeners, this@MinecraftOdyssey)
+                // Odyssey Food Listeners
+                registerEvents(OdysseyFoodListeners, this@MinecraftOdyssey)
+                // Odyssey Items Listeners
+                registerEvents(OdysseyItemListeners, this@MinecraftOdyssey)
+                // Block Listeners
+                registerEvents(OdysseyBlockListeners, this@MinecraftOdyssey)
+                // Odyssey Weapon Listeners
+                registerEvents(OdysseyWeaponListeners, this@MinecraftOdyssey)
+                // Odyssey Misc Listeners
+                registerEvents(OdysseyMiscListeners, this@MinecraftOdyssey)
+            }
             // Config
             if (config.getBoolean("world-phenomenon.enabled")) {
                 // Register Daily Events
@@ -151,38 +155,7 @@ class MinecraftOdyssey : JavaPlugin() {
 
         // Structures
         logger.info("Registering Structures...")
-        try {
-            val worldFolder = this.mainWorld!!.worldFolder
-            val datapackDirectory = worldFolder.path + "/datapacks"
-            val datapackFile = File(datapackDirectory)
-            val odysseyPackDirectory = datapackDirectory + "/OdysseyDataPack"
-            val odysseyPackFile = File(odysseyPackDirectory)
-            println(datapackFile)
-            println(odysseyPackFile)
-            //"OdysseyDataPack\\data\\mcodyssey\\structures\\stone_pillars\\stone_pillars_1.nbt"
-
-            val pillarFile = File(odysseyPackDirectory + "/data/mcodyssey/structures/stone_pillars/stone_pillars_1.nbt")
-            val pillarStructure = server.structureManager.loadStructure(pillarFile)
-            server.structureManager.registerStructure(NamespacedKey(instance, "stone_pillars_1"), pillarStructure)
-            //server.structureManager.saveStructure(NamespacedKey(instance, "stone_pillars_1"))
-            println(server.structureManager.getStructureFile(NamespacedKey(instance, "stone_pillars_1")))
-
-            /*
-            //val qPillar = server.structureManager.loadStructure(this.getResource("data/mcodyssey/structures/stone_pillars_1.nbt"))
-            //OdysseyDataPack\data\mcodyssey\structures\stone_pillars\stone_pillars_1.nbt
-            val pillarResource = this.getResource("OdysseyDataPack/data/mcodyssey/structures/stone_pillars/stone_pillars_1.nbt")
-            if (pillarResource != null) {
-                val pillars = server.structureManager.loadStructure(pillarResource)
-                server.structureManager.registerStructure(NamespacedKey(instance, "stone_pillars_1"), pillars)
-                println("Success!")
-            }
-            println("Input Stream: $pillarResource")
-
-             */
-        }
-        catch(ex: FileNotFoundException) {
-            logger.info(ex.message)
-        }
+        registerOdysseyStructures(this)
 
 
         // TODO: MAKE METHODS!!
