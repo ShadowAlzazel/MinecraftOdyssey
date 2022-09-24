@@ -63,7 +63,7 @@ object OdysseyWeaponListeners : Listener {
     }
 
     // Stat handler
-    private fun weaponArmorFunction(weaponData: Int, someVictim: LivingEntity, oldDamage: Double): Pair<Double, Double> {
+    private fun armorCalculations(weaponData: Int, someVictim: LivingEntity, oldDamage: Double): Pair<Double, Double> {
         return if (!someVictim.isDead && someVictim.getAttribute(Attribute.GENERIC_ARMOR)?.value != null) {
             // Armor Point
             val armorPoints = someVictim.getAttribute(Attribute.GENERIC_ARMOR)!!.value
@@ -224,7 +224,7 @@ object OdysseyWeaponListeners : Listener {
                     }
                 }
                 println("Original Damage: ${event.damage}")
-                val extraDamage = weaponArmorFunction(someWeapon.itemMeta.customModelData, someVictim, event.damage)
+                val extraDamage = armorCalculations(someWeapon.itemMeta.customModelData, someVictim, event.damage)
                 event.damage += extraDamage.first
                 someVictim.health -= extraDamage.second
                 println("New Damage: ${event.damage}")

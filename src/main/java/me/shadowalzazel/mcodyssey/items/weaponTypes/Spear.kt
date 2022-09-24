@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.items.weaponTypes
 
-import me.shadowalzazel.mcodyssey.items.utilty.OdysseyItem
+import me.shadowalzazel.mcodyssey.items.odyssey.OdysseyItem
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack

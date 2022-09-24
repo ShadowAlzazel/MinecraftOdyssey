@@ -2,7 +2,6 @@ package me.shadowalzazel.mcodyssey.items
 
 import me.shadowalzazel.mcodyssey.items.odyssey.*
 import me.shadowalzazel.mcodyssey.items.misc.*
-import me.shadowalzazel.mcodyssey.items.utilty.OdysseyItem
 
 // MAKE OBJECTS LATER
 object OdysseyItems {
