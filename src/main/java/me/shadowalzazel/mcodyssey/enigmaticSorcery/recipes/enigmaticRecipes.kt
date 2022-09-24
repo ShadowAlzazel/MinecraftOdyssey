@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.enigmaticSorcery.recipes
 
-import me.shadowalzazel.mcodyssey.enigmaticSorcery.utility.OdysseyEnigmaticRecipe
+import me.shadowalzazel.mcodyssey.enigmaticSorcery.enigmatic.OdysseyEnigmaticRecipe
 import me.shadowalzazel.mcodyssey.items.OdysseyItems
 import me.shadowalzazel.mcodyssey.mobs.OdysseyMobs
 import org.bukkit.Material

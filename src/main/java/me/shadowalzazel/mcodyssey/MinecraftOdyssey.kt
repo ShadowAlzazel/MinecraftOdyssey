@@ -16,14 +16,11 @@ import me.shadowalzazel.mcodyssey.phenomenon.PhenomenonCycle
 import me.shadowalzazel.mcodyssey.phenomenon.utility.OdysseyPhenomenon
 import me.shadowalzazel.mcodyssey.recipes.*
 import org.bukkit.Bukkit
-import org.bukkit.NamespacedKey
 import org.bukkit.World
 
 import org.bukkit.plugin.java.JavaPlugin
-import java.io.File
-import java.io.FileNotFoundException
 
-class MinecraftOdyssey : JavaPlugin(), DataPackManager {
+class MinecraftOdyssey : JavaPlugin(), OdysseyManager {
 
     // Main
     var mainWorld: World? = null
@@ -95,6 +92,8 @@ class MinecraftOdyssey : JavaPlugin(), DataPackManager {
                 registerEvents(OdysseyEffectTagListeners, this@MinecraftOdyssey)
                 // Odyssey Mob Drops Listeners
                 registerEvents(OdysseyDropsListeners, this@MinecraftOdyssey)
+                //
+                registerEvents(OdysseyMobListeners, this@MinecraftOdyssey)
                 // Odyssey Food Listeners
                 registerEvents(OdysseyFoodListeners, this@MinecraftOdyssey)
                 // Odyssey Items Listeners

@@ -9,7 +9,7 @@ import me.shadowalzazel.mcodyssey.items.OdysseyBooks
 import me.shadowalzazel.mcodyssey.items.OdysseyItems
 import me.shadowalzazel.mcodyssey.items.OdysseyWeapons
 import me.shadowalzazel.mcodyssey.items.misc.GildedBook
-import me.shadowalzazel.mcodyssey.items.utilty.OdysseyItem
+import me.shadowalzazel.mcodyssey.items.odyssey.OdysseyItem
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration

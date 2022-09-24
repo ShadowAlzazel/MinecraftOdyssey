@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.items.utilty
+package me.shadowalzazel.mcodyssey.items.odyssey
 
 import me.shadowalzazel.mcodyssey.constants.ModifiersUUIDs
 import net.kyori.adventure.text.Component
