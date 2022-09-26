@@ -13,8 +13,9 @@ import me.shadowalzazel.mcodyssey.listeners.enchantmentListeners.MiscListeners
 import me.shadowalzazel.mcodyssey.listeners.enchantmentListeners.RangedListeners
 import me.shadowalzazel.mcodyssey.listeners.OdysseyPhenomenaListeners
 import me.shadowalzazel.mcodyssey.phenomenon.PhenomenonCycle
-import me.shadowalzazel.mcodyssey.phenomenon.utility.OdysseyPhenomenon
+import me.shadowalzazel.mcodyssey.phenomenon.odyssey.OdysseyPhenomenon
 import me.shadowalzazel.mcodyssey.recipes.*
+import me.shadowalzazel.mcodyssey.situation.SituationHandler
 import org.bukkit.Bukkit
 import org.bukkit.World
 
@@ -120,9 +121,13 @@ class MinecraftOdyssey : JavaPlugin(), OdysseyManager {
                         break
                     }
                 }
-
             }
         }
+
+        // Run situations
+        val situationHandler = SituationHandler(mainWorld!!)
+        val timerDelay = 20 * 10L
+        situationHandler.runTaskTimer(this, timerDelay, 20 * 10)
 
         // Register Recipes
         logger.info("Registering Recipes...")

@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.phenomenon.utility
+package me.shadowalzazel.mcodyssey.phenomenon.odyssey
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import net.kyori.adventure.text.Component

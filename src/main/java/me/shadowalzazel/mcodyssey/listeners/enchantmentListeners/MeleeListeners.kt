@@ -9,6 +9,8 @@ import me.shadowalzazel.mcodyssey.effects.*
 import me.shadowalzazel.mcodyssey.listeners.tasks.FrogFrightTask
 import me.shadowalzazel.mcodyssey.listeners.tasks.GravityWellTask
 import me.shadowalzazel.mcodyssey.listeners.tasks.HemorrhageTask
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
 import org.bukkit.*
 import org.bukkit.entity.Bee
 import org.bukkit.entity.EntityType
@@ -63,6 +65,9 @@ object MeleeListeners : Listener {
                                 backstabberCooldown[someDamager.uniqueId] = System.currentTimeMillis()
                                 backstabberEnchantment(event, someWeapon, someVictim)
                             }
+                            else {
+                                someDamager.sendActionBar(Component.text("Backstabber on Cooldown (Time Remaining: ${6.0 - (timeElapsed / 1000)}s)", TextColor.color(255, 255, 85)))
+                            }
                         }
                         OdysseyEnchantments.BANE_OF_THE_ILLAGER -> {
                             baneOfTheIllagerEnchantment(event, someWeapon, someVictim)
@@ -76,9 +81,12 @@ object MeleeListeners : Listener {
                         OdysseyEnchantments.BUZZY_BEES -> {
                             if (!buzzyBeesCooldown.containsKey(someDamager.uniqueId)) { buzzyBeesCooldown[someDamager.uniqueId] = 0L }
                             val timeElapsed: Long = System.currentTimeMillis() - buzzyBeesCooldown[someDamager.uniqueId]!!
-                            if (timeElapsed > 2.5 * 1000) {
+                            if (timeElapsed > 4.5 * 1000) {
                                 buzzyBeesCooldown[someDamager.uniqueId] = System.currentTimeMillis()
                                 buzzyBeesEnchantment(event, someWeapon, someVictim)
+                            }
+                            else {
+                                someDamager.sendActionBar(Component.text("Buzzy Bees on Cooldown (Time Remaining: ${4.5 - (timeElapsed / 1000)}s)", TextColor.color(255, 255, 85)))
                             }
                         }
                         OdysseyEnchantments.DECAYING_TOUCH -> {
@@ -87,6 +95,9 @@ object MeleeListeners : Listener {
                             if (timeElapsed > 3.0 * 1000) {
                                 decayingTouchCooldown[someDamager.uniqueId] = System.currentTimeMillis()
                                 decayingTouchEnchantment(someWeapon, someVictim)
+                            }
+                            else {
+                                someDamager.sendActionBar(Component.text("Decaying Touch on Cooldown (Time Remaining: ${3.0 - (timeElapsed / 1000)}s)", TextColor.color(255, 255, 85)))
                             }
                         }
                         OdysseyEnchantments.DOUSE -> {
@@ -108,6 +119,9 @@ object MeleeListeners : Listener {
                                 gravityWellCooldown[someDamager.uniqueId] = System.currentTimeMillis()
                                 gravityWellEnchantment(event, someWeapon, someVictim)
                             }
+                            else {
+                                someDamager.sendActionBar(Component.text("Gravity Well on Cooldown (Time Remaining: ${8.0 - (timeElapsed / 1000)}s)", TextColor.color(255, 255, 85)))
+                            }
                         }
                         OdysseyEnchantments.HEMORRHAGE -> {
                             if (!hemorrhageCooldown.containsKey(someDamager.uniqueId)) { hemorrhageCooldown[someDamager.uniqueId] = 0L }
@@ -116,12 +130,15 @@ object MeleeListeners : Listener {
                                 hemorrhageCooldown[someDamager.uniqueId] = System.currentTimeMillis()
                                 hemorrhageEnchantment(someWeapon, someVictim)
                             }
+                            else {
+                                someDamager.sendActionBar(Component.text("Hemorrhage on Cooldown (Time Remaining: ${3.0 - (timeElapsed / 1000)}s)", TextColor.color(255, 255, 85)))
+                            }
                         }
                         OdysseyEnchantments.VOID_STRIKE -> {
                             if (!voidStrikeCooldown.containsKey(someDamager.uniqueId)) { voidStrikeCooldown[someDamager.uniqueId] = 0L }
                             val timeElapsed: Long = System.currentTimeMillis() - voidStrikeCooldown[someDamager.uniqueId]!!
                             //val attackSpeedAttribute = someDamager.getAttribute(Attribute.GENERIC_ATTACK_SPEED)
-                            if (timeElapsed > 0.3 * 1000 && someDamager.isHandRaised) {
+                            if (timeElapsed > 0.5 * 1000 && someDamager.isHandRaised) {
                                 voidStrikeCooldown[someDamager.uniqueId] = System.currentTimeMillis()
                                 voidStrikeEnchantment(event, someWeapon, someVictim)
                             }
@@ -132,6 +149,9 @@ object MeleeListeners : Listener {
                             if (timeElapsed > 3.0 * 1000) {
                                 whirlwindCooldown[someDamager.uniqueId] = System.currentTimeMillis()
                                 whirlwindEnchantment(event, someDamager, someVictim, someWeapon)
+                            }
+                            else {
+                                someDamager.sendActionBar(Component.text("Whirlwind on Cooldown (Time Remaining: ${3.0 - (timeElapsed / 1000)}s)", TextColor.color(255, 255, 85)))
                             }
                         }
                     }
@@ -165,9 +185,12 @@ object MeleeListeners : Listener {
                         OdysseyEnchantments.GUARDING_STRIKE -> {
                             if (!guardingStrikeCooldown.containsKey(someKiller.uniqueId)) { guardingStrikeCooldown[someKiller.uniqueId] = 0L }
                             val timeElapsed: Long = System.currentTimeMillis() - guardingStrikeCooldown[someKiller.uniqueId]!!
-                            if (timeElapsed > 8 * 1000) {
+                            if (timeElapsed > 4.0 * 1000) {
                                 guardingStrikeCooldown[someKiller.uniqueId] = System.currentTimeMillis()
                                 guardingStrikeEnchantment(someWeapon, someVictim, someKiller)
+                            }
+                            else {
+                                someKiller.sendActionBar(Component.text("Guarding Strike on Cooldown (Time Remaining: ${4.0 - (timeElapsed / 1000)}s)", TextColor.color(255, 255, 85)))
                             }
                         }
                     }

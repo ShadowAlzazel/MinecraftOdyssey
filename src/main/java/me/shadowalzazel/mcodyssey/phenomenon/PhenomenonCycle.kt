@@ -2,7 +2,7 @@ package me.shadowalzazel.mcodyssey.phenomenon
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.phenomenon.ankiPhenomena.DrawOfFortunes
-import me.shadowalzazel.mcodyssey.phenomenon.utility.OdysseyPhenomenon
+import me.shadowalzazel.mcodyssey.phenomenon.odyssey.OdysseyPhenomenon
 import org.bukkit.World
 import org.bukkit.scheduler.BukkitRunnable
 

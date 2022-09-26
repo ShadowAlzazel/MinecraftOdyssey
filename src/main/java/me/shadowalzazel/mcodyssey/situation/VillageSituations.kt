@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.situations
+package me.shadowalzazel.mcodyssey.situation
 
 object VillageSituations {
 
@@ -7,5 +7,6 @@ object VillageSituations {
     // TODO: Decay Plague
     // TODO: Pumpkin Harvest - golem
     // TODO: Fairy Fair!
+    // TODO: Skeleton Invasion
 
 }
