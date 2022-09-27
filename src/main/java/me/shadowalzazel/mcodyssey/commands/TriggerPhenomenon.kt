@@ -3,8 +3,8 @@ package me.shadowalzazel.mcodyssey.commands
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.phenomenon.SuenPhenomena
 import me.shadowalzazel.mcodyssey.phenomenon.UtuPhenomena
-import me.shadowalzazel.mcodyssey.phenomenon.utility.OdysseyPhenomenon
-import me.shadowalzazel.mcodyssey.phenomenon.utility.PhenomenonTypes
+import me.shadowalzazel.mcodyssey.phenomenon.odyssey.OdysseyPhenomenon
+import me.shadowalzazel.mcodyssey.phenomenon.odyssey.PhenomenonTypes
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender

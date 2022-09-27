@@ -6,7 +6,7 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object Reckless : OdysseyEnchantment("Relentless", "relentless", 3) {
+object Reckless : OdysseyEnchantment("reckless", "Reckless", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
@@ -21,7 +21,8 @@ object Reckless : OdysseyEnchantment("Relentless", "relentless", 3) {
 
     override fun canEnchantItem(item: ItemStack): Boolean {
         return when (item.type) {
-            Material.ENCHANTED_BOOK, Material.NETHERITE_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.IRON_CHESTPLATE, Material.GOLDEN_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, Material.LEATHER_CHESTPLATE -> {
+            Material.ENCHANTED_BOOK,
+            Material.NETHERITE_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.IRON_CHESTPLATE, Material.GOLDEN_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, Material.LEATHER_CHESTPLATE -> {
                 true
             }
             else -> {
@@ -30,5 +31,5 @@ object Reckless : OdysseyEnchantment("Relentless", "relentless", 3) {
         }
     }
 
-    // TODO: If below 35% health gain more damage
+    // TODO: Take more damage but do more damage
 }

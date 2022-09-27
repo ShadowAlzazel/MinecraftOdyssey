@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.phenomenon.suenPhenomena
 
-import me.shadowalzazel.mcodyssey.phenomenon.utility.OdysseyPhenomenon
-import me.shadowalzazel.mcodyssey.phenomenon.utility.PhenomenonTypes
+import me.shadowalzazel.mcodyssey.phenomenon.odyssey.OdysseyPhenomenon
+import me.shadowalzazel.mcodyssey.phenomenon.odyssey.PhenomenonTypes
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Particle

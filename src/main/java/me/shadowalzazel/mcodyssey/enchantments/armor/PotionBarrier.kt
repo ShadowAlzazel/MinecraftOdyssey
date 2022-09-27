@@ -10,7 +10,7 @@ object PotionBarrier : OdysseyEnchantment("potionbarrier", "Potion Barrier", 2) 
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            THORNS, OdysseyEnchantments.FRUITFUL_FARE -> {
+            OdysseyEnchantments.FRUITFUL_FARE -> {
                 true
             }
             else -> {

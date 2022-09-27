@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.effects
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.effects.tasks.*
 import org.bukkit.Particle
 import org.bukkit.entity.LivingEntity
 import org.bukkit.potion.PotionEffect
@@ -15,7 +16,7 @@ object OdysseyEffectFunctions {
         val decayingPotionEffect = PotionEffect(PotionEffectType.HUNGER, duration * 20, amplifier)
         victimList.forEach {
             it.addPotionEffect(decayingPotionEffect)
-            it.addScoreboardTag(OdysseyEffectTags.DECAYING)
+            if (OdysseyEffectTags.DECAYING !in it.scoreboardTags) { it.addScoreboardTag(OdysseyEffectTags.DECAYING) }
             val decayingTask = DecayingTask(it, 1, duration / 2)
             decayingTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20 * 2)
         }
@@ -75,7 +76,7 @@ object OdysseyEffectFunctions {
         victimList.forEach {
             if (OdysseyEffectTags.THORNY !in it.scoreboardTags) {
                 it.addScoreboardTag(OdysseyEffectTags.THORNY)
-                val thornyTask = ThornsTask(it, duration)
+                val thornyTask = ThornyTask(it, duration)
                 thornyTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20)
             }
         }
@@ -103,5 +104,25 @@ object OdysseyEffectFunctions {
         }
     }
 
+    // Honeyed
+    fun honeyedEffect(victimList: MutableCollection<LivingEntity>, duration: Int) {
+        val honeyedPotionEffect = PotionEffect(PotionEffectType.SLOW, duration * 20, 0)
+        victimList.forEach {
+            if (OdysseyEffectTags.HONEYED !in it.scoreboardTags) {
+                it.addScoreboardTag(OdysseyEffectTags.HONEYED)
+                val honeyedTask = HoneyedTask(it, duration * 2)
+                honeyedTask.runTaskTimer(MinecraftOdyssey.instance, 0, 10)
+            }
+        }
+    }
+
+    // Hemorrhaging
+    fun hemorrhagingEffect(victimList: MutableCollection<LivingEntity>, amplifier: Int = 1) {
+        victimList.forEach {
+            if (OdysseyEffectTags.HEMORRHAGING !in it.scoreboardTags) { it.addScoreboardTag(OdysseyEffectTags.HEMORRHAGING) }
+            val hemorrhageTask = HemorrhageTask(it, amplifier)
+            hemorrhageTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20)
+        }
+    }
 
 }

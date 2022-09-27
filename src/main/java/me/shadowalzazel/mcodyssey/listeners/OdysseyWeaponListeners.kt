@@ -41,6 +41,8 @@ object OdysseyWeaponListeners : Listener {
         return reachedEntity
     }
 
+    // TODO: If Crouching more damage
+
     // Function for critical hits that sweep
     private fun sweepComboFunction(someVictim: LivingEntity, someDamager: LivingEntity, radius: Double, eventDamage: Double) {
         val midpoint = someDamager.location.clone().set(
