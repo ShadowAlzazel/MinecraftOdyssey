@@ -17,8 +17,10 @@ object OdysseyEnchantments {
 
     // Utility
     val GILDED_POWER: OdysseyEnchantment = GildedPower
+
     // Enchantments
     val ALCHEMY_ARTILLERY: OdysseyEnchantment = AlchemyArtillery
+    val ARCANE_CELL: OdysseyEnchantment = ArcaneCell
     val BACKSTABBER: OdysseyEnchantment = Backstabber
     val BANE_OF_THE_ILLAGER: OdysseyEnchantment = BaneOfTheIllager
     val BANE_OF_THE_SEA: OdysseyEnchantment = BaneOfTheSea
@@ -34,8 +36,9 @@ object OdysseyEnchantments {
     val ECHO: OdysseyEnchantment = Echo
     val ENTANGLEMENT: OdysseyEnchantment = Entanglement
     val EXPLODING: OdysseyEnchantment = Exploding
-    val FREEZING_ASPECT : OdysseyEnchantment = FreezingAspect
+    val FREEZING_ASPECT: OdysseyEnchantment = FreezingAspect
     val FROG_FRIGHT: OdysseyEnchantment = FrogFright
+    val FROSTY_FUSE: OdysseyEnchantment = FrostyFuse
     val FRUITFUL_FARE: OdysseyEnchantment = FruitfulFare
     val GALE_WIND: OdysseyEnchantment = GaleWind
     val GRAVITY_WELL: OdysseyEnchantment = GravityWell  // drop
@@ -44,7 +47,6 @@ object OdysseyEnchantments {
     val HOOK_SHOT: OdysseyEnchantment = HookShot
     val ILLUCIDATION: OdysseyEnchantment = Illucidation
     val IGNORE_PAIN: OdysseyEnchantment = IgnorePain
-    val IRRADIATED: OdysseyEnchantment = Irradiated
     val LUCKY_DRAW: OdysseyEnchantment = LuckyDraw
     val MIRROR_FORCE: OdysseyEnchantment = MirrorForce
     val OVERCHARGE: OdysseyEnchantment = Overcharge
@@ -68,19 +70,109 @@ object OdysseyEnchantments {
     val WHIRLWIND: OdysseyEnchantment = Whirlwind
 
     // Set of all enchantments
-    val enchantmentSet = setOf(GILDED_POWER, ALCHEMY_ARTILLERY, BACKSTABBER, BANE_OF_THE_ILLAGER, BANE_OF_THE_SEA, BANE_OF_THE_SWINE, BEASTLY_BRAWLER,
-        BURST_BARRAGE, BUZZY_BEES, CHAIN_REACTION, COWARDICE, DECAYING_TOUCH, DOUSE, ECHO,
-        EXPLODING, FREEZING_ASPECT, FROG_FRIGHT, FRUITFUL_FARE, GALE_WIND, GRAVITY_WELL, GUARDING_STRIKE, HEMORRHAGE, HOOK_SHOT, IGNORE_PAIN, ILLUCIDATION, IRRADIATED,
-        LUCKY_DRAW, MIRROR_FORCE, OVERCHARGE, PERPETUAL_PROJECTILE, RECKLESS, RELENTLESS, RICOCHET,
-        POTION_BARRIER, SINGULARITY_SHOT, SOUL_REND, SPEEDY_SPURS, SQUIDIFY, STELLAR_SHOWER, TEMPORAL_TORRENT, VICIOUS_VIGOR, VOID_STRIKE, WARP_JUMP, WAR_CRY, WHIRLWIND)
+    val enchantmentSet = setOf(
+        GILDED_POWER,
+        ALCHEMY_ARTILLERY,
+        ARCANE_CELL,
+        BACKSTABBER,
+        BANE_OF_THE_ILLAGER,
+        BANE_OF_THE_SEA,
+        BANE_OF_THE_SWINE,
+        BEASTLY_BRAWLER,
+        BURST_BARRAGE,
+        BUZZY_BEES,
+        CHAIN_REACTION,
+        COMMITTED,
+        COWARDICE,
+        DECAYING_TOUCH,
+        DOUSE,
+        ECHO,
+        EXPLODING,
+        FREEZING_ASPECT,
+        FROG_FRIGHT,
+        FROSTY_FUSE,
+        FRUITFUL_FARE,
+        GALE_WIND,
+        GRAVITY_WELL,
+        GUARDING_STRIKE,
+        HEMORRHAGE,
+        HOOK_SHOT,
+        IGNORE_PAIN,
+        ILLUCIDATION,
+        LUCKY_DRAW,
+        MIRROR_FORCE,
+        OVERCHARGE,
+        PERPETUAL_PROJECTILE,
+        RECKLESS,
+        RELENTLESS,
+        RICOCHET,
+        POTION_BARRIER,
+        SINGULARITY_SHOT,
+        SOUL_REND,
+        SPEEDY_SPURS,
+        SQUIDIFY,
+        STELLAR_SHOWER,
+        TEMPORAL_TORRENT,
+        VICIOUS_VIGOR,
+        VOID_STRIKE,
+        WARP_JUMP,
+        WAR_CRY,
+        WHIRLWIND
+    )
 
 
     // Set that is available to table
-    val meleeSet = setOf(BACKSTABBER, BANE_OF_THE_ILLAGER, BANE_OF_THE_SEA, BANE_OF_THE_SWINE, BEASTLY_BRAWLER, BUZZY_BEES, DECAYING_TOUCH, DOUSE, ECHO, EXPLODING, FREEZING_ASPECT, FROG_FRIGHT, GUARDING_STRIKE, HEMORRHAGE, IGNORE_PAIN, ILLUCIDATION, IRRADIATED, VOID_STRIKE, WHIRLWIND)
-    val armorSet = setOf(COWARDICE, FRUITFUL_FARE, POTION_BARRIER, RECKLESS, RELENTLESS, SPEEDY_SPURS, SPOREFUL, SQUIDIFY, VENGEFUL, VICIOUS_VIGOR, WAR_CRY)
-    val rangedSet = setOf(ALCHEMY_ARTILLERY, BURST_BARRAGE, CHAIN_REACTION, ENTANGLEMENT, GALE_WIND, LUCKY_DRAW, PERPETUAL_PROJECTILE, RICOCHET, SOUL_REND, STELLAR_SHOWER, TEMPORAL_TORRENT, OVERCHARGE)
+    val meleeSet = setOf(
+        ARCANE_CELL,
+        BACKSTABBER,
+        BANE_OF_THE_ILLAGER,
+        BANE_OF_THE_SEA,
+        BANE_OF_THE_SWINE,
+        BUZZY_BEES,
+        COMMITTED,
+        DECAYING_TOUCH,
+        DOUSE,
+        ECHO,
+        EXPLODING,
+        FREEZING_ASPECT,
+        FROG_FRIGHT,
+        FROSTY_FUSE,
+        GUARDING_STRIKE,
+        HEMORRHAGE,
+        IGNORE_PAIN,
+        ILLUCIDATION,
+        VOID_STRIKE,
+        WHIRLWIND
+    )
+    val armorSet = setOf(
+        BEASTLY_BRAWLER,
+        COWARDICE,
+        FRUITFUL_FARE,
+        POTION_BARRIER,
+        RECKLESS,
+        RELENTLESS,
+        SPEEDY_SPURS,
+        SPOREFUL,
+        SQUIDIFY,
+        VENGEFUL,
+        VICIOUS_VIGOR,
+        WAR_CRY
+    )
+    val rangedSet = setOf(
+        ALCHEMY_ARTILLERY,
+        BURST_BARRAGE,
+        CHAIN_REACTION,
+        ENTANGLEMENT,
+        GALE_WIND,
+        LUCKY_DRAW,
+        PERPETUAL_PROJECTILE,
+        RICOCHET,
+        SOUL_REND,
+        STELLAR_SHOWER,
+        TEMPORAL_TORRENT,
+        OVERCHARGE
+    )
     val miscSet = setOf(WARP_JUMP)
-
 
 
     // Register
