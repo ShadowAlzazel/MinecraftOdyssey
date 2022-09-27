@@ -46,17 +46,17 @@ object IdescineEssence : OdysseyItem("Idescine Essence",
     listOf(Component.text("A sappy substance brimming with life", TextColor.color(160, 45, 160)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     ItemModels.IDESCINE_ESSENCE)
 
-// Irradiated Shard
-object IrradiatedShard : OdysseyItem("Irradiated Shard",
+// ArcaneCell Shard
+object IrradiatedShard : OdysseyItem("ArcaneCell Shard",
     Material.PRISMARINE_SHARD,
-    Component.text("Irradiated Shard", TextColor.color(198, 196, 178), TextDecoration.ITALIC),
+    Component.text("ArcaneCell Shard", TextColor.color(198, 196, 178), TextDecoration.ITALIC),
     listOf(Component.text("A shard dangerous to handle...", TextColor.color(191, 126, 85)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     ItemModels.IRRADIATED_SHARD)
 
-// Irradiated Rod
-object IrradiatedRod : OdysseyItem("Irradiated Rod",
+// ArcaneCell Rod
+object IrradiatedRod : OdysseyItem("ArcaneCell Rod",
     Material.PRISMARINE_SHARD,
-    Component.text("Irradiated Rod", TextColor.color(58, 50, 95), TextDecoration.ITALIC),
+    Component.text("ArcaneCell Rod", TextColor.color(58, 50, 95), TextDecoration.ITALIC),
     listOf(Component.text("A mechanical piece, dangerous to handle...", TextColor.color(191, 126, 85)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     ItemModels.IRRADIATED_ROD)
 

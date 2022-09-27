@@ -79,9 +79,9 @@ object TotemOfVexing : OdysseyItem("Totem of Vexing",
 
 
 // IRRADIATED_FRUIT
-object IrradiatedFruit : OdysseyItem("Irradiated Fruit",
+object IrradiatedFruit : OdysseyItem("ArcaneCell Fruit",
     Material.APPLE,
-    Component.text("Irradiated Fruit", TextColor.color(255, 84, 255), TextDecoration.ITALIC),
+    Component.text("ArcaneCell Fruit", TextColor.color(255, 84, 255), TextDecoration.ITALIC),
     listOf(Component.text("A fruit with unusual properties...", TextColor.color(87, 67, 96)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     ItemModels.IRRADIATED_FRUIT,
     mapOf(Enchantment.MENDING to 1))
