@@ -65,7 +65,7 @@ object MeleeListeners : Listener {
                                 System.currentTimeMillis() - backstabberCooldown[someDamager.uniqueId]!!
                             if (timeElapsed > 3.0 * 1000) {
                                 backstabberCooldown[someDamager.uniqueId] = System.currentTimeMillis()
-                                backstabberEnchantment(event, someVictim, enchant.value)
+                                event.damage += backstabberEnchantment(someDamager, someVictim, enchant.value)
                             } else {
                                 someDamager.sendActionBar(
                                     Component.text(
@@ -76,13 +76,13 @@ object MeleeListeners : Listener {
                             }
                         }
                         OdysseyEnchantments.BANE_OF_THE_ILLAGER -> {
-                            baneOfTheIllagerEnchantment(event, someVictim, enchant.value)
+                            event.damage += baneOfTheIllagerEnchantment(someVictim, enchant.value)
                         }
                         OdysseyEnchantments.BANE_OF_THE_SEA -> {
-                            baneOfTheSeaEnchantment(event, someVictim, enchant.value)
+                            event.damage += baneOfTheSeaEnchantment(someDamager, someVictim, enchant.value)
                         }
                         OdysseyEnchantments.BANE_OF_THE_SWINE -> {
-                            baneOfTheSwineEnchantment(event, someVictim, enchant.value)
+                            event.damage += baneOfTheSwineEnchantment(someVictim, enchant.value)
                         }
                         OdysseyEnchantments.BUZZY_BEES -> {
                             if (!buzzyBeesCooldown.containsKey(someDamager.uniqueId)) {
@@ -318,13 +318,13 @@ object MeleeListeners : Listener {
 
     // BACKSTABBER Enchantment Function
     private fun backstabberEnchantment(
-        event: EntityDamageByEntityEvent,
+        eventDamager: LivingEntity,
         eventVictim: LivingEntity,
         enchantmentStrength: Int
-    ) {
+    ): Int {
         // Check if not target
         val victimTarget = eventVictim.getTargetEntity(10)
-        if (victimTarget != event.damager) {
+        if (victimTarget != eventDamager || eventDamager.isInvisible || eventDamager.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
             // Particles and sounds
             with(eventVictim.world) {
                 spawnParticle(Particle.CRIT_MAGIC, eventVictim.location, 25, 0.5, 0.5, 0.5)
@@ -334,41 +334,43 @@ object MeleeListeners : Listener {
                 playSound(eventVictim.location, Sound.BLOCK_HONEY_BLOCK_FALL, 2.5F, 0.9F)
             }
             // Damage
-            event.damage += (3 + (enchantmentStrength * 3))
+            return (3 + (enchantmentStrength * 3))
         }
+        return 0
     }
 
     // BANE_OF_THE_ILLAGER Enchantment Function
     private fun baneOfTheIllagerEnchantment(
-        event: EntityDamageByEntityEvent,
         eventVictim: LivingEntity,
         enchantmentStrength: Int
-    ) {
+    ): Double {
         if (eventVictim is Raider) {
-            event.damage += (enchantmentStrength.toDouble() * 2.5)
+            return enchantmentStrength.toDouble() * 2.5
         }
+        return 0.0
     }
 
     // BANE_OF_THE_SEA Enchantment Function
     private fun baneOfTheSeaEnchantment(
-        event: EntityDamageByEntityEvent,
+        eventDamager: LivingEntity,
         eventVictim: LivingEntity,
         enchantmentStrength: Int
-    ) {
-        if (eventVictim.isInWaterOrRainOrBubbleColumn || eventVictim is WaterMob || eventVictim.isSwimming || event.damager.isInWaterOrRainOrBubbleColumn) {
-            event.damage += (enchantmentStrength.toDouble() * 2.0)
+    ): Double  {
+        if (eventVictim.isInWaterOrRainOrBubbleColumn || eventVictim is WaterMob || eventVictim.isSwimming || eventDamager.isInWaterOrRainOrBubbleColumn) {
+            return enchantmentStrength.toDouble() * 2.0
         }
+        return 0.0
     }
 
     // BANE_OF_THE_SWINE Enchantment Function
     private fun baneOfTheSwineEnchantment(
-        event: EntityDamageByEntityEvent,
         eventVictim: LivingEntity,
         enchantmentStrength: Int
-    ) {
+    ): Double  {
         if (eventVictim is PiglinAbstract || eventVictim is Pig || eventVictim is Hoglin) {
-            event.damage += (enchantmentStrength.toDouble() * 2.5)
+            return enchantmentStrength.toDouble() * 2.5
         }
+        return 0.0
     }
 
     // BUZZY_BEES Enchantment Function
