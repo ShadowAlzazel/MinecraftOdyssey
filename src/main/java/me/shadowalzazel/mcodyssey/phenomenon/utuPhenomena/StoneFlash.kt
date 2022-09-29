@@ -28,18 +28,16 @@ object StoneFlash : OdysseyPhenomenon("Stone Flash",
         val stoneFlashEffects = listOf(
             PotionEffect(PotionEffectType.SLOW, 12000, 0),
             PotionEffect(PotionEffectType.ABSORPTION, 12000, 4))
-        for (somePlayer in someWorld.players) {
-            with(somePlayer) {
-                addPotionEffects(stoneFlashEffects)
-                sendMessage(Component.text("After a super luminous flash of light your skin has turned into stone?", TextColor.color(56, 127, 232)))
-                spawnParticle(Particle.SPIT, location, 15, 0.5, 0.5, 0.5)
-                spawnParticle(Particle.EXPLOSION_NORMAL, location, 5, 0.5, 0.5, 0.5)
-                playSound(location, Sound.BLOCK_STONE_BREAK, 2.5F, 1.5F)
-                playSound(location, Sound.BLOCK_STONE_FALL, 2.5F, 1.5F)
-                val bloodBlockBreak = Material.STONE.createBlockData()
-                spawnParticle(Particle.BLOCK_CRACK, location, 95, 0.95, 0.8, 0.95, bloodBlockBreak)
-            }
+
+        someWorld.players.forEach {
+            it.addPotionEffects(stoneFlashEffects)
+            it.sendMessage(Component.text("After a super luminous flash of light your skin has turned into stone?", TextColor.color(56, 87, 55)))
+            it.spawnParticle(Particle.SPELL_MOB_AMBIENT, it.location, 15, 0.5, 0.5, 0.5)
+            it.playSound(it.location, Sound.BLOCK_STONE_BREAK, 2.5F, 0.5F)
+            it.playSound(it.location, Sound.BLOCK_STONE_FALL, 2.5F, 0.5F)
+            it.spawnParticle(Particle.BLOCK_CRACK, it.location, 95, 0.95, 0.8, 0.95, Material.STONE.createBlockData())
         }
+
     }
 
 

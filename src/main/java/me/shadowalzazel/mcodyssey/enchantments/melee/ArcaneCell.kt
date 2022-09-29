@@ -10,7 +10,7 @@ object ArcaneCell : OdysseyEnchantment("arcanecell", "Arcane Cell", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.BUZZY_BEES -> {
+            OdysseyEnchantments.GRAVITY_WELL, KNOCKBACK, OdysseyEnchantments.FROG_FRIGHT -> {
                 true
             }
             else -> {

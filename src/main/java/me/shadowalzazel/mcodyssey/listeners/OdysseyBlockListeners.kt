@@ -23,7 +23,7 @@ object OdysseyBlockListeners : Listener {
             when(event.itemInHand.itemMeta.customModelData) {
                 ItemModels.IDESCINE_SAPLINGS -> {
                     println("I")
-                    if (!checkValidGrowth(event.block)) { event.isCancelled }
+                    if (!checkValidIdescineTree(event.block)) { event.isCancelled }
                     else { spawnIdescineTree(event.block, event.player.server) }
                 }
                 else -> {
@@ -35,7 +35,7 @@ object OdysseyBlockListeners : Listener {
 
     // ----------------------------------------------------------------------------------------------------
 
-    private fun checkValidGrowth(someBlock: Block): Boolean {
+    private fun checkValidIdescineTree(someBlock: Block): Boolean {
         val lattice = setOf(Pair(1.0, 0.0), Pair(-1.0, 0.0), Pair(0.0, 1.0), Pair(0.0, -1.0))
         for (lat in lattice) {
             if (someBlock.location.clone().toCenterLocation().add(lat.first, -1.0, lat.second).block.type != Material.ANCIENT_DEBRIS) { return false }

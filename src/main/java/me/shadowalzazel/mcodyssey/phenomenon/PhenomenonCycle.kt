@@ -104,6 +104,15 @@ class PhenomenonCycle(private val mainWorld: World) : BukkitRunnable() {
             suenPhenomenonActivation()
             moonCount =+ 1
         }
+        // Check if active for persistent
+        with(MinecraftOdyssey.instance) {
+            if (utuPhenomenonActive) {
+                currentUtuPhenomenon!!.persistentPlayerActives(mainWorld!!)
+            }
+            else if (suenPhenomenonActive) {
+                currentSuenPhenomenon!!.persistentPlayerActives(mainWorld!!)
+            }
+        }
     }
 
 }

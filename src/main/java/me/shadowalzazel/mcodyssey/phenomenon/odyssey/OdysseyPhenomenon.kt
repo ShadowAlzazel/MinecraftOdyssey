@@ -64,7 +64,7 @@ open class OdysseyPhenomenon(
         somePlayers.forEach { it.sendMessage(warningMessage!!) }
     }
 
-    open fun persistentPlayerActives() {
+    open fun persistentPlayerActives(someWorld: World) {
         // IF persistent call this
         // timer delay var and tick speed
     }

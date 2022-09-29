@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.enchantments.ranged
 
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantment
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
@@ -9,7 +10,7 @@ object SingularityShot : OdysseyEnchantment("singularityshot", "Singularity Shot
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            MENDING -> {
+            OdysseyEnchantments.RICOCHET, OdysseyEnchantments.PERPETUAL_PROJECTILE, OdysseyEnchantments.STELLAR_SHOWER -> {
                 true
             }
             else -> {

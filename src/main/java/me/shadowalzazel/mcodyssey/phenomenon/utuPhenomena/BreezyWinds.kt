@@ -25,15 +25,15 @@ object BreezyWinds : OdysseyPhenomenon("Breezy Winds",
         // Player Effects
         val breezeStrength = (0..2).random()
         val breezeEffect = PotionEffect(PotionEffectType.SPEED, 12000, breezeStrength)
-        for (somePlayer in someWorld.players) {
-            with(somePlayer) {
-                addPotionEffect(breezeEffect)
-                sendMessage(Component.text("A swift wind follows your side...", TextColor.color(56, 127, 232)))
-                spawnParticle(Particle.SPIT, location, 15, 0.5, 0.5, 0.5)
-                spawnParticle(Particle.EXPLOSION_NORMAL, location, 5, 0.5, 0.5, 0.5)
-                playSound(location, Sound.ITEM_TRIDENT_RIPTIDE_3, 2.5F, 1.5F)
-            }
+
+        someWorld.players.forEach {
+            it.addPotionEffect(breezeEffect)
+            it.sendMessage(Component.text("A swift wind follows your side...", TextColor.color(56, 127, 232)))
+            it.spawnParticle(Particle.SPIT, it.location, 15, 0.5, 0.5, 0.5)
+            it.spawnParticle(Particle.EXPLOSION_NORMAL, it.location, 5, 0.5, 0.5, 0.5)
+            it.playSound(it.location, Sound.ITEM_TRIDENT_RIPTIDE_3, 2.5F, 1.5F)
         }
+
     }
 
 }

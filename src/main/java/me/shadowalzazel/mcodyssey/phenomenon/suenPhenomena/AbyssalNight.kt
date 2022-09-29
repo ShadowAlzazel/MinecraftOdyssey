@@ -4,6 +4,7 @@ import me.shadowalzazel.mcodyssey.phenomenon.odyssey.OdysseyPhenomenon
 import me.shadowalzazel.mcodyssey.phenomenon.odyssey.PhenomenonTypes
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
+import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.World
@@ -21,21 +22,26 @@ object AbyssalNight : OdysseyPhenomenon("Abyssal Night",
         println("The Abyss falls at ${someWorld.name}!")
 
         // Player Effects
-        val abyssalNightEffect = PotionEffect(PotionEffectType.DARKNESS, 12000, (0..1).random())
-        for (somePlayer in someWorld.players) {
-            with(somePlayer) {
-                addPotionEffect(abyssalNightEffect)
-                sendMessage(Component.text("The black abyss drops from the sky...", TextColor.color(26, 27, 52)))
-            }
-            with(somePlayer.world) {
-                val someLocation = somePlayer.location
-                spawnParticle(Particle.SNOWFLAKE, someLocation, 15, 0.5, 0.5, 0.5)
-                spawnParticle(Particle.SQUID_INK, someLocation, 14, 0.5, 0.5, 0.5)
-                playSound(someLocation, Sound.BLOCK_NOTE_BLOCK_BASEDRUM, 2.5F, 1.5F)
-                playSound(someLocation, Sound.ENTITY_WARDEN_EMERGE, 2.5F, 0.5F)
-            }
+        val abyssalNightEffect = PotionEffect(PotionEffectType.DARKNESS, 20 * 20, 0)
+
+        someWorld.players.forEach {
+            it.addPotionEffect(abyssalNightEffect)
+            it.sendMessage(Component.text("The black abyss drops from the sky...", TextColor.color(26, 27, 52)))
+            it.spawnParticle(Particle.SQUID_INK, it.location, 15, 0.5, 0.5, 0.5)
+            it.playSound(it.location, Sound.BLOCK_NOTE_BLOCK_BASEDRUM, 2.5F, 1.5F)
+            it.playSound(it.location, Sound.ENTITY_WARDEN_EMERGE, 2.5F, 0.5F)
+            it.spawnParticle(Particle.BLOCK_CRACK, it.location, 95, 0.95, 0.8, 0.95, Material.COAL_BLOCK.createBlockData())
         }
 
+    }
+
+    override fun persistentPlayerActives(someWorld: World) {
+        val abyssalNightEffect = PotionEffect(PotionEffectType.DARKNESS, 20 * 11, 1)
+        someWorld.players.forEach {
+            if (it.location.block.lightFromBlocks < 12) {
+                it.addPotionEffect(abyssalNightEffect)
+            }
+        }
     }
 
 }

@@ -20,7 +20,6 @@ object BlazingSouls : OdysseyPhenomenon("Blazing Souls",
 
     override fun successfulActivation(someWorld: World) {
         super.successfulActivation(someWorld)
-        someWorld.sendMessage(Component.text("The players soul's are ablaze!"))
         println("The players soul's are ablaze at ${someWorld.name}!")
 
         val blazingBodyEffects = listOf(
@@ -33,30 +32,27 @@ object BlazingSouls : OdysseyPhenomenon("Blazing Souls",
             PotionEffect(PotionEffectType.INCREASE_DAMAGE, 12000, 1))
 
         // Player Effects
-        for (somePlayer in someWorld.players) {
-            with(somePlayer) {
-                sendMessage(Component.text("You sense the crackling embers...", TextColor.color(255, 110, 30)))
-                // Blazing Body
-                if ((0..3).random() == 2) {
-                    addPotionEffects(blazingBodyEffects)
-                    sendMessage(Component.text("Your body is set ablaze!", TextColor.color(255, 110, 30)))
-                }
-                // Blazing Mind
-                if ((0..3).random() == 3) {
-                    addPotionEffects(blazingMindEffects)
-                    sendMessage(Component.text("The flames of progress burn strong!", TextColor.color(255, 110, 30)))
-                }
-                // Blazing Soul
-                if ((0..3).random() == 0) {
-                    addPotionEffects(blazingSoulEffects)
-                    sendMessage(Component.text("The inferno illuminates from within!", TextColor.color(255, 110, 30)))
-                }
+        someWorld.players.forEach {
+            it.sendMessage(Component.text("You sense the crackling embers...", TextColor.color(255, 110, 30)))
+            // Blazing Body
+            if ((0..3).random() == 2) {
+                it.addPotionEffects(blazingBodyEffects)
+                it.sendMessage(Component.text("Your body is set ablaze!", TextColor.color(255, 110, 30)))
             }
-            with(somePlayer.world) {
-                spawnParticle(Particle.ELECTRIC_SPARK, somePlayer.location, 15, 0.5, 0.5, 0.5)
-                spawnParticle(Particle.SMALL_FLAME, somePlayer.location, 15, 0.5, 0.5, 0.5)
-                playSound(somePlayer.location, Sound.BLOCK_FURNACE_FIRE_CRACKLE, 2.5F, 1.2F)
+            // Blazing Mind
+            if ((0..3).random() == 3) {
+                it.addPotionEffects(blazingMindEffects)
+                it.sendMessage(Component.text("The flames of progress burn strong!", TextColor.color(255, 110, 30)))
             }
+            // Blazing Soul
+            if ((0..3).random() == 0) {
+                it.addPotionEffects(blazingSoulEffects)
+                it.sendMessage(Component.text("The inferno illuminates from within!", TextColor.color(255, 110, 30)))
+            }
+
+            it.spawnParticle(Particle.SMALL_FLAME, it.location, 14, 0.5, 0.5, 0.5)
+            it.playSound(it.location, Sound.BLOCK_FURNACE_FIRE_CRACKLE, 2.5F, 1.5F)
+
         }
     }
 

@@ -20,23 +20,17 @@ object StarryNight : OdysseyPhenomenon("Starry Night",
 
     override fun successfulActivation(someWorld: World) {
         super.successfulActivation(someWorld)
-        println("The Abyss falls at ${someWorld.name}!")
+        println("The star falls at ${someWorld.name}!")
 
         // Player Effects
         val starryNightEffect = PotionEffect(PotionEffectType.LUCK, 12000, (0..1).random())
-        for (somePlayer in someWorld.players) {
-            with(somePlayer) {
-                addPotionEffect(starryNightEffect)
-                sendMessage(Component.text("The stars are falling from the sky!?", TextColor.color(156, 127, 192)))
-            }
-            with(somePlayer.world) {
-                val someLocation = somePlayer.location
-                spawnParticle(Particle.SCRAPE, someLocation, 15, 0.5, 0.5, 0.5)
-                playSound(someLocation, Sound.BLOCK_NOTE_BLOCK_BASEDRUM, 2.5F, 1.5F)
-
-                // TODO: Star falling
-            }
+        someWorld.players.forEach {
+            it.addPotionEffect(starryNightEffect)
+            it.sendMessage(Component.text("The stars are falling from the sky!?", TextColor.color(156, 127, 192)))
+            it.spawnParticle(Particle.SCRAPE, it.location, 5, 0.5, 0.5, 0.5)
+            it.playSound(it.location, Sound.BLOCK_NOTE_BLOCK_CHIME, 2.5F, 1.5F)
         }
 
+        // TODO: Star falling
     }
 }

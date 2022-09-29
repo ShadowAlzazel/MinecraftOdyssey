@@ -6,11 +6,11 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object GaleWind : OdysseyEnchantment("galewind", "GaleWind", 3) {
+object BolaShot : OdysseyEnchantment("bolashot", "Bola Shot", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.OVERCHARGE -> {
+            OdysseyEnchantments.SOUL_REND, MENDING -> {
                 true
             }
             else -> {
@@ -21,7 +21,7 @@ object GaleWind : OdysseyEnchantment("galewind", "GaleWind", 3) {
 
     override fun canEnchantItem(item: ItemStack): Boolean {
         return when (item.type) {
-            Material.ENCHANTED_BOOK, Material.CROSSBOW, Material.BOW -> {
+            Material.ENCHANTED_BOOK, Material.CROSSBOW -> {
                 true
             }
             else -> {
@@ -30,6 +30,6 @@ object GaleWind : OdysseyEnchantment("galewind", "GaleWind", 3) {
         }
     }
 
+    // On hit spawn web
 
-    // When shoot, next shift direction dash, has cooldown and timer
 }

@@ -29,15 +29,14 @@ object ShimmerIntoxication : OdysseyPhenomenon("Shimmer Intoxication",
             PotionEffect(PotionEffectType.INCREASE_DAMAGE, 12000, 1),
             PotionEffect(PotionEffectType.CONFUSION, 120, 0),
             PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 12000, 1))
-        for (somePlayer in someWorld.players) {
-            with(somePlayer) {
-                addPotionEffects(shimmerEffects)
-                sendMessage(Component.text("You don't remember what happened but there are empty bottles of shimmer in you hand", TextColor.color(78, 0, 161)))
-                somePlayer.inventory.addItem(ItemStack(Material.GLASS_BOTTLE, 2))
-                spawnParticle(Particle.SPELL_WITCH, location, 55, 0.5, 0.5, 0.5)
-                spawnParticle(Particle.SPELL_MOB_AMBIENT, location, 35, 0.5, 0.5, 0.5)
-                playSound(location, Sound.ENTITY_GENERIC_DRINK, 2.5F, 1.5F)
-            }
+
+        someWorld.players.forEach {
+            it.addPotionEffects(shimmerEffects)
+            it.sendMessage(Component.text("You don't remember what happened but there are empty bottles of shimmer in you hand", TextColor.color(78, 0, 161)))
+            it.inventory.addItem(ItemStack(Material.GLASS_BOTTLE, 2))
+            it.spawnParticle(Particle.SPELL_WITCH, it.location, 55, 0.5, 0.5, 0.5)
+            it.spawnParticle(Particle.SPELL_MOB_AMBIENT, it.location, 35, 0.5, 0.5, 0.5)
+            it.playSound(it.location, Sound.ENTITY_GENERIC_DRINK, 2.5F, 1.5F)
         }
     }
 

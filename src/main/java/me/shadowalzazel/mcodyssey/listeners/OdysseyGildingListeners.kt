@@ -177,7 +177,7 @@ object OdysseyGildingListeners : Listener {
         val addedEnchants = tableEnchants.toMutableMap()
         val newGildedEnchants = mutableMapOf<Enchantment, Int>()
         for (x in 1..gildedSlots) {
-            if (6 >= (1..10).random()) {
+            if (7 >= (1..10).random()) {
                 val possibleEnchant = compatibleSet(enchantingItem.type).random()
                 if (possibleEnchant in addedEnchants) { break }
                 var conflict = false

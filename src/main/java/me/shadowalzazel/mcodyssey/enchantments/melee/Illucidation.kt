@@ -35,6 +35,4 @@ object Illucidation : OdysseyEnchantment("illucidation", "Illucidation", 4) {
         }
     }
 
-    // TODO: More Damage to Glowing Enemies
-
 }

@@ -18,6 +18,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.player.PlayerInteractEvent
+import kotlin.math.max
 import kotlin.math.min
 
 
@@ -72,7 +73,7 @@ object OdysseyWeaponListeners : Listener {
             println(armorPoints)
 
             // Bludgeon
-            val bludgeoningDamage = if (bludgeonMap[weaponData] != null) { min(armorPoints, bludgeonMap[weaponData]!!) }  else { 0.0 }
+            val bludgeoningDamage = if (bludgeonMap[weaponData] != null) {  max(bludgeonMap[weaponData]!! - armorPoints, 1.0) }  else { 0.0 }
             // Lacerate
             val laceratingDamage = if (lacerateMap[weaponData] != null) {
                 if (armorPoints <= 1.0) { min(oldDamage, lacerateMap[weaponData]!!) } else { 0.0 }
@@ -85,6 +86,8 @@ object OdysseyWeaponListeners : Listener {
         } else {
             Pair(0.0, 0.0)
         }
+
+        // TODO: FIX
     }
 
 
@@ -231,7 +234,7 @@ object OdysseyWeaponListeners : Listener {
                 someVictim.health -= extraDamage.second
                 println("New Damage: ${event.damage}")
                 println("Extra Damage: ${extraDamage.first}")
-                println("True Damage: ${extraDamage.second}")
+                println("Piercing Damage: ${extraDamage.second}")
             }
         }
     }

@@ -35,23 +35,20 @@ object BloodMoon : OdysseyPhenomenon("Blood Moon",
 
         // Blood Moon Effects
         val bloodMoonEffect = PotionEffect(PotionEffectType.UNLUCK, 12000, 0)
-        for (somePlayer in someWorld.players) {
-            with(somePlayer) {
-                addPotionEffect(bloodMoonEffect)
-                sendMessage(Component.text("The blood moon rises...", TextColor.color(96, 17, 12)))
-            }
-            with(somePlayer.world) {
-                val someLocation = somePlayer.location
-                spawnParticle(Particle.SPELL_MOB_AMBIENT, someLocation, 15, 0.5, 0.5, 0.5)
-                val bloodBlockBreak = Material.REDSTONE_BLOCK.createBlockData()
-                spawnParticle(Particle.BLOCK_CRACK, someLocation, 95, 0.95, 0.8, 0.95, bloodBlockBreak)
-                playSound(someLocation, Sound.ENTITY_WITHER_AMBIENT, 2.5F, 0.5F)
-            }
+
+        someWorld.players.forEach {
+            it.addPotionEffect(bloodMoonEffect)
+            it.sendMessage(Component.text("The blood moon rises...", TextColor.color(96, 17, 12)))
+            it.spawnParticle(Particle.SPELL_MOB_AMBIENT, it.location, 15, 0.5, 0.5, 0.5)
+            it.playSound(it.location, Sound.ENTITY_WITHER_AMBIENT, 2.5F, 0.5F)
+            it.spawnParticle(Particle.BLOCK_CRACK, it.location, 95, 0.95, 0.8, 0.95, Material.REDSTONE_BLOCK.createBlockData())
         }
     }
 
     override fun persistentSpawningActives(someEntity: LivingEntity) {
         someEntity.also {
+            // Do not blood moon if not exposed to night sky
+            if (it.location.block.lightFromSky < 7) { return }
             // Naming and Tagging
             if (it.customName() != null) { it.customName(Component.text("Blood Moon ${(it.customName() as TextComponent).content()}", TextColor.color(96, 17, 12))) }
             else { it.customName(Component.text("Blood Moon ${it.name}", TextColor.color(96, 17, 12))) }
@@ -61,19 +58,17 @@ object BloodMoon : OdysseyPhenomenon("Blood Moon",
             it.health += 20
             // Random Upgrade
             val randomUpgrade = (0..100).random()
-            if (40 < randomUpgrade) {
-                val spawnLocation = it.location.clone()
-                val someWorld = it.world
-                if (spawnLocation.y > 68.0) {
+            if (randomUpgrade > 40) {
+                if (it.location.y > 68.0) {
                     var someMob: LivingEntity? = null
                     when (it) {
                         is Zombie -> {
                             it.remove()
-                            someMob = if (90 < randomUpgrade) { OdysseyMobs.SAVAGE.createKnight(someWorld, spawnLocation).first } else { OdysseyMobs.SAVAGE.createMob(someWorld, spawnLocation) }
+                            someMob = if (randomUpgrade > 90) { OdysseyMobs.SAVAGE.createKnight(it.world, it.location).first } else { OdysseyMobs.SAVAGE.createMob(it.world, it.location) }
                         }
                         is Skeleton -> {
                             it.remove()
-                            someMob = if (90 < randomUpgrade) { OdysseyMobs.VANGUARD.createKnight(someWorld, spawnLocation).first } else { OdysseyMobs.VANGUARD.createMob(someWorld, spawnLocation) }
+                            someMob = if (randomUpgrade > 90) { OdysseyMobs.VANGUARD.createKnight(it.world, it.location).first } else { OdysseyMobs.VANGUARD.createMob(it.world, it.location) }
                         }
                         else -> {
                         }
