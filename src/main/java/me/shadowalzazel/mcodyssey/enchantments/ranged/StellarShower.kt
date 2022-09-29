@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.enchantments.ranged
 
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantment
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
@@ -9,7 +10,7 @@ object StellarShower : OdysseyEnchantment("stellarshower", "Stellar Shower", 4) 
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            ARROW_FIRE -> {
+            OdysseyEnchantments.SINGULARITY_SHOT -> {
                 true
             }
             else -> {

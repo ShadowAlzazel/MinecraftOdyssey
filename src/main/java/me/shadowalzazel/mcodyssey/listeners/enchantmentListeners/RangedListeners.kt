@@ -15,6 +15,8 @@ import org.bukkit.event.entity.EntityShootBowEvent
 import org.bukkit.event.entity.ProjectileHitEvent
 import org.bukkit.inventory.ItemStack
 import java.util.*
+import kotlin.math.cos
+import kotlin.math.sin
 
 
 object RangedListeners : Listener {
@@ -37,16 +39,19 @@ object RangedListeners : Listener {
                 // When match
                 when (enchant.key) {
                     OdysseyEnchantments.ALCHEMY_ARTILLERY -> {
-                        alchemyArtilleryEnchantmentShoot(event, someShooter, someBow)
+                        alchemyArtilleryEnchantmentShoot(someProjectile, someShooter, enchant.value)
+                    }
+                    OdysseyEnchantments.BOLA_SHOT -> {
+
                     }
                     OdysseyEnchantments.BURST_BARRAGE -> {
-                        burstBarrageEnchantment(someProjectile, someBow, someShooter)
+                        burstBarrageEnchantment(someProjectile, someShooter, enchant.value)
                     }
                     OdysseyEnchantments.CHAIN_REACTION -> {
-                        chainReactionEnchantmentShoot(someProjectile, someBow)
+                        chainReactionEnchantmentShoot(someProjectile, enchant.value)
                     }
                     OdysseyEnchantments.LUCKY_DRAW -> {
-                        luckyDrawEnchantment(event, someBow)
+                        event.setConsumeItem(!luckyDrawEnchantment(enchant.value))
                     }
                     OdysseyEnchantments.OVERCHARGE -> {
 
@@ -74,7 +79,7 @@ object RangedListeners : Listener {
                             soulRendEnchantmentHit(someShooter, someProjectile, someHitEntity)
                         }
                         "Chain_Reaction_Arrow" -> {
-                            chainReactionEnchantmentHit(someShooter, someProjectile, someHitEntity)
+                            chainReactionEnchantmentHit(someProjectile, someHitEntity)
                         }
                     }
                 }
@@ -92,7 +97,7 @@ object RangedListeners : Listener {
             for (enchant in someCrossbow.enchantments) {
                 when (enchant.key) {
                     OdysseyEnchantments.ALCHEMY_ARTILLERY -> {
-                        alchemyArtilleryEnchantmentLoad(event, someEntity, someCrossbow)
+                        event.isCancelled = alchemyArtilleryEnchantmentLoad(someEntity, someCrossbow)
                     }
                 }
             }
@@ -107,7 +112,7 @@ object RangedListeners : Listener {
             for (enchant in someBow.enchantments) {
                 when (enchant.key) {
                     OdysseyEnchantments.OVERCHARGE -> {
-
+                        println(event.bow)
                     }
                 }
             }
@@ -119,43 +124,41 @@ object RangedListeners : Listener {
     /*----------------------------------------------------------------------------------*/
 
     // ALCHEMY_ARTILLERY enchantment function regarding loading
-    private fun alchemyArtilleryEnchantmentLoad(event: EntityLoadCrossbowEvent, eventEntity: LivingEntity, eventCrossbow: ItemStack) {
+    private fun alchemyArtilleryEnchantmentLoad(eventEntity: LivingEntity, eventCrossbow: ItemStack): Boolean {
         if (eventEntity.equipment!!.itemInOffHand.type == Material.SPLASH_POTION || eventEntity.equipment!!.itemInOffHand.type == Material.LINGERING_POTION) {
             val someOffHandPotion = eventEntity.equipment!!.itemInOffHand
-            if ("Alchemy_Artillery_Loaded" !in eventEntity.scoreboardTags) {
+            return if ("Alchemy_Artillery_Loaded" !in eventEntity.scoreboardTags) {
                 eventEntity.scoreboardTags.add("Alchemy_Artillery_Loaded")
-                if (!entityAlchemyArtilleryAmmo.containsKey(eventEntity.uniqueId)) { entityAlchemyArtilleryAmmo[eventEntity.uniqueId] = someOffHandPotion } else { entityAlchemyArtilleryAmmo[eventEntity.uniqueId] = someOffHandPotion }
+                // Check if potion
+                entityAlchemyArtilleryAmmo[eventEntity.uniqueId] = someOffHandPotion
+                // Check counter
                 val multiCounter = if (eventCrossbow.itemMeta.hasEnchant(Enchantment.MULTISHOT)) 3 else 1
-                if (!entityAlchemyArtilleryCounter.containsKey(eventEntity.uniqueId)) { entityAlchemyArtilleryCounter[eventEntity.uniqueId] = multiCounter } else { entityAlchemyArtilleryCounter[eventEntity.uniqueId] = multiCounter }
+                entityAlchemyArtilleryCounter[eventEntity.uniqueId] = multiCounter
+                // Remove off-hand potion
                 eventEntity.equipment!!.setItemInOffHand(ItemStack(Material.AIR, 1))
-                println("Loaded")
-            }
-            else {
-                event.isCancelled = true
-                println("Full!")
+                false
+            } else {
+                true
             }
         }
+        return false
     }
 
     // ALCHEMY_ARTILLERY enchantment function regarding shooting
-    private fun alchemyArtilleryEnchantmentShoot(event: EntityShootBowEvent, eventShooter: LivingEntity, eventBow: ItemStack) {
-        // Check enchantment Strength
-        val enchantmentStrength = eventBow.itemMeta.getEnchantLevel(OdysseyEnchantments.ALCHEMY_ARTILLERY)
-        //
+    private fun alchemyArtilleryEnchantmentShoot(eventProjectile: Entity, eventShooter: LivingEntity, enchantmentStrength: Int) {
         var removeTag = false
         if ("Alchemy_Artillery_Loaded" in eventShooter.scoreboardTags) {
             val someCount = entityAlchemyArtilleryCounter[eventShooter.uniqueId]
             if (someCount!! >= 1) {
-                val loadedPotionItem: ItemStack = entityAlchemyArtilleryAmmo[eventShooter.uniqueId]!!
-                val someThrownPotion: ThrownPotion = eventShooter.world.spawnEntity(event.projectile.location, EntityType.SPLASH_POTION) as ThrownPotion
-                someThrownPotion.item = loadedPotionItem
-                val newVelocity = event.projectile.velocity.clone()
-                newVelocity.multiply((enchantmentStrength * 0.2) + 0.1)
-                someThrownPotion.velocity = newVelocity
-                someThrownPotion.shooter = eventShooter
-                event.projectile.remove()
+                // Spawn potion with item
+                (eventShooter.world.spawnEntity(eventProjectile.location, EntityType.SPLASH_POTION) as ThrownPotion).also {
+                    it.item = entityAlchemyArtilleryAmmo[eventShooter.uniqueId] ?: ItemStack(Material.SPLASH_POTION, 1)
+                    it.velocity = eventProjectile.velocity.clone().multiply((enchantmentStrength * 0.2) + 0.1)
+                    it.shooter = eventShooter
+                }
                 entityAlchemyArtilleryCounter[eventShooter.uniqueId] = someCount - 1
                 if (entityAlchemyArtilleryCounter[eventShooter.uniqueId] == 0) removeTag = true
+
             }
             if (removeTag) {
                 eventShooter.scoreboardTags.remove("Alchemy_Artillery_Loaded")
@@ -166,10 +169,7 @@ object RangedListeners : Listener {
     }
 
     // BURST_BARRAGE enchantment function
-    private fun burstBarrageEnchantment(eventProjectile: Entity, eventBow: ItemStack, eventShooter: LivingEntity) {
-        // Check enchantment Strength
-        val enchantmentStrength = eventBow.itemMeta.getEnchantLevel(OdysseyEnchantments.BURST_BARRAGE)
-        //
+    private fun burstBarrageEnchantment(eventProjectile: Entity, eventShooter: LivingEntity, enchantmentStrength: Int) {
         if (!eventShooter.scoreboardTags.contains("Burst_Shooting"))  {
             eventShooter.addScoreboardTag("Burst_Shooting")
             val initialVelocity = eventProjectile.velocity.clone()
@@ -180,49 +180,67 @@ object RangedListeners : Listener {
     }
 
     // CHAIN_REACTION enchantment function regarding shooting
-    private fun chainReactionEnchantmentShoot(eventProjectile: Entity, eventBow: ItemStack) {
-        val enchantmentStrength = eventBow.itemMeta.getEnchantLevel(OdysseyEnchantments.CHAIN_REACTION)
+    private fun chainReactionEnchantmentShoot(eventProjectile: Entity, enchantmentStrength: Int) {
         eventProjectile.addScoreboardTag("Chain_Reaction_Arrow")
         eventProjectile.addScoreboardTag("Chain_Reaction_Modifier_$enchantmentStrength")
     }
 
     // CHAIN_REACTION enchantment function
-    private fun chainReactionEnchantmentHit(eventShooter: LivingEntity, eventProjectile: Projectile, eventHitEntity: LivingEntity) {
-        val baseVelocity = eventProjectile.velocity.clone()
-        val baseUnitVector = baseVelocity.clone().normalize()
-        baseUnitVector.y = 0.0
-        val baseLocation = eventProjectile.location.clone()
-        var amount: Int = 0
-        for (x in 1..5) {
-            if (eventProjectile.scoreboardTags.contains("Chain_Reaction_Modifier_$x")) {
-                amount = x
-                break
+    private fun chainReactionEnchantmentHit(eventProjectile: Projectile, eventHitEntity: LivingEntity) {
+        // Loop and check if modifier reached
+        val closeEntities = eventHitEntity.location.getNearbyLivingEntities(10.0)
+        for (x in 1..10) {
+            if (eventProjectile.scoreboardTags.contains("Chain_Reaction_Modifier_$x")) { break }
+            // Spawn projectiles
+            if (x <= closeEntities.size) {
+                val chainVelocity = closeEntities.elementAt(x - 1).location.clone().subtract(eventProjectile.location.add(0.0, -0.25, 0.0)).toVector().normalize().multiply(2.0)
+                eventProjectile.world.spawnEntity(eventProjectile.location, eventProjectile.type).also {
+                    it.velocity = chainVelocity
+                }
             }
-        }
-        // remove tag after
+            // TODO: Maybe shoot back!?
 
-        for (p in 1..amount) {
-            val someRotation = (360.0 / amount) * p
-            val newProjectile = eventProjectile.world.spawnEntity(baseLocation, eventProjectile.type)
-            // copy item data later
-            val newVelocity = baseVelocity.clone().multiply(baseVelocity.length() - 0.5).rotateAroundY(someRotation)
-            newProjectile.velocity = newVelocity
         }
 
     }
 
-    // CHAIN_REACTION enchantment function regarding shooting
-    private fun ricochetEnchantmentShoot(eventProjectile: Entity, eventBow: ItemStack) {
-        val enchantmentStrength = eventBow.itemMeta.getEnchantLevel(OdysseyEnchantments.CHAIN_REACTION)
+    // CLUSTER_SHOT enchantment function regarding shooting
+    private fun clusterShotEnchantmentShoot(eventProjectile: Entity, enchantmentStrength: Int) {
+        eventProjectile.addScoreboardTag("Cluster_Shot_Arrow")
+        eventProjectile.addScoreboardTag("Cluster_Shot_Modifier_$enchantmentStrength")
+    }
+
+    // CLUSTER_SHOT enchantment function
+    private fun clusterShotEnchantmentHit(eventProjectile: Projectile, eventHitEntity: LivingEntity) {
+        // Loop
+        for (x in 1..20) {
+            if (eventProjectile.scoreboardTags.contains("Cluster_Shot_Modifier_${x / 3}")) { break }
+            // Math
+            val someAngle = Math.random() * Math.PI * 2
+            val coordinates: Pair<Double, Double> = Pair(cos(someAngle) * 2.0, sin(someAngle) * 2.0)
+
+            val someVelocity = eventProjectile.location.clone().add(coordinates.first, 10.0, coordinates.second).subtract(eventProjectile.location).toVector()
+            eventProjectile.world.spawnEntity(eventProjectile.location, eventProjectile.type).also {
+                it.velocity = someVelocity
+            }
+
+        }
+
+        // TODO: Random Circle
+
+
+    }
+
+    // RICOCHET enchantment function regarding shooting
+    private fun ricochetEnchantmentShoot(eventProjectile: Entity, enchantmentStrength: Int) {
         eventProjectile.addScoreboardTag("Ricochet_Arrow")
-        eventProjectile.addScoreboardTag("Chain_Reaction_Modifier_$enchantmentStrength")
+        eventProjectile.addScoreboardTag("Ricochet_Modifier_$enchantmentStrength")
     }
 
 
     // LUCKY_DRAW enchantment function
-    private fun luckyDrawEnchantment(event: EntityShootBowEvent, eventBow: ItemStack) {
-        val luckyFactor = eventBow.itemMeta.getEnchantLevel(OdysseyEnchantments.LUCKY_DRAW)
-        if ((0..100).random() <= (luckyFactor * 10) + 5) { event.setConsumeItem(false) }
+    private fun luckyDrawEnchantment(enchantmentStrength: Int): Boolean {
+        return (enchantmentStrength * 10) + 7 > (0..100).random()
     }
 
     // OVERCHARGE enchantment function

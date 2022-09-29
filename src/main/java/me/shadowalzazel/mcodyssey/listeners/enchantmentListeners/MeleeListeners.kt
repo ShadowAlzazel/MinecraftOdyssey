@@ -9,10 +9,7 @@ import me.shadowalzazel.mcodyssey.listeners.tasks.FrostyFuseTask
 import me.shadowalzazel.mcodyssey.listeners.tasks.GravityWellTask
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
-import org.bukkit.Color
-import org.bukkit.FireworkEffect
-import org.bukkit.Particle
-import org.bukkit.Sound
+import org.bukkit.*
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
@@ -28,6 +25,7 @@ import java.util.*
 object MeleeListeners : Listener {
 
     // Internal cool downs for enchantments
+    private var arcaneCellCooldown = mutableMapOf<UUID, Long>()
     private var backstabberCooldown = mutableMapOf<UUID, Long>()
     private var buzzyBeesCooldown = mutableMapOf<UUID, Long>()
     private var decayingTouchCooldown = mutableMapOf<UUID, Long>()
@@ -49,30 +47,19 @@ object MeleeListeners : Listener {
             // Make thorns bug new enchant apply ranged effects !!!!!
             // Check if active item has lore
             if (someDamager.equipment?.itemInMainHand?.hasItemMeta() == true) {
-                val someWeapon = someDamager.equipment?.itemInMainHand
+                val someWeapon = someDamager.equipment!!.itemInMainHand
                 // Loop for all enchants
-                for (enchant in someWeapon!!.enchantments) {
+                for (enchant in someWeapon.enchantments) {
                     // When match
                     when (enchant.key) {
                         OdysseyEnchantments.ARCANE_CELL -> {
-                            arcaneCellEnchantment(someVictim, enchant.value)
+                            if (cooldownManager(someDamager, "Arcane Cell", arcaneCellCooldown, 5.25)) {
+                                arcaneCellEnchantment(someVictim, enchant.value)
+                            }
                         }
                         OdysseyEnchantments.BACKSTABBER -> {
-                            if (!backstabberCooldown.containsKey(someDamager.uniqueId)) {
-                                backstabberCooldown[someDamager.uniqueId] = 0L
-                            }
-                            val timeElapsed: Long =
-                                System.currentTimeMillis() - backstabberCooldown[someDamager.uniqueId]!!
-                            if (timeElapsed > 3.0 * 1000) {
-                                backstabberCooldown[someDamager.uniqueId] = System.currentTimeMillis()
+                            if (cooldownManager(someDamager, "Backstabber", backstabberCooldown, 3.25)) {
                                 event.damage += backstabberEnchantment(someDamager, someVictim, enchant.value)
-                            } else {
-                                someDamager.sendActionBar(
-                                    Component.text(
-                                        "Backstabber on Cooldown (Time Remaining: ${6.0 - (timeElapsed / 1000)}s)",
-                                        TextColor.color(255, 255, 85)
-                                    )
-                                )
                             }
                         }
                         OdysseyEnchantments.BANE_OF_THE_ILLAGER -> {
@@ -85,42 +72,19 @@ object MeleeListeners : Listener {
                             event.damage += baneOfTheSwineEnchantment(someVictim, enchant.value)
                         }
                         OdysseyEnchantments.BUZZY_BEES -> {
-                            if (!buzzyBeesCooldown.containsKey(someDamager.uniqueId)) {
-                                buzzyBeesCooldown[someDamager.uniqueId] = 0L
-                            }
-                            val timeElapsed: Long =
-                                System.currentTimeMillis() - buzzyBeesCooldown[someDamager.uniqueId]!!
-                            if (timeElapsed > 4.5 * 1000) {
-                                buzzyBeesCooldown[someDamager.uniqueId] = System.currentTimeMillis()
+                            if (cooldownManager(someDamager, "Buzzy Bees", buzzyBeesCooldown, 4.25)) {
                                 buzzyBeesEnchantment(someVictim, enchant.value)
-                            } else {
-                                someDamager.sendActionBar(
-                                    Component.text(
-                                        "Buzzy Bees on Cooldown (Time Remaining: ${4.5 - (timeElapsed / 1000)}s)",
-                                        TextColor.color(255, 255, 85)
-                                    )
-                                )
                             }
                         }
                         OdysseyEnchantments.COMMITTED -> {
                             event.damage += committedEnchantment(someVictim, enchant.value)
                         }
+                        OdysseyEnchantments.CULL_THE_WEAK -> {
+                            event.damage += cullTheWeakEnchantment(someVictim, enchant.value)
+                        }
                         OdysseyEnchantments.DECAYING_TOUCH -> {
-                            if (!decayingTouchCooldown.containsKey(someDamager.uniqueId)) {
-                                decayingTouchCooldown[someDamager.uniqueId] = 0L
-                            }
-                            val timeElapsed: Long =
-                                System.currentTimeMillis() - decayingTouchCooldown[someDamager.uniqueId]!!
-                            if (timeElapsed > 3.0 * 1000) {
-                                decayingTouchCooldown[someDamager.uniqueId] = System.currentTimeMillis()
+                            if (cooldownManager(someDamager, "Decaying Touch", decayingTouchCooldown, 3.0)) {
                                 decayingTouchEnchantment(someVictim, enchant.value)
-                            } else {
-                                someDamager.sendActionBar(
-                                    Component.text(
-                                        "Decaying Touch on Cooldown (Time Remaining: ${3.0 - (timeElapsed / 1000)}s)",
-                                        TextColor.color(255, 255, 85)
-                                    )
-                                )
                             }
                         }
                         OdysseyEnchantments.DOUSE -> {
@@ -136,108 +100,39 @@ object MeleeListeners : Listener {
                             frogFrightEnchantment(someDamager, someVictim, enchant.value)
                         }
                         OdysseyEnchantments.FROSTY_FUSE -> {
-                            if (!frostyFuseCooldown.containsKey(someDamager.uniqueId)) {
-                                frostyFuseCooldown[someDamager.uniqueId] = 0L
-                            }
-                            val timeElapsed: Long =
-                                System.currentTimeMillis() - frostyFuseCooldown[someDamager.uniqueId]!!
-                            if (timeElapsed > 5.0 * 1000) {
-                                frostyFuseCooldown[someDamager.uniqueId] = System.currentTimeMillis()
+                            if (cooldownManager(someDamager, "Frosty Fuse", frostyFuseCooldown, 5.0)) {
                                 frostyFuseEnchantment(someVictim, enchant.value)
-                            } else {
-                                someDamager.sendActionBar(
-                                    Component.text(
-                                        "Frosty Fuse on Cooldown (Time Remaining: ${5.0 - ((timeElapsed / 1) * 0.001)}s)",
-                                        TextColor.color(255, 255, 85)
-                                    )
-                                )
                             }
-                            frostyFuseEnchantment(someVictim, enchant.value)
                         }
                         OdysseyEnchantments.GRAVITY_WELL -> {
-                            if (!gravityWellCooldown.containsKey(someDamager.uniqueId)) {
-                                gravityWellCooldown[someDamager.uniqueId] = 0L
-                            }
-                            val timeElapsed: Long =
-                                System.currentTimeMillis() - gravityWellCooldown[someDamager.uniqueId]!!
-                            if (timeElapsed > 8.0 * 1000) {
-                                gravityWellCooldown[someDamager.uniqueId] = System.currentTimeMillis()
+                            if (cooldownManager(someDamager, "Gravity Well", gravityWellCooldown, 8.0)) {
                                 gravityWellEnchantment(someDamager, someVictim, enchant.value)
-                            } else {
-                                someDamager.sendActionBar(
-                                    Component.text(
-                                        "Gravity Well on Cooldown (Time Remaining: ${8.0 - (timeElapsed / 1000)}s)",
-                                        TextColor.color(255, 255, 85)
-                                    )
-                                )
                             }
                         }
                         OdysseyEnchantments.GUARDING_STRIKE -> {
-                            if (!guardingStrikeCooldown.containsKey(someDamager.uniqueId)) {
-                                guardingStrikeCooldown[someDamager.uniqueId] = 0L
-                            }
-                            val timeElapsed: Long =
-                                System.currentTimeMillis() - guardingStrikeCooldown[someDamager.uniqueId]!!
-                            if (timeElapsed > 4.0 * 1000) {
-                                guardingStrikeCooldown[someDamager.uniqueId] = System.currentTimeMillis()
-                                guardingStrikeEnchantment(someDamager, enchant.value)
-                            } else {
-                                someDamager.sendActionBar(
-                                    Component.text(
-                                        "Guarding Strike on Cooldown (Time Remaining: ${4.0 - (timeElapsed / 1000)}s)",
-                                        TextColor.color(255, 255, 85)
-                                    )
-                                )
+                            if (cooldownManager(someDamager, "Guarding Strike", guardingStrikeCooldown, 4.0)) {
+                                guardingStrikeEnchantment(someVictim, enchant.value)
                             }
                         }
                         OdysseyEnchantments.HEMORRHAGE -> {
-                            if (!hemorrhageCooldown.containsKey(someDamager.uniqueId)) {
-                                hemorrhageCooldown[someDamager.uniqueId] = 0L
-                            }
-                            val timeElapsed: Long =
-                                System.currentTimeMillis() - hemorrhageCooldown[someDamager.uniqueId]!!
-                            if (timeElapsed > 3.0 * 1000) {
-                                hemorrhageCooldown[someDamager.uniqueId] = System.currentTimeMillis()
+                            if (cooldownManager(someDamager, "Hemorrhage", hemorrhageCooldown, 3.0)) {
                                 hemorrhageEnchantment(someVictim, enchant.value)
-                            } else {
-                                someDamager.sendActionBar(
-                                    Component.text(
-                                        "Hemorrhage on Cooldown (Time Remaining: ${3.0 - (timeElapsed / 1000)}s)",
-                                        TextColor.color(255, 255, 85)
-                                    )
-                                )
                             }
                         }
                         OdysseyEnchantments.ILLUCIDATION -> {
                             event.damage += illucidationEnchantment(someVictim, enchant.value, event.isCritical)
                         }
+                        OdysseyEnchantments.RUPTURING_STRIKE -> {
+                            event.damage -= rupturingStrikeEnchantment(someVictim, event.damage, enchant.value)
+                        }
                         OdysseyEnchantments.VOID_STRIKE -> {
-                            if (!voidStrikeCooldown.containsKey(someDamager.uniqueId)) {
-                                voidStrikeCooldown[someDamager.uniqueId] = 0L
-                            }
-                            val timeElapsed: Long =
-                                System.currentTimeMillis() - voidStrikeCooldown[someDamager.uniqueId]!!
-                            if (timeElapsed > 0.5 * 1000) {
-                                voidStrikeCooldown[someDamager.uniqueId] = System.currentTimeMillis()
+                            if (cooldownManager(someDamager, "Void Strike", voidStrikeCooldown, 0.45)) {
                                 event.damage += voidStrikeEnchantment(someDamager, someVictim, enchant.value)
                             }
                         }
                         OdysseyEnchantments.WHIRLWIND -> {
-                            if (!whirlwindCooldown.containsKey(someDamager.uniqueId)) {
-                                whirlwindCooldown[someDamager.uniqueId] = 0L
-                            }
-                            val timeElapsed: Long =
-                                System.currentTimeMillis() - whirlwindCooldown[someDamager.uniqueId]!!
-                            if (timeElapsed > 3.0 * 1000) {
-                                whirlwindCooldown[someDamager.uniqueId] = System.currentTimeMillis()
+                            if (cooldownManager(someDamager, "Whirlwind", whirlwindCooldown, 3.0)) {
                                 whirlwindEnchantment(someDamager, someVictim, event.damage, enchant.value)
-                            } else {
-                                someDamager.sendActionBar(
-                                    Component.text(
-                                        "Whirlwind on Cooldown (Time Remaining: ${3.0 - (timeElapsed / 1000)}s)",
-                                        TextColor.color(255, 255, 85)
-                                    )
-                                )
                             }
                         }
                     }
@@ -261,39 +156,41 @@ object MeleeListeners : Listener {
                     // When Match
                     when (enchant.key) {
                         OdysseyEnchantments.EXPLODING -> {
-                            if (!explodingCooldown.containsKey(someKiller.uniqueId)) {
-                                explodingCooldown[someKiller.uniqueId] = 0L
-                            }
-                            val timeElapsed: Long =
-                                System.currentTimeMillis() - explodingCooldown[someKiller.uniqueId]!!
-                            if (timeElapsed > 1.25 * 1000) {
-                                explodingCooldown[someKiller.uniqueId] = System.currentTimeMillis()
+                            if (cooldownManager(someKiller, "Exploding", explodingCooldown, 1.25)) {
                                 explodingEnchantment(someVictim, enchant.value)
                             }
                         }
-                        OdysseyEnchantments.GUARDING_STRIKE -> {
-                            if (!guardingStrikeCooldown.containsKey(someKiller.uniqueId)) {
-                                guardingStrikeCooldown[someKiller.uniqueId] = 0L
-                            }
-                            val timeElapsed: Long =
-                                System.currentTimeMillis() - guardingStrikeCooldown[someKiller.uniqueId]!!
-                            if (timeElapsed > 4.0 * 1000) {
-                                guardingStrikeCooldown[someKiller.uniqueId] = System.currentTimeMillis()
-                                guardingStrikeEnchantment(someKiller, enchant.value)
-                            } else {
-                                someKiller.sendActionBar(
-                                    Component.text(
-                                        "Guarding Strike on Cooldown (Time Remaining: ${4.0 - (timeElapsed / 1000)}s)",
-                                        TextColor.color(255, 255, 85)
-                                    )
-                                )
-                            }
+                        OdysseyEnchantments.FEARFUL_FINISHER -> {
+                            // TODO: Make Soul Socket or Enchant
                         }
                     }
                 }
             }
         }
     }
+
+    // Helper function for cooldown
+    private fun cooldownManager(eventHitter: LivingEntity, someMessage: String, someCooldownMap: MutableMap<UUID, Long>, cooldownTimer: Double): Boolean {
+        if (!someCooldownMap.containsKey(eventHitter.uniqueId)) {
+            someCooldownMap[eventHitter.uniqueId] = 0L
+        }
+        // Cooldown Timer
+        val timeElapsed: Long = System.currentTimeMillis() - someCooldownMap[eventHitter.uniqueId]!!
+        return if (timeElapsed > cooldownTimer * 1000) {
+            someCooldownMap[eventHitter.uniqueId] = System.currentTimeMillis()
+            true
+        } else {
+            eventHitter.sendActionBar(
+                Component.text(
+                    "$someMessage on Cooldown (Time Remaining: ${cooldownTimer - ((timeElapsed / 1) * 0.001)}s)",
+                    TextColor.color(155, 155, 155)
+                )
+            )
+            false
+        }
+
+    }
+
 
     /*----------------------------------------------------------------------------------*/
 
@@ -355,7 +252,7 @@ object MeleeListeners : Listener {
         eventDamager: LivingEntity,
         eventVictim: LivingEntity,
         enchantmentStrength: Int
-    ): Double  {
+    ): Double {
         if (eventVictim.isInWaterOrRainOrBubbleColumn || eventVictim is WaterMob || eventVictim.isSwimming || eventDamager.isInWaterOrRainOrBubbleColumn) {
             return enchantmentStrength.toDouble() * 2.0
         }
@@ -366,7 +263,7 @@ object MeleeListeners : Listener {
     private fun baneOfTheSwineEnchantment(
         eventVictim: LivingEntity,
         enchantmentStrength: Int
-    ): Double  {
+    ): Double {
         if (eventVictim is PiglinAbstract || eventVictim is Pig || eventVictim is Hoglin) {
             return enchantmentStrength.toDouble() * 2.5
         }
@@ -405,6 +302,14 @@ object MeleeListeners : Listener {
         }
     }
 
+    // CULL_THE_WEAK Enchantment Function
+    private fun cullTheWeakEnchantment(eventVictim: LivingEntity, enchantmentStrength: Int): Double {
+        return if (eventVictim.hasPotionEffect(PotionEffectType.SLOW) || eventVictim.hasPotionEffect(PotionEffectType.WEAKNESS) || eventVictim.hasPotionEffect(PotionEffectType.SLOW_DIGGING)) {
+            enchantmentStrength * 2.0
+        } else {
+            0.0
+        }
+    }
 
     // DECAYING_TOUCH Enchantment Function
     private fun decayingTouchEnchantment(eventVictim: LivingEntity, enchantmentStrength: Int) {
@@ -498,7 +403,7 @@ object MeleeListeners : Listener {
         eventVictim.also {
             it.velocity.multiply(0.9)
             val tongueLashVector = eventDamager.location.clone().subtract(it.location).toVector().normalize().multiply(1.1 + (enchantmentStrength * 0.1))
-            val frogFrightTask = FrogFrightTask(eventVictim, tongueLashVector)
+            val frogFrightTask = FrogFrightTask(eventVictim, tongueLashVector.multiply(-1))
             frogFrightTask.runTaskLater(MinecraftOdyssey.instance, 14)
             it.addPotionEffect(PotionEffect(PotionEffectType.SLOW, 3, 1))
             it.damage(1.0)
@@ -549,14 +454,8 @@ object MeleeListeners : Listener {
     private fun guardingStrikeEnchantment(eventHitter: LivingEntity, enchantmentStrength: Int) {
         // Effects
         with(eventHitter) {
-            if (velocity.length() < 0.05) {
-                addPotionEffect(
-                    PotionEffect(
-                        PotionEffectType.DAMAGE_RESISTANCE,
-                        (2 + (enchantmentStrength * 3)) * 20,
-                        0
-                    )
-                )
+            if (velocity.length() < 0.1) {
+                addPotionEffect(PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, (1 + (enchantmentStrength * 2)) * 20, 0))
             }
             // Particles and Sounds
             world.spawnParticle(Particle.SCRAPE, location, 35, 1.0, 0.5, 1.0)
@@ -598,6 +497,39 @@ object MeleeListeners : Listener {
         return illucidationDamage
     }
 
+    // RUPTURING_STRIKE Enchantment Function
+    private fun rupturingStrikeEnchantment(eventVictim: LivingEntity, eventDamage: Double, enchantmentStrength: Int): Double {
+        // Victim
+        var rupturingDamage: Double = 0.0
+
+        with(eventVictim) {
+            if (scoreboardTags.contains("Fully_Ruptured")) {
+                scoreboardTags.remove("Fully_Ruptured")
+                if (eventDamage + 2 > enchantmentStrength) {
+                    rupturingDamage += enchantmentStrength
+                    health -= if (health < rupturingDamage) {
+                        rupturingDamage - health
+                    } else {
+                        rupturingDamage
+                    }
+                }
+            }
+            else if (scoreboardTags.contains("Partly_Ruptured")) {
+                scoreboardTags.remove("Partly_Ruptured")
+                scoreboardTags.add("Fully_Ruptured")
+            } else {
+                scoreboardTags.add("Partly_Ruptured")
+            }
+            eventDamage
+        }
+
+        with(eventVictim.world) {
+            playSound(eventVictim.location, Sound.ITEM_CROSSBOW_QUICK_CHARGE_2, 2.5F, 1.7F)
+            spawnParticle(Particle.CRIT, eventVictim.location, 25, 1.0, 0.5, 1.0)
+            spawnParticle(Particle.BLOCK_CRACK, eventVictim.location, 25, 0.95, 0.8, 0.95, Material.QUARTZ_BRICKS.createBlockData())
+        }
+        return rupturingDamage
+    }
 
     // VOID_STRIKE Enchantment Function
     private fun voidStrikeEnchantment(

@@ -6,11 +6,11 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object GaleWind : OdysseyEnchantment("galewind", "GaleWind", 3) {
+object Sharpshooter : OdysseyEnchantment("sharpshooter", "Sharpshooter", 5) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.OVERCHARGE -> {
+            OdysseyEnchantments.ALCHEMY_ARTILLERY -> {
                 true
             }
             else -> {
@@ -30,6 +30,5 @@ object GaleWind : OdysseyEnchantment("galewind", "GaleWind", 3) {
         }
     }
 
-
-    // When shoot, next shift direction dash, has cooldown and timer
+    // When fully charged do more damage
 }

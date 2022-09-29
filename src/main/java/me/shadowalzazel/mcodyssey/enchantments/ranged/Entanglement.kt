@@ -29,7 +29,5 @@ object Entanglement : OdysseyEnchantment("entanglement", "Entanglement", 2) {
             }
         }
     }
-    fun g() {
-        TODO("If shoot twice TP?")
-    }
+    // Zac Arms
 }

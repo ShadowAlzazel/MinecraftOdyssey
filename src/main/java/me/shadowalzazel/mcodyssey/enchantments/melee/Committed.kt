@@ -10,7 +10,7 @@ object Committed : OdysseyEnchantment("committed", "Committed", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.VOID_STRIKE -> {
+            OdysseyEnchantments.BACKSTABBER -> {
                 true
             }
             else -> {

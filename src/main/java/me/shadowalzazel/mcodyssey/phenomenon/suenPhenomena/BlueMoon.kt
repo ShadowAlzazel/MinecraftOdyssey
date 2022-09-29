@@ -20,17 +20,14 @@ object BlueMoon : OdysseyPhenomenon("Blood Moon",
 
         // Blood Moon Effects
         val blueMoonEffects = listOf(PotionEffect(PotionEffectType.NIGHT_VISION, 12000, 0))
-        for (somePlayer in someWorld.players) {
-            with(somePlayer) {
-                addPotionEffects(blueMoonEffects)
-                sendMessage(Component.text("A blue moon illuminates the night...", TextColor.color(136, 143, 255)))
-            }
-            with(somePlayer.world) {
-                val someLocation = somePlayer.location
-                spawnParticle(Particle.SPELL_MOB_AMBIENT, someLocation, 15, 0.5, 0.5, 0.5)
-                playSound(someLocation, Sound.BLOCK_AMETHYST_BLOCK_CHIME, 2.5F, 0.5F)
-            }
+
+        someWorld.players.forEach {
+            it.addPotionEffects(blueMoonEffects)
+            it.sendMessage(Component.text("A blue moon illuminates the night...", TextColor.color(136, 143, 255)))
+            it.spawnParticle(Particle.SPELL_MOB_AMBIENT, it.location, 15, 0.5, 0.5, 0.5)
+            it.playSound(it.location, Sound.BLOCK_AMETHYST_BLOCK_CHIME, 2.5F, 0.5F)
         }
+
     }
 
 }

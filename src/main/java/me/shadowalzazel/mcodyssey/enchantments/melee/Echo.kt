@@ -10,7 +10,7 @@ object Echo : OdysseyEnchantment("echo", "Echo", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.GRAVITY_WELL -> {
+            ARROW_INFINITE -> {
                 true
             }
             else -> {

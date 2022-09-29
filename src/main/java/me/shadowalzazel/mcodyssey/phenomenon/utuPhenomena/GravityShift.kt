@@ -31,14 +31,12 @@ object GravityShift : OdysseyPhenomenon("Gravity shift",
         super.successfulActivation(someWorld)
         println("The gravity shifts at ${someWorld.name}!")
 
-        for (somePlayer in someWorld.players) {
-            with(somePlayer) {
-                addPotionEffects(lowGravityEffects)
-                sendMessage(Component.text("${server.name} experiencing a relativistic shift and unstable gravity zones!", TextColor.color(56, 127, 232)))
-                spawnParticle(Particle.SPIT, location, 15, 0.5, 0.5, 0.5)
-                spawnParticle(Particle.EXPLOSION_NORMAL, location, 5, 0.5, 0.5, 0.5)
-                playSound(location, Sound.ITEM_TRIDENT_RIPTIDE_3, 2.5F, 1.5F)
-            }
+        someWorld.players.forEach {
+            it.addPotionEffects(lowGravityEffects)
+            it.sendMessage(Component.text("${it.server.name} experiencing a relativistic shift and unstable gravity zones!", TextColor.color(56, 127, 232)))
+            it.spawnParticle(Particle.SPIT, it.location, 15, 0.5, 0.5, 0.5)
+            it.spawnParticle(Particle.EXPLOSION_NORMAL, it.location, 5, 0.5, 0.5, 0.5)
+            it.playSound(it.location, Sound.ITEM_TRIDENT_RIPTIDE_3, 2.5F, 1.5F)
         }
     }
 

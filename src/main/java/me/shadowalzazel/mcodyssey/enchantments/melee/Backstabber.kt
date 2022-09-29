@@ -10,7 +10,7 @@ object Backstabber : OdysseyEnchantment("backstabber", "Backstabber", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.VOID_STRIKE -> {
+            OdysseyEnchantments.COMMITTED -> {
                 true
             }
             else -> {

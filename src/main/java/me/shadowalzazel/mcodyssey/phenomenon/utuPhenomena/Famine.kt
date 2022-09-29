@@ -24,16 +24,15 @@ object Famine : OdysseyPhenomenon("Famine",
 
         // Effects
         val famineEffect = PotionEffect(PotionEffectType.HUNGER, 2000, 0)
-        for (somePlayer in someWorld.players) {
-            with(somePlayer) {
-                addPotionEffect(famineEffect)
-                foodLevel = 5
-                sendMessage(Component.text("The food is rotten and spoiled...", TextColor.color(127, 122, 55)))
-                spawnParticle(Particle.CRIT, location, 15, 0.5, 0.5, 0.5)
-                playSound(location, Sound.ENTITY_ARROW_HIT_PLAYER, 2.5F, 1.5F)
-            }
+        someWorld.players.forEach {
+            it.addPotionEffect(famineEffect)
+            it.foodLevel = 5
+            it.sendMessage(Component.text("The food is rotten and spoiled...", TextColor.color(127, 122, 55)))
+            it.spawnParticle(Particle.CRIT, it.location, 15, 0.5, 0.5, 0.5)
+            it.playSound(it.location, Sound.ENTITY_ARROW_HIT_PLAYER, 2.5F, 1.5F)
         }
     }
+
 
 
 

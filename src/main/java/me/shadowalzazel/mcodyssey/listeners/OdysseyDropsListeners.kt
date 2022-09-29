@@ -20,14 +20,14 @@ object OdysseyDropsListeners : Listener {
 
     private fun droppedItemSound(somePlayer: Player) {
         with(somePlayer) {
-            playSound(this.location, Sound.BLOCK_AMETHYST_BLOCK_CHIME, 1.5F, 0.9F)
-            playSound(this.location, Sound.BLOCK_AMETHYST_CLUSTER_PLACE, 1.5F, 0.9F)
-            playSound(this.location, Sound.BLOCK_AMETHYST_BLOCK_PLACE, 1.5F, 0.9F)
-            playSound(this.location, Sound.BLOCK_ENCHANTMENT_TABLE_USE, 1.5F, 0.9F)
-            world.spawnParticle(Particle.TOTEM, this.location, 25, 2.0, 1.0, 2.0)
-            world.spawnParticle(Particle.END_ROD, this.location, 25, 2.0, 1.0, 2.0)
-            world.spawnParticle(Particle.GLOW, this.location, 35, 2.0, 1.0, 2.0)
-            println("Dropped Item Gilded ${this.name}")
+            playSound(location, Sound.BLOCK_AMETHYST_BLOCK_CHIME, 1.5F, 0.9F)
+            playSound(location, Sound.BLOCK_AMETHYST_CLUSTER_PLACE, 1.5F, 0.9F)
+            playSound(location, Sound.BLOCK_AMETHYST_BLOCK_PLACE, 1.5F, 0.9F)
+            playSound(location, Sound.BLOCK_ENCHANTMENT_TABLE_USE, 1.5F, 0.9F)
+            world.spawnParticle(Particle.TOTEM, location, 25, 2.0, 1.0, 2.0)
+            world.spawnParticle(Particle.END_ROD, location, 25, 2.0, 1.0, 2.0)
+            world.spawnParticle(Particle.GLOW, location, 35, 2.0, 1.0, 2.0)
+            println("Dropped Item Gilded $name")
         }
     }
 
@@ -37,8 +37,7 @@ object OdysseyDropsListeners : Listener {
             if (event.entity.killer is Player) {
                 val somePlayer: Player = event.entity.killer as Player
                 if (event.entity.hasLineOfSight(somePlayer)) {
-                    val randomEnchantList = listOf(OdysseyEnchantments.HEMORRHAGE, OdysseyEnchantments.WHIRLWIND, OdysseyEnchantments.SPEEDY_SPURS, OdysseyEnchantments.WARP_JUMP, OdysseyEnchantments.SPEEDY_SPURS, OdysseyEnchantments.ECHO,
-                        OdysseyEnchantments.COWARDICE, OdysseyEnchantments.LUCKY_DRAW, OdysseyEnchantments.SOUL_REND, OdysseyEnchantments.SPOREFUL, OdysseyEnchantments.FRUITFUL_FARE, OdysseyEnchantments.POTION_BARRIER, OdysseyEnchantments.BURST_BARRAGE)
+                    val enchantmentSet = OdysseyEnchantments.meleeSet + OdysseyEnchantments.rangedSet
 
                     event.entity.also {
                         // Looting and luck
@@ -70,7 +69,7 @@ object OdysseyDropsListeners : Listener {
                             is Skeleton -> {
                                 if (hasBloodMoon) {
                                     if ((2.5 + luck + looting + misc) * 10 > (0..1000).random()) {
-                                        it.world.dropItem(it.location, (OdysseyBooks.GILDED_BOOK.createGildedBook(randomEnchantList.random(), 1)))
+                                        it.world.dropItem(it.location, (OdysseyBooks.GILDED_BOOK.createGildedBook(enchantmentSet.random(), 1)))
                                         droppedItemSound(somePlayer)
                                     }
                                 }
@@ -96,7 +95,7 @@ object OdysseyDropsListeners : Listener {
                             is Zombie -> {
                                 if (hasBloodMoon) {
                                     if ((2.5 + luck + looting + misc) * 10 > (0..1000).random()) {
-                                        it.world.dropItem(it.location, (OdysseyBooks.GILDED_BOOK.createGildedBook(randomEnchantList.random(), 1)))
+                                        it.world.dropItem(it.location, (OdysseyBooks.GILDED_BOOK.createGildedBook(enchantmentSet.random(), 1)))
                                         droppedItemSound(somePlayer)
                                     }
                                     it.world.dropItem(it.location, (OdysseyItems.COAGULATED_BLOOD.createItemStack((1..3).random())))

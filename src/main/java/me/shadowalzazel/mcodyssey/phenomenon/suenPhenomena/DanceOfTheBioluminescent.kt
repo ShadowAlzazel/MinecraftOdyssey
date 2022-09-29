@@ -29,16 +29,11 @@ object DanceOfTheBioluminescent : OdysseyPhenomenon("Dance of the Bioluminescent
         println("The bioluminescent creatures glow at ${someWorld.name}!")
 
         // Player Effects
-        for (somePlayer in someWorld.players) {
-            with(somePlayer) {
-                addPotionEffects(bioluminescentEffects)
-                sendMessage(Component.text("Small life forms cling to you and glow...", TextColor.color(46, 181, 204)))
-            }
-            with(somePlayer.world) {
-                val someLocation = somePlayer.location
-                spawnParticle(Particle.GLOW_SQUID_INK, someLocation, 14, 0.5, 0.5, 0.5)
-                playSound(someLocation, Sound.ENTITY_SILVERFISH_AMBIENT, 2.5F, 0.5F)
-            }
+        someWorld.players.forEach {
+            it.addPotionEffects(bioluminescentEffects)
+            it.sendMessage(Component.text("Small life forms cling to you and glow...", TextColor.color(46, 181, 204)))
+            it.spawnParticle(Particle.GLOW_SQUID_INK, it.location, 15, 0.5, 0.5, 0.5)
+            it.playSound(it.location, Sound.ENTITY_SILVERFISH_AMBIENT, 2.5F, 1.5F)
         }
     }
 

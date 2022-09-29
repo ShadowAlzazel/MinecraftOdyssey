@@ -10,7 +10,7 @@ object ChainReaction : OdysseyEnchantment("chainreaction", "Chain Reaction", 5) 
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.ENTANGLEMENT -> {
+            OdysseyEnchantments.ENTANGLEMENT, OdysseyEnchantments.CLUSTER_SHOT -> {
                 true
             }
             else -> {
@@ -29,5 +29,7 @@ object ChainReaction : OdysseyEnchantment("chainreaction", "Chain Reaction", 5) 
             }
         }
     }
+
+    // Auto Target
 
 }

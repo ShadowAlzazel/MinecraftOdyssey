@@ -26,16 +26,20 @@ object OdysseyEnchantments {
     val BANE_OF_THE_SEA: OdysseyEnchantment = BaneOfTheSea
     val BANE_OF_THE_SWINE: OdysseyEnchantment = BaneOfTheSwine
     val BEASTLY_BRAWLER: OdysseyEnchantment = BeastlyBrawler
+    val BOLA_SHOT: OdysseyEnchantment = BolaShot
     val BURST_BARRAGE: OdysseyEnchantment = BurstBarrage
     val BUZZY_BEES: OdysseyEnchantment = BuzzyBees
     val CHAIN_REACTION: OdysseyEnchantment = ChainReaction
+    val CLUSTER_SHOT: OdysseyEnchantment = ClusterShot
     val COMMITTED: OdysseyEnchantment = Committed
     val COWARDICE: OdysseyEnchantment = Cowardice
+    val CULL_THE_WEAK: OdysseyEnchantment = CullTheWeak
     val DECAYING_TOUCH: OdysseyEnchantment = DecayingTouch
     val DOUSE: OdysseyEnchantment = Douse
     val ECHO: OdysseyEnchantment = Echo
     val ENTANGLEMENT: OdysseyEnchantment = Entanglement
     val EXPLODING: OdysseyEnchantment = Exploding
+    val FEARFUL_FINISHER: OdysseyEnchantment = FearfulFinisher
     val FREEZING_ASPECT: OdysseyEnchantment = FreezingAspect
     val FROG_FRIGHT: OdysseyEnchantment = FrogFright
     val FROSTY_FUSE: OdysseyEnchantment = FrostyFuse
@@ -55,7 +59,9 @@ object OdysseyEnchantments {
     val RECKLESS: OdysseyEnchantment = Reckless
     val RELENTLESS: OdysseyEnchantment = Relentless
     val RICOCHET: OdysseyEnchantment = Ricochet
+    val RUPTURING_STRIKE: OdysseyEnchantment = RupturingStrike
     val SINGULARITY_SHOT: OdysseyEnchantment = SingularityShot // drop
+    val SHARPSHOOTER: OdysseyEnchantment = Sharpshooter
     val SOUL_REND: OdysseyEnchantment = SoulRend
     val SPEEDY_SPURS: OdysseyEnchantment = SpeedySpurs
     val SPOREFUL: OdysseyEnchantment = Sporeful
@@ -84,11 +90,13 @@ object OdysseyEnchantments {
         CHAIN_REACTION,
         COMMITTED,
         COWARDICE,
+        CULL_THE_WEAK,
         DECAYING_TOUCH,
         DOUSE,
         ECHO,
         EXPLODING,
         FREEZING_ASPECT,
+        FEARFUL_FINISHER,
         FROG_FRIGHT,
         FROSTY_FUSE,
         FRUITFUL_FARE,
@@ -106,6 +114,7 @@ object OdysseyEnchantments {
         RECKLESS,
         RELENTLESS,
         RICOCHET,
+        RUPTURING_STRIKE,
         POTION_BARRIER,
         SINGULARITY_SHOT,
         SOUL_REND,
@@ -130,17 +139,19 @@ object OdysseyEnchantments {
         BANE_OF_THE_SWINE,
         BUZZY_BEES,
         COMMITTED,
+        CULL_THE_WEAK,
         DECAYING_TOUCH,
         DOUSE,
         ECHO,
         EXPLODING,
+        FEARFUL_FINISHER,
         FREEZING_ASPECT,
         FROG_FRIGHT,
         FROSTY_FUSE,
         GUARDING_STRIKE,
         HEMORRHAGE,
-        IGNORE_PAIN,
         ILLUCIDATION,
+        RUPTURING_STRIKE,
         VOID_STRIKE,
         WHIRLWIND
     )
@@ -160,17 +171,20 @@ object OdysseyEnchantments {
     )
     val rangedSet = setOf(
         ALCHEMY_ARTILLERY,
+        BOLA_SHOT,
         BURST_BARRAGE,
         CHAIN_REACTION,
         ENTANGLEMENT,
         GALE_WIND,
         LUCKY_DRAW,
+        OVERCHARGE,
         PERPETUAL_PROJECTILE,
         RICOCHET,
+        SHARPSHOOTER,
         SOUL_REND,
         STELLAR_SHOWER,
         TEMPORAL_TORRENT,
-        OVERCHARGE
+
     )
     val miscSet = setOf(WARP_JUMP)
 

@@ -33,9 +33,27 @@ object TriggerPhenomenon : CommandExecutor {
                     "breezy_winds" -> {
                         somePhenomenon = UtuPhenomena.BREEZY_WINDS
                     }
+                    "slime_rain" -> {
+                        somePhenomenon = UtuPhenomena.SLIME_SHOWER
+                    }
                     "dance_of_the_bio" -> {
                         if (someWorld.time > 12000) {
                             somePhenomenon = SuenPhenomena.DANCE_OF_THE_BIOLUMINESCENT
+                        }
+                    }
+                    "abyss" -> {
+                        if (someWorld.time > 12000) {
+                            somePhenomenon = SuenPhenomena.ABYSSAL_NIGHT
+                        }
+                    }
+                    "acid_rain" -> {
+                        if (someWorld.time > 12000) {
+                            somePhenomenon = SuenPhenomena.ACIDIC_DOWNPOUR
+                        }
+                    }
+                    "chill" -> {
+                        if (someWorld.time > 12000) {
+                            somePhenomenon = SuenPhenomena.CHILLING_NIGHT
                         }
                     }
                 }
