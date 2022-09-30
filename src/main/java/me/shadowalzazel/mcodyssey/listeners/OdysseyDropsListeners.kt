@@ -168,7 +168,7 @@ object OdysseyDropsListeners : Listener {
                                 }
                             }
                             is Vex -> {
-                                if ((1.5 + luck + looting + misc) * 10 > (0..1000).random()) {
+                                if ((4.5 + luck + looting + misc) * 10 > (0..1000).random()) {
                                     it.world.dropItem(it.location, (OdysseyItems.TOTEM_OF_VEXING.createItemStack(1)))
                                 }
                             }

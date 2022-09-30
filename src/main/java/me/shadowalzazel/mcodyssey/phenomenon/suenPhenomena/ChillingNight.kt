@@ -4,6 +4,7 @@ import me.shadowalzazel.mcodyssey.phenomenon.odyssey.OdysseyPhenomenon
 import me.shadowalzazel.mcodyssey.phenomenon.odyssey.PhenomenonTypes
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
+import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.World
@@ -35,15 +36,12 @@ object ChillingNight: OdysseyPhenomenon("Chilling Night",
     }
 
     override fun persistentPlayerActives(someWorld: World) {
-        val chillingNight = PotionEffect(PotionEffectType.SLOW, 20 * 11, 1)
+        val chillingNight = PotionEffect(PotionEffectType.SLOW, 20 * 5, 1)
         someWorld.players.forEach {
-            if (it.location.block.lightFromBlocks < 12 || it.isInWaterOrRain) {
-                if (it.hasPotionEffect(PotionEffectType.SLOW)) {
-                    it.freezeTicks += 20 * 15
-                }
-                else {
-                    it.freezeTicks += 20 * 5
-                }
+            //val isClothed = (it.equipment.boots.type == Material.LEATHER_BOOTS) && (it.equipment.leggings.type == Material.LEATHER_LEGGINGS) && (it.equipment.chestplate.type == Material.LEATHER_CHESTPLATE) && (it.equipment.helmet.type == Material.LEATHER_HELMET)
+            val isClothed = false
+            if (it.location.block.lightFromBlocks < 8 || it.isInWaterOrRain && !isClothed) {
+                it.freezeTicks += 20 * 7
                 it.addPotionEffect(chillingNight)
             }
         }

@@ -76,7 +76,7 @@ object OdysseyEnchantments {
     val WHIRLWIND: OdysseyEnchantment = Whirlwind
 
     // Set of all enchantments
-    val enchantmentSet = setOf(
+    val registeredSet = setOf(
         GILDED_POWER,
         ALCHEMY_ARTILLERY,
         ARCANE_CELL,
@@ -85,9 +85,11 @@ object OdysseyEnchantments {
         BANE_OF_THE_SEA,
         BANE_OF_THE_SWINE,
         BEASTLY_BRAWLER,
+        BOLA_SHOT,
         BURST_BARRAGE,
         BUZZY_BEES,
         CHAIN_REACTION,
+        CLUSTER_SHOT,
         COMMITTED,
         COWARDICE,
         CULL_THE_WEAK,
@@ -116,6 +118,7 @@ object OdysseyEnchantments {
         RICOCHET,
         RUPTURING_STRIKE,
         POTION_BARRIER,
+        SHARPSHOOTER,
         SINGULARITY_SHOT,
         SOUL_REND,
         SPEEDY_SPURS,
@@ -173,6 +176,7 @@ object OdysseyEnchantments {
         ALCHEMY_ARTILLERY,
         BOLA_SHOT,
         BURST_BARRAGE,
+        CLUSTER_SHOT,
         CHAIN_REACTION,
         ENTANGLEMENT,
         GALE_WIND,
@@ -191,7 +195,7 @@ object OdysseyEnchantments {
 
     // Register
     fun register() {
-        for (odysseyEnchant in enchantmentSet) {
+        for (odysseyEnchant in registeredSet) {
             val registered = Arrays.stream(Enchantment.values()).collect(Collectors.toList()).contains(odysseyEnchant)
             if (!registered) registerOdysseyEnchantment(odysseyEnchant as Enchantment)
         }

@@ -13,6 +13,7 @@ import me.shadowalzazel.mcodyssey.listeners.enchantmentListeners.MiscListeners
 import me.shadowalzazel.mcodyssey.listeners.enchantmentListeners.RangedListeners
 import me.shadowalzazel.mcodyssey.listeners.OdysseyPhenomenaListeners
 import me.shadowalzazel.mcodyssey.phenomenon.PhenomenonCycle
+import me.shadowalzazel.mcodyssey.phenomenon.PhenomenonPersistentHandler
 import me.shadowalzazel.mcodyssey.phenomenon.odyssey.OdysseyPhenomenon
 import me.shadowalzazel.mcodyssey.recipes.*
 import me.shadowalzazel.mcodyssey.situation.SituationHandler
@@ -116,11 +117,12 @@ class MinecraftOdyssey : JavaPlugin(), OdysseyManager {
                     if (world.environment == World.Environment.NORMAL) {
                         mainWorld = world
                         val phenomenonCycle = PhenomenonCycle(mainWorld!!)
-                        val timerDelay = 20 * 10L
-                        phenomenonCycle.runTaskTimer(this, timerDelay, 20 * 10)
+                        phenomenonCycle.runTaskTimer(this, 20 * 10L, 20 * 10)
                         break
                     }
                 }
+                val phenomenonPersistentHandler = PhenomenonPersistentHandler()
+                phenomenonPersistentHandler.runTaskTimer(this, 20 * 5, 20 * 5)
             }
         }
 
