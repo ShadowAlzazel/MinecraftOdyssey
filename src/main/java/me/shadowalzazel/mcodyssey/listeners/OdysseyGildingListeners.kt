@@ -347,7 +347,7 @@ object OdysseyGildingListeners : Listener {
                     }
                     // Checks if item two has gilded enchants
                     var itemTwoGilded = false
-                    for (enchantKey in secondItem!!.enchantments.keys) { if (enchantKey in OdysseyEnchantments.enchantmentSet) { itemTwoGilded = true } }
+                    for (enchantKey in secondItem!!.enchantments.keys) { if (enchantKey in OdysseyEnchantments.registeredSet) { itemTwoGilded = true } }
                     // If item two gilded cancel event
                     if (itemTwoGilded) {
                         event.result = ItemStack(Material.AIR, 1)
@@ -362,7 +362,7 @@ object OdysseyGildingListeners : Listener {
                             var enchantSlots = 2
                             var gildedSlots = 1
                             for (enchant in event.result!!.clone().enchantments) {
-                                if (enchant.key in OdysseyEnchantments.enchantmentSet) { gildedSlots += 1 } else { enchantSlots += 1 }
+                                if (enchant.key in OdysseyEnchantments.registeredSet) { gildedSlots += 1 } else { enchantSlots += 1 }
                             }
                             // Create new lore add slots and hide vanilla enchant display
                             event.result!!.addItemFlags(ItemFlag.HIDE_ENCHANTS)
@@ -422,7 +422,7 @@ object OdysseyGildingListeners : Listener {
             else if (firstItem != null) {
                 if (renameText != null) {
                     for (enchant in firstItem!!.enchantments.keys) {
-                        if (enchant in OdysseyEnchantments.enchantmentSet) {
+                        if (enchant in OdysseyEnchantments.registeredSet) {
                             // TEMP
                             event.result = ItemStack(Material.AIR, 1)
                             event.viewers.forEach { viewer -> if (viewer is Player) { viewer.updateInventory() } }

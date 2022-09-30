@@ -9,7 +9,7 @@ object BurstBarrage : OdysseyEnchantment("burstbarrage", "Burst Barrage", 5) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            ARROW_INFINITE -> {
+            ARROW_INFINITE, MULTISHOT -> {
                 true
             }
             else -> {

@@ -14,6 +14,8 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityShootBowEvent
 import org.bukkit.event.entity.ProjectileHitEvent
 import org.bukkit.inventory.ItemStack
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 import java.util.*
 import kotlin.math.cos
 import kotlin.math.sin
@@ -31,30 +33,51 @@ object RangedListeners : Listener {
     fun mainBowShotHandler(event: EntityShootBowEvent) {
         // Check if item has meta and exists
         if (event.bow?.hasItemMeta() == true) {
+            //
             val someBow: ItemStack = event.bow!!
             val someShooter = event.entity
             val someProjectile = event.projectile
+            //
+            if (someProjectile.scoreboardTags.contains("Copied_Burst_Arrow")) {
+                println("DETECTED COPIED ARROW!")
+                return
+            }
             // Loop for all enchants
             for (enchant in someBow.enchantments) {
                 // When match
                 when (enchant.key) {
                     OdysseyEnchantments.ALCHEMY_ARTILLERY -> {
-                        alchemyArtilleryEnchantmentShoot(someProjectile, someShooter, enchant.value)
+                        event.projectile = alchemyArtilleryEnchantmentShoot(someProjectile, someShooter, enchant.value) ?: event.projectile
                     }
                     OdysseyEnchantments.BOLA_SHOT -> {
-
+                        bolaShotEnchantmentShoot(someProjectile, enchant.value)
                     }
                     OdysseyEnchantments.BURST_BARRAGE -> {
-                        burstBarrageEnchantment(someProjectile, someShooter, enchant.value)
+                        burstBarrageEnchantmentShoot(someProjectile, someShooter, enchant.value)
                     }
                     OdysseyEnchantments.CHAIN_REACTION -> {
                         chainReactionEnchantmentShoot(someProjectile, enchant.value)
                     }
+                    OdysseyEnchantments.CLUSTER_SHOT -> {
+                        clusterShotEnchantmentShoot(someProjectile, enchant.value)
+                    }
                     OdysseyEnchantments.LUCKY_DRAW -> {
-                        event.setConsumeItem(!luckyDrawEnchantment(enchant.value))
+                        event.setConsumeItem(!luckyDrawEnchantmentShoot(enchant.value))
+                    }
+                    OdysseyEnchantments.GALE_WIND -> {
+                        galeWindEnchantmentShoot(someShooter, enchant.value)
                     }
                     OdysseyEnchantments.OVERCHARGE -> {
-
+                        println("Called: Main Bow Shot")
+                    }
+                    OdysseyEnchantments.PERPETUAL_PROJECTILE -> {
+                        perpetualProjectileEnchantmentShoot(someProjectile, enchant.value)
+                    }
+                    OdysseyEnchantments.RICOCHET -> {
+                        ricochetEnchantmentShoot(someProjectile, enchant.value)
+                    }
+                    OdysseyEnchantments.SHARPSHOOTER -> {
+                        sharpshooterEnchantmentShoot(someProjectile, enchant.value)
                     }
                     OdysseyEnchantments.SOUL_REND -> {
                         soulRendEnchantmentShoot(someProjectile, someBow)
@@ -75,11 +98,17 @@ object RangedListeners : Listener {
                 // make odyssey enchants work with each other
                 for (projectileTag in event.entity.scoreboardTags) {
                     when (projectileTag) {
-                        "Soul_Rend_Arrow" -> {
-                            soulRendEnchantmentHit(someShooter, someProjectile, someHitEntity)
+                        "Bola_Shot_Arrow" -> {
+                            bolaShotEnchantmentHit(someProjectile, someHitEntity)
                         }
                         "Chain_Reaction_Arrow" -> {
                             chainReactionEnchantmentHit(someProjectile, someHitEntity)
+                        }
+                        "Cluster_Shot_Arrow" -> {
+                            clusterShotEnchantmentHit(someProjectile, someHitEntity)
+                        }
+                        "Soul_Rend_Arrow" -> {
+                            soulRendEnchantmentHit(someShooter, someProjectile, someHitEntity)
                         }
                     }
                 }
@@ -107,18 +136,18 @@ object RangedListeners : Listener {
     // Main function for readying arrows
     @EventHandler
     fun bowReadyHandler(event: PlayerReadyArrowEvent) {
+        // Only works in survival
         if (event.bow.hasItemMeta()) {
             val someBow = event.bow
             for (enchant in someBow.enchantments) {
                 when (enchant.key) {
                     OdysseyEnchantments.OVERCHARGE -> {
-                        println(event.bow)
+                        println("Called: Main Bow Ready")
                     }
                 }
             }
         }
     }
-
 
 
     /*----------------------------------------------------------------------------------*/
@@ -145,32 +174,55 @@ object RangedListeners : Listener {
     }
 
     // ALCHEMY_ARTILLERY enchantment function regarding shooting
-    private fun alchemyArtilleryEnchantmentShoot(eventProjectile: Entity, eventShooter: LivingEntity, enchantmentStrength: Int) {
+    private fun alchemyArtilleryEnchantmentShoot(eventProjectile: Entity, eventShooter: LivingEntity, enchantmentStrength: Int): ThrownPotion? {
         var removeTag = false
+        var someThrownPotion: ThrownPotion? = null
         if ("Alchemy_Artillery_Loaded" in eventShooter.scoreboardTags) {
             val someCount = entityAlchemyArtilleryCounter[eventShooter.uniqueId]
             if (someCount!! >= 1) {
                 // Spawn potion with item
-                (eventShooter.world.spawnEntity(eventProjectile.location, EntityType.SPLASH_POTION) as ThrownPotion).also {
+                someThrownPotion = (eventShooter.world.spawnEntity(eventProjectile.location, EntityType.SPLASH_POTION) as ThrownPotion).also {
                     it.item = entityAlchemyArtilleryAmmo[eventShooter.uniqueId] ?: ItemStack(Material.SPLASH_POTION, 1)
                     it.velocity = eventProjectile.velocity.clone().multiply((enchantmentStrength * 0.2) + 0.1)
                     it.shooter = eventShooter
                 }
                 entityAlchemyArtilleryCounter[eventShooter.uniqueId] = someCount - 1
                 if (entityAlchemyArtilleryCounter[eventShooter.uniqueId] == 0) removeTag = true
-
             }
             if (removeTag) {
                 eventShooter.scoreboardTags.remove("Alchemy_Artillery_Loaded")
                 entityAlchemyArtilleryAmmo[eventShooter.uniqueId] = null
             }
         }
+        return someThrownPotion
 
     }
 
+    // BOLA_SHOT enchantment function regarding shooting
+    private fun bolaShotEnchantmentShoot(eventProjectile: Entity, enchantmentStrength: Int) {
+        eventProjectile.addScoreboardTag("Bola_Shot_Arrow")
+        eventProjectile.addScoreboardTag("Bola_Shot_Modifier_$enchantmentStrength")
+    }
+
+    // BOLA_SHOT enchantment function
+    private fun bolaShotEnchantmentHit(eventProjectile: Projectile, eventHitEntity: LivingEntity) {
+        // Loop
+        for (x in 1..3) {
+            if (eventProjectile.scoreboardTags.contains("Bola_Shot_Modifier_$x")) {
+                if (eventHitEntity.location.block.type == Material.AIR) {
+                    eventHitEntity.location.block.type = Material.COBWEB
+                    eventHitEntity.addPotionEffects(listOf(
+                        PotionEffect(PotionEffectType.SLOW, 20 * (4 + x), 0),
+                        PotionEffect(PotionEffectType.SLOW_DIGGING, 20 * (4 + x), 0)))
+                }
+                break
+            }
+        }
+    }
+
     // BURST_BARRAGE enchantment function
-    private fun burstBarrageEnchantment(eventProjectile: Entity, eventShooter: LivingEntity, enchantmentStrength: Int) {
-        if (!eventShooter.scoreboardTags.contains("Burst_Shooting"))  {
+    private fun burstBarrageEnchantmentShoot(eventProjectile: Entity, eventShooter: LivingEntity, enchantmentStrength: Int) {
+        if (!eventShooter.scoreboardTags.contains("Burst_Shooting") && !eventProjectile.scoreboardTags.contains("Copied_Burst_Arrow"))  {
             eventShooter.addScoreboardTag("Burst_Shooting")
             val initialVelocity = eventProjectile.velocity.clone()
             val burstBarrageTask = BurstBarrageTask(eventShooter, enchantmentStrength, initialVelocity, eventProjectile) // Every 0.25 secs
@@ -198,10 +250,8 @@ object RangedListeners : Listener {
                     it.velocity = chainVelocity
                 }
             }
-            // TODO: Maybe shoot back!?
-
+            // TODO: Maybe shoot back!? both directions
         }
-
     }
 
     // CLUSTER_SHOT enchantment function regarding shooting
@@ -214,32 +264,46 @@ object RangedListeners : Listener {
     private fun clusterShotEnchantmentHit(eventProjectile: Projectile, eventHitEntity: LivingEntity) {
         // Loop
         for (x in 1..20) {
-            if (eventProjectile.scoreboardTags.contains("Cluster_Shot_Modifier_${x / 3}")) { break }
+            if (eventProjectile.scoreboardTags.contains("Cluster_Shot_Modifier_${(x - 1) / 3}")) { break }
             // Math
             val someAngle = Math.random() * Math.PI * 2
-            val coordinates: Pair<Double, Double> = Pair(cos(someAngle) * 2.0, sin(someAngle) * 2.0)
+            val coordinates: Pair<Double, Double> = Pair(cos(someAngle) * (5..12).random() * 0.1, sin(someAngle) * (5..12).random() * 0.1)
+            // Make Random radii?
 
-            val someVelocity = eventProjectile.location.clone().add(coordinates.first, 10.0, coordinates.second).subtract(eventProjectile.location).toVector()
-            eventProjectile.world.spawnEntity(eventProjectile.location, eventProjectile.type).also {
-                it.velocity = someVelocity
+            val someVelocity = eventProjectile.location.clone().add(coordinates.first, 7.6, coordinates.second).subtract(eventProjectile.location).toVector().normalize().multiply(1.0)
+            eventHitEntity.world.spawnEntity(eventHitEntity.location.clone().add(0.0, 0.5, 0.0), eventProjectile.type).also {
+                if (it is Arrow) {
+                    it.basePotionData = (eventProjectile as Arrow).basePotionData
+                    it.isPersistent = false
+                    it.fireTicks = eventProjectile.fireTicks
+                }
+                else if (it is ThrownPotion) {
+                    it.item = (eventProjectile as ThrownPotion).item
+                }
+                // Projectile
+                if (it is Projectile) {
+                    for (tag in eventProjectile.scoreboardTags) {
+                        it.scoreboardTags.add(tag)
+                    }
+                    it.velocity = someVelocity
+                }
             }
-
         }
-
-        // TODO: Random Circle
-
-
     }
 
-    // RICOCHET enchantment function regarding shooting
-    private fun ricochetEnchantmentShoot(eventProjectile: Entity, enchantmentStrength: Int) {
-        eventProjectile.addScoreboardTag("Ricochet_Arrow")
-        eventProjectile.addScoreboardTag("Ricochet_Modifier_$enchantmentStrength")
+    // GALE_WIND enchantment function
+    private fun galeWindEnchantmentShoot(eventShooter: LivingEntity, enchantmentStrength: Int) {
+        println(eventShooter.velocity)
+        println(eventShooter.velocity.length())
+        val someVelocity = eventShooter.velocity.clone().normalize().setY(0.0).multiply((enchantmentStrength * 0.6) + 1.3)
+        eventShooter.velocity = someVelocity
+        println(someVelocity)
+        println(someVelocity.length())
+        // TODO: PARTICLES
     }
-
 
     // LUCKY_DRAW enchantment function
-    private fun luckyDrawEnchantment(enchantmentStrength: Int): Boolean {
+    private fun luckyDrawEnchantmentShoot(enchantmentStrength: Int): Boolean {
         return (enchantmentStrength * 10) + 7 > (0..100).random()
     }
 
@@ -259,7 +323,30 @@ object RangedListeners : Listener {
 
     }
 
+    // PERPETUAL_PROJECTILE enchantment function regarding shooting
+    private fun perpetualProjectileEnchantmentShoot(eventProjectile: Entity, enchantmentStrength: Int) {
+        eventProjectile.run {
+            addScoreboardTag("Perpetual_Arrow")
+            addScoreboardTag("Perpetual_Modifier_$enchantmentStrength")
+            setGravity(false)
+            isPersistent = false
+        }
+        // TODO: Maybe if hit will keep on going
+    }
 
+    // RICOCHET enchantment function regarding shooting
+    private fun ricochetEnchantmentShoot(eventProjectile: Entity, enchantmentStrength: Int) {
+        eventProjectile.addScoreboardTag("Ricochet_Arrow")
+        eventProjectile.addScoreboardTag("Ricochet_Modifier_$enchantmentStrength")
+    }
+
+    // RICOCHET enchantment function regarding shooting
+    private fun sharpshooterEnchantmentShoot(eventProjectile: Entity, enchantmentStrength: Int) {
+        if (eventProjectile.velocity.length() >= 2.94) {
+            eventProjectile.addScoreboardTag("Sharpshooter_Arrow")
+            eventProjectile.addScoreboardTag("Sharpshooter_Modifier_$enchantmentStrength")
+        }
+    }
 
     // SOUL_REND enchantment function regarding shooting
     private fun soulRendEnchantmentShoot(eventProjectile: Entity, eventBow: ItemStack) {

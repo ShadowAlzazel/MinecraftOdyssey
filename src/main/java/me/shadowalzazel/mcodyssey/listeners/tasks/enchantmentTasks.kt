@@ -4,33 +4,48 @@ import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
-import org.bukkit.entity.Entity
-import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.*
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
 
-class BurstBarrageTask(private val someEntity: LivingEntity, private val burstAmount: Int, private val burstVelocity: Vector, private val burstProjectile: Entity) : BukkitRunnable() {
+class BurstBarrageTask(private val someShooter: LivingEntity, private val burstAmount: Int, private val burstVelocity: Vector, private val burstProjectile: Entity) : BukkitRunnable() {
     private var counter = 0
     private var burstTimer = System.currentTimeMillis()
 
     override fun run() {
         counter += 1
         // Check if tag removed
-        if ("Burst_Shooting" !in someEntity.scoreboardTags) { this.cancel() }
+        if ("Burst_Shooting" !in someShooter.scoreboardTags) { this.cancel() }
 
         // Spawn projectile and set velocity
-        val someProjectile = someEntity.world.spawnEntity(someEntity.location.clone().add(0.0, 1.5, 0.0), burstProjectile.type)
-        val newVelocity = someEntity.eyeLocation.direction.clone().normalize()
-        newVelocity.multiply(burstVelocity.length() - 0.1)
-        someProjectile.velocity = newVelocity
+        //someShooter.launchProjectile((burstProjectile as Projectile).javaClass)
 
+        //someShooter.world.spawnEntity(someShooter.location.clone().add(0.0, 1.5, 0.0), burstProjectile.type).also {
+        someShooter.launchProjectile((burstProjectile as Projectile).javaClass).also {
+            it.addScoreboardTag("Copied_Burst_Arrow")
+            if (it is Arrow) {
+                it.basePotionData = (burstProjectile as Arrow).basePotionData
+                it.pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
+            }
+            else if (it is ThrownPotion) {
+                it.item = (burstProjectile as ThrownPotion).item
+            }
+            // Projectile
+            if (it is Projectile) {
+                for (tag in burstProjectile.scoreboardTags) {
+                    it.scoreboardTags.add(tag)
+                }
+                println("Q")
+                it.velocity = someShooter.eyeLocation.direction.clone().normalize().multiply(burstVelocity.length() - 0.1)
+            }
+        }
         // Fix for effect arrows !!!!
 
         val timeElapsed = System.currentTimeMillis() - burstTimer
         if (counter > burstAmount || timeElapsed > (0.2 * (burstAmount + 1)) * 1000) {
-            someEntity.removeScoreboardTag("Burst_Shooting")
+            someShooter.removeScoreboardTag("Burst_Shooting")
             this.cancel()
         }
     }

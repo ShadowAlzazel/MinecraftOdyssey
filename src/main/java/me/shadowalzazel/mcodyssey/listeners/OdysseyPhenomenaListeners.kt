@@ -42,13 +42,11 @@ object OdysseyPhenomenaListeners : Listener {
                     // Blood Moon
                     SuenPhenomena.BLOOD_MOON -> {
                         if (event.spawnReason == CreatureSpawnEvent.SpawnReason.NATURAL || event.spawnReason == CreatureSpawnEvent.SpawnReason.REINFORCEMENTS) {
-                            // TODO: Light Level and Y level
                             SuenPhenomena.BLOOD_MOON.persistentSpawningActives(event.entity)
                         }
                     }
                     SuenPhenomena.DANCE_OF_THE_BIOLUMINESCENT -> {
                         if (event.spawnReason == CreatureSpawnEvent.SpawnReason.NATURAL || event.spawnReason == CreatureSpawnEvent.SpawnReason.REINFORCEMENTS) {
-                            // TODO: Light Level and Y level
                             SuenPhenomena.DANCE_OF_THE_BIOLUMINESCENT.persistentSpawningActives(event.entity)
                         }
                     }
