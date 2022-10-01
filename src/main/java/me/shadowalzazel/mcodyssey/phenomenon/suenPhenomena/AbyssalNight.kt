@@ -13,7 +13,7 @@ import org.bukkit.potion.PotionEffectType
 
 object AbyssalNight : OdysseyPhenomenon("Abyssal Night",
     PhenomenonTypes.SUEN,
-    15,
+    10,
     4,
     10) {
 

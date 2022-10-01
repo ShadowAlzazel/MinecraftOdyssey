@@ -14,9 +14,9 @@ import org.bukkit.potion.PotionEffectType
 
 object AcidicDownpour : OdysseyPhenomenon("Acidic Downpour",
     PhenomenonTypes.SUEN,
-    10,
-    4,
-    10) {
+    6,
+    3,
+    5) {
 
     override fun successfulActivation(someWorld: World) {
         super.successfulActivation(someWorld)

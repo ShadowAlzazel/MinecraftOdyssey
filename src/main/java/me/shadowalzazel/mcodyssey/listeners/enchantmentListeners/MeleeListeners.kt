@@ -404,7 +404,7 @@ object MeleeListeners : Listener {
             it.velocity.multiply(0.9)
             val tongueLashVector = eventDamager.location.clone().subtract(it.location).toVector().normalize().multiply(1.1 + (enchantmentStrength * 0.1))
             val frogFrightTask = FrogFrightTask(eventVictim, tongueLashVector.multiply(-1))
-            frogFrightTask.runTaskLater(MinecraftOdyssey.instance, 14)
+            frogFrightTask.runTaskLater(MinecraftOdyssey.instance, 9)
             it.addPotionEffect(PotionEffect(PotionEffectType.SLOW, 3, 1))
             it.damage(1.0)
         }
