@@ -403,9 +403,11 @@ object OdysseyGildingListeners : Listener {
                                 for (removed in enchantsToRemove) { event.result!!.enchantments.remove(removed) }
                                 lore[infoIndex] = Component.text("Enchantment Slots: [${usedSlots + gildedSlots}/$totalSlots]", experienceEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                                 // Checks if item exceeded slots
+                                /* DEBUG
                                 println(event.result!!.enchantments)
                                 println(counter)
                                 println(occupiedSlots + emptySlots)
+                                 */
                                 if (counter > occupiedSlots + emptySlots) {
                                     event.result = ItemStack(Material.AIR, 1)
                                     event.viewers.forEach { viewer -> if (viewer is Player) { viewer.updateInventory() } }

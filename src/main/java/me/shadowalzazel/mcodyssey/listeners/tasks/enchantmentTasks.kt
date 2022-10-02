@@ -217,6 +217,7 @@ class OverchargeTask(private val chargingPlayer: Player, private val chargingBow
                             playSound(it.location, Sound.ENTITY_WARDEN_SONIC_BOOM, 1.5F, 1.8F)
                         }
                     }
+                    it.addPotionEffect(PotionEffect(PotionEffectType.SLOW, 20 * 3, x * 2))
                     break
                 }
             }

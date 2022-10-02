@@ -32,19 +32,18 @@ object PumpkinHarvest: OdysseySituation("Pumpkin Harvest",
     override fun situationEffects(structureLocation: Location) {
         super.situationEffects(structureLocation)
 
-        println("LOLOL")
         val livingVillagers = structureLocation.getNearbyLivingEntities(64.0).filter { it.type == EntityType.VILLAGER }
         livingVillagers.forEach {
             if ((it as Villager).profession == Villager.Profession.FARMER) {
                 it.recipes
                 // Add recipe
                 // Timer then remove after a while
-                println(it)
             }
         }
 
 
     }
+
 
 
 

@@ -65,6 +65,9 @@ open class OdysseyPhenomenon(
     }
 
     open fun persistentPlayerActives(someWorld: World) {
+        if (phenomenonType == PhenomenonTypes.SUEN) {
+
+        }
         // IF persistent call this
         // timer delay var and tick speed
     }

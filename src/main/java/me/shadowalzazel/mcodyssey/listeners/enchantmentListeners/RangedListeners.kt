@@ -373,7 +373,7 @@ object RangedListeners : Listener {
                 if (it is Projectile) {
                     for (tag in eventProjectile.scoreboardTags) {
                         it.shooter = eventProjectile.shooter
-                        it.scoreboardTags.add(tag)
+                        if (tag != "Cluster_Shot_Arrow") { it.scoreboardTags.add(tag) }
                     }
                     it.velocity = someVelocity
                 }
