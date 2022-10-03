@@ -16,4 +16,6 @@ class PhenomenonPersistentHandler : BukkitRunnable() {
             }
         }
     }
+
+    // TODO: If near allay, prevent effects
 }
