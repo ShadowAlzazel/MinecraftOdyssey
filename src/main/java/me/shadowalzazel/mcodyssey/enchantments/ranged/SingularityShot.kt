@@ -29,6 +29,8 @@ object SingularityShot : OdysseyEnchantment("singularityshot", "Singularity Shot
             }
         }
     }
+
+    //
     fun todo() {
         TODO("Shoots singularity, replace arrow")
     }
