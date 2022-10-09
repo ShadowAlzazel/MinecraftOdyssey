@@ -36,7 +36,7 @@ class MinecraftOdyssey : JavaPlugin(), OdysseyManager {
 
     // Config variables
     var endGame: Boolean = true
-    val resourcePackHash: String = "39bd2b57f97627f8c6b04ff672482cce44262e7b"
+    val resourcePackHash: String = "686cfd7e0d24fe6107c7bb3c4ab56ef6272a0f4d"
 
     // Boss Progression
     // Change This LATER to read from storage

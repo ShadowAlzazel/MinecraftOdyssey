@@ -55,14 +55,6 @@ object TomeOfPromotion : OdysseyItem("Tome Of Promotion",
     listOf(Component.text("Tome of Promotion", TextColor.color(210, 255, 74)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     ItemModels.TOME_OF_PROMOTION)
 
-// TOME OF REPLICATION
-object TomeOfReplication : OdysseyItem("Tome Of Replication",
-    Material.ENCHANTED_BOOK,
-    Component.text("Tome of Replication", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
-    listOf(Component.text("Tome of Replication", TextColor.color(64, 128, 234)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-    ItemModels.TOME_OF_REPLICATION)
-
-
 // TOME OF HARMONY
 object TomeOfHarmony : OdysseyItem("Tome Of Harmony",
     Material.ENCHANTED_BOOK,
@@ -79,7 +71,7 @@ object TomeOfEmbrace : OdysseyItem("Tome Of Embrace",
     ItemModels.TOME_OF_EMBRACE)
 
 
-// TOME OF HARMONY
+// TOME OF BANISHMENT
 object TomeOfBanishment : OdysseyItem("Tome Of Banishment",
     Material.ENCHANTED_BOOK,
     Component.text("Tome of Banishment", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
@@ -87,12 +79,36 @@ object TomeOfBanishment : OdysseyItem("Tome Of Banishment",
     ItemModels.TOME_OF_BANISHMENT)
 
 
-// TOME OF INFUSION
+// TOME OF REPLICATION
+object TomeOfReplication : OdysseyItem("Tome Of Replication",
+    Material.ENCHANTED_BOOK,
+    Component.text("Tome of Replication", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
+    listOf(Component.text("Tome of Replication", TextColor.color(64, 128, 234)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+    ItemModels.TOME_OF_REPLICATION)
+
+
+// TOME OF EXPENDITURE
 object TomeOfExpenditure : OdysseyItem("Tome Of Expenditure",
     Material.ENCHANTED_BOOK,
     Component.text("Tome of Expenditure", TextColor.color(255, 170, 0), TextDecoration.ITALIC),
     listOf(Component.text("Tome of Expenditure", TextColor.color(114, 176, 54)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     ItemModels.TOME_OF_EXPENDITURE)
+
+
+// TOME OF EUPHONY
+object TomeOfEuphony : OdysseyItem("Tome Of Euphony",
+    Material.ENCHANTED_BOOK,
+    Component.text("Tome of Euphony", TextColor.color(255, 170, 0), TextDecoration.ITALIC),
+    listOf(Component.text("Tome of Euphony", TextColor.color(94, 210, 215)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+    ItemModels.TOME_OF_EUPHONY)
+
+
+// TOME OF AVARICE
+object TomeOfAvarice : OdysseyItem("Tome Of Avarice",
+    Material.ENCHANTED_BOOK,
+    Component.text("Tome of Avarice", TextColor.color(255, 170, 0), TextDecoration.ITALIC),
+    listOf(Component.text("Tome of Avarice", TextColor.color(212, 74, 74)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+    ItemModels.TOME_OF_AVARICE)
 
 
 // RECIPE BOOK
@@ -106,17 +122,7 @@ object WeaponEncyclopedia : OdysseyItem( "Weapon Encyclopedia",
         newBook.itemMeta = (newBook.itemMeta as KnowledgeBookMeta).also {
             it.recipes.addAll(setOf())
         }
-        /*
-        NamespacedKey(MinecraftOdyssey.instance, "goldenkatana"),
-                NamespacedKey(MinecraftOdyssey.instance, "ironclaymore"),
-                NamespacedKey(MinecraftOdyssey.instance, "stonespear"),
-                NamespacedKey(MinecraftOdyssey.instance, "woodendagger"),
-                NamespacedKey(MinecraftOdyssey.instance, "diamondrapier"),
-                NamespacedKey(MinecraftOdyssey.instance, "bonestaff")
-         */
-
         return newBook
     }
-
 
 }
