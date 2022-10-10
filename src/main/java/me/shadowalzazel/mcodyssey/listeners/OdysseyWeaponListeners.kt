@@ -52,9 +52,8 @@ object OdysseyWeaponListeners : Listener {
             ((someVictim.location.z + someDamager.location.z) / 2))
 
         someVictim.scoreboardTags.add("Weapon_Comboed")
-        val comboEntities = midpoint.getNearbyEntities(radius, radius, radius).also {
-            it.remove(someVictim)
-            it.remove(someDamager)
+        val comboEntities = midpoint.getNearbyEntities(radius, radius, radius).filter {
+            !(it == someVictim || it == someDamager)
         }
         for (entity in comboEntities) {
             if (entity is LivingEntity && !entity.scoreboardTags.contains("Weapon_Comboed")) {
@@ -72,14 +71,15 @@ object OdysseyWeaponListeners : Listener {
             val armorPoints = someVictim.getAttribute(Attribute.GENERIC_ARMOR)!!.value
             println(armorPoints)
 
+            //max(bludgeonMap[weaponData]!! - armorPoints, 1.0)
             // Bludgeon
-            val bludgeoningDamage = if (bludgeonMap[weaponData] != null) {  max(bludgeonMap[weaponData]!! - armorPoints, 1.0) }  else { 0.0 }
+            val bludgeoningDamage = if (bludgeonMap[weaponData] != null) {  min(bludgeonMap[weaponData]!! + (armorPoints * 0.1), armorPoints) }  else { 0.0 }
             // Lacerate
             val laceratingDamage = if (lacerateMap[weaponData] != null) {
-                if (armorPoints <= 1.0) { min(oldDamage, lacerateMap[weaponData]!!) } else { 0.0 }
+                if (armorPoints <= 1.5) { lacerateMap[weaponData]!! } else { 0.0 }
             }  else { 0.0 }
             // Pierce
-            val piercingDamage = if (pierceMap[weaponData] != null) { min(armorPoints, min(pierceMap[weaponData]!!, oldDamage)) }  else { 0.0 }
+            val piercingDamage = if (pierceMap[weaponData] != null) { min(armorPoints, pierceMap[weaponData]!!) }  else { 0.0 }
 
             // Extra damage, True Damage
             Pair(bludgeoningDamage + laceratingDamage, piercingDamage)

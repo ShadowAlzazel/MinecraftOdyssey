@@ -293,7 +293,7 @@ object OdysseyGildingListeners : Listener {
                     if (item!!.itemMeta!!.customModelData == ItemModels.ARCANE_BOOK) {
                         // TODO: Make level 1-3 each do common, rare, exotic arcane books
                         var randomTome: OdysseyItem? = null
-                        val expScaleOffset = minOf(event.expLevelCost + (maxOf(30, event.enchanter.level) - 30), 90)
+                        val expScaleOffset = minOf(event.expLevelCost + (maxOf(30, event.enchanter.level) - 30), 85)
                         when ((0..100).random() - expScaleOffset) {
                             in -200..-55 -> {
                                 randomTome = listOf(OdysseyBooks.TOME_OF_AVARICE, OdysseyBooks.TOME_OF_EUPHONY).random()
