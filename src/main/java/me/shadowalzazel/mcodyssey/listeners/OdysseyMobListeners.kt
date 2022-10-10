@@ -25,8 +25,8 @@ object OdysseyMobListeners : Listener {
 
             // Add Item or enchant
             equipment!!.also {
-                if (it.itemInMainHand.enchantments.isNotEmpty()) { it.itemInMainHand.addUnsafeEnchantment(gildedAffix, gildedAffix.maxLevel) }
-                else { it.setItemInMainHand(OdysseyBooks.GILDED_BOOK.createGildedBook(gildedAffix, gildedAffix.maxLevel)) }
+                if (it.itemInMainHand.hasItemMeta()) { it.itemInMainHand.addUnsafeEnchantment(gildedAffix, gildedAffix.maxLevel) }
+                else { it.setItemInMainHand(OdysseyBooks.GILDED_BOOK.createGildedBook(gildedAffix, gildedAffix.startLevel)) }
                 it.itemInMainHandDropChance = 0.35F
             }
 

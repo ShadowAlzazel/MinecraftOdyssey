@@ -13,9 +13,9 @@ import org.bukkit.potion.PotionEffectType
 
 object ChillingNight: OdysseyPhenomenon("Chilling Night",
     PhenomenonTypes.SUEN,
-    10,
-    4,
-    10) {
+    7,
+    3,
+    7) {
 
     override fun successfulActivation(someWorld: World) {
         super.successfulActivation(someWorld)

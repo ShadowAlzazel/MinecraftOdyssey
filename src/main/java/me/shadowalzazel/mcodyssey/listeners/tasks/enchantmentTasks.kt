@@ -5,6 +5,7 @@ import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.*
+import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
@@ -184,6 +185,54 @@ class FrogFrightTask(private val toungedEntity: LivingEntity, private val someVe
         this.cancel()
     }
 }
+
+// OVERCHARGE TASK
+class OverchargeTask(private val chargingPlayer: Player, private val chargingBow: ItemStack, private val factor: Int) : BukkitRunnable() {
+    override fun run() {
+        chargingPlayer.also {
+            // Checks if mount is player to add effects
+            if (it.activeItem != chargingBow) {
+                if (it.scoreboardTags.contains("Bow_Overcharging")) {
+                    it.scoreboardTags.remove("Bow_Overcharging")
+                }
+
+                for (x in 1..5) {
+                    if (it.scoreboardTags.contains("Bow_Overcharge_Modifier_$x")) {
+                        it.scoreboardTags.remove("Bow_Overcharge_Modifier_$x")
+                    }
+                }
+                this.cancel()
+                return
+            }
+
+            for (x in 0..5) {
+                if (it.scoreboardTags.contains("Bow_Overcharge_Modifier_$x") && x <= factor) {
+                    it.scoreboardTags.remove("Bow_Overcharge_Modifier_$x")
+                    it.scoreboardTags.add("Bow_Overcharge_Modifier_${x + 1}")
+                    with(it.world) {
+                        spawnParticle(Particle.END_ROD, it.location, 15 * x, 0.5, 0.5, 0.5)
+                        spawnParticle(Particle.ELECTRIC_SPARK, it.location, 15 * x, 0.5, 0.5, 0.5)
+                        playSound(it.location, Sound.BLOCK_MANGROVE_ROOTS_PLACE, 2.5F, 0.9F)
+                        if (x == factor) {
+                            playSound(it.location, Sound.ENTITY_WARDEN_SONIC_BOOM, 1.5F, 1.8F)
+                        }
+                    }
+                    it.addPotionEffect(PotionEffect(PotionEffectType.SLOW, 20 * 3, x * 2))
+                    break
+                }
+            }
+        }
+    }
+}
+
+class GaleWindTask(private val galeEntity: LivingEntity, private val galeStrength: Int) : BukkitRunnable() {
+    override fun run() {
+        galeEntity.world.playSound(galeEntity.location, Sound.ITEM_TRIDENT_RIPTIDE_2, 2.5F, 1.2F)
+        galeEntity.velocity = galeEntity.eyeLocation.direction.clone().normalize().multiply(galeStrength * 0.5)
+        this.cancel()
+    }
+}
+
 
 // SPEEDY_SPURS TASK
 class SpeedySpursTask(private val mountedPlayer: LivingEntity, private val mountEntity: LivingEntity, private val spursFactor: Int) : BukkitRunnable() {

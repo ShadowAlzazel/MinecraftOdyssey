@@ -37,10 +37,12 @@ object SlimeShower : OdysseyPhenomenon("Slime Shower",
             PotionEffect(PotionEffectType.HEALTH_BOOST, 20 * 600, 1))
         //
         someWorld.players.forEach {
-            if (it.location.block.lightFromSky > 9 && it.location.y > 63.0) {
-                (it.world.spawnEntity(it.location.clone().add((-16..16).random().toDouble(), 32.0, (-16..16).random().toDouble()), EntityType.SLIME) as Slime).also { slime ->
-                    slime.addPotionEffects(fallingSlimeEffects)
-                    slime.health += 8.0
+            if ((0..10).random() > 9) {
+                if (it.location.block.lightFromSky > 9 && it.location.y > 63.0) {
+                    (it.world.spawnEntity(it.location.clone().add((-16..16).random().toDouble(), 32.0, (-16..16).random().toDouble()), EntityType.SLIME) as Slime).also { slime ->
+                        slime.addPotionEffects(fallingSlimeEffects)
+                        slime.health += 8.0
+                    }
                 }
             }
         }

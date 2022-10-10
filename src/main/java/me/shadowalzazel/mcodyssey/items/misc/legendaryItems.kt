@@ -30,3 +30,5 @@ object GemmaPrimus : OdysseyItem("Gemma Primus",
         Component.text("the test world. Shines with the condensed hopes", TextColor.color(215, 215, 215)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE),
         Component.text("and dreams of universes that once were.", TextColor.color(215, 215, 215)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     ItemModels.GEMMA_PRIMUS)
+
+// TODO: Flashbang, Knock-Up, Freeze, 

@@ -110,6 +110,8 @@ object ItemModels {
     const val TOME_OF_EMBRACE: Int = 6906072
     const val TOME_OF_EXPENDITURE: Int = 6906073
     const val TOME_OF_INFUSION: Int = 6906074
+    const val TOME_OF_EUPHONY: Int = 6906075
+    const val TOME_OF_AVARICE: Int = 6906076
 
     // Written Books
     const val NECRONOMICON_BOOK: Int = 6905066

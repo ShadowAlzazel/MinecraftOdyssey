@@ -16,6 +16,9 @@ object OdysseyBooks {
     val TOME_OF_BANISHMENT = TomeOfBanishment
     val TOME_OF_EMBRACE = TomeOfEmbrace
     val TOME_OF_EXPENDITURE = TomeOfExpenditure
+    val TOME_OF_EUPHONY = TomeOfEuphony
+    val TOME_OF_AVARICE = TomeOfAvarice
+
 
     // Recipe Books
     val WEAPON_ENCYCLOPEDIA = WeaponEncyclopedia
