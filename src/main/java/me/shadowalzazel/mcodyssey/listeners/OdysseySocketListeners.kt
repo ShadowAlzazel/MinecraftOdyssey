@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.listeners
 
+
 import org.bukkit.event.Listener
 
 object OdysseySocketListeners : Listener {
@@ -24,6 +25,8 @@ object OdysseySocketListeners : Listener {
 
         // Make gem refiner table/merchant
 
+
+        // TODO: Smith weapons reset attack, hide attack, and speed, add custom Lore
     }
 
 }

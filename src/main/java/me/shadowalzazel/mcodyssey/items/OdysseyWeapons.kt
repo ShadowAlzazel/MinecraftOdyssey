@@ -90,5 +90,6 @@ object OdysseyWeapons {
     // ENIGMATIC
     val SOUL_STEEL_KATANA = SoulSteelKatana
 
+    // Zweihander exotic
 
 }

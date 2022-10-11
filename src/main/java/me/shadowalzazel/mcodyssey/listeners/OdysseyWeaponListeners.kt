@@ -69,11 +69,9 @@ object OdysseyWeaponListeners : Listener {
         return if (!someVictim.isDead && someVictim.getAttribute(Attribute.GENERIC_ARMOR)?.value != null) {
             // Armor Point
             val armorPoints = someVictim.getAttribute(Attribute.GENERIC_ARMOR)!!.value
-            println(armorPoints)
 
-            //max(bludgeonMap[weaponData]!! - armorPoints, 1.0)
             // Bludgeon
-            val bludgeoningDamage = if (bludgeonMap[weaponData] != null) {  min(bludgeonMap[weaponData]!! + (armorPoints * 0.1), armorPoints) }  else { 0.0 }
+            val bludgeoningDamage = if (bludgeonMap[weaponData] != null) {  min(bludgeonMap[weaponData]!! + (armorPoints * 0.2), armorPoints) }  else { 0.0 }
             // Lacerate
             val laceratingDamage = if (lacerateMap[weaponData] != null) {
                 if (armorPoints <= 1.5) { lacerateMap[weaponData]!! } else { 0.0 }
@@ -82,12 +80,13 @@ object OdysseyWeaponListeners : Listener {
             val piercingDamage = if (pierceMap[weaponData] != null) { min(armorPoints, pierceMap[weaponData]!!) }  else { 0.0 }
 
             // Extra damage, True Damage
-            Pair(bludgeoningDamage + laceratingDamage, piercingDamage)
+            val extraAppliedDamage = if (oldDamage >= bludgeoningDamage + laceratingDamage) { bludgeoningDamage + laceratingDamage } else { 0.0 }
+
+            Pair(extraAppliedDamage, piercingDamage)
         } else {
             Pair(0.0, 0.0)
         }
 
-        // TODO: FIX
     }
 
 
@@ -182,7 +181,7 @@ object OdysseyWeaponListeners : Listener {
                 // Make crit and still combos !!
                 when (val weaponData = someWeapon.itemMeta.customModelData) {
                     ItemModels.DIAMOND_DAGGER -> {
-                        if (someVictim !in someDamager.getNearbyEntities(1.8, 1.8, 1.8)) {
+                        if (someVictim !in someDamager.getNearbyEntities(1.85, 1.85, 1.85)) {
                             event.isCancelled = true
                             return
                         }
@@ -221,20 +220,23 @@ object OdysseyWeaponListeners : Listener {
                         if (someOffHand.type != Material.AIR) {
                             event.damage -= 5.0
                         }
-                        else if (someDamager.equipment.itemInOffHand.type == Material.AIR) {
+                        else if (someOffHand.type == Material.AIR) {
                             val sweepDamage = if (event.isCritical) { event.damage } else { event.damage - 3.0 }
                             sweepComboFunction(someVictim, someDamager, sweepMap[weaponData]!!, sweepDamage)
                         }
                             // SWEEP PARTICLES!!!
                     }
                 }
-                println("Original Damage: ${event.damage}")
-                val extraDamage = armorCalculations(someWeapon.itemMeta.customModelData, someVictim, event.damage)
-                event.damage += extraDamage.first
-                someVictim.health -= extraDamage.second
-                println("New Damage: ${event.damage}")
-                println("Extra Damage: ${extraDamage.first}")
-                println("Piercing Damage: ${extraDamage.second}")
+                val extraDamages = armorCalculations(someWeapon.itemMeta.customModelData, someVictim, event.damage)
+                event.damage -= extraDamages.second
+                event.damage += extraDamages.first
+                if (someVictim.health < extraDamages.second) {
+                    someVictim.health -= extraDamages.second - someVictim.health
+                }
+                else {
+                    someVictim.health -= extraDamages.second
+                }
+
             }
         }
     }
