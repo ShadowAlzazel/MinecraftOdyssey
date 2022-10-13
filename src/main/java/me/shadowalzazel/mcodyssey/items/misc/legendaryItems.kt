@@ -31,4 +31,11 @@ object GemmaPrimus : OdysseyItem("Gemma Primus",
         Component.text("and dreams of universes that once were.", TextColor.color(215, 215, 215)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     ItemModels.GEMMA_PRIMUS)
 
-// TODO: Flashbang, Knock-Up, Freeze, 
+// TODO: Flashbang, Knock-Up, Freeze,
+
+object RestlessGale : OdysseyItem("Hourglass from Babel",
+    Material.RAW_GOLD,
+    Component.text("Hourglass from Babel", TextColor.color(191, 166, 95), TextDecoration.ITALIC),
+    listOf(Component.text("A strange hourglass with temporal properties...", TextColor.color(231, 166, 95)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+    ItemModels.HOURGLASS_FROM_BABEL)
+
