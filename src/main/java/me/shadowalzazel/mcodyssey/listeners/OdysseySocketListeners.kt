@@ -1,9 +1,15 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
+import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.event.Listener
 
 object OdysseySocketListeners : Listener {
+
+    private val statColor = TextColor.color(167, 125, 255)
+    private val createdBySeparator = Component.text("Socket: + Empty" , statColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
 
     fun socketDamageHandler() {
 
