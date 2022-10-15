@@ -15,6 +15,9 @@ import org.bukkit.potion.PotionEffectType
 
 object OdysseyMobListeners : Listener {
 
+    // TODO: Scarecrow Mob pumpkin and stand
+    // weeping angels
+
 
     private fun createGildedMob(eventEntity: LivingEntity) {
 
