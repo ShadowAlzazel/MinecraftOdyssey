@@ -1,11 +1,9 @@
 package me.shadowalzazel.mcodyssey.recipes
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
-import me.shadowalzazel.mcodyssey.items.OdysseyBooks
 import me.shadowalzazel.mcodyssey.items.OdysseyWeapons
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
-import org.bukkit.inventory.Recipe
 import org.bukkit.inventory.RecipeChoice
 import org.bukkit.inventory.ShapedRecipe
 

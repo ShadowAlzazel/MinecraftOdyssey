@@ -21,12 +21,12 @@ object BabelAnnulusSchematics : OdysseyItem("Babel Annulus Schematics",
     ItemModels.BABEL_ANNULUS_SCHEMATICS)
 
 // FIX!!
-// DormantSentientStar
-object DormantSentientStar : OdysseyItem("Dormant Star System",
+// DormantCyberStar
+object DormantCyberStar : OdysseyItem("Dormant Cyber Star",
     Material.NETHER_STAR,
-    Component.text("Dormant Star System-", TextColor.color(255, 255, 85), TextDecoration.ITALIC).append(Component.text("Mini-Matrioshka").decorate(TextDecoration.OBFUSCATED).color(TextColor.color(255, 255, 85))),
+    Component.text("Dormant Cyber System-", TextColor.color(255, 255, 85), TextDecoration.ITALIC).append(Component.text("Mini-Matrioshka").decorate(TextDecoration.OBFUSCATED).color(TextColor.color(255, 255, 85))),
     listOf(Component.text("Something is speaking to you...", TextColor.color(80, 60, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-    ItemModels.DORMANT_SENTIENT_STAR,
+    ItemModels.DORMANT_CYBER_STAR,
     mapOf(Enchantment.LOYALTY to 5))
 
 
@@ -69,19 +69,10 @@ object FruitOfErishkigal : OdysseyItem("Fruit of Erishkigal",
     ItemModels.FRUIT_OF_ERISHKIGAL,
     mapOf(Enchantment.MENDING to 1))
 
-
-// TOTEM_OF_VEXING
-object TotemOfVexing : OdysseyItem("Totem of Vexing",
-    Material.MILK_BUCKET,
-    Component.text("Totem of Vexing", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
-    listOf(Component.text("A totem with vexing properties", TextColor.color(112, 123, 153)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-    ItemModels.TOTEM_OF_VEXING)
-
-
 // IRRADIATED_FRUIT
-object IrradiatedFruit : OdysseyItem("ArcaneCell Fruit",
+object IrradiatedFruit : OdysseyItem("Irradiated Fruit",
     Material.APPLE,
-    Component.text("ArcaneCell Fruit", TextColor.color(255, 84, 255), TextDecoration.ITALIC),
+    Component.text("Irradiated Fruit", TextColor.color(255, 84, 255), TextDecoration.ITALIC),
     listOf(Component.text("A fruit with unusual properties...", TextColor.color(87, 67, 96)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     ItemModels.IRRADIATED_FRUIT,
     mapOf(Enchantment.MENDING to 1))

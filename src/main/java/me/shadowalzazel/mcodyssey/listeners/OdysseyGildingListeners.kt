@@ -38,8 +38,19 @@ object OdysseyGildingListeners : Listener {
     private val experienceEnchantColor = TextColor.color(191, 255, 189)
     private val soulEnchantColor = TextColor.color(102, 255, 222)
     private val gildedEnchantColor = TextColor.color(255, 170, 0)
-    // Components
+    private val statColor = TextColor.color(167, 125, 255)
+    // Headers
+    private val statHeader = Component.text("Weapon Stats: " , separatorColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
     private val loreSeparator = Component.text("----------------------" , separatorColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+    // Damage
+    private val baseDamage = Component.text("Base Damage: " , statColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+    private val piercingDamage = Component.text("Piercing Bonus: " , statColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+    private val bludgeoningDamage = Component.text("Bludgeoning Bonus: " , statColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+    private val laceratingDamage = Component.text("Lacerating Bonus: " , statColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+    private val cleavingDamage = Component.text("Cleaving Bonus: " , statColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+    // Creation
+    private val createdBySeparator = Component.text("Created By: " , statColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+    // Slots
     private val emptyGildedSlot = Component.text("+ Empty Gilded Slot", gildedEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
     private val emptyEnchantSlot = Component.text("+ Empty Enchantment Slot", separatorColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
 

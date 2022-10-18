@@ -50,7 +50,13 @@ object OdysseyPhenomenaListeners : Listener {
                             SuenPhenomena.DANCE_OF_THE_BIOLUMINESCENT.persistentSpawningActives(event.entity)
                         }
                     }
+                    SuenPhenomena.STARRY_NIGHT -> {
+                        if (event.spawnReason == CreatureSpawnEvent.SpawnReason.NATURAL || event.spawnReason == CreatureSpawnEvent.SpawnReason.REINFORCEMENTS) {
+                            SuenPhenomena.STARRY_NIGHT.persistentSpawningActives(event.entity)
+                        }
+                    }
                     else -> {
+
                     }
                 }
             }

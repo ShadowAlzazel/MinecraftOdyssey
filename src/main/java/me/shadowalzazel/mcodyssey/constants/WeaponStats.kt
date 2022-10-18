@@ -12,16 +12,17 @@ object WeaponStats {
         ItemModels.DIAMOND_DAGGER to 3.05)
 
     val lacerateMap = mapOf(
-        ItemModels.IRON_KATANA to 2.5,
-        ItemModels.SOUL_STEEL_KATANA to 2.5,
-        ItemModels.DIAMOND_CLAYMORE to 2.0,
-        ItemModels.DIAMOND_SABER to 1.5,
+        ItemModels.IRON_KATANA to 5.5,
+        ItemModels.SOUL_STEEL_KATANA to 6.5,
+        ItemModels.DIAMOND_CLAYMORE to 4.0,
+        ItemModels.DIAMOND_SABER to 3.0,
     )
 
     val pierceMap = mapOf(
-        ItemModels.DIAMOND_RAPIER to 2.0,
-        ItemModels.DIAMOND_HALBERD to 3.0,
-        ItemModels.DIAMOND_SPEAR to 1.0,
+        ItemModels.DIAMOND_RAPIER to 3.0,
+        ItemModels.DIAMOND_DAGGER to 1.0,
+        ItemModels.DIAMOND_HALBERD to 6.0,
+        ItemModels.DIAMOND_SPEAR to 5.0,
     )
 
     val bludgeonMap = mapOf(
@@ -29,7 +30,7 @@ object WeaponStats {
     )
 
     val cleaveMap = mapOf(
-        ItemModels.DIAMOND_CLAYMORE to 1.0
+        ItemModels.DIAMOND_CLAYMORE to 3.0
     )
 
     val sweepMap = mapOf(
@@ -54,7 +55,7 @@ object WeaponStats {
     // Sweeping - more sweep/aoe
 
     // Parrying !? Riding !?
-
+    // Slow?
 
     // BLUNT - POINTED - EDGED
 
