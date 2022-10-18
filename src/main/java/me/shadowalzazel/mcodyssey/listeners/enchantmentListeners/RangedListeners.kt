@@ -502,6 +502,7 @@ object RangedListeners : Listener {
                         it.velocity = input.subtract(normal.multiply(input.dot(normal) * 2.0)).normalize().multiply(max(eventProjectile.velocity.length() - 0.3, 0.0))
                     }
                 }
+                eventProjectile.remove()
                 return true
             }
         }
