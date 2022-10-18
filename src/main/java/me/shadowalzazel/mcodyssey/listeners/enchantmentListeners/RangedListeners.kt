@@ -346,6 +346,7 @@ object RangedListeners : Listener {
     private fun clusterShotEnchantmentShoot(eventProjectile: Entity, enchantmentStrength: Int) {
         eventProjectile.addScoreboardTag("Cluster_Shot_Arrow")
         eventProjectile.addScoreboardTag("Cluster_Shot_Modifier_$enchantmentStrength")
+        if (eventProjectile is Arrow) { eventProjectile.pickupStatus = AbstractArrow.PickupStatus.DISALLOWED }
     }
 
     // CLUSTER_SHOT enchantment function

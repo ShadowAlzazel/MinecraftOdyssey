@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.alchemy.recipes
+ package me.shadowalzazel.mcodyssey.alchemy.recipes
 
 import me.shadowalzazel.mcodyssey.alchemy.AlchemyPotions
 import me.shadowalzazel.mcodyssey.alchemy.utility.AwkwardPotion

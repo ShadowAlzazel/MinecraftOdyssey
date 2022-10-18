@@ -13,9 +13,9 @@ import org.bukkit.potion.PotionEffectType
 
 object AbyssalNight : OdysseyPhenomenon("Abyssal Night",
     PhenomenonTypes.SUEN,
-    10,
-    4,
-    10) {
+    8,
+    3,
+    8) {
 
     override fun successfulActivation(someWorld: World) {
         super.successfulActivation(someWorld)
@@ -38,7 +38,9 @@ object AbyssalNight : OdysseyPhenomenon("Abyssal Night",
     override fun persistentPlayerActives(someWorld: World) {
         val abyssalNightEffect = PotionEffect(PotionEffectType.DARKNESS, 20 * 11, 1)
         someWorld.players.forEach {
-            if (it.location.block.lightFromBlocks < 8) {
+            val hasLight: Boolean = it.equipment.itemInOffHand.type == Material.LANTERN
+
+            if ((it.location.block.lightFromBlocks < 8) && !hasLight) {
                 it.addPotionEffect(abyssalNightEffect)
             }
         }

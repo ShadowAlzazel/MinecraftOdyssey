@@ -62,7 +62,7 @@ object ItemModels {
     const val GEMMA_PRIMUS: Int = 6900000
 
     const val BABEL_ANNULUS_SCHEMATICS: Int = 6900068
-    const val DORMANT_SENTIENT_STAR: Int = 6900069
+    const val DORMANT_CYBER_STAR: Int = 6900069
     const val IMPURE_ANTI_MATTER_SHARD: Int = 6900088
     const val PURE_ANTIMATTER_CRYSTAL: Int = 6900089
     const val NEUTRONIUM_BARK_INGOT: Int = 6900565

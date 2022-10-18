@@ -38,9 +38,9 @@ object ChillingNight: OdysseyPhenomenon("Chilling Night",
     override fun persistentPlayerActives(someWorld: World) {
         val chillingNight = PotionEffect(PotionEffectType.SLOW, 20 * 5, 1)
         someWorld.players.forEach {
-            //val isClothed = (it.equipment.boots.type == Material.LEATHER_BOOTS) && (it.equipment.leggings.type == Material.LEATHER_LEGGINGS) && (it.equipment.chestplate.type == Material.LEATHER_CHESTPLATE) && (it.equipment.helmet.type == Material.LEATHER_HELMET)
-            val isClothed = false
-            if (it.location.block.lightFromBlocks < 8 || it.isInWaterOrRain && !isClothed) {
+            val hasLight: Boolean = it.equipment.itemInOffHand.type == Material.LANTERN
+
+            if (((it.location.block.lightFromBlocks < 8) && !hasLight) || (it.isInWaterOrRain)) {
                 it.freezeTicks += 20 * 7
                 it.addPotionEffect(chillingNight)
             }

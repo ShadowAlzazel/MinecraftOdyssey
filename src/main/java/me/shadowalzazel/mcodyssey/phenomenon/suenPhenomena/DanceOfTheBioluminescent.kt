@@ -13,9 +13,9 @@ import org.bukkit.potion.PotionEffectType
 
 object DanceOfTheBioluminescent : OdysseyPhenomenon("Dance of the Bioluminescent",
     PhenomenonTypes.SUEN,
-    45,
+    10,
     5,
-    30,
+    45,
     55,
     Component.text("There is a faint glow emanating from the flora...")) {
 

@@ -22,7 +22,7 @@ object OdysseyItems {
     val REFINED_NEPTUNIAN_DIAMONDS: OdysseyItem = RefinedNeptunianDiamonds
     val REFINED_IOJOVIAN_EMERALDS: OdysseyItem = RefinedIojovianEmeralds
     val POLYMORPHIC_GLUE: OdysseyItem = PolymorphicGlue
-    val DORMANT_SENTIENT_STAR: OdysseyItem = DormantSentientStar
+    val DORMANT_SENTIENT_STAR: OdysseyItem = DormantCyberStar
     val IMPURE_ANTIMATTER_SHARD: OdysseyItem = ImpureAntiMatterShard
     val NEUTRONIUM_BARK_INGOT: OdysseyItem = NeutroniumBarkIngot
     val PURE_ANTIMATTER_CRYSTAL: OdysseyItem = PureAntimatterCrystal

@@ -39,3 +39,16 @@ object RestlessGale : OdysseyItem("Hourglass from Babel",
     listOf(Component.text("A strange hourglass with temporal properties...", TextColor.color(231, 166, 95)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     ItemModels.HOURGLASS_FROM_BABEL)
 
+// TOTEM_OF_VEXING
+object TotemOfVexing : OdysseyItem("Totem of Vexing",
+    Material.MILK_BUCKET,
+    Component.text("Totem of Vexing", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
+    listOf(Component.text("A totem with vexing properties", TextColor.color(112, 123, 153)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+    ItemModels.TOTEM_OF_VEXING)
+
+// NEUTRONIUM_BARK_SCRAPS
+object NeutroniumBarkScraps : OdysseyItem("Neutronium-Bark Scraps",
+    Material.NETHERITE_SCRAP,
+    Component.text("Neutronium-Bark Scraps", TextColor.color(85, 255, 255), TextDecoration.ITALIC),
+    listOf(Component.text("Pieces of bark with extreme weight and density", TextColor.color(45, 45, 45)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+    ItemModels.NEUTRONIUM_BARK_SCRAPS)

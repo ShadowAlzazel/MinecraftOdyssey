@@ -195,7 +195,6 @@ object OdysseyAlchemyListeners : Listener {
                         it.itemInMainHand.subtract(1)
 
                         if (1 == (1..9).random()) { it.setItemInOffHand(ItemStack(Material.AIR, 1)) }
-                        println("V")
                     }
                 }
             }

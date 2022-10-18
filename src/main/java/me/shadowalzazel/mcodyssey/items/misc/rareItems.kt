@@ -9,7 +9,7 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 
 // Refined Neptunian Diamond
-object RefinedNeptunianDiamonds : OdysseyItem("Refined Neptunian-Diamond",
+object RefinedNeptunianDiamonds : OdysseyItem("Flawless Neptunian-Diamond",
     Material.DIAMOND,
     Component.text("Refined Neptunian-Diamond", TextColor.color(47, 122, 228), TextDecoration.ITALIC),
     listOf(Component.text("A diamond forged inside a colossal planet refined to an impressive caliber", TextColor.color(47, 122, 228)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
@@ -17,36 +17,12 @@ object RefinedNeptunianDiamonds : OdysseyItem("Refined Neptunian-Diamond",
     mapOf(Enchantment.LOOT_BONUS_BLOCKS to 1))
 
 // Refined Iojovian Emerald
-object RefinedIojovianEmeralds : OdysseyItem("Refined Iojovian-Emerald",
+object RefinedIojovianEmeralds : OdysseyItem("Flawless Iojovian-Emerald",
     Material.EMERALD,
     Component.text("Refined Iojovian-Emerald", TextColor.color(210, 234, 64), TextDecoration.ITALIC),
     listOf(Component.text("An emerald grown near a Jovian super-planet to unmatched pristine", TextColor.color(210, 234, 64)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     ItemModels.IOJOVIAN_EMERALD,
     mapOf(Enchantment.LOOT_BONUS_BLOCKS to 1))
-
-
-// Refined Iojovian Emerald
-object Ruby : OdysseyItem("Ruby",
-    Material.EMERALD,
-    Component.text("Ruby", TextColor.color(210, 64, 64), TextDecoration.ITALIC),
-    listOf(Component.text("Ruby", TextColor.color(210, 64, 64)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-    ItemModels.IOJOVIAN_EMERALD,
-    mapOf(Enchantment.LOOT_BONUS_BLOCKS to 1))
-
-// Refined Iojovian Emerald
-object RefinedRuby : OdysseyItem("Ruby",
-    Material.EMERALD,
-    Component.text("Ruby", TextColor.color(210, 64, 64), TextDecoration.ITALIC),
-    listOf(Component.text("Ruby", TextColor.color(210, 64, 64)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-    ItemModels.IOJOVIAN_EMERALD,
-    mapOf(Enchantment.LOOT_BONUS_BLOCKS to 1))
-
-// Neutronium Scraps
-object NeutroniumBarkScraps : OdysseyItem("Neutronium-Bark Scraps",
-    Material.NETHERITE_SCRAP,
-    Component.text("Neutronium-Bark Scraps", TextColor.color(85, 255, 255), TextDecoration.ITALIC),
-    listOf(Component.text("Pieces of bark with extreme weight and density", TextColor.color(45, 45, 45)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-    ItemModels.NEUTRONIUM_BARK_SCRAPS)
 
 // Idescine Sapling
 object IdescineSaplings : OdysseyItem("Idescine Saplings",
