@@ -838,6 +838,7 @@ object OdysseyGildingListeners : Listener {
                                 event.result = inputEquipment!!.clone().apply { itemMeta = newMeta }
                             }
                             // Tome Of Expenditure
+                            // TODO: Fix, does not work for multiple gilded
                             ItemModels.TOME_OF_EXPENDITURE -> {
                                 if (inputEquipment!!.itemMeta?.hasEnchants() == true) {
                                     val randomEnchant = inputEquipment!!.enchantments.toList().random()

@@ -21,7 +21,8 @@ object PotionBarrier : OdysseyEnchantment("potionbarrier", "Potion Barrier", 2) 
 
     override fun canEnchantItem(item: ItemStack): Boolean {
         return when (item.type) {
-            Material.ENCHANTED_BOOK, Material.NETHERITE_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.IRON_CHESTPLATE, Material.GOLDEN_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, Material.LEATHER_CHESTPLATE -> {
+            Material.ENCHANTED_BOOK,
+            Material.NETHERITE_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.IRON_CHESTPLATE, Material.GOLDEN_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, Material.LEATHER_CHESTPLATE -> {
                 true
             }
             else -> {

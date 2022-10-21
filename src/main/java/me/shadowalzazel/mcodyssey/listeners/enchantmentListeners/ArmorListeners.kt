@@ -139,6 +139,27 @@ object ArmorListeners : Listener {
 
     }
 
+    @EventHandler
+    fun mainArmorHitHandler(event: EntityDamageEvent) {
+        if (event.cause == EntityDamageEvent.DamageCause.FALL) {
+            val someDefender = event.entity as LivingEntity
+            // --------------------------------------------------------------
+            // Check if boot item has lore
+            if (someDefender.equipment?.boots?.hasItemMeta() == true) {
+                val someBoots = someDefender.equipment?.boots
+                // Loop for all enchants
+                for (enchant in someBoots!!.enchantments) {
+                    // Check when
+                    when (enchant.key) {
+
+                    }
+                }
+            }
+        }
+
+    }
+
+
     // Some function regarding vehicles and armor
     @EventHandler
     fun miscArmorVehicleHandler(event: VehicleEnterEvent) { // Move Horse Armor Enchant Here
@@ -191,6 +212,16 @@ object ArmorListeners : Listener {
             eventDefender.location.clone().subtract(eventDamager.location).toVector().normalize().multiply(1.6)
         }
     }
+
+
+    private fun devastatingDrop(eventDefender: LivingEntity, eventDamage: Double, enchantmentStrength: Int) {
+        eventDefender.location.getNearbyLivingEntities(4.0).forEach {
+            if (it != eventDefender) {
+                it.damage(eventDamage * (0.4 * enchantmentStrength))
+            }
+        }
+    }
+
 
     // FRUITFUL_FARE Enchantment Function
     private fun fruitfulFareEnchantment(eventConsumer: Player, eventItem: ItemStack, enchantmentStrength: Int) {
