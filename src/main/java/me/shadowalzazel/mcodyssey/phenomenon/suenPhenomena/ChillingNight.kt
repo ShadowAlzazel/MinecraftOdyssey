@@ -38,7 +38,7 @@ object ChillingNight: OdysseyPhenomenon("Chilling Night",
     override fun persistentPlayerActives(someWorld: World) {
         val chillingNight = PotionEffect(PotionEffectType.SLOW, 20 * 5, 1)
         someWorld.players.forEach {
-            val hasLight: Boolean = it.equipment.itemInOffHand.type == Material.LANTERN
+            val hasLight: Boolean = it.equipment.itemInOffHand.type == Material.LANTERN || it.equipment.itemInOffHand.type == Material.TORCH
 
             if (((it.location.block.lightFromBlocks < 8) && !hasLight) || (it.isInWaterOrRain)) {
                 it.freezeTicks += 20 * 7

@@ -152,6 +152,18 @@ object PuffyPricklyPotionRecipe : OdysseyAlchemyCauldronRecipe(
         AlchemyPotions.POTION_OF_THORNS.createItemStack(1)),
     3, Material.SOUL_FIRE)
 
+ // PUFFED_MIASMA_POTION_RECIPE
+ object PuffedMiasmaPotionRecipe : OdysseyAlchemyCauldronRecipe(
+     AlchemyPotions.PUFFY_PRICKLY_POTION,
+     listOf(
+         ItemStack(Material.PUFFERFISH, 5),
+         ItemStack(Material.WARPED_FUNGUS, 5),
+         ItemStack(Material.FERMENTED_SPIDER_EYE, 5),
+         ItemStack(Material.SPONGE, 3),
+         ItemStack(Material.HONEY_BLOCK, 3),
+         AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1)),
+     6, Material.SOUL_FIRE)
+
 // BOTTLED_SOULS_RECIPE
 object BottledSoulsRecipe : OdysseyAlchemyCauldronRecipe(
     AlchemyPotions.BOTTLED_SOULS,
