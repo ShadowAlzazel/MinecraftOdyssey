@@ -36,7 +36,7 @@ object MiscListeners : Listener {
                                     //event.entity.velocity = event.entity.location.subtract(blockingEntity.location).toVector()
                                     event.entity.velocity.multiply(-2.0)
                                     //direction
-
+                                    // Use normal
 
                                 }
                             }

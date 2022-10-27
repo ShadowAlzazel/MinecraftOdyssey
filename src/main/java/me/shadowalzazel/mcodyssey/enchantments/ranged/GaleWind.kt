@@ -30,6 +30,4 @@ object GaleWind : OdysseyEnchantment("galewind", "Gale Wind", 3) {
         }
     }
 
-
-    // When shoot, next shift direction dash, has cooldown and timer
 }
