@@ -21,3 +21,6 @@ object SoulSteelKatana: Katana("Soul Steel Katana", Material.IRON_SWORD, ItemMod
     }
 
 }
+
+
+// Soul Steel Dagger

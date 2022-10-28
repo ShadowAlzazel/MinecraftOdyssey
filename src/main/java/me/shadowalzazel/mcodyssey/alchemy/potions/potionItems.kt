@@ -147,3 +147,8 @@ object PotionOfShimmer : OdysseyPotion("Bottle o' Shimmer",
         PotionEffect(PotionEffectType.CONFUSION, 120 * 20, 0)
     ),
     potionColor = Color.fromRGB(78, 0, 161))
+
+
+// POTION OF FISHING
+
+//
