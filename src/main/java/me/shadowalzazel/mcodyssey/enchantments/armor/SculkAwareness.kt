@@ -6,11 +6,11 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object Relentless : OdysseyEnchantment("relentless", "Relentless", 3) {
+object SculkAwareness : OdysseyEnchantment("sculkawareness", "Sculk Awareness", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            THORNS, OdysseyEnchantments.FRUITFUL_FARE -> {
+            OdysseyEnchantments.FRUITFUL_FARE -> {
                 true
             }
             else -> {
@@ -22,7 +22,7 @@ object Relentless : OdysseyEnchantment("relentless", "Relentless", 3) {
     override fun canEnchantItem(item: ItemStack): Boolean {
         return when (item.type) {
             Material.ENCHANTED_BOOK,
-            Material.NETHERITE_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.IRON_CHESTPLATE, Material.GOLDEN_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, Material.LEATHER_CHESTPLATE -> {
+            Material.NETHERITE_HELMET, Material.DIAMOND_HELMET, Material.IRON_HELMET, Material.GOLDEN_HELMET, Material.CHAINMAIL_HELMET, Material.LEATHER_HELMET -> {
                 true
             }
             else -> {
@@ -31,5 +31,5 @@ object Relentless : OdysseyEnchantment("relentless", "Relentless", 3) {
         }
     }
 
-    // TODO: If below 35% health gain more damage
+    // TODO: Can see the movement of enemies???
 }

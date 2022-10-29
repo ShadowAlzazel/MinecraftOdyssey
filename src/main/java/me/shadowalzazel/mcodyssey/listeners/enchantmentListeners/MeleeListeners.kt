@@ -206,6 +206,12 @@ object MeleeListeners : Listener {
                     )
                 )
                 addScoreboardTag("Arcane_Jailed")
+                // Particles and Sound
+                // TODO: Make circle
+                world.spawnParticle(Particle.SPELL_WITCH, location, 35, 1.0, 0.5, 1.0)
+                world.playSound(location, Sound.ENTITY_VEX_CHARGE, 1.5F, 0.5F)
+
+
                 val arcaneCellTask = ArcaneCellTask(eventVictim, location, (2 + (enchantmentStrength * 2)) * 4)
                 arcaneCellTask.runTaskTimer(MinecraftOdyssey.instance, 5, 5)
             }
@@ -454,13 +460,14 @@ object MeleeListeners : Listener {
     private fun guardingStrikeEnchantment(eventHitter: LivingEntity, enchantmentStrength: Int) {
         // Effects
         with(eventHitter) {
+
             if (velocity.length() < 0.1) {
-                addPotionEffect(PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, (1 + (enchantmentStrength * 2)) * 20, 0))
+                addPotionEffect(PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, (3 + (enchantmentStrength * 2)) * 20, 0))
             }
             // Particles and Sounds
-            world.spawnParticle(Particle.SCRAPE, location, 35, 1.0, 0.5, 1.0)
+            world.spawnParticle(Particle.SUSPENDED, location, 35, 1.0, 0.5, 1.0)
             world.spawnParticle(Particle.ELECTRIC_SPARK, location, 35, 1.0, 0.5, 1.0)
-            world.playSound(location, Sound.ITEM_SHIELD_BLOCK, 1.5F, 0.5F)
+            world.playSound(location, Sound.ENTITY_IRON_GOLEM_ATTACK, 1.5F, 0.5F)
             world.playSound(location, Sound.BLOCK_DEEPSLATE_BREAK, 1.5F, 0.5F)
         }
     }

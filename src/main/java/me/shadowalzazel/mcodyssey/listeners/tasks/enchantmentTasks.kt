@@ -11,36 +11,33 @@ import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
 
-class BurstBarrageTask(private val someShooter: LivingEntity, private val burstAmount: Int, private val burstVelocity: Vector, private val burstProjectile: Entity) : BukkitRunnable() {
+class BurstBarrageTask(private val someShooter: LivingEntity, private val burstAmount: Int, private val burstVelocity: Vector, private val burstProjectile: Projectile) : BukkitRunnable() {
     private var counter = 0
     private var burstTimer = System.currentTimeMillis()
+
+    private val initialTags = mutableListOf<String>()
 
     override fun run() {
         counter += 1
         // Check if tag removed
         if ("Burst_Shooting" !in someShooter.scoreboardTags) { this.cancel() }
+        if (counter == 1)  { initialTags.addAll(burstProjectile.scoreboardTags) }
 
         // Spawn projectile and set velocity
-        //someShooter.launchProjectile((burstProjectile as Projectile).javaClass)
-
-        //someShooter.world.spawnEntity(someShooter.location.clone().add(0.0, 1.5, 0.0), burstProjectile.type).also {
-        someShooter.launchProjectile((burstProjectile as Projectile).javaClass).also {
+        someShooter.launchProjectile(burstProjectile.javaClass).also {
             it.addScoreboardTag("Copied_Burst_Arrow")
             if (it is Arrow) {
-                it.basePotionData = (burstProjectile as Arrow).basePotionData
+                it.shooter = someShooter
                 it.pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
+                it.basePotionData = (burstProjectile as Arrow).basePotionData
             }
             else if (it is ThrownPotion) {
+                it.shooter = someShooter
                 it.item = (burstProjectile as ThrownPotion).item
             }
             // Projectile
-            if (it is Projectile) {
-                for (tag in burstProjectile.scoreboardTags) {
-                    it.scoreboardTags.add(tag)
-                }
-                println("Q")
-                it.velocity = someShooter.eyeLocation.direction.clone().normalize().multiply(burstVelocity.length() - 0.1)
-            }
+            it.scoreboardTags.addAll(initialTags)
+            it.velocity = someShooter.eyeLocation.direction.clone().normalize().multiply(burstVelocity.length() - 0.1)
         }
         // Fix for effect arrows !!!!
 

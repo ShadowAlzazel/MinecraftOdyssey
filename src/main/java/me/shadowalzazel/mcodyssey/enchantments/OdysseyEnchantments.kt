@@ -158,6 +158,7 @@ object OdysseyEnchantments {
         VOID_STRIKE,
         WHIRLWIND
     )
+    // TODO: Less durability more dmg
     val armorSet = setOf(
         BEASTLY_BRAWLER,
         COWARDICE,

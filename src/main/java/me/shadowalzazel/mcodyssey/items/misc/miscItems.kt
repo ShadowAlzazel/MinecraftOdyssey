@@ -13,3 +13,5 @@ object Saya : OdysseyItem("Saya",
     Component.text("Saya", TextColor.color(191, 186, 139), TextDecoration.ITALIC),
     listOf(Component.text("Saya", TextColor.color(191, 186, 139)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     ItemModels.SAYA)
+
+// SNOW CRASH

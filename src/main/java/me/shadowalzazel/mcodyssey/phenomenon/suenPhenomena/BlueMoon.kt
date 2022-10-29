@@ -10,8 +10,8 @@ import org.bukkit.potion.PotionEffectType
 
 object BlueMoon : OdysseyPhenomenon("Blood Moon",
     PhenomenonTypes.SUEN,
-    12,
-    3,
+    13,
+    4,
     10) {
 
     override fun successfulActivation(someWorld: World) {

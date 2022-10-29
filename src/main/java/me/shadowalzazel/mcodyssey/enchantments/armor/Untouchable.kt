@@ -6,11 +6,11 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object Relentless : OdysseyEnchantment("relentless", "Relentless", 3) {
+object Untouchable : OdysseyEnchantment("untouchable", "Untouchable", 1) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            THORNS, OdysseyEnchantments.FRUITFUL_FARE -> {
+            OdysseyEnchantments.BEASTLY_BRAWLER -> {
                 true
             }
             else -> {
@@ -31,5 +31,7 @@ object Relentless : OdysseyEnchantment("relentless", "Relentless", 3) {
         }
     }
 
-    // TODO: If below 35% health gain more damage
+    // When you kill something, get a 1 time blocking shield
+    // 20 sec cooldown
+
 }

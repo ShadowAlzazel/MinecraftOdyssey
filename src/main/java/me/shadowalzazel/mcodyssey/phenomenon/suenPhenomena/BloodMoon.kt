@@ -18,8 +18,8 @@ import org.bukkit.potion.PotionEffectType
 
 object BloodMoon : OdysseyPhenomenon("Blood Moon",
     PhenomenonTypes.SUEN,
-    12,
-    3,
+    13,
+    4,
     10) {
 
     private val bloodMoonMobEffects = listOf(

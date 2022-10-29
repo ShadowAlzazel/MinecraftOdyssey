@@ -133,7 +133,6 @@ object RangedListeners : Listener {
     }
 
 
-
     // Main function for enchantments relating to projectile hits
     @EventHandler
     fun mainProjectileHitHandler(event: ProjectileHitEvent) {
@@ -158,17 +157,10 @@ object RangedListeners : Listener {
                 }
             }
             else if (event.hitBlock != null) {
-                for (projectileTag in someProjectile.scoreboardTags) {
-                    when (projectileTag) {
-                        "Ricochet_Arrow" -> {
-                            event.isCancelled = ricochetEnchantmentHit(someProjectile, event.hitBlockFace!!.direction)
-                            break
-                        }
-                    }
+                if (someProjectile.scoreboardTags.contains("Ricochet_Arrow")) {
+                    ricochetEnchantmentBlockHit(someProjectile, event.hitBlockFace!!.direction)
                 }
-
             }
-            // For Ricochet hitting anything
         }
     }
 
@@ -198,7 +190,6 @@ object RangedListeners : Listener {
             for (enchant in someBow.enchantments) {
                 when (enchant.key) {
                     OdysseyEnchantments.OVERCHARGE -> {
-                        println("Called: Main Bow Ready")
                         overchargeEnchantmentLoad(somePlayer, someBow, enchant.value)
                     }
                 }
@@ -206,6 +197,7 @@ object RangedListeners : Listener {
         }
     }
 
+    // Helper Function for item drop
     @EventHandler
     fun itemDropHandler(event: PlayerDropItemEvent) {
         if (event.itemDrop.itemStack.hasItemMeta()) {
@@ -310,11 +302,11 @@ object RangedListeners : Listener {
 
     // BURST_BARRAGE enchantment function
     private fun burstBarrageEnchantmentShoot(eventProjectile: Entity, eventShooter: LivingEntity, enchantmentStrength: Int) {
-        if (!eventShooter.scoreboardTags.contains("Burst_Shooting") && !eventProjectile.scoreboardTags.contains("Copied_Burst_Arrow"))  {
+        if (!eventShooter.scoreboardTags.contains("Burst_Shooting") && !eventProjectile.scoreboardTags.contains("Copied_Burst_Arrow") && eventProjectile is Projectile)  {
             eventShooter.addScoreboardTag("Burst_Shooting")
             val initialVelocity = eventProjectile.velocity.clone()
-            val burstBarrageTask = BurstBarrageTask(eventShooter, enchantmentStrength, initialVelocity, eventProjectile) // Every 0.25 secs
-            burstBarrageTask.runTaskTimer(MinecraftOdyssey.instance, 5, 5)
+            val burstBarrageTask = BurstBarrageTask(eventShooter, enchantmentStrength, initialVelocity, eventProjectile)
+            burstBarrageTask.runTaskTimer(MinecraftOdyssey.instance, 3, 3)
         }
 
     }
@@ -465,17 +457,20 @@ object RangedListeners : Listener {
 
 
     // RICOCHET enchantment function regarding hit
-    private fun ricochetEnchantmentHit(eventProjectile: Entity, eventNormalVector: Vector): Boolean {
+    private fun ricochetEnchantmentBlockHit(eventProjectile: Entity, eventNormalVector: Vector): Boolean {
         // Loop
         for (x in 1..4) {
             if (eventProjectile.scoreboardTags.contains("Ricochet_Modifier_$x")) {
                 // Tags
                 with(eventProjectile.scoreboardTags) {
-                    remove("Ricochet_Modifier_$x")
                     for (z in 0..4) {
-                        if (contains("Ricochet_Bounced_$z")) {
+                        if (contains("Ricochet_Bounced_$z") && z < x) {
                             remove("Ricochet_Bounced_$z")
                             add("Ricochet_Bounced_${z + 1}")
+                            break
+                        }
+                        else if (contains("Ricochet_Bounced_$z") && z == x) {
+                            return false
                         }
                     }
                 }
@@ -485,16 +480,14 @@ object RangedListeners : Listener {
                         it.basePotionData = it.basePotionData
                         it.isPersistent = false
                         it.fireTicks = eventProjectile.fireTicks
+                        it.pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
                     }
                     else if (it is ThrownPotion) {
                         it.item = (eventProjectile as ThrownPotion).item
                     }
                     // Projectile
                     if (it is Projectile) {
-                        for (tag in eventProjectile.scoreboardTags) {
-                            it.scoreboardTags.add(tag)
-                        }
-                        if (x != 1) { it.scoreboardTags.add("Ricochet_Modifier_${x - 1}") }
+                        it.scoreboardTags.addAll(eventProjectile.scoreboardTags)
                         it.shooter = (eventProjectile as Projectile).shooter
                         // Math
                         val normal = eventNormalVector.clone().normalize()

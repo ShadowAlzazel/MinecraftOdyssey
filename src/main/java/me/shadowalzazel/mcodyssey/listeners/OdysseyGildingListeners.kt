@@ -348,7 +348,7 @@ object OdysseyGildingListeners : Listener {
         with(event.inventory) {
             // Anvil Combination
             if (firstItem != null && secondItem != null) {
-                if (firstItem!!.itemMeta?.hasEnchants() == true || secondItem!!.itemMeta?.hasEnchants() == true) {
+                if (firstItem!!.itemMeta?.hasEnchants() == true || secondItem!!.itemMeta?.hasEnchants() == true || secondItem!!.type == Material.ENCHANTED_BOOK) {
                     // Checks if it has gilded enchant
                     var itemOneGilded = false
                     val currentGildedEnchants: MutableMap<Enchantment, Int> = mutableMapOf()
@@ -361,11 +361,16 @@ object OdysseyGildingListeners : Listener {
                     }
                     // Checks if item two has gilded enchants
                     var itemTwoGilded = false
-                    for (enchantKey in secondItem!!.enchantments.keys) { if (enchantKey in OdysseyEnchantments.registeredSet) { itemTwoGilded = true } }
+                    for (enchantKey in secondItem!!.enchantments.keys) { if (enchantKey is OdysseyEnchantment) { itemTwoGilded = true } }
                     // If item two gilded cancel event
                     if (itemTwoGilded) {
                         event.result = ItemStack(Material.AIR, 1)
-                        event.viewers.forEach { viewer -> if (viewer is Player) { viewer.updateInventory() } }
+                        event.viewers.forEach { viewer ->
+                            if (viewer is Player) {
+                                viewer.updateInventory()
+                                viewer.sendActionBar(Component.text("Cannot add gilded enchants with the anvil!", TextColor.color(255, 255, 85)))
+                            }
+                        }
                         return
                     }
                     // Add if only one gilded item
@@ -391,42 +396,60 @@ object OdysseyGildingListeners : Listener {
                             val newLore = firstItem!!.clone().lore()!!.also { lore ->
                                 // Index
                                 val infoIndex = lore.indexOf(loreSeparator) - 1
-                                // Empty Slots
+                                // Manage Slots
                                 val emptySlots = lore.count{ it == emptyEnchantSlot }
-                                // Check slots in first item
-                                var occupiedSlots = 0
-                                var gildedSlots = 0
-                                for (enchant in firstItem!!.enchantments) { if (enchant.key is OdysseyEnchantment) { gildedSlots += 1 } else { occupiedSlots += 1 }}
-                                val totalSlots = emptySlots + lore.count{ it == emptyGildedSlot } + occupiedSlots + gildedSlots
+                                val emptyGildedSlots = lore.count{ it == emptyGildedSlot }
+                                var usedGildedSlots = currentGildedEnchants.size
+                                var usedSlots = firstItem!!.enchantments.size - usedGildedSlots
+                                val gildedSlots = emptyGildedSlots + usedGildedSlots
+                                val enchantSlots = emptySlots + usedSlots
+                                val totalSlots = gildedSlots + enchantSlots
                                 // Loop over all enchants to either add lore or add to removal enchants if over enchant slots
                                 val enchantsToRemove = mutableListOf<Enchantment>()
-                                var counter = 0
-                                var usedSlots = 0
-                                for (enchant in event.result!!.enchantments) {
-                                    if (enchant.key !is OdysseyEnchantment) {
-                                        if (usedSlots < emptySlots + occupiedSlots) {
+                                event.result!!.enchantments.forEach {
+                                    if (it.key !is OdysseyEnchantment) {
+                                        val lowestLevel = if (it.key in firstItem!!.enchantments.keys) { firstItem!!.getEnchantmentLevel(it.key) } else { it.value }
+                                        val enchantLore = it.key.displayName(lowestLevel).color(experienceEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                                        if (!lore.contains(enchantLore) && usedSlots < enchantSlots) {
+                                            val emptySlotIndex = lore.indexOf(emptyEnchantSlot)
+                                            lore[emptySlotIndex] = enchantLore
                                             usedSlots += 1
-                                            lore[infoIndex + 2 + counter] = enchant.key.displayName(enchant.value).color(experienceEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                                        }
+                                        else if (lore.contains(enchantLore)) {
+                                            val usedSlotIndex = lore.indexOf(enchantLore)
+                                            val replacementLore = it.key.displayName(it.value).color(experienceEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                                            lore[usedSlotIndex] = replacementLore
                                         }
                                         else {
-                                            enchantsToRemove.add(enchant.key)
+                                            enchantsToRemove.add(it.value, it.key)
                                         }
-                                        counter += 1
+                                    }
+                                    else if (it.key is OdysseyEnchantment) {
+                                        // Should not work but OK
+                                        val gildedLore = it.key.displayName(it.value).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                                        if (!lore.contains(gildedLore) && usedGildedSlots < emptyGildedSlots) {
+                                            val emptySlotIndex = lore.indexOf(emptyGildedSlot)
+                                            lore[emptySlotIndex] = gildedLore
+                                            usedGildedSlots += 1
+                                        }
                                     }
                                 }
-                                for (removed in enchantsToRemove) { event.result!!.enchantments.remove(removed) }
-                                lore[infoIndex] = Component.text("Enchantment Slots: [${usedSlots + gildedSlots}/$totalSlots]", experienceEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-                                // Checks if item exceeded slots
-                                /* DEBUG
-                                println(event.result!!.enchantments)
-                                println(counter)
-                                println(occupiedSlots + emptySlots)
-                                 */
-                                if (counter > occupiedSlots + emptySlots) {
+                                // Do not create result if more
+                                if (event.result!!.enchantments.size > totalSlots) {
                                     event.result = ItemStack(Material.AIR, 1)
-                                    event.viewers.forEach { viewer -> if (viewer is Player) { viewer.updateInventory() } }
+                                    event.viewers.forEach { viewer ->
+                                        if (viewer is Player) {
+                                            viewer.updateInventory()
+                                            viewer.sendActionBar(Component.text("There are not enough slots to combine the items!", TextColor.color(255, 255, 85)))
+                                        }
+                                    }
                                     return
                                 }
+                                // Remove excess enchants if any
+                                enchantsToRemove.forEach {
+                                    event.result!!.enchantments.remove(it)
+                                }
+                                lore[infoIndex] = Component.text("Enchantment Slots: [${usedSlots + usedGildedSlots}/$totalSlots]", experienceEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                             }
                             event.result!!.addItemFlags(ItemFlag.HIDE_ENCHANTS)
                             event.result!!.lore(newLore)
@@ -437,11 +460,9 @@ object OdysseyGildingListeners : Listener {
             // TODO: Fix
             else if (firstItem != null) {
                 if (renameText != null) {
-                    for (enchant in firstItem!!.enchantments.keys) {
-                        if (enchant in OdysseyEnchantments.registeredSet) {
-                            // TEMP
-                            event.result = ItemStack(Material.AIR, 1)
-                            event.viewers.forEach { viewer -> if (viewer is Player) { viewer.updateInventory() } }
+                    if (firstItem!!.lore()?.contains(loreSeparator) == true) {
+                        event.result = firstItem!!.clone().also {
+                            it.itemMeta.displayName(Component.text(renameText!!))
                         }
                     }
                 }
@@ -838,6 +859,7 @@ object OdysseyGildingListeners : Listener {
                                 event.result = inputEquipment!!.clone().apply { itemMeta = newMeta }
                             }
                             // Tome Of Expenditure
+                            // TODO: Fix, does not work for multiple gilded
                             ItemModels.TOME_OF_EXPENDITURE -> {
                                 if (inputEquipment!!.itemMeta?.hasEnchants() == true) {
                                     val randomEnchant = inputEquipment!!.enchantments.toList().random()

@@ -50,3 +50,6 @@ object SoulSteelIngot : OdysseyItem("Soul Steel Ingot",
     listOf(Component.text("An ingot forged with souls...", TextColor.color(57, 63, 84)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     ItemModels.SOUL_STEEL_INGOT)
 
+// SOUL_STEEL_CHARM
+
+// Chance to break, off hand

@@ -100,7 +100,8 @@ object OdysseyWeaponListeners : Listener {
         val somePlayer = event.player
         if (somePlayer.equipment.itemInMainHand.itemMeta?.hasCustomModelData() == true) {
             val mainWeapon = somePlayer.equipment.itemInMainHand
-            // Main Damage Click
+            val offHand = somePlayer.equipment.itemInOffHand
+            // Main Damage Left Click
             if (event.action.isLeftClick) {
                 reachFunction(somePlayer, reachMap[mainWeapon.itemMeta.customModelData])
                 // Get If entity reached
@@ -109,35 +110,30 @@ object OdysseyWeaponListeners : Listener {
                     somePlayer.attack(reachedEntity)
                 }
             }
-            // Right click actions can be custom combos
+            // Right click bonus actions
             if (event.action.isRightClick) {
-                when (mainWeapon.itemMeta.customModelData) {
+                // Off-hand weapon
+                when (offHand.itemMeta.customModelData) {
                     // Dagger
                     ItemModels.DIAMOND_DAGGER -> {
-                        // Check if dual wielding daggers
-                        val dualWieldingDaggers: Boolean = somePlayer.equipment.itemInOffHand.let {
-                            if (it.hasItemMeta()) {
-                                if (it.itemMeta.hasCustomModelData()) { it.itemMeta.customModelData == ItemModels.DIAMOND_DAGGER }
-                                else { false }
-                            }
-                            else { false }
-                        }
-                        if (dualWieldingDaggers) {
-                            val reachedEntity = reachFunction(somePlayer, reachMap[mainWeapon.itemMeta.customModelData])
-                            if (reachedEntity is LivingEntity) {
-                                somePlayer.swingOffHand()
-                                with(somePlayer.equipment) {
-                                    val mainHand = itemInMainHand.clone()
-                                    val offHand = itemInOffHand.clone()
-                                    setItemInOffHand(mainHand)
-                                    setItemInMainHand(offHand)
-                                    somePlayer.attack(reachedEntity)
-                                    setItemInMainHand(mainHand)
-                                    setItemInOffHand(offHand)
-                                }
+                        // Left click offhand
+                        val reachedEntity = reachFunction(somePlayer, reachMap[mainWeapon.itemMeta.customModelData])
+                        if (reachedEntity is LivingEntity) {
+                            somePlayer.swingOffHand()
+                            with(somePlayer.equipment) {
+                                val mainHand = itemInMainHand.clone()
+                                val offHand = itemInOffHand.clone()
+                                setItemInOffHand(mainHand)
+                                setItemInMainHand(offHand)
+                                somePlayer.attack(reachedEntity)
+                                setItemInMainHand(mainHand)
+                                setItemInOffHand(offHand)
                             }
                         }
                     }
+                }
+                // Main-hand weapon
+                when (mainWeapon.itemMeta.customModelData) {
                     // Staff AOE
                     ItemModels.WOODEN_STAFF, ItemModels.BONE_STAFF, ItemModels.BAMBOO_STAFF, ItemModels.BLAZE_ROD_STAFF -> {
                         if (somePlayer.equipment.itemInOffHand.type == Material.AIR) {
@@ -181,7 +177,7 @@ object OdysseyWeaponListeners : Listener {
                 // Make crit and still combos !!
                 when (val weaponData = someWeapon.itemMeta.customModelData) {
                     ItemModels.DIAMOND_DAGGER -> {
-                        if (someVictim !in someDamager.getNearbyEntities(1.85, 1.85, 1.85)) {
+                        if (someVictim !in someDamager.getNearbyEntities(1.9, 1.9, 1.9)) {
                             event.isCancelled = true
                             return
                         }

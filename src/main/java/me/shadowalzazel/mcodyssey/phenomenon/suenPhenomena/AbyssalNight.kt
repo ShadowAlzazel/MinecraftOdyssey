@@ -38,7 +38,7 @@ object AbyssalNight : OdysseyPhenomenon("Abyssal Night",
     override fun persistentPlayerActives(someWorld: World) {
         val abyssalNightEffect = PotionEffect(PotionEffectType.DARKNESS, 20 * 11, 1)
         someWorld.players.forEach {
-            val hasLight: Boolean = it.equipment.itemInOffHand.type == Material.LANTERN
+            val hasLight: Boolean = it.equipment.itemInOffHand.type == Material.LANTERN || it.equipment.itemInOffHand.type == Material.TORCH
 
             if ((it.location.block.lightFromBlocks < 8) && !hasLight) {
                 it.addPotionEffect(abyssalNightEffect)

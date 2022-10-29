@@ -4,6 +4,8 @@ import me.shadowalzazel.mcodyssey.items.weaponTypes.Staff
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import org.bukkit.Material
 
+/* --------------------------STAFF---------------------------*/
+
 object BambooStaff: Staff("Bamboo Staff", Material.WOODEN_SHOVEL, ItemModels.BAMBOO_STAFF, 2.5, 1.75)
 
 object BoneStaff: Staff("Bone Staff", Material.WOODEN_SHOVEL, ItemModels.BONE_STAFF, 3.0, 1.45)

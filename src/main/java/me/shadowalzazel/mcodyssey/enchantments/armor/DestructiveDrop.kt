@@ -1,16 +1,15 @@
 package me.shadowalzazel.mcodyssey.enchantments.armor
 
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantment
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object Relentless : OdysseyEnchantment("relentless", "Relentless", 3) {
+object DestructiveDrop : OdysseyEnchantment("destructivedrop", "Destructive Drop", 4) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            THORNS, OdysseyEnchantments.FRUITFUL_FARE -> {
+            PROTECTION_FALL -> {
                 true
             }
             else -> {
@@ -22,7 +21,7 @@ object Relentless : OdysseyEnchantment("relentless", "Relentless", 3) {
     override fun canEnchantItem(item: ItemStack): Boolean {
         return when (item.type) {
             Material.ENCHANTED_BOOK,
-            Material.NETHERITE_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.IRON_CHESTPLATE, Material.GOLDEN_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, Material.LEATHER_CHESTPLATE -> {
+            Material.NETHERITE_BOOTS, Material.DIAMOND_BOOTS, Material.IRON_BOOTS, Material.GOLDEN_BOOTS, Material.CHAINMAIL_BOOTS, Material.LEATHER_BOOTS -> {
                 true
             }
             else -> {
@@ -31,5 +30,6 @@ object Relentless : OdysseyEnchantment("relentless", "Relentless", 3) {
         }
     }
 
-    // TODO: If below 35% health gain more damage
+    // TODO: If takes fall damage, convert (0.3, 0.6, 0.9, 1.2,) into surrounding damage
+
 }
