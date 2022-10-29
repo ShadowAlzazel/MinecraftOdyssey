@@ -4,6 +4,8 @@ import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.items.weaponTypes.Warhammer
 import org.bukkit.Material
 
+/* --------------------------WARHAMMER---------------------------*/
+
 object WoodenWarhammer: Warhammer("Wooden Warhammer", Material.WOODEN_PICKAXE, ItemModels.WOODEN_WARHAMMER, 6.5, 0.7)
 
 object GoldenWarhammer: Warhammer("Golden Warhammer", Material.GOLDEN_PICKAXE, ItemModels.GOLDEN_WARHAMMER, 7.5, 0.7)

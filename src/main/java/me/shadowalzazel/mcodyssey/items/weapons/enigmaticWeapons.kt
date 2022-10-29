@@ -9,6 +9,7 @@ import org.bukkit.attribute.AttributeModifier
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 
+//
 object SoulSteelKatana: Katana("Soul Steel Katana", Material.IRON_SWORD, ItemModels.SOUL_STEEL_KATANA, 7.0, 1.5) {
 
     override fun createItemStack(amount: Int): ItemStack {
