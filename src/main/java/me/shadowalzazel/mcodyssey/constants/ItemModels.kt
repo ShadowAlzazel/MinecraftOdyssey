@@ -204,6 +204,10 @@ object ItemModels {
     const val WOODEN_BATTLE_AXE: Int = 6905784
 
     const val WOODEN_LONG_AXE: Int = 6905785
+    const val STONE_LONG_AXE: Int = 6905785
+    const val GOLDEN_LONG_AXE: Int = 6905785
+    const val IRON_LONG_AXE: Int = 6905785
+    const val DIAMOND_LONG_AXE: Int = 6905785
 
 
     /* ----------------------------------------------------------- */

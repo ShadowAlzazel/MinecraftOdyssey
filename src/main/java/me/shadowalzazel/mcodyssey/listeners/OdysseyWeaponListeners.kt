@@ -18,7 +18,6 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.player.PlayerInteractEvent
-import kotlin.math.max
 import kotlin.math.min
 
 
@@ -97,27 +96,50 @@ object OdysseyWeaponListeners : Listener {
     @EventHandler(priority = EventPriority.HIGH)
     fun mainWeaponInteractionHandler(event: PlayerInteractEvent) {
         // Right click and left click combos
+
+        // Player and weapons
         val somePlayer = event.player
-        if (somePlayer.equipment.itemInMainHand.itemMeta?.hasCustomModelData() == true) {
-            val mainWeapon = somePlayer.equipment.itemInMainHand
-            val offHand = somePlayer.equipment.itemInOffHand
-            // Main Damage Left Click
-            if (event.action.isLeftClick) {
-                reachFunction(somePlayer, reachMap[mainWeapon.itemMeta.customModelData])
-                // Get If entity reached
-                val reachedEntity = reachFunction(somePlayer, reachMap[mainWeapon.itemMeta.customModelData])
-                if (reachedEntity is LivingEntity) {
-                    somePlayer.attack(reachedEntity)
+        val mainWeapon = somePlayer.equipment.itemInMainHand
+        val offHandWeapon = somePlayer.equipment.itemInOffHand
+
+        // Left Click
+        if (event.action.isLeftClick && mainWeapon.itemMeta?.hasCustomModelData() == true) {
+            reachFunction(somePlayer, reachMap[mainWeapon.itemMeta.customModelData])
+            // Get If entity reached
+            val reachedEntity = reachFunction(somePlayer, reachMap[mainWeapon.itemMeta.customModelData])
+            if (reachedEntity is LivingEntity) {
+                somePlayer.attack(reachedEntity)
+            }
+        }
+        // Right Click
+        else if (event.action.isRightClick) {
+            // Main Weapon
+            if (mainWeapon.itemMeta?.hasCustomModelData() == true) {
+                when (mainWeapon.itemMeta.customModelData) {
+                    // Staff AOE
+                    ItemModels.WOODEN_STAFF, ItemModels.BONE_STAFF, ItemModels.BAMBOO_STAFF, ItemModels.BLAZE_ROD_STAFF -> {
+                        // Empty Hand
+                        if (somePlayer.equipment.itemInOffHand.type == Material.AIR) {
+                            val nearbyEnemies = somePlayer.getNearbyEntities(1.5, 1.5, 1.5).also { it.remove(somePlayer) }
+                            for (enemy in nearbyEnemies) {
+                                somePlayer.attack(enemy)
+                                somePlayer.swingMainHand()
+                            }
+                        }
+                    }
+                    // Warhammer
+                    ItemModels.IRON_WARHAMMER -> {
+                        // SUPER ATTACK?
+                    }
                 }
             }
-            // Right click bonus actions
-            if (event.action.isRightClick) {
-                // Off-hand weapon
-                when (offHand.itemMeta.customModelData) {
+            // Offhand Weapon
+           if (offHandWeapon.itemMeta?.hasCustomModelData() == true) {
+                when (offHandWeapon.itemMeta.customModelData) {
                     // Dagger
                     ItemModels.DIAMOND_DAGGER -> {
                         // Left click offhand
-                        val reachedEntity = reachFunction(somePlayer, reachMap[mainWeapon.itemMeta.customModelData])
+                        val reachedEntity = reachFunction(somePlayer, reachMap[offHandWeapon.itemMeta.customModelData])
                         if (reachedEntity is LivingEntity) {
                             somePlayer.swingOffHand()
                             with(somePlayer.equipment) {
@@ -130,24 +152,6 @@ object OdysseyWeaponListeners : Listener {
                                 setItemInOffHand(offHand)
                             }
                         }
-                    }
-                }
-                // Main-hand weapon
-                when (mainWeapon.itemMeta.customModelData) {
-                    // Staff AOE
-                    ItemModels.WOODEN_STAFF, ItemModels.BONE_STAFF, ItemModels.BAMBOO_STAFF, ItemModels.BLAZE_ROD_STAFF -> {
-                        if (somePlayer.equipment.itemInOffHand.type == Material.AIR) {
-                            val nearbyEnemies = somePlayer.getNearbyEntities(1.5, 1.5, 1.5).also { it.remove(somePlayer) }
-                            for (enemy in nearbyEnemies) {
-                                somePlayer.attack(enemy)
-                                somePlayer.swingMainHand()
-                            }
-                        }
-                    }
-                    // Warhammer
-                    ItemModels.IRON_WARHAMMER -> {
-                        // SUPER ATTACK?
-
                     }
                 }
             }
@@ -199,22 +203,27 @@ object OdysseyWeaponListeners : Listener {
                         else { sweepComboFunction(someVictim, someDamager, sweepMap[weaponData]!!, event.damage - 1) }
 
                     }
-                    ItemModels.GOLDEN_SABER -> {
+                    ItemModels.DIAMOND_LONG_AXE -> {
+                        if (someOffHand.type != Material.AIR) {
+                            val minimumDamage = minOf(event.damage, 5.0)
+                            event.damage -= minimumDamage
+                        }
                     }
-
                     ItemModels.DIAMOND_KATANA, ItemModels.SOUL_STEEL_KATANA -> {
                         // Rabbit Hide -> Sheath
                         if (event.isCritical && (someOffHand.type == Material.AIR || someOffHand.type == Material.RABBIT_HIDE)) {
                             sweepComboFunction(someVictim, someDamager, sweepMap[weaponData]!!, event.damage)
                         }
                         else if (someOffHand.type != Material.AIR && someOffHand.type != Material.RABBIT_HIDE) {
-                            event.damage -= 3.0
+                            val minimumDamage = minOf(event.damage, 3.0)
+                            event.damage -= minimumDamage
                         }
                         // Piercing?
                     }
                     ItemModels.DIAMOND_CLAYMORE -> {
                         if (someOffHand.type != Material.AIR) {
-                            event.damage -= 5.0
+                            val minimumDamage = minOf(event.damage, 5.0)
+                            event.damage -= minimumDamage
                         }
                         else if (someOffHand.type == Material.AIR) {
                             val sweepDamage = if (event.isCritical) { event.damage } else { event.damage - 3.0 }

@@ -53,6 +53,11 @@ object WeaponRecipes {
             createStoneHalberdRecipe(),
             createIronHalberdRecipe(),
             createDiamondHalberdRecipe(),
+            createWoodenLongAxeRecipe(),
+            createGoldenLongAxeRecipe(),
+            createStoneLongAxeRecipe(),
+            createIronLongAxeRecipe(),
+            createDiamondLongAxeRecipe(),
             createIronWarhammerRecipe(),
             createBambooStaffRecipe(),
             createBoneStaffRecipe(),
@@ -521,6 +526,57 @@ object WeaponRecipes {
         return someRecipe
     }
 
+    /*----------------------------------------LONG AXE-----------------------------------------*/
+
+    private fun createWoodenLongAxeRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.WOODEN_LONG_AXE.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "woodenlongaxe"), someResult).apply {
+            shape("YXX", "YXX", "Y  ")
+            setIngredient('X', RecipeChoice.MaterialChoice(Material.ACACIA_PLANKS, Material.BIRCH_PLANKS, Material.DARK_OAK_PLANKS, Material.OAK_PLANKS, Material.SPRUCE_PLANKS, Material.JUNGLE_PLANKS))
+            setIngredient('Y', Material.STICK)
+        }
+        return someRecipe
+    }
+
+    private fun createGoldenLongAxeRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.GOLDEN_LONG_AXE.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "goldenlongaxe"), someResult).apply {
+            shape("YXX", "YXX", "Y  ")
+            setIngredient('X', Material.GOLD_INGOT)
+            setIngredient('Y', Material.STICK)
+        }
+        return someRecipe
+    }
+
+    private fun createStoneLongAxeRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.STONE_LONG_AXE.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "stonelongaxe"), someResult).apply {
+            shape("YXX", "YXX", "Y  ")
+            setIngredient('X', Material.COBBLESTONE)
+            setIngredient('Y', Material.STICK)
+        }
+        return someRecipe
+    }
+
+    private fun createIronLongAxeRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.IRON_LONG_AXE.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "ironlongaxe"), someResult).apply {
+            shape("YXX", "YXX", "Y  ")
+            setIngredient('X', Material.IRON_INGOT)
+            setIngredient('Y', Material.STICK)
+        }
+        return someRecipe
+    }
+
+    private fun createDiamondLongAxeRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.DIAMOND_LONG_AXE.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "diamondlongaxe"), someResult).apply {
+            shape("YXX", "YXX", "Y  ")
+            setIngredient('X', Material.DIAMOND)
+            setIngredient('Y', Material.STICK)
+        }
+        return someRecipe
+    }
 
     /*----------------------------------------STAFFS-----------------------------------------*/
 
