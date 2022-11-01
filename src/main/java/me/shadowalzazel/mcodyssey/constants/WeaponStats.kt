@@ -19,7 +19,7 @@ object WeaponStats {
     )
 
     val pierceMap = mapOf(
-        ItemModels.DIAMOND_RAPIER to 3.0,
+        ItemModels.DIAMOND_RAPIER to 2.0,
         ItemModels.DIAMOND_DAGGER to 1.0,
         ItemModels.DIAMOND_HALBERD to 6.0,
         ItemModels.DIAMOND_SPEAR to 5.0,

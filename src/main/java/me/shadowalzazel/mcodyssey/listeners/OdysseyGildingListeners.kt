@@ -40,7 +40,7 @@ object OdysseyGildingListeners : Listener {
     private val gildedEnchantColor = TextColor.color(255, 170, 0)
     private val statColor = TextColor.color(167, 125, 255)
     // Headers
-    private val statHeader = Component.text("Weapon Stats: " , separatorColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+    private val statHeader = Component.text("Weapon in Main Hand: " , separatorColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
     private val loreSeparator = Component.text("----------------------" , separatorColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
     // Damage
     private val baseDamage = Component.text("Base Damage: " , statColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
