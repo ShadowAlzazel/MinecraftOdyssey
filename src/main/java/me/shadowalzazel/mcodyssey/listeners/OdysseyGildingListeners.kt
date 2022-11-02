@@ -499,6 +499,7 @@ object OdysseyGildingListeners : Listener {
                                     it.lore(oldMeta.lore())
                                     for (enchant in oldMeta.enchants) { it.addEnchantment(enchant.key, enchant.value) }
                                     for (flag in oldMeta.itemFlags) { it.addItemFlags(flag) }
+                                    it.itemMeta.displayName(oldMeta.displayName())
                                 }
                             }
                         }
@@ -906,7 +907,7 @@ object OdysseyGildingListeners : Listener {
                                         return
                                     }
                                     // Get Slots
-                                    val gildedEnchants = inputEquipment!!.enchantments.count { it is OdysseyEnchantment }
+                                    val gildedEnchants = inputEquipment!!.enchantments.keys.count { it is OdysseyEnchantment }
                                     val gildedSlots = inputEquipment!!.lore()!!.count{ it == emptyGildedSlot }
                                     // If 2 or less gilded slots + enchants and 5 enchants
                                     if (gildedEnchants + gildedSlots <= 1 && inputEquipment!!.enchantments.size - gildedEnchants >= 5 ) {
