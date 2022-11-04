@@ -76,12 +76,12 @@ object OdysseyWeaponListeners : Listener {
                 if (armorPoints <= 1.5) { lacerateMap[weaponData]!! } else { 0.0 }
             }  else { 0.0 }
             // Pierce
-            val piercingDamage = if (pierceMap[weaponData] != null) { min(armorPoints, pierceMap[weaponData]!!) }  else { 0.0 }
+            val trueDamage = if (pierceMap[weaponData] != null) { min(armorPoints, pierceMap[weaponData]!!) }  else { 0.0 }
 
             // Extra damage, True Damage
-            val extraAppliedDamage = if (oldDamage >= bludgeoningDamage + laceratingDamage) { bludgeoningDamage + laceratingDamage } else { 0.0 }
+            val bonusDamage = if (oldDamage >= bludgeoningDamage + laceratingDamage) { bludgeoningDamage + laceratingDamage } else { 0.0 }
 
-            Pair(extraAppliedDamage, piercingDamage)
+            Pair(bonusDamage, trueDamage)
         } else {
             Pair(0.0, 0.0)
         }

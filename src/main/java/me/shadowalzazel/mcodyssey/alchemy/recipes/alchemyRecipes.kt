@@ -170,7 +170,7 @@ object BottledSoulsRecipe : OdysseyAlchemyCauldronRecipe(
     listOf(
         OdysseyItems.ECTOPLASM.createItemStack(3),
         OdysseyItems.SOUL_CRYSTAL.createItemStack(4),
-        ItemStack(Material.CRYING_OBSIDIAN, 4),
+        ItemStack(Material.CRYING_OBSIDIAN, 2),
         AlchemyPotions.CRYSTALLINE_POTION.createItemStack(1)),
     4, Material.SOUL_FIRE)
 

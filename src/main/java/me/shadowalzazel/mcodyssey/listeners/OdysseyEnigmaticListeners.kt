@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.listeners
 
+import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.enigmaticSorcery.EnigmaticSorceryRecipes
 import me.shadowalzazel.mcodyssey.items.OdysseyItems
 import org.bukkit.Material
@@ -38,7 +39,49 @@ object OdysseyEnigmaticListeners : Listener {
                 }
             }
         }
+
+        // Checks if more exp dropped from items
+        if (event.entity.killer != null && event.droppedExp > 0) {
+            var expDrop = 0.0
+            val someKiller = event.entity.killer!!
+            // Weapon
+            if (someKiller.equipment.itemInMainHand.hasItemMeta()) {
+                if (someKiller.equipment.itemInMainHand.itemMeta.hasCustomModelData()) {
+                    if (someKiller.equipment.itemInMainHand.itemMeta.customModelData == ItemModels.SOUL_STEEL_KATANA) {
+                        expDrop += 0.25
+                    }
+                }
+            }
+            // Charm
+            if (someKiller.equipment.itemInOffHand.hasItemMeta()) {
+                if (someKiller.equipment.itemInOffHand.itemMeta.hasCustomModelData()) {
+                    if (someKiller.equipment.itemInOffHand.itemMeta.customModelData == ItemModels.ENIGMATIC_OMAMORI) {
+                        expDrop += 0.1
+                    }
+                }
+            }
+            // Helmet
+            if (someKiller.equipment.helmet?.hasItemMeta() == true) {
+                if (someKiller.equipment.helmet.itemMeta.hasCustomModelData()) {
+                    if (someKiller.equipment.helmet.itemMeta.customModelData == ItemModels.SOUL_STEEL_HELMET) {
+                        expDrop += 0.25
+                    }
+                }
+            }
+
+            // ADD EXP
+            event.droppedExp += (event.droppedExp * (1 + expDrop)).toInt()
+            // Check for particles
+            if (expDrop > 0.0) {
+                with(someKiller.world) {
+                    spawnParticle(Particle.SOUL, someKiller.location, 8, 0.05, 0.25, 0.05)
+                    spawnParticle(Particle.SCULK_SOUL, someKiller.location, 9, 0.15, 0.25, 0.15)
+                }
+            }
+        }
+
     }
+
 
     //
     @EventHandler

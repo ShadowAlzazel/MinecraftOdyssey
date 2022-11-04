@@ -82,6 +82,15 @@ object ItemModels {
     const val SOUL_CATALYST: Int = 6906617
     const val SOUL_STEEL_INGOT: Int = 6906618
 
+    // Special variants like kama...
+
+    // ENIGMATIC
+    const val SOUL_STEEL_KATANA: Int = 6906644
+    const val SOUL_STEEL_HELMET: Int = 6906645
+
+    // Scythe, Sickle, Kama, Katana, Dagger
+    const val ENIGMATIC_OMAMORI: Int = 6906649
+
 
     /* ----------------------------------------------------------- */
 
@@ -233,11 +242,6 @@ object ItemModels {
     // EXOTICS
     const val ABZU_BLADE: Int = 6905002
     const val KINETIC_BLASTER: Int = 6905003
-
-    // Special variants like kame...
-
-    // ENIGMATIC
-    const val SOUL_STEEL_KATANA: Int = 6906644
 
 
 

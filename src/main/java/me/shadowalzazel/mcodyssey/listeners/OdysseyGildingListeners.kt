@@ -304,12 +304,12 @@ object OdysseyGildingListeners : Listener {
                     if (item!!.itemMeta!!.customModelData == ItemModels.ARCANE_BOOK) {
                         // TODO: Make level 1-3 each do common, rare, exotic arcane books
                         var randomTome: OdysseyItem? = null
-                        val expScaleOffset = minOf(event.expLevelCost + (maxOf(30, event.enchanter.level) - 30), 90)
+                        val expScaleOffset = minOf(event.expLevelCost + (maxOf(30, event.enchanter.level) - 30), 95)
                         when ((0..100).random() - expScaleOffset) {
-                            in -200..-65 -> {
+                            in -200..-80 -> {
                                 randomTome = listOf(OdysseyBooks.TOME_OF_AVARICE, OdysseyBooks.TOME_OF_EUPHONY).random()
                             }
-                            in -66..5 -> {
+                            in -81..5 -> {
                                 randomTome = listOf(OdysseyBooks.TOME_OF_EXPENDITURE, OdysseyBooks.TOME_OF_REPLICATION).random()
                             }
                             in 6..30 -> {
@@ -458,12 +458,16 @@ object OdysseyGildingListeners : Listener {
                 }
             }
             // TODO: Fix
-            else if (firstItem != null) {
+            else if (firstItem != null && secondItem == null) {
                 if (renameText != null) {
                     if (firstItem!!.lore()?.contains(loreSeparator) == true) {
-                        event.result = firstItem!!.clone().also {
+                        val renamedItem = firstItem!!.clone().also {
                             it.itemMeta.displayName(Component.text(renameText!!))
+                            val someMeta = it.itemMeta
+                            someMeta.displayName(Component.text(renameText!!))
+                            it.itemMeta = someMeta
                         }
+                        event.result = renamedItem
                     }
                 }
             }
