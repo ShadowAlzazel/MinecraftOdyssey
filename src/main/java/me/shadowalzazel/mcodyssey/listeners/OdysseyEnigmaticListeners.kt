@@ -48,7 +48,7 @@ object OdysseyEnigmaticListeners : Listener {
             if (someKiller.equipment.itemInMainHand.hasItemMeta()) {
                 if (someKiller.equipment.itemInMainHand.itemMeta.hasCustomModelData()) {
                     if (someKiller.equipment.itemInMainHand.itemMeta.customModelData == ItemModels.SOUL_STEEL_KATANA) {
-                        expDrop += 0.25
+                        expDrop += 0.15
                     }
                 }
             }
@@ -64,7 +64,7 @@ object OdysseyEnigmaticListeners : Listener {
             if (someKiller.equipment.helmet?.hasItemMeta() == true) {
                 if (someKiller.equipment.helmet.itemMeta.hasCustomModelData()) {
                     if (someKiller.equipment.helmet.itemMeta.customModelData == ItemModels.SOUL_STEEL_HELMET) {
-                        expDrop += 0.25
+                        expDrop += 0.15
                     }
                 }
             }

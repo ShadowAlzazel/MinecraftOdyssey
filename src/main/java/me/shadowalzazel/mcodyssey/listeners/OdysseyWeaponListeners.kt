@@ -93,7 +93,7 @@ object OdysseyWeaponListeners : Listener {
 
 
     // Main function regarding interactions
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGHEST)
     fun mainWeaponInteractionHandler(event: PlayerInteractEvent) {
         // Right click and left click combos
 
@@ -159,7 +159,7 @@ object OdysseyWeaponListeners : Listener {
     }
 
     //
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGHEST)
     fun mainWeaponDamageHandler(event: EntityDamageByEntityEvent) {
         // Check if event damager and damaged is living entity
         if (event.damager is Player && event.entity is LivingEntity && event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
