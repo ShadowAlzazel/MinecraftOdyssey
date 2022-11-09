@@ -320,7 +320,7 @@ object RangedListeners : Listener {
     // CHAIN_REACTION enchantment function
     private fun chainReactionEnchantmentHit(eventProjectile: Projectile, eventHitEntity: LivingEntity) {
         // Loop and check if modifier reached
-        val closeEntities = eventHitEntity.location.getNearbyLivingEntities(10.0)
+        val closeEntities = eventHitEntity.location.getNearbyLivingEntities(10.0).filter { it != eventProjectile.shooter!! }
         for (x in 1..10) {
             if (eventProjectile.scoreboardTags.contains("Chain_Reaction_Modifier_$x")) { break }
             // Spawn projectiles
