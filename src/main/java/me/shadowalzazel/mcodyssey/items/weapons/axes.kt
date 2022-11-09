@@ -18,14 +18,14 @@ object IronBattleaxe: Battleaxe("Iron Battleaxe", Material.IRON_SWORD, ItemModel
 
 object DiamondBattleaxe: Battleaxe("Diamond Battleaxe", Material.DIAMOND_SWORD, ItemModels.DIAMOND_KATANA, 8.5, 1.15)
 
-/* --------------------------AXES---------------------------*/
+/* --------------------------LONG AXE---------------------------*/
 
-object WoodenLongaxe: Longaxe("Wooden Battleaxe", Material.WOODEN_SWORD, ItemModels.WOODEN_KATANA, 8.5, 0.85)
+object WoodenLongaxe: Longaxe("Wooden Longaxe", Material.WOODEN_AXE, ItemModels.WOODEN_LONG_AXE, 8.0, 0.75)
 
-object GoldenLongaxe: Longaxe("Golden Battleaxe", Material.GOLDEN_SWORD, ItemModels.GOLDEN_KATANA, 9.5, 0.85)
+object GoldenLongaxe: Longaxe("Golden Longaxe", Material.GOLDEN_AXE, ItemModels.GOLDEN_LONG_AXE, 9.0, 0.75)
 
-object StoneLongaxe: Longaxe("Stone Battleaxe", Material.STONE_SWORD, ItemModels.STONE_KATANA, 10.5, 0.85)
+object StoneLongaxe: Longaxe("Stone Longaxe", Material.STONE_AXE, ItemModels.STONE_LONG_AXE, 10.0, 0.75)
 
-object IronLongaxe: Longaxe("Iron Battleaxe", Material.IRON_SWORD, ItemModels.IRON_KATANA, 11.5, 0.85)
+object IronLongaxe: Longaxe("Iron Longaxe", Material.IRON_AXE, ItemModels.IRON_LONG_AXE, 11.0, 0.75)
 
-object DiamondLongaxe: Longaxe("Diamond Battleaxe", Material.DIAMOND_SWORD, ItemModels.DIAMOND_KATANA, 12.5, 0.85)
+object DiamondLongaxe: Longaxe("Diamond Longaxe", Material.DIAMOND_AXE, ItemModels.DIAMOND_LONG_AXE, 12.0, 0.75)

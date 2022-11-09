@@ -50,6 +50,12 @@ object SoulSteelIngot : OdysseyItem("Soul Steel Ingot",
     listOf(Component.text("An ingot forged with souls...", TextColor.color(57, 63, 84)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     ItemModels.SOUL_STEEL_INGOT)
 
-// SOUL_STEEL_CHARM
+// ENIGMATIC_OMAMORI
+object EnigmaticOmamori : OdysseyItem("Enigmatic Omamori",
+    Material.PAPER,
+    Component.text("Enigmatic Omamori", TextColor.color(57, 63, 84), TextDecoration.ITALIC),
+    listOf(Component.text("A charm to help guide souls...", TextColor.color(23, 170, 177)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+    ItemModels.ENIGMATIC_OMAMORI)
 
-// Chance to break, off hand
+//
+// Soul Catalyst, Soul Embers()

@@ -13,7 +13,8 @@ object EnigmaticRecipes {
     fun registerRecipes(): List<ShapedRecipe> {
         return listOf(
             createSorrowingSoulRecipe(),
-            createSoulCatalystRecipe()
+            createSoulCatalystRecipe(),
+            createEnigmaticOmamoriRecipe()
         )
     }
 
@@ -35,13 +36,28 @@ object EnigmaticRecipes {
         val someResult = OdysseyItems.SOUL_CATALYST.createItemStack(1)
         val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "soulcatalyst"), someResult)
         val exactSoulCrystal = OdysseyItems.SOUL_CRYSTAL.createItemStack(1)
+        val exactEctoplasm = OdysseyItems.ECTOPLASM.createItemStack(1)
 
-        someRecipe.shape("XXX", "XYX", "XXX")
-        someRecipe.setIngredient('X', RecipeChoice.ExactChoice(exactSoulCrystal))
-        someRecipe.setIngredient('Y', Material.TINTED_GLASS)
+        someRecipe.shape("XZX", "ZYZ", "XZX")
+        someRecipe.setIngredient('X', Material.TINTED_GLASS)
+        someRecipe.setIngredient('Y', RecipeChoice.ExactChoice(exactEctoplasm))
+        someRecipe.setIngredient('Z', RecipeChoice.ExactChoice(exactSoulCrystal))
         return someRecipe
     }
 
+    private fun createEnigmaticOmamoriRecipe(): ShapedRecipe {
+        val someResult = OdysseyItems.ENIGMATIC_OMAMORI.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "enigmaticomamori"), someResult)
+        val exactSoulCrystal = OdysseyItems.SOUL_CRYSTAL.createItemStack(1)
+        val exactSoulIngot = OdysseyItems.SOUL_STEEL_INGOT.createItemStack(1)
+
+        someRecipe.shape(" W ", "XYX", "XZX")
+        someRecipe.setIngredient('Z', RecipeChoice.ExactChoice(exactSoulIngot))
+        someRecipe.setIngredient('Y', RecipeChoice.ExactChoice(exactSoulCrystal))
+        someRecipe.setIngredient('X', Material.PAPER)
+        someRecipe.setIngredient('W', Material.STRING)
+        return someRecipe
+    }
 
 
 }

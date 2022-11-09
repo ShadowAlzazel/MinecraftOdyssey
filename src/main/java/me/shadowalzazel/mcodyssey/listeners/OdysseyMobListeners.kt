@@ -59,12 +59,8 @@ object OdysseyMobListeners : Listener {
                 is WanderingTrader -> {
 
                 }
-
             }
-
             if (rollGilded) {
-                println("X")
-                println(event.entity.location)
                 createGildedMob(event.entity)
             }
         }
