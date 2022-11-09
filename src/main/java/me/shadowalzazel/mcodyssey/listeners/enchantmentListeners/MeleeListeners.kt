@@ -392,6 +392,18 @@ object MeleeListeners : Listener {
         }
     }
 
+    // FEARFUL_FINISHER Enchantment Function
+    private fun fearfulFinisher(eventVictim: LivingEntity, enchantmentStrength: Int) {
+
+        // For all mobs nearby, find get vector from eye location to target, normalize, then (flip), set mob goal.
+
+        with(eventVictim) {
+            world.playSound(location, Sound.ENTITY_VEX_CHARGE, 2.5F, 0.5F)
+            world.spawnParticle(Particle.SPELL_WITCH, location, 35, 1.0, 0.5, 1.0)
+        }
+    }
+
+
     // FREEZING_ASPECT Enchantment Function
     private fun freezingAspectEnchantment(eventVictim: LivingEntity, enchantmentStrength: Int) {
         // Victim Effects

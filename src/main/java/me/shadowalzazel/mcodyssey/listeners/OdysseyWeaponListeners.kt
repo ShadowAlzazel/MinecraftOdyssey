@@ -2,6 +2,7 @@ package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.WeaponStats.bludgeonMap
+import me.shadowalzazel.mcodyssey.constants.WeaponStats.cleaveMap
 import me.shadowalzazel.mcodyssey.constants.WeaponStats.lacerateMap
 import me.shadowalzazel.mcodyssey.constants.WeaponStats.pierceMap
 import me.shadowalzazel.mcodyssey.constants.WeaponStats.reachMap
@@ -69,6 +70,16 @@ object OdysseyWeaponListeners : Listener {
         return if (!someVictim.isDead && someVictim.getAttribute(Attribute.GENERIC_ARMOR)?.value != null) {
             // Armor Point
             val armorPoints = someVictim.getAttribute(Attribute.GENERIC_ARMOR)!!.value
+
+            // Piercing ignores some armor
+            // BLudgoen is true damage
+            // Cleaving more damage if wearing armor
+            // LAcerate
+
+
+
+            // Cleaving
+            val cleaveDamage = if (cleaveMap[weaponData] != null) { cleaveMap[weaponData] } else { 0.0 }
 
             // Bludgeon
             val bludgeoningDamage = if (bludgeonMap[weaponData] != null) {  min(bludgeonMap[weaponData]!! + (armorPoints * 0.2), armorPoints) }  else { 0.0 }

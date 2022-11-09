@@ -26,11 +26,12 @@ object WeaponStats {
     )
 
     val bludgeonMap = mapOf(
-        ItemModels.DIAMOND_WARHAMMER to 4.5
+        ItemModels.DIAMOND_WARHAMMER to 5.5
     )
 
     val cleaveMap = mapOf(
-        ItemModels.DIAMOND_CLAYMORE to 3.0
+        ItemModels.DIAMOND_CLAYMORE to 3.0,
+        ItemModels.WOODEN_LONG_AXE to 5.0
     )
 
     val sweepMap = mapOf(
