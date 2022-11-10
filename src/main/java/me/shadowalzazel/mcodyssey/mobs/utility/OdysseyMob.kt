@@ -20,6 +20,7 @@ open class OdysseyMob(internal val odysseyName: String, private val odysseyEntit
             addScoreboardTag("Odyssey_Mob")
             // Health
             if (this is LivingEntity) {
+                // CUSTOM KEY HEALTH PAIRS
                 val mobHealth = AttributeModifier(ModifiersUUIDs.ODYSSEY_MOB_HEALTH_UUID, "odyssey_mob_health", odysseyHealth, AttributeModifier.Operation.ADD_NUMBER)
                 val healthAttribute = getAttribute(Attribute.GENERIC_MAX_HEALTH)
                 healthAttribute!!.addModifier(mobHealth)
