@@ -38,7 +38,7 @@ object Savage : OdysseyMob("Savage", EntityType.ZOMBIE, 30.0) {
 
         // Knight Steed
         val zombieSteed = (odysseyWorld.spawnEntity(spawningLocation, EntityType.ZOMBIE_HORSE) as ZombieHorse).apply {
-            isTamed = true
+            isTamed = false
             addPassenger(someKnight)
             addPotionEffects(listOf(
                 PotionEffect(PotionEffectType.HEALTH_BOOST, 20 * 300, 25),

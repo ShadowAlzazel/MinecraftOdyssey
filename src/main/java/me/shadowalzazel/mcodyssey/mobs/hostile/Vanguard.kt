@@ -40,7 +40,7 @@ object Vanguard : OdysseyMob("Vanguard", EntityType.SKELETON, 30.0) {
 
         // Knight Steed
         val skeletonSteed = (odysseyWorld.spawnEntity(spawningLocation, EntityType.SKELETON_HORSE) as SkeletonHorse).apply {
-            isTamed = true
+            isTamed = false
             addPassenger(someKnight)
             addPotionEffects(listOf(
                 PotionEffect(PotionEffectType.HEALTH_BOOST, 20 * 300, 25),
