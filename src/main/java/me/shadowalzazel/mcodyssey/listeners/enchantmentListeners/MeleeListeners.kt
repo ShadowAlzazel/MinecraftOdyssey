@@ -673,7 +673,7 @@ object MeleeListeners : Listener {
                 it.damage(whirlDamage, eventDamager)
             }
             it.velocity = it.location.clone().subtract(eventDamager.location).toVector().normalize()
-                .multiply(0.75 + (0.1 * enchantmentStrength))
+                .multiply(0.8 + (0.15 * enchantmentStrength))
         }
     }
 

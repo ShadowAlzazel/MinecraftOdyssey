@@ -68,7 +68,14 @@ object OdysseyWeapons {
     val IRON_HALBERD = IronHalberd
     val DIAMOND_HALBERD = DiamondHalberd
 
-    // War hammer
+    // Long Axe
+    val WOODEN_LONG_AXE = WoodenLongaxe
+    val GOLDEN_LONG_AXE = GoldenLongaxe
+    val STONE_LONG_AXE = StoneLongaxe
+    val IRON_LONG_AXE = IronLongaxe
+    val DIAMOND_LONG_AXE = DiamondLongaxe
+
+    // War Hammer
     val WOODEN_WARHAMMER = WoodenWarhammer
     val GOLDEN_WARHAMMER = GoldenWarhammer
     val STONE_WARHAMMER = StoneWarhammer
