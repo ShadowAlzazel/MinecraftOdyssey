@@ -60,11 +60,11 @@ class GravityWellTask(private val gravityWellVictim: LivingEntity, private val c
             counter += 1
             // Check if Gravity Well entity has tag
             if ("Gravity_Well" !in victim.scoreboardTags) { this.cancel() }
-            if (victim.scoreboardTags.contains("Falling_Singularity")) { singularityLocation = victim.location.clone() }
+            if (victim.scoreboardTags.contains("Falling_Singularity") || victim.scoreboardTags.contains("Moving_Singularity")) { singularityLocation = victim.location.clone() }
 
             // Spawn particles and get nearby entities
             with(victim.world) {
-                val someLocation = victim.location.clone().add(0.0, 0.25, 0.0)
+                val someLocation = singularityLocation.clone().add(0.0, 0.25, 0.0)
                 spawnParticle(Particle.END_ROD, someLocation, 15, 0.5, 0.5, 0.5)
                 spawnParticle(Particle.CRIT_MAGIC, someLocation, 45, 0.5, 0.40, 0.5)
                 spawnParticle(Particle.PORTAL, someLocation, 55, 0.5, 0.4, 0.5)

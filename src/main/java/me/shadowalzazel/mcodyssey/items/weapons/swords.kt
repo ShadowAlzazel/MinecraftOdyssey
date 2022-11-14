@@ -74,3 +74,7 @@ object StoneSaber: Saber("Stone Saber", Material.STONE_SWORD, ItemModels.STONE_S
 object IronSaber: Saber("Iron Saber", Material.IRON_SWORD, ItemModels.IRON_SABER, 4.5, 1.8)
 
 object DiamondSaber: Saber("Diamond Saber", Material.DIAMOND_SWORD, ItemModels.DIAMOND_SABER, 5.5, 1.8)
+
+
+/* -------------------------ZWEIHANDER--------------------------*/
+object NetheriteZweihander: Zweihander("Netherite Zweihander", Material.NETHERITE_SWORD, ItemModels.NETHERITE_ZWEIHANDER, 14.5, 0.9)

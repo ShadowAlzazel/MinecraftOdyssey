@@ -68,6 +68,7 @@ object OdysseyEnchantments {
     val SQUIDIFY: OdysseyEnchantment = Squidify
     val STELLAR_SHOWER: OdysseyEnchantment = StellarShower
     val TEMPORAL_TORRENT: OdysseyEnchantment = TemporalTorrent
+    val UNTOUCHABLE: OdysseyEnchantment = Untouchable
     val VENGEFUL: OdysseyEnchantment = Vengeful
     val VICIOUS_VIGOR: OdysseyEnchantment = ViciousVigor
     val VOID_STRIKE: OdysseyEnchantment = VoidStrike
@@ -125,6 +126,7 @@ object OdysseyEnchantments {
         SQUIDIFY,
         STELLAR_SHOWER,
         TEMPORAL_TORRENT,
+        UNTOUCHABLE,
         VICIOUS_VIGOR,
         VOID_STRIKE,
         WARP_JUMP,
@@ -188,10 +190,11 @@ object OdysseyEnchantments {
         SHARPSHOOTER,
         SOUL_REND,
         STELLAR_SHOWER,
-        TEMPORAL_TORRENT,
-
+        TEMPORAL_TORRENT
     )
-    val miscSet = setOf(WARP_JUMP)
+    val miscSet = setOf(
+        WARP_JUMP
+    )
 
 
     // Register

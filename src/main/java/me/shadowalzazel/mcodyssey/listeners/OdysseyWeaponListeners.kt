@@ -2,12 +2,14 @@ package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.WeaponStats.bludgeonMap
+import me.shadowalzazel.mcodyssey.constants.WeaponStats.cleaveMap
 import me.shadowalzazel.mcodyssey.constants.WeaponStats.lacerateMap
 import me.shadowalzazel.mcodyssey.constants.WeaponStats.pierceMap
 import me.shadowalzazel.mcodyssey.constants.WeaponStats.reachMap
 import me.shadowalzazel.mcodyssey.constants.WeaponStats.sweepMap
 
 import org.bukkit.Material
+import org.bukkit.Sound
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
@@ -69,6 +71,16 @@ object OdysseyWeaponListeners : Listener {
             // Armor Point
             val armorPoints = someVictim.getAttribute(Attribute.GENERIC_ARMOR)!!.value
 
+            // Piercing ignores some armor
+            // BLudgoen is true damage
+            // Cleaving more damage if wearing armor
+            // LAcerate
+
+
+
+            // Cleaving
+            val cleaveDamage = if (cleaveMap[weaponData] != null) { cleaveMap[weaponData] } else { 0.0 }
+
             // Bludgeon
             val bludgeoningDamage = if (bludgeonMap[weaponData] != null) {  min(bludgeonMap[weaponData]!! + (armorPoints * 0.2), armorPoints) }  else { 0.0 }
             // Lacerate
@@ -88,6 +100,12 @@ object OdysseyWeaponListeners : Listener {
 
     }
 
+    // TODO: !!!!!!!!
+    // PARRY
+    // IF hand raised
+    // IF weapon can parry
+    // If attack right after parry
+    // DO damage,
 
     // ----------------------------------------------------------------------------------------------------
 
@@ -103,7 +121,7 @@ object OdysseyWeaponListeners : Listener {
         val offHandWeapon = somePlayer.equipment.itemInOffHand
 
         // Left Click
-        if (event.action.isLeftClick && mainWeapon.itemMeta?.hasCustomModelData() == true) {
+        if (event.action.isLeftClick && mainWeapon.itemMeta?.hasCustomModelData() == true && reachMap[mainWeapon.itemMeta.customModelData] != null) {
             reachFunction(somePlayer, reachMap[mainWeapon.itemMeta.customModelData])
             // Get If entity reached
             val reachedEntity = reachFunction(somePlayer, reachMap[mainWeapon.itemMeta.customModelData])
@@ -120,6 +138,7 @@ object OdysseyWeaponListeners : Listener {
                     ItemModels.WOODEN_STAFF, ItemModels.BONE_STAFF, ItemModels.BAMBOO_STAFF, ItemModels.BLAZE_ROD_STAFF -> {
                         // Empty Hand
                         if (somePlayer.equipment.itemInOffHand.type == Material.AIR) {
+                            // TODO: Fix
                             val nearbyEnemies = somePlayer.getNearbyEntities(1.5, 1.5, 1.5).also { it.remove(somePlayer) }
                             for (enemy in nearbyEnemies) {
                                 somePlayer.attack(enemy)
@@ -130,6 +149,27 @@ object OdysseyWeaponListeners : Listener {
                     // Warhammer
                     ItemModels.IRON_WARHAMMER -> {
                         // SUPER ATTACK?
+                    }
+                    ItemModels.NETHERITE_ZWEIHANDER -> {
+                        // Empty Hand
+                        if (somePlayer.equipment.itemInOffHand.type == Material.AIR) {
+                            //  Step Forward
+                            val movingVector = somePlayer.eyeLocation.direction.clone().normalize().setY(0.0)
+                            // Get swing arc
+                            val midPointSwing = somePlayer.eyeLocation.direction.clone().add(movingVector.multiply(2.0)).toLocation(somePlayer.world)
+                            val nearbyEnemies = midPointSwing.getNearbyEntities(2.5, 1.0, 2.5).also { it.remove(somePlayer) }
+                            for (enemy in nearbyEnemies) {
+                                somePlayer.attack(enemy)
+                            }
+                            //if hit
+                            if (nearbyEnemies.isNotEmpty() && !somePlayer.isFlying) {
+                                // Particles and Sounds
+                                somePlayer.world.playSound(somePlayer.location, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 0.5F, 2.75F)
+                                println("X")
+                                somePlayer.velocity = movingVector.clone().multiply(0.35)
+                            }
+
+                        }
                     }
                 }
             }
@@ -231,6 +271,17 @@ object OdysseyWeaponListeners : Listener {
                         }
                             // SWEEP PARTICLES!!!
                     }
+                    ItemModels.NETHERITE_ZWEIHANDER -> {
+                        // Stab Or Custom Sweep
+                        if (event.cause == EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) {
+                            event.isCancelled = true
+                        }
+                    }
+
+                    // ZWEIHANDER
+                    // leftclick stab
+                    // righclick short dash and AOE
+
                 }
                 val extraDamages = armorCalculations(someWeapon.itemMeta.customModelData, someVictim, event.damage)
                 event.damage -= extraDamages.second

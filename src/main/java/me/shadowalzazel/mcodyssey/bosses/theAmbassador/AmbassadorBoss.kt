@@ -36,7 +36,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
     //
     internal var angered: Boolean = false
     // Gifts
-    private val itemLootTable = listOf(OdysseyItems.REFINED_IOJOVIAN_EMERALDS, OdysseyItems.NEUTRONIUM_BARK_SCRAPS, OdysseyItems.PURE_ALLOY_GOLD, OdysseyItems.PAPERS_OF_ARCUS, OdysseyItems.POLYMORPHIC_GLUE,
+    private val itemLootTable = listOf(OdysseyItems.REFINED_IOJOVIAN_EMERALDS, OdysseyItems.PURE_ALLOY_GOLD, OdysseyItems.POLYMORPHIC_GLUE,
         OdysseyItems.PURE_ALLOY_COPPER, OdysseyItems.GALVANIZED_STEEL, OdysseyItems.REFINED_NEPTUNIAN_DIAMONDS)
     // Combat Mechanic
     private var takeDamageCooldown: Long = 0L

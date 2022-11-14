@@ -9,7 +9,9 @@ object WeaponStats {
         ItemModels.DIAMOND_CLAYMORE to 5.2,
         ItemModels.DIAMOND_CUTLASS to 3.7,
         ItemModels.DIAMOND_RAPIER to 3.9,
-        ItemModels.DIAMOND_DAGGER to 3.05)
+        ItemModels.DIAMOND_DAGGER to 3.05,
+        ItemModels.NETHERITE_CLAYMORE to 5.5
+    )
 
     val lacerateMap = mapOf(
         ItemModels.IRON_KATANA to 5.5,
@@ -26,11 +28,12 @@ object WeaponStats {
     )
 
     val bludgeonMap = mapOf(
-        ItemModels.DIAMOND_WARHAMMER to 4.5
+        ItemModels.DIAMOND_WARHAMMER to 5.5
     )
 
     val cleaveMap = mapOf(
-        ItemModels.DIAMOND_CLAYMORE to 3.0
+        ItemModels.DIAMOND_CLAYMORE to 3.0,
+        ItemModels.WOODEN_LONG_AXE to 5.0
     )
 
     val sweepMap = mapOf(
