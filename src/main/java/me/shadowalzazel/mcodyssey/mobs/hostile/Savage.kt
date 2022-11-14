@@ -25,11 +25,11 @@ object Savage : OdysseyMob("Savage", EntityType.ZOMBIE, 30.0) {
             // Name
             customName(Component.text("Savage Knight"))
             // Claymore
-            val newClaymore = OdysseyWeapons.IRON_CLAYMORE.createItemStack(1).apply {
+            val newClaymore = OdysseyWeapons.IRON_LONG_AXE.createItemStack(1).apply {
                 addUnsafeEnchantment(Enchantment.DURABILITY, 3)
                 addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5)
                 addUnsafeEnchantment(Enchantment.KNOCKBACK, 3)
-                itemMeta.displayName(Component.text("Norinthian Claymore"))
+                itemMeta.displayName(Component.text("Norinthian Longaxe"))
             }
             clearActiveItem()
             equipment.setItemInOffHand(ItemStack(Material.AIR, 1))

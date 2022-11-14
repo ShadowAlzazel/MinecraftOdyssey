@@ -180,6 +180,8 @@ object ItemModels {
 
     /* ----------------------------------------------------------- */
 
+    // Kama
+
     const val WOODEN_SCYTHE: Int = 6905757
 
     const val WOODEN_SICKLE: Int = 6905758
@@ -239,7 +241,13 @@ object ItemModels {
 
     /* ----------------------------------------------------------- */
 
-    // EXOTICS
+    // Specials
+    const val NETHERITE_ZWEIHANDER: Int = 6905777
+
+
+    /* ----------------------------------------------------------- */
+
+    // Exotics
     const val ABZU_BLADE: Int = 6905002
     const val KINETIC_BLASTER: Int = 6905003
 

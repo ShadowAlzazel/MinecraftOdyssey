@@ -58,6 +58,7 @@ object WeaponRecipes {
             createStoneLongAxeRecipe(),
             createIronLongAxeRecipe(),
             createDiamondLongAxeRecipe(),
+            createNetheriteZweihanderRecipe(),
             createIronWarhammerRecipe(),
             createBambooStaffRecipe(),
             createBoneStaffRecipe(),
@@ -577,6 +578,20 @@ object WeaponRecipes {
         }
         return someRecipe
     }
+
+    /*--------------------------------------ZWEIHANDER---------------------------------------*/
+
+    private fun createNetheriteZweihanderRecipe(): ShapedRecipe {
+        val someResult = OdysseyWeapons.NETHERITE_ZWEIHANDER.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "netheritezweihander"), someResult).apply {
+            shape("  X", "XX ", "YX ")
+            setIngredient('X', Material.NETHERITE_INGOT)
+            setIngredient('Y', Material.BLAZE_ROD)
+        }
+        return someRecipe
+    }
+
+
 
     /*----------------------------------------STAFFS-----------------------------------------*/
 

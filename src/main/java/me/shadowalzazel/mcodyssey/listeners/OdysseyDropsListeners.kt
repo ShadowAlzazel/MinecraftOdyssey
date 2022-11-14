@@ -114,6 +114,7 @@ object OdysseyDropsListeners : Listener {
                                 }
                             }
                             is Creeper -> {
+                                // If charged creeper kills catalyst, drop echo shard
                                 if ((1.5 + luck + looting + misc) * 10 > (0..1000).random()) {
                                     it.world.dropItem(it.location, (OdysseyBooks.GILDED_BOOK.createGildedBook(OdysseyEnchantments.EXPLODING, 1)))
                                     droppedItemSound(somePlayer)
@@ -177,6 +178,7 @@ object OdysseyDropsListeners : Listener {
                                 it.world.dropItem(it.location, (OdysseyItems.IRRADIATED_SHARD.createItemStack((2..5).random())))
                             }
                             is Warden -> {
+                                // IF has echo? drop echo shards?
                                 it.world.dropItem(it.location, (OdysseyItems.WARDEN_ENTRAILS.createItemStack(1)))
                                 it.world.dropItem(it.location, (OdysseyItems.GEMMA_PRIMUS.createItemStack((10..15).random())))
                             }

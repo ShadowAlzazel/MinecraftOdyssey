@@ -59,5 +59,30 @@ object EnigmaticRecipes {
         return someRecipe
     }
 
+// Soul Ore
+    // 4 crying obsidian
+    // 1 ectoplasm
+    // 4 soul crystal
+
+    // Liberating Bell
+    // If used on skeleton or zombie, kills them instantly
+
+
+    // TEARS OF THE DAMNED
+    // 1 tear
+    // 4 ectoplasm
+
+
+    // SOUL WELL
+    // Respawn anchor
+    // 5 soul crystal
+    // 3 ectoplasm
+    // -> Do not drop EXP
+    //
+
+
+    // IDEAS: Store EXP, drop EXP, prevent drops, prevent reinforcements
+    //
+
 
 }

@@ -22,13 +22,12 @@ object StarryNight : OdysseyPhenomenon("Starry Night",
 
     override fun successfulActivation(someWorld: World) {
         super.successfulActivation(someWorld)
-        println("The star falls at ${someWorld.name}!")
 
         // Player Effects
         val starryNightEffect = PotionEffect(PotionEffectType.LUCK, 12000, (0..1).random())
         someWorld.players.forEach {
             it.addPotionEffect(starryNightEffect)
-            it.sendMessage(Component.text("The stars are falling from the sky!?", TextColor.color(156, 127, 192)))
+            it.sendMessage(Component.text("The stars light up the sky!?", TextColor.color(156, 127, 192)))
             it.spawnParticle(Particle.SCRAPE, it.location, 5, 0.5, 0.5, 0.5)
             it.playSound(it.location, Sound.BLOCK_NOTE_BLOCK_CHIME, 2.5F, 1.5F)
         }
@@ -37,15 +36,15 @@ object StarryNight : OdysseyPhenomenon("Starry Night",
     override fun persistentSpawningActives(someEntity: LivingEntity) {
         if (someEntity.location.block.lightFromSky > 5) {
             // Firework
-            (someEntity.world.spawnEntity(someEntity.location.clone().add(0.0, 40.0, 0.0), EntityType.FIREWORK) as Firework).also {
+            (someEntity.world.spawnEntity(someEntity.location.clone().add(0.0, 3.0, 0.0), EntityType.FIREWORK) as Firework).also {
                 val newMeta = it.fireworkMeta
                 newMeta.power = 1
                 newMeta.addEffect(
                     FireworkEffect.builder().with(FireworkEffect.Type.STAR).withColor(Color.WHITE)
-                        .withFade(Color.WHITE).trail(true).flicker(true).build()
+                        .withFade(Color.AQUA).trail(true).flicker(true).build()
                 )
                 it.fireworkMeta = newMeta
-                it.velocity = Vector(0.0, -3.0, 0.0)
+                it.velocity = Vector((0..10).random().toDouble() * 0.1, 3.0, (0..10).random().toDouble() * 0.1)
                 it.ticksToDetonate = 5 * 20
             }
         }
