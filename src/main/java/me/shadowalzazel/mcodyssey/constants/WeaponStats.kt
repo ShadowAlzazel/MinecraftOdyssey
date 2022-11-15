@@ -10,7 +10,7 @@ object WeaponStats {
         ItemModels.DIAMOND_CUTLASS to 3.7,
         ItemModels.DIAMOND_RAPIER to 3.9,
         ItemModels.DIAMOND_DAGGER to 3.05,
-        ItemModels.NETHERITE_CLAYMORE to 5.5
+        ItemModels.NETHERITE_ZWEIHANDER to 5.5
     )
 
     val lacerateMap = mapOf(

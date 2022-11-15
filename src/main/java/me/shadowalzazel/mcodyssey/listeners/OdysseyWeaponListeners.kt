@@ -149,6 +149,24 @@ object OdysseyWeaponListeners : Listener {
                     // Warhammer
                     ItemModels.IRON_WARHAMMER -> {
                         // SUPER ATTACK?
+                        if (somePlayer.equipment.itemInOffHand.type == Material.AIR) {
+                            //  Step Forward
+                            val movingVector = somePlayer.eyeLocation.direction.clone().normalize().setY(0.0)
+                            // Get swing arc
+                            val midPointSwing = somePlayer.eyeLocation.direction.clone().add(movingVector.multiply(2.0)).toLocation(somePlayer.world)
+                            val nearbyEnemies = midPointSwing.getNearbyEntities(2.5, 1.0, 2.5).also { it.remove(somePlayer) }
+                            for (enemy in nearbyEnemies) {
+                                somePlayer.attack(enemy)
+                            }
+                            //if hit
+                            if (nearbyEnemies.isNotEmpty() && !somePlayer.isFlying) {
+                                // Particles and Sounds
+                                somePlayer.world.playSound(somePlayer.location, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 0.5F, 2.75F)
+                                println("X")
+                                somePlayer.velocity = movingVector.clone().multiply(0.35)
+                            }
+
+                        }
                     }
                     ItemModels.NETHERITE_ZWEIHANDER -> {
                         // Empty Hand
