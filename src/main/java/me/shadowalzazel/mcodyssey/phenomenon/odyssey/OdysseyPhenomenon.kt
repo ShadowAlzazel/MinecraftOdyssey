@@ -3,6 +3,7 @@ package me.shadowalzazel.mcodyssey.phenomenon.odyssey
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import net.kyori.adventure.text.Component
 import org.bukkit.World
+import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 
@@ -65,11 +66,14 @@ open class OdysseyPhenomenon(
     }
 
     open fun persistentPlayerActives(someWorld: World) {
-        if (phenomenonType == PhenomenonTypes.SUEN) {
-
-        }
         // IF persistent call this
         // timer delay var and tick speed
+    }
+
+    fun allayMitigation(someEntity: LivingEntity): Boolean {
+        val nearbyMobs = someEntity.getNearbyEntities(16.0, 16.0, 16.0).filter { it.type == EntityType.ALLAY }
+        // Checks if allay
+        return nearbyMobs.size > 1
     }
 
     open fun persistentSpawningActives(someEntity: LivingEntity) {

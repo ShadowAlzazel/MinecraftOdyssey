@@ -41,8 +41,10 @@ object ChillingNight: OdysseyPhenomenon("Chilling Night",
             val hasLight: Boolean = it.equipment.itemInOffHand.type == Material.LANTERN || it.equipment.itemInOffHand.type == Material.TORCH
 
             if (((it.location.block.lightFromBlocks < 8) && !hasLight) || (it.isInWaterOrRain)) {
-                it.freezeTicks += 20 * 7
-                it.addPotionEffect(chillingNight)
+                if (!allayMitigation(it)) {
+                    it.freezeTicks += 20 * 7
+                    it.addPotionEffect(chillingNight)
+                }
             }
         }
     }
