@@ -399,7 +399,7 @@ object MeleeListeners : Listener {
     }
 
     // FEARFUL_FINISHER Enchantment Function
-    private fun fearfulFinisher(eventVictim: LivingEntity, enchantmentStrength: Int) {
+    private fun fearfulFinisherEnchantment(eventVictim: LivingEntity, enchantmentStrength: Int) {
 
         // For all mobs nearby, find get vector from eye location to target, normalize, then (flip), set mob goal.
 

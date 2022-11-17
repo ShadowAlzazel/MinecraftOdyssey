@@ -35,6 +35,7 @@ object OdysseyEnchantments {
     val COWARDICE: OdysseyEnchantment = Cowardice
     val CULL_THE_WEAK: OdysseyEnchantment = CullTheWeak
     val DECAYING_TOUCH: OdysseyEnchantment = DecayingTouch
+    val DEVASTATING_DROP: OdysseyEnchantment = DevastatingDrop
     val DOUSE: OdysseyEnchantment = Douse
     val ECHO: OdysseyEnchantment = Echo
     val ENTANGLEMENT: OdysseyEnchantment = Entanglement
@@ -95,6 +96,7 @@ object OdysseyEnchantments {
         COWARDICE,
         CULL_THE_WEAK,
         DECAYING_TOUCH,
+        DEVASTATING_DROP,
         DOUSE,
         ECHO,
         EXPLODING,
@@ -164,6 +166,7 @@ object OdysseyEnchantments {
     val armorSet = setOf(
         BEASTLY_BRAWLER,
         COWARDICE,
+        DEVASTATING_DROP,
         FRUITFUL_FARE,
         POTION_BARRIER,
         RECKLESS,

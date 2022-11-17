@@ -151,10 +151,27 @@ object ArmorListeners : Listener {
                 for (enchant in someBoots!!.enchantments) {
                     // Check when
                     when (enchant.key) {
-
+                        OdysseyEnchantments.DEVASTATING_DROP -> {
+                            devastatingDrop(someDefender, event.damage, enchant.value)
+                        }
                     }
                 }
             }
+        }
+
+        if (event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK || event.cause == EntityDamageEvent.DamageCause.PROJECTILE) {
+            // DODGE AN ATTACK WITH UNTOUCHABLE
+            // If CAN SEE AND WITHIN 3 BLOCKS DODGE MELLE
+            // IF LINE OF SIGHT projectile
+            // DODGE
+            // COOLDOWN
+
+
+            // IF SOMETHING
+            // IDK
+
+
+
         }
 
     }

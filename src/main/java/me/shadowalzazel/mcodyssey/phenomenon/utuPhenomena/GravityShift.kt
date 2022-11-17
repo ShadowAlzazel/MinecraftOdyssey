@@ -22,6 +22,10 @@ object GravityShift : OdysseyPhenomenon("Gravity shift",
     // Make spheres
     // create bubbles that if near do more crazy stuff
 
+    // If in BIOME this triggers
+    // UNSTABLE PLAINS
+    // Gravity does not work, so floating rocks and stuff
+
     // Low Gravity Effects
     private val lowGravityEffects = listOf(
         PotionEffect(PotionEffectType.JUMP, 12000, 2),
