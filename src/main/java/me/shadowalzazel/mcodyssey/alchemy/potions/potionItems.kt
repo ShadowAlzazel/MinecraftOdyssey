@@ -114,9 +114,9 @@ object PuffyPricklyPotion : OdysseyPotion("Puffy n' Prickly Potion",
     potionEffects = emptyList(),
     potionColor = Color.fromRGB(208, 247, 166))
 
-object PuffedMiasmaPotion : OdysseyPotion("Puffed Miasma Potion",
-    Component.text("Puffed Miasma Potion", TextColor.color(208, 247, 166)),
-    listOf(Component.text("Puffed Miasma (2:00)", TextColor.color(208, 247, 166)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+object PuffedMiasmaPotion : OdysseyPotion("Miasma Potion",
+    Component.text("Puffed Miasma Potion", TextColor.color(158, 247, 106)),
+    listOf(Component.text("Puffed Miasma (2:00)", TextColor.color(158, 247, 106)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     potionEffects = listOf(
         PotionEffect(PotionEffectType.POISON, 120 * 20, 2),
         PotionEffect(PotionEffectType.HUNGER, 120 * 20, 2),
@@ -151,4 +151,6 @@ object PotionOfShimmer : OdysseyPotion("Bottle o' Shimmer",
 
 // POTION OF FISHING
 
-//
+// KERNEL POTION
+// BASIS FOR FLOWER POTION
+// WHEN COMBINED WITH FLOWER makes POTION THAT ACTS LIEK BONEMEAL BUT APPLIES FLOWER GROWTH
