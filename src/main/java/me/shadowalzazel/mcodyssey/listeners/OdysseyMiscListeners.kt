@@ -1,7 +1,9 @@
 package me.shadowalzazel.mcodyssey.listeners
 
+import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.bosses.theAmbassador.AmbassadorBoss
+import net.kyori.adventure.text.Component
 import org.bukkit.ChatColor
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Snowman
@@ -61,7 +63,40 @@ object OdysseyMiscListeners : Listener {
 
     }
 
+    // TEST
+    // Elytra Mechanics
+    @EventHandler
+    fun elytraBoost(event: PlayerElytraBoostEvent) {
+        var boostFailureChance = 0.15
+        var boostFailureDamage = 20.0
+
+        // Lower Boost Failure Chance
+        if (event.itemStack.lore()?.contains(Component.text("Magma_Cream")) == true) { // Change to detect component var
+            boostFailureChance -= 0.10
+        }
+
+        // DUD?
+
+        if ((boostFailureChance * 100) > (0..100).random()) {
+
+            // EXPLODE !!
+
+            // Lower Boost Failure Damage
+            if (event.itemStack.lore()?.contains(Component.text("Blaze_Powder")) == true) { // Change to detect component var
+                boostFailureDamage -= 15.0
+            }
+
+            // Change to explode fireball
+            event.player.damage(boostFailureDamage)
 
 
+        }
+
+
+    }
+
+
+    // WHEN CRAFTING
+    // DETECT IF ROCKET
 
 }

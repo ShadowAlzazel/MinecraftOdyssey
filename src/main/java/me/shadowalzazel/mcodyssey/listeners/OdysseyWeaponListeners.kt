@@ -36,7 +36,9 @@ object OdysseyWeaponListeners : Listener {
                 val rangeReach = somePlayer.eyeLocation.distance(targetEntity.location.clone())
                 //println(rangeReach)
                 // sees if target entity out of range
-                if (reachStat < rangeReach) { targetEntity = null }
+                if (reachStat < rangeReach) {
+                    targetEntity = null
+                }
             }
             targetEntity
         }
@@ -50,7 +52,8 @@ object OdysseyWeaponListeners : Listener {
         val midpoint = someDamager.location.clone().set(
             ((someVictim.location.x + someDamager.location.x) / 2),
             ((someVictim.location.y + someDamager.location.y) / 2),
-            ((someVictim.location.z + someDamager.location.z) / 2))
+            ((someVictim.location.z + someDamager.location.z) / 2)
+        )
 
         someVictim.scoreboardTags.add("Weapon_Comboed")
         val comboEntities = midpoint.getNearbyEntities(radius, radius, radius).filter {
@@ -77,21 +80,42 @@ object OdysseyWeaponListeners : Listener {
             // LAcerate
 
 
-
             // Cleaving
-            val cleaveDamage = if (cleaveMap[weaponData] != null) { cleaveMap[weaponData] } else { 0.0 }
+            val cleaveDamage = if (cleaveMap[weaponData] != null) {
+                cleaveMap[weaponData]
+            } else {
+                0.0
+            }
 
             // Bludgeon
-            val bludgeoningDamage = if (bludgeonMap[weaponData] != null) {  min(bludgeonMap[weaponData]!! + (armorPoints * 0.2), armorPoints) }  else { 0.0 }
+            val bludgeoningDamage = if (bludgeonMap[weaponData] != null) {
+                min(bludgeonMap[weaponData]!! + (armorPoints * 0.2), armorPoints)
+            } else {
+                0.0
+            }
             // Lacerate
             val laceratingDamage = if (lacerateMap[weaponData] != null) {
-                if (armorPoints <= 1.5) { lacerateMap[weaponData]!! } else { 0.0 }
-            }  else { 0.0 }
+                if (armorPoints <= 1.5) {
+                    lacerateMap[weaponData]!!
+                } else {
+                    0.0
+                }
+            } else {
+                0.0
+            }
             // Pierce
-            val trueDamage = if (pierceMap[weaponData] != null) { min(armorPoints, pierceMap[weaponData]!!) }  else { 0.0 }
+            val trueDamage = if (pierceMap[weaponData] != null) {
+                min(armorPoints, pierceMap[weaponData]!!)
+            } else {
+                0.0
+            }
 
             // Extra damage, True Damage
-            val bonusDamage = if (oldDamage >= bludgeoningDamage + laceratingDamage) { bludgeoningDamage + laceratingDamage } else { 0.0 }
+            val bonusDamage = if (oldDamage >= bludgeoningDamage + laceratingDamage) {
+                bludgeoningDamage + laceratingDamage
+            } else {
+                0.0
+            }
 
             Pair(bonusDamage, trueDamage)
         } else {
@@ -191,8 +215,24 @@ object OdysseyWeaponListeners : Listener {
                     }
                 }
             }
+
+            // CAN THROW KUNAI/ SNOWBALLS THAT DO DMG
+            // If throw snowball
+            // if kunai
+            // add tag
+            // if tag is kunai, and hits do +5 damage
+
+
+            // MINATO enchant
+            // If throw kunai
+            // If has tag
+            // If surface normalized
+            // spawn armor stand with kunai
+            // can tp if throw another
+            //
+
             // Offhand Weapon
-           if (offHandWeapon.itemMeta?.hasCustomModelData() == true) {
+            if (offHandWeapon.itemMeta?.hasCustomModelData() == true) {
                 when (offHandWeapon.itemMeta.customModelData) {
                     // Dagger
                     ItemModels.DIAMOND_DAGGER -> {
@@ -257,8 +297,11 @@ object OdysseyWeaponListeners : Listener {
                         }
                     }
                     ItemModels.BAMBOO_STAFF, ItemModels.WOODEN_STAFF, ItemModels.BONE_STAFF, ItemModels.BLAZE_ROD_STAFF -> {
-                        if (event.isCritical) { sweepComboFunction(someVictim, someDamager, sweepMap[weaponData]!!, event.damage + 2) }
-                        else { sweepComboFunction(someVictim, someDamager, sweepMap[weaponData]!!, event.damage - 1) }
+                        if (event.isCritical) {
+                            sweepComboFunction(someVictim, someDamager, sweepMap[weaponData]!!, event.damage + 2)
+                        } else {
+                            sweepComboFunction(someVictim, someDamager, sweepMap[weaponData]!!, event.damage - 1)
+                        }
 
                     }
                     ItemModels.DIAMOND_LONG_AXE -> {
@@ -271,8 +314,7 @@ object OdysseyWeaponListeners : Listener {
                         // Rabbit Hide -> Sheath
                         if (event.isCritical && (someOffHand.type == Material.AIR || someOffHand.type == Material.RABBIT_HIDE)) {
                             sweepComboFunction(someVictim, someDamager, sweepMap[weaponData]!!, event.damage)
-                        }
-                        else if (someOffHand.type != Material.AIR && someOffHand.type != Material.RABBIT_HIDE) {
+                        } else if (someOffHand.type != Material.AIR && someOffHand.type != Material.RABBIT_HIDE) {
                             val minimumDamage = minOf(event.damage, 3.0)
                             event.damage -= minimumDamage
                         }
@@ -282,12 +324,15 @@ object OdysseyWeaponListeners : Listener {
                         if (someOffHand.type != Material.AIR) {
                             val minimumDamage = minOf(event.damage, 5.0)
                             event.damage -= minimumDamage
-                        }
-                        else if (someOffHand.type == Material.AIR) {
-                            val sweepDamage = if (event.isCritical) { event.damage } else { event.damage - 3.0 }
+                        } else if (someOffHand.type == Material.AIR) {
+                            val sweepDamage = if (event.isCritical) {
+                                event.damage
+                            } else {
+                                event.damage - 3.0
+                            }
                             sweepComboFunction(someVictim, someDamager, sweepMap[weaponData]!!, sweepDamage)
                         }
-                            // SWEEP PARTICLES!!!
+                        // SWEEP PARTICLES!!!
                     }
                     ItemModels.NETHERITE_ZWEIHANDER -> {
                         // Stab Or Custom Sweep
@@ -306,8 +351,7 @@ object OdysseyWeaponListeners : Listener {
                 event.damage += extraDamages.first
                 if (someVictim.health < extraDamages.second) {
                     someVictim.health -= extraDamages.second - someVictim.health
-                }
-                else {
+                } else {
                     someVictim.health -= extraDamages.second
                 }
 
