@@ -55,7 +55,9 @@ object AcidicDownpour : OdysseyPhenomenon("Acidic Downpour",
 
         someWorld.players.forEach {
             if (it.location.block.lightFromSky > 5 && it.isInRain) {
-                it.addPotionEffects(acidicEffects)
+                if (!allayMitigation(it)) {
+                    it.addPotionEffects(acidicEffects)
+                }
             }
         }
     }

@@ -41,7 +41,9 @@ object AbyssalNight : OdysseyPhenomenon("Abyssal Night",
             val hasLight: Boolean = it.equipment.itemInOffHand.type == Material.LANTERN || it.equipment.itemInOffHand.type == Material.TORCH
 
             if ((it.location.block.lightFromBlocks < 8) && !hasLight) {
-                it.addPotionEffect(abyssalNightEffect)
+                if (!allayMitigation(it)) {
+                    it.addPotionEffect(abyssalNightEffect)
+                }
             }
         }
     }

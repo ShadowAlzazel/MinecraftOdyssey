@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.listeners
 
-import me.shadowalzazel.mcodyssey.constants.ItemModels
+import me.shadowalzazel.mcodyssey.constants.OdysseyItemModels
 import me.shadowalzazel.mcodyssey.enigmaticSorcery.EnigmaticSorceryRecipes
 import me.shadowalzazel.mcodyssey.items.OdysseyItems
 import org.bukkit.Material
@@ -47,7 +47,7 @@ object OdysseyEnigmaticListeners : Listener {
             // Weapon
             if (someKiller.equipment.itemInMainHand.hasItemMeta()) {
                 if (someKiller.equipment.itemInMainHand.itemMeta.hasCustomModelData()) {
-                    if (someKiller.equipment.itemInMainHand.itemMeta.customModelData == ItemModels.SOUL_STEEL_KATANA) {
+                    if (someKiller.equipment.itemInMainHand.itemMeta.customModelData == OdysseyItemModels.SOUL_STEEL_KATANA) {
                         expDrop += 0.15
                     }
                 }
@@ -55,7 +55,7 @@ object OdysseyEnigmaticListeners : Listener {
             // Charm
             if (someKiller.equipment.itemInOffHand.hasItemMeta()) {
                 if (someKiller.equipment.itemInOffHand.itemMeta.hasCustomModelData()) {
-                    if (someKiller.equipment.itemInOffHand.itemMeta.customModelData == ItemModels.ENIGMATIC_OMAMORI) {
+                    if (someKiller.equipment.itemInOffHand.itemMeta.customModelData == OdysseyItemModels.ENIGMATIC_OMAMORI) {
                         expDrop += 0.1
                     }
                 }
@@ -63,7 +63,7 @@ object OdysseyEnigmaticListeners : Listener {
             // Helmet
             if (someKiller.equipment.helmet?.hasItemMeta() == true) {
                 if (someKiller.equipment.helmet.itemMeta.hasCustomModelData()) {
-                    if (someKiller.equipment.helmet.itemMeta.customModelData == ItemModels.SOUL_STEEL_HELMET) {
+                    if (someKiller.equipment.helmet.itemMeta.customModelData == OdysseyItemModels.SOUL_STEEL_HELMET) {
                         expDrop += 0.15
                     }
                 }

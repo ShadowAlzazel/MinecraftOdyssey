@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.items.odyssey
 
-import me.shadowalzazel.mcodyssey.constants.ModifiersUUIDs
+import me.shadowalzazel.mcodyssey.constants.OdysseyUUIDs
 import net.kyori.adventure.text.Component
 //import net.kyori.adventure.text.TextComponent
 import org.bukkit.Material
@@ -40,13 +40,13 @@ open class OdysseyItem(val name: String,
         // Add attributes
         weaponMeta.also {
             // Modify Attack Speed
-            val someAttackSpeedStat = AttributeModifier(ModifiersUUIDs.ATTACK_SPEED_RESET_UUID, "odyssey.attack_speed", -4.0, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND)
-            val odysseyAttackSpeedStat = AttributeModifier(ModifiersUUIDs.ATTACK_SPEED_UUID, "odyssey.attack_speed", weaponSpeed, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND)
+            val someAttackSpeedStat = AttributeModifier(OdysseyUUIDs.ATTACK_SPEED_RESET_UUID, "odyssey.attack_speed", -4.0, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND)
+            val odysseyAttackSpeedStat = AttributeModifier(OdysseyUUIDs.ATTACK_SPEED_UUID, "odyssey.attack_speed", weaponSpeed, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND)
             it.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, someAttackSpeedStat)
             it.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, odysseyAttackSpeedStat)
 
             // Modify Attack Damage
-            val odysseyAttackDamageStat = AttributeModifier(ModifiersUUIDs.ATTACK_DAMAGE_UUID, "odyssey.attack_damage", weaponDamage, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND)
+            val odysseyAttackDamageStat = AttributeModifier(OdysseyUUIDs.ATTACK_DAMAGE_UUID, "odyssey.attack_damage", weaponDamage, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND)
             it.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, odysseyAttackDamageStat)
 
             // Modify Knock Back

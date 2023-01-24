@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.items.weapons
 
-import me.shadowalzazel.mcodyssey.constants.ItemModels
+import me.shadowalzazel.mcodyssey.constants.OdysseyItemModels
 import me.shadowalzazel.mcodyssey.items.odyssey.OdysseyItem
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -16,7 +16,7 @@ object KineticBlaster : OdysseyItem("Kinetic Blaster",
     Material.BOW,
     odysseyDisplayName = Component.text("Kinetic Blaster", TextColor.color(39, 79, 152)),
     odysseyLore =  listOf(Component.text("A weapon commissioned to shoot kinetic projectiles", TextColor.color(39, 79, 152)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-    customModel = ItemModels.KINETIC_BLASTER) {
+    customModel = OdysseyItemModels.KINETIC_BLASTER) {
 
     override fun createItemStack(amount: Int): ItemStack {
         val newKineticBlaster = super.createItemStack(amount)

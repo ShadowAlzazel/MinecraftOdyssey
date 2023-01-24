@@ -27,7 +27,6 @@ object OdysseyDropsListeners : Listener {
             world.spawnParticle(Particle.TOTEM, location, 25, 2.0, 1.0, 2.0)
             world.spawnParticle(Particle.END_ROD, location, 25, 2.0, 1.0, 2.0)
             world.spawnParticle(Particle.GLOW, location, 35, 2.0, 1.0, 2.0)
-            println("Dropped Item Gilded $name")
         }
     }
 
@@ -178,7 +177,7 @@ object OdysseyDropsListeners : Listener {
                                 it.world.dropItem(it.location, (OdysseyItems.IRRADIATED_SHARD.createItemStack((2..5).random())))
                             }
                             is Warden -> {
-                                // IF has echo? drop echo shards?
+                                // If has echo? drop echo shards?
                                 it.world.dropItem(it.location, (OdysseyItems.WARDEN_ENTRAILS.createItemStack(1)))
                                 it.world.dropItem(it.location, (OdysseyItems.GEMMA_PRIMUS.createItemStack((10..15).random())))
                             }

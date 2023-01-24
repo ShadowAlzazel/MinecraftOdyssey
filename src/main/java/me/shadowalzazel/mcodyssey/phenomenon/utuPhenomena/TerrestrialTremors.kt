@@ -36,25 +36,27 @@ object TerrestrialTremors : OdysseyPhenomenon("Terrestrial Tremors",
             // Effects
             someWorld.players.forEach {
                 if (!it.isFlying) {
-                    // Math
-                    val distanceFromEpicenter = randomEpicenter.distance(it.location)
-                    val distanceFactor: Double = tremorMagnitude.div((((distanceFromEpicenter - 1000) / 100) + 1))
+                    if (!allayMitigation(it)) {
+                        // Math
+                        val distanceFromEpicenter = randomEpicenter.distance(it.location)
+                        val distanceFactor: Double = tremorMagnitude.div((((distanceFromEpicenter - 1000) / 100) + 1))
 
-                    if (distanceFromEpicenter < 40) {
-                        it.damage(tremorMagnitude.toDouble())
-                        it.addPotionEffects(listOf(tremorEffect, trembleConfusionEffect, trembleWeaknessEffect, trembleFatigueEffect))
-                        it.sendMessage(Component.text("THE GROUND TREMBLES UNDER YOU!!!", TextColor.color(67, 67, 67)))
-                        it.spawnParticle(Particle.CRIT, it.location, 65, 0.5, 0.5, 0.5)
-                        it.playSound(it.location, Sound.BLOCK_BASALT_BREAK, 5.5F, 1.2F)
-                    }
-                    else if (distanceFromEpicenter < 800) {
-                        it.damage(tremorMagnitude.toDouble() * distanceFactor)
-                        it.addPotionEffects(listOf(shakeEffect, trembleConfusionEffect))
-                        it.sendMessage(Component.text("Your at the mercy of a tremor!", TextColor.color(67, 67, 67)))
-                        it.spawnParticle(Particle.CRIT, it.location, 15, 0.5, 0.5, 0.5)
-                    }
-                    else {
-                        it.sendMessage(Component.text("You hear tremors from afar", TextColor.color(67, 67, 67)))
+                        if (distanceFromEpicenter < 40) {
+                            it.damage(tremorMagnitude.toDouble())
+                            it.addPotionEffects(listOf(tremorEffect, trembleConfusionEffect, trembleWeaknessEffect, trembleFatigueEffect))
+                            it.sendMessage(Component.text("THE GROUND TREMBLES UNDER YOU!!!", TextColor.color(67, 67, 67)))
+                            it.spawnParticle(Particle.CRIT, it.location, 65, 0.5, 0.5, 0.5)
+                            it.playSound(it.location, Sound.BLOCK_BASALT_BREAK, 5.5F, 1.2F)
+                        }
+                        else if (distanceFromEpicenter < 800) {
+                            it.damage(tremorMagnitude.toDouble() * distanceFactor)
+                            it.addPotionEffects(listOf(shakeEffect, trembleConfusionEffect))
+                            it.sendMessage(Component.text("Your at the mercy of a tremor!", TextColor.color(67, 67, 67)))
+                            it.spawnParticle(Particle.CRIT, it.location, 15, 0.5, 0.5, 0.5)
+                        }
+                        else {
+                            it.sendMessage(Component.text("You hear tremors from afar", TextColor.color(67, 67, 67)))
+                        }
                     }
                 }
                 else {

@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.items.weapons
 
 import me.shadowalzazel.mcodyssey.items.odyssey.OdysseyItem
-import me.shadowalzazel.mcodyssey.constants.ItemModels
+import me.shadowalzazel.mcodyssey.constants.OdysseyItemModels
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.event.ClickEvent
@@ -17,7 +17,7 @@ object Necronomicon : OdysseyItem("Necronomicon",
     Material.WRITTEN_BOOK,
     odysseyDisplayName = Component.text("Necronomicon", TextColor.color(39, 19, 92)),
     odysseyLore = null,
-    customModel = ItemModels.NECRONOMICON_BOOK) {
+    customModel = OdysseyItemModels.NECRONOMICON_BOOK) {
 
     override fun createItemStack(amount: Int): ItemStack {
         val necronomiconBook = super.createItemStack(amount)
@@ -46,7 +46,7 @@ object Necronomicon : OdysseyItem("Necronomicon",
 
         // Build
         val newBookMeta = necronomiconBookBuilder.build()
-        newBookMeta.setCustomModelData(ItemModels.NECRONOMICON_BOOK)
+        newBookMeta.setCustomModelData(OdysseyItemModels.NECRONOMICON_BOOK)
         newBookMeta.generation = BookMeta.Generation.TATTERED
         necronomiconBook.itemMeta = newBookMeta
         return necronomiconBook

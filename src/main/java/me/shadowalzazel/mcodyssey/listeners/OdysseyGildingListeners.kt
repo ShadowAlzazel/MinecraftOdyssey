@@ -2,7 +2,7 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import com.destroystokyo.paper.event.inventory.PrepareResultEvent
-import me.shadowalzazel.mcodyssey.constants.ItemModels
+import me.shadowalzazel.mcodyssey.constants.OdysseyItemModels
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.items.OdysseyBooks
@@ -56,7 +56,7 @@ object OdysseyGildingListeners : Listener {
 
 
     // Get slots based on material
-    private fun createSlotCounts(itemType: Material): Pair<Int, Int> {
+    private fun createRuneSlots(itemType: Material): Pair<Int, Int> {
         var gildedSlots = 0
         val enchantSlots = when(itemType) {
             Material.STONE_SWORD, Material.STONE_AXE, Material.STONE_PICKAXE, Material.STONE_SHOVEL, Material.STONE_HOE,
@@ -254,7 +254,7 @@ object OdysseyGildingListeners : Listener {
             if (item!!.type != Material.BOOK) {
                 if (item!!.lore()?.contains(loreSeparator) != true) {
                     // Create new slots
-                    val someSlots = createSlotCounts(item!!.type)
+                    val someSlots = createRuneSlots(item!!.type)
                     // Remove excess enchants
                     val newEnchants = event.enchantsToAdd.also { enchants ->
                         var counter = 0
@@ -301,7 +301,7 @@ object OdysseyGildingListeners : Listener {
             // TODO: Make soul/infusion table later check structure
             else if (item!!.type == Material.BOOK) {
                 if (item!!.itemMeta?.hasCustomModelData() == true) {
-                    if (item!!.itemMeta!!.customModelData == ItemModels.ARCANE_BOOK) {
+                    if (item!!.itemMeta!!.customModelData == OdysseyItemModels.ARCANE_BOOK) {
                         // TODO: Make level 1-3 each do common, rare, exotic arcane books
                         var randomTome: OdysseyItem? = null
                         val expScaleOffset = minOf(event.expLevelCost + (maxOf(30, event.enchanter.level) - 30), 95)
@@ -497,7 +497,7 @@ object OdysseyGildingListeners : Listener {
                     if (inputEquipment!!.itemMeta?.hasCustomModelData() == true && inputMineral == OdysseyItems.SOUL_STEEL_INGOT.createItemStack(inputMineral!!.amount)) {
                         val oldMeta = inputEquipment!!.itemMeta
                         when (oldMeta.customModelData) {
-                            ItemModels.IRON_KATANA -> {
+                            OdysseyItemModels.IRON_KATANA -> {
                                 event.result = OdysseyWeapons.SOUL_STEEL_KATANA.createItemStack(1).also {
                                    // it.itemMeta = inputEquipment!!.itemMeta
                                     it.lore(oldMeta.lore())
@@ -548,7 +548,7 @@ object OdysseyGildingListeners : Listener {
                     if (inputMineral!!.itemMeta?.hasCustomModelData() == true && event.viewers.size == 1) {
                         when (inputMineral!!.itemMeta!!.customModelData) {
                             // Gilded Book
-                            ItemModels.GILDED_BOOK -> {
+                            OdysseyItemModels.GILDED_BOOK -> {
                                 if (inputEquipment!!.itemMeta.hasEnchants() && inputMineral!!.itemMeta.hasEnchants()) {
                                     val firstBookEnchants = inputEquipment!!.enchantments
                                     val secondBookEnchants = inputMineral!!.enchantments
@@ -564,7 +564,7 @@ object OdysseyGildingListeners : Listener {
                                 }
                             }
                             // Tome of Promotion
-                            ItemModels.TOME_OF_PROMOTION -> {
+                            OdysseyItemModels.TOME_OF_PROMOTION -> {
                                 // Checks book meta and enchant
                                 val randomEnchant: Pair<Enchantment, Int>? = if (inputEquipment!!.itemMeta.hasEnchants()) {
                                     inputEquipment!!.enchantments.toList().random() }
@@ -596,7 +596,7 @@ object OdysseyGildingListeners : Listener {
                                 }
                             }
                             // Tome of Replication
-                            ItemModels.TOME_OF_REPLICATION -> {
+                            OdysseyItemModels.TOME_OF_REPLICATION -> {
                                 if (inputEquipment!!.itemMeta.hasEnchants() || (inputEquipment!!.itemMeta as EnchantmentStorageMeta).hasStoredEnchants()) {
                                     inputMineral = inputEquipment!!.clone()
                                 }
@@ -611,7 +611,7 @@ object OdysseyGildingListeners : Listener {
                     if (inputMineral!!.itemMeta?.hasCustomModelData() == true) {
                         when (inputMineral!!.itemMeta!!.customModelData) {
                             // Gilded book
-                            ItemModels.GILDED_BOOK -> {
+                            OdysseyItemModels.GILDED_BOOK -> {
                                 // Gilded books can only have 1 enchant !
                                 var gildedEnchant: OdysseyEnchantment? = null
                                 var gildedValue = 0
@@ -691,7 +691,7 @@ object OdysseyGildingListeners : Listener {
                                 }
                             }
                             // Tome of Embrace
-                            ItemModels.TOME_OF_EMBRACE -> {
+                            OdysseyItemModels.TOME_OF_EMBRACE -> {
                                 if (inputEquipment!!.lore()?.contains(loreSeparator) == true) {
                                     val newLore = inputEquipment!!.clone().lore()!!.also { lore ->
                                         // Change info
@@ -711,7 +711,7 @@ object OdysseyGildingListeners : Listener {
                             }
                             // Tome of Banishment
                             // TODO: Fix
-                            ItemModels.TOME_OF_BANISHMENT -> {
+                            OdysseyItemModels.TOME_OF_BANISHMENT -> {
                                 if (inputEquipment!!.lore()?.contains(loreSeparator) == true) {
                                     var extraEnchant: Enchantment? = null
                                     val newLore = inputEquipment!!.clone().lore()!!.also { lore ->
@@ -746,7 +746,7 @@ object OdysseyGildingListeners : Listener {
                                 }
                             }
                             // Tome of Discharge
-                            ItemModels.TOME_OF_DISCHARGE -> {
+                            OdysseyItemModels.TOME_OF_DISCHARGE -> {
                                 if (inputEquipment!!.lore()?.contains(loreSeparator) == true && inputEquipment!!.itemMeta?.hasEnchants() == true)  {
                                     // Gets random enchant and replaces with an empty slot
                                     val randomEnchant = inputEquipment!!.enchantments.toList().random()
@@ -774,7 +774,7 @@ object OdysseyGildingListeners : Listener {
                                 }
                             }
                             // Tome of Promotion
-                            ItemModels.TOME_OF_EUPHONY -> {
+                            OdysseyItemModels.TOME_OF_EUPHONY -> {
                                 if (inputEquipment!!.lore()?.contains(loreSeparator) == true && inputEquipment!!.itemMeta?.hasEnchants() == true)  {
                                     // Check if level 0
                                     var euphonicLevels = true // Has zero levels
@@ -824,7 +824,7 @@ object OdysseyGildingListeners : Listener {
                                 }
                             }
                             // Tome of Promotion
-                            ItemModels.TOME_OF_PROMOTION -> {
+                            OdysseyItemModels.TOME_OF_PROMOTION -> {
                                 if (inputEquipment!!.lore()?.contains(loreSeparator) == true && inputEquipment!!.itemMeta?.hasEnchants() == true)  {
                                     // Gets random enchant and tries to promote it
                                     // Checks book meta and enchant
@@ -869,7 +869,7 @@ object OdysseyGildingListeners : Listener {
                             }
 
                             // Tome of Harmony
-                            ItemModels.TOME_OF_HARMONY -> {
+                            OdysseyItemModels.TOME_OF_HARMONY -> {
                                 val newMeta = inputEquipment!!.clone().itemMeta.also {
                                     if (it is Repairable) { it.repairCost = 1 }
                                 }
@@ -877,7 +877,7 @@ object OdysseyGildingListeners : Listener {
                             }
                             // Tome Of Expenditure
                             // TODO: Fix, does not work for multiple gilded
-                            ItemModels.TOME_OF_EXPENDITURE -> {
+                            OdysseyItemModels.TOME_OF_EXPENDITURE -> {
                                 if (inputEquipment!!.itemMeta?.hasEnchants() == true) {
                                     val randomEnchant = inputEquipment!!.enchantments.toList().random()
 
@@ -896,7 +896,7 @@ object OdysseyGildingListeners : Listener {
                                 }
                             }
                             // Tome Of Avarice
-                            ItemModels.TOME_OF_AVARICE -> {
+                            OdysseyItemModels.TOME_OF_AVARICE -> {
                                 if (inputEquipment!!.itemMeta?.hasEnchants() == true && inputEquipment!!.lore()?.contains(loreSeparator) == true) {
                                     // Check if level 30
                                     var avariceLevels = true // Has zero levels

@@ -2,7 +2,7 @@ package me.shadowalzazel.mcodyssey.bosses.theAmbassador
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.bosses.utility.OdysseyBoss
-import me.shadowalzazel.mcodyssey.constants.ModifiersUUIDs
+import me.shadowalzazel.mcodyssey.constants.OdysseyUUIDs
 import me.shadowalzazel.mcodyssey.listeners.tasks.GravityWellTask
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.items.*
@@ -107,7 +107,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
             canPickupItems = true
 
             // Health
-            val mobHealth = AttributeModifier(ModifiersUUIDs.ODYSSEY_BOSS_HEALTH_UUID, "odyssey_mob_health", 930.0, AttributeModifier.Operation.ADD_NUMBER)
+            val mobHealth = AttributeModifier(OdysseyUUIDs.ODYSSEY_BOSS_HEALTH_UUID, "odyssey_mob_health", 930.0, AttributeModifier.Operation.ADD_NUMBER)
             val healthAttribute = getAttribute(Attribute.GENERIC_MAX_HEALTH)
             healthAttribute!!.addModifier(mobHealth)
             health = 950.0

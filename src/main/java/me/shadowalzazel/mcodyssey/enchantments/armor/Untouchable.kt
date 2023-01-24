@@ -22,7 +22,7 @@ object Untouchable : OdysseyEnchantment("untouchable", "Untouchable", 1) {
     override fun canEnchantItem(item: ItemStack): Boolean {
         return when (item.type) {
             Material.ENCHANTED_BOOK,
-            Material.NETHERITE_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.IRON_CHESTPLATE, Material.GOLDEN_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, Material.LEATHER_CHESTPLATE -> {
+            Material.NETHERITE_LEGGINGS, Material.DIAMOND_LEGGINGS, Material.IRON_LEGGINGS, Material.GOLDEN_LEGGINGS, Material.CHAINMAIL_LEGGINGS, Material.LEATHER_LEGGINGS -> {
                 true
             }
             else -> {
