@@ -2,7 +2,7 @@ package me.shadowalzazel.mcodyssey.items.misc
 
 import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.items.odyssey.OdysseyItem
-import me.shadowalzazel.mcodyssey.constants.ItemModels
+import me.shadowalzazel.mcodyssey.constants.OdysseyItemModels
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
@@ -16,21 +16,21 @@ object ArcaneBook : OdysseyItem("Arcane Book",
     Material.BOOK,
     Component.text("Arcane Book", TextColor.color(191, 146, 239), TextDecoration.ITALIC),
     listOf(Component.text("Arcane Book", TextColor.color(191, 146, 239)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-    ItemModels.ARCANE_BOOK)
+    OdysseyItemModels.ARCANE_BOOK)
 
 
 // GILDED BOOK
 object GildedBook : OdysseyItem("Gilded Book",
     Material.ENCHANTED_BOOK,
     Component.text("Gilded Book", TextColor.color(255, 170, 0), TextDecoration.ITALIC),
-    customModel = ItemModels.GILDED_BOOK) {
+    customModel = OdysseyItemModels.GILDED_BOOK) {
     fun createGildedBook(gildedEnchantment: OdysseyEnchantment, level: Int): ItemStack {
         val newGildedBook = ItemStack(Material.ENCHANTED_BOOK, 1)
 
         // Assign meta
         newGildedBook.itemMeta = newGildedBook.itemMeta.also {
             it.addEnchant(gildedEnchantment, level, true)
-            it.setCustomModelData(ItemModels.GILDED_BOOK)
+            it.setCustomModelData(OdysseyItemModels.GILDED_BOOK)
             it.displayName(odysseyDisplayName)
             val textLore = gildedEnchantment.enchantLore(level)
             it.lore(listOf(textLore.decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
@@ -46,21 +46,21 @@ object TomeOfDischarge : OdysseyItem("Tome Of Discharge",
     Material.ENCHANTED_BOOK,
     Component.text("Tome of Discharge", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
     listOf(Component.text("Tome of Discharge", TextColor.color(193, 94, 54)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-    ItemModels.TOME_OF_DISCHARGE)
+    OdysseyItemModels.TOME_OF_DISCHARGE)
 
 // TOME OF PROMOTION
 object TomeOfPromotion : OdysseyItem("Tome Of Promotion",
     Material.ENCHANTED_BOOK,
     Component.text("Tome of Promotion", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
     listOf(Component.text("Tome of Promotion", TextColor.color(210, 255, 74)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-    ItemModels.TOME_OF_PROMOTION)
+    OdysseyItemModels.TOME_OF_PROMOTION)
 
 // TOME OF HARMONY
 object TomeOfHarmony : OdysseyItem("Tome Of Harmony",
     Material.ENCHANTED_BOOK,
     Component.text("Tome of Harmony", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
     listOf(Component.text("Tome of Harmony", TextColor.color(237, 165, 247)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-    ItemModels.TOME_OF_HARMONY)
+    OdysseyItemModels.TOME_OF_HARMONY)
 
 
 // TOME OF HARMONY
@@ -68,7 +68,7 @@ object TomeOfEmbrace : OdysseyItem("Tome Of Embrace",
     Material.ENCHANTED_BOOK,
     Component.text("Tome of Embrace", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
     listOf(Component.text("Tome of Embrace", TextColor.color(23, 221, 98)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-    ItemModels.TOME_OF_EMBRACE)
+    OdysseyItemModels.TOME_OF_EMBRACE)
 
 
 // TOME OF BANISHMENT
@@ -76,7 +76,7 @@ object TomeOfBanishment : OdysseyItem("Tome Of Banishment",
     Material.ENCHANTED_BOOK,
     Component.text("Tome of Banishment", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
     listOf(Component.text("Tome of Banishment", TextColor.color(23, 221, 98)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-    ItemModels.TOME_OF_BANISHMENT)
+    OdysseyItemModels.TOME_OF_BANISHMENT)
 
 
 // TOME OF REPLICATION
@@ -84,7 +84,7 @@ object TomeOfReplication : OdysseyItem("Tome Of Replication",
     Material.ENCHANTED_BOOK,
     Component.text("Tome of Replication", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
     listOf(Component.text("Tome of Replication", TextColor.color(64, 128, 234)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-    ItemModels.TOME_OF_REPLICATION)
+    OdysseyItemModels.TOME_OF_REPLICATION)
 
 
 // TOME OF EXPENDITURE
@@ -92,7 +92,7 @@ object TomeOfExpenditure : OdysseyItem("Tome Of Expenditure",
     Material.ENCHANTED_BOOK,
     Component.text("Tome of Expenditure", TextColor.color(255, 170, 0), TextDecoration.ITALIC),
     listOf(Component.text("Tome of Expenditure", TextColor.color(114, 176, 54)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-    ItemModels.TOME_OF_EXPENDITURE)
+    OdysseyItemModels.TOME_OF_EXPENDITURE)
 
 
 // TOME OF EUPHONY
@@ -100,7 +100,7 @@ object TomeOfEuphony : OdysseyItem("Tome Of Euphony",
     Material.ENCHANTED_BOOK,
     Component.text("Tome of Euphony", TextColor.color(255, 170, 0), TextDecoration.ITALIC),
     listOf(Component.text("Tome of Euphony", TextColor.color(94, 210, 215)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-    ItemModels.TOME_OF_EUPHONY)
+    OdysseyItemModels.TOME_OF_EUPHONY)
 
 
 // TOME OF AVARICE
@@ -108,7 +108,7 @@ object TomeOfAvarice : OdysseyItem("Tome Of Avarice",
     Material.ENCHANTED_BOOK,
     Component.text("Tome of Avarice", TextColor.color(255, 170, 0), TextDecoration.ITALIC),
     listOf(Component.text("Tome of Avarice", TextColor.color(212, 74, 74)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-    ItemModels.TOME_OF_AVARICE)
+    OdysseyItemModels.TOME_OF_AVARICE)
 
 
 // RECIPE BOOK

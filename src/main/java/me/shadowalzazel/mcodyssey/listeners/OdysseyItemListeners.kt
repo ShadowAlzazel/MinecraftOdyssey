@@ -2,7 +2,7 @@ package me.shadowalzazel.mcodyssey.listeners
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
-import me.shadowalzazel.mcodyssey.constants.ModifiersUUIDs
+import me.shadowalzazel.mcodyssey.constants.OdysseyUUIDs
 import me.shadowalzazel.mcodyssey.listeners.tasks.UnstableAntimatterTask
 import me.shadowalzazel.mcodyssey.items.OdysseyItems
 import me.shadowalzazel.mcodyssey.listeners.tasks.TemporalStasisTask
@@ -63,10 +63,10 @@ object OdysseyItemListeners : Listener {
                 when (event.item) {
                     // Fruit Of Erishkigal Health Boosts
                     OdysseyItems.FRUIT_OF_ERISHKIGAL.createItemStack(someStackValue) -> {
-                        if (!extraHealthCalculator(somePlayer, ModifiersUUIDs.ERISHKIGAL_FRUIT_HEALTH)) { event.isCancelled }
+                        if (!extraHealthCalculator(somePlayer, OdysseyUUIDs.EXTRA_HEALTH_ERISHKIGAL_FRUIT)) { event.isCancelled }
                     }
                     OdysseyItems.IRRADIATED_FRUIT.createItemStack(someStackValue) -> {
-                        if (!extraHealthCalculator(somePlayer, ModifiersUUIDs.IRRADIATED_FRUIT_HEALTH)) { event.isCancelled }
+                        if (!extraHealthCalculator(somePlayer, OdysseyUUIDs.EXTRA_HEALTH_IRRADIATED_FRUIT)) { event.isCancelled }
                         else {
                             somePlayer.addPotionEffects(listOf(
                                 PotionEffect(PotionEffectType.HUNGER, 20 * 30, 1),
@@ -76,7 +76,7 @@ object OdysseyItemListeners : Listener {
                         }
                     }
                     OdysseyItems.SCULK_HEART.createItemStack(someStackValue) -> {
-                        if (!extraHealthCalculator(somePlayer, ModifiersUUIDs.SCULK_HEART_HEALTH)) { event.isCancelled }
+                        if (!extraHealthCalculator(somePlayer, OdysseyUUIDs.EXTRA_HEALTH_SCULK_HEART)) { event.isCancelled }
                         else {
                             somePlayer.addPotionEffect(PotionEffect(PotionEffectType.DARKNESS, 20 * 30, 1))
                             somePlayer.damage(2.0)
@@ -171,9 +171,9 @@ object OdysseyItemListeners : Listener {
 
     private fun extraHealthCalculator(eventPlayer: Player, healthUUID: UUID): Boolean {
         val healthMap = mapOf(
-            ModifiersUUIDs.ERISHKIGAL_FRUIT_HEALTH to Pair("odyssey_extra_health_erishkigal", 4.0), // * 4
-            ModifiersUUIDs.IRRADIATED_FRUIT_HEALTH to Pair("odyssey_extra_health_erishkigal", 2.0),
-            ModifiersUUIDs.SCULK_HEART_HEALTH to Pair("odyssey_extra_health_sculk_heart", 2.0))
+            OdysseyUUIDs.EXTRA_HEALTH_ERISHKIGAL_FRUIT to Pair("odyssey_extra_health_erishkigal", 4.0), // * 4
+            OdysseyUUIDs.EXTRA_HEALTH_IRRADIATED_FRUIT to Pair("odyssey_extra_health_erishkigal", 2.0),
+            OdysseyUUIDs.EXTRA_HEALTH_SCULK_HEART to Pair("odyssey_extra_health_sculk_heart", 2.0))
 
         // Get health
         val playerHealth = eventPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!
