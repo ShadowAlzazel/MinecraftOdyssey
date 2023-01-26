@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.listeners
 
-import me.shadowalzazel.mcodyssey.effects.OdysseyEffectTags
+import me.shadowalzazel.mcodyssey.constants.OdysseyEffectTags
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.entity.EntityType

@@ -165,14 +165,14 @@ object OdysseyAlchemyListeners : Listener {
         }
         // Match Names
         when (potionName) {
-            "Bottle o' Decay" -> { OdysseyEffectFunctions.decayingEffect(affectedEntities, potionDuration, 1) }
-            "Bottle o' Frost" -> { OdysseyEffectFunctions.freezingEffect(affectedEntities, potionDuration, 1) }
-            "Bottle o' Douse" -> { OdysseyEffectFunctions.dousedEffect(affectedEntities, potionDuration, 2) }
-            "Bottle o' Ablaze" -> { OdysseyEffectFunctions.ablazeEffect(affectedEntities, potionDuration, 2) }
-            "Potion of Thorns" -> { OdysseyEffectFunctions.thornsEffect(affectedEntities, potionDuration) }
-            "Puffy n' Prickly Potion" -> { OdysseyEffectFunctions.puffyPricklyEffect(affectedEntities, potionDuration) }
-            "Poltergeist Brew" -> { OdysseyEffectFunctions.accursedEffect(affectedEntities, potionDuration) }
-            "Bottled Souls" -> { OdysseyEffectFunctions.soulDamageEffect(affectedEntities, 1) }
+            "Bottle o' Decay" -> { OdysseyEffectsHandler.decayingEffect(affectedEntities, potionDuration, 1) }
+            "Bottle o' Frost" -> { OdysseyEffectsHandler.freezingEffect(affectedEntities, potionDuration, 1) }
+            "Bottle o' Douse" -> { OdysseyEffectsHandler.dousedEffect(affectedEntities, potionDuration, 2) }
+            "Bottle o' Ablaze" -> { OdysseyEffectsHandler.ablazeEffect(affectedEntities, potionDuration, 2) }
+            "Potion of Thorns" -> { OdysseyEffectsHandler.thornsEffect(affectedEntities, potionDuration) }
+            "Puffy n' Prickly Potion" -> { OdysseyEffectsHandler.puffyPricklyEffect(affectedEntities, potionDuration) }
+            "Poltergeist Brew" -> { OdysseyEffectsHandler.accursedEffect(affectedEntities, potionDuration) }
+            "Bottled Souls" -> { OdysseyEffectsHandler.soulDamageEffect(affectedEntities, 1) }
             else -> {
             }
         }
@@ -243,14 +243,14 @@ object OdysseyAlchemyListeners : Listener {
                     // Match Names
                     // TODO: Reapply
                     when (potionName) {
-                        "Bottle o' Decay" -> { OdysseyEffectFunctions.decayingEffect(mutableListOf(somePlayer), potionDuration, 1) }
-                        "Bottle o' Frost" -> { OdysseyEffectFunctions.freezingEffect(mutableListOf(somePlayer), potionDuration, 1) }
-                        "Bottle o' Douse" -> { OdysseyEffectFunctions.dousedEffect(mutableListOf(somePlayer), potionDuration, 2) }
-                        "Bottle o' Ablaze" -> { OdysseyEffectFunctions.ablazeEffect(mutableListOf(somePlayer), potionDuration, 2) }
-                        "Potion of Thorns" -> { OdysseyEffectFunctions.thornsEffect(mutableListOf(somePlayer), potionDuration) }
-                        "Puffy n' Prickly Potion" -> { OdysseyEffectFunctions.puffyPricklyEffect(mutableListOf(somePlayer), potionDuration) }
-                        "Poltergeist Brew" -> { OdysseyEffectFunctions.accursedEffect(mutableListOf(somePlayer), potionDuration) }
-                        "Bottled Souls" -> { OdysseyEffectFunctions.soulDamageEffect(mutableListOf(somePlayer), 1) }
+                        "Bottle o' Decay" -> { OdysseyEffectsHandler.decayingEffect(mutableListOf(somePlayer), potionDuration, 1) }
+                        "Bottle o' Frost" -> { OdysseyEffectsHandler.freezingEffect(mutableListOf(somePlayer), potionDuration, 1) }
+                        "Bottle o' Douse" -> { OdysseyEffectsHandler.dousedEffect(mutableListOf(somePlayer), potionDuration, 2) }
+                        "Bottle o' Ablaze" -> { OdysseyEffectsHandler.ablazeEffect(mutableListOf(somePlayer), potionDuration, 2) }
+                        "Potion of Thorns" -> { OdysseyEffectsHandler.thornsEffect(mutableListOf(somePlayer), potionDuration) }
+                        "Puffy n' Prickly Potion" -> { OdysseyEffectsHandler.puffyPricklyEffect(mutableListOf(somePlayer), potionDuration) }
+                        "Poltergeist Brew" -> { OdysseyEffectsHandler.accursedEffect(mutableListOf(somePlayer), potionDuration) }
+                        "Bottled Souls" -> { OdysseyEffectsHandler.soulDamageEffect(mutableListOf(somePlayer), 1) }
                         else -> {
                         }
                     }
@@ -437,16 +437,16 @@ object OdysseyAlchemyListeners : Listener {
         // For now base timers then string manipulation
         for (tag in somePotionCloud.scoreboardTags) {
             when (tag) {
-                "Decaying_Cloud" -> { OdysseyEffectFunctions.decayingEffect(event.affectedEntities, (30 / 4) / 2, 1) }
-                "Frost_Cloud" -> { OdysseyEffectFunctions.freezingEffect(event.affectedEntities, 30 / 4, 1) }
-                "Douse_Cloud" -> { OdysseyEffectFunctions.dousedEffect(event.affectedEntities, 40 / 4, 2) }
-                "Blazing_Cloud" -> { OdysseyEffectFunctions.ablazeEffect(event.affectedEntities, 30 / 4, 2) }
-                "Potion of Thorns" -> { OdysseyEffectFunctions.thornsEffect(event.affectedEntities, 50 / 4) }
-                "Puffy_Prickly_Cloud" -> { OdysseyEffectFunctions.puffyPricklyEffect(event.affectedEntities, 40 / 4) }
-                "Escaping_Souls_Cloud" -> { OdysseyEffectFunctions.soulDamageEffect(event.affectedEntities, 1)
+                "Decaying_Cloud" -> { OdysseyEffectsHandler.decayingEffect(event.affectedEntities, (30 / 4) / 2, 1) }
+                "Frost_Cloud" -> { OdysseyEffectsHandler.freezingEffect(event.affectedEntities, 30 / 4, 1) }
+                "Douse_Cloud" -> { OdysseyEffectsHandler.dousedEffect(event.affectedEntities, 40 / 4, 2) }
+                "Blazing_Cloud" -> { OdysseyEffectsHandler.ablazeEffect(event.affectedEntities, 30 / 4, 2) }
+                "Potion of Thorns" -> { OdysseyEffectsHandler.thornsEffect(event.affectedEntities, 50 / 4) }
+                "Puffy_Prickly_Cloud" -> { OdysseyEffectsHandler.puffyPricklyEffect(event.affectedEntities, 40 / 4) }
+                "Escaping_Souls_Cloud" -> { OdysseyEffectsHandler.soulDamageEffect(event.affectedEntities, 1)
                     with(somePotionCloud) { world.spawnParticle(Particle.SCULK_SOUL, location, (radius * 40).toInt(), radius.toDouble(), 0.25, radius.toDouble()) }
                 }
-                "Poltergeist_Accursed_Cloud" -> { OdysseyEffectFunctions.accursedEffect(event.affectedEntities, 30 / 4) }
+                "Poltergeist_Accursed_Cloud" -> { OdysseyEffectsHandler.accursedEffect(event.affectedEntities, 30 / 4) }
                 else -> {
                 }
             }

@@ -14,6 +14,9 @@ import org.bukkit.potion.PotionEffectType
 object OdysseyFoodListeners : Listener {
 
     // Main Function for food related consumption events
+
+    // MOON POTATOES
+
     @EventHandler
     fun eatingOdysseyFood(event: PlayerItemConsumeEvent) {
         if (event.item.itemMeta.hasLore()) {
