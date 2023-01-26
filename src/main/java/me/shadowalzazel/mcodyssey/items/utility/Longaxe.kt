@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.items.weapons.kinds
+package me.shadowalzazel.mcodyssey.items.utility
 
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import net.kyori.adventure.text.Component

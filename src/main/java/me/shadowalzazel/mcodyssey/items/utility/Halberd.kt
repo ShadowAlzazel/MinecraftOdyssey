@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.items.weapons.kinds
+package me.shadowalzazel.mcodyssey.items.utility
 
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import net.kyori.adventure.text.Component
@@ -17,6 +17,3 @@ open class Halberd (halberdName: String, halberdMaterial: Material, halberdCusto
     }
 
 }
-
-
-// MAYBE CHANGE SPIKE TO PRISMARINE!!!!!!! !!!!!!!!!!!

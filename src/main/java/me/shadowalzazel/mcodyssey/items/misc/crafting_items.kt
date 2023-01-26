@@ -22,14 +22,14 @@ object EnigmaticAnchor : OdysseyItem("Enigmatic Anchor",
     OdysseyItemModels.ENIGMATIC_ANCHOR)
 // Yone E
 
-object GemmaPrimus : OdysseyItem("Primogem",
+object Primogem : OdysseyItem("Primogem",
     Material.EMERALD,
     Component.text("Primogem", TextColor.color(226, 137, 69), TextDecoration.ITALIC),
     listOf(
         Component.text("A primordial crystalline gem that's beyond", TextColor.color(215, 215, 215)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE),
         Component.text("the test world. Shines with the condensed hopes", TextColor.color(215, 215, 215)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE),
         Component.text("and dreams of universes that once were.", TextColor.color(215, 215, 215)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-    OdysseyItemModels.GEMMA_PRIMUS)
+    OdysseyItemModels.PRIMOGEM)
 
 // TODO: Flashbang, Knock-Up, Freeze,
 

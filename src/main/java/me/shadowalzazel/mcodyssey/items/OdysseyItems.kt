@@ -7,7 +7,7 @@ import me.shadowalzazel.mcodyssey.items.misc.*
 object OdysseyItems {
 
     /* ------------------------------------------------------------------------- */
-    val GEMMA_PRIMUS: OdysseyItem = GemmaPrimus
+    val GEMMA_PRIMUS: OdysseyItem = Primogem
 
     val PAPERS_OF_ARCUS: OdysseyItem =  PapersOfArcus
     val GALVANIZED_STEEL: OdysseyItem = GalvanizedSteel

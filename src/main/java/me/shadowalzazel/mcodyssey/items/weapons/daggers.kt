@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.items.weapons
 
-import me.shadowalzazel.mcodyssey.items.weapons.kinds.Dagger
+import me.shadowalzazel.mcodyssey.items.utility.Dagger
 import me.shadowalzazel.mcodyssey.constants.OdysseyItemModels
 import org.bukkit.Material
 
