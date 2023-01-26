@@ -7,7 +7,7 @@ import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 
-// ARCANE_BOOK
+// SAYA
 object Saya : OdysseyItem("Saya",
     Material.RABBIT_HIDE,
     Component.text("Saya", TextColor.color(191, 186, 139), TextDecoration.ITALIC),

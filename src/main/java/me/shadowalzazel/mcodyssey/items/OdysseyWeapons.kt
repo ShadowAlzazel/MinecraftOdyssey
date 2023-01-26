@@ -89,7 +89,7 @@ object OdysseyWeapons {
     val BLAZE_ROD_STAFF = BlazeRodStaff
 
     // Exotics
-    val ABZU_BLADE = AbzuBlade
+    val ABZU_BLADE = WolfsGravestone
 
     // Bosses
     val KINETIC_BLASTER = KineticBlaster

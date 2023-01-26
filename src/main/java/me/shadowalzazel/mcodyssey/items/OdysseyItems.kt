@@ -1,6 +1,8 @@
 package me.shadowalzazel.mcodyssey.items
 
+import me.shadowalzazel.mcodyssey.items.arcane.*
 import me.shadowalzazel.mcodyssey.items.base.*
+import me.shadowalzazel.mcodyssey.items.materials.*
 import me.shadowalzazel.mcodyssey.items.miscellaneous.*
 
 // MAKE OBJECTS LATER
@@ -15,12 +17,12 @@ object OdysseyItems {
     val PURE_ALLOY_GOLD: OdysseyItem = PureAlloyGold
     val NEUTRONIUM_BARK_SCRAPS: OdysseyItem = NeutroniumBarkScraps
     val HAWKING_ENTANGLED_UNIT: OdysseyItem = HawkingEntangledUnit
-    val IDESCINE_SAPLING: OdysseyItem = IdescineSaplings
+    val IDESCINE_SAPLING: OdysseyItem = ElencuileSaplings
     val IDESCINE_ESSENCE: OdysseyItem = IdescineEssence
     val KUGELBLITZ_CONTAINMENT_UNIT: OdysseyItem = KugelblitzContainmentUnit
     val BABEL_ANNULUS_SCHEMATICS: OdysseyItem = BabelAnnulusSchematics
-    val REFINED_NEPTUNIAN_DIAMONDS: OdysseyItem = RefinedNeptunianDiamonds
-    val REFINED_IOJOVIAN_EMERALDS: OdysseyItem = RefinedIojovianEmeralds
+    val REFINED_NEPTUNIAN_DIAMONDS: OdysseyItem = NeptunianDiamond
+    val REFINED_IOJOVIAN_EMERALDS: OdysseyItem = JovianEmerald
     val POLYMORPHIC_GLUE: OdysseyItem = PolymorphicGlue
     val DORMANT_SENTIENT_STAR: OdysseyItem = DormantCyberStar
     val IMPURE_ANTIMATTER_SHARD: OdysseyItem = ImpureAntiMatterShard

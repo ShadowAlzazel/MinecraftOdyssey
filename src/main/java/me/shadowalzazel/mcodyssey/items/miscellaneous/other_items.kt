@@ -51,31 +51,3 @@ object KugelblitzContainmentUnit : OdysseyItem("Kugelblitz Containment Unit",
     listOf(Component.text("A portable device capable of holding large amounts of matter", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     OdysseyItemModels.KUGELBLITZ_CONTAINMENT_UNIT)
 
-
-// Refined Neptunian Diamond
-object NeptunianDiamond : OdysseyItem("Neptunian-Diamond",
-    Material.DIAMOND,
-    Component.text("Refined Neptunian-Diamond", TextColor.color(47, 122, 228), TextDecoration.ITALIC),
-    listOf(Component.text("A diamond forged inside a colossal planet refined to an impressive caliber", TextColor.color(47, 122, 228)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-    OdysseyItemModels.NEPTUNIAN_DIAMOND)
-
-// Refined Iojovian Emerald
-object IojovianEmerald : OdysseyItem("Iojovian-Emerald",
-    Material.EMERALD,
-    Component.text("Refined Iojovian-Emerald", TextColor.color(210, 234, 64), TextDecoration.ITALIC),
-    listOf(Component.text("An emerald grown near a Jovian super-planet to unmatched pristine", TextColor.color(210, 234, 64)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-    OdysseyItemModels.IOJOVIAN_EMERALD)
-
-// Refined Iojovian Emerald
-object Kunzite : OdysseyItem("Kunzite",
-    Material.EMERALD,
-    Component.text("Kunzite", TextColor.color(255, 150, 210), TextDecoration.ITALIC),
-    listOf(Component.text("Kunzite", TextColor.color(255, 150, 210)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-    OdysseyItemModels.IOJOVIAN_EMERALD)
-
-// Refined Iojovian Emerald
-object Ruby : OdysseyItem("Ruby",
-    Material.EMERALD,
-    Component.text("Ruby", TextColor.color(210, 64, 64), TextDecoration.ITALIC),
-    listOf(Component.text("Ruby", TextColor.color(210, 64, 64)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-    OdysseyItemModels.IOJOVIAN_EMERALD)

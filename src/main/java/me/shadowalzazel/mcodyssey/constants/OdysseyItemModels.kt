@@ -32,9 +32,6 @@ object OdysseyItemModels {
     /* --------------------------------------------ITEMS--------------------------------------------- */
     /* ---------------------------------------------------------------------------------------------- */
 
-    /* ----------------------------------------------------------- */
-
-    // UNCOMMON
     const val PAPERS_OF_ARCUS: Int = 6905070
     const val GALVANIZED_STEEL: Int = 6905071
     const val PURE_ALLOY_COPPER: Int = 6905072
@@ -43,24 +40,16 @@ object OdysseyItemModels {
     const val KUGELBLITZ_CONTAINMENT_UNIT: Int = 6905075
     const val POLYMORPHIC_GLUE: Int = 6905076
 
-    /* ----------------------------------------------------------- */
-
-    // RARE
     const val NEPTUNIAN_DIAMOND: Int = 6905006
-    const val IOJOVIAN_EMERALD: Int = 6905105
+    const val JOVIAN_EMERALD: Int = 6905105
     const val NEUTRONIUM_BARK_SCRAPS: Int = 6905333
-    const val IDESCINE_SAPLINGS: Int = 6905464
-    const val IDESCINE_ESSENCE: Int = 6905465
+    const val ELENCUILE_SAPLING: Int = 6905464
+    const val ELENCUILE_ESSENCE: Int = 6905465
     const val IRRADIATED_SHARD: Int = 6905466
     const val IRRADIATED_ROD: Int = 6905467
 
-
-    /* ----------------------------------------------------------- */
     // 6900XXX
-
-    // EXOTIC
     const val PRIMOGEM: Int = 6900000
-
     const val BABEL_ANNULUS_SCHEMATICS: Int = 6900068
     const val DORMANT_CYBER_STAR: Int = 6900069
     const val IMPURE_ANTI_MATTER_SHARD: Int = 6900088
@@ -70,11 +59,9 @@ object OdysseyItemModels {
     const val SILMARIL_OF_YGGLADIEL: Int = 6900556
     const val IRRADIATED_FRUIT: Int = 6905468
     const val TOTEM_OF_VEXING: Int = 6905303
+    const val BONE_OF_FROST: Int = 6905304
 
-    /* ----------------------------------------------------------- */
     // 69066XX
-
-    // ENIGMATIC
     const val SOUL_CRYSTAL: Int = 6906613
     const val ECTOPLASM: Int = 6906614
     const val SORROWING_SOUL: Int = 6906615
@@ -83,11 +70,8 @@ object OdysseyItemModels {
     const val SOUL_STEEL_INGOT: Int = 6906618
 
     // Special variants like kama...
-
-    // ENIGMATIC
     const val SOUL_STEEL_KATANA: Int = 6906644
     const val SOUL_STEEL_HELMET: Int = 6906645
-
     // Scythe, Sickle, Kama, Katana, Dagger
     const val ENIGMATIC_OMAMORI: Int = 6906649
 
