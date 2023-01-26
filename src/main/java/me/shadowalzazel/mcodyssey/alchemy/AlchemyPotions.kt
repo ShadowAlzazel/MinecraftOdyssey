@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.alchemy
 
 import me.shadowalzazel.mcodyssey.alchemy.potions.*
-import me.shadowalzazel.mcodyssey.alchemy.utility.OdysseyPotion
+import me.shadowalzazel.mcodyssey.items.utility.OdysseyPotion
 
 object AlchemyPotions {
 

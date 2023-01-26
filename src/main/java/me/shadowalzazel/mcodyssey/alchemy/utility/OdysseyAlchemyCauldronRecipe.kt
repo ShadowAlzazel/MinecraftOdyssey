@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.alchemy.utility
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.items.utility.OdysseyPotion
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Item
