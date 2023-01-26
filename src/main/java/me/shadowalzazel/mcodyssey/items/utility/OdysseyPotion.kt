@@ -10,9 +10,13 @@ import org.bukkit.potion.PotionData
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionType
 
-//
-open class OdysseyPotion(potionName: String, val potionDisplayName: Component, potionLore: List<Component>? = null, private val potionEffects: List<PotionEffect>, private val potionColor: Color?) :
-    OdysseyItem(potionName, Material.POTION, potionDisplayName, potionLore) {
+open class OdysseyPotion(
+    potionName: String,
+    val potionDisplayName: Component,
+    potionLore: List<Component>? = null,
+    private val potionEffects: List<PotionEffect>,
+    private val potionColor: Color?
+    ) : OdysseyItem(potionName, Material.POTION, potionDisplayName, potionLore) {
 
     // Creates and Item Stack
     override fun createItemStack(amount: Int): ItemStack {

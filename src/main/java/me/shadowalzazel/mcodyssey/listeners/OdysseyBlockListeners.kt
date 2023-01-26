@@ -21,7 +21,7 @@ object OdysseyBlockListeners : Listener {
     fun onCustomBlockPlace(event: BlockPlaceEvent) {
         if (event.itemInHand.itemMeta?.hasCustomModelData() == true) {
             when(event.itemInHand.itemMeta.customModelData) {
-                OdysseyItemModels.IDESCINE_SAPLINGS -> {
+                OdysseyItemModels.ELENCUILE_SAPLING -> {
                     println("I")
                     if (!checkValidIdescineTree(event.block)) { event.isCancelled }
                     else { spawnIdescineTree(event.block, event.player.server) }

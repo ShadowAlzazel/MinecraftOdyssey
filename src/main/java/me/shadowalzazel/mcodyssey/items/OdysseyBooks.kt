@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.items
 
+import me.shadowalzazel.mcodyssey.items.arcane.*
 import me.shadowalzazel.mcodyssey.items.miscellaneous.*
 
 object OdysseyBooks {

@@ -7,7 +7,6 @@ import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 
-
 // BEETROOT_COOKIE
 object BeetrootCookie : OdysseyItem("Beetroot Cookie",
     Material.COOKIE,

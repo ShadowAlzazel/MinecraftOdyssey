@@ -15,12 +15,13 @@ object Bacon : OdysseyItem("Bacon",
     OdysseyItemModels.BACON)
 
 // SALMON_ROLL
-object SalmonRollSushi : OdysseyItem("Salmon Roll",
+object SalmonRoll : OdysseyItem("Salmon Roll",
     Material.COOKED_SALMON,
     Component.text("Salmon Roll", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
     listOf(Component.text("Salmon Roll Sushi!", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
     OdysseyItemModels.SALMON_ROLL)
 
+// CRYSTAL_CANDY
 object CrystalCandy: OdysseyItem("Crystal Candy",
     Material.SWEET_BERRIES,
     Component.text("Crystal Candy", TextColor.color(255, 255, 85), TextDecoration.ITALIC),

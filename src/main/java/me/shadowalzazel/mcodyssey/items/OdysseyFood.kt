@@ -19,6 +19,6 @@ object OdysseyFood {
 
     val CRYSTAL_CANDY = CrystalCandy
     val BACON = Bacon
-    val SALMON_ROLL = SalmonRollSushi
+    val SALMON_ROLL = SalmonRoll
 
 }

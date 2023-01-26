@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.alchemy.potions
+package me.shadowalzazel.mcodyssey.items.arcane
 
 import me.shadowalzazel.mcodyssey.items.utility.OdysseyPotion
 import net.kyori.adventure.text.Component
