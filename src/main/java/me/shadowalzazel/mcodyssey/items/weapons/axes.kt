@@ -1,8 +1,8 @@
 package me.shadowalzazel.mcodyssey.items.weapons
 
 import me.shadowalzazel.mcodyssey.constants.OdysseyItemModels
-import me.shadowalzazel.mcodyssey.items.weapons.kinds.Battleaxe
-import me.shadowalzazel.mcodyssey.items.weapons.kinds.Longaxe
+import me.shadowalzazel.mcodyssey.items.utility.Battleaxe
+import me.shadowalzazel.mcodyssey.items.utility.Longaxe
 import org.bukkit.Material
 
 

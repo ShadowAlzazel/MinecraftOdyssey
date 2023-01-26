@@ -59,7 +59,7 @@ object OdysseyItemModels {
     // 6900XXX
 
     // EXOTIC
-    const val GEMMA_PRIMUS: Int = 6900000
+    const val PRIMOGEM: Int = 6900000
 
     const val BABEL_ANNULUS_SCHEMATICS: Int = 6900068
     const val DORMANT_CYBER_STAR: Int = 6900069
