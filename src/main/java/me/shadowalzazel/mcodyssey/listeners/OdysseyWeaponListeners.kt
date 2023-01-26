@@ -73,9 +73,9 @@ object OdysseyWeaponListeners : Listener {
             val armorPoints = someVictim.getAttribute(Attribute.GENERIC_ARMOR)!!.value
 
             // Piercing ignores some armor
-            // BLudgoen is true damage
+            // Bludgeon is true damage
             // Cleaving more damage if wearing armor
-            // LAcerate
+            // lacerate
 
 
             // Cleaving

@@ -2,7 +2,7 @@ package me.shadowalzazel.mcodyssey.items.weapons
 
 import me.shadowalzazel.mcodyssey.constants.OdysseyItemModels
 import me.shadowalzazel.mcodyssey.constants.OdysseyUUIDs
-import me.shadowalzazel.mcodyssey.items.weaponTypes.Katana
+import me.shadowalzazel.mcodyssey.items.weapons.kinds.Katana
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier

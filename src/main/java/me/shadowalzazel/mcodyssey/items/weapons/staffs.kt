@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.items.weapons
 
-import me.shadowalzazel.mcodyssey.items.weaponTypes.Staff
+import me.shadowalzazel.mcodyssey.items.weapons.kinds.Staff
 import me.shadowalzazel.mcodyssey.constants.OdysseyItemModels
 import org.bukkit.Material
 

@@ -1,8 +1,8 @@
 package me.shadowalzazel.mcodyssey.items.weapons
 
-import me.shadowalzazel.mcodyssey.items.weaponTypes.Spear
+import me.shadowalzazel.mcodyssey.items.weapons.kinds.Spear
 import me.shadowalzazel.mcodyssey.constants.OdysseyItemModels
-import me.shadowalzazel.mcodyssey.items.weaponTypes.Halberd
+import me.shadowalzazel.mcodyssey.items.weapons.kinds.Halberd
 import org.bukkit.Material
 
 /* --------------------------SPEAR---------------------------*/

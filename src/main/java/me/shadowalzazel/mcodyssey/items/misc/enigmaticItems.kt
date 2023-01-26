@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.items.misc
 
-import me.shadowalzazel.mcodyssey.items.odyssey.OdysseyItem
+import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import me.shadowalzazel.mcodyssey.constants.OdysseyItemModels
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor

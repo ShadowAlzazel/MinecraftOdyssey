@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.listeners.enchantmentListeners
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
-import me.shadowalzazel.mcodyssey.effects.OdysseyEffectFunctions
+import me.shadowalzazel.mcodyssey.effects.OdysseyEffectsHandler
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.listeners.tasks.ArcaneCellTask
 import me.shadowalzazel.mcodyssey.listeners.tasks.FrogFrightTask
@@ -294,7 +294,7 @@ object MeleeListeners : Listener {
                     it.target = this
                 }
             }
-            OdysseyEffectFunctions.honeyedEffect(mutableListOf(this), ((3 * enchantmentStrength) + 3) * 2)
+            OdysseyEffectsHandler.honeyedEffect(mutableListOf(this), ((3 * enchantmentStrength) + 3) * 2)
             world.playSound(location, Sound.BLOCK_HONEY_BLOCK_FALL, 2.5F, 0.9F)
         }
     }
@@ -327,7 +327,7 @@ object MeleeListeners : Listener {
     private fun decayingTouchEnchantment(eventVictim: LivingEntity, enchantmentStrength: Int) {
         // Victim
         with(eventVictim) {
-            OdysseyEffectFunctions.decayingEffect(mutableListOf(this), 10, enchantmentStrength * 1)
+            OdysseyEffectsHandler.decayingEffect(mutableListOf(this), 10, enchantmentStrength * 1)
             world.playSound(location, Sound.BLOCK_BIG_DRIPLEAF_TILT_UP, 2.5F, 0.9F)
         }
     }
@@ -336,7 +336,7 @@ object MeleeListeners : Listener {
     private fun douseEnchantment(eventVictim: LivingEntity, enchantmentStrength: Int) {
         // Victim
         with(eventVictim) {
-            OdysseyEffectFunctions.dousedEffect(mutableListOf(this), 10, enchantmentStrength * 1)
+            OdysseyEffectsHandler.dousedEffect(mutableListOf(this), 10, enchantmentStrength * 1)
             world.playSound(location, Sound.ENTITY_BLAZE_SHOOT, 2.5F, 1.5F)
         }
     }
@@ -415,7 +415,7 @@ object MeleeListeners : Listener {
         // Victim Effects
         with(eventVictim) {
             if (freezeTicks <= 50) {
-                OdysseyEffectFunctions.freezingEffect(mutableListOf(this), 8, enchantmentStrength * 1)
+                OdysseyEffectsHandler.freezingEffect(mutableListOf(this), 8, enchantmentStrength * 1)
                 world.spawnParticle(Particle.SNOWFLAKE, this.location, 25, 1.0, 0.5, 1.0)
             }
         }
@@ -494,7 +494,7 @@ object MeleeListeners : Listener {
     // HEMORRHAGE Enchantment Function
     private fun hemorrhageEnchantment(eventVictim: LivingEntity, enchantmentStrength: Int) {
         // Victim
-        OdysseyEffectFunctions.hemorrhagingEffect(mutableListOf(eventVictim), enchantmentStrength * 1)
+        OdysseyEffectsHandler.hemorrhagingEffect(mutableListOf(eventVictim), enchantmentStrength * 1)
         with(eventVictim.world) {
             playSound(eventVictim.location, Sound.BLOCK_NETHER_SPROUTS_PLACE, 2.5F, 0.9F)
             spawnParticle(Particle.CRIT, eventVictim.location, 35, 1.0, 0.5, 1.0)

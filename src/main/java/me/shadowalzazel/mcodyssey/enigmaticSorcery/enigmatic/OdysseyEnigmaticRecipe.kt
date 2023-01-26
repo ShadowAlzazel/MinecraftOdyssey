@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.enigmaticSorcery.enigmatic
 
-import me.shadowalzazel.mcodyssey.items.odyssey.OdysseyItem
+import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import me.shadowalzazel.mcodyssey.mobs.utility.OdysseyMob
 import org.bukkit.Location
 import org.bukkit.Material

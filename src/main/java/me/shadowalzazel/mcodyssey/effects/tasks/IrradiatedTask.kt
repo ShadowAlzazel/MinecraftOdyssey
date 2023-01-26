@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.effects.tasks
 
-import me.shadowalzazel.mcodyssey.effects.OdysseyEffectTags
+import me.shadowalzazel.mcodyssey.constants.OdysseyEffectTags
 import org.bukkit.entity.LivingEntity
 import org.bukkit.scheduler.BukkitRunnable
 

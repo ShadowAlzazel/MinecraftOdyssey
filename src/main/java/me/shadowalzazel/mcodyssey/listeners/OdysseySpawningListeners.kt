@@ -1,11 +1,12 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.constants.OdysseyUUIDs.ODYSSEY_ENHANCED_MOB_HEALTH_UUID
+import me.shadowalzazel.mcodyssey.constants.OdysseyUUIDs.ODYSSEY_GILDED_MOB_HEALTH_UUID
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.items.OdysseyBooks
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
-import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.entity.LivingEntity
@@ -19,31 +20,41 @@ import kotlin.math.pow
 
 object OdysseySpawningListeners : Listener {
 
-    // TODO: Scarecrow Mob pumpkin and stand
-    // weeping angels
+    private val dangerPrefixes = setOf(
+        "Deadly",
+        "Magnificent",
+        "Terrorizing",
+        "Potent",
+        "Dominant",
+        "Forceful",
+        "Mighty",
+        "Great",
+        "Cruel",
+        "Dangerous",
+        "Savage",
+        "Lethal",
+        "Fatal")
 
     private fun gildedMobHandler(eventEntity: LivingEntity) {
-
-        val gildedPrefixes = setOf("Deadly", "Magnificent", "Terrorizing", "Potent", "Dominant", "Forceful", "Mighty", "Great", "Cruel", "Dangerous", "Savage", "Lethal", "Fatal")
 
         eventEntity.apply {
             val gildedAffix = OdysseyEnchantments.meleeSet.random()
 
             // Add Item or enchant
             equipment!!.also {
-                if (it.itemInMainHand.hasItemMeta()) { it.itemInMainHand.addUnsafeEnchantment(gildedAffix, gildedAffix.maxLevel) }
+                if (it.itemInMainHand.type != Material.AIR) { it.itemInMainHand.addUnsafeEnchantment(gildedAffix, gildedAffix.maxLevel) }
                 else { it.setItemInMainHand(OdysseyBooks.GILDED_BOOK.createGildedBook(gildedAffix, gildedAffix.startLevel)) }
                 it.itemInMainHandDropChance = 0.35F
             }
 
             // TODO: Add prefixes and affixes to enchantments
             @Suppress("DEPRECATION")
-            customName((Component.text("${gildedPrefixes.random()} ")).append(name()).append(Component.text(" of ${gildedAffix.name}")).color(TextColor.color(255, 170, 0)))
+            customName((Component.text("${dangerPrefixes.random()} ")).append(name()).append(Component.text(" of ${gildedAffix.name}")).color(TextColor.color(255, 170, 0)))
             isCustomNameVisible = true
 
-            //val newHealthModifier = AttributeModifier(healthUUID, healthMap[healthUUID]!!.first, healthMap[healthUUID]!!.second, AttributeModifier.Operation.ADD_NUMBER)
-
-
+            // Gilded Health Modifier
+            val gildedHealthModifier = AttributeModifier(ODYSSEY_GILDED_MOB_HEALTH_UUID, "odyssey_gilded_mob_health", health * 2.5, AttributeModifier.Operation.ADD_NUMBER)
+            getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.addModifier(gildedHealthModifier)
 
         }
     }
