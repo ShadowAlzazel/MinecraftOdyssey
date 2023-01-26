@@ -7,74 +7,74 @@ import org.bukkit.Material
 
 /* --------------------------CLAYMORE---------------------------*/
 
-object WoodenClaymore: Claymore("Wooden Claymore", Material.WOODEN_SWORD, OdysseyItemModels.WOODEN_CLAYMORE, 7.75, 0.7)
+object WoodenClaymore: OdysseyWeapon("Wooden Claymore", Material.WOODEN_SWORD, OdysseyItemModels.WOODEN_CLAYMORE, 7.75, 0.7, WeaponTypes.SWORD)
 
-object GoldenClaymore: Claymore("Golden Claymore", Material.GOLDEN_SWORD, OdysseyItemModels.GOLDEN_CLAYMORE, 8.75, 0.7)
+object GoldenClaymore: OdysseyWeapon("Golden Claymore", Material.GOLDEN_SWORD, OdysseyItemModels.GOLDEN_CLAYMORE, 8.75, 0.7, WeaponTypes.SWORD)
 
-object StoneClaymore: Claymore("Stone Claymore", Material.STONE_SWORD, OdysseyItemModels.STONE_CLAYMORE, 9.75, 0.7)
+object StoneClaymore: OdysseyWeapon("Stone Claymore", Material.STONE_SWORD, OdysseyItemModels.STONE_CLAYMORE, 9.75, 0.7, WeaponTypes.SWORD)
 
-object IronClaymore: Claymore("Iron Claymore", Material.IRON_SWORD, OdysseyItemModels.IRON_CLAYMORE, 10.75, 0.7)
+object IronClaymore: OdysseyWeapon("Iron Claymore", Material.IRON_SWORD, OdysseyItemModels.IRON_CLAYMORE, 10.75, 0.7, WeaponTypes.SWORD)
 
-object DiamondClaymore: Claymore("Diamond Claymore", Material.DIAMOND_SWORD, OdysseyItemModels.DIAMOND_CLAYMORE, 11.75, 0.7)
+object DiamondClaymore: OdysseyWeapon("Diamond Claymore", Material.DIAMOND_SWORD, OdysseyItemModels.DIAMOND_CLAYMORE, 11.75, 0.7, WeaponTypes.SWORD)
 
-object NetheriteClaymore: Claymore("Netherite Claymore", Material.NETHERITE_SWORD, OdysseyItemModels.NETHERITE_CLAYMORE, 12.75, 0.7)
+object NetheriteClaymore: OdysseyWeapon("Netherite Claymore", Material.NETHERITE_SWORD, OdysseyItemModels.NETHERITE_CLAYMORE, 12.75, 0.7, WeaponTypes.SWORD)
 
 
 /* --------------------------CUTLASS---------------------------*/
 
-object WoodenCutlass: Cutlass("Wooden Cutlass", Material.WOODEN_SWORD, OdysseyItemModels.WOODEN_CUTLASS, 2.0, 2.1)
+object WoodenCutlass: OdysseyWeapon("Wooden Cutlass", Material.WOODEN_SWORD, OdysseyItemModels.WOODEN_CUTLASS, 2.0, 2.1, WeaponTypes.SWORD)
 
-object GoldenCutlass: Cutlass("Golden Cutlass", Material.GOLDEN_SWORD, OdysseyItemModels.GOLDEN_CUTLASS, 2.0, 2.1)
+object GoldenCutlass: OdysseyWeapon("Golden Cutlass", Material.GOLDEN_SWORD, OdysseyItemModels.GOLDEN_CUTLASS, 2.0, 2.1, WeaponTypes.SWORD)
 
-object StoneCutlass: Cutlass("Stone Cutlass", Material.STONE_SWORD, OdysseyItemModels.STONE_CUTLASS, 3.0, 2.1)
+object StoneCutlass: OdysseyWeapon("Stone Cutlass", Material.STONE_SWORD, OdysseyItemModels.STONE_CUTLASS, 3.0, 2.1, WeaponTypes.SWORD)
 
-object IronCutlass: Cutlass("Iron Cutlass", Material.IRON_SWORD, OdysseyItemModels.IRON_CUTLASS, 4.0, 2.1)
+object IronCutlass: OdysseyWeapon("Iron Cutlass", Material.IRON_SWORD, OdysseyItemModels.IRON_CUTLASS, 4.0, 2.1, WeaponTypes.SWORD)
 
-object DiamondCutlass: Cutlass("Diamond Cutlass", Material.DIAMOND_SWORD, OdysseyItemModels.DIAMOND_CUTLASS, 5.0, 2.1)
+object DiamondCutlass: OdysseyWeapon("Diamond Cutlass", Material.DIAMOND_SWORD, OdysseyItemModels.DIAMOND_CUTLASS, 5.0, 2.1, WeaponTypes.SWORD)
 
 
 /* --------------------------KATANA---------------------------*/
 
-object WoodenKatana: Katana("Wooden Katana", Material.WOODEN_SWORD, OdysseyItemModels.WOODEN_KATANA, 4.0, 1.5)
+object WoodenKatana: OdysseyWeapon("Wooden Katana", Material.WOODEN_SWORD, OdysseyItemModels.WOODEN_KATANA, 4.0, 1.5, WeaponTypes.SWORD)
 
-object GoldenKatana: Katana("Golden Katana", Material.GOLDEN_SWORD, OdysseyItemModels.GOLDEN_KATANA, 4.0, 1.5)
+object GoldenKatana: OdysseyWeapon("Golden Katana", Material.GOLDEN_SWORD, OdysseyItemModels.GOLDEN_KATANA, 4.0, 1.5, WeaponTypes.SWORD)
 
-object StoneKatana: Katana("Stone Katana", Material.STONE_SWORD, OdysseyItemModels.STONE_KATANA, 5.0, 1.5)
+object StoneKatana: OdysseyWeapon("Stone Katana", Material.STONE_SWORD, OdysseyItemModels.STONE_KATANA, 5.0, 1.5, WeaponTypes.SWORD)
 
-object IronKatana: Katana("Iron Katana", Material.IRON_SWORD, OdysseyItemModels.IRON_KATANA, 6.0, 1.5)
+object IronKatana: OdysseyWeapon("Iron Katana", Material.IRON_SWORD, OdysseyItemModels.IRON_KATANA, 6.0, 1.5, WeaponTypes.SWORD)
 
-object DiamondKatana: Katana("Diamond Katana", Material.DIAMOND_SWORD, OdysseyItemModels.DIAMOND_KATANA, 7.0, 1.5)
+object DiamondKatana: OdysseyWeapon("Diamond Katana", Material.DIAMOND_SWORD, OdysseyItemModels.DIAMOND_KATANA, 7.0, 1.5, WeaponTypes.SWORD)
 
-object NetheriteKatana: Katana("Netherite Katana", Material.NETHERITE_SWORD, OdysseyItemModels.NETHERITE_KATANA, 8.0, 1.5)
+object NetheriteKatana: OdysseyWeapon("Netherite Katana", Material.NETHERITE_SWORD, OdysseyItemModels.NETHERITE_KATANA, 8.0, 1.5, WeaponTypes.SWORD)
 
 
 /* --------------------------RAPIER---------------------------*/
 
-object WoodenRapier: Rapier("Wooden Rapier", Material.WOODEN_SWORD, OdysseyItemModels.WOODEN_RAPIER, 1.25, 3.5)
+object WoodenRapier: OdysseyWeapon("Wooden Rapier", Material.WOODEN_SWORD, OdysseyItemModels.WOODEN_RAPIER, 1.25, 3.5, WeaponTypes.SWORD)
 
-object GoldenRapier: Rapier("Golden Rapier", Material.GOLDEN_SWORD, OdysseyItemModels.GOLDEN_RAPIER, 1.25, 3.5)
+object GoldenRapier: OdysseyWeapon("Golden Rapier", Material.GOLDEN_SWORD, OdysseyItemModels.GOLDEN_RAPIER, 1.25, 3.5, WeaponTypes.SWORD)
 
-object StoneRapier: Rapier("Stone Rapier", Material.STONE_SWORD, OdysseyItemModels.STONE_RAPIER, 2.25, 3.5)
+object StoneRapier: OdysseyWeapon("Stone Rapier", Material.STONE_SWORD, OdysseyItemModels.STONE_RAPIER, 2.25, 3.5, WeaponTypes.SWORD)
 
-object IronRapier: Rapier("Iron Rapier", Material.IRON_SWORD, OdysseyItemModels.IRON_RAPIER, 3.25, 3.5)
+object IronRapier: OdysseyWeapon("Iron Rapier", Material.IRON_SWORD, OdysseyItemModels.IRON_RAPIER, 3.25, 3.5, WeaponTypes.SWORD)
 
-object DiamondRapier: Rapier("Diamond Rapier", Material.DIAMOND_SWORD, OdysseyItemModels.DIAMOND_RAPIER, 4.25, 3.5)
+object DiamondRapier: OdysseyWeapon("Diamond Rapier", Material.DIAMOND_SWORD, OdysseyItemModels.DIAMOND_RAPIER, 4.25, 3.5, WeaponTypes.SWORD)
 
-object NetheriteRapier: Rapier("Netherite Rapier", Material.NETHERITE_SWORD, OdysseyItemModels.NETHERITE_RAPIER, 6.25, 3.5)
+object NetheriteRapier: OdysseyWeapon("Netherite Rapier", Material.NETHERITE_SWORD, OdysseyItemModels.NETHERITE_RAPIER, 6.25, 3.5, WeaponTypes.SWORD)
 
 
 /* --------------------------SABER---------------------------*/
 
-object WoodenSaber: Saber("Wooden Saber", Material.WOODEN_SWORD, OdysseyItemModels.WOODEN_SABER, 2.5, 1.8)
+object WoodenSaber: OdysseyWeapon("Wooden Saber", Material.WOODEN_SWORD, OdysseyItemModels.WOODEN_SABER, 2.5, 1.8, WeaponTypes.SWORD)
 
-object GoldenSaber: Saber("Golden Saber", Material.GOLDEN_SWORD, OdysseyItemModels.GOLDEN_SABER, 2.5, 1.8)
+object GoldenSaber: OdysseyWeapon("Golden Saber", Material.GOLDEN_SWORD, OdysseyItemModels.GOLDEN_SABER, 2.5, 1.8, WeaponTypes.SWORD)
 
-object StoneSaber: Saber("Stone Saber", Material.STONE_SWORD, OdysseyItemModels.STONE_SABER, 3.5, 1.89)
+object StoneSaber: OdysseyWeapon("Stone Saber", Material.STONE_SWORD, OdysseyItemModels.STONE_SABER, 3.5, 1.89, WeaponTypes.SWORD)
 
-object IronSaber: Saber("Iron Saber", Material.IRON_SWORD, OdysseyItemModels.IRON_SABER, 4.5, 1.8)
+object IronSaber: OdysseyWeapon("Iron Saber", Material.IRON_SWORD, OdysseyItemModels.IRON_SABER, 4.5, 1.8, WeaponTypes.SWORD)
 
-object DiamondSaber: Saber("Diamond Saber", Material.DIAMOND_SWORD, OdysseyItemModels.DIAMOND_SABER, 5.5, 1.8)
+object DiamondSaber: OdysseyWeapon("Diamond Saber", Material.DIAMOND_SWORD, OdysseyItemModels.DIAMOND_SABER, 5.5, 1.8, WeaponTypes.SWORD)
 
 
 /* -------------------------ZWEIHANDER--------------------------*/
-object NetheriteZweihander: Zweihander("Netherite Zweihander", Material.NETHERITE_SWORD, OdysseyItemModels.NETHERITE_ZWEIHANDER, 14.5, 0.9)
+object NetheriteZweihander: OdysseyWeapon("Netherite Zweihander", Material.NETHERITE_SWORD, OdysseyItemModels.NETHERITE_ZWEIHANDER, 14.5, 0.9, WeaponTypes.SWORD)

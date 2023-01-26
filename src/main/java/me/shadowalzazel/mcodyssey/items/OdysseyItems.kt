@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.items
 
 import me.shadowalzazel.mcodyssey.items.base.*
-import me.shadowalzazel.mcodyssey.items.misc.*
+import me.shadowalzazel.mcodyssey.items.miscellaneous.*
 
 // MAKE OBJECTS LATER
 object OdysseyItems {

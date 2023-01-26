@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.alchemy.potions
 
-import me.shadowalzazel.mcodyssey.alchemy.utility.OdysseyPotion
+import me.shadowalzazel.mcodyssey.items.utility.OdysseyPotion
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
