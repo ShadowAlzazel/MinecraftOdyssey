@@ -15,7 +15,7 @@ object OdysseyServerListeners : Listener {
 
     // Join Messages
     @EventHandler
-    fun onPlayerJoin(event: PlayerJoinEvent) {
+    fun playerJoinHandler(event: PlayerJoinEvent) {
         val player = event.player
         // Resource Pack
         if (MinecraftOdyssey.instance.config.getBoolean("server-resource-pack-force")) {
@@ -54,7 +54,7 @@ object OdysseyServerListeners : Listener {
 
     // Leave Message
     @EventHandler
-    fun onPlayerLeave(event: PlayerQuitEvent) {
+    fun playerLeaveHandler(event: PlayerQuitEvent) {
         val player = event.player
         event.quitMessage = ("${ChatColor.GOLD}${player.name} ${ChatColor.YELLOW}has left the Realm of Vail!")
     }

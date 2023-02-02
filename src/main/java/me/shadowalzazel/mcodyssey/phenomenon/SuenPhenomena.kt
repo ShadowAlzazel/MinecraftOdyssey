@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.phenomenon
 
-import me.shadowalzazel.mcodyssey.phenomenon.suenPhenomena.*
+import me.shadowalzazel.mcodyssey.phenomenon.lunar_phenomena.*
 
 object SuenPhenomena {
 

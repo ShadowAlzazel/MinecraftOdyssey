@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.phenomenon
 
-import me.shadowalzazel.mcodyssey.phenomenon.utuPhenomena.*
+import me.shadowalzazel.mcodyssey.phenomenon.solar_phenomena.*
 
 object UtuPhenomena {
 

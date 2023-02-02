@@ -11,7 +11,6 @@ import org.bukkit.potion.PotionEffectType
 object OdysseyEffectsHandler {
     // Duration in seconds
 
-
     // Decaying
     fun decayingEffect(victimList: MutableCollection<LivingEntity>, duration: Int, amplifier: Int) {
         val decayingPotionEffect = PotionEffect(PotionEffectType.HUNGER, duration * 20, amplifier)

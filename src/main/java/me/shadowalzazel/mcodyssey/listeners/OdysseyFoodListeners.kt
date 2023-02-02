@@ -15,7 +15,7 @@ object OdysseyFoodListeners : Listener {
 
     // Main Function for food related consumption events
 
-    // MOON POTATOES
+    // LUNAR POTATOES
 
     @EventHandler
     fun eatingOdysseyFood(event: PlayerItemConsumeEvent) {

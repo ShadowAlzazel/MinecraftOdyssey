@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.items.miscellaneous
 
-import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantment
+import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import me.shadowalzazel.mcodyssey.constants.OdysseyItemModels
 import net.kyori.adventure.text.Component

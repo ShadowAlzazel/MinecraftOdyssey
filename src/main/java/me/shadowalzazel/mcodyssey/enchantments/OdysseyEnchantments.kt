@@ -7,8 +7,8 @@ import me.shadowalzazel.mcodyssey.enchantments.other.HookShot
 import me.shadowalzazel.mcodyssey.enchantments.other.MirrorForce
 import me.shadowalzazel.mcodyssey.enchantments.other.WarpJump
 import me.shadowalzazel.mcodyssey.enchantments.ranged.*
-import me.shadowalzazel.mcodyssey.enchantments.utility.GildedPower
-import me.shadowalzazel.mcodyssey.enchantments.utility.OdysseyEnchantment
+import me.shadowalzazel.mcodyssey.enchantments.base.GildedPower
+import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import org.bukkit.enchantments.Enchantment
 import java.util.*
 import java.util.stream.Collectors
