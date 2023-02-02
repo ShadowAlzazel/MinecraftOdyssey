@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.situation.odyssey
+package me.shadowalzazel.mcodyssey.structure_events.base
 
 enum class SituationTypes {
 

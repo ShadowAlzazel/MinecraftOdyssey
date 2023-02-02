@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.enchantments.other
+package me.shadowalzazel.mcodyssey.enchantments.misc
 
 object ReversedRecoil {
 

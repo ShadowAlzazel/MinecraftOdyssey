@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.bosses.theAmbassador
+package me.shadowalzazel.mcodyssey.bosses.the_ambassador
 
 import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey

@@ -3,9 +3,9 @@ package me.shadowalzazel.mcodyssey.enchantments
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.enchantments.armor.*
 import me.shadowalzazel.mcodyssey.enchantments.melee.*
-import me.shadowalzazel.mcodyssey.enchantments.other.HookShot
-import me.shadowalzazel.mcodyssey.enchantments.other.MirrorForce
-import me.shadowalzazel.mcodyssey.enchantments.other.WarpJump
+import me.shadowalzazel.mcodyssey.enchantments.misc.HookShot
+import me.shadowalzazel.mcodyssey.enchantments.misc.MirrorForce
+import me.shadowalzazel.mcodyssey.enchantments.misc.VoidJump
 import me.shadowalzazel.mcodyssey.enchantments.ranged.*
 import me.shadowalzazel.mcodyssey.enchantments.base.GildedPower
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
@@ -72,13 +72,13 @@ object OdysseyEnchantments {
     val UNTOUCHABLE: OdysseyEnchantment = Untouchable
     val VENGEFUL: OdysseyEnchantment = Vengeful
     val VICIOUS_VIGOR: OdysseyEnchantment = ViciousVigor
+    val VOID_JUMP: OdysseyEnchantment = VoidJump
     val VOID_STRIKE: OdysseyEnchantment = VoidStrike
-    val WARP_JUMP: OdysseyEnchantment = WarpJump
     val WAR_CRY: OdysseyEnchantment = WarCry
     val WHIRLWIND: OdysseyEnchantment = Whirlwind
 
     // Set of all enchantments
-    val registeredSet = setOf(
+    val REGISTERED_SET = setOf(
         GILDED_POWER,
         ALCHEMY_ARTILLERY,
         ARCANE_CELL,
@@ -131,14 +131,14 @@ object OdysseyEnchantments {
         UNTOUCHABLE,
         VICIOUS_VIGOR,
         VOID_STRIKE,
-        WARP_JUMP,
+        VOID_JUMP,
         WAR_CRY,
         WHIRLWIND
     )
 
 
     // Set that is available to table
-    val meleeSet = setOf(
+    val MELEE_SET = setOf(
         ARCANE_CELL,
         BACKSTABBER,
         BANE_OF_THE_ILLAGER,
@@ -162,8 +162,8 @@ object OdysseyEnchantments {
         VOID_STRIKE,
         WHIRLWIND
     )
-    // TODO: Less durability more dmg
-    val armorSet = setOf(
+
+    val ARMOR_SET = setOf(
         BEASTLY_BRAWLER,
         COWARDICE,
         DEVASTATING_DROP,
@@ -178,7 +178,8 @@ object OdysseyEnchantments {
         VICIOUS_VIGOR,
         WAR_CRY
     )
-    val rangedSet = setOf(
+
+    val RANGED_SET = setOf(
         ALCHEMY_ARTILLERY,
         BOLA_SHOT,
         BURST_BARRAGE,
@@ -195,14 +196,15 @@ object OdysseyEnchantments {
         STELLAR_SHOWER,
         TEMPORAL_TORRENT
     )
-    val miscSet = setOf(
-        WARP_JUMP
+
+    val MISC_SET = setOf(
+        VOID_JUMP
     )
 
 
     // Register
     fun register() {
-        for (odysseyEnchant in registeredSet) {
+        for (odysseyEnchant in REGISTERED_SET) {
             val registered = Arrays.stream(Enchantment.values()).collect(Collectors.toList()).contains(odysseyEnchant)
             if (!registered) registerOdysseyEnchantment(odysseyEnchant as Enchantment)
         }

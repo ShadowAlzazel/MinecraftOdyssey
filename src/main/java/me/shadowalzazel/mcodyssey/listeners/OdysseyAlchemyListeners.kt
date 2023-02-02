@@ -57,7 +57,7 @@ object OdysseyAlchemyListeners : Listener {
     // Helper Coroutine Function for validating cauldron recipes
     private suspend fun validateCauldronRecipe(someItemSet: MutableSet<Item>, someFuelBlock: Material): AlchemyCauldronRecipe? = runBlocking {
         val recipeJob: Deferred<AlchemyCauldronRecipe?> = async {
-            for (recipe in AlchemyRecipes.recipeSet) {
+            for (recipe in AlchemyRecipes.CAULDRON_SET) {
                 val validated: Boolean = recipe.validateRecipe(someItemSet, someFuelBlock)
                 if (validated) {
                     return@async recipe

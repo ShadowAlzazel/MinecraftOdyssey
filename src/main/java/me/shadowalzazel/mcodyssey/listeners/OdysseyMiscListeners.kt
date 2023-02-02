@@ -1,8 +1,6 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
-import me.shadowalzazel.mcodyssey.bosses.theAmbassador.AmbassadorBoss
 import net.kyori.adventure.text.Component
 import org.bukkit.ChatColor
 import org.bukkit.entity.EntityType
@@ -12,7 +10,6 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.weather.LightningStrikeEvent
-import org.bukkit.event.world.TimeSkipEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 

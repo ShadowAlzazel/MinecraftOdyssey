@@ -1,7 +1,6 @@
-package me.shadowalzazel.mcodyssey.bosses.hogRider
+package me.shadowalzazel.mcodyssey.bosses.hog_rider
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
-import me.shadowalzazel.mcodyssey.bosses.hogRider.HogRiderBoss
 import org.bukkit.entity.Hoglin
 import org.bukkit.entity.PiglinBrute
 import org.bukkit.entity.Player

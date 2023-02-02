@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
-import me.shadowalzazel.mcodyssey.bosses.theAmbassador.AmbassadorBoss
+import me.shadowalzazel.mcodyssey.bosses.the_ambassador.AmbassadorBoss
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.world.TimeSkipEvent

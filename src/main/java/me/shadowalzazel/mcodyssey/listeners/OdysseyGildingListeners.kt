@@ -157,28 +157,28 @@ object OdysseyGildingListeners : Listener {
             Material.NETHERITE_PICKAXE, Material.DIAMOND_PICKAXE, Material.IRON_PICKAXE, Material.GOLDEN_PICKAXE, Material.STONE_PICKAXE, Material.WOODEN_PICKAXE,
             Material.NETHERITE_SHOVEL, Material.DIAMOND_SHOVEL, Material.IRON_SHOVEL, Material.GOLDEN_SHOVEL, Material.STONE_SHOVEL, Material.WOODEN_SHOVEL,
             Material.NETHERITE_HOE, Material.DIAMOND_HOE, Material.IRON_HOE, Material.GOLDEN_HOE, Material.STONE_HOE, Material.WOODEN_HOE -> {
-                return OdysseyEnchantments.meleeSet
+                return OdysseyEnchantments.MELEE_SET
             }
             Material.NETHERITE_LEGGINGS, Material.DIAMOND_LEGGINGS, Material.IRON_LEGGINGS, Material.CHAINMAIL_LEGGINGS, Material.GOLDEN_LEGGINGS, Material.LEATHER_LEGGINGS -> {
-                return OdysseyEnchantments.armorSet
+                return OdysseyEnchantments.ARMOR_SET
             }
             Material.NETHERITE_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.IRON_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, Material.GOLDEN_CHESTPLATE, Material.LEATHER_CHESTPLATE -> {
-                return OdysseyEnchantments.armorSet
+                return OdysseyEnchantments.ARMOR_SET
             }
             Material.NETHERITE_BOOTS, Material.DIAMOND_BOOTS, Material.IRON_BOOTS, Material.CHAINMAIL_BOOTS, Material.GOLDEN_BOOTS, Material.LEATHER_BOOTS -> {
-                return OdysseyEnchantments.armorSet
+                return OdysseyEnchantments.ARMOR_SET
             }
             Material.NETHERITE_HELMET, Material.DIAMOND_HELMET, Material.IRON_HELMET, Material.CHAINMAIL_HELMET, Material.GOLDEN_HELMET, Material.LEATHER_HELMET -> {
-                return OdysseyEnchantments.armorSet
+                return OdysseyEnchantments.ARMOR_SET
             }
             Material.BOW, Material.CROSSBOW -> {
-                return OdysseyEnchantments.rangedSet
+                return OdysseyEnchantments.RANGED_SET
             }
             Material.ELYTRA, Material.SHIELD -> {
-                return OdysseyEnchantments.miscSet
+                return OdysseyEnchantments.MISC_SET
             }
             else -> {
-                return OdysseyEnchantments.miscSet
+                return OdysseyEnchantments.MISC_SET
             }
         }
     }
@@ -381,7 +381,7 @@ object OdysseyGildingListeners : Listener {
                             var enchantSlots = 2
                             var gildedSlots = 1
                             for (enchant in event.result!!.clone().enchantments) {
-                                if (enchant.key in OdysseyEnchantments.registeredSet) { gildedSlots += 1 } else { enchantSlots += 1 }
+                                if (enchant.key in OdysseyEnchantments.REGISTERED_SET) { gildedSlots += 1 } else { enchantSlots += 1 }
                             }
                             // Create new lore add slots and hide vanilla enchant display
                             event.result!!.addItemFlags(ItemFlag.HIDE_ENCHANTS)

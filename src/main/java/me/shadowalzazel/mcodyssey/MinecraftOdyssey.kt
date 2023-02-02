@@ -1,28 +1,28 @@
 package me.shadowalzazel.mcodyssey
 
-import me.shadowalzazel.mcodyssey.bosses.hogRider.HogRiderListeners
-import me.shadowalzazel.mcodyssey.bosses.theAmbassador.AmbassadorListeners
-import me.shadowalzazel.mcodyssey.bosses.utility.OdysseyBoss
+import me.shadowalzazel.mcodyssey.bosses.hog_rider.HogRiderListeners
+import me.shadowalzazel.mcodyssey.bosses.the_ambassador.AmbassadorListeners
+import me.shadowalzazel.mcodyssey.bosses.base.OdysseyBoss
 import me.shadowalzazel.mcodyssey.commands.*
 import me.shadowalzazel.mcodyssey.commands.spells.Necronomicon
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.listeners.*
-import me.shadowalzazel.mcodyssey.listeners.enchantmentListeners.ArmorListeners
-import me.shadowalzazel.mcodyssey.listeners.enchantmentListeners.MeleeListeners
-import me.shadowalzazel.mcodyssey.listeners.enchantmentListeners.MiscListeners
-import me.shadowalzazel.mcodyssey.listeners.enchantmentListeners.RangedListeners
+import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.ArmorListeners
+import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.MeleeListeners
+import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.MiscListeners
+import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.RangedListeners
 import me.shadowalzazel.mcodyssey.listeners.OdysseyPhenomenaListeners
 import me.shadowalzazel.mcodyssey.phenomenon.PhenomenonCycle
 import me.shadowalzazel.mcodyssey.phenomenon.PersistentPhenomenonHandler
 import me.shadowalzazel.mcodyssey.phenomenon.base.OdysseyPhenomenon
 import me.shadowalzazel.mcodyssey.recipes.*
-import me.shadowalzazel.mcodyssey.situation.SituationHandler
+import me.shadowalzazel.mcodyssey.structure_events.SituationHandler
 import org.bukkit.Bukkit
 import org.bukkit.World
 
 import org.bukkit.plugin.java.JavaPlugin
 
-class MinecraftOdyssey : JavaPlugin(), OdysseyManager {
+class MinecraftOdyssey : JavaPlugin(), OdysseyAssetManager {
 
     // Main
     var mainWorld: World? = null

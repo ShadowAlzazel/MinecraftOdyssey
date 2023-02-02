@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.bosses.theAmbassador
+package me.shadowalzazel.mcodyssey.bosses.the_ambassador
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import org.bukkit.entity.ArmorStand

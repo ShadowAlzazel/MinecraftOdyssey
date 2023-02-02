@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.situation
+package me.shadowalzazel.mcodyssey.structure_events
 
 import org.bukkit.World
 import org.bukkit.scheduler.BukkitRunnable
