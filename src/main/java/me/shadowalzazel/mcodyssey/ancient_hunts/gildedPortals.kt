@@ -1,0 +1,1 @@
+package me.shadowalzazel.mcodyssey.ancient_hunts

@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.constants.OdysseyItemModels
-import me.shadowalzazel.mcodyssey.enigmaticSorcery.EnigmaticSorceryRecipes
+import me.shadowalzazel.mcodyssey.alchemy.SoulBraiseRecipes
 import me.shadowalzazel.mcodyssey.items.OdysseyItems
 import org.bukkit.Material
 import org.bukkit.Particle
@@ -18,7 +18,7 @@ object OdysseyEnigmaticListeners : Listener {
 
 
     @EventHandler
-    fun entityEnigmaticDeath(event: EntityDeathEvent) {
+    fun soulItemHandlers(event: EntityDeathEvent) {
         if (event.entity.location.world.environment == World.Environment.NETHER)  {
             event.entity.also {
                 val blockUnderneath = it.location.clone().add(0.0 , -0.5, 0.0).block
@@ -85,13 +85,13 @@ object OdysseyEnigmaticListeners : Listener {
 
     //
     @EventHandler
-    fun enigmaticCrucible(event: EntityCombustByBlockEvent) {
+    fun soulBraiseBurnHandler(event: EntityCombustByBlockEvent) {
         if (event.combuster != null) {
             if (event.combuster!!.type == Material.SOUL_FIRE && event.entity is Item) {
                 val someItem = event.entity as Item
-                for (enigmaticRecipe in EnigmaticSorceryRecipes.recipeSet) {
+                for (enigmaticRecipe in SoulBraiseRecipes.recipeSet) {
                     if (enigmaticRecipe.validateRecipe(setOf(someItem), event.combuster!!)) {
-                        enigmaticRecipe.enigmaticResonator(someItem.itemStack.amount, event.combuster!!.location.clone().toCenterLocation()) //?
+                        enigmaticRecipe.braiseHandler(someItem.itemStack.amount, event.combuster!!.location.clone().toCenterLocation()) //?
                         break
                     }
                 }

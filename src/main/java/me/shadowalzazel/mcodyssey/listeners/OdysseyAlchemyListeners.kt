@@ -3,10 +3,10 @@ package me.shadowalzazel.mcodyssey.listeners
 import kotlinx.coroutines.*
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.alchemy.AlchemyRecipes
-import me.shadowalzazel.mcodyssey.alchemy.utility.OdysseyAlchemyCauldronRecipe
+import me.shadowalzazel.mcodyssey.alchemy.base.AlchemyCauldronRecipe
 import me.shadowalzazel.mcodyssey.effects.*
-import me.shadowalzazel.mcodyssey.synchronizers.BrewingEventSynchro
-import me.shadowalzazel.mcodyssey.synchronizers.CauldronEventSynchro
+import me.shadowalzazel.mcodyssey.coroutine_synchronizers.BrewingEventSynchro
+import me.shadowalzazel.mcodyssey.coroutine_synchronizers.CauldronEventSynchro
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.TextDecoration
@@ -55,9 +55,9 @@ object OdysseyAlchemyListeners : Listener {
     }
 
     // Helper Coroutine Function for validating cauldron recipes
-    private suspend fun validateCauldronRecipe(someItemSet: MutableSet<Item>, someFuelBlock: Material): OdysseyAlchemyCauldronRecipe? = runBlocking {
-        val recipeJob: Deferred<OdysseyAlchemyCauldronRecipe?> = async {
-            for (recipe in AlchemyRecipes.alchemyRecipeSet) {
+    private suspend fun validateCauldronRecipe(someItemSet: MutableSet<Item>, someFuelBlock: Material): AlchemyCauldronRecipe? = runBlocking {
+        val recipeJob: Deferred<AlchemyCauldronRecipe?> = async {
+            for (recipe in AlchemyRecipes.recipeSet) {
                 val validated: Boolean = recipe.validateRecipe(someItemSet, someFuelBlock)
                 if (validated) {
                     return@async recipe
@@ -296,7 +296,7 @@ object OdysseyAlchemyListeners : Listener {
                             }
                             // Runs validation if all items
                             if (allItems) {
-                                val validRecipe: OdysseyAlchemyCauldronRecipe? = validateCauldronRecipe(itemsToCheck, blockUnderneath)
+                                val validRecipe: AlchemyCauldronRecipe? = validateCauldronRecipe(itemsToCheck, blockUnderneath)
                                 // If valid recipe then sync back to main thread
                                 if (validRecipe != null) {
                                     val synchroCauldronTask: BukkitRunnable = CauldronEventSynchro(validRecipe, itemsToCheck)

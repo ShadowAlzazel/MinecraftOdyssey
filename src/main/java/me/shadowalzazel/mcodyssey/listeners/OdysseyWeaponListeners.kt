@@ -23,12 +23,15 @@ import org.bukkit.event.player.PlayerInteractEvent
 import kotlin.math.min
 
 
+// TODO: Mounted Bonus i.e. Cavalry Charges
+// TODO: Add Armor Stats through Lore
+
 object OdysseyWeaponListeners : Listener {
 
     // Entities have custom dual and range wield mechanics!!!!!
 
     // Helper function for reach
-    private fun reachFunction(somePlayer: Player, reachStat: Double?): Entity? {
+    private fun getReachedTarget(somePlayer: Player, reachStat: Double?): Entity? {
         val reachedEntity: Entity? = reachStat?.run {
             val targetInfo = somePlayer.getTargetEntityInfo(reachStat.toInt() + 2, false)
             var targetEntity = targetInfo?.entity
@@ -46,7 +49,7 @@ object OdysseyWeaponListeners : Listener {
     // TODO: If Crouching more damage
 
     // Function for critical hits that sweep
-    private fun sweepComboFunction(someVictim: LivingEntity, someDamager: LivingEntity, radius: Double, eventDamage: Double) {
+    private fun doWeaponSweep(someVictim: LivingEntity, someDamager: LivingEntity, radius: Double, eventDamage: Double) {
         val midpoint = someDamager.location.clone().set(
             ((someVictim.location.x + someDamager.location.x) / 2),
             ((someVictim.location.y + someDamager.location.y) / 2),
@@ -67,7 +70,7 @@ object OdysseyWeaponListeners : Listener {
     }
 
     // Stat handler
-    private fun armorCalculations(weaponData: Int, someVictim: LivingEntity, oldDamage: Double): Pair<Double, Double> {
+    private fun weaponStatsHandler(weaponData: Int, someVictim: LivingEntity, oldDamage: Double): Pair<Double, Double> {
         return if (!someVictim.isDead && someVictim.getAttribute(Attribute.GENERIC_ARMOR)?.value != null) {
             // Armor Point
             val armorPoints = someVictim.getAttribute(Attribute.GENERIC_ARMOR)!!.value
@@ -144,9 +147,9 @@ object OdysseyWeaponListeners : Listener {
 
         // Left Click
         if (event.action.isLeftClick && mainWeapon.itemMeta?.hasCustomModelData() == true && REACH_MAP[mainWeapon.itemMeta.customModelData] != null) {
-            reachFunction(somePlayer, REACH_MAP[mainWeapon.itemMeta.customModelData])
+            getReachedTarget(somePlayer, REACH_MAP[mainWeapon.itemMeta.customModelData])
             // Get If entity reached
-            val reachedEntity = reachFunction(somePlayer, REACH_MAP[mainWeapon.itemMeta.customModelData])
+            val reachedEntity = getReachedTarget(somePlayer, REACH_MAP[mainWeapon.itemMeta.customModelData])
             if (reachedEntity is LivingEntity) {
                 somePlayer.attack(reachedEntity)
             }
@@ -235,7 +238,7 @@ object OdysseyWeaponListeners : Listener {
                     // Dagger
                     OdysseyItemModels.DIAMOND_DAGGER -> {
                         // Left click offhand
-                        val reachedEntity = reachFunction(somePlayer, REACH_MAP[offHandWeapon.itemMeta.customModelData])
+                        val reachedEntity = getReachedTarget(somePlayer, REACH_MAP[offHandWeapon.itemMeta.customModelData])
                         if (reachedEntity is LivingEntity) {
                             somePlayer.swingOffHand()
                             with(somePlayer.equipment) {
@@ -296,9 +299,9 @@ object OdysseyWeaponListeners : Listener {
                     }
                     OdysseyItemModels.BAMBOO_STAFF, OdysseyItemModels.WOODEN_STAFF, OdysseyItemModels.BONE_STAFF, OdysseyItemModels.BLAZE_ROD_STAFF -> {
                         if (event.isCritical) {
-                            sweepComboFunction(someVictim, someDamager, SWEEP_MAP[weaponData]!!, event.damage + 2)
+                            doWeaponSweep(someVictim, someDamager, SWEEP_MAP[weaponData]!!, event.damage + 2)
                         } else {
-                            sweepComboFunction(someVictim, someDamager, SWEEP_MAP[weaponData]!!, event.damage - 1)
+                            doWeaponSweep(someVictim, someDamager, SWEEP_MAP[weaponData]!!, event.damage - 1)
                         }
 
                     }
@@ -311,7 +314,7 @@ object OdysseyWeaponListeners : Listener {
                     OdysseyItemModels.DIAMOND_KATANA, OdysseyItemModels.SOUL_STEEL_KATANA -> {
                         // Rabbit Hide -> Sheath
                         if (event.isCritical && (someOffHand.type == Material.AIR || someOffHand.type == Material.RABBIT_HIDE)) {
-                            sweepComboFunction(someVictim, someDamager, SWEEP_MAP[weaponData]!!, event.damage)
+                            doWeaponSweep(someVictim, someDamager, SWEEP_MAP[weaponData]!!, event.damage)
                         } else if (someOffHand.type != Material.AIR && someOffHand.type != Material.RABBIT_HIDE) {
                             val minimumDamage = minOf(event.damage, 3.0)
                             event.damage -= minimumDamage
@@ -328,7 +331,7 @@ object OdysseyWeaponListeners : Listener {
                             } else {
                                 event.damage - 3.0
                             }
-                            sweepComboFunction(someVictim, someDamager, SWEEP_MAP[weaponData]!!, sweepDamage)
+                            doWeaponSweep(someVictim, someDamager, SWEEP_MAP[weaponData]!!, sweepDamage)
                         }
                         // SWEEP PARTICLES!!!
                     }
@@ -344,7 +347,7 @@ object OdysseyWeaponListeners : Listener {
                     // righclick short dash and AOE
 
                 }
-                val extraDamages = armorCalculations(someWeapon.itemMeta.customModelData, someVictim, event.damage)
+                val extraDamages = weaponStatsHandler(someWeapon.itemMeta.customModelData, someVictim, event.damage)
                 event.damage -= extraDamages.second
                 event.damage += extraDamages.first
                 if (someVictim.health < extraDamages.second) {
