@@ -25,7 +25,7 @@ import kotlin.math.min
 
 // TODO: Mounted Bonus i.e. Cavalry Charges
 // TODO: Add Armor Stats through Lore
-
+// TODO: Scepter -> checks if offhand is a tome of _enchantment_, does spell.
 object OdysseyWeaponListeners : Listener {
 
     // Entities have custom dual and range wield mechanics!!!!!

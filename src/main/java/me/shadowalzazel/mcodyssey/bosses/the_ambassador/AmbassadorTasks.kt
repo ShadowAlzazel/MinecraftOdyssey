@@ -36,8 +36,8 @@ class AmbassadorDepartTask : BukkitRunnable() {
             if (ambassadorBoss.bossActive && ambassadorBoss.bossEntity != null) {
                 ambassadorBoss.departBoss()
                 MinecraftOdyssey.instance.also {
-                    it.activeBoss = false
-                    it.ambassadorDefeated = true
+                    it.isBossActive = false
+                    it.isAmbassadorDefeated = true
                     it.currentBoss = null
                 }
                 this.cancel()

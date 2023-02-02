@@ -31,7 +31,7 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.inventory.meta.Repairable
 import kotlin.math.max
 
-object OdysseyGildingListeners : Listener {
+object OdysseyArcaneSlotListeners : Listener {
 
     // Colors
     private val separatorColor = TextColor.color(170, 170, 170)
@@ -56,7 +56,7 @@ object OdysseyGildingListeners : Listener {
 
 
     // Get slots based on material
-    private fun createRuneSlots(itemType: Material): Pair<Int, Int> {
+    private fun enchantmentSlotHandler(itemType: Material): Pair<Int, Int> {
         var gildedSlots = 0
         val enchantSlots = when(itemType) {
             Material.STONE_SWORD, Material.STONE_AXE, Material.STONE_PICKAXE, Material.STONE_SHOVEL, Material.STONE_HOE,
@@ -254,7 +254,7 @@ object OdysseyGildingListeners : Listener {
             if (item!!.type != Material.BOOK) {
                 if (item!!.lore()?.contains(loreSeparator) != true) {
                     // Create new slots
-                    val someSlots = createRuneSlots(item!!.type)
+                    val someSlots = enchantmentSlotHandler(item!!.type)
                     // Remove excess enchants
                     val newEnchants = event.enchantsToAdd.also { enchants ->
                         var counter = 0

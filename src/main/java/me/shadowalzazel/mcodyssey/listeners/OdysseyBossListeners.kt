@@ -12,7 +12,7 @@ object OdysseyBossListeners : Listener {
     @EventHandler
     fun newBoss(event: TimeSkipEvent) {
         MinecraftOdyssey.instance.run {
-            if (!activeBoss) {
+            if (!isBossActive) {
                 val timeElapsed = System.currentTimeMillis() - timeSinceBoss
                 if (timeElapsed >= 90000000) {
                     when ((0..4).random()) {
@@ -20,7 +20,7 @@ object OdysseyBossListeners : Listener {
                         0 -> {
                             timeSinceBoss = System.currentTimeMillis()
                             currentBoss = AmbassadorBoss()
-                            activeBoss = true
+                            isBossActive = true
                             (currentBoss as AmbassadorBoss).createBoss(mainWorld!!)
                             println("${mainWorld!!.name}Spawned the Ambassador")
                         }

@@ -17,7 +17,7 @@ object AmbassadorListeners: Listener {
     // Function to check if current boss is ambassador
     private fun ambassadorActiveCheck(): Boolean {
         with(MinecraftOdyssey.instance) {
-            return (activeBoss && currentBoss is AmbassadorBoss) && ((currentBoss as AmbassadorBoss).bossActive)
+            return (isBossActive && currentBoss is AmbassadorBoss) && ((currentBoss as AmbassadorBoss).bossActive)
         }
     }
 
@@ -83,8 +83,8 @@ object AmbassadorListeners: Listener {
             if (event.entity.uniqueId == ambassadorBoss.bossEntity!!.uniqueId) {
                 ambassadorBoss.defeatedBoss(ambassadorBoss.bossEntity!!, event.entity.killer)
                 MinecraftOdyssey.instance.also {
-                    it.activeBoss = false
-                    it.ambassadorDefeated = true
+                    it.isBossActive = false
+                    it.isAmbassadorDefeated = true
                     it.currentBoss = null
                     it.bossDespawnTimer = System.currentTimeMillis()
                 }

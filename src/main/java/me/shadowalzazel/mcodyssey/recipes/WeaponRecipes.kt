@@ -10,7 +10,7 @@ import org.bukkit.inventory.ShapedRecipe
 object WeaponRecipes {
 
     // Register Recipes
-    fun registerRecipes(): List<ShapedRecipe> {
+    fun getRecipes(): List<ShapedRecipe> {
         return listOf(
             createWoodenKatanaRecipe(),
             createGoldenKatanaRecipe(),

@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.items
 
-import me.shadowalzazel.mcodyssey.items.food.*
+import me.shadowalzazel.mcodyssey.items.foods.*
 object OdysseyFood {
 
     val BEETROOT_COOKIE = BeetrootCookie

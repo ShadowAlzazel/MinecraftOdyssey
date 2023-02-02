@@ -59,13 +59,13 @@ object TriggerPhenomenon : CommandExecutor {
                 }
                 if (somePhenomenon!!.phenomenonType == PhenomenonTypes.LUNAR) {
                     somePhenomenon.successfulActivation(someWorld)
-                    MinecraftOdyssey.instance.currentSuenPhenomenon = somePhenomenon
-                    MinecraftOdyssey.instance.suenPhenomenonActive = true
+                    MinecraftOdyssey.instance.currentLunarPhenomenon = somePhenomenon
+                    MinecraftOdyssey.instance.isLunarPhenomenonActive = true
                 }
                 else if (somePhenomenon.phenomenonType == PhenomenonTypes.SOLAR) {
                     somePhenomenon.successfulActivation(someWorld)
-                    MinecraftOdyssey.instance.currentUtuPhenomenon = somePhenomenon
-                    MinecraftOdyssey.instance.utuPhenomenonActive = true
+                    MinecraftOdyssey.instance.currentSolarPhenomenon = somePhenomenon
+                    MinecraftOdyssey.instance.isSolarPhenomenonActive = true
                 }
             }
         }

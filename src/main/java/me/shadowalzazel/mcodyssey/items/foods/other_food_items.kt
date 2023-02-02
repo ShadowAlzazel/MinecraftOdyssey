@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.items.food
+package me.shadowalzazel.mcodyssey.items.foods
 
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import me.shadowalzazel.mcodyssey.constants.OdysseyItemModels

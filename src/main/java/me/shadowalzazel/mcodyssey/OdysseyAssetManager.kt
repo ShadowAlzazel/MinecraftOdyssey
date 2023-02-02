@@ -1,13 +1,21 @@
 package me.shadowalzazel.mcodyssey
 
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
+import org.bukkit.ChatColor
 import org.bukkit.NamespacedKey
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerQuitEvent
 import java.io.File
 import java.io.FileNotFoundException
 
-interface OdysseyAssetManager {
+interface OdysseyAssetManager : Listener {
 
-    fun registerOdysseyStructures(mcodysseyPlugin: MinecraftOdyssey) {
-        mcodysseyPlugin.run {
+    fun registerOdysseyStructures(odysseyPlugin: MinecraftOdyssey) {
+        odysseyPlugin.run {
+            /*
             try {
                 val worldFolder = mainWorld!!.worldFolder
                 val structureDirectory = worldFolder.path + "/datapacks/OdysseyDataPack/data/minecraftodyssey/structures"
@@ -27,11 +35,11 @@ interface OdysseyAssetManager {
             catch(ex: FileNotFoundException) {
                 logger.info(ex.message)
             }
+
+             */
         }
     }
 
-
-
-
+    // TODO: MAKE METHODS!!
 
 }

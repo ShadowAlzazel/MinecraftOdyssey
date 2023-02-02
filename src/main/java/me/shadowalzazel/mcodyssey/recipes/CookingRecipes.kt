@@ -14,7 +14,7 @@ import org.bukkit.inventory.SmokingRecipe
 object CookingRecipes {
 
     // Register Recipes
-    fun registerRecipes(): List<Recipe> {
+    fun getRecipes(): List<Recipe> {
         return listOf(
             createBeetrootCookieRecipe(),
             createPumpkinCookieRecipe(),

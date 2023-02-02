@@ -9,7 +9,7 @@ object TradingRecipes {
     var tradeList = listOf(createHourglassTradeRecipe())
 
     // Register Recipes
-    fun registerRecipes(): List<MerchantRecipe> {
+    fun getRecipes(): List<MerchantRecipe> {
         return listOf(
             createHourglassTradeRecipe(),
         )

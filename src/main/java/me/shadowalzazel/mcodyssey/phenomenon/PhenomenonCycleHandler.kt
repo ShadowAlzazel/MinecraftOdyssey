@@ -6,7 +6,7 @@ import me.shadowalzazel.mcodyssey.phenomenon.base.OdysseyPhenomenon
 import org.bukkit.World
 import org.bukkit.scheduler.BukkitRunnable
 
-class PhenomenonCycle(private val mainWorld: World) : BukkitRunnable() {
+class PhenomenonCycleHandler(private val mainWorld: World) : BukkitRunnable() {
 
     private var sunCount = 0
     private var moonCount = 0
@@ -30,10 +30,10 @@ class PhenomenonCycle(private val mainWorld: World) : BukkitRunnable() {
                 // Reset
                 //it.utuPhenomenonActive = false
                 //it.currentUtuPhenomenon = null
-                it.suenPhenomenonActive = false
-                it.currentSuenPhenomenon = null
+                it.isLunarPhenomenonActive = false
+                it.currentLunarPhenomenon = null
                 // Check if end game
-                if (it.endGame && !it.utuPhenomenonActive) {
+                if (it.isBossProgressionEnabled && !it.isSolarPhenomenonActive) {
                     val rolledRate = (0..100).random()
                     // Daily luck is not a true daily phenomenon
                     //val luckConfigAmount = MinecraftOdyssey.instance.config.getInt("player-minimum-for-luck")
@@ -44,8 +44,8 @@ class PhenomenonCycle(private val mainWorld: World) : BukkitRunnable() {
                     val leadingPhenomenon = utuSet[0]
                     val activated: Boolean = leadingPhenomenon.rollActivation(it.mainWorld!!)
                     if (activated) {
-                        it.utuPhenomenonActive = true
-                        it.currentUtuPhenomenon = leadingPhenomenon
+                        it.isSolarPhenomenonActive = true
+                        it.currentSolarPhenomenon = leadingPhenomenon
                         utuSet.remove(leadingPhenomenon)
                         utuSet.add(leadingPhenomenon)
                         if (utuSet[0].criticalWarning()) { utuSet[0].criticalityActivation(it.mainWorld!!.players) }
@@ -68,17 +68,17 @@ class PhenomenonCycle(private val mainWorld: World) : BukkitRunnable() {
             if (timeElapsed >= suenPhenomenonTimerConstant) {
                 suenPhenomenonCallCooldown = System.currentTimeMillis()
                 // Reset
-                it.utuPhenomenonActive = false
-                it.currentUtuPhenomenon = null
+                it.isSolarPhenomenonActive = false
+                it.currentSolarPhenomenon = null
                 //it.suenPhenomenonActive = false
                 //it.currentSuenPhenomenon = null
                 // Check if end game
-                if (it.endGame && !it.suenPhenomenonActive) {
+                if (it.isBossProgressionEnabled && !it.isLunarPhenomenonActive) {
                     val leadingPhenomenon = suenSet[0]
                     val activated: Boolean = leadingPhenomenon.rollActivation(it.mainWorld!!)
                     if (activated) {
-                        it.suenPhenomenonActive = true
-                        it.currentSuenPhenomenon = leadingPhenomenon
+                        it.isLunarPhenomenonActive = true
+                        it.currentLunarPhenomenon = leadingPhenomenon
                         suenSet.remove(leadingPhenomenon)
                         suenSet.add(leadingPhenomenon)
                         if (suenSet[0].criticalWarning()) { suenSet[0].criticalityActivation(it.mainWorld!!.players) }
@@ -106,11 +106,11 @@ class PhenomenonCycle(private val mainWorld: World) : BukkitRunnable() {
         }
         // Check if active for persistent
         with(MinecraftOdyssey.instance) {
-            if (utuPhenomenonActive) {
-                currentUtuPhenomenon!!.persistentPlayerActives(mainWorld!!)
+            if (isSolarPhenomenonActive) {
+                currentSolarPhenomenon!!.persistentPlayerActives(mainWorld!!)
             }
-            else if (suenPhenomenonActive) {
-                currentSuenPhenomenon!!.persistentPlayerActives(mainWorld!!)
+            else if (isLunarPhenomenonActive) {
+                currentLunarPhenomenon!!.persistentPlayerActives(mainWorld!!)
             }
         }
     }

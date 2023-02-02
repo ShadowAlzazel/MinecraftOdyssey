@@ -15,11 +15,11 @@ object SpawnHogRider : CommandExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender is Player) {
             if (sender.isOp) {
-                if (!MinecraftOdyssey.instance.activeBoss) {
+                if (!MinecraftOdyssey.instance.isBossActive) {
                     if (!spawnCooldown.containsKey(sender.uniqueId)) {
                         spawnCooldown[sender.uniqueId] = System.currentTimeMillis()
                         MinecraftOdyssey.instance.currentBoss = HogRiderBoss()
-                        MinecraftOdyssey.instance.activeBoss = true
+                        MinecraftOdyssey.instance.isBossActive = true
                         val hogRiderBoss = MinecraftOdyssey.instance.currentBoss as HogRiderBoss
                         hogRiderBoss.createBoss(sender.world, sender.location)
                         println("${sender.name}Spawned HOG RIDERRRR!!!!!!!!!!!!!!!")
@@ -29,7 +29,7 @@ object SpawnHogRider : CommandExecutor {
                         if (timeElapsed >= 5000) {
                             spawnCooldown[sender.uniqueId] = System.currentTimeMillis()
                             MinecraftOdyssey.instance.currentBoss = HogRiderBoss()
-                            MinecraftOdyssey.instance.activeBoss = true
+                            MinecraftOdyssey.instance.isBossActive = true
                             val hogRiderBoss = MinecraftOdyssey.instance.currentBoss as HogRiderBoss
                             hogRiderBoss.createBoss(sender.world, sender.location)
                             println("${sender.name}Spawned HOG RIDERRRR!!!!!!!!!!!!!!!")

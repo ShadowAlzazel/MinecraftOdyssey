@@ -12,13 +12,14 @@ import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.MeleeListeners
 import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.MiscListeners
 import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.RangedListeners
 import me.shadowalzazel.mcodyssey.listeners.OdysseyPhenomenaListeners
-import me.shadowalzazel.mcodyssey.phenomenon.PhenomenonCycle
+import me.shadowalzazel.mcodyssey.phenomenon.PhenomenonCycleHandler
 import me.shadowalzazel.mcodyssey.phenomenon.PersistentPhenomenonHandler
 import me.shadowalzazel.mcodyssey.phenomenon.base.OdysseyPhenomenon
 import me.shadowalzazel.mcodyssey.recipes.*
 import me.shadowalzazel.mcodyssey.structure_events.SituationHandler
 import org.bukkit.Bukkit
 import org.bukkit.World
+import org.bukkit.event.Listener
 
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -28,26 +29,27 @@ class MinecraftOdyssey : JavaPlugin(), OdysseyAssetManager {
     var mainWorld: World? = null
 
     // Phenomenon Stuff
-    var utuPhenomenonActive: Boolean = false
-    var suenPhenomenonActive: Boolean = false
-    var currentSuenPhenomenon: OdysseyPhenomenon? = null
-    var currentUtuPhenomenon: OdysseyPhenomenon? = null
+    var isSolarPhenomenonActive: Boolean = false
+    var isLunarPhenomenonActive: Boolean = false
+    var currentLunarPhenomenon: OdysseyPhenomenon? = null
+    var currentSolarPhenomenon: OdysseyPhenomenon? = null
     var playersRequiredForLuck: Int = 99
 
     // Config variables
-    var endGame: Boolean = true
-    val resourcePackHash: String = "6ffda6dda0e4a3e4e0c8cdc951e58be0747f55f9"
+    var isBossProgressionEnabled: Boolean = true
 
     // Boss Progression
     // Change This LATER to read from storage
-    var enderDragonDefeated: Boolean = true
-    var ambassadorDefeated: Boolean = true
+    var isEnderDragonDefeated: Boolean = true
+    var isAmbassadorDefeated: Boolean = true
 
     // Boss Mechanics
     var currentBoss: OdysseyBoss? = null
-    var activeBoss: Boolean = false
+    var isBossActive: Boolean = false
     var timeSinceBoss: Long = System.currentTimeMillis()
     var bossDespawnTimer: Long = System.currentTimeMillis()
+
+
 
     companion object {
         lateinit var instance : MinecraftOdyssey
@@ -57,6 +59,9 @@ class MinecraftOdyssey : JavaPlugin(), OdysseyAssetManager {
         instance = this
     }
 
+    private fun eventRegister(eventListener : Listener) {
+        server.pluginManager.registerEvents(eventListener, this@MinecraftOdyssey)
+    }
 
     // Plugin startup logic
     override fun onEnable() {
@@ -67,83 +72,59 @@ class MinecraftOdyssey : JavaPlugin(), OdysseyAssetManager {
         saveConfig()
 
         // Register Enchantments
+        logger.info("Registering Enchantments...")
         OdysseyEnchantments.register()
 
-        // Registering Server related events
+        // Register Recipes
         logger.info("Registering Recipes...")
-        server.also {
-            with(it.pluginManager) {
-                // Odyssey Server Listeners
-                registerEvents(OdysseyServerListeners, this@MinecraftOdyssey)
-                // Odyssey Alchemy Listeners
-                registerEvents(OdysseyAlchemyListeners, this@MinecraftOdyssey)
-                // Odyssey Enigmatic Listeners
-                registerEvents(OdysseyEnigmaticListeners, this@MinecraftOdyssey)
-                // Register Gilding Listeners
-                registerEvents(OdysseyGildingListeners, this@MinecraftOdyssey)
-                // Odyssey Boss Listeners
-                registerEvents(OdysseyBossListeners, this@MinecraftOdyssey)
-                registerEvents(AmbassadorListeners, this@MinecraftOdyssey)
-                registerEvents(HogRiderListeners, this@MinecraftOdyssey)
-                // Odyssey Enchantment listeners
-                registerEvents(ArmorListeners, this@MinecraftOdyssey)
-                registerEvents(MeleeListeners, this@MinecraftOdyssey)
-                registerEvents(MiscListeners, this@MinecraftOdyssey)
-                registerEvents(RangedListeners, this@MinecraftOdyssey)
-                // Odyssey Effect Listeners
-                registerEvents(OdysseyEffectTagListeners, this@MinecraftOdyssey)
-                // Odyssey Mob Drops Listeners
-                registerEvents(OdysseyDropsListeners, this@MinecraftOdyssey)
-                //
-                registerEvents(OdysseyMobListeners, this@MinecraftOdyssey)
-                // Odyssey Food Listeners
-                registerEvents(OdysseyFoodListeners, this@MinecraftOdyssey)
-                // Odyssey Items Listeners
-                registerEvents(OdysseyItemListeners, this@MinecraftOdyssey)
-                // Block Listeners
-                registerEvents(OdysseyBlockListeners, this@MinecraftOdyssey)
-                // Odyssey Weapon Listeners
-                registerEvents(OdysseyWeaponListeners, this@MinecraftOdyssey)
-                // Odyssey Misc Listeners
-                registerEvents(OdysseyMiscListeners, this@MinecraftOdyssey)
-            }
-            // Config
-            if (config.getBoolean("world-phenomenon.enabled")) {
-                // Register Daily Events
-                it.pluginManager.registerEvents(OdysseyPhenomenaListeners, this)
-                playersRequiredForLuck = config.getInt("world-phenomenon.player-minimum-for-luck")
-                // Getting main world for phenomenon timer
-                for (world in it.worlds) {
-                    if (world.environment == World.Environment.NORMAL) {
-                        mainWorld = world
-                        val phenomenonCycle = PhenomenonCycle(mainWorld!!)
-                        phenomenonCycle.runTaskTimer(this, 20 * 10L, 20 * 10)
-                        break
-                    }
+        val fullRecipeList = SmithingRecipes.getRecipes() + OdysseyRecipes.getRecipes() + CookingRecipes.getRecipes() +
+                EnigmaticRecipes.getRecipes() + WeaponRecipes.getRecipes() + TradingRecipes.getRecipes()
+        fullRecipeList.forEach { Bukkit.addRecipe(it) }
+
+        // Register Events
+        logger.info("Registering Events...")
+        listOf(OdysseyListeners,
+            OdysseyAlchemyListeners,
+            OdysseyEnigmaticListeners,
+            OdysseyArcaneSlotListeners,
+            OdysseyBossListeners,
+            AmbassadorListeners,
+            HogRiderListeners,
+            ArmorListeners,
+            MeleeListeners,
+            MiscListeners,
+            RangedListeners,
+            OdysseyEffectTagListeners,
+            OdysseyDropsListeners,
+            OdysseyMobListeners,
+            OdysseyFoodListeners,
+            OdysseyItemListeners,
+            OdysseyBlockListeners,
+            OdysseyWeaponListeners,
+            OdysseyMiscListeners).forEach { eventRegister(it) }
+
+        // Config
+        if (config.getBoolean("world-phenomenon.enabled")) {
+            // Register Daily Events
+            server.pluginManager.registerEvents(OdysseyPhenomenaListeners, this)
+            playersRequiredForLuck = config.getInt("world-phenomenon.player-minimum-for-luck")
+            // Getting main world for phenomenon timer
+            for (world in server.worlds) {
+                if (world.environment == World.Environment.NORMAL) {
+                    mainWorld = world
+                    // Set Handlers
+                    val cycleHandler = PhenomenonCycleHandler(mainWorld!!)
+                    cycleHandler.runTaskTimer(this, 20 * 10L, 20 * 10)
+                    val persistentHandler = PersistentPhenomenonHandler()
+                    persistentHandler.runTaskTimer(this, 20 * 5, 20 * 5)
+                    break
                 }
-                val phenomenonPersistentHandler = PersistentPhenomenonHandler()
-                phenomenonPersistentHandler.runTaskTimer(this, 20 * 5, 20 * 5)
             }
         }
 
         // Run situations
         val situationHandler = SituationHandler(mainWorld!!)
-        val timerDelay = 20 * 10L
-        situationHandler.runTaskTimer(this, timerDelay, 20 * 10)
-
-        // Register Recipes
-        logger.info("Registering Recipes...")
-        // Smithing Recipes
-        SmithingRecipes.registerRecipes().forEach { Bukkit.addRecipe(it) }
-
-        // Item Recipes
-        OdysseyRecipes.registerRecipes().forEach { Bukkit.addRecipe(it) }
-        CookingRecipes.registerRecipes().forEach { Bukkit.addRecipe(it) }
-        EnigmaticRecipes.registerRecipes().forEach { Bukkit.addRecipe(it) }
-        WeaponRecipes.registerRecipes().forEach { Bukkit.addRecipe(it) }
-
-        // Merchant Recipes
-        TradingRecipes.registerRecipes().forEach { Bukkit.addRecipe(it) }
+        situationHandler.runTaskTimer(this, 20 * 10L, 20 * 10)
 
         // Register Commands
         logger.info("Registering Commands...")
@@ -155,17 +136,12 @@ class MinecraftOdyssey : JavaPlugin(), OdysseyAssetManager {
         getCommand("TriggerPhenomenon")?.setExecutor(TriggerPhenomenon)
         getCommand("LocateStructureAsync")?.setExecutor(LocateStructureAsync)
         getCommand("PlaceOdysseyStructure")?.setExecutor(PlaceOdysseyStructure)
-
         // Spell Commands
         getCommand("necronomicon")?.setExecutor(Necronomicon)
 
         // Structures
         logger.info("Registering Structures...")
         registerOdysseyStructures(this)
-
-
-        // TODO: MAKE METHODS!!
-
 
         // Hello World!
         val timeElapsed = (System.currentTimeMillis() - timerStart).div(1000.0)

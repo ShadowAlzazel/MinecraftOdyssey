@@ -8,11 +8,11 @@ class PersistentPhenomenonHandler : BukkitRunnable() {
     override fun run() {
         // Check if active for persistent
         with(MinecraftOdyssey.instance) {
-            if (utuPhenomenonActive) {
-                currentUtuPhenomenon!!.persistentPlayerActives(mainWorld!!)
+            if (isSolarPhenomenonActive) {
+                currentSolarPhenomenon!!.persistentPlayerActives(mainWorld!!)
             }
-            else if (suenPhenomenonActive) {
-                currentSuenPhenomenon!!.persistentPlayerActives(mainWorld!!)
+            else if (isLunarPhenomenonActive) {
+                currentLunarPhenomenon!!.persistentPlayerActives(mainWorld!!)
             }
         }
     }
