@@ -11,7 +11,7 @@ import org.bukkit.inventory.ShapedRecipe
 object OdysseyRecipes {
 
     // Register Recipes
-    fun registerRecipes(): List<ShapedRecipe> {
+    fun getRecipes(): List<ShapedRecipe> {
         return listOf(
             createNeutroniumIngotRecipe(),
             createPurelyUnstableAntimatterCrystalRecipe(),

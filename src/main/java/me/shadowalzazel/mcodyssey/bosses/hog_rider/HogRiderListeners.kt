@@ -14,7 +14,7 @@ object HogRiderListeners : Listener {
 
     @EventHandler
     fun onHogTakeDamage(event: EntityDamageByEntityEvent) {
-        if (MinecraftOdyssey.instance.activeBoss) {
+        if (MinecraftOdyssey.instance.isBossActive) {
             if (MinecraftOdyssey.instance.currentBoss is HogRiderBoss) {
                 val hogRiderBoss = MinecraftOdyssey.instance.currentBoss as HogRiderBoss
                 val hogRiderBossID = hogRiderBoss.bossEntityRider!!.uniqueId
@@ -37,7 +37,7 @@ object HogRiderListeners : Listener {
 
     @EventHandler
     fun onHogRiderDeath(event: EntityDeathEvent) {
-        if (MinecraftOdyssey.instance.activeBoss) {
+        if (MinecraftOdyssey.instance.isBossActive) {
             if (MinecraftOdyssey.instance.currentBoss is HogRiderBoss) {
                 val hogRiderBoss = MinecraftOdyssey.instance.currentBoss as HogRiderBoss
                 val hogRiderBossID = hogRiderBoss.bossEntityRider!!.uniqueId
@@ -45,8 +45,8 @@ object HogRiderListeners : Listener {
                     // Check if Player Kill
                     if (event.entity.killer is Player) {
                         //hogRiderBoss.defeatedBoss(hogRiderBoss.bossEntity!!, event.entity.killer as Player)
-                        MinecraftOdyssey.instance.activeBoss = false
-                        MinecraftOdyssey.instance.ambassadorDefeated = true
+                        MinecraftOdyssey.instance.isBossActive = false
+                        MinecraftOdyssey.instance.isAmbassadorDefeated = true
                         MinecraftOdyssey.instance.currentBoss = null
                         MinecraftOdyssey.instance.bossDespawnTimer = System.currentTimeMillis()
                     }
@@ -56,8 +56,8 @@ object HogRiderListeners : Listener {
                         if (vanquisher != null) {
                             if (vanquisher is Player) {
                                 //hogRiderBoss.defeatedBoss(hogRiderBoss.bossEntity!!, vanquisher)
-                                MinecraftOdyssey.instance.activeBoss = false
-                                MinecraftOdyssey.instance.ambassadorDefeated = true
+                                MinecraftOdyssey.instance.isBossActive = false
+                                MinecraftOdyssey.instance.isAmbassadorDefeated = true
                                 MinecraftOdyssey.instance.currentBoss = null
                                 MinecraftOdyssey.instance.bossDespawnTimer = System.currentTimeMillis()
                             }

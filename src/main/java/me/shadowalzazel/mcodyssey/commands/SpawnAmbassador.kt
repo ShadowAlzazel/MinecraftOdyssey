@@ -15,11 +15,11 @@ object SpawnAmbassador : CommandExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender is Player) {
             if (sender.isOp) {
-                if (!MinecraftOdyssey.instance.activeBoss) {
+                if (!MinecraftOdyssey.instance.isBossActive) {
                     if (!spawnCooldown.containsKey(sender.uniqueId)) {
                         spawnCooldown[sender.uniqueId] = System.currentTimeMillis()
                         MinecraftOdyssey.instance.currentBoss = AmbassadorBoss()
-                        MinecraftOdyssey.instance.activeBoss = true
+                        MinecraftOdyssey.instance.isBossActive = true
                         val ambassadorBoss = MinecraftOdyssey.instance.currentBoss as AmbassadorBoss
                         ambassadorBoss.createBoss(sender.world)
                         println("${sender.name}Spawned the Ambassador")
@@ -29,7 +29,7 @@ object SpawnAmbassador : CommandExecutor {
                         if (timeElapsed >= 5000) {
                             spawnCooldown[sender.uniqueId] = System.currentTimeMillis()
                             MinecraftOdyssey.instance.currentBoss = AmbassadorBoss()
-                            MinecraftOdyssey.instance.activeBoss = true
+                            MinecraftOdyssey.instance.isBossActive = true
                             val ambassadorBoss = MinecraftOdyssey.instance.currentBoss as AmbassadorBoss
                             ambassadorBoss.createBoss(sender.world)
                             println("${sender.name}Spawned the Ambassador")

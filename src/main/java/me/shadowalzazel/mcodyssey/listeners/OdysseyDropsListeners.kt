@@ -32,7 +32,7 @@ object OdysseyDropsListeners : Listener {
 
     @EventHandler
     fun mobDropsHandler(event: EntityDeathEvent) {
-        if (MinecraftOdyssey.instance.ambassadorDefeated) {
+        if (MinecraftOdyssey.instance.isAmbassadorDefeated) {
             if (event.entity.killer is Player) {
                 val somePlayer: Player = event.entity.killer as Player
                 if (event.entity.hasLineOfSight(somePlayer)) {

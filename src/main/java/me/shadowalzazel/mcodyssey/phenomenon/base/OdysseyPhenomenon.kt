@@ -34,7 +34,6 @@ open class OdysseyPhenomenon(
 
     fun rollActivation(someWorld: World, modifier: Int = 0): Boolean {
         return if (occurrenceRate > ((0..100).random() + modifier)) {
-            println("$phenomenonName ${phenomenonType}-Phenomenon activated at $someWorld")
             successfulActivation(someWorld)
             true
         } else {

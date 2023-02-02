@@ -44,7 +44,6 @@ object MeleeListeners : Listener {
         if (event.damager is LivingEntity && event.entity is LivingEntity && event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
             val someDamager = event.damager as LivingEntity
             val someVictim = event.entity as LivingEntity
-            // Make thorns bug new enchant apply ranged effects !!!!!
             // Check if active item has lore
             if (someDamager.equipment?.itemInMainHand?.hasItemMeta() == true) {
                 val someWeapon = someDamager.equipment!!.itemInMainHand
@@ -683,5 +682,7 @@ object MeleeListeners : Listener {
                 .multiply(0.8 + (0.15 * enchantmentStrength))
         }
     }
+
+    // Make thorns bug new enchant apply ranged effects !!!!!
 
 }

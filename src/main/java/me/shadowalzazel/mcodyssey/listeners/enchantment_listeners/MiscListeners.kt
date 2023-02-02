@@ -17,7 +17,7 @@ import java.util.*
 
 object MiscListeners : Listener {
 
-    private var playersVoidJumpCooldown = mutableMapOf<UUID, Long>()
+    private var voidJumpCooldown = mutableMapOf<UUID, Long>()
 
     // MIRROR_FORCE enchantment effects
     @EventHandler
@@ -88,17 +88,17 @@ object MiscListeners : Listener {
             }
 
             // Apply
-            with(event.entity.shooter as Player) {
+            with((event.entity.shooter as Player)) {
                 // Cooldown
-                if (!playersVoidJumpCooldown.containsKey(uniqueId)) { playersVoidJumpCooldown[uniqueId] = 0L }
-                val timeElapsed: Long = System.currentTimeMillis() - playersVoidJumpCooldown[uniqueId]!!
+                if (!voidJumpCooldown.containsKey(uniqueId)) { voidJumpCooldown[uniqueId] = 0L }
+                val timeElapsed: Long = System.currentTimeMillis() - voidJumpCooldown[uniqueId]!!
                 // Time sentry
                 if (timeElapsed < 1.0 * 1000) {
                     return@voidJumpHandler
                 }
-                playersVoidJumpCooldown[uniqueId] = System.currentTimeMillis()
+                voidJumpCooldown[uniqueId] = System.currentTimeMillis()
 
-                // Get level
+                // Get vector
                 val enchantmentLevel = equipment.chestplate.getEnchantmentLevel(OdysseyEnchantments.VOID_JUMP)
                 val unitVector = velocity.clone().normalize()
                 val jumpLocation = location.clone().add(

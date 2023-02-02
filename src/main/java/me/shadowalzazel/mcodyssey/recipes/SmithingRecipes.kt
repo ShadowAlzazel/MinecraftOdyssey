@@ -5,13 +5,12 @@ import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.RecipeChoice
-import org.bukkit.inventory.ShapedRecipe
 import org.bukkit.inventory.SmithingRecipe
 
 object SmithingRecipes {
 
     // Register Recipes
-    fun registerRecipes(): List<SmithingRecipe> {
+    fun getRecipes(): List<SmithingRecipe> {
         return listOf(
             createGildedBookActivationRecipe(),
             createGildedCombiningRecipe(),
