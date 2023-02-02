@@ -36,7 +36,7 @@ object OdysseyDropsListeners : Listener {
             if (event.entity.killer is Player) {
                 val somePlayer: Player = event.entity.killer as Player
                 if (event.entity.hasLineOfSight(somePlayer)) {
-                    val enchantmentSet = OdysseyEnchantments.meleeSet + OdysseyEnchantments.rangedSet
+                    val enchantmentSet = OdysseyEnchantments.MELEE_SET + OdysseyEnchantments.RANGED_SET
 
                     event.entity.also {
                         // Looting and luck
@@ -163,7 +163,7 @@ object OdysseyDropsListeners : Listener {
                             }
                             is Enderman -> {
                                 if ((2.0 + luck + looting + misc) * 10 > (0..1000).random()) {
-                                    it.world.dropItem(it.location, (OdysseyBooks.GILDED_BOOK.createGildedBook(OdysseyEnchantments.WARP_JUMP, 1)))
+                                    it.world.dropItem(it.location, (OdysseyBooks.GILDED_BOOK.createGildedBook(OdysseyEnchantments.VOID_JUMP, 1)))
                                     droppedItemSound(somePlayer)
                                 }
                             }

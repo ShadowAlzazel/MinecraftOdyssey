@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.listeners.enchantmentListeners
+package me.shadowalzazel.mcodyssey.listeners.enchantment_listeners
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments

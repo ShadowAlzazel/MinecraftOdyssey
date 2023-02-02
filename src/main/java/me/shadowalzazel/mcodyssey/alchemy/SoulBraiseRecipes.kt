@@ -16,7 +16,7 @@ object SoulBraiseRecipes {
     private val ROTTING_SUMMON_RECIPE = RottingSummonRecipe
 
     // Set
-    val recipeSet = setOf(
+    val BRAISE_SET = setOf(
         SOUL_CRYSTAL_RECIPE,
         SOUL_STEEL_RECIPE,
         SCULK_HEART_RECIPE,

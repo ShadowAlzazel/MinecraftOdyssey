@@ -1,7 +1,7 @@
-package me.shadowalzazel.mcodyssey.situation.villageSituations
+package me.shadowalzazel.mcodyssey.structure_events.village_events
 
-import me.shadowalzazel.mcodyssey.situation.odyssey.OdysseySituation
-import me.shadowalzazel.mcodyssey.situation.odyssey.SituationTypes
+import me.shadowalzazel.mcodyssey.structure_events.base.OdysseySituation
+import me.shadowalzazel.mcodyssey.structure_events.base.SituationTypes
 import net.kyori.adventure.text.Component
 import org.bukkit.Location
 import org.bukkit.entity.EntityType

@@ -89,7 +89,7 @@ object OdysseyEnigmaticListeners : Listener {
         if (event.combuster != null) {
             if (event.combuster!!.type == Material.SOUL_FIRE && event.entity is Item) {
                 val someItem = event.entity as Item
-                for (enigmaticRecipe in SoulBraiseRecipes.recipeSet) {
+                for (enigmaticRecipe in SoulBraiseRecipes.BRAISE_SET) {
                     if (enigmaticRecipe.validateRecipe(setOf(someItem), event.combuster!!)) {
                         enigmaticRecipe.braiseHandler(someItem.itemStack.amount, event.combuster!!.location.clone().toCenterLocation()) //?
                         break

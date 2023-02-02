@@ -4,7 +4,7 @@ import org.bukkit.NamespacedKey
 import java.io.File
 import java.io.FileNotFoundException
 
-interface OdysseyManager {
+interface OdysseyAssetManager {
 
     fun registerOdysseyStructures(mcodysseyPlugin: MinecraftOdyssey) {
         mcodysseyPlugin.run {

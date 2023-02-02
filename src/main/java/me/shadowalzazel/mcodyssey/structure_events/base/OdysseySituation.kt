@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.situation.odyssey
+package me.shadowalzazel.mcodyssey.structure_events.base
 
 import net.kyori.adventure.text.TextComponent
 import org.bukkit.Location

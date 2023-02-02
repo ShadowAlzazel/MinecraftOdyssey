@@ -1,15 +1,15 @@
-package me.shadowalzazel.mcodyssey.enchantments.other
+package me.shadowalzazel.mcodyssey.enchantments.misc
 
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object HookShot : OdysseyEnchantment("hookshot", "Hook Shot", 2) {
+object VoidJump : OdysseyEnchantment("voidjump", "Void Jump", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            ARROW_INFINITE -> {
+            PROTECTION_ENVIRONMENTAL, PROTECTION_PROJECTILE, PROTECTION_EXPLOSIONS, PROTECTION_FIRE -> {
                 true
             }
             else -> {
@@ -20,7 +20,7 @@ object HookShot : OdysseyEnchantment("hookshot", "Hook Shot", 2) {
 
     override fun canEnchantItem(item: ItemStack): Boolean {
         return when (item.type) {
-            Material.ENCHANTED_BOOK, Material.FISHING_ROD -> {
+            Material.ENCHANTED_BOOK, Material.ELYTRA -> {
                 true
             }
             else -> {
@@ -29,8 +29,4 @@ object HookShot : OdysseyEnchantment("hookshot", "Hook Shot", 2) {
         }
     }
 
-
-    fun todo() {
-        TODO("Temporarily Disabled")
-    }
 }

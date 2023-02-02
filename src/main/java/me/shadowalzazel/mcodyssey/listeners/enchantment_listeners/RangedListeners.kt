@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.listeners.enchantmentListeners
+package me.shadowalzazel.mcodyssey.listeners.enchantment_listeners
 
 import com.destroystokyo.paper.event.player.PlayerReadyArrowEvent
 import io.papermc.paper.event.entity.EntityLoadCrossbowEvent

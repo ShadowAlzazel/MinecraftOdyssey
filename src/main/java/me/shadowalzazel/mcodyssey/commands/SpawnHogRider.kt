@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.commands
 
 import me.shadowalzazel.mcodyssey.MinecraftOdyssey
-import me.shadowalzazel.mcodyssey.bosses.hogRider.HogRiderBoss
+import me.shadowalzazel.mcodyssey.bosses.hog_rider.HogRiderBoss
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender

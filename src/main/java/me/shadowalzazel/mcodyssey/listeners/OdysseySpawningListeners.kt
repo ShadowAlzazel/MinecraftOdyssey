@@ -38,7 +38,7 @@ object OdysseySpawningListeners : Listener {
     private fun gildedMobHandler(eventEntity: LivingEntity) {
 
         eventEntity.apply {
-            val gildedAffix = OdysseyEnchantments.meleeSet.random()
+            val gildedAffix = OdysseyEnchantments.MELEE_SET.random()
 
             // Add Item or enchant
             equipment!!.also {
