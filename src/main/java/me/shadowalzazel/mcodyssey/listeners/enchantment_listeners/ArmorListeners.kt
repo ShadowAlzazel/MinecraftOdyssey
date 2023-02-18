@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.listeners.enchantment_listeners
 
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.listeners.tasks.SpeedySpursTask
 import org.bukkit.Material
@@ -301,7 +301,7 @@ object ArmorListeners : Listener {
     private fun speedySpursEnchantment(eventRider: LivingEntity, eventMount: LivingEntity, enchantmentStrength: Int) {
         // Tasks
         val someSpeedySpursTask = SpeedySpursTask(eventRider, eventMount, enchantmentStrength)
-        someSpeedySpursTask.runTaskTimer(MinecraftOdyssey.instance, 0, 10 * 20)
+        someSpeedySpursTask.runTaskTimer(Odyssey.instance, 0, 10 * 20)
     }
 
     // SPOREFUL Enchantment Function

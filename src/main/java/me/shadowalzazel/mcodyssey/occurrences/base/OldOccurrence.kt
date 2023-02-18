@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.structure_events.base
+package me.shadowalzazel.mcodyssey.occurrences.base
 
 import net.kyori.adventure.text.TextComponent
 import org.bukkit.Location
@@ -6,9 +6,9 @@ import org.bukkit.World
 import org.bukkit.generator.structure.Structure
 import org.bukkit.util.StructureSearchResult
 
-open class OdysseySituation(
+open class OldOccurrence(
     val situationName: String,
-    val situationType: SituationTypes,
+    val situationType: OccurrenceType,
     private val affectedStructures: List<Structure>,
     private val announcement: TextComponent) {
 
@@ -18,7 +18,7 @@ open class OdysseySituation(
                 "If player near village structure" +
                 "If village inhabited" +
                 "If not in cooldown" +
-                "Do some OdysseySituation, send rumors to player" +
+                "Do some OldOccurrence, send rumors to player" +
                 "Ideas: Market Sale, Raid, Nether Invasion, ? " +
                 "If Allay nearby lower chance")
     }
@@ -50,7 +50,6 @@ open class OdysseySituation(
 
     protected open fun situationEffects(structureLocation: Location) {
         structureLocation.getNearbyPlayers(16 * 60.0).forEach{ it.sendMessage(announcement) }
-        println("$situationName happened at $structureLocation")
         // TODO: Make Announcement show village name
         // If structure in list, send name, else add name to list and counters!
     }

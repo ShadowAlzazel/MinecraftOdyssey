@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.phenomenon.base
 
-enum class PhenomenonTypes {
+enum class PhenomenonType {
 
     LUNAR,  // Suen
     SOLAR,   // Utu

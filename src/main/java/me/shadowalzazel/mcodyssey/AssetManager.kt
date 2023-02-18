@@ -1,19 +1,10 @@
 package me.shadowalzazel.mcodyssey
 
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.TextColor
-import org.bukkit.ChatColor
-import org.bukkit.NamespacedKey
-import org.bukkit.event.EventHandler
-import org.bukkit.event.Listener
-import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.event.player.PlayerQuitEvent
-import java.io.File
 import java.io.FileNotFoundException
 
-interface OdysseyAssetManager : Listener {
+interface AssetManager {
 
-    fun registerOdysseyStructures(odysseyPlugin: MinecraftOdyssey) {
+    fun registerOdysseyStructures(odysseyPlugin: Odyssey) {
         odysseyPlugin.run {
             /*
             try {
@@ -25,8 +16,8 @@ interface OdysseyAssetManager : Listener {
                 val idescineTreeFile = File("$structureDirectory/idescine/idescine_tree.nbt")
 
                 with(server.structureManager) {
-                    registerStructure(NamespacedKey(MinecraftOdyssey.instance, "stone_pillars_1"), loadStructure(stonePillars1File))
-                    registerStructure(NamespacedKey(MinecraftOdyssey.instance, "idescine_tree"), loadStructure(idescineTreeFile))
+                    registerStructure(NamespacedKey(Odyssey.instance, "stone_pillars_1"), loadStructure(stonePillars1File))
+                    registerStructure(NamespacedKey(Odyssey.instance, "idescine_tree"), loadStructure(idescineTreeFile))
 
                 }
 
@@ -41,5 +32,39 @@ interface OdysseyAssetManager : Listener {
     }
 
     // TODO: MAKE METHODS!!
+
+
+
+    fun registerItems(odysseyPlugin: Odyssey) {
+        try {
+            // TODO: Get On Init
+            val datapackPath = "datapacks/OdysseyDataPack/data/odyssey"
+
+            // CREATE ENUMS FOR EACH ODYSSEY ITEM
+
+
+
+
+
+
+
+        }
+        catch(ex: FileNotFoundException) {
+            odysseyPlugin.logger.info(ex.message)
+        }
+
+
+
+    }
+
+    fun registerOccurrences(odysseyPlugin: Odyssey) {
+
+
+
+
+
+    }
+
+
 
 }

@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.recipes
 
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.items.OdysseyItems
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
@@ -22,7 +22,7 @@ object EnigmaticRecipes {
 
     private fun createSorrowingSoulRecipe(): ShapedRecipe {
         val someResult = OdysseyItems.SORROWING_SOUL.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "sorrowingsoul"), someResult)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "sorrowingsoul"), someResult)
         val exactEctoplasm = OdysseyItems.ECTOPLASM.createItemStack(1)
 
         someRecipe.shape("XZX", "XYX", "XZX")
@@ -34,7 +34,7 @@ object EnigmaticRecipes {
 
     private fun createSoulCatalystRecipe(): ShapedRecipe {
         val someResult = OdysseyItems.SOUL_CATALYST.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "soulcatalyst"), someResult)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "soulcatalyst"), someResult)
         val exactSoulCrystal = OdysseyItems.SOUL_CRYSTAL.createItemStack(1)
         val exactEctoplasm = OdysseyItems.ECTOPLASM.createItemStack(1)
 
@@ -47,7 +47,7 @@ object EnigmaticRecipes {
 
     private fun createEnigmaticOmamoriRecipe(): ShapedRecipe {
         val someResult = OdysseyItems.ENIGMATIC_OMAMORI.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "enigmaticomamori"), someResult)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "enigmaticomamori"), someResult)
         val exactSoulCrystal = OdysseyItems.SOUL_CRYSTAL.createItemStack(1)
         val exactSoulIngot = OdysseyItems.SOUL_STEEL_INGOT.createItemStack(1)
 

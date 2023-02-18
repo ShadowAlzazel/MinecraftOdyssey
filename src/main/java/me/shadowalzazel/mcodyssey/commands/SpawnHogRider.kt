@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.commands
 
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.bosses.hog_rider.HogRiderBoss
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -15,12 +15,12 @@ object SpawnHogRider : CommandExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender is Player) {
             if (sender.isOp) {
-                if (!MinecraftOdyssey.instance.isBossActive) {
+                if (!Odyssey.instance.isBossActive) {
                     if (!spawnCooldown.containsKey(sender.uniqueId)) {
                         spawnCooldown[sender.uniqueId] = System.currentTimeMillis()
-                        MinecraftOdyssey.instance.currentBoss = HogRiderBoss()
-                        MinecraftOdyssey.instance.isBossActive = true
-                        val hogRiderBoss = MinecraftOdyssey.instance.currentBoss as HogRiderBoss
+                        Odyssey.instance.currentBoss = HogRiderBoss()
+                        Odyssey.instance.isBossActive = true
+                        val hogRiderBoss = Odyssey.instance.currentBoss as HogRiderBoss
                         hogRiderBoss.createBoss(sender.world, sender.location)
                         println("${sender.name}Spawned HOG RIDERRRR!!!!!!!!!!!!!!!")
                     }
@@ -28,9 +28,9 @@ object SpawnHogRider : CommandExecutor {
                         val timeElapsed: Long = System.currentTimeMillis()- spawnCooldown[sender.uniqueId]!!
                         if (timeElapsed >= 5000) {
                             spawnCooldown[sender.uniqueId] = System.currentTimeMillis()
-                            MinecraftOdyssey.instance.currentBoss = HogRiderBoss()
-                            MinecraftOdyssey.instance.isBossActive = true
-                            val hogRiderBoss = MinecraftOdyssey.instance.currentBoss as HogRiderBoss
+                            Odyssey.instance.currentBoss = HogRiderBoss()
+                            Odyssey.instance.isBossActive = true
+                            val hogRiderBoss = Odyssey.instance.currentBoss as HogRiderBoss
                             hogRiderBoss.createBoss(sender.world, sender.location)
                             println("${sender.name}Spawned HOG RIDERRRR!!!!!!!!!!!!!!!")
                         }

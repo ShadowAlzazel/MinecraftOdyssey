@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.bosses.the_ambassador
 
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.bosses.base.OdysseyBoss
 import me.shadowalzazel.mcodyssey.constants.OdysseyUUIDs
 import me.shadowalzazel.mcodyssey.listeners.tasks.GravityWellTask
@@ -72,7 +72,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         val spawningLocation = spawningPlayer.location.clone().add((-28..28).random().toDouble(), 0.0, (-28..28).random().toDouble())
         spawningLocation.y = 300.0
         // Messages
-        with(MinecraftOdyssey.instance.server) {
+        with(Odyssey.instance.server) {
             broadcast(vailPrefix.append(Component.text("My Ambassador has arrived!", TextColor.color(255, 255, 85))))
             broadcast(ambassadorPrefix.append(Component.text("I am descending upon ${spawningPlayer.name}'s land...", TextColor.color(255, 255, 255))))
             logger.info("The Ambassador has arrived at x:${spawningLocation.x}, y:${spawningLocation.z}")
@@ -84,7 +84,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         bossActive = true
         bossEntity = spawnBossEntity(spawningLocation)
         val departTimer = AmbassadorDepartTask()
-        departTimer.runTaskLater(MinecraftOdyssey.instance, 20 * 60 * 60 * 1)
+        departTimer.runTaskLater(Odyssey.instance, 20 * 60 * 60 * 1)
     }
 
     // Spawn entity
@@ -162,7 +162,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         }
         bossEntity!!.isAware = true
         val attackCycle = AmbassadorAttackCycle(bossEntity!!)
-        attackCycle.runTaskTimer(MinecraftOdyssey.instance, 0, 20 * 10)
+        attackCycle.runTaskTimer(Odyssey.instance, 0, 20 * 10)
     }
 
     // Spawn a dummy clone
@@ -226,9 +226,9 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
             addPotionEffect(PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 300, 0))
         }
         val gravityWellTask = GravityWellTask(fallingSingularity, bossEntity!!, 4, 30)
-        gravityWellTask.runTaskTimer(MinecraftOdyssey.instance, 0, 10)
+        gravityWellTask.runTaskTimer(Odyssey.instance, 0, 10)
         val standTask = AmbassadorSingularity(fallingSingularity)
-        standTask.runTaskLater(MinecraftOdyssey.instance, 33 * 10)
+        standTask.runTaskLater(Odyssey.instance, 33 * 10)
     }
 
     // Spawn a vortex that launches players
@@ -289,7 +289,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         }
         // Hijack
         val hijackTask = AmbassadorHijackTasks(bossEntity!!)
-        hijackTask.runTaskTimer(MinecraftOdyssey.instance, 0, 10)
+        hijackTask.runTaskTimer(Odyssey.instance, 0, 10)
 
     }
 

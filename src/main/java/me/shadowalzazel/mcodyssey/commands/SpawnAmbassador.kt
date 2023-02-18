@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.commands
 
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.bosses.the_ambassador.AmbassadorBoss
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -15,12 +15,12 @@ object SpawnAmbassador : CommandExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender is Player) {
             if (sender.isOp) {
-                if (!MinecraftOdyssey.instance.isBossActive) {
+                if (!Odyssey.instance.isBossActive) {
                     if (!spawnCooldown.containsKey(sender.uniqueId)) {
                         spawnCooldown[sender.uniqueId] = System.currentTimeMillis()
-                        MinecraftOdyssey.instance.currentBoss = AmbassadorBoss()
-                        MinecraftOdyssey.instance.isBossActive = true
-                        val ambassadorBoss = MinecraftOdyssey.instance.currentBoss as AmbassadorBoss
+                        Odyssey.instance.currentBoss = AmbassadorBoss()
+                        Odyssey.instance.isBossActive = true
+                        val ambassadorBoss = Odyssey.instance.currentBoss as AmbassadorBoss
                         ambassadorBoss.createBoss(sender.world)
                         println("${sender.name}Spawned the Ambassador")
                     }
@@ -28,9 +28,9 @@ object SpawnAmbassador : CommandExecutor {
                         val timeElapsed: Long = System.currentTimeMillis()- spawnCooldown[sender.uniqueId]!!
                         if (timeElapsed >= 5000) {
                             spawnCooldown[sender.uniqueId] = System.currentTimeMillis()
-                            MinecraftOdyssey.instance.currentBoss = AmbassadorBoss()
-                            MinecraftOdyssey.instance.isBossActive = true
-                            val ambassadorBoss = MinecraftOdyssey.instance.currentBoss as AmbassadorBoss
+                            Odyssey.instance.currentBoss = AmbassadorBoss()
+                            Odyssey.instance.isBossActive = true
+                            val ambassadorBoss = Odyssey.instance.currentBoss as AmbassadorBoss
                             ambassadorBoss.createBoss(sender.world)
                             println("${sender.name}Spawned the Ambassador")
                         }

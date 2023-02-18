@@ -1,7 +1,6 @@
 package me.shadowalzazel.mcodyssey.mobs.passive
 
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
-import me.shadowalzazel.mcodyssey.items.OdysseyBooks
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.items.OdysseyItems
 import me.shadowalzazel.mcodyssey.mobs.utility.FallingBlockTimer
 import me.shadowalzazel.mcodyssey.mobs.utility.OdysseyMob
@@ -9,10 +8,8 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.*
 import org.bukkit.entity.EntityType
-import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Pig
 import org.bukkit.inventory.ItemStack
-import org.bukkit.loot.LootTable
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
@@ -24,7 +21,7 @@ object TreasurePig: OdysseyMob("Treasure Pig", EntityType.PIG, 100.0) {
 
     override fun createMob(someWorld: World, spawningLocation: Location): Pig {
         // Some Block
-        val someBlockData = MinecraftOdyssey.instance.server.createBlockData(Material.BARREL)
+        val someBlockData = Odyssey.instance.server.createBlockData(Material.BARREL)
         val someBlock = someWorld.spawnFallingBlock(spawningLocation, someBlockData).apply {
             shouldAutoExpire(false)
             isPersistent = false
@@ -44,10 +41,10 @@ object TreasurePig: OdysseyMob("Treasure Pig", EntityType.PIG, 100.0) {
         }
         // Add falling block timer
         val newTimer = FallingBlockTimer(someBlock)
-        newTimer.runTaskTimer(MinecraftOdyssey.instance, 20 * 10, 20 * 10)
+        newTimer.runTaskTimer(Odyssey.instance, 20 * 10, 20 * 10)
         // Add loot drop
         val droppingLootTask = DroppingLootTask(treasurePigEntity)
-        droppingLootTask.runTaskTimer(MinecraftOdyssey.instance, 20 * 10, 20 * 10)
+        droppingLootTask.runTaskTimer(Odyssey.instance, 20 * 10, 20 * 10)
         return treasurePigEntity
     }
 

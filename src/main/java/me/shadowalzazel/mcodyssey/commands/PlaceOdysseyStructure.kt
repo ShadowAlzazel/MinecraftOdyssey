@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.commands
 
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.Odyssey
 import org.bukkit.NamespacedKey
 import org.bukkit.block.structure.Mirror
 import org.bukkit.block.structure.StructureRotation
@@ -17,7 +17,7 @@ object PlaceOdysseyStructure : CommandExecutor{
             if (args.size == 1) {
                 when (args[0]) {
                     "stone_pillars" -> {
-                        sender.server.structureManager.loadStructure(NamespacedKey(MinecraftOdyssey.instance,"stone_pillars_1"))?.place(sender.location, true, StructureRotation.NONE, Mirror.NONE, 0, 1F, Random(2121L))
+                        sender.server.structureManager.loadStructure(NamespacedKey(Odyssey.instance,"stone_pillars_1"))?.place(sender.location, true, StructureRotation.NONE, Mirror.NONE, 0, 1F, Random(2121L))
                     }
                 }
             }

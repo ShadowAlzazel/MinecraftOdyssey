@@ -1,15 +1,15 @@
-package me.shadowalzazel.mcodyssey.structure_events.village_events
+package me.shadowalzazel.mcodyssey.occurrences.festivals
 
-import me.shadowalzazel.mcodyssey.structure_events.base.OdysseySituation
-import me.shadowalzazel.mcodyssey.structure_events.base.SituationTypes
+import me.shadowalzazel.mcodyssey.occurrences.base.OldOccurrence
+import me.shadowalzazel.mcodyssey.occurrences.base.OccurrenceType
 import net.kyori.adventure.text.Component
 import org.bukkit.Location
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Villager
 import org.bukkit.generator.structure.Structure
 
-object PumpkinHarvest: OdysseySituation("Pumpkin Harvest",
-    SituationTypes.MASTO,
+object PumpkinHarvest: OldOccurrence("Pumpkin Harvest",
+    OccurrenceType.FESTIVAL,
     listOf<Structure>(Structure.VILLAGE_PLAINS, Structure.VILLAGE_SAVANNA, Structure.VILLAGE_TAIGA),
     Component.text("There is a pumpkin harvest going on in a nearby village...")) {
 

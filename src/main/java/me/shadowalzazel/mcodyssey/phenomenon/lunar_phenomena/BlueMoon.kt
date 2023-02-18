@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.phenomenon.lunar_phenomena
 
 import me.shadowalzazel.mcodyssey.phenomenon.base.OdysseyPhenomenon
-import me.shadowalzazel.mcodyssey.phenomenon.base.PhenomenonTypes
+import me.shadowalzazel.mcodyssey.phenomenon.base.PhenomenonType
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.*
@@ -9,7 +9,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
 object BlueMoon : OdysseyPhenomenon("Blood Moon",
-    PhenomenonTypes.LUNAR,
+    PhenomenonType.LUNAR,
     13,
     4,
     10) {

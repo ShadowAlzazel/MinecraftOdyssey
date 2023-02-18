@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.recipes
 
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.items.OdysseyBooks
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
@@ -18,7 +18,7 @@ object FinalRecipes {
 
     private fun createWeaponEncyclopediaRecipe(): ShapedRecipe {
         val someResult = OdysseyBooks.WEAPON_ENCYCLOPEDIA.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "weaponencyclopedia"), someResult)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "weaponencyclopedia"), someResult)
 
         someRecipe.shape(" A ", " B ", " C ")
         someRecipe.setIngredient('A', Material.STONE_SWORD)

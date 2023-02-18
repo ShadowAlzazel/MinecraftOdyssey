@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.effects.tasks
 
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.Odyssey
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.entity.LivingEntity
@@ -33,7 +33,7 @@ class DousedTask(private val dousedVictim: LivingEntity, private val douseCount:
                 it.fireTicks = 20 * ((dousePower * 4) + 4) + 1
                 // Run task
                 val blazeDouseTask = BlazingTask(it, dousePower, ((dousePower * 4) + 4))
-                blazeDouseTask.runTaskTimer(MinecraftOdyssey.instance, 1, 20)
+                blazeDouseTask.runTaskTimer(Odyssey.instance, 1, 20)
                 this.cancel()
             }
 

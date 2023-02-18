@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.listeners
 
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.bosses.the_ambassador.AmbassadorBoss
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -11,7 +11,7 @@ object OdysseyBossListeners : Listener {
     // Main function for calling a new boss
     @EventHandler
     fun newBoss(event: TimeSkipEvent) {
-        MinecraftOdyssey.instance.run {
+        Odyssey.instance.run {
             if (!isBossActive) {
                 val timeElapsed = System.currentTimeMillis() - timeSinceBoss
                 if (timeElapsed >= 90000000) {

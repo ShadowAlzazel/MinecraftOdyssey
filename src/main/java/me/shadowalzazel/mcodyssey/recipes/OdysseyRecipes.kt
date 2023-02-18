@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.recipes
 
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.items.OdysseyBooks
 import me.shadowalzazel.mcodyssey.items.OdysseyItems
 import org.bukkit.Material
@@ -27,7 +27,7 @@ object OdysseyRecipes {
     // NEUTRONIUM_INGOT
     private fun createNeutroniumIngotRecipe(): ShapedRecipe {
         val someResult = OdysseyItems.NEUTRONIUM_BARK_INGOT.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "neutroniumbarkingot"), someResult)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "neutroniumbarkingot"), someResult)
         val exactNeutroniumScrap = OdysseyItems.NEUTRONIUM_BARK_SCRAPS.createItemStack(1)
         val exactGoldAlloy = OdysseyItems.PURE_ALLOY_GOLD.createItemStack(1)
 
@@ -40,7 +40,7 @@ object OdysseyRecipes {
     // UNSTABLE_ANTIMATTER_CRYSTAL
     private fun createPurelyUnstableAntimatterCrystalRecipe(): ShapedRecipe {
         val someResult = OdysseyItems.PURE_ANTIMATTER_CRYSTAL.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "purelyunstableantimattercrystal"), someResult)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "purelyunstableantimattercrystal"), someResult)
         val exactImpureAntimatter = OdysseyItems.IMPURE_ANTIMATTER_SHARD.createItemStack(1)
         val exactScrap = OdysseyItems.NEUTRONIUM_BARK_SCRAPS.createItemStack(1)
         val exactDiamond = OdysseyItems.REFINED_NEPTUNIAN_DIAMONDS.createItemStack(1)
@@ -55,7 +55,7 @@ object OdysseyRecipes {
     // FRUIT_OF_ERISHKIGAL
     private fun createFruitOfErishkigalRecipe(): ShapedRecipe {
         val someResult = OdysseyItems.FRUIT_OF_ERISHKIGAL.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "fruitoferishkigal"), someResult)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "fruitoferishkigal"), someResult)
         val exactPureAntimatter = OdysseyItems.PURE_ANTIMATTER_CRYSTAL.createItemStack(1)
         val exactIdescineEssence = OdysseyItems.IDESCINE_ESSENCE.createItemStack(1)
 
@@ -69,7 +69,7 @@ object OdysseyRecipes {
     // IRRADIATED_FRUIT
     private fun createIrradiatedFruitRecipe(): ShapedRecipe {
         val someResult = OdysseyItems.IRRADIATED_FRUIT.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "irradiatedfruit"), someResult)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "irradiatedfruit"), someResult)
         val exactIrradiatedRod = OdysseyItems.IRRADIATED_ROD.createItemStack(1)
 
         someRecipe.shape("XZX", "ZYZ", "XZX")
@@ -82,7 +82,7 @@ object OdysseyRecipes {
     // ARCANE_BOOK
     private fun createArcaneBookRecipe(): ShapedRecipe {
         val someResult = OdysseyBooks.ARCANE_BOOK.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "arcanebook"), someResult)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "arcanebook"), someResult)
 
         someRecipe.shape("DDB", "DAB", "BBC")
         someRecipe.setIngredient('A', Material.ENCHANTED_BOOK)
@@ -95,7 +95,7 @@ object OdysseyRecipes {
     //
     private fun createHourglassOfBabelRecipe(): ShapedRecipe {
         val someResult = OdysseyItems.HOURGLASS_FROM_BABEL.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "hourglassfrombabel"), someResult)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "hourglassfrombabel"), someResult)
         val exactShard = OdysseyItems.IRRADIATED_SHARD.createItemStack(1)
         val exactGoldAlloy = OdysseyItems.PURE_ALLOY_GOLD.createItemStack(1)
 

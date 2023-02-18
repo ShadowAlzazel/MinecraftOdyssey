@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.recipes
 
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.Odyssey
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
@@ -11,7 +11,7 @@ object BrandingRecipes {
 
     /*
     var ODYSSEY_NAMING: SmithingRecipe = SmithingRecipe(
-        NamespacedKey(MinecraftOdyssey.instance, "odysseynaming"),
+        NamespacedKey(Odyssey.instance, "odysseynaming"),
         ItemStack(Material.AIR),
         RecipeChoice.MaterialChoice(
             Material.NETHERITE_SWORD, Material.DIAMOND_SWORD, Material.IRON_SWORD, Material.GOLDEN_SWORD, Material.STONE_SWORD, Material.WOODEN_SWORD,
@@ -30,7 +30,7 @@ object BrandingRecipes {
      */
 
     var ODYSSEY_NAMING: SmithingRecipe = SmithingRecipe(
-        NamespacedKey(MinecraftOdyssey.instance, "odysseynaming"),
+        NamespacedKey(Odyssey.instance, "odysseynaming"),
         ItemStack(Material.AIR),
         RecipeChoice.MaterialChoice(
             Material.ACACIA_BOAT,

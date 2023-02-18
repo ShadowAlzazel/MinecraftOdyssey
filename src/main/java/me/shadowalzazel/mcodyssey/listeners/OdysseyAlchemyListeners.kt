@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import kotlinx.coroutines.*
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.alchemy.AlchemyRecipes
 import me.shadowalzazel.mcodyssey.alchemy.base.AlchemyCauldronRecipe
 import me.shadowalzazel.mcodyssey.effects.*
@@ -300,7 +300,7 @@ object OdysseyAlchemyListeners : Listener {
                                 // If valid recipe then sync back to main thread
                                 if (validRecipe != null) {
                                     val synchroCauldronTask: BukkitRunnable = CauldronEventSynchro(validRecipe, itemsToCheck)
-                                    synchroCauldronTask.runTask(MinecraftOdyssey.instance)
+                                    synchroCauldronTask.runTask(Odyssey.instance)
                                 }
                             }
                         }
@@ -323,7 +323,7 @@ object OdysseyAlchemyListeners : Listener {
 
                 val newBrewingStandSlots = brewCustomAlchemyPotion(brewingContents, event.contents.ingredient!!.type)
                 val synchroBrewingTask: BukkitRunnable = BrewingEventSynchro(newBrewingStandSlots, event.contents)
-                synchroBrewingTask.runTask(MinecraftOdyssey.instance)
+                synchroBrewingTask.runTask(Odyssey.instance)
 
             }
         }

@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.constants.OdysseyUUIDs
 import me.shadowalzazel.mcodyssey.listeners.tasks.UnstableAntimatterTask
 import me.shadowalzazel.mcodyssey.items.OdysseyItems
@@ -162,7 +162,7 @@ object OdysseyItemListeners : Listener {
             it.addScoreboardTag("Temporal_Stasis")
         }
         val temporalStasisTask = TemporalStasisTask(eventPlayer)
-        temporalStasisTask.runTaskLater(MinecraftOdyssey.instance, 20 * 8)
+        temporalStasisTask.runTaskLater(Odyssey.instance, 20 * 8)
     }
 
 
@@ -221,7 +221,7 @@ object OdysseyItemListeners : Listener {
         if ("Unstable_Crafting" !in eventPlayer.scoreboardTags) {
             eventPlayer.scoreboardTags.add("Unstable_Crafting")
             val antimatterCraftingTask = UnstableAntimatterTask(eventPlayer)
-            antimatterCraftingTask.runTaskTimer(MinecraftOdyssey.instance, 0, 1)
+            antimatterCraftingTask.runTaskTimer(Odyssey.instance, 0, 1)
         }
     }
 

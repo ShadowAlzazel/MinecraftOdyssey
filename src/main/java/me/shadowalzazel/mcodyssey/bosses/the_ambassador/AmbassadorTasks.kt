@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.bosses.the_ambassador
 
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.Odyssey
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Illusioner
 import org.bukkit.potion.PotionEffect
@@ -31,11 +31,11 @@ class AmbassadorSingularity(private val someStand: ArmorStand) : BukkitRunnable(
 
 class AmbassadorDepartTask : BukkitRunnable() {
     override fun run() {
-        if (MinecraftOdyssey.instance.currentBoss is AmbassadorBoss) {
-            val ambassadorBoss = MinecraftOdyssey.instance.currentBoss as AmbassadorBoss
+        if (Odyssey.instance.currentBoss is AmbassadorBoss) {
+            val ambassadorBoss = Odyssey.instance.currentBoss as AmbassadorBoss
             if (ambassadorBoss.bossActive && ambassadorBoss.bossEntity != null) {
                 ambassadorBoss.departBoss()
-                MinecraftOdyssey.instance.also {
+                Odyssey.instance.also {
                     it.isBossActive = false
                     it.isAmbassadorDefeated = true
                     it.currentBoss = null
@@ -52,8 +52,8 @@ class AmbassadorDepartTask : BukkitRunnable() {
 class AmbassadorAttackCycle(private val ambassadorEntity: Illusioner) : BukkitRunnable() {
 
     override fun run() {
-        if (MinecraftOdyssey.instance.currentBoss is AmbassadorBoss) {
-            val ambassadorBoss = MinecraftOdyssey.instance.currentBoss as AmbassadorBoss
+        if (Odyssey.instance.currentBoss is AmbassadorBoss) {
+            val ambassadorBoss = Odyssey.instance.currentBoss as AmbassadorBoss
             if (!ambassadorEntity.isDead && ambassadorEntity == ambassadorBoss.bossEntity!! && ambassadorBoss.bossActive) {
                 ambassadorBoss.attackPatterns()
             }

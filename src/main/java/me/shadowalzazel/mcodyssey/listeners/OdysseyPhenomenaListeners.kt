@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.listeners
 
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.phenomenon.SuenPhenomena
 import org.bukkit.World
 import org.bukkit.event.EventHandler
@@ -14,10 +14,10 @@ object OdysseyPhenomenaListeners : Listener {
     @EventHandler
     fun playerPreventSleep(event: PlayerBedEnterEvent) {
         // Check if ambassador defeated
-        if (MinecraftOdyssey.instance.isEnderDragonDefeated) {
-            if (MinecraftOdyssey.instance.isLunarPhenomenonActive) {
+        if (Odyssey.instance.isEnderDragonDefeated) {
+            if (Odyssey.instance.isLunarPhenomenonActive) {
                 val someWorld = event.player.world
-                if (someWorld == MinecraftOdyssey.instance.mainWorld) {
+                if (someWorld == Odyssey.instance.mainWorld) {
                     event.player.sendMessage("The night prevents you from sleeping.")
                     event.isCancelled = true
                 }
@@ -29,10 +29,10 @@ object OdysseyPhenomenaListeners : Listener {
     // Main function for creature related spawns regarding phenomena
     @EventHandler
     fun mainEntityPhenomenaSpawning(event: CreatureSpawnEvent) {
-        if (MinecraftOdyssey.instance.isLunarPhenomenonActive) {
+        if (Odyssey.instance.isLunarPhenomenonActive) {
             val someWorld = event.entity.world
             if (someWorld.environment == World.Environment.NORMAL) {
-                when (MinecraftOdyssey.instance.currentLunarPhenomenon) {
+                when (Odyssey.instance.currentLunarPhenomenon) {
                     // Blue Moon
                     SuenPhenomena.BLUE_MOON -> {
                         if (event.spawnReason == CreatureSpawnEvent.SpawnReason.NATURAL || event.spawnReason == CreatureSpawnEvent.SpawnReason.REINFORCEMENTS) {

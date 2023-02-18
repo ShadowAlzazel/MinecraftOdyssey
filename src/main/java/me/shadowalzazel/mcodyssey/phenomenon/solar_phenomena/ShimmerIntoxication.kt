@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.phenomenon.solar_phenomena
 
 import me.shadowalzazel.mcodyssey.phenomenon.base.OdysseyPhenomenon
-import me.shadowalzazel.mcodyssey.phenomenon.base.PhenomenonTypes
+import me.shadowalzazel.mcodyssey.phenomenon.base.PhenomenonType
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Material
@@ -13,7 +13,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
 object ShimmerIntoxication : OdysseyPhenomenon("Shimmer Intoxication",
-    PhenomenonTypes.LUNAR,
+    PhenomenonType.LUNAR,
     35,
     5,
     15,

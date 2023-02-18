@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.bosses.hog_rider
 
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.Odyssey
 import org.bukkit.entity.Hoglin
 import org.bukkit.entity.PiglinBrute
 import org.bukkit.entity.Player
@@ -14,9 +14,9 @@ object HogRiderListeners : Listener {
 
     @EventHandler
     fun onHogTakeDamage(event: EntityDamageByEntityEvent) {
-        if (MinecraftOdyssey.instance.isBossActive) {
-            if (MinecraftOdyssey.instance.currentBoss is HogRiderBoss) {
-                val hogRiderBoss = MinecraftOdyssey.instance.currentBoss as HogRiderBoss
+        if (Odyssey.instance.isBossActive) {
+            if (Odyssey.instance.currentBoss is HogRiderBoss) {
+                val hogRiderBoss = Odyssey.instance.currentBoss as HogRiderBoss
                 val hogRiderBossID = hogRiderBoss.bossEntityRider!!.uniqueId
 
                 if (event.entity is Hoglin) {
@@ -37,18 +37,18 @@ object HogRiderListeners : Listener {
 
     @EventHandler
     fun onHogRiderDeath(event: EntityDeathEvent) {
-        if (MinecraftOdyssey.instance.isBossActive) {
-            if (MinecraftOdyssey.instance.currentBoss is HogRiderBoss) {
-                val hogRiderBoss = MinecraftOdyssey.instance.currentBoss as HogRiderBoss
+        if (Odyssey.instance.isBossActive) {
+            if (Odyssey.instance.currentBoss is HogRiderBoss) {
+                val hogRiderBoss = Odyssey.instance.currentBoss as HogRiderBoss
                 val hogRiderBossID = hogRiderBoss.bossEntityRider!!.uniqueId
                 if (event.entity.uniqueId == hogRiderBossID) {
                     // Check if Player Kill
                     if (event.entity.killer is Player) {
                         //hogRiderBoss.defeatedBoss(hogRiderBoss.bossEntity!!, event.entity.killer as Player)
-                        MinecraftOdyssey.instance.isBossActive = false
-                        MinecraftOdyssey.instance.isAmbassadorDefeated = true
-                        MinecraftOdyssey.instance.currentBoss = null
-                        MinecraftOdyssey.instance.bossDespawnTimer = System.currentTimeMillis()
+                        Odyssey.instance.isBossActive = false
+                        Odyssey.instance.isAmbassadorDefeated = true
+                        Odyssey.instance.currentBoss = null
+                        Odyssey.instance.bossDespawnTimer = System.currentTimeMillis()
                     }
                     // Last Hit
                     else {
@@ -56,10 +56,10 @@ object HogRiderListeners : Listener {
                         if (vanquisher != null) {
                             if (vanquisher is Player) {
                                 //hogRiderBoss.defeatedBoss(hogRiderBoss.bossEntity!!, vanquisher)
-                                MinecraftOdyssey.instance.isBossActive = false
-                                MinecraftOdyssey.instance.isAmbassadorDefeated = true
-                                MinecraftOdyssey.instance.currentBoss = null
-                                MinecraftOdyssey.instance.bossDespawnTimer = System.currentTimeMillis()
+                                Odyssey.instance.isBossActive = false
+                                Odyssey.instance.isAmbassadorDefeated = true
+                                Odyssey.instance.currentBoss = null
+                                Odyssey.instance.bossDespawnTimer = System.currentTimeMillis()
                             }
                             else {
                                 event.isCancelled = true
