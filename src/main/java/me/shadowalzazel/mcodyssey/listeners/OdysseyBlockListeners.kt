@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.listeners
 
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.constants.OdysseyItemModels
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
@@ -46,7 +46,7 @@ object OdysseyBlockListeners : Listener {
 
     private fun spawnIdescineTree(someBlock: Block, server: Server) {
         println("Q")
-        server.structureManager.loadStructure(NamespacedKey(MinecraftOdyssey.instance,"idescine_tree"))?.place(someBlock.location.toCenterLocation(), true, StructureRotation.NONE, Mirror.NONE, 0, 1F, Random(2121L))
+        server.structureManager.loadStructure(NamespacedKey(Odyssey.instance,"idescine_tree"))?.place(someBlock.location.toCenterLocation(), true, StructureRotation.NONE, Mirror.NONE, 0, 1F, Random(2121L))
         someBlock.location.getNearbyEntities(10.0, 10.0, 10.0).forEach {
             if (it.type == EntityType.ITEM_FRAME) {
                 if ((it as ItemFrame).item.type == Material.YELLOW_GLAZED_TERRACOTTA) {

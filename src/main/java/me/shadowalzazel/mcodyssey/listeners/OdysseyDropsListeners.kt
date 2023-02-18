@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.listeners
 
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.items.OdysseyBooks
 import me.shadowalzazel.mcodyssey.items.OdysseyFood
@@ -32,7 +32,7 @@ object OdysseyDropsListeners : Listener {
 
     @EventHandler
     fun mobDropsHandler(event: EntityDeathEvent) {
-        if (MinecraftOdyssey.instance.isAmbassadorDefeated) {
+        if (Odyssey.instance.isAmbassadorDefeated) {
             if (event.entity.killer is Player) {
                 val somePlayer: Player = event.entity.killer as Player
                 if (event.entity.hasLineOfSight(somePlayer)) {

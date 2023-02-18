@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.bosses.the_ambassador
 
 import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.Odyssey
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
@@ -16,7 +16,7 @@ object AmbassadorListeners: Listener {
 
     // Function to check if current boss is ambassador
     private fun ambassadorActiveCheck(): Boolean {
-        with(MinecraftOdyssey.instance) {
+        with(Odyssey.instance) {
             return (isBossActive && currentBoss is AmbassadorBoss) && ((currentBoss as AmbassadorBoss).bossActive)
         }
     }
@@ -44,7 +44,7 @@ object AmbassadorListeners: Listener {
     @EventHandler
     fun itemGiftHandler(event: PlayerDropItemEvent) {
         if (ambassadorActiveCheck()) {
-            val ambassadorBoss = MinecraftOdyssey.instance.currentBoss as AmbassadorBoss
+            val ambassadorBoss = Odyssey.instance.currentBoss as AmbassadorBoss
             if (!ambassadorBoss.angered) {
                 if (event.player in ambassadorBoss.bossEntity!!.getNearbyEntities(1.5, 1.5, 1.5)) {
                     ambassadorBoss.appeasementCheck(event.player, event.itemDrop)
@@ -56,7 +56,7 @@ object AmbassadorListeners: Listener {
     @EventHandler
     fun onElytraActivation(event: PlayerElytraBoostEvent) {
         if (ambassadorActiveCheck()) {
-            val ambassadorBoss = MinecraftOdyssey.instance.currentBoss as AmbassadorBoss
+            val ambassadorBoss = Odyssey.instance.currentBoss as AmbassadorBoss
             if (!ambassadorBoss.angered) {
                 if (event.player in ambassadorBoss.bossEntity!!.getNearbyEntities(1.5, 1.5, 1.5)) {
                     event.isCancelled
@@ -69,7 +69,7 @@ object AmbassadorListeners: Listener {
     @EventHandler
     fun onAmbassadorTakeDamage(event: EntityDamageByEntityEvent) {
         if (ambassadorActiveCheck()) {
-            val ambassadorBoss = MinecraftOdyssey.instance.currentBoss as AmbassadorBoss
+            val ambassadorBoss = Odyssey.instance.currentBoss as AmbassadorBoss
             if (event.entity.uniqueId == ambassadorBoss.bossEntity!!.uniqueId) {
                 ambassadorBoss.damageHandler(event.damager, event.damage)
             }
@@ -79,10 +79,10 @@ object AmbassadorListeners: Listener {
     @EventHandler
     fun onAmbassadorDeath(event: EntityDeathEvent) {
         if (ambassadorActiveCheck()) {
-            val ambassadorBoss = MinecraftOdyssey.instance.currentBoss as AmbassadorBoss
+            val ambassadorBoss = Odyssey.instance.currentBoss as AmbassadorBoss
             if (event.entity.uniqueId == ambassadorBoss.bossEntity!!.uniqueId) {
                 ambassadorBoss.defeatedBoss(ambassadorBoss.bossEntity!!, event.entity.killer)
-                MinecraftOdyssey.instance.also {
+                Odyssey.instance.also {
                     it.isBossActive = false
                     it.isAmbassadorDefeated = true
                     it.currentBoss = null

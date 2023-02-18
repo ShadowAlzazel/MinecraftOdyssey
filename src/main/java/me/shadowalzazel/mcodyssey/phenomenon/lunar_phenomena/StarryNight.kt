@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.phenomenon.lunar_phenomena
 
 import me.shadowalzazel.mcodyssey.phenomenon.base.OdysseyPhenomenon
-import me.shadowalzazel.mcodyssey.phenomenon.base.PhenomenonTypes
+import me.shadowalzazel.mcodyssey.phenomenon.base.PhenomenonType
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.*
@@ -13,7 +13,7 @@ import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
 
 object StarryNight : OdysseyPhenomenon("Starry Night",
-    PhenomenonTypes.LUNAR,
+    PhenomenonType.LUNAR,
     11,
     5,
     11,

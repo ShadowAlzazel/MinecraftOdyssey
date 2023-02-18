@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.phenomenon
 
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.phenomenon.recurring_phenomena.DrawOfFortunes
 import me.shadowalzazel.mcodyssey.phenomenon.base.OdysseyPhenomenon
 import org.bukkit.World
@@ -22,7 +22,7 @@ class PhenomenonCycleHandler(private val mainWorld: World) : BukkitRunnable() {
 
     // Main function call for sun phenomenon activations
     private fun utuPhenomenonActivation() {
-        MinecraftOdyssey.instance.also {
+        Odyssey.instance.also {
             // Event Cool down timer
             val timeElapsed = System.currentTimeMillis() - utuPhenomenonCallCooldown
             if (timeElapsed >= utuPhenomenonTimerConstant) {
@@ -36,7 +36,7 @@ class PhenomenonCycleHandler(private val mainWorld: World) : BukkitRunnable() {
                 if (it.isBossProgressionEnabled && !it.isSolarPhenomenonActive) {
                     val rolledRate = (0..100).random()
                     // Daily luck is not a true daily phenomenon
-                    //val luckConfigAmount = MinecraftOdyssey.instance.config.getInt("player-minimum-for-luck")
+                    //val luckConfigAmount = Odyssey.instance.config.getInt("player-minimum-for-luck")
                     if (it.mainWorld!!.players.size >= it.playersRequiredForLuck) {
                         DrawOfFortunes.successfulActivation(it.mainWorld!!)
                     }
@@ -62,7 +62,7 @@ class PhenomenonCycleHandler(private val mainWorld: World) : BukkitRunnable() {
 
     // Main function call for moon phenomenon activations
     private fun suenPhenomenonActivation() {
-        MinecraftOdyssey.instance.also {
+        Odyssey.instance.also {
             // Event Cool down timer
             val timeElapsed = System.currentTimeMillis() - suenPhenomenonCallCooldown
             if (timeElapsed >= suenPhenomenonTimerConstant) {
@@ -105,7 +105,7 @@ class PhenomenonCycleHandler(private val mainWorld: World) : BukkitRunnable() {
             moonCount =+ 1
         }
         // Check if active for persistent
-        with(MinecraftOdyssey.instance) {
+        with(Odyssey.instance) {
             if (isSolarPhenomenonActive) {
                 currentSolarPhenomenon!!.persistentPlayerActives(mainWorld!!)
             }

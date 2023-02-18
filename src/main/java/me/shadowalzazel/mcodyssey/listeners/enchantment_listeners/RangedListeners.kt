@@ -2,7 +2,7 @@ package me.shadowalzazel.mcodyssey.listeners.enchantment_listeners
 
 import com.destroystokyo.paper.event.player.PlayerReadyArrowEvent
 import io.papermc.paper.event.entity.EntityLoadCrossbowEvent
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.listeners.tasks.BurstBarrageTask
 import me.shadowalzazel.mcodyssey.listeners.tasks.GaleWindTask
@@ -306,7 +306,7 @@ object RangedListeners : Listener {
             eventShooter.addScoreboardTag("Burst_Shooting")
             val initialVelocity = eventProjectile.velocity.clone()
             val burstBarrageTask = BurstBarrageTask(eventShooter, enchantmentStrength, initialVelocity, eventProjectile)
-            burstBarrageTask.runTaskTimer(MinecraftOdyssey.instance, 3, 3)
+            burstBarrageTask.runTaskTimer(Odyssey.instance, 3, 3)
         }
 
     }
@@ -378,7 +378,7 @@ object RangedListeners : Listener {
     private fun galeWindEnchantmentShoot(eventShooter: LivingEntity, enchantmentStrength: Int) {
         eventShooter.world.playSound(eventShooter.location, Sound.ENTITY_WARDEN_SONIC_CHARGE, 2.5F, 1.5F)
         val galeWindTask = GaleWindTask(eventShooter, enchantmentStrength)
-        galeWindTask.runTaskLater(MinecraftOdyssey.instance, 6)
+        galeWindTask.runTaskLater(Odyssey.instance, 6)
     }
 
     // LUCKY_DRAW enchantment function
@@ -397,7 +397,7 @@ object RangedListeners : Listener {
             eventPlayer.scoreboardTags.add("Bow_Overcharging")
             eventPlayer.scoreboardTags.add("Bow_Overcharge_Modifier_0")
             val overchargeTask = OverchargeTask(eventPlayer, eventBow, enchantmentStrength)
-            overchargeTask.runTaskTimer(MinecraftOdyssey.instance, (20 * 2) + 10, 20 * 2)
+            overchargeTask.runTaskTimer(Odyssey.instance, (20 * 2) + 10, 20 * 2)
         }
     }
 

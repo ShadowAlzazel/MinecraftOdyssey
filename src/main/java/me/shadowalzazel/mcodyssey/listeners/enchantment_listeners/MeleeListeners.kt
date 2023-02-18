@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.listeners.enchantment_listeners
 
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.effects.OdysseyEffectsHandler
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.listeners.tasks.ArcaneCellTask
@@ -212,7 +212,7 @@ object MeleeListeners : Listener {
 
 
                 val arcaneCellTask = ArcaneCellTask(eventVictim, location, (2 + (enchantmentStrength * 2)) * 4)
-                arcaneCellTask.runTaskTimer(MinecraftOdyssey.instance, 5, 5)
+                arcaneCellTask.runTaskTimer(Odyssey.instance, 5, 5)
             }
         }
 
@@ -427,7 +427,7 @@ object MeleeListeners : Listener {
             it.velocity.multiply(0.9)
             val tongueLashVector = eventDamager.location.clone().subtract(it.location).toVector().normalize().multiply(1.1 + (enchantmentStrength * 0.1))
             val frogFrightTask = FrogFrightTask(eventVictim, tongueLashVector.multiply(-1))
-            frogFrightTask.runTaskLater(MinecraftOdyssey.instance, 9)
+            frogFrightTask.runTaskLater(Odyssey.instance, 9)
             it.addPotionEffect(PotionEffect(PotionEffectType.SLOW, 3, 1))
             it.damage(1.0)
         }
@@ -447,7 +447,7 @@ object MeleeListeners : Listener {
             if (!scoreboardTags.contains("Frosted_Fuse")) {
                 addScoreboardTag("Frosted_Fuse")
                 val frostedFuseTask = FrostyFuseTask(eventVictim, enchantmentStrength * 1, 5 * 4)
-                frostedFuseTask.runTaskTimer(MinecraftOdyssey.instance, 5, 5)
+                frostedFuseTask.runTaskTimer(Odyssey.instance, 5, 5)
             }
         }
 
@@ -468,7 +468,7 @@ object MeleeListeners : Listener {
             addScoreboardTag("Gravity_Well")
             val gravityWellTask =
                 GravityWellTask(eventVictim, eventDamager, enchantmentStrength * 1, ((enchantmentStrength * 2) + 2) * 2)
-            gravityWellTask.runTaskTimer(MinecraftOdyssey.instance, 0, 10)
+            gravityWellTask.runTaskTimer(Odyssey.instance, 0, 10)
         }
 
     }

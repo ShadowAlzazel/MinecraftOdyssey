@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.enchantments
 
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.enchantments.armor.*
 import me.shadowalzazel.mcodyssey.enchantments.melee.*
 import me.shadowalzazel.mcodyssey.enchantments.misc.HookShot
@@ -223,7 +223,7 @@ object OdysseyEnchantments {
         }
         if (registered) {
             // Send to console
-            MinecraftOdyssey.instance.logger.info("Registered: $enchantment")
+            Odyssey.instance.logger.info("Registered: $enchantment")
         }
     }
 }

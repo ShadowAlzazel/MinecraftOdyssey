@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.recipes
 
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.items.OdysseyFood
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
@@ -37,7 +37,7 @@ object CookingRecipes {
     // SHAPED
     private fun createBeetrootCookieRecipe(): ShapedRecipe {
         val someResult = OdysseyFood.BEETROOT_COOKIE.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "beetrootcookie"), someResult)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "beetrootcookie"), someResult)
         someRecipe.shape("X", "Y", "X")
         someRecipe.setIngredient('X', Material.BEETROOT)
         someRecipe.setIngredient('Y', Material.COOKIE)
@@ -46,7 +46,7 @@ object CookingRecipes {
 
     private fun createPumpkinCookieRecipe(): ShapedRecipe {
         val someCookie = OdysseyFood.PUMPKIN_COOKIE.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "pumpkincookie"), someCookie)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "pumpkincookie"), someCookie)
         someRecipe.shape("X", "Y", "X")
         someRecipe.setIngredient('X', Material.PUMPKIN_SEEDS)
         someRecipe.setIngredient('Y', Material.COOKIE)
@@ -55,7 +55,7 @@ object CookingRecipes {
 
     private fun createHoneyCookieRecipe(): ShapedRecipe {
         val someCookie = OdysseyFood.HONEY_COOKIE.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "honeycookie"), someCookie)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "honeycookie"), someCookie)
         someRecipe.shape("X", "Y", "X")
         someRecipe.setIngredient('X', Material.HONEY_BOTTLE)
         someRecipe.setIngredient('Y', Material.COOKIE)
@@ -64,7 +64,7 @@ object CookingRecipes {
 
     private fun createAppleCookieRecipe(): ShapedRecipe {
         val someCookie = OdysseyFood.APPLE_COOKIE.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "applecookie"), someCookie)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "applecookie"), someCookie)
         someRecipe.shape("X", "Y", "X")
         someRecipe.setIngredient('X', Material.APPLE)
         someRecipe.setIngredient('Y', Material.COOKIE)
@@ -73,7 +73,7 @@ object CookingRecipes {
 
     private fun createBerryCookieRecipe(): ShapedRecipe {
         val someCookie = OdysseyFood.BERRY_COOKIE.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "berrycookie"), someCookie)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "berrycookie"), someCookie)
         someRecipe.shape("X", "Y", "X")
         someRecipe.setIngredient('X', Material.SWEET_BERRIES)
         someRecipe.setIngredient('Y', Material.COOKIE)
@@ -82,7 +82,7 @@ object CookingRecipes {
 
     private fun createGlowBerryCookieRecipe(): ShapedRecipe {
         val someCookie = OdysseyFood.GLOW_BERRY_COOKIE.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "glowberrycookie"), someCookie)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "glowberrycookie"), someCookie)
         someRecipe.shape("X", "Y", "X")
         someRecipe.setIngredient('X', Material.GLOW_BERRIES)
         someRecipe.setIngredient('Y', Material.COOKIE)
@@ -91,7 +91,7 @@ object CookingRecipes {
 
     private fun createMelonCookieRecipe(): ShapedRecipe {
         val someCookie = OdysseyFood.MELON_COOKIE.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "meloncookie"), someCookie)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "meloncookie"), someCookie)
         someRecipe.shape("X", "Y", "X")
         someRecipe.setIngredient('X', Material.MELON_SLICE)
         someRecipe.setIngredient('Y', Material.COOKIE)
@@ -100,7 +100,7 @@ object CookingRecipes {
 
     private fun createSugarCookieRecipe(): ShapedRecipe {
         val someCookie = OdysseyFood.SUGAR_COOKIE.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "sugarcookie"), someCookie)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "sugarcookie"), someCookie)
         someRecipe.shape("X", "Y", "X")
         someRecipe.setIngredient('X', Material.SUGAR)
         someRecipe.setIngredient('Y', Material.COOKIE)
@@ -109,7 +109,7 @@ object CookingRecipes {
 
     private fun createGoldenCookieRecipe(): ShapedRecipe {
         val someCookie = OdysseyFood.GOLDEN_COOKIE.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "goldencookie"), someCookie)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "goldencookie"), someCookie)
         someRecipe.shape("XXX", "XYX", "XXX")
         someRecipe.setIngredient('X', Material.GOLD_INGOT)
         someRecipe.setIngredient('Y', Material.COOKIE)
@@ -118,7 +118,7 @@ object CookingRecipes {
 
     private fun createSugaryBreadRecipe(): ShapedRecipe {
         val someResult = OdysseyFood.SUGARY_BREAD.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "sugarybread"), someResult)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "sugarybread"), someResult)
         someRecipe.shape("X", "Y", "X")
         someRecipe.setIngredient('X', Material.SUGAR)
         someRecipe.setIngredient('Y', Material.BREAD)
@@ -127,7 +127,7 @@ object CookingRecipes {
 
     private fun createSalmonRollRecipe(): ShapedRecipe {
         val someResult = OdysseyFood.SALMON_ROLL.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(MinecraftOdyssey.instance, "salmonroll"), someResult)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "salmonroll"), someResult)
         someRecipe.shape("X", "Y", "X")
         someRecipe.setIngredient('X', Material.DRIED_KELP)
         someRecipe.setIngredient('Y', Material.SALMON)
@@ -138,7 +138,7 @@ object CookingRecipes {
     private fun createBaconRecipe(): CampfireRecipe {
         val someResult = OdysseyFood.BACON.createItemStack(1)
         return CampfireRecipe(
-            NamespacedKey(MinecraftOdyssey.instance, "bacon"),
+            NamespacedKey(Odyssey.instance, "bacon"),
             someResult, Material.COOKED_PORKCHOP, 1.0F, 10 * 20
         )
     }
@@ -148,7 +148,7 @@ object CookingRecipes {
         val someResult = OdysseyFood.FRENCH_TOAST.createItemStack(1)
         val someExactIngredient = OdysseyFood.SUGARY_BREAD.createItemStack(1)
         return SmokingRecipe(
-            NamespacedKey(MinecraftOdyssey.instance, "frenchtoast"),
+            NamespacedKey(Odyssey.instance, "frenchtoast"),
             someResult, RecipeChoice.ExactChoice(someExactIngredient), 3.5F, 15 * 20
         )
     }

@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.enchantments.base
 
 import io.papermc.paper.enchantments.EnchantmentRarity
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.Odyssey
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.TextColor
@@ -14,7 +14,7 @@ import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 
 open class OdysseyEnchantment(namespace: String?, private val name: String, private val maxLevel: Int) :
-    Enchantment(NamespacedKey(MinecraftOdyssey.instance, namespace!!)) {
+    Enchantment(NamespacedKey(Odyssey.instance, namespace!!)) {
 
     private val romanNumeralList = mapOf(1 to "I", 2 to "II", 3 to "III", 4 to "IV", 5 to "V", 6 to "VI", 7 to "VII", 8 to "VIII", 9 to "IX", 10 to "X")
 

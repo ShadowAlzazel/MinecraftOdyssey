@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.alchemy.base
 
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.items.utility.OdysseyPotion
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -36,6 +36,6 @@ open class AlchemyCauldronRecipe(private val odysseyPotion: OdysseyPotion, priva
         }
         // Runs alchemy task ticking every 0.5 seconds
         val alchemyTask = AlchemyCauldronTask(someBlock, odysseyPotion.createItemStack(1))
-        alchemyTask.runTaskTimer(MinecraftOdyssey.instance, 0, 2)
+        alchemyTask.runTaskTimer(Odyssey.instance, 0, 2)
     }
 }

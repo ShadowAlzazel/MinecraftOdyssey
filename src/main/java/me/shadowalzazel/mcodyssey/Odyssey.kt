@@ -16,14 +16,14 @@ import me.shadowalzazel.mcodyssey.phenomenon.PhenomenonCycleHandler
 import me.shadowalzazel.mcodyssey.phenomenon.PersistentPhenomenonHandler
 import me.shadowalzazel.mcodyssey.phenomenon.base.OdysseyPhenomenon
 import me.shadowalzazel.mcodyssey.recipes.*
-import me.shadowalzazel.mcodyssey.structure_events.SituationHandler
+import me.shadowalzazel.mcodyssey.occurrences.OccurrenceHandler
 import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.event.Listener
 
 import org.bukkit.plugin.java.JavaPlugin
 
-class MinecraftOdyssey : JavaPlugin(), OdysseyAssetManager {
+class Odyssey : JavaPlugin(), AssetManager {
 
     // Main
     var mainWorld: World? = null
@@ -52,7 +52,7 @@ class MinecraftOdyssey : JavaPlugin(), OdysseyAssetManager {
 
 
     companion object {
-        lateinit var instance : MinecraftOdyssey
+        lateinit var instance : Odyssey
     }
 
     init {
@@ -60,7 +60,7 @@ class MinecraftOdyssey : JavaPlugin(), OdysseyAssetManager {
     }
 
     private fun eventRegister(eventListener : Listener) {
-        server.pluginManager.registerEvents(eventListener, this@MinecraftOdyssey)
+        server.pluginManager.registerEvents(eventListener, this@Odyssey)
     }
 
     // Plugin startup logic
@@ -123,7 +123,7 @@ class MinecraftOdyssey : JavaPlugin(), OdysseyAssetManager {
         }
 
         // Run situations
-        val situationHandler = SituationHandler(mainWorld!!)
+        val situationHandler = OccurrenceHandler(mainWorld!!)
         situationHandler.runTaskTimer(this, 20 * 10L, 20 * 10)
 
         // Register Commands

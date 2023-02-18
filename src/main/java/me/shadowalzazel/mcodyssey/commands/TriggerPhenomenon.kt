@@ -1,10 +1,10 @@
 package me.shadowalzazel.mcodyssey.commands
 
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.phenomenon.SuenPhenomena
 import me.shadowalzazel.mcodyssey.phenomenon.UtuPhenomena
 import me.shadowalzazel.mcodyssey.phenomenon.base.OdysseyPhenomenon
-import me.shadowalzazel.mcodyssey.phenomenon.base.PhenomenonTypes
+import me.shadowalzazel.mcodyssey.phenomenon.base.PhenomenonType
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -57,15 +57,15 @@ object TriggerPhenomenon : CommandExecutor {
                         }
                     }
                 }
-                if (somePhenomenon!!.phenomenonType == PhenomenonTypes.LUNAR) {
+                if (somePhenomenon!!.phenomenonType == PhenomenonType.LUNAR) {
                     somePhenomenon.successfulActivation(someWorld)
-                    MinecraftOdyssey.instance.currentLunarPhenomenon = somePhenomenon
-                    MinecraftOdyssey.instance.isLunarPhenomenonActive = true
+                    Odyssey.instance.currentLunarPhenomenon = somePhenomenon
+                    Odyssey.instance.isLunarPhenomenonActive = true
                 }
-                else if (somePhenomenon.phenomenonType == PhenomenonTypes.SOLAR) {
+                else if (somePhenomenon.phenomenonType == PhenomenonType.SOLAR) {
                     somePhenomenon.successfulActivation(someWorld)
-                    MinecraftOdyssey.instance.currentSolarPhenomenon = somePhenomenon
-                    MinecraftOdyssey.instance.isSolarPhenomenonActive = true
+                    Odyssey.instance.currentSolarPhenomenon = somePhenomenon
+                    Odyssey.instance.isSolarPhenomenonActive = true
                 }
             }
         }

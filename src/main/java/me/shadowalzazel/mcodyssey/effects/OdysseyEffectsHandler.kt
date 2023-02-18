@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.effects
 
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.constants.OdysseyEffectTags
 import me.shadowalzazel.mcodyssey.effects.tasks.*
 import org.bukkit.Particle
@@ -18,7 +18,7 @@ object OdysseyEffectsHandler {
             it.addPotionEffect(decayingPotionEffect)
             if (OdysseyEffectTags.DECAYING !in it.scoreboardTags) { it.addScoreboardTag(OdysseyEffectTags.DECAYING) }
             val decayingTask = DecayingTask(it, 1, duration / 2)
-            decayingTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20 * 2)
+            decayingTask.runTaskTimer(Odyssey.instance, 0, 20 * 2)
         }
     }
 
@@ -30,7 +30,7 @@ object OdysseyEffectsHandler {
                 it.addPotionEffect(freezingPotionEffect)
                 it.addScoreboardTag(OdysseyEffectTags.FREEZING)
                 val freezingTask = FreezingTask(it, amplifier, duration)
-                freezingTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20)
+                freezingTask.runTaskTimer(Odyssey.instance, 0, 20)
             }
         }
     }
@@ -42,7 +42,7 @@ object OdysseyEffectsHandler {
                 it.addScoreboardTag(OdysseyEffectTags.DOUSED)
                 it.addScoreboardTag("Doused_Factor_$amplifier")
                 val dousedTask = DousedTask(it, duration)
-                dousedTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20)
+                dousedTask.runTaskTimer(Odyssey.instance, 0, 20)
             }
         }
     }
@@ -54,7 +54,7 @@ object OdysseyEffectsHandler {
                 it.fireTicks = duration * 20
                 it.addScoreboardTag(OdysseyEffectTags.ABLAZE)
                 val blazingTask = BlazingTask(it, amplifier, duration)
-                blazingTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20)
+                blazingTask.runTaskTimer(Odyssey.instance, 0, 20)
             }
         }
     }
@@ -77,7 +77,7 @@ object OdysseyEffectsHandler {
             if (OdysseyEffectTags.THORNY !in it.scoreboardTags) {
                 it.addScoreboardTag(OdysseyEffectTags.THORNY)
                 val thornyTask = ThornyTask(it, duration)
-                thornyTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20)
+                thornyTask.runTaskTimer(Odyssey.instance, 0, 20)
             }
         }
     }
@@ -88,7 +88,7 @@ object OdysseyEffectsHandler {
             if (OdysseyEffectTags.PUFFY_PRICKLY !in it.scoreboardTags) {
                 it.addScoreboardTag(OdysseyEffectTags.PUFFY_PRICKLY)
                 val puffyPricklyTask = PuffyPricklyTask(it, duration)
-                puffyPricklyTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20)
+                puffyPricklyTask.runTaskTimer(Odyssey.instance, 0, 20)
             }
         }
     }
@@ -99,7 +99,7 @@ object OdysseyEffectsHandler {
             if (OdysseyEffectTags.ACCURSED !in it.scoreboardTags) {
                 it.addScoreboardTag(OdysseyEffectTags.ACCURSED)
                 val accursedTask = AccursedTask(it, duration)
-                accursedTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20)
+                accursedTask.runTaskTimer(Odyssey.instance, 0, 20)
             }
         }
     }
@@ -111,7 +111,7 @@ object OdysseyEffectsHandler {
             if (OdysseyEffectTags.HONEYED !in it.scoreboardTags) {
                 it.addScoreboardTag(OdysseyEffectTags.HONEYED)
                 val honeyedTask = HoneyedTask(it, duration * 2)
-                honeyedTask.runTaskTimer(MinecraftOdyssey.instance, 0, 10)
+                honeyedTask.runTaskTimer(Odyssey.instance, 0, 10)
             }
         }
     }
@@ -121,7 +121,7 @@ object OdysseyEffectsHandler {
         victimList.forEach {
             if (OdysseyEffectTags.HEMORRHAGING !in it.scoreboardTags) { it.addScoreboardTag(OdysseyEffectTags.HEMORRHAGING) }
             val hemorrhageTask = HemorrhageTask(it, amplifier)
-            hemorrhageTask.runTaskTimer(MinecraftOdyssey.instance, 0, 20)
+            hemorrhageTask.runTaskTimer(Odyssey.instance, 0, 20)
         }
     }
 

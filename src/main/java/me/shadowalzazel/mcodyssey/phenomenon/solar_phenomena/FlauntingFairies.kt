@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.phenomenon.solar_phenomena
 
 import me.shadowalzazel.mcodyssey.phenomenon.base.OdysseyPhenomenon
-import me.shadowalzazel.mcodyssey.phenomenon.base.PhenomenonTypes
+import me.shadowalzazel.mcodyssey.phenomenon.base.PhenomenonType
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Particle
@@ -11,7 +11,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
 object FlauntingFairies : OdysseyPhenomenon("Flaunting Fairies",
-    PhenomenonTypes.LUNAR,
+    PhenomenonType.LUNAR,
     45,
     5,
     15,

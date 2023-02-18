@@ -1,6 +1,6 @@
-name: MinecraftOdyssey
+name: Odyssey
 version: '${project.version}'
-main: me.shadowalzazel.mcodyssey.MinecraftOdyssey
+main: me.shadowalzazel.mcodyssey.Odyssey
 api-version: 1.19
 authors: [ShadowAlzazel]
 description: A server side expansion pack for a new minecraft adventure!

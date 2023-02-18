@@ -2,7 +2,7 @@ package me.shadowalzazel.mcodyssey.phenomenon.lunar_phenomena
 
 import me.shadowalzazel.mcodyssey.mobs.OdysseyMobs
 import me.shadowalzazel.mcodyssey.phenomenon.base.OdysseyPhenomenon
-import me.shadowalzazel.mcodyssey.phenomenon.base.PhenomenonTypes
+import me.shadowalzazel.mcodyssey.phenomenon.base.PhenomenonType
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.TextColor
@@ -17,7 +17,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
 object BloodMoon : OdysseyPhenomenon("Blood Moon",
-    PhenomenonTypes.LUNAR,
+    PhenomenonType.LUNAR,
     13,
     4,
     10) {
@@ -31,7 +31,6 @@ object BloodMoon : OdysseyPhenomenon("Blood Moon",
 
     override fun successfulActivation(someWorld: World) {
         super.successfulActivation(someWorld)
-        println("A blood moon is happening at ${someWorld.name}!")
 
         // Blood Moon Effects
         val bloodMoonEffect = PotionEffect(PotionEffectType.UNLUCK, 12000, 0)

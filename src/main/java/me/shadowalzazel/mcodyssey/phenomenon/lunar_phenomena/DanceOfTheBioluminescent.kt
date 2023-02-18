@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.phenomenon.lunar_phenomena
 
 import me.shadowalzazel.mcodyssey.phenomenon.base.OdysseyPhenomenon
-import me.shadowalzazel.mcodyssey.phenomenon.base.PhenomenonTypes
+import me.shadowalzazel.mcodyssey.phenomenon.base.PhenomenonType
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Particle
@@ -12,7 +12,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
 object DanceOfTheBioluminescent : OdysseyPhenomenon("Dance of the Bioluminescent",
-    PhenomenonTypes.LUNAR,
+    PhenomenonType.LUNAR,
     10,
     5,
     45,

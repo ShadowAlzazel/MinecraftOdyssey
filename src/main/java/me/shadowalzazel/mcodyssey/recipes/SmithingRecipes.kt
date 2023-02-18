@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.recipes
 
-import me.shadowalzazel.mcodyssey.MinecraftOdyssey
+import me.shadowalzazel.mcodyssey.Odyssey
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
@@ -25,7 +25,7 @@ object SmithingRecipes {
     // Main for combining books
     private fun createGildedBookActivationRecipe(): SmithingRecipe {
         return SmithingRecipe(
-            NamespacedKey(MinecraftOdyssey.instance, "gildedbooklegacyactiation"),
+            NamespacedKey(Odyssey.instance, "gildedbooklegacyactiation"),
             ItemStack(Material.AIR),
             RecipeChoice.MaterialChoice(Material.ENCHANTED_BOOK),
             RecipeChoice.MaterialChoice(Material.GOLD_INGOT)
@@ -34,7 +34,7 @@ object SmithingRecipes {
 
     private fun createGildedCombiningRecipe(): SmithingRecipe {
         return SmithingRecipe(
-            NamespacedKey(MinecraftOdyssey.instance, "gildedbookcombining"),
+            NamespacedKey(Odyssey.instance, "gildedbookcombining"),
             ItemStack(Material.AIR),
             RecipeChoice.MaterialChoice(Material.ENCHANTED_BOOK),
             RecipeChoice.MaterialChoice(Material.ENCHANTED_BOOK)
@@ -43,7 +43,7 @@ object SmithingRecipes {
 
     private fun createSoulSteelSmithingRecipe(): SmithingRecipe {
         return SmithingRecipe(
-            NamespacedKey(MinecraftOdyssey.instance, "soulsteelsmithing"),
+            NamespacedKey(Odyssey.instance, "soulsteelsmithing"),
             ItemStack(Material.AIR),
             RecipeChoice.MaterialChoice(Material.IRON_SWORD),
             RecipeChoice.MaterialChoice(Material.IRON_INGOT)
@@ -52,7 +52,7 @@ object SmithingRecipes {
 
     private fun createOdysseyGildedSmithingRecipe(): SmithingRecipe {
         return SmithingRecipe(
-            NamespacedKey(MinecraftOdyssey.instance, "odysseygildedsmithing"),
+            NamespacedKey(Odyssey.instance, "odysseygildedsmithing"),
             ItemStack(Material.AIR),
             RecipeChoice.MaterialChoice(
                 Material.NETHERITE_SWORD, Material.DIAMOND_SWORD, Material.IRON_SWORD, Material.GOLDEN_SWORD, Material.STONE_SWORD, Material.WOODEN_SWORD,
@@ -72,7 +72,7 @@ object SmithingRecipes {
 
     private fun createOdysseyUpgradingSmithingRecipe(): SmithingRecipe {
         return SmithingRecipe(
-            NamespacedKey(MinecraftOdyssey.instance, "odysseyupgrading"),
+            NamespacedKey(Odyssey.instance, "odysseyupgrading"),
             ItemStack(Material.AIR),
             RecipeChoice.MaterialChoice(
                 Material.NETHERITE_SWORD, Material.DIAMOND_SWORD, Material.IRON_SWORD, Material.GOLDEN_SWORD, Material.STONE_SWORD, Material.WOODEN_SWORD,

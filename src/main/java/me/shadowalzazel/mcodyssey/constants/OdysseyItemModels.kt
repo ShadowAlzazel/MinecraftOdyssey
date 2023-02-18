@@ -97,6 +97,7 @@ object OdysseyItemModels {
     const val ENIGMATIC_ANCHOR: Int = 6903619
     const val WARDEN_ENTRAILS: Int = 6903620
     const val SCULK_HEART: Int = 6903621
+    const val SUSPICIOUS_TOTEM: Int = 6903622
 
     /* ----------------------------------------------------------- */
     const val SAYA: Int = 6903819

@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.phenomenon.lunar_phenomena
 
 import me.shadowalzazel.mcodyssey.phenomenon.base.OdysseyPhenomenon
-import me.shadowalzazel.mcodyssey.phenomenon.base.PhenomenonTypes
+import me.shadowalzazel.mcodyssey.phenomenon.base.PhenomenonType
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Material
@@ -13,7 +13,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
 object AcidicDownpour : OdysseyPhenomenon("Acidic Downpour",
-    PhenomenonTypes.LUNAR,
+    PhenomenonType.LUNAR,
     6,
     3,
     5) {
