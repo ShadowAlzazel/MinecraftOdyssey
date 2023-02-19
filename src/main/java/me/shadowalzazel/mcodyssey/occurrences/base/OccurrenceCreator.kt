@@ -8,10 +8,16 @@ interface OccurrenceCreator {
 
     fun temp() {
 
+        // CREATE TEMPLATE
+        // THEN -> READ
+        // THEN -> CREATE NEW OCCURRENCE
+        // THEN -> MATCH TEMP VALUES TO NEW OCCURRENCE
+
         val newTemplate = mapOf(
             "name" to "Hello",
             "type" to listOf(
-                OccurrenceType.LUNAR),
+                OccurrenceType.LUNAR
+            ),
             "negatable_by_allay" to false,
             "requirements" to listOf(
                 Requirement.IsSeason(listOf(SeasonType.AUTUMN)),
@@ -23,20 +29,17 @@ interface OccurrenceCreator {
                     Condition.IsWet(true, in_water = true)
                 )
             ),
-            "actions" to mapOf( // For actions -> each get their own list
-                "persistent" to listOf(
-                    mapOf(
-                        "criteria_name" to "is_high_and_wet",
-                        "entries" to listOf(
-                            OccurrenceAction.ApplyFreeze(7),
-                            OccurrenceAction.ApplyPotionEffect(listOf(
-                                PotionEffect(PotionEffectType.HUNGER, 2, 1)))
-                        )
+            "persistent" to listOf(
+                mapOf(
+                    "criteria_name" to "is_high_and_wet",
+                    "entries" to listOf(
+                        OccurrenceAction.ApplyFreeze(7),
+                        OccurrenceAction.ApplyPotionEffect(listOf(PotionEffect(PotionEffectType.HUNGER, 2, 1)))
                     )
-                ),
-                "spawning" to listOf(),
-                "one_time" to listOf()
-            )
+                )
+            ),
+            "spawning" to listOf("EMPTY"),
+            "one_time" to listOf("ALSO EMPTY")
         )
     }
 
