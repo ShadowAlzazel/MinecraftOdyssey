@@ -82,7 +82,7 @@ object MiscListeners : Listener {
     fun voidJumpHandler(event: ProjectileLaunchEvent) {
         // Check if shot pearl and shooter is player
         if (event.entity is EnderPearl && event.entity.shooter is Player) {
-            // Condition Sentry
+            // Requirement Sentry
             if (!voidJumpConditionsMet(event.entity.shooter as Player)) {
                 return
             }
