@@ -12,7 +12,7 @@ import org.bukkit.generator.structure.StructureType
 
 open class Occurrence (
     val name: String,
-    val occurrenceType: List<OccurrenceType>,
+    val oType: OccurrenceType,
     private val negatableByAllay: Boolean,
     private val requirements: List<Requirement>,
     private val criteria: Map<String, List<Condition>>,
@@ -51,6 +51,7 @@ open class Occurrence (
     }
 
     private fun OccurrenceAction.criteriaMetBy(someEntity: LivingEntity): Boolean {
+        // Allay checked first
         val allayNearby: Boolean = negatableByAllay && someEntity.getNearbyEntities(16.0, 16.0, 16.0).any { it.type == EntityType.ALLAY }
         return !allayNearby && criteria[this.criteriaName]!!.all { it.checkCondition(someEntity) }
     }

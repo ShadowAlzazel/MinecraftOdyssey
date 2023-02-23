@@ -3,8 +3,6 @@ package me.shadowalzazel.mcodyssey
 import me.shadowalzazel.mcodyssey.bosses.hog_rider.HogRiderListeners
 import me.shadowalzazel.mcodyssey.bosses.the_ambassador.AmbassadorListeners
 import me.shadowalzazel.mcodyssey.bosses.base.OdysseyBoss
-import me.shadowalzazel.mcodyssey.commands.*
-import me.shadowalzazel.mcodyssey.commands.spells.Necronomicon
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.listeners.*
 import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.ArmorListeners
@@ -16,7 +14,7 @@ import me.shadowalzazel.mcodyssey.phenomenon.PhenomenonCycleHandler
 import me.shadowalzazel.mcodyssey.phenomenon.PersistentPhenomenonHandler
 import me.shadowalzazel.mcodyssey.phenomenon.base.OdysseyPhenomenon
 import me.shadowalzazel.mcodyssey.recipes.*
-import me.shadowalzazel.mcodyssey.occurrences.OccurrenceHandler
+import me.shadowalzazel.mcodyssey.occurrences.OldOccurrenceHandler
 import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.event.Listener
@@ -25,8 +23,14 @@ import org.bukkit.plugin.java.JavaPlugin
 
 class Odyssey : JavaPlugin(), AssetManager {
 
-    // Main
+    // Main World
     var mainWorld: World? = null
+
+    // Asset Variables for extra datapacks
+    //var hasTerralith: Boolean = false
+    //var hasIncendium: Boolean = false
+    //var hasContinents: Boolean = false
+
 
     // Phenomenon Stuff
     var isSolarPhenomenonActive: Boolean = false
@@ -71,6 +75,19 @@ class Odyssey : JavaPlugin(), AssetManager {
         config.options().copyDefaults()
         saveConfig()
 
+        // Need to find the main world to locate datapacks
+        logger.info("Finding Datapack World...")
+        findMainWorld(this)
+
+        // Find the Odyssey Datapack as it is required
+        logger.info("Finding Odyssey Datapack...")
+        val foundPack = findOdysseyDatapack(this)
+        if (!foundPack) {
+            logger.info("Disabling Odyssey Plugin! Can Not Find Datapack!")
+            server.pluginManager.disablePlugin(this)
+            return
+        }
+
         // Register Enchantments
         logger.info("Registering Enchantments...")
         OdysseyEnchantments.register()
@@ -109,44 +126,25 @@ class Odyssey : JavaPlugin(), AssetManager {
             server.pluginManager.registerEvents(OdysseyPhenomenaListeners, this)
             playersRequiredForLuck = config.getInt("world-phenomenon.player-minimum-for-luck")
             // Getting main world for phenomenon timer
-            for (world in server.worlds) {
-                if (world.environment == World.Environment.NORMAL) {
-                    mainWorld = world
-                    // Set Handlers
-                    val cycleHandler = PhenomenonCycleHandler(mainWorld!!)
-                    cycleHandler.runTaskTimer(this, 20 * 10L, 20 * 10)
-                    val persistentHandler = PersistentPhenomenonHandler()
-                    persistentHandler.runTaskTimer(this, 20 * 5, 20 * 5)
-                    break
-                }
-            }
+            val cycleHandler = PhenomenonCycleHandler(mainWorld!!)
+            cycleHandler.runTaskTimer(this, 20 * 10L, 20 * 10)
+            val persistentHandler = PersistentPhenomenonHandler()
+            persistentHandler.runTaskTimer(this, 20 * 5, 20 * 5)
         }
 
         // Run situations
-        val situationHandler = OccurrenceHandler(mainWorld!!)
+        val situationHandler = OldOccurrenceHandler(mainWorld!!)
         situationHandler.runTaskTimer(this, 20 * 10L, 20 * 10)
 
         // Register Commands
         logger.info("Registering Commands...")
-        getCommand("SpawnAmbassador")?.setExecutor(SpawnAmbassador)
-        getCommand("SpawnHogRider")?.setExecutor(SpawnHogRider)
-        getCommand("GiveTestItem")?.setExecutor(GiveTestItem)
-        getCommand("SpawnTestMob")?.setExecutor(SpawnTestMob)
-        getCommand("SpawnTestKnight")?.setExecutor(SpawnTestKnight)
-        getCommand("TriggerPhenomenon")?.setExecutor(TriggerPhenomenon)
-        getCommand("LocateStructureAsync")?.setExecutor(LocateStructureAsync)
-        getCommand("PlaceOdysseyStructure")?.setExecutor(PlaceOdysseyStructure)
-        // Spell Commands
-        getCommand("necronomicon")?.setExecutor(Necronomicon)
-
-        // Structures
-        logger.info("Registering Structures...")
-        registerOdysseyStructures(this)
 
         // Hello World!
         val timeElapsed = (System.currentTimeMillis() - timerStart).div(1000.0)
         logger.info("Odyssey Start Up sequence in ($timeElapsed) seconds!")
         logger.info("The Odyssey has just begun!")
+
+
     }
 
     override fun onDisable() {

@@ -15,9 +15,7 @@ interface OccurrenceCreator {
 
         val newTemplate = mapOf(
             "name" to "Hello",
-            "type" to listOf(
-                OccurrenceType.LUNAR
-            ),
+            "type" to OccurrenceType.LUNAR,
             "negatable_by_allay" to false,
             "requirements" to listOf(
                 Requirement.IsSeason(listOf(SeasonType.AUTUMN)),
