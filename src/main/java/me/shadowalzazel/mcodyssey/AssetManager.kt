@@ -1,70 +1,53 @@
 package me.shadowalzazel.mcodyssey
 
+import java.io.File
 import java.io.FileNotFoundException
+
 
 interface AssetManager {
 
-    fun registerOdysseyStructures(odysseyPlugin: Odyssey) {
-        odysseyPlugin.run {
-            /*
+    fun findMainWorld(odysseyPlugin: Odyssey): Boolean {
+        for (world in odysseyPlugin.server.worlds) {
+            val folderPath = world.worldFolder
             try {
-                val worldFolder = mainWorld!!.worldFolder
-                val structureDirectory = worldFolder.path + "/datapacks/OdysseyDataPack/data/minecraftodyssey/structures"
-
-                // Make for loop later
-                val stonePillars1File = File("$structureDirectory/stone_pillars/stone_pillars_1.nbt")
-                val idescineTreeFile = File("$structureDirectory/idescine/idescine_tree.nbt")
-
-                with(server.structureManager) {
-                    registerStructure(NamespacedKey(Odyssey.instance, "stone_pillars_1"), loadStructure(stonePillars1File))
-                    registerStructure(NamespacedKey(Odyssey.instance, "idescine_tree"), loadStructure(idescineTreeFile))
-
-                }
-
-                // Place armor stands with names inv and tags when bottle consume fruit
+                val dataPackFolderPath = File("${folderPath}/datapacks")
+                odysseyPlugin.mainWorld = world
+                return true
             }
-            catch(ex: FileNotFoundException) {
-                logger.info(ex.message)
+            catch (ex: FileNotFoundException) {
+                continue
             }
-
-             */
         }
+
+        return false
+
     }
 
-    // TODO: MAKE METHODS!!
+
+    fun findOdysseyDatapack(odysseyPlugin: Odyssey): Boolean {
+
+        val worldFilePath = odysseyPlugin.mainWorld!!.worldFolder.path
+        val datapackPathString = "/datapacks/OdysseyDataPack"
+
+        return try {
+            val datapackMetaFile = File("${worldFilePath + datapackPathString}/pack.mcmeta")
+            true
+        } catch (ex: FileNotFoundException) {
+            odysseyPlugin.logger.info(ex.message)
+            false
+        }
+
+    }
 
 
-
-    fun registerItems(odysseyPlugin: Odyssey) {
+    fun findOtherDatapacks(odysseyPlugin: Odyssey) {
+        val worldFilePath = odysseyPlugin.mainWorld!!.worldFolder.path
         try {
-            // TODO: Get On Init
-            val datapackPath = "datapacks/OdysseyDataPack/data/odyssey"
-
-            // CREATE ENUMS FOR EACH ODYSSEY ITEM
-
-
-
-
-
-
 
         }
-        catch(ex: FileNotFoundException) {
+        catch (ex: FileNotFoundException) {
             odysseyPlugin.logger.info(ex.message)
         }
-
-
-
     }
-
-    fun registerOccurrences(odysseyPlugin: Odyssey) {
-
-
-
-
-
-    }
-
-
 
 }

@@ -4,36 +4,3 @@ main: me.shadowalzazel.mcodyssey.Odyssey
 api-version: 1.19
 authors: [ShadowAlzazel]
 description: A server side expansion pack for a new minecraft adventure!
-
-commands:
-  SpawnAmbassador:
-    description: ""
-    usage: /<command>
-    permission: op
-  SpawnHogRider:
-    description: ""
-    usage: /<command>
-    permission: op
-  GiveTestItem:
-    description: ""
-    usage: /<command>
-    permission: op
-  SpawnTestMob:
-    description: ""
-    usage: /<command>
-    permission: op
-  SpawnTestKnight:
-    description: ""
-    usage: /<command>
-    permission: op
-  necronomicon:
-    description: "Lol"
-  TriggerPhenomenon:
-    usage: /<command>
-    permission: op
-  LocateStructureAsync:
-    usage: /<command>
-    permission: op
-  PlaceOdysseyStructure:
-    usage: /<command>
-    permission: op

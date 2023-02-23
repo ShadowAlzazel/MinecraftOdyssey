@@ -22,7 +22,7 @@ object GravityShift : OdysseyPhenomenon("Gravity shift",
     // Make spheres
     // create bubbles that if near do more crazy stuff
 
-    // If in BIOME this triggers
+    // If in BIOME this conditions
     // UNSTABLE PLAINS
     // Gravity does not work, so floating rocks and stuff
 
