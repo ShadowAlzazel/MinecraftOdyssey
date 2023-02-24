@@ -1,5 +1,9 @@
-package me.shadowalzazel.mcodyssey.occurrences.base
+package me.shadowalzazel.mcodyssey.occurrences.other
 
+import me.shadowalzazel.mcodyssey.occurrences.base.Condition
+import me.shadowalzazel.mcodyssey.occurrences.base.OccurrenceAction
+import me.shadowalzazel.mcodyssey.occurrences.base.OccurrenceType
+import me.shadowalzazel.mcodyssey.occurrences.base.Requirement
 import me.shadowalzazel.mcodyssey.seasons.SeasonType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
@@ -24,7 +28,8 @@ fun oMain() {
     val oldTemplate = mapOf(
         "name" to "Hello",
         "type" to listOf(
-            OccurrenceType.LUNAR),
+            OccurrenceType.LUNAR
+        ),
         "negatable_by_allay" to false,
         "requirements" to listOf(
             Requirement.IsSeason(listOf(SeasonType.AUTUMN)),
@@ -41,9 +46,11 @@ fun oMain() {
                 "criteria_name" to "is_high_and_wet",
                 "entries" to listOf(
                     OccurrenceAction.ApplyFreeze(7),
-                    OccurrenceAction.ApplyPotionEffect(listOf(
-                        PotionEffect(PotionEffectType.HUNGER, 2, 1)
-                    ))
+                    OccurrenceAction.ApplyPotionEffects(
+                        listOf(
+                            PotionEffect(PotionEffectType.HUNGER, 2, 1)
+                        )
+                    )
                 )
             )
         )

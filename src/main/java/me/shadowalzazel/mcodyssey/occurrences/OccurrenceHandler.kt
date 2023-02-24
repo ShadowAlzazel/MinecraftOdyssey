@@ -4,12 +4,6 @@ class OccurrenceHandler {
 
 
 
-    constructor(lunarOccurrences: List<Occurrences>) {
-
-
-    }
-
-
 
 
 }

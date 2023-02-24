@@ -1,5 +1,6 @@
-package me.shadowalzazel.mcodyssey.occurrences.base
+package me.shadowalzazel.mcodyssey.occurrences.other
 
+import me.shadowalzazel.mcodyssey.occurrences.base.OccurrenceType
 import net.kyori.adventure.text.TextComponent
 import org.bukkit.Location
 import org.bukkit.World

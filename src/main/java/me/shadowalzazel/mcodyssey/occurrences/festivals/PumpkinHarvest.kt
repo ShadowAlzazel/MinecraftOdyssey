@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.occurrences.festivals
 
-import me.shadowalzazel.mcodyssey.occurrences.base.OldOccurrence
+import me.shadowalzazel.mcodyssey.occurrences.other.OldOccurrence
 import me.shadowalzazel.mcodyssey.occurrences.base.OccurrenceType
 import net.kyori.adventure.text.Component
 import org.bukkit.Location

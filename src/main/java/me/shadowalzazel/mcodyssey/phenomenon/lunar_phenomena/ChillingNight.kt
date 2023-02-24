@@ -31,6 +31,7 @@ object ChillingNight: OdysseyPhenomenon("Chilling Night",
             it.spawnParticle(Particle.ELECTRIC_SPARK, it.location, 14, 0.5, 0.5, 0.5)
             it.playSound(it.location, Sound.BLOCK_NOTE_BLOCK_BASEDRUM, 2.5F, 1.5F)
             it.playSound(it.location, Sound.ENTITY_PLAYER_HURT_FREEZE, 2.5F, 0.5F)
+
         }
 
     }

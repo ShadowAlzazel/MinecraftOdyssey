@@ -1,10 +1,14 @@
-package me.shadowalzazel.mcodyssey.occurrences.base
+package me.shadowalzazel.mcodyssey.occurrences.other
 
+import me.shadowalzazel.mcodyssey.occurrences.base.Condition
+import me.shadowalzazel.mcodyssey.occurrences.base.OccurrenceAction
+import me.shadowalzazel.mcodyssey.occurrences.base.OccurrenceType
+import me.shadowalzazel.mcodyssey.occurrences.base.Requirement
 import me.shadowalzazel.mcodyssey.seasons.SeasonType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-interface OccurrenceCreator {
+interface TemplateCreator {
 
     fun temp() {
 
@@ -13,7 +17,7 @@ interface OccurrenceCreator {
         // THEN -> CREATE NEW OCCURRENCE
         // THEN -> MATCH TEMP VALUES TO NEW OCCURRENCE
 
-        val newTemplate = mapOf(
+        val jsonTemplate = mapOf(
             "name" to "Hello",
             "type" to OccurrenceType.LUNAR,
             "negatable_by_allay" to false,
@@ -32,7 +36,7 @@ interface OccurrenceCreator {
                     "criteria_name" to "is_high_and_wet",
                     "entries" to listOf(
                         OccurrenceAction.ApplyFreeze(7),
-                        OccurrenceAction.ApplyPotionEffect(listOf(PotionEffect(PotionEffectType.HUNGER, 2, 1)))
+                        OccurrenceAction.ApplyPotionEffects(listOf(PotionEffect(PotionEffectType.HUNGER, 2, 1)))
                     )
                 )
             ),
