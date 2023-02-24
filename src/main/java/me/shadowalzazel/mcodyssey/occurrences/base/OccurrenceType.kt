@@ -14,7 +14,7 @@ enum class OccurrenceType {
     HUNT // Random Ancient Beast spawns, can be hunted WIP
 
 
-    // NOTES: Occurrences that 'grief' should always be countered by allay
+    // NOTES: OdysseyOccurrenceCreator that 'grief' should always be countered by allay
     // NOTES: An occurrence can have multiple types, each with their own requirements (i.e. drought is weather, but seasonal)
     // NOTES: Read from COMMON Folder in datapack as JSON
 

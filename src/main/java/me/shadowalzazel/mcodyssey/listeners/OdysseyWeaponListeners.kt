@@ -22,10 +22,16 @@ import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import kotlin.math.min
 
-
+// --------------------------------- NOTES --------------------------------
 // TODO: Mounted Bonus i.e. Cavalry Charges
 // TODO: Add Armor Stats through Lore
 // TODO: Scepter -> checks if offhand is a tome of _enchantment_, does spell.
+
+// Can craft weapons without recipe, but with recipe, it is greater quality
+// Weapon that can ignore I-frames
+
+// RUNE STONES vs ENCHANTMENTS
+
 object OdysseyWeaponListeners : Listener {
 
     // Entities have custom dual and range wield mechanics!!!!!
@@ -359,6 +365,7 @@ object OdysseyWeaponListeners : Listener {
             }
         }
     }
+
 
 
 }

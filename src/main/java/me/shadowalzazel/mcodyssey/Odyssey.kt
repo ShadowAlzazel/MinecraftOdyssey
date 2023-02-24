@@ -77,11 +77,11 @@ class Odyssey : JavaPlugin(), AssetManager {
 
         // Need to find the main world to locate datapacks
         logger.info("Finding Datapack World...")
-        findMainWorld(this)
+        findMainWorld()
 
         // Find the Odyssey Datapack as it is required
         logger.info("Finding Odyssey Datapack...")
-        val foundPack = findOdysseyDatapack(this)
+        val foundPack = findOdysseyDatapack()
         if (!foundPack) {
             logger.info("Disabling Odyssey Plugin! Can Not Find Datapack!")
             server.pluginManager.disablePlugin(this)
@@ -100,7 +100,7 @@ class Odyssey : JavaPlugin(), AssetManager {
 
         // Register Events
         logger.info("Registering Events...")
-        listOf(OdysseyListeners,
+        listOf(AssetListeners,
             OdysseyAlchemyListeners,
             OdysseyEnigmaticListeners,
             OdysseyArcaneSlotListeners,
@@ -120,37 +120,30 @@ class Odyssey : JavaPlugin(), AssetManager {
             OdysseyWeaponListeners,
             OdysseyMiscListeners).forEach { eventRegister(it) }
 
-        // Config
-        if (config.getBoolean("world-phenomenon.enabled")) {
-            // Register Daily Events
-            server.pluginManager.registerEvents(OdysseyPhenomenaListeners, this)
-            playersRequiredForLuck = config.getInt("world-phenomenon.player-minimum-for-luck")
-            // Getting main world for phenomenon timer
-            val cycleHandler = PhenomenonCycleHandler(mainWorld!!)
-            cycleHandler.runTaskTimer(this, 20 * 10L, 20 * 10)
-            val persistentHandler = PersistentPhenomenonHandler()
-            persistentHandler.runTaskTimer(this, 20 * 5, 20 * 5)
-        }
+        server.pluginManager.registerEvents(OdysseyPhenomenaListeners, this)
+        playersRequiredForLuck = 4
+        // Getting main world for phenomenon timer
+        val cycleHandler = PhenomenonCycleHandler(mainWorld!!)
+        cycleHandler.runTaskTimer(this, 20 * 10L, 20 * 10)
+        val persistentHandler = PersistentPhenomenonHandler()
+        persistentHandler.runTaskTimer(this, 20 * 5, 20 * 5)
 
         // Run situations
         val situationHandler = OldOccurrenceHandler(mainWorld!!)
         situationHandler.runTaskTimer(this, 20 * 10L, 20 * 10)
-
-        // Register Commands
-        logger.info("Registering Commands...")
 
         // Hello World!
         val timeElapsed = (System.currentTimeMillis() - timerStart).div(1000.0)
         logger.info("Odyssey Start Up sequence in ($timeElapsed) seconds!")
         logger.info("The Odyssey has just begun!")
 
-
     }
 
     override fun onDisable() {
-
         // Plugin shutdown logic
         logger.info("The Odyssey will wait another day...")
+
+        // TODO: Add Saving OdysseyOccurrenceCreator
     }
 
 

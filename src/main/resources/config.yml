@@ -1,26 +1,4 @@
 # -------------------------------------
 # Minecraft Odyssey Config File
-#
 # -------------------------------------
 
-# Server Names
-names:
-  server-name: "None"
-
-# Enables or disables daily world events
-world-phenomenon:
-  enabled: true
-  player-minimum-for-luck: 4
-
-# Enables or disables mega events
-mega-events: true
-
-# dictates whether the end game is disabled
-end-game:
-  enabled: true
-
-# Server Join Message
-server-join: true
-
-# If server requires resource pack
-server-resource-pack-force: true

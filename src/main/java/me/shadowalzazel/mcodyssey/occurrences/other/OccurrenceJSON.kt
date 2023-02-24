@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.occurrences.base
+package me.shadowalzazel.mcodyssey.occurrences.other
 
 
 @kotlinx.serialization.Serializable

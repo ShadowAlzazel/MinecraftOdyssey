@@ -6,47 +6,42 @@ import java.io.FileNotFoundException
 
 interface AssetManager {
 
-    fun findMainWorld(odysseyPlugin: Odyssey): Boolean {
-        for (world in odysseyPlugin.server.worlds) {
+    fun findMainWorld(): Boolean {
+        for (world in Odyssey.instance.server.worlds) {
             val folderPath = world.worldFolder
             try {
                 val dataPackFolderPath = File("${folderPath}/datapacks")
-                odysseyPlugin.mainWorld = world
+                Odyssey.instance.mainWorld = world
                 return true
             }
             catch (ex: FileNotFoundException) {
                 continue
             }
         }
-
         return false
-
     }
 
 
-    fun findOdysseyDatapack(odysseyPlugin: Odyssey): Boolean {
-
-        val worldFilePath = odysseyPlugin.mainWorld!!.worldFolder.path
+    fun findOdysseyDatapack(): Boolean {
+        val worldFilePath = Odyssey.instance.mainWorld!!.worldFolder.path
         val datapackPathString = "/datapacks/OdysseyDataPack"
 
         return try {
             val datapackMetaFile = File("${worldFilePath + datapackPathString}/pack.mcmeta")
             true
         } catch (ex: FileNotFoundException) {
-            odysseyPlugin.logger.info(ex.message)
+            Odyssey.instance.logger.info(ex.message)
             false
         }
-
     }
 
 
-    fun findOtherDatapacks(odysseyPlugin: Odyssey) {
-        val worldFilePath = odysseyPlugin.mainWorld!!.worldFolder.path
+    fun findOtherDatapacks() {
+        val worldFilePath = Odyssey.instance.mainWorld!!.worldFolder.path
         try {
-
         }
         catch (ex: FileNotFoundException) {
-            odysseyPlugin.logger.info(ex.message)
+            Odyssey.instance.logger.info(ex.message)
         }
     }
 

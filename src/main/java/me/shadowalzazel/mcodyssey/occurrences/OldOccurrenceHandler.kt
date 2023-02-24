@@ -11,7 +11,7 @@ class OldOccurrenceHandler(private val mainWorld: World) : BukkitRunnable() {
             // TODO: Temp; make list later
             if (mainWorld.players.isNotEmpty()) {
                 val someQ = mainWorld.players.random().location
-                Occurrences.PUMPKIN_HARVEST.runSituation(someQ)
+                //OdysseyOccurrenceCreator.PUMPKIN_HARVEST.runSituation(someQ)
             }
 
         }

@@ -12,53 +12,62 @@ import org.bukkit.generator.structure.StructureType
 
 open class Occurrence (
     val name: String,
-    val oType: OccurrenceType,
+    val mainType: OccurrenceType,
     private val negatableByAllay: Boolean,
     private val requirements: List<Requirement>,
     private val criteria: Map<String, List<Condition>>,
-    private val persistentActions: List<OccurrenceAction>,
-    private val spawningActions: List<OccurrenceAction>,
-    private val oneTimeActions: List<OccurrenceAction>
+    private val persistentActions: Map<String, List<OccurrenceAction>>,
+    private val spawningActions: Map<String, List<OccurrenceAction>>,
+    private val oneTimeActions: Map<String, List<OccurrenceAction>>
     ) {
 
-    fun persistentHandler(someEntities: List<LivingEntity>) {
+    fun persistentActionHandler(someEntities: List<LivingEntity>) {
         // Used by Task Class for persistent async effects
         // Add to list, Run on branch, if timer ready, apply to bukkit, else continue
-        someEntities.forEach {
-            multiActionHandler(it, persistentActions)
+        someEntities.forEach { entity ->
+            for (aKey in persistentActions.keys) {
+                if (criteriaUnlocked(entity, aKey)) {
+                    persistentActions[aKey]!!.forEach { it.applyAction(someEntity = entity) }
+                }
+            }
         }
     }
 
-    fun spawningHandler(someEntities: List<LivingEntity>) {
+
+    fun spawningActionHandler(someEntities: List<LivingEntity>) {
         // Used By Events
-        someEntities.forEach {
-            multiActionHandler(it, spawningActions)
+        someEntities.forEach { entity ->
+            for (aKey in spawningActions.keys) {
+                if (criteriaUnlocked(entity, aKey)) {
+                    spawningActions[aKey]!!.forEach { it.applyAction(someEntity = entity) }
+                }
+            }
         }
     }
 
-    fun oneTimeHandler(someEntities: List<LivingEntity>) {
+    fun oneTimeActionHandler(someEntities: List<LivingEntity>) {
         // Used By One Time Syncer
-        someEntities.forEach {
-            multiActionHandler(it, oneTimeActions)
+        someEntities.forEach { entity ->
+            for (aKey in oneTimeActions.keys) {
+                if (criteriaUnlocked(entity, aKey)) {
+                    oneTimeActions[aKey]!!.forEach { it.applyAction(someEntity = entity) }
+                }
+            }
         }
-    }
-
-    private fun multiActionHandler(someEntity: LivingEntity, actionList: List<OccurrenceAction>) {
-        // FOR all x in occurrenceActions list of obj
-        // IF entity passed criteria_name of x apply all entries
-        // Maybe Random or Weighted
-        actionList.forEach { if (it.criteriaMetBy(someEntity)) it.applyAction(someEntity) }
-    }
-
-    private fun OccurrenceAction.criteriaMetBy(someEntity: LivingEntity): Boolean {
-        // Allay checked first
-        val allayNearby: Boolean = negatableByAllay && someEntity.getNearbyEntities(16.0, 16.0, 16.0).any { it.type == EntityType.ALLAY }
-        return !allayNearby && criteria[this.criteriaName]!!.all { it.checkCondition(someEntity) }
     }
 
     fun requirementHandler(someSeason: SeasonType, someWorld: World) : Boolean {
         // Used to activate and put into activation
         return requirements.all { it.checkRequirement(someSeason, someWorld) }
+    }
+
+
+    // Probably Expensive to run
+    private fun criteriaUnlocked(someEntity: LivingEntity, someKey: String): Boolean {
+        // Allay checked first
+        // CURRENTLY -> allay affects EVERY Condition and Action
+        val allayNearby: Boolean = negatableByAllay && someEntity.getNearbyEntities(16.0, 16.0, 16.0).any { it.type == EntityType.ALLAY }
+        return !allayNearby && criteria[someKey]!!.all { it.checkCondition(someEntity) }
     }
 
     fun locateStructures(someWorld: World, someLocation: Location, matchingStructures: List<Structure>, matchingType: List<StructureType>): List<Structure> {
