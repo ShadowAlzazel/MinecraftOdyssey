@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.effects
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.constants.OdysseyEffectTags
+import me.shadowalzazel.mcodyssey.constants.EffectTags
 import me.shadowalzazel.mcodyssey.effects.tasks.*
 import org.bukkit.Particle
 import org.bukkit.entity.LivingEntity
@@ -16,7 +16,7 @@ object OdysseyEffectsHandler {
         val decayingPotionEffect = PotionEffect(PotionEffectType.HUNGER, duration * 20, amplifier)
         victimList.forEach {
             it.addPotionEffect(decayingPotionEffect)
-            if (OdysseyEffectTags.DECAYING !in it.scoreboardTags) { it.addScoreboardTag(OdysseyEffectTags.DECAYING) }
+            if (EffectTags.DECAYING !in it.scoreboardTags) { it.addScoreboardTag(EffectTags.DECAYING) }
             val decayingTask = DecayingTask(it, 1, duration / 2)
             decayingTask.runTaskTimer(Odyssey.instance, 0, 20 * 2)
         }
@@ -26,9 +26,9 @@ object OdysseyEffectsHandler {
     fun freezingEffect(victimList: MutableCollection<LivingEntity>, duration: Int, amplifier: Int) {
         val freezingPotionEffect = PotionEffect(PotionEffectType.SLOW, duration * 20, amplifier)
         victimList.forEach {
-            if (OdysseyEffectTags.FREEZING !in it.scoreboardTags) {
+            if (EffectTags.FREEZING !in it.scoreboardTags) {
                 it.addPotionEffect(freezingPotionEffect)
-                it.addScoreboardTag(OdysseyEffectTags.FREEZING)
+                it.addScoreboardTag(EffectTags.FREEZING)
                 val freezingTask = FreezingTask(it, amplifier, duration)
                 freezingTask.runTaskTimer(Odyssey.instance, 0, 20)
             }
@@ -38,8 +38,8 @@ object OdysseyEffectsHandler {
     // Doused
     fun dousedEffect(victimList: MutableCollection<LivingEntity>, duration: Int, amplifier: Int = 1) {
         victimList.forEach {
-            if (OdysseyEffectTags.DOUSED !in it.scoreboardTags) {
-                it.addScoreboardTag(OdysseyEffectTags.DOUSED)
+            if (EffectTags.DOUSED !in it.scoreboardTags) {
+                it.addScoreboardTag(EffectTags.DOUSED)
                 it.addScoreboardTag("Doused_Factor_$amplifier")
                 val dousedTask = DousedTask(it, duration)
                 dousedTask.runTaskTimer(Odyssey.instance, 0, 20)
@@ -50,9 +50,9 @@ object OdysseyEffectsHandler {
     // Ablaze
     fun ablazeEffect(victimList: MutableCollection<LivingEntity>, duration: Int, amplifier: Int = 1) {
         victimList.forEach {
-            if (OdysseyEffectTags.ABLAZE !in it.scoreboardTags) {
+            if (EffectTags.ABLAZE !in it.scoreboardTags) {
                 it.fireTicks = duration * 20
-                it.addScoreboardTag(OdysseyEffectTags.ABLAZE)
+                it.addScoreboardTag(EffectTags.ABLAZE)
                 val blazingTask = BlazingTask(it, amplifier, duration)
                 blazingTask.runTaskTimer(Odyssey.instance, 0, 20)
             }
@@ -74,8 +74,8 @@ object OdysseyEffectsHandler {
     // Thorns
     fun thornsEffect(victimList: MutableCollection<LivingEntity>, duration: Int) {
         victimList.forEach {
-            if (OdysseyEffectTags.THORNY !in it.scoreboardTags) {
-                it.addScoreboardTag(OdysseyEffectTags.THORNY)
+            if (EffectTags.THORNY !in it.scoreboardTags) {
+                it.addScoreboardTag(EffectTags.THORNY)
                 val thornyTask = ThornyTask(it, duration)
                 thornyTask.runTaskTimer(Odyssey.instance, 0, 20)
             }
@@ -83,11 +83,11 @@ object OdysseyEffectsHandler {
     }
 
     // Thorns
-    fun puffyPricklyEffect(victimList: MutableCollection<LivingEntity>, duration: Int) {
+    fun miasmaEffect(victimList: MutableCollection<LivingEntity>, duration: Int) {
         victimList.forEach {
-            if (OdysseyEffectTags.PUFFY_PRICKLY !in it.scoreboardTags) {
-                it.addScoreboardTag(OdysseyEffectTags.PUFFY_PRICKLY)
-                val puffyPricklyTask = PuffyPricklyTask(it, duration)
+            if (EffectTags.MIASMA !in it.scoreboardTags) {
+                it.addScoreboardTag(EffectTags.MIASMA)
+                val puffyPricklyTask = MiasmaTask(it, duration)
                 puffyPricklyTask.runTaskTimer(Odyssey.instance, 0, 20)
             }
         }
@@ -96,8 +96,8 @@ object OdysseyEffectsHandler {
     // Accursed
     fun accursedEffect(victimList: MutableCollection<LivingEntity>, duration: Int) {
         victimList.forEach {
-            if (OdysseyEffectTags.ACCURSED !in it.scoreboardTags) {
-                it.addScoreboardTag(OdysseyEffectTags.ACCURSED)
+            if (EffectTags.ACCURSED !in it.scoreboardTags) {
+                it.addScoreboardTag(EffectTags.ACCURSED)
                 val accursedTask = AccursedTask(it, duration)
                 accursedTask.runTaskTimer(Odyssey.instance, 0, 20)
             }
@@ -108,8 +108,8 @@ object OdysseyEffectsHandler {
     fun honeyedEffect(victimList: MutableCollection<LivingEntity>, duration: Int) {
         val honeyedPotionEffect = PotionEffect(PotionEffectType.SLOW, duration * 20, 0)
         victimList.forEach {
-            if (OdysseyEffectTags.HONEYED !in it.scoreboardTags) {
-                it.addScoreboardTag(OdysseyEffectTags.HONEYED)
+            if (EffectTags.HONEYED !in it.scoreboardTags) {
+                it.addScoreboardTag(EffectTags.HONEYED)
                 val honeyedTask = HoneyedTask(it, duration * 2)
                 honeyedTask.runTaskTimer(Odyssey.instance, 0, 10)
             }
@@ -119,7 +119,7 @@ object OdysseyEffectsHandler {
     // Hemorrhaging
     fun hemorrhagingEffect(victimList: MutableCollection<LivingEntity>, amplifier: Int = 1) {
         victimList.forEach {
-            if (OdysseyEffectTags.HEMORRHAGING !in it.scoreboardTags) { it.addScoreboardTag(OdysseyEffectTags.HEMORRHAGING) }
+            if (EffectTags.HEMORRHAGING !in it.scoreboardTags) { it.addScoreboardTag(EffectTags.HEMORRHAGING) }
             val hemorrhageTask = HemorrhageTask(it, amplifier)
             hemorrhageTask.runTaskTimer(Odyssey.instance, 0, 20)
         }

@@ -5,7 +5,7 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object DevastatingDrop : OdysseyEnchantment("devastatingdrop", "Devastating Drop", 4) {
+object DevastatingDrop : OdysseyEnchantment("devastating_drop", "Devastating Drop", 4) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {

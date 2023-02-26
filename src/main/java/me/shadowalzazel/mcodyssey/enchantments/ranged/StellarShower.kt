@@ -6,7 +6,7 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object StellarShower : OdysseyEnchantment("stellarshower", "Stellar Shower", 4) {
+object StellarShower : OdysseyEnchantment("stellar_shower", "Stellar Shower", 4) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {

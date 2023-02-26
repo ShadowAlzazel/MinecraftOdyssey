@@ -6,7 +6,7 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object FrogFright : OdysseyEnchantment("frogfright", "Frog Fright", 3) {
+object FrogFright : OdysseyEnchantment("frog_fright", "Frog Fright", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {

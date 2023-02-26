@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.effects.tasks
 
-import me.shadowalzazel.mcodyssey.constants.OdysseyEffectTags
+import me.shadowalzazel.mcodyssey.constants.EffectTags
 import org.bukkit.entity.LivingEntity
 import org.bukkit.scheduler.BukkitRunnable
 
@@ -11,10 +11,10 @@ class ThornyTask(private val thornEntity: LivingEntity, private val thornCount: 
 
     override fun run() {
         counter += 1
-        if (OdysseyEffectTags.THORNY !in thornEntity.scoreboardTags) { this.cancel() }
+        if (EffectTags.THORNY !in thornEntity.scoreboardTags) { this.cancel() }
         val timeElapsed = System.currentTimeMillis() - thornsCooldown
         if (thornCount < counter || timeElapsed > thornCount * 1000) {
-            thornEntity.scoreboardTags.remove(OdysseyEffectTags.THORNY)
+            thornEntity.scoreboardTags.remove(EffectTags.THORNY)
             this.cancel()
         }
     }

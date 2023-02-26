@@ -6,7 +6,7 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object DecayingTouch : OdysseyEnchantment("decayingtouch", "Decaying Touch", 3) {
+object DecayingTouch : OdysseyEnchantment("decaying_touch", "Decaying Touch", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {

@@ -1,24 +1,22 @@
 package me.shadowalzazel.mcodyssey
 
+import me.shadowalzazel.mcodyssey.bosses.base.OdysseyBoss
 import me.shadowalzazel.mcodyssey.bosses.hog_rider.HogRiderListeners
 import me.shadowalzazel.mcodyssey.bosses.the_ambassador.AmbassadorListeners
-import me.shadowalzazel.mcodyssey.bosses.base.OdysseyBoss
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.listeners.*
 import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.ArmorListeners
 import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.MeleeListeners
 import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.MiscListeners
 import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.RangedListeners
-import me.shadowalzazel.mcodyssey.listeners.OdysseyPhenomenaListeners
-import me.shadowalzazel.mcodyssey.phenomenon.PhenomenonCycleHandler
-import me.shadowalzazel.mcodyssey.phenomenon.PersistentPhenomenonHandler
-import me.shadowalzazel.mcodyssey.phenomenon.base.OdysseyPhenomenon
-import me.shadowalzazel.mcodyssey.recipes.*
 import me.shadowalzazel.mcodyssey.occurrences.OldOccurrenceHandler
+import me.shadowalzazel.mcodyssey.phenomenon.PersistentPhenomenonHandler
+import me.shadowalzazel.mcodyssey.phenomenon.PhenomenonCycleHandler
+import me.shadowalzazel.mcodyssey.phenomenon.base.OdysseyPhenomenon
+import me.shadowalzazel.mcodyssey.recipe_creators.RecipeManager
 import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.event.Listener
-
 import org.bukkit.plugin.java.JavaPlugin
 
 class Odyssey : JavaPlugin(), AssetManager {
@@ -94,9 +92,9 @@ class Odyssey : JavaPlugin(), AssetManager {
 
         // Register Recipes
         logger.info("Registering Recipes...")
-        val fullRecipeList = SmithingRecipes.getRecipes() + OdysseyRecipes.getRecipes() + CookingRecipes.getRecipes() +
-                EnigmaticRecipes.getRecipes() + WeaponRecipes.getRecipes() + TradingRecipes.getRecipes()
-        fullRecipeList.forEach { Bukkit.addRecipe(it) }
+        RecipeManager().createAllRecipes().forEach {
+            Bukkit.addRecipe(it)
+        }
 
         // Register Events
         logger.info("Registering Events...")

@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.effects.tasks
 
-import me.shadowalzazel.mcodyssey.constants.OdysseyEffectTags
+import me.shadowalzazel.mcodyssey.constants.EffectTags
 import org.bukkit.entity.LivingEntity
 import org.bukkit.scheduler.BukkitRunnable
 
@@ -11,10 +11,10 @@ class AccursedTask(private val accursedEntity: LivingEntity, private val accurse
 
     override fun run() {
         counter += 1
-        if (OdysseyEffectTags.THORNY !in accursedEntity.scoreboardTags) { this.cancel() }
+        if (EffectTags.THORNY !in accursedEntity.scoreboardTags) { this.cancel() }
         val timeElapsed = System.currentTimeMillis() - accursedCooldown
         if (accursedCounter < counter || timeElapsed > accursedCounter * 1000) {
-            accursedEntity.scoreboardTags.remove(OdysseyEffectTags.THORNY)
+            accursedEntity.scoreboardTags.remove(EffectTags.ACCURSED)
             this.cancel()
         }
     }

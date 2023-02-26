@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.effects.tasks
 
+import me.shadowalzazel.mcodyssey.constants.EffectTags
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.entity.LivingEntity
@@ -14,7 +15,7 @@ class BlazingTask(private val blazingVictim: LivingEntity, private val blazingFa
         blazingVictim.also {
             counter += 1
             // Check if in water or not ablaze
-            if (it.isInWaterOrRainOrBubbleColumn || "Ablaze" !in it.scoreboardTags) { this.cancel() }
+            if (it.isInWaterOrRainOrBubbleColumn || EffectTags.ABLAZE !in it.scoreboardTags) { this.cancel() }
 
             // Spawn particles in world
             with(it.world) {
@@ -34,7 +35,7 @@ class BlazingTask(private val blazingVictim: LivingEntity, private val blazingFa
             // Every 1 sec
             val timeElapsed = System.currentTimeMillis() - dousingCooldown
             if (blazingCount < counter || it.health <= 0.0 || timeElapsed > blazingCount * 1000) {
-                if (!it.isDead) { it.scoreboardTags.remove("Ablaze") }
+                if (!it.isDead) { it.scoreboardTags.remove(EffectTags.ABLAZE) }
                 this.cancel()
             }
         }

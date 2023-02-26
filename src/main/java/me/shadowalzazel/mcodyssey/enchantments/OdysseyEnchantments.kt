@@ -2,13 +2,13 @@ package me.shadowalzazel.mcodyssey.enchantments
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.enchantments.armor.*
+import me.shadowalzazel.mcodyssey.enchantments.base.GildedPower
+import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.enchantments.melee.*
 import me.shadowalzazel.mcodyssey.enchantments.misc.HookShot
 import me.shadowalzazel.mcodyssey.enchantments.misc.MirrorForce
-import me.shadowalzazel.mcodyssey.enchantments.misc.VoidJump
+import me.shadowalzazel.mcodyssey.enchantments.misc.VoidDrive
 import me.shadowalzazel.mcodyssey.enchantments.ranged.*
-import me.shadowalzazel.mcodyssey.enchantments.base.GildedPower
-import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import org.bukkit.enchantments.Enchantment
 import java.util.*
 import java.util.stream.Collectors
@@ -72,7 +72,7 @@ object OdysseyEnchantments {
     val UNTOUCHABLE: OdysseyEnchantment = Untouchable
     val VENGEFUL: OdysseyEnchantment = Vengeful
     val VICIOUS_VIGOR: OdysseyEnchantment = ViciousVigor
-    val VOID_JUMP: OdysseyEnchantment = VoidJump
+    val VOID_JUMP: OdysseyEnchantment = VoidDrive
     val VOID_STRIKE: OdysseyEnchantment = VoidStrike
     val WAR_CRY: OdysseyEnchantment = WarCry
     val WHIRLWIND: OdysseyEnchantment = Whirlwind

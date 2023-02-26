@@ -15,8 +15,7 @@ class AlchemyCauldronTask(private val cauldronBlock: Block, private val someResu
 
     override fun run() {
         cauldronBlock.also {
-            counter += 1
-
+            // Particle Effects
             with(it.world) {
                 // Cancel task  if not Water Cauldron
                 if (getBlockAt(someLocation).type != Material.WATER_CAULDRON) { this@AlchemyCauldronTask.cancel() }
@@ -27,25 +26,32 @@ class AlchemyCauldronTask(private val cauldronBlock: Block, private val someResu
                 spawnParticle(Particle.BUBBLE_POP, randomLocation, 0, 0.0, 0.2, 0.0)
             }
 
-            // Some timer
+            counter += 1
             val timeElapsed = System.currentTimeMillis() - someCooldown
-            if (20 * 10 < counter || timeElapsed > 10 * 1000) {
-                val levelledData = it.blockData as Levelled
-                if (levelledData.level != 1) {
-                    (it.blockData as Levelled).level -= 1
-                }
-                else {
-                    it.type = Material.CAULDRON
-                }
-                it.blockData = levelledData
-                // Maker Color particles from color potion
-                with(it.world) {
-                    dropItem(someLocation.clone().add(0.0, 0.5, 0.0), someResult)
-                    playSound(someLocation, Sound.BLOCK_BREWING_STAND_BREW, 2.5F, 0.5F)
-                    spawnParticle(Particle.DRAGON_BREATH, someLocation, 45, 0.25, 0.25, 0.25)
-                }
-                this.cancel()
+            if (10 * 20 < counter || timeElapsed > 10 * 1000) {
+                brewFinishedHandler()
             }
         }
     }
+
+    private fun brewFinishedHandler() {
+        cauldronBlock.also {
+            // Change Cauldron Water level
+            val levelledData = it.blockData as Levelled
+            if (levelledData.level != 1) {
+                (it.blockData as Levelled).level -= 1
+            }
+            else {
+                it.type = Material.CAULDRON
+            }
+            // Maker Color particles from color potion
+            with(it.world) {
+                dropItem(someLocation.clone().add(0.0, 0.5, 0.0), someResult)
+                playSound(someLocation, Sound.BLOCK_BREWING_STAND_BREW, 2.5F, 0.5F)
+                spawnParticle(Particle.DRAGON_BREATH, someLocation, 45, 0.25, 0.25, 0.25)
+            }
+            this.cancel()
+        }
+    }
+
 }

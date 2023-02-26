@@ -6,7 +6,7 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object FreezingAspect : OdysseyEnchantment("frezzingaspect", "Freezing Aspect", 2) {
+object FreezingAspect : OdysseyEnchantment("frezzing_aspect", "Freezing Aspect", 2) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {

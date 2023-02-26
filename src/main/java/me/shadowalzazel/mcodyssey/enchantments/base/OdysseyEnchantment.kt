@@ -4,7 +4,7 @@ import io.papermc.paper.enchantments.EnchantmentRarity
 import me.shadowalzazel.mcodyssey.Odyssey
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
-import net.kyori.adventure.text.format.TextColor
+import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
@@ -13,7 +13,11 @@ import org.bukkit.entity.EntityCategory
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 
-open class OdysseyEnchantment(namespace: String?, private val name: String, private val maxLevel: Int) :
+open class OdysseyEnchantment(
+    namespace: String?,
+    val enchantName: String,
+    val maximumLevel: Int,
+    val subtype: Subtype = Subtype.GILDED) :
     Enchantment(NamespacedKey(Odyssey.instance, namespace!!)) {
 
     private val romanNumeralList = mapOf(1 to "I", 2 to "II", 3 to "III", 4 to "IV", 5 to "V", 6 to "VI", 7 to "VII", 8 to "VIII", 9 to "IX", 10 to "X")
@@ -22,13 +26,13 @@ open class OdysseyEnchantment(namespace: String?, private val name: String, priv
         TODO("Not yet implemented")
     }
 
-    @Deprecated("Deprecated in Java")
+    @Deprecated("Deprecated in Java", ReplaceWith("enchantName"))
     override fun getName(): String {
-        return name
+        return enchantName
     }
 
     override fun getMaxLevel(): Int {
-        return maxLevel
+        return maximumLevel
     }
 
     override fun getStartLevel(): Int {
@@ -63,11 +67,11 @@ open class OdysseyEnchantment(namespace: String?, private val name: String, priv
     }
 
     override fun displayName(level: Int): Component {
-        return Component.text("$name ${romanNumeralList[level]}", TextColor.color(255, 170, 0))
+        return Component.text(enchantName, subtype.displayColor)
     }
 
-    fun enchantLore(level: Int): TextComponent {
-        return Component.text("$name ${romanNumeralList[level]}", TextColor.color(255, 170, 0))
+    fun createEnchantmentLore(level: Int): TextComponent {
+        return Component.text("$enchantName ${romanNumeralList[level]}", subtype.displayColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
     }
 
     override fun isTradeable(): Boolean {

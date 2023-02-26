@@ -6,7 +6,7 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object IgnorePain : OdysseyEnchantment("ignorepain", "Ignore Pain", 3) {
+object IgnorePain : OdysseyEnchantment("ignore_pain", "Ignore Pain", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {

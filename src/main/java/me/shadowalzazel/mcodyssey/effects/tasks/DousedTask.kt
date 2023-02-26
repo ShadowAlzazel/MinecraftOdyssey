@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.effects.tasks
 
 import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.constants.EffectTags
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.entity.LivingEntity
@@ -15,7 +16,7 @@ class DousedTask(private val dousedVictim: LivingEntity, private val douseCount:
         dousedVictim.also {
             counter += 1
             // Check if no longer Doused
-            if ("Doused" !in it.scoreboardTags) { this.cancel() }
+            if (EffectTags.DOUSED !in it.scoreboardTags) { this.cancel() }
 
             // Check if on fire
             if (it.fireTicks > 0) {
@@ -28,8 +29,8 @@ class DousedTask(private val dousedVictim: LivingEntity, private val douseCount:
                     }
                 }
                 // Do ablaze effects
-                it.scoreboardTags.remove("Doused")
-                it.addScoreboardTag("Ablaze")
+                it.scoreboardTags.remove(EffectTags.DOUSED)
+                it.addScoreboardTag(EffectTags.ABLAZE)
                 it.fireTicks = 20 * ((dousePower * 4) + 4) + 1
                 // Run task
                 val blazeDouseTask = BlazingTask(it, dousePower, ((dousePower * 4) + 4))

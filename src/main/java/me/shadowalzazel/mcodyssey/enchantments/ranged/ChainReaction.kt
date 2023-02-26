@@ -6,7 +6,7 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object ChainReaction : OdysseyEnchantment("chainreaction", "Chain Reaction", 5) {
+object ChainReaction : OdysseyEnchantment("chain_reaction", "Chain Reaction", 5) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {

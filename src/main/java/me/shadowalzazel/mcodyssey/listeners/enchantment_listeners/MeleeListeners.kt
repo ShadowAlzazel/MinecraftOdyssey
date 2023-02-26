@@ -52,7 +52,7 @@ object MeleeListeners : Listener {
                     // When match
                     when (enchant.key) {
                         OdysseyEnchantments.ARCANE_CELL -> {
-                            if (cooldownManager(someDamager, "Arcane Cell", arcaneCellCooldown, 5.25)) {
+                            if (cooldownManager(someDamager, "Runic Cell", arcaneCellCooldown, 5.25)) {
                                 arcaneCellEnchantment(someVictim, enchant.value)
                             }
                         }

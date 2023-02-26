@@ -2,10 +2,10 @@ package me.shadowalzazel.mcodyssey.listeners
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.constants.OdysseyUUIDs
-import me.shadowalzazel.mcodyssey.listeners.tasks.UnstableAntimatterTask
-import me.shadowalzazel.mcodyssey.items.OdysseyItems
+import me.shadowalzazel.mcodyssey.constants.Identifiers
+import me.shadowalzazel.mcodyssey.items.Miscellaneous
 import me.shadowalzazel.mcodyssey.listeners.tasks.TemporalStasisTask
+import me.shadowalzazel.mcodyssey.listeners.tasks.UnstableAntimatterTask
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.*
@@ -36,17 +36,20 @@ object OdysseyItemListeners : Listener {
             if (somePlayer.gameMode != GameMode.SPECTATOR) {
                 // Match
                 when (event.inventory.result) {
-                    OdysseyItems.PURE_ANTIMATTER_CRYSTAL.createItemStack(1) -> {
+                    /*
+                    Miscellaneous.PURE_ANTIMATTER_CRYSTAL.createItemStack(1) -> {
                         pureAntiMatterCrystalCrafting(somePlayer)
                         // TODO: REMOVE ITEM ON DEATH
                     }
-                    OdysseyItems.FRUIT_OF_ERISHKIGAL.createItemStack(1) -> {
+                    Miscellaneous.FRUIT_OF_ERISHKIGAL.createItemStack(1) -> {
                         fruitOfErishkigalCrafting(somePlayer)
                     }
-                    OdysseyItems.IRRADIATED_FRUIT.createItemStack(1) -> {
+
+                     */
+                    Miscellaneous.IRRADIATED_FRUIT.createItemStack(1) -> {
                         irradiatedFruitCrafting(somePlayer)
                     }
-                    //OdysseyRecipes.IRRADIATED_FRUIT_RECIPE.result
+                    //Misc.IRRADIATED_FRUIT_RECIPE.result
                 }
             }
         }
@@ -62,11 +65,14 @@ object OdysseyItemListeners : Listener {
                 // Match items
                 when (event.item) {
                     // Fruit Of Erishkigal Health Boosts
-                    OdysseyItems.FRUIT_OF_ERISHKIGAL.createItemStack(someStackValue) -> {
-                        if (!extraHealthCalculator(somePlayer, OdysseyUUIDs.EXTRA_HEALTH_ERISHKIGAL_FRUIT)) { event.isCancelled }
+                    /*
+                    Miscellaneous.FRUIT_OF_ERISHKIGAL.createItemStack(someStackValue) -> {
+                        if (!extraHealthCalculator(somePlayer, Identifiers.EXTRA_HEALTH_ERISHKIGAL_FRUIT)) { event.isCancelled }
                     }
-                    OdysseyItems.IRRADIATED_FRUIT.createItemStack(someStackValue) -> {
-                        if (!extraHealthCalculator(somePlayer, OdysseyUUIDs.EXTRA_HEALTH_IRRADIATED_FRUIT)) { event.isCancelled }
+
+                     */
+                    Miscellaneous.IRRADIATED_FRUIT.createItemStack(someStackValue) -> {
+                        if (!extraHealthCalculator(somePlayer, Identifiers.EXTRA_HEALTH_IRRADIATED_FRUIT)) { event.isCancelled }
                         else {
                             somePlayer.addPotionEffects(listOf(
                                 PotionEffect(PotionEffectType.HUNGER, 20 * 30, 1),
@@ -75,8 +81,8 @@ object OdysseyItemListeners : Listener {
                             ))
                         }
                     }
-                    OdysseyItems.SCULK_HEART.createItemStack(someStackValue) -> {
-                        if (!extraHealthCalculator(somePlayer, OdysseyUUIDs.EXTRA_HEALTH_SCULK_HEART)) { event.isCancelled }
+                    Miscellaneous.SCULK_HEART.createItemStack(someStackValue) -> {
+                        if (!extraHealthCalculator(somePlayer, Identifiers.EXTRA_HEALTH_SCULK_HEART)) { event.isCancelled }
                         else {
                             somePlayer.addPotionEffect(PotionEffect(PotionEffectType.DARKNESS, 20 * 30, 1))
                             somePlayer.damage(2.0)
@@ -96,7 +102,7 @@ object OdysseyItemListeners : Listener {
         if (event.entity is LivingEntity) {
             val someEntity = event.entity as LivingEntity
             if (someEntity.equipment?.itemInOffHand != null) {
-                if (someEntity.equipment?.itemInOffHand == OdysseyItems.TOTEM_OF_VEXING.createItemStack(1)) {
+                if (someEntity.equipment?.itemInOffHand == Miscellaneous.TOTEM_OF_VEXING.createItemStack(1)) {
                     event.damage = 0.0
                     if ((1..3).random() != 1) { someEntity.equipment!!.setItemInOffHand(ItemStack(Material.AIR, 1)) }
                     someEntity.world.playSound(someEntity.location, Sound.ITEM_TOTEM_USE, 2.5F, 0.2F)
@@ -110,7 +116,7 @@ object OdysseyItemListeners : Listener {
     @EventHandler(priority = EventPriority.HIGH)
     fun itemDropHandler(event: PlayerDropItemEvent) {
         when (event.itemDrop.itemStack) {
-            OdysseyItems.HOURGLASS_FROM_BABEL.createItemStack(1) -> {
+            Miscellaneous.HOURGLASS_FROM_BABEL.createItemStack(1) -> {
                 event.itemDrop.remove()
                 hourglassDrop(event.player)
             }
@@ -171,9 +177,9 @@ object OdysseyItemListeners : Listener {
 
     private fun extraHealthCalculator(eventPlayer: Player, healthUUID: UUID): Boolean {
         val healthMap = mapOf(
-            OdysseyUUIDs.EXTRA_HEALTH_ERISHKIGAL_FRUIT to Pair("odyssey_extra_health_erishkigal", 4.0), // * 4
-            OdysseyUUIDs.EXTRA_HEALTH_IRRADIATED_FRUIT to Pair("odyssey_extra_health_erishkigal", 2.0),
-            OdysseyUUIDs.EXTRA_HEALTH_SCULK_HEART to Pair("odyssey_extra_health_sculk_heart", 2.0))
+            Identifiers.EXTRA_HEALTH_ERISHKIGAL_FRUIT to Pair("odyssey_extra_health_erishkigal", 4.0), // * 4
+            Identifiers.EXTRA_HEALTH_IRRADIATED_FRUIT to Pair("odyssey_extra_health_erishkigal", 2.0),
+            Identifiers.EXTRA_HEALTH_SCULK_HEART to Pair("odyssey_extra_health_sculk_heart", 2.0))
 
         // Get health
         val playerHealth = eventPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!

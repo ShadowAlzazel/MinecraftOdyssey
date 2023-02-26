@@ -1,8 +1,8 @@
 package me.shadowalzazel.mcodyssey.listeners
 
-import me.shadowalzazel.mcodyssey.constants.OdysseyItemModels
 import me.shadowalzazel.mcodyssey.alchemy.SoulBraiseRecipes
-import me.shadowalzazel.mcodyssey.items.OdysseyItems
+import me.shadowalzazel.mcodyssey.constants.ItemModels
+import me.shadowalzazel.mcodyssey.items.Ingredients
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
@@ -32,7 +32,7 @@ object OdysseyEnigmaticListeners : Listener {
                                 spawnParticle(Particle.SCULK_SOUL, it.location, 35, 0.25, 0.35, 0.25)
                                 playSound(it.location, Sound.PARTICLE_SOUL_ESCAPE, 4.5F, 1.2F)
                                 playSound(it.location, Sound.BLOCK_SOUL_SAND_BREAK, 2.5F, 1.2F)
-                                dropItem(it.location, OdysseyItems.ECTOPLASM.createItemStack((1..3).random()))
+                                dropItem(it.location, Ingredients.ECTOPLASM.createItemStack((1..3).random()))
                             }
                         }
                     }
@@ -47,7 +47,7 @@ object OdysseyEnigmaticListeners : Listener {
             // Weapon
             if (someKiller.equipment.itemInMainHand.hasItemMeta()) {
                 if (someKiller.equipment.itemInMainHand.itemMeta.hasCustomModelData()) {
-                    if (someKiller.equipment.itemInMainHand.itemMeta.customModelData == OdysseyItemModels.SOUL_STEEL_KATANA) {
+                    if (someKiller.equipment.itemInMainHand.itemMeta.customModelData == ItemModels.SOUL_STEEL_KATANA) {
                         expDrop += 0.15
                     }
                 }
@@ -55,7 +55,7 @@ object OdysseyEnigmaticListeners : Listener {
             // Charm
             if (someKiller.equipment.itemInOffHand.hasItemMeta()) {
                 if (someKiller.equipment.itemInOffHand.itemMeta.hasCustomModelData()) {
-                    if (someKiller.equipment.itemInOffHand.itemMeta.customModelData == OdysseyItemModels.ENIGMATIC_OMAMORI) {
+                    if (someKiller.equipment.itemInOffHand.itemMeta.customModelData == ItemModels.ENIGMATIC_OMAMORI) {
                         expDrop += 0.1
                     }
                 }
@@ -63,7 +63,7 @@ object OdysseyEnigmaticListeners : Listener {
             // Helmet
             if (someKiller.equipment.helmet?.hasItemMeta() == true) {
                 if (someKiller.equipment.helmet.itemMeta.hasCustomModelData()) {
-                    if (someKiller.equipment.helmet.itemMeta.customModelData == OdysseyItemModels.SOUL_STEEL_HELMET) {
+                    if (someKiller.equipment.helmet.itemMeta.customModelData == ItemModels.SOUL_STEEL_HELMET) {
                         expDrop += 0.15
                     }
                 }
@@ -91,7 +91,7 @@ object OdysseyEnigmaticListeners : Listener {
                 val someItem = event.entity as Item
                 for (enigmaticRecipe in SoulBraiseRecipes.BRAISE_SET) {
                     if (enigmaticRecipe.validateRecipe(setOf(someItem), event.combuster!!)) {
-                        enigmaticRecipe.braiseHandler(someItem.itemStack.amount, event.combuster!!.location.clone().toCenterLocation()) //?
+                        enigmaticRecipe.braiseSuccessHandler(someItem.itemStack.amount, event.combuster!!.location.clone().toCenterLocation()) //?
                         break
                     }
                 }

@@ -6,7 +6,7 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object GravityWell : OdysseyEnchantment("gravitywell", "Gravity Well", 3) {
+object GravityWell : OdysseyEnchantment("gravity_well", "Gravity Well", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {

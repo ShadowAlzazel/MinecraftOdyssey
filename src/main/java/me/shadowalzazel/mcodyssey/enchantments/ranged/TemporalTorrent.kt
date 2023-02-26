@@ -6,7 +6,7 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object TemporalTorrent : OdysseyEnchantment("temporaltorrent", "Temporal Torrent", 5) {
+object TemporalTorrent : OdysseyEnchantment("temporal_torrent", "Temporal Torrent", 5) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {

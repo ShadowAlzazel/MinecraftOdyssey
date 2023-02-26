@@ -5,7 +5,7 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object HookShot : OdysseyEnchantment("hookshot", "Hook Shot", 2) {
+object HookShot : OdysseyEnchantment("hook_shot", "Hook Shot", 2) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {

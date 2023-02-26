@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.constants.OdysseyItemModels
+import me.shadowalzazel.mcodyssey.constants.ItemModels
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.Server
@@ -21,7 +21,7 @@ object OdysseyBlockListeners : Listener {
     fun onCustomBlockPlace(event: BlockPlaceEvent) {
         if (event.itemInHand.itemMeta?.hasCustomModelData() == true) {
             when(event.itemInHand.itemMeta.customModelData) {
-                OdysseyItemModels.ELENCUILE_SAPLING -> {
+                ItemModels.ELENCUILE_SAPLING -> {
                     println("I")
                     if (!checkValidIdescineTree(event.block)) { event.isCancelled }
                     else { spawnIdescineTree(event.block, event.player.server) }

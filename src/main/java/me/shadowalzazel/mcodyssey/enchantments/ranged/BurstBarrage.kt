@@ -5,7 +5,7 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object BurstBarrage : OdysseyEnchantment("burstbarrage", "Burst Barrage", 5) {
+object BurstBarrage : OdysseyEnchantment("burst_barrage", "Burst Barrage", 5) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {

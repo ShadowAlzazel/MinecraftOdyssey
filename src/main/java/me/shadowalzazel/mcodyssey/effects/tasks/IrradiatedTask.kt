@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.effects.tasks
 
-import me.shadowalzazel.mcodyssey.constants.OdysseyEffectTags
+import me.shadowalzazel.mcodyssey.constants.EffectTags
 import org.bukkit.entity.LivingEntity
 import org.bukkit.scheduler.BukkitRunnable
 
@@ -12,7 +12,7 @@ class IrradiatedTask(private val irradiatedEntity: LivingEntity, private val irr
 
     override fun run() {
         counter += 1
-        if (OdysseyEffectTags.IRRADIATED !in irradiatedEntity.scoreboardTags) { this.cancel() }
+        if (EffectTags.IRRADIATED !in irradiatedEntity.scoreboardTags) { this.cancel() }
         // Effects
         if (irradiatedEntity.health > healthLimit) { irradiatedEntity.health = healthLimit }
         irradiatedEntity.damage(0.5)
@@ -20,7 +20,7 @@ class IrradiatedTask(private val irradiatedEntity: LivingEntity, private val irr
         // Timer
         val timeElapsed = System.currentTimeMillis() - puffyPricklyCooldown
         if (irradiatedCount < counter || timeElapsed > irradiatedCount * 1000) {
-            irradiatedEntity.scoreboardTags.remove(OdysseyEffectTags.IRRADIATED)
+            irradiatedEntity.scoreboardTags.remove(EffectTags.IRRADIATED)
             this.cancel()
         }
     }

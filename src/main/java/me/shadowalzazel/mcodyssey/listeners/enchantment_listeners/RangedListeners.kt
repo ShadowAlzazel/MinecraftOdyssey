@@ -24,8 +24,8 @@ import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import java.util.*
 import org.bukkit.util.Vector
+import java.util.*
 import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.sin

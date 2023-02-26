@@ -6,7 +6,9 @@ import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.text.Component
 import org.bukkit.*
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.entity.*
+import org.bukkit.entity.EntityType
+import org.bukkit.entity.Hoglin
+import org.bukkit.entity.PiglinBrute
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.potion.PotionEffect
@@ -31,9 +33,9 @@ class HogRiderBoss : OdysseyBoss("Hog Rider", "Piglin") {
         // Add lore and name
         val smokyWarHammerMeta: ItemMeta = smokyWarHammer.itemMeta
         smokyWarHammerMeta.setDisplayName("${ChatColor.GOLD}Puny Smoky War-hammer")
-        val smokyWarHammerLore = listOf("${ChatColor.GOLD}${OdysseyEnchantments.BANE_OF_THE_SWINE.name} V",
-            "${ChatColor.GOLD}${OdysseyEnchantments.FREEZING_ASPECT.name} II",
-            "${ChatColor.GOLD}${OdysseyEnchantments.GUARDING_STRIKE.name} II",
+        val smokyWarHammerLore = listOf("${ChatColor.GOLD}${OdysseyEnchantments.BANE_OF_THE_SWINE.enchantName} V",
+            "${ChatColor.GOLD}${OdysseyEnchantments.FREEZING_ASPECT.enchantName} II",
+            "${ChatColor.GOLD}${OdysseyEnchantments.GUARDING_STRIKE.enchantName} II",
             "A weapon ironic in name", "That has slaughtered many")
         smokyWarHammerMeta.lore = smokyWarHammerLore
 

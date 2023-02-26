@@ -6,7 +6,7 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object CullTheWeak : OdysseyEnchantment("culltheweak", "Cull the Weak", 3) {
+object CullTheWeak : OdysseyEnchantment("cull_the_weak", "Cull the Weak", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {

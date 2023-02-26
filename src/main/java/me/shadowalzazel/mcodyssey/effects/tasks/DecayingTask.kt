@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.effects.tasks
 
+import me.shadowalzazel.mcodyssey.constants.EffectTags
 import org.bukkit.Particle
 import org.bukkit.entity.LivingEntity
 import org.bukkit.scheduler.BukkitRunnable
@@ -13,7 +14,7 @@ class DecayingTask(private val decayingVictim: LivingEntity, private val decayin
         decayingVictim.also {
             counter += 1
             // Check if no longer decaying
-            if ("Decaying" !in decayingVictim.scoreboardTags) { this.cancel() }
+            if (EffectTags.DECAYING !in decayingVictim.scoreboardTags) { this.cancel() }
 
             with(it.world) {
                 val someLocation = it.location.clone().add(0.0, 0.5, 0.0)
@@ -36,7 +37,7 @@ class DecayingTask(private val decayingVictim: LivingEntity, private val decayin
             // Every 2 sec
             val timeElapsed = System.currentTimeMillis() - decayCooldown
             if ( counter > decayingCount || timeElapsed > (decayingCount * 2) * 1000) {
-                if (!it.isDead) it.scoreboardTags.remove("Decaying")
+                if (!it.isDead) it.scoreboardTags.remove(EffectTags.DECAYING)
                 this.cancel()
             }
         }

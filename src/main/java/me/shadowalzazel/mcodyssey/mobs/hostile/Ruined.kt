@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.mobs.hostile
 
-import me.shadowalzazel.mcodyssey.items.OdysseyWeapons
+import me.shadowalzazel.mcodyssey.items.Weapons
 import me.shadowalzazel.mcodyssey.mobs.utility.OdysseyMob
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -21,14 +21,14 @@ object Ruined : OdysseyMob("Ruined", EntityType.STRAY, 30.0) {
                 PotionEffect(PotionEffectType.INCREASE_DAMAGE, 99999, 4),
                 PotionEffect(PotionEffectType.FAST_DIGGING, 99999, 8)
             ))
-            // Misc
+            // Miscellaneous
             health = 50.0
             canPickupItems = true
 
             clearActiveItem()
             customName(Component.text(odysseyName, TextColor.color(220, 216, 75)))
             // Dagger
-            val newClaymore = OdysseyWeapons.DIAMOND_CLAYMORE.createItemStack(1).apply {
+            val newClaymore = Weapons.DIAMOND_CLAYMORE.createItemStack(1).apply {
                 addUnsafeEnchantment(Enchantment.DURABILITY, 3)
                 addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5)
                 addUnsafeEnchantment(Enchantment.KNOCKBACK, 3)

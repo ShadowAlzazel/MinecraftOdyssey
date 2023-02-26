@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.listeners
 
-import me.shadowalzazel.mcodyssey.constants.OdysseyItemModels
+import me.shadowalzazel.mcodyssey.constants.ItemModels
 import net.kyori.adventure.text.TextComponent
 import org.bukkit.Material
 import org.bukkit.Particle
@@ -29,34 +29,34 @@ object OdysseyFoodListeners : Listener {
                     Material.COOKIE -> {
                         // Cookie match
                         when (someFood.itemMeta.customModelData) {
-                            OdysseyItemModels.BEETROOT_COOKIE -> {
+                            ItemModels.BEETROOT_COOKIE -> {
                                 somePlayer.addPotionEffect(PotionEffect(PotionEffectType.INCREASE_DAMAGE, 4 * 20, 0))
                             }
-                            OdysseyItemModels.PUMPKIN_COOKIE -> {
+                            ItemModels.PUMPKIN_COOKIE -> {
                                 somePlayer.addPotionEffect(PotionEffect(PotionEffectType.FAST_DIGGING, 5 * 20, 0))
                             }
-                            OdysseyItemModels.HONEY_COOKIE -> {
+                            ItemModels.HONEY_COOKIE -> {
                                 somePlayer.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION, 4 * 20, 0))
                             }
-                            OdysseyItemModels.APPLE_COOKIE -> {
+                            ItemModels.APPLE_COOKIE -> {
                                 somePlayer.addPotionEffect(PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 4 * 20, 0))
                             }
-                            OdysseyItemModels.BERRY_COOKIE -> {
+                            ItemModels.BERRY_COOKIE -> {
                                 somePlayer.addPotionEffect(PotionEffect(PotionEffectType.INCREASE_DAMAGE, 2 * 20, 0))
                             }
-                            OdysseyItemModels.GLOWBERRY_COOKIE -> {
+                            ItemModels.GLOW_BERRY_COOKIE -> {
                                 somePlayer.addPotionEffect(PotionEffect(PotionEffectType.GLOWING, 2 * 20, 0))
                             }
-                            OdysseyItemModels.MELON_COOKIE -> {
+                            ItemModels.MELON_COOKIE -> {
                                 somePlayer.addPotionEffect(PotionEffect(PotionEffectType.REGENERATION, 3 * 20, 0))
                             }
-                            OdysseyItemModels.SUGAR_COOKIE -> {
+                            ItemModels.SUGAR_COOKIE -> {
                                 somePlayer.addPotionEffect(PotionEffect(PotionEffectType.SPEED, 5 * 20, 0))
                             }
-                            OdysseyItemModels.GOLDEN_COOKIE -> {
+                            ItemModels.GOLDEN_COOKIE -> {
                                 somePlayer.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION, 15 * 20, 1))
                             }
-                            OdysseyItemModels.CHORUS_COOKIE -> {
+                            ItemModels.CHORUS_COOKIE -> {
                                 somePlayer.teleport(somePlayer.location.clone().add(((0..50).random().div(10.0)), 8.0, ((0..50).random().div(10.0))))
                             }
                         }
