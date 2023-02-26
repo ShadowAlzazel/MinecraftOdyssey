@@ -6,7 +6,7 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object PotionBarrier : OdysseyEnchantment("potionbarrier", "Potion Barrier", 2) {
+object PotionBarrier : OdysseyEnchantment("potion_barrier", "Potion Barrier", 2) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {

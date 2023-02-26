@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.mobs.neutral
 
 import me.shadowalzazel.mcodyssey.mobs.utility.OdysseyMob
-import me.shadowalzazel.mcodyssey.recipes.TradingRecipes
+import me.shadowalzazel.mcodyssey.recipe_creators.Merchant
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Location
@@ -23,7 +23,7 @@ object DubiousDealer : OdysseyMob("Dubious Dealer", EntityType.WANDERING_TRADER,
                 PotionEffect(PotionEffectType.SPEED, 99999, 2),
                 PotionEffect(PotionEffectType.FAST_DIGGING, 99999, 8)
             ))
-            // Misc
+            // Miscellaneous
             health = 40.0
             canPickupItems = true
             clearActiveItem()
@@ -40,7 +40,9 @@ object DubiousDealer : OdysseyMob("Dubious Dealer", EntityType.WANDERING_TRADER,
                 it.leggingsDropChance = 0F
                 it.bootsDropChance = 0F
             }
-            setRecipe(0, TradingRecipes.tradeList[0])
+            // TODO!! Recipe
+            val trade = Merchant().createHourglassTradeRecipe()
+            setRecipe(1, trade)
         }
         return dubiousDealerEntity
     }

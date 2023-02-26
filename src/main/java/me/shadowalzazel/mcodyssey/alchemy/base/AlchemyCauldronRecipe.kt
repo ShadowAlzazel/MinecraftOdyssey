@@ -1,19 +1,24 @@
 package me.shadowalzazel.mcodyssey.alchemy.base
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.items.utility.OdysseyPotion
+import me.shadowalzazel.mcodyssey.items.Potions.createPotion
+import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Item
 import org.bukkit.inventory.ItemStack
 
-open class AlchemyCauldronRecipe(private val odysseyPotion: OdysseyPotion, private val ingredientList: List<ItemStack>, private val ingredientSize: Int, private val fuelBlock: Material) {
+open class AlchemyCauldronRecipe(
+    private val brewedPotion: OdysseyItem,
+    private val ingredientList: List<ItemStack>,
+    private val ingredientSize: Int,
+    private val fireMaterial: Material) {
 
     // Validation Recipe Function
     fun validateRecipe(someItemEntities: MutableCollection<Item>, someFuel: Material): Boolean {
         var valid = false
         // Check fuel
-        if ((someItemEntities.size == ingredientSize) && someFuel == fuelBlock) {
+        if ((someItemEntities.size == ingredientSize) && someFuel == fireMaterial) {
             val someItemEntitiesCollection: MutableCollection<Item> = someItemEntities.toCollection(mutableListOf())
             // Check if items not in ingredient list for recipe
             for (someItem: Item in someItemEntitiesCollection) {
@@ -35,7 +40,8 @@ open class AlchemyCauldronRecipe(private val odysseyPotion: OdysseyPotion, priva
             itemEntity.remove()
         }
         // Runs alchemy task ticking every 0.5 seconds
-        val alchemyTask = AlchemyCauldronTask(someBlock, odysseyPotion.createItemStack(1))
+        val result = if (brewedPotion.potionEffects != null) { brewedPotion.createPotion() } else { brewedPotion.createItemStack(1) }
+        val alchemyTask = AlchemyCauldronTask(someBlock, result)
         alchemyTask.runTaskTimer(Odyssey.instance, 0, 2)
     }
 }

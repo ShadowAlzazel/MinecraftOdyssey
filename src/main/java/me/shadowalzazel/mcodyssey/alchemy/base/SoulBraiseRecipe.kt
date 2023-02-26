@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.alchemy.base
 
+import me.shadowalzazel.mcodyssey.alchemy.utility.BraiseBase
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import me.shadowalzazel.mcodyssey.mobs.utility.OdysseyMob
 import org.bukkit.Location
@@ -14,41 +15,43 @@ open class SoulBraiseRecipe(
     private val itemResult: OdysseyItem?,
     private val mobSummon: OdysseyMob?,
     private val braiseIngredients: List<ItemStack>,
-    private val braiseBase: Set<Material>,
-    private val lattice: Set<Pair<Double, Double>>) {
+    private val braiseMaterial: Set<Material>,
+    private val braiseBase: BraiseBase) {
 
-    fun validateRecipe(someIngredients: Set<Item>, someAlterFire: Block): Boolean {
-        for (item in someIngredients) {
-            if (item.itemStack !in braiseIngredients) { return false }
+    fun validateRecipe(someIngredients: Set<Item>, fireBlock: Block): Boolean {
+        // Check items
+        someIngredients.forEach {
+            if (it.itemStack !in braiseIngredients) { return false }
         }
-        val location = someAlterFire.location.clone().toCenterLocation().add(0.0, -1.0, 0.0)
-        for (lat in lattice) {
-            if (location.clone().add(lat.first, 0.0, lat.second).block.type !in braiseBase) { return false }
+        // Check blocks
+        val braiseLocation = fireBlock.location.clone().toCenterLocation().add(0.0, -1.0, 0.0)
+        braiseBase.blockCoords.forEach {
+            if (braiseLocation.clone().add(it.first, it.second, it.third).block.type !in braiseMaterial) { return false }
         }
+
         // Remove item entity for success
         someIngredients.forEach { it.remove() }
         return true
     }
 
-    fun braiseHandler(amount: Int, location: Location) {
-        val lattice = setOf(Pair(1.0, 0.0), Pair(-1.0, 0.0), Pair(0.0, 1.0), Pair(0.0, -1.0))
-        // Remove lattice
-        for (lat in lattice) {
-            val someBlock = location.clone().add(lat.first, -1.0, lat.second).block
-            someBlock.type = Material.AIR
+    fun braiseSuccessHandler(amount: Int, someLocation: Location) {
+        // Remove blocks
+        val braiseLocation = someLocation.clone().toCenterLocation().add(0.0, -1.0, 0.0)
+        braiseLocation.block.type = Material.AIR
+        braiseBase.blockCoords.forEach {
+            braiseLocation.clone().add(it.first, it.second, it.third).block.type = Material.AIR
         }
-        // Remove block
-        location.clone().toCenterLocation().add(0.0, -1.0, 0.0).block.also { it.type = Material.AIR }
 
         // World Particles
-        with(location.world) {
-            spawnParticle(Particle.SOUL, location, 35, 0.05, 0.35, 0.05)
-            spawnParticle(Particle.SCULK_SOUL, location, 35, 0.25, 0.35, 0.25)
-            playSound(location, Sound.PARTICLE_SOUL_ESCAPE, 4.5F, 1.2F)
-            playSound(location, Sound.BLOCK_SOUL_SAND_BREAK, 2.5F, 1.2F)
-            if (itemResult != null) { dropItem(location.clone().add(0.0, 0.75, 0.0), itemResult.createItemStack(amount)) }
-            mobSummon?.createMob(location.world, location)
+        with(someLocation.world) {
+            spawnParticle(Particle.SOUL, someLocation, 35, 0.05, 0.35, 0.05)
+            spawnParticle(Particle.SCULK_SOUL, someLocation, 35, 0.25, 0.35, 0.25)
+            playSound(someLocation, Sound.PARTICLE_SOUL_ESCAPE, 4.5F, 1.2F)
+            playSound(someLocation, Sound.BLOCK_SOUL_SAND_BREAK, 2.5F, 1.2F)
         }
+
+        if (itemResult != null) { someLocation.world.dropItem(someLocation.clone().add(0.0, 0.75, 0.0), itemResult.createItemStack(amount)) }
+        mobSummon?.createMob(someLocation.world, someLocation)
 
 
     }

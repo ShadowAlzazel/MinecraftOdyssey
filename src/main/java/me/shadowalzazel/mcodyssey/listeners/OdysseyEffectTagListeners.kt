@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.listeners
 
-import me.shadowalzazel.mcodyssey.constants.OdysseyEffectTags
+import me.shadowalzazel.mcodyssey.constants.EffectTags
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.entity.EntityType
@@ -35,11 +35,11 @@ object OdysseyEffectTagListeners : Listener {
                     "Vengeance_Marked_3" -> {
                         event.damage += 7
                     }
-                    OdysseyEffectTags.THORNY -> {
+                    EffectTags.THORNY -> {
                         if (event.damager is LivingEntity) { (event.damager as LivingEntity).damage(2.0) }
                         remove = false
                     }
-                    OdysseyEffectTags.PUFFY_PRICKLY -> {
+                    EffectTags.MIASMA -> {
                         if (event.damager is LivingEntity) {
                             (event.damager as LivingEntity).damage(2.0)
                             (event.damager as LivingEntity).addPotionEffect(PotionEffect(PotionEffectType.POISON, 20 * 10, 0)) // TODO: Maybe make proper effect
@@ -62,7 +62,7 @@ object OdysseyEffectTagListeners : Listener {
         val someVictim = event.entity
         someVictim.scoreboardTags.forEach {
             when (it) {
-                OdysseyEffectTags.ACCURSED -> {
+                EffectTags.ACCURSED -> {
                     if (someVictim.type == EntityType.VILLAGER) {
                         (someVictim as Villager).zombify()
                         someVictim.scoreboardTags.remove(it)

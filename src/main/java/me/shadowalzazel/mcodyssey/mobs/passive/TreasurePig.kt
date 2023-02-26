@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.mobs.passive
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.items.OdysseyItems
+import me.shadowalzazel.mcodyssey.items.Ingredients
 import me.shadowalzazel.mcodyssey.mobs.utility.FallingBlockTimer
 import me.shadowalzazel.mcodyssey.mobs.utility.OdysseyMob
 import net.kyori.adventure.text.Component
@@ -16,8 +16,7 @@ import org.bukkit.scheduler.BukkitRunnable
 
 object TreasurePig: OdysseyMob("Treasure Pig", EntityType.PIG, 100.0) {
 
-    private val droppingLootTable = listOf(OdysseyItems.REFINED_NEPTUNIAN_DIAMONDS, OdysseyItems.REFINED_IOJOVIAN_EMERALDS,
-        OdysseyItems.PURE_ALLOY_GOLD, OdysseyItems.PURE_ALLOY_COPPER, OdysseyItems.GALVANIZED_STEEL)
+    private val droppingLootTable = listOf(Ingredients.NEPTUNIAN_DIAMOND, Ingredients.JOVIAN_EMERALD, Ingredients.KUNZITE)
 
     override fun createMob(someWorld: World, spawningLocation: Location): Pig {
         // Some Block

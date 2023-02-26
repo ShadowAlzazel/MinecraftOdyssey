@@ -2,14 +2,21 @@ package me.shadowalzazel.mcodyssey.listeners
 
 import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
+import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.ChatColor
+import org.bukkit.Color
+import org.bukkit.FireworkEffect
+import org.bukkit.Location
 import org.bukkit.entity.EntityType
+import org.bukkit.entity.Firework
 import org.bukkit.entity.Snowman
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.weather.LightningStrikeEvent
+import org.bukkit.inventory.meta.FireworkMeta
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
@@ -28,68 +35,56 @@ object OdysseyMiscListeners : Listener {
         }
     }
 
-
-    // Misc snow man immunity
-    @EventHandler
-    fun snowManDamage(event: CreatureSpawnEvent) {
-        val snowSpawn = event.spawnReason
-        val anEntity = event.entity
-        if (snowSpawn == CreatureSpawnEvent.SpawnReason.BUILD_SNOWMAN) {
-            val anEntityLocationX = anEntity.location.blockX
-            val anEntityLocationY = anEntity.location.blockY
-            val anEntityLocationZ = anEntity.location.blockZ
-            //val anEntityBlock = anEntity.world.getBlockAt(anEntity.location.blockX, anEntity.location.blockY, anEntity.location.blockZ)
-            if (anEntity.world.getTemperature(anEntityLocationX, anEntityLocationY, anEntityLocationZ) >= 1) {
-                //change to powder snow
-                val snowMan = event.entity as Snowman
-                if (true) {
-                    val snowSkin = PotionEffect(PotionEffectType.FIRE_RESISTANCE, 9999999, 1)
-                    anEntity.addPotionEffect(snowSkin)
-                }
-            }
-        }
-    }
-
-
-
     @EventHandler
     fun chargeAmethyst(event: LightningStrikeEvent) {
         if (event.cause != LightningStrikeEvent.Cause.TRIDENT) {
             // DO CHARGE?
         }
-
     }
 
     // TEST
     // Elytra Mechanics
     @EventHandler
     fun elytraBoost(event: PlayerElytraBoostEvent) {
-        var boostFailureChance = 0.15
-        var boostFailureDamage = 20.0
+        if ((event.itemStack.itemMeta!! as FireworkMeta).power > 3) {
+            var boostFailureChance = 0.05 + ((event.itemStack.itemMeta as FireworkMeta).power * 0.05) // FOR DURATION
+            var boostFailureDamage = ((event.itemStack.itemMeta as FireworkMeta).power * 0.5) - 0.5
+            var dudChance = 0.1
 
-        // Lower Boost Failure Chance
-        if (event.itemStack.lore()?.contains(Component.text("Magma_Cream")) == true) { // Change to detect component var
-            boostFailureChance -= 0.10
-        }
+            val loreComponent = listOf(Component.text("Danger!", TextColor.color(255, 55, 55)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))
 
-        // DUD?
-
-        if ((boostFailureChance * 100) > (0..100).random()) {
-
-            // EXPLODE !!
-
-            // Lower Boost Failure Damage
+            // Maybe
             if (event.itemStack.lore()?.contains(Component.text("Blaze_Powder")) == true) { // Change to detect component var
-                boostFailureDamage -= 15.0
+                boostFailureDamage -= 2.0
             }
 
-            // Change to explode fireball
-            event.player.damage(boostFailureDamage)
-
-
+            if ((boostFailureChance * 100) > (0..100).random()) {
+                event.firework.detonate()
+                createDetonatingFirework(event.player.location)
+                event.player.damage(boostFailureDamage)
+            }
         }
+    }
 
 
+    private fun createDetonatingFirework(targetLocation: Location): Firework {
+        val randomColors = listOf(Color.BLUE, Color.RED, Color.YELLOW, Color.FUCHSIA, Color.AQUA)
+        val superFirework: Firework = (targetLocation.world.spawnEntity(targetLocation, EntityType.FIREWORK) as Firework).apply {
+            fireworkMeta = fireworkMeta.clone().also {
+                it.addEffect(
+                    FireworkEffect.builder()
+                    .with(FireworkEffect.Type.BALL_LARGE)
+                    .withColor(randomColors.random())
+                    .withFade(randomColors.random())
+                    .trail(true)
+                    .flicker(true)
+                    .build()
+                )
+            }
+            fireworkMeta.power = 1
+            ticksToDetonate = 0
+        }
+        return superFirework
     }
 
 

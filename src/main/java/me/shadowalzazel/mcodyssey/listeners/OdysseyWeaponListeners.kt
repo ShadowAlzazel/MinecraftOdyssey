@@ -1,12 +1,12 @@
 package me.shadowalzazel.mcodyssey.listeners
 
-import me.shadowalzazel.mcodyssey.constants.OdysseyItemModels
-import me.shadowalzazel.mcodyssey.constants.OdysseyWeaponAttributes.BLUDGEON_MAP
-import me.shadowalzazel.mcodyssey.constants.OdysseyWeaponAttributes.CLEAVE_MAP
-import me.shadowalzazel.mcodyssey.constants.OdysseyWeaponAttributes.LACERATE_MAP
-import me.shadowalzazel.mcodyssey.constants.OdysseyWeaponAttributes.PIERCE_MAP
-import me.shadowalzazel.mcodyssey.constants.OdysseyWeaponAttributes.REACH_MAP
-import me.shadowalzazel.mcodyssey.constants.OdysseyWeaponAttributes.SWEEP_MAP
+import me.shadowalzazel.mcodyssey.constants.ItemModels
+import me.shadowalzazel.mcodyssey.constants.WeaponMaps.BLUDGEON_MAP
+import me.shadowalzazel.mcodyssey.constants.WeaponMaps.CLEAVE_MAP
+import me.shadowalzazel.mcodyssey.constants.WeaponMaps.LACERATE_MAP
+import me.shadowalzazel.mcodyssey.constants.WeaponMaps.PIERCE_MAP
+import me.shadowalzazel.mcodyssey.constants.WeaponMaps.REACH_MAP
+import me.shadowalzazel.mcodyssey.constants.WeaponMaps.SWEEP_MAP
 
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -166,7 +166,7 @@ object OdysseyWeaponListeners : Listener {
             if (mainWeapon.itemMeta?.hasCustomModelData() == true) {
                 when (mainWeapon.itemMeta.customModelData) {
                     // Staff AOE
-                    OdysseyItemModels.WOODEN_STAFF, OdysseyItemModels.BONE_STAFF, OdysseyItemModels.BAMBOO_STAFF, OdysseyItemModels.BLAZE_ROD_STAFF -> {
+                    ItemModels.WOODEN_STAFF, ItemModels.BONE_STAFF, ItemModels.BAMBOO_STAFF, ItemModels.BLAZE_ROD_STAFF -> {
                         // Empty Hand
                         if (somePlayer.equipment.itemInOffHand.type == Material.AIR) {
                             // TODO: Fix
@@ -178,7 +178,7 @@ object OdysseyWeaponListeners : Listener {
                         }
                     }
                     // Warhammer
-                    OdysseyItemModels.IRON_WARHAMMER -> {
+                    ItemModels.WARHAMMER -> {
                         // SUPER ATTACK?
                         if (somePlayer.equipment.itemInOffHand.type == Material.AIR) {
                             //  Step Forward
@@ -199,7 +199,7 @@ object OdysseyWeaponListeners : Listener {
 
                         }
                     }
-                    OdysseyItemModels.NETHERITE_ZWEIHANDER -> {
+                    ItemModels.ZWEIHANDER -> {
                         // Empty Hand
                         if (somePlayer.equipment.itemInOffHand.type == Material.AIR) {
                             //  Step Forward
@@ -242,7 +242,7 @@ object OdysseyWeaponListeners : Listener {
             if (offHandWeapon.itemMeta?.hasCustomModelData() == true) {
                 when (offHandWeapon.itemMeta.customModelData) {
                     // Dagger
-                    OdysseyItemModels.DIAMOND_DAGGER -> {
+                    ItemModels.DAGGER -> {
                         // Left click offhand
                         val reachedEntity = getReachedTarget(somePlayer, REACH_MAP[offHandWeapon.itemMeta.customModelData])
                         if (reachedEntity is LivingEntity) {
@@ -285,25 +285,25 @@ object OdysseyWeaponListeners : Listener {
 
                 // Make crit and still combos !!
                 when (val weaponData = someWeapon.itemMeta.customModelData) {
-                    OdysseyItemModels.DIAMOND_DAGGER -> {
+                    ItemModels.DAGGER -> {
                         if (someVictim !in someDamager.getNearbyEntities(1.9, 1.9, 1.9)) {
                             event.isCancelled = true
                             return
                         }
                     }
-                    OdysseyItemModels.WOODEN_SPEAR -> {
+                    ItemModels.WOODEN_SPEAR -> {
                         if (someVictim in someDamager.getNearbyEntities(1.25, 1.25, 1.25)) {
                             event.isCancelled = true
                             return
                         }
                     }
-                    OdysseyItemModels.IRON_HALBERD -> {
+                    ItemModels.WOODEN_HALBERD -> {
                         if (someVictim in someDamager.getNearbyEntities(1.5, 1.5, 1.5) || (someOffHand.type != Material.AIR && someOffHand.type != Material.SHIELD)) {
                             event.isCancelled = true
                             return
                         }
                     }
-                    OdysseyItemModels.BAMBOO_STAFF, OdysseyItemModels.WOODEN_STAFF, OdysseyItemModels.BONE_STAFF, OdysseyItemModels.BLAZE_ROD_STAFF -> {
+                    ItemModels.BAMBOO_STAFF, ItemModels.WOODEN_STAFF, ItemModels.BONE_STAFF, ItemModels.BLAZE_ROD_STAFF -> {
                         if (event.isCritical) {
                             doWeaponSweep(someVictim, someDamager, SWEEP_MAP[weaponData]!!, event.damage + 2)
                         } else {
@@ -311,13 +311,13 @@ object OdysseyWeaponListeners : Listener {
                         }
 
                     }
-                    OdysseyItemModels.DIAMOND_LONG_AXE -> {
+                    ItemModels.LONG_AXE -> {
                         if (someOffHand.type != Material.AIR) {
                             val minimumDamage = minOf(event.damage, 5.0)
                             event.damage -= minimumDamage
                         }
                     }
-                    OdysseyItemModels.DIAMOND_KATANA, OdysseyItemModels.SOUL_STEEL_KATANA -> {
+                    ItemModels.KATANA, ItemModels.SOUL_STEEL_KATANA -> {
                         // Rabbit Hide -> Sheath
                         if (event.isCritical && (someOffHand.type == Material.AIR || someOffHand.type == Material.RABBIT_HIDE)) {
                             doWeaponSweep(someVictim, someDamager, SWEEP_MAP[weaponData]!!, event.damage)
@@ -327,7 +327,7 @@ object OdysseyWeaponListeners : Listener {
                         }
                         // Piercing?
                     }
-                    OdysseyItemModels.DIAMOND_CLAYMORE -> {
+                    ItemModels.CLAYMORE -> {
                         if (someOffHand.type != Material.AIR) {
                             val minimumDamage = minOf(event.damage, 5.0)
                             event.damage -= minimumDamage
@@ -341,7 +341,7 @@ object OdysseyWeaponListeners : Listener {
                         }
                         // SWEEP PARTICLES!!!
                     }
-                    OdysseyItemModels.NETHERITE_ZWEIHANDER -> {
+                    ItemModels.ZWEIHANDER -> {
                         // Stab Or Custom Sweep
                         if (event.cause == EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) {
                             event.isCancelled = true

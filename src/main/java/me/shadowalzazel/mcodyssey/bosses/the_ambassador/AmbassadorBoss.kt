@@ -2,10 +2,10 @@ package me.shadowalzazel.mcodyssey.bosses.the_ambassador
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.bosses.base.OdysseyBoss
-import me.shadowalzazel.mcodyssey.constants.OdysseyUUIDs
+import me.shadowalzazel.mcodyssey.constants.Identifiers
+import me.shadowalzazel.mcodyssey.items.Miscellaneous
+import me.shadowalzazel.mcodyssey.items.Weapons
 import me.shadowalzazel.mcodyssey.listeners.tasks.GravityWellTask
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.items.*
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.TextColor
@@ -17,6 +17,7 @@ import org.bukkit.entity.*
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import java.util.*
+
 // Experimental
 
 
@@ -36,8 +37,19 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
     //
     internal var angered: Boolean = false
     // Gifts
-    private val itemLootTable = listOf(OdysseyItems.REFINED_IOJOVIAN_EMERALDS, OdysseyItems.PURE_ALLOY_GOLD, OdysseyItems.POLYMORPHIC_GLUE,
-        OdysseyItems.PURE_ALLOY_COPPER, OdysseyItems.GALVANIZED_STEEL, OdysseyItems.REFINED_NEPTUNIAN_DIAMONDS)
+    /*
+    private val itemLootTable = listOf(Miscellaneous.REFINED_IOJOVIAN_EMERALDS, Miscellaneous.PURE_ALLOY_GOLD, Miscellaneous.POLYMORPHIC_GLUE,
+        Miscellaneous.PURE_ALLOY_COPPER, Miscellaneous.GALVANIZED_STEEL, Miscellaneous.REFINED_NEPTUNIAN_DIAMONDS)
+     */
+    private val itemLootTable = listOf(
+        Material.GOLD_BLOCK,
+        Material.SLIME_BLOCK,
+        Material.WAXED_COPPER_BLOCK,
+        Material.IRON_BLOCK,
+        Material.DIAMOND,
+        Material.EMERALD,
+    )
+
     // Combat Mechanic
     private var takeDamageCooldown: Long = 0L
 
@@ -107,14 +119,14 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
             canPickupItems = true
 
             // Health
-            val mobHealth = AttributeModifier(OdysseyUUIDs.ODYSSEY_BOSS_HEALTH_UUID, "odyssey_mob_health", 930.0, AttributeModifier.Operation.ADD_NUMBER)
+            val mobHealth = AttributeModifier(Identifiers.ODYSSEY_BOSS_HEALTH_UUID, "odyssey_mob_health", 930.0, AttributeModifier.Operation.ADD_NUMBER)
             val healthAttribute = getAttribute(Attribute.GENERIC_MAX_HEALTH)
             healthAttribute!!.addModifier(mobHealth)
             health = 950.0
 
             // Add Kinetic Blaster
             clearActiveItem()
-            equipment.setItemInMainHand(OdysseyWeapons.KINETIC_BLASTER.createItemStack(1))
+            equipment.setItemInMainHand(Weapons.KINETIC_BLASTER.createItemStack(1))
         }
         return newAmbassadorEntity
     }
@@ -124,8 +136,8 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         if (ambassadorEntity == bossEntity) {
             if (vanquisher is Player) {
                 // Spawn loot near vanquisher
-                vanquisher.world.dropItem(vanquisher.location, (OdysseyBooks.GILDED_BOOK.createGildedBook(OdysseyEnchantments.GRAVITY_WELL, 1)))
-                vanquisher.world.dropItem(vanquisher.location, (OdysseyItems.GEMMA_PRIMUS.createItemStack(15)))
+                //vanquisher.world.dropItem(vanquisher.location, (Runic.GILDED_BOOK.createGildedBook(OdysseyEnchantments.GRAVITY_WELL, 1)))
+                vanquisher.world.dropItem(vanquisher.location, (Miscellaneous.PRIMO_GEM.createItemStack(15)))
                 vanquisher.giveExpLevels(10)
             }
             val vanquisherName = vanquisher?.name ?: "An unknown Hero"
@@ -179,7 +191,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 PotionEffect(PotionEffectType.SLOW, 20 * 300, 1)))
             // Add Item
             clearActiveItem()
-            equipment.setItemInMainHand(OdysseyWeapons.KINETIC_BLASTER.createItemStack(1))
+            equipment.setItemInMainHand(Weapons.KINETIC_BLASTER.createItemStack(1))
         }
     }
 
@@ -461,13 +473,14 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
         val likenessReward = (playerLikeness[givingPlayer.uniqueId]!! / 25).toInt() + 1
         // Checks if gift in when, and deletes if accepted
         val someGift = itemLootTable.random()
+        /*
         when (giftedMaterial) {
             Material.NETHER_STAR -> {
                 bossEntity?.world!!.spawnParticle(Particle.SPELL_WITCH, givingPlayer.location, 35, 1.0, 1.0, 1.0)
                 giftLikeness += 45
                 givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}An unborn Unit-${ChatColor.MAGIC}092412X.${ChatColor.RESET}. I shall start its sentience activation cycle for you...")
-                givingPlayer.inventory.addItem(OdysseyItems.DORMANT_SENTIENT_STAR.createItemStack(1))
-                val gravityBook = OdysseyBooks.GILDED_BOOK.createGildedBook(OdysseyEnchantments.GRAVITY_WELL, (1..3).random())
+                givingPlayer.inventory.addItem(Miscellaneous.DORMANT_SENTIENT_STAR.createItemStack(1))
+                val gravityBook = Runic.GILDED_BOOK.createGildedBook(OdysseyEnchantments.GRAVITY_WELL, (1..3).random())
                 givingPlayer.inventory.addItem(gravityBook)
             }
             Material.NETHERITE_INGOT -> {
@@ -475,14 +488,14 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 giftLikeness += 6
                 if (appeasement > 50) {
                     givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Hmm casted Neutronium Bark... Here take this special Unit-${ChatColor.MAGIC}092412X.")
-                    givingPlayer.inventory.addItem(OdysseyItems.DORMANT_SENTIENT_STAR.createItemStack(1))
+                    givingPlayer.inventory.addItem(Miscellaneous.DORMANT_SENTIENT_STAR.createItemStack(1))
                 }
                 else {
                     givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Hmm casted Neutronium Bark... Here are some quantum-entangled vacuums repurposed as storage " +
                             "that might help you as well as some gifts")
-                    givingPlayer.inventory.addItem(OdysseyItems.HAWKING_ENTANGLED_UNIT.createItemStack(likenessReward + 2))
-                    givingPlayer.inventory.addItem(OdysseyItems.REFINED_NEPTUNIAN_DIAMONDS.createItemStack(likenessReward * 4))
-                    givingPlayer.inventory.addItem(OdysseyItems.REFINED_IOJOVIAN_EMERALDS.createItemStack(likenessReward * 4))
+                    givingPlayer.inventory.addItem(Miscellaneous.HAWKING_ENTANGLED_UNIT.createItemStack(likenessReward + 2))
+                    givingPlayer.inventory.addItem(Miscellaneous.REFINED_NEPTUNIAN_DIAMONDS.createItemStack(likenessReward * 4))
+                    givingPlayer.inventory.addItem(Miscellaneous.REFINED_IOJOVIAN_EMERALDS.createItemStack(likenessReward * 4))
                 }
             }
             Material.DIAMOND, Material.EMERALD, Material.AMETHYST_SHARD -> {
@@ -502,7 +515,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
                 if (appeasement > 50) {
                     givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}This will help you towards mechanization...")
-                    givingPlayer.inventory.addItem(OdysseyItems.KUGELBLITZ_CONTAINMENT_UNIT.createItemStack(1))
+                    givingPlayer.inventory.addItem(Miscellaneous.KUGELBLITZ_CONTAINMENT_UNIT.createItemStack(1))
                 }
             }
             Material.ACACIA_LOG, Material.OAK_LOG, Material.SPRUCE_LOG, Material.DARK_OAK_LOG, Material.BIRCH_LOG, Material.JUNGLE_LOG, Material.MANGROVE_LOG,
@@ -512,7 +525,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward))
                 if (appeasement > 50) {
                     givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}This will help you towards industrialization...")
-                    givingPlayer.inventory.addItem(OdysseyItems.POLYMORPHIC_GLUE.createItemStack(6))
+                    givingPlayer.inventory.addItem(Miscellaneous.POLYMORPHIC_GLUE.createItemStack(6))
                 }
             }
             Material.ROTTEN_FLESH -> {
@@ -550,7 +563,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 }
                 else {
                     val randomEnchantments = listOf(OdysseyEnchantments.SPOREFUL, OdysseyEnchantments.SQUIDIFY, OdysseyEnchantments.BACKSTABBER, OdysseyEnchantments.BUZZY_BEES, OdysseyEnchantments.FRUITFUL_FARE, OdysseyEnchantments.POTION_BARRIER)
-                    val randomBook = OdysseyBooks.GILDED_BOOK.createGildedBook(randomEnchantments.random(), 1)
+                    val randomBook = Runic.GILDED_BOOK.createGildedBook(randomEnchantments.random(), 1)
                     givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}So far I can say I am enjoying this...")
                     givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward + 1))
                     givingPlayer.inventory.addItem(randomBook)
@@ -565,7 +578,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 giftLikeness += 50
                 givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}How did you get this?... I did not hear that Vail planted Aether roots from Lupercal...")
                 givingPlayer.sendMessage("${ChatColor.DARK_GRAY}${ChatColor.ITALIC}Do not alert the others... Here take this. Keep it safe, it will help you soon to come...")
-                givingPlayer.inventory.addItem(OdysseyItems.BABEL_ANNULUS_SCHEMATICS.createItemStack(1))
+                givingPlayer.inventory.addItem(Miscellaneous.BABEL_ANNULUS_SCHEMATICS.createItemStack(1))
             }
             Material.DANDELION, Material.POPPY, Material.BLUE_ORCHID, Material.ALLIUM, Material.AZURE_BLUET, Material.ORANGE_TULIP,
             Material.RED_TULIP, Material.WHITE_TULIP, Material.PINK_TULIP, Material.CORNFLOWER, Material.LILY_OF_THE_VALLEY, Material.SUNFLOWER,
@@ -578,7 +591,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 }
                 else if (appeasement >= 45) {
                     givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}This should grow your knowledge and strength in time...")
-                    givingPlayer.inventory.addItem(OdysseyItems.IDESCINE_SAPLING.createItemStack(1))
+                    givingPlayer.inventory.addItem(Miscellaneous.IDESCINE_SAPLING.createItemStack(1))
                 }
             }
             Material.GOAT_HORN -> {
@@ -599,7 +612,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 5))
                 if (appeasement >= 35) {
                     givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}These are some relics I have collected from previous visits...")
-                    val randomBook = OdysseyBooks.GILDED_BOOK.createGildedBook(randomEnchantments.random(), 1)
+                    val randomBook = Runic.GILDED_BOOK.createGildedBook(randomEnchantments.random(), 1)
                     givingPlayer.inventory.addItem(randomBook)
                 }
             }
@@ -608,7 +621,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 bossEntity?.world!!.spawnParticle(Particle.SPELL_WITCH, givingPlayer.location, 35, 1.0, 1.0, 1.0)
                 givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}The ocean is essential to this world's stability! Though, power does not give you an excuse to butcher.")
                 giftLikeness += 45
-                val seaBook = OdysseyBooks.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BANE_OF_THE_SEA, 4)
+                val seaBook = Runic.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BANE_OF_THE_SEA, 4)
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
                 if (appeasement >= 45) {
@@ -621,7 +634,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 bossEntity?.world!!.spawnParticle(Particle.SPELL_WITCH, givingPlayer.location, 35, 1.0, 1.0, 1.0)
                 givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Do no be afraid of the sea or its monsters...")
                 giftLikeness += 30
-                val seaBook = OdysseyBooks.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BANE_OF_THE_SEA, (1..3).random())
+                val seaBook = Runic.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BANE_OF_THE_SEA, (1..3).random())
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
                 givingPlayer.inventory.addItem(seaBook)
@@ -632,7 +645,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 giftLikeness += 45
                 givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Follow the path of doubt...and not blinding light")
                 val randomEnchantments = listOf(OdysseyEnchantments.VOID_JUMP, OdysseyEnchantments.ECHO, OdysseyEnchantments.VOID_STRIKE, OdysseyEnchantments.SOUL_REND, OdysseyEnchantments.BACKSTABBER)
-                val randomBook = OdysseyBooks.GILDED_BOOK.createGildedBook(randomEnchantments.random(), 1)
+                val randomBook = Runic.GILDED_BOOK.createGildedBook(randomEnchantments.random(), 1)
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
                 if (appeasement >= 45) {
@@ -647,7 +660,7 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
                 givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward + 1))
                 if (appeasement >= 65) {
                     givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}This is what a present look like however...")
-                    givingPlayer.inventory.addItem(OdysseyItems.KUGELBLITZ_CONTAINMENT_UNIT.createItemStack(1))
+                    givingPlayer.inventory.addItem(Miscellaneous.KUGELBLITZ_CONTAINMENT_UNIT.createItemStack(1))
                 }
             }
             else -> {
@@ -656,6 +669,9 @@ class AmbassadorBoss : OdysseyBoss("The Ambassador", "Illusioner") {
 
             }
         }
+
+
+         */
         // DO GILDED ENCHANTMENTS
         if (giftAccepted) {
             giftedItem.remove()

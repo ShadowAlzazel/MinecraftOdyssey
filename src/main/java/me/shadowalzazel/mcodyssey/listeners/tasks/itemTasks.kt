@@ -1,6 +1,5 @@
 package me.shadowalzazel.mcodyssey.listeners.tasks
 
-import me.shadowalzazel.mcodyssey.items.OdysseyItems
 import org.bukkit.Color
 import org.bukkit.Particle
 import org.bukkit.entity.Player
@@ -31,7 +30,7 @@ class UnstableAntimatterTask(private val somePlayer: Player) : BukkitRunnable() 
             val timeElapsed = System.currentTimeMillis() - someCooldown
             if ((10 * 20 < counter || timeElapsed > 10 * 1000) && !playerStabilized) {
                 it.scoreboardTags.remove("Unstable_Crafting")
-                it.inventory.remove(OdysseyItems.PURE_ANTIMATTER_CRYSTAL.createItemStack(1))
+                //it.inventory.remove(Miscellaneous.PURE_ANTIMATTER_CRYSTAL.createItemStack(1))
                 it.damage(314.15)
                 this.cancel()
             }

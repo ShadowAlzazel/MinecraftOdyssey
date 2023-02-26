@@ -5,7 +5,7 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object LuckyDraw : OdysseyEnchantment("luckydraw", "Lucky Draw", 3) {
+object LuckyDraw : OdysseyEnchantment("lucky_draw", "Lucky Draw", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {

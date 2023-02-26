@@ -6,7 +6,7 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object SculkAwareness : OdysseyEnchantment("sculkawareness", "Sculk Awareness", 3) {
+object SculkAwareness : OdysseyEnchantment("sculk_awareness", "Sculk Awareness", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {

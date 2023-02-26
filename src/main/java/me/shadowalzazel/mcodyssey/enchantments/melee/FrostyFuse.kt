@@ -6,7 +6,7 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object FrostyFuse : OdysseyEnchantment("frostyfuse", "Frosty Fuse", 3) {
+object FrostyFuse : OdysseyEnchantment("frosty_fuse", "Frosty Fuse", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {

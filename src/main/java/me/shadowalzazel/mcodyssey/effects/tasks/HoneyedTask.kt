@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.effects.tasks
 
+import me.shadowalzazel.mcodyssey.constants.EffectTags
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
@@ -13,7 +14,7 @@ class HoneyedTask(private val honeyedVictim: LivingEntity, private val honeyCoun
         honeyedVictim.also {
             counter += 1
             // Check if still honeyed
-            if ("Honeyed" !in it.scoreboardTags) { this.cancel() }
+            if (EffectTags.HONEYED !in it.scoreboardTags) { this.cancel() }
 
             // Particles and Sound
             with(it.world) {
@@ -30,7 +31,7 @@ class HoneyedTask(private val honeyedVictim: LivingEntity, private val honeyCoun
             // Timing
             val timeElapsed = System.currentTimeMillis() - honeyCooldown
             if (honeyCount < counter || it.health <= 1.0 || timeElapsed > (honeyCount / 2) * 1000) {
-                if (!it.isDead) { it.scoreboardTags.remove("Honeyed") }
+                if (!it.isDead) { it.scoreboardTags.remove(EffectTags.HONEYED) }
                 this.cancel()
             }
 

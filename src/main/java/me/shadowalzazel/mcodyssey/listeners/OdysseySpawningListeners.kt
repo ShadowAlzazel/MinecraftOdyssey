@@ -1,9 +1,10 @@
 package me.shadowalzazel.mcodyssey.listeners
 
-import me.shadowalzazel.mcodyssey.constants.OdysseyUUIDs.ODYSSEY_ENHANCED_MOB_HEALTH_UUID
-import me.shadowalzazel.mcodyssey.constants.OdysseyUUIDs.ODYSSEY_GILDED_MOB_HEALTH_UUID
+import me.shadowalzazel.mcodyssey.constants.Identifiers.ODYSSEY_ENHANCED_MOB_HEALTH_UUID
+import me.shadowalzazel.mcodyssey.constants.Identifiers.ODYSSEY_GILDED_MOB_HEALTH_UUID
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.items.OdysseyBooks
+import me.shadowalzazel.mcodyssey.items.Runic
+import me.shadowalzazel.mcodyssey.items.Runic.createEnchantedBook
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Material
@@ -42,14 +43,14 @@ object OdysseySpawningListeners : Listener {
 
             // Add Item or enchant
             equipment!!.also {
-                if (it.itemInMainHand.type != Material.AIR) { it.itemInMainHand.addUnsafeEnchantment(gildedAffix, gildedAffix.maxLevel) }
-                else { it.setItemInMainHand(OdysseyBooks.GILDED_BOOK.createGildedBook(gildedAffix, gildedAffix.startLevel)) }
+                if (it.itemInMainHand.type != Material.AIR) { it.itemInMainHand.addUnsafeEnchantment(gildedAffix, gildedAffix.maximumLevel) }
+                else { it.setItemInMainHand(Runic.GILDED_BOOK.createEnchantedBook(gildedAffix, gildedAffix.startLevel)) }
                 it.itemInMainHandDropChance = 0.35F
             }
 
             // TODO: Add prefixes and affixes to enchantments
             @Suppress("DEPRECATION")
-            customName((Component.text("${dangerPrefixes.random()} ")).append(name()).append(Component.text(" of ${gildedAffix.name}")).color(TextColor.color(255, 170, 0)))
+            customName((Component.text("${dangerPrefixes.random()} ")).append(name()).append(Component.text(" of ${gildedAffix.enchantName}")).color(TextColor.color(255, 170, 0)))
             isCustomNameVisible = true
 
             // Gilded Health Modifier

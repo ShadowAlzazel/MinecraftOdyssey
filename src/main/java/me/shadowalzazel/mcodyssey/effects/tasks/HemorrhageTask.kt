@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.effects.tasks
 
+import me.shadowalzazel.mcodyssey.constants.EffectTags
 import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.Particle
@@ -14,7 +15,7 @@ class HemorrhageTask(private val hemorrhageVictim: LivingEntity, private val hem
         hemorrhageVictim.also {
             counter += 1
             // Check if still hemorrhaging
-            if ("Hemorrhaging" !in it.scoreboardTags) { this.cancel() }
+            if (EffectTags.HEMORRHAGING !in it.scoreboardTags) { this.cancel() }
 
             // Particles
             with(it.world) {
@@ -34,7 +35,7 @@ class HemorrhageTask(private val hemorrhageVictim: LivingEntity, private val hem
             // Timer
             val timeElapsed = System.currentTimeMillis() - hemorrhageCooldown
             if (6 < counter || it.health <= 0.1 || timeElapsed > 9 * 1000) { // 9 sec
-                if (!it.isDead) { it.scoreboardTags.remove("Hemorrhaging") }
+                if (!it.isDead) { it.scoreboardTags.remove(EffectTags.HEMORRHAGING) }
                 this.cancel()
             }
         }

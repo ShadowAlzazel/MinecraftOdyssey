@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.mobs.hostile
 
-import me.shadowalzazel.mcodyssey.items.OdysseyWeapons
+import me.shadowalzazel.mcodyssey.items.Weapons
 import me.shadowalzazel.mcodyssey.mobs.utility.OdysseyMob
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -24,13 +24,13 @@ object PreacherOfTheAbyss : OdysseyMob("Preacher of the Abyss", EntityType.WITHE
                 PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 99999, 0),
                 PotionEffect(PotionEffectType.SPEED, 99999, 0)
             ))
-            // Misc
+            // Miscellaneous
             health = 150.0
             canPickupItems = true
             clearActiveItem()
             customName(Component.text(this@PreacherOfTheAbyss.odysseyName, TextColor.color(40, 6, 25)))
             // Weapon
-            val newBlade = OdysseyWeapons.ABZU_BLADE.createItemStack(1).apply {
+            val newBlade = Weapons.ABZU_BLADE.createItemStack(1).apply {
             }
             // Add Items
             equipment.also {

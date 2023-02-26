@@ -5,7 +5,7 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object FearfulFinisher : OdysseyEnchantment("fearfulfinisher", "Fearful Finisher", 3) {
+object FearfulFinisher : OdysseyEnchantment("fearful_finisher", "Fearful Finisher", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {

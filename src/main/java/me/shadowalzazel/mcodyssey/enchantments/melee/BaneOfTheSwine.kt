@@ -7,7 +7,7 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object BaneOfTheSwine : OdysseyEnchantment("baneoftheswine", "Bane of the Swine", 5) {
+object BaneOfTheSwine : OdysseyEnchantment("bane_of_the_swine", "Bane of the Swine", 5) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {

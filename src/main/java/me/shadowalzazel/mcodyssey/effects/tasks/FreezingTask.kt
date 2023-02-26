@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.effects.tasks
 
+import me.shadowalzazel.mcodyssey.constants.EffectTags
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.entity.LivingEntity
@@ -13,7 +14,7 @@ class FreezingTask(private val freezingVictim: LivingEntity, private val freezeF
         freezingVictim.also {
             counter += 1
             // Check if still freezing
-            if ("Freezing" !in it.scoreboardTags) { this.cancel() }
+            if (EffectTags.FREEZING !in it.scoreboardTags) { this.cancel() }
 
             // Particles
             with(it.world) {
@@ -35,7 +36,7 @@ class FreezingTask(private val freezingVictim: LivingEntity, private val freezeF
             val timeElapsed = System.currentTimeMillis() - freezeCooldown
             if (freezingCount < counter || it.health <= 0.5 || timeElapsed > freezingCount * 1000) {
                 it.freezeTicks = 0
-                if (!it.isDead) { it.scoreboardTags.remove("Freezing") }
+                if (!it.isDead) { it.scoreboardTags.remove(EffectTags.FREEZING) }
                 this.cancel()
             }
         }

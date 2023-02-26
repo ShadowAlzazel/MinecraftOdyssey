@@ -2,11 +2,11 @@ package me.shadowalzazel.mcodyssey.listeners
 
 import kotlinx.coroutines.*
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.alchemy.AlchemyRecipes
+import me.shadowalzazel.mcodyssey.alchemy.CauldronRecipes
 import me.shadowalzazel.mcodyssey.alchemy.base.AlchemyCauldronRecipe
-import me.shadowalzazel.mcodyssey.effects.*
 import me.shadowalzazel.mcodyssey.coroutine_synchronizers.BrewingEventSynchro
 import me.shadowalzazel.mcodyssey.coroutine_synchronizers.CauldronEventSynchro
+import me.shadowalzazel.mcodyssey.effects.*
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.TextDecoration
@@ -57,7 +57,7 @@ object OdysseyAlchemyListeners : Listener {
     // Helper Coroutine Function for validating cauldron recipes
     private suspend fun validateCauldronRecipe(someItemSet: MutableSet<Item>, someFuelBlock: Material): AlchemyCauldronRecipe? = runBlocking {
         val recipeJob: Deferred<AlchemyCauldronRecipe?> = async {
-            for (recipe in AlchemyRecipes.CAULDRON_SET) {
+            for (recipe in CauldronRecipes.CAULDRON_SET) {
                 val validated: Boolean = recipe.validateRecipe(someItemSet, someFuelBlock)
                 if (validated) {
                     return@async recipe
@@ -170,7 +170,7 @@ object OdysseyAlchemyListeners : Listener {
             "Bottle o' Douse" -> { OdysseyEffectsHandler.dousedEffect(affectedEntities, potionDuration, 2) }
             "Bottle o' Ablaze" -> { OdysseyEffectsHandler.ablazeEffect(affectedEntities, potionDuration, 2) }
             "Potion of Thorns" -> { OdysseyEffectsHandler.thornsEffect(affectedEntities, potionDuration) }
-            "Puffy n' Prickly Potion" -> { OdysseyEffectsHandler.puffyPricklyEffect(affectedEntities, potionDuration) }
+            "Puffy n' Prickly Potion" -> { OdysseyEffectsHandler.miasmaEffect(affectedEntities, potionDuration) }
             "Poltergeist Brew" -> { OdysseyEffectsHandler.accursedEffect(affectedEntities, potionDuration) }
             "Bottled Souls" -> { OdysseyEffectsHandler.soulDamageEffect(affectedEntities, 1) }
             else -> {
@@ -248,7 +248,7 @@ object OdysseyAlchemyListeners : Listener {
                         "Bottle o' Douse" -> { OdysseyEffectsHandler.dousedEffect(mutableListOf(somePlayer), potionDuration, 2) }
                         "Bottle o' Ablaze" -> { OdysseyEffectsHandler.ablazeEffect(mutableListOf(somePlayer), potionDuration, 2) }
                         "Potion of Thorns" -> { OdysseyEffectsHandler.thornsEffect(mutableListOf(somePlayer), potionDuration) }
-                        "Puffy n' Prickly Potion" -> { OdysseyEffectsHandler.puffyPricklyEffect(mutableListOf(somePlayer), potionDuration) }
+                        "Puffy n' Prickly Potion" -> { OdysseyEffectsHandler.miasmaEffect(mutableListOf(somePlayer), potionDuration) }
                         "Poltergeist Brew" -> { OdysseyEffectsHandler.accursedEffect(mutableListOf(somePlayer), potionDuration) }
                         "Bottled Souls" -> { OdysseyEffectsHandler.soulDamageEffect(mutableListOf(somePlayer), 1) }
                         else -> {
@@ -442,7 +442,7 @@ object OdysseyAlchemyListeners : Listener {
                 "Douse_Cloud" -> { OdysseyEffectsHandler.dousedEffect(event.affectedEntities, 40 / 4, 2) }
                 "Blazing_Cloud" -> { OdysseyEffectsHandler.ablazeEffect(event.affectedEntities, 30 / 4, 2) }
                 "Potion of Thorns" -> { OdysseyEffectsHandler.thornsEffect(event.affectedEntities, 50 / 4) }
-                "Puffy_Prickly_Cloud" -> { OdysseyEffectsHandler.puffyPricklyEffect(event.affectedEntities, 40 / 4) }
+                "Puffy_Prickly_Cloud" -> { OdysseyEffectsHandler.miasmaEffect(event.affectedEntities, 40 / 4) }
                 "Escaping_Souls_Cloud" -> { OdysseyEffectsHandler.soulDamageEffect(event.affectedEntities, 1)
                     with(somePotionCloud) { world.spawnParticle(Particle.SCULK_SOUL, location, (radius * 40).toInt(), radius.toDouble(), 0.25, radius.toDouble()) }
                 }

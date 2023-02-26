@@ -6,7 +6,7 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object VoidStrike : OdysseyEnchantment("voidstrike", "Void Strike", 3) {
+object VoidStrike : OdysseyEnchantment("void_strike", "Void Strike", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
