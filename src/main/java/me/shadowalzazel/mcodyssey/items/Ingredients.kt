@@ -26,11 +26,16 @@ object Ingredients {
     val KUNZITE = OdysseyItem(
         name = "kunzite",
         material = Material.EMERALD,
-        displayName = Component.text("Neptunian Diamond", TextColor.color(255, 150, 210), TextDecoration.ITALIC),
-        lore = listOf(Component.text("An pristine emerald harvested from the clouds", TextColor.color(255, 150, 210)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        displayName = Component.text("Kunzite", TextColor.color(255, 150, 210), TextDecoration.ITALIC),
+        lore = listOf(Component.text("TODO", TextColor.color(255, 150, 210)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.JOVIAN_EMERALD)
 
-    // RUBY? -> 210, 64, 64
+    val RUBY = OdysseyItem(
+        name = "ruby",
+        material = Material.EMERALD,
+        displayName = Component.text("Ruby", TextColor.color(210, 64, 64), TextDecoration.ITALIC),
+        lore = listOf(Component.text("TODO", TextColor.color(210, 64, 64)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.JOVIAN_EMERALD)
 
     val IRRADIATED_SHARD = OdysseyItem(
         name = "irradiated_shard",

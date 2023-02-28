@@ -40,7 +40,7 @@ object OdysseyEffectsHandler {
         victimList.forEach {
             if (EffectTags.DOUSED !in it.scoreboardTags) {
                 it.addScoreboardTag(EffectTags.DOUSED)
-                it.addScoreboardTag("Doused_Factor_$amplifier")
+                it.addScoreboardTag("${EffectTags.DOUSE_FACTOR}${amplifier}")
                 val dousedTask = DousedTask(it, duration)
                 dousedTask.runTaskTimer(Odyssey.instance, 0, 20)
             }
@@ -55,18 +55,6 @@ object OdysseyEffectsHandler {
                 it.addScoreboardTag(EffectTags.ABLAZE)
                 val blazingTask = BlazingTask(it, amplifier, duration)
                 blazingTask.runTaskTimer(Odyssey.instance, 0, 20)
-            }
-        }
-    }
-
-    // Soul Damage
-    fun soulDamageEffect(victimList: MutableCollection<LivingEntity>, amplifier: Int = 1) {
-        victimList.forEach {
-            // Souls will not kill only escape violently
-            if (it.health > 4.0) {
-                it.health -= 4.0 * amplifier
-                it.damage(0.01)
-                it.world.spawnParticle(Particle.SCULK_SOUL, it.location, 25, 0.25, 0.35, 0.25)
             }
         }
     }
@@ -100,6 +88,18 @@ object OdysseyEffectsHandler {
                 it.addScoreboardTag(EffectTags.ACCURSED)
                 val accursedTask = AccursedTask(it, duration)
                 accursedTask.runTaskTimer(Odyssey.instance, 0, 20)
+            }
+        }
+    }
+
+    // Soul Damage
+    fun soulDamageEffect(victimList: MutableCollection<LivingEntity>, amplifier: Int = 1) {
+        victimList.forEach {
+            // Souls will not kill only escape violently
+            if (it.health > 4.0) {
+                it.health -= 4.0 * amplifier
+                it.damage(0.01)
+                it.world.spawnParticle(Particle.SCULK_SOUL, it.location, 25, 0.25, 0.35, 0.25)
             }
         }
     }
