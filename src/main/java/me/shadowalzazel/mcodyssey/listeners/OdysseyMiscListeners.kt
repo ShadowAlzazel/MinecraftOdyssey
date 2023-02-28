@@ -38,7 +38,7 @@ object OdysseyMiscListeners : Listener {
     @EventHandler
     fun chargeAmethyst(event: LightningStrikeEvent) {
         if (event.cause != LightningStrikeEvent.Cause.TRIDENT) {
-            // DO CHARGE?
+            // DO CHARGE? ->
         }
     }
 
@@ -48,13 +48,13 @@ object OdysseyMiscListeners : Listener {
     fun elytraBoost(event: PlayerElytraBoostEvent) {
         if ((event.itemStack.itemMeta!! as FireworkMeta).power > 3) {
             var boostFailureChance = 0.05 + ((event.itemStack.itemMeta as FireworkMeta).power * 0.05) // FOR DURATION
-            var boostFailureDamage = ((event.itemStack.itemMeta as FireworkMeta).power * 0.5) - 0.5
+            var boostFailureDamage = 3.0
             var dudChance = 0.1
 
             val loreComponent = listOf(Component.text("Danger!", TextColor.color(255, 55, 55)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))
 
             // Maybe
-            if (event.itemStack.lore()?.contains(Component.text("Blaze_Powder")) == true) { // Change to detect component var
+            if (event.itemStack.lore()?.contains(Component.text("Safe!")) == true) { // Change to detect component var
                 boostFailureDamage -= 2.0
             }
 

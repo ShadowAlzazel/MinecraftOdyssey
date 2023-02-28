@@ -31,7 +31,7 @@ open class AlchemyCauldronRecipe(
     }
 
     // Called on a successful validation
-    fun alchemyHandler(someMaterials: MutableCollection<Item>) {
+    fun successfulRecipeHandler(someMaterials: MutableCollection<Item>) {
         val someLocation = someMaterials.elementAt(0).location.clone()
         someLocation.world.playSound(someLocation, Sound.ITEM_BOTTLE_FILL, 2.5F, 0.8F)
         val someBlock = someLocation.block
@@ -39,9 +39,9 @@ open class AlchemyCauldronRecipe(
         for (itemEntity in someMaterials) {
             itemEntity.remove()
         }
-        // Runs alchemy task ticking every 0.5 seconds
         val result = if (brewedPotion.potionEffects != null) { brewedPotion.createPotion() } else { brewedPotion.createItemStack(1) }
         val alchemyTask = AlchemyCauldronTask(someBlock, result)
         alchemyTask.runTaskTimer(Odyssey.instance, 0, 2)
+        // Runs alchemy task ticking every 0.5 seconds
     }
 }

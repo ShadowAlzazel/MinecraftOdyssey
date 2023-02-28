@@ -1,12 +1,15 @@
 package me.shadowalzazel.mcodyssey.items.base
 
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.items.utility.WeaponMaterial
 import me.shadowalzazel.mcodyssey.items.utility.WeaponType
 import net.kyori.adventure.text.Component
 import org.bukkit.Color
 import org.bukkit.Material
+import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
+import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffect
 
 
@@ -30,6 +33,7 @@ data class OdysseyItem(
             if (lore != null) { it.lore(lore) }
             if (customModel != null) { it.setCustomModelData(customModel) }
             //if (enchantments != null) { for (enchant in enchantments) { it.addEnchant(enchant.key, enchant.value, true) } }
+            it.persistentDataContainer.set(NamespacedKey(Odyssey.instance, "item"), PersistentDataType.STRING, name)
         }
         return newItemStack
     }
