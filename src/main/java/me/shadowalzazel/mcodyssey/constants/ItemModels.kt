@@ -8,11 +8,12 @@ object ItemModels {
     /* -------------------------------------------ALCHEMY-------------------------------------------- */
     /* ---------------------------------------------------------------------------------------------- */
 
-    const val OIL_BOTTLE: Int = 6905000 // For Weapon Oils
-    const val VIAL: Int = 6905000 // For Small Potions
-    const val FLASK: Int = 6905000 // For Odyssey Effect Potions
+    const val CONICAL_POTION: Int = 6905310 // For Odyssey Effect Potions With Time
+    const val PEARSHAPE_POTION: Int = 6905317 // For Odyssey Effect Potions Without Time
+    const val OIL_POTION: Int = 6905000 // For Weapon Oils
+    const val VIAL_POTION: Int = 6905000 // For Small Potions
     const val LARGE_POTION: Int = 6905000 // Large Potions
-    const val REINFORCED_POTION: Int = 6905000 // For Multiple Effect Potions
+    const val SQUARE_POTION: Int = 6905000
 
     /* ---------------------------------------------------------------------------------------------- */
     /* ------------------------------------------RUNES------------------------------------------- */
