@@ -31,6 +31,14 @@ interface AlchemyManager {
         return if (seconds < 9) { "($minutes:0$seconds)" } else { "($minutes:$seconds)" }
     }
 
+    private fun getPotionDuration(potionLore: MutableList<Component>): Int {
+        val timerLoreContent = (potionLore.first() as TextComponent).content()
+        val i = timerLoreContent.lastIndex
+        val potionLoreTimer = timerLoreContent.subSequence((i - 5)..i)
+        return loreToSeconds(potionLoreTimer)
+    }
+
+
     // Helper function to create lingering timed potions
     fun createLingeringPotion(potionMaterial: Material, oldPotion: ItemStack): ItemStack {
         val newPotion = ItemStack(potionMaterial, 1)
@@ -50,18 +58,11 @@ interface AlchemyManager {
         return newPotion
     }
 
-
-    fun createCustomPotion(potionMaterial: Material, oldPotion: ItemStack): ItemStack {
+    fun createCustomPotion(potionMaterial: Material, oldPotion: ItemStack, modelBottle: Int = 0): ItemStack {
         val newPotion = ItemStack(potionMaterial, 1)
-        newPotion.itemMeta = oldPotion.itemMeta as PotionMeta
+        newPotion.itemMeta = (oldPotion.itemMeta as PotionMeta)
+        if (modelBottle != 0) { newPotion.itemMeta.setCustomModelData(modelBottle) }
         return newPotion
-    }
-
-    private fun getPotionDuration(potionLore: MutableList<Component>): Int {
-        val timerLoreContent = (potionLore.first() as TextComponent).content()
-        val i = timerLoreContent.lastIndex
-        val potionLoreTimer = timerLoreContent.subSequence((i - 5)..i)
-        return loreToSeconds(potionLoreTimer)
     }
 
 

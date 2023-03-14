@@ -18,5 +18,8 @@ object EntityTags {
     // Mobs
     const val ODYSSEY_MOB: String = "odyssey.mob"
 
+    // ENCHANT_TAGS
+
+
 
 }

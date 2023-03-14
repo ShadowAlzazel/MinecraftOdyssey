@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.mobs.other
 
-import me.shadowalzazel.mcodyssey.mobs.utility.OdysseyMob
+import me.shadowalzazel.mcodyssey.mobs.base.OdysseyMob
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.entity.EntityType

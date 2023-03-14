@@ -2,7 +2,7 @@ package me.shadowalzazel.mcodyssey.alchemy.base
 
 import me.shadowalzazel.mcodyssey.alchemy.utility.BraiseBase
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
-import me.shadowalzazel.mcodyssey.mobs.utility.OdysseyMob
+import me.shadowalzazel.mcodyssey.mobs.base.OdysseyMob
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Particle

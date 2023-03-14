@@ -24,7 +24,8 @@ object AssetListeners : Listener {
         )
     }
 
-    @EventHandler
+    // DISABLED
+   //  @EventHandler
     fun playerJoinHandler(event: PlayerJoinEvent) {
         // Force the player to use the resource pack
         resourcePackHandler(event.player)
@@ -33,7 +34,7 @@ object AssetListeners : Listener {
 
     @EventHandler
     fun playerLeaveHandler(event: PlayerQuitEvent) {
-        val player = event.player
+        //
     }
 
 }

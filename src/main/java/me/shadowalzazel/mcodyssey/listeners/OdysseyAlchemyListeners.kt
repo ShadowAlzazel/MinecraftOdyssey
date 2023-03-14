@@ -7,6 +7,8 @@ import me.shadowalzazel.mcodyssey.alchemy.CauldronRecipes
 import me.shadowalzazel.mcodyssey.alchemy.base.AlchemyCauldronRecipe
 import me.shadowalzazel.mcodyssey.alchemy.utility.CauldronEventSynchro
 import me.shadowalzazel.mcodyssey.constants.EntityTags
+import me.shadowalzazel.mcodyssey.constants.ItemModels
+import me.shadowalzazel.mcodyssey.constants.ItemTags.hasOdysseyTag
 import me.shadowalzazel.mcodyssey.effects.*
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
@@ -32,6 +34,7 @@ import org.bukkit.scheduler.BukkitRunnable
 object OdysseyAlchemyListeners : Listener, AlchemyManager {
 
 
+    // TODO: Fix bug if multiple types, converts all
     // If Handler for materials and types
     private fun brewingHandler(brewingIngredient: Material, brewerPotions: List<ItemStack?>): Map<Int, ItemStack> {
         val brewedPotions = mutableMapOf<Int, ItemStack>()
@@ -44,8 +47,10 @@ object OdysseyAlchemyListeners : Listener, AlchemyManager {
             val itemAtX = brewerPotions[x]
             if (itemAtX == null) {
                 brewedPotions[x] = ItemStack(Material.AIR)
-            } else if (!(itemAtX.itemMeta.persistentDataContainer.has(NamespacedKey(Odyssey.instance, "item")))) {
-                continue
+            } else if (!(itemAtX.itemMeta.persistentDataContainer.hasOdysseyTag())) {
+                if (brewingIngredient == Material.REDSTONE) {
+                    itemAtX.itemMeta.setCustomModelData(ItemModels.SQUARE_POTION)
+                }
             } else if (itemAtX.itemMeta.hasCustomModelData()) {/*
                 val potionModel = itemAtX.itemMeta.customModelData
                 if (potionModel == ItemModels.CONICAL_POTION) {
@@ -74,7 +79,7 @@ object OdysseyAlchemyListeners : Listener, AlchemyManager {
 
     @EventHandler
     fun brewPotionHandler(event: BrewEvent) {
-        if (!(event.contents.ingredient!!.type == Material.GUNPOWDER || event.contents.ingredient!!.type == Material.DRAGON_BREATH)) return
+        if (event.contents.ingredient == null) return
         // Function to async
         val newPotionMap = brewingHandler(event.contents.ingredient!!.type, event.contents.contents.toList())
         //for (brew in newPotionMap) { event.contents.setItem(brew.key, brew.value) }
@@ -85,7 +90,7 @@ object OdysseyAlchemyListeners : Listener, AlchemyManager {
 
 
     // Simple finder function for async class
-    private fun asyncCauldronRecipeFinder(someItems: MutableCollection<Item>, someFuel: Material): AlchemyCauldronRecipe? {
+    private suspend fun asyncCauldronRecipeFinder(someItems: MutableCollection<Item>, someFuel: Material): AlchemyCauldronRecipe? {
         return CauldronRecipes.CAULDRON_SET.find {
             it.validateRecipe(someItems, someFuel)
         }
@@ -128,9 +133,15 @@ object OdysseyAlchemyListeners : Listener, AlchemyManager {
     fun alchemyPotionConsumeHandler(event: PlayerItemConsumeEvent) {
         if (event.item.hasItemMeta() && event.item.type == Material.POTION) {
             val potionMeta = event.item.itemMeta as PotionMeta
-            if (potionMeta.persistentDataContainer.has(NamespacedKey(Odyssey.instance, "item")) && potionMeta.basePotionData.type == PotionType.UNCRAFTABLE) {
+            if (potionMeta.persistentDataContainer.hasOdysseyTag() && potionMeta.basePotionData.type == PotionType.UNCRAFTABLE) {
                 val potionName = potionMeta.persistentDataContainer[NamespacedKey(Odyssey.instance, "item"), PersistentDataType.STRING]!!
                 potionEffectAssigner(mutableListOf(event.player), listOf(potionName), false)
+            }
+            // Check if custom bottle
+            if (potionMeta.hasCustomModelData()) {
+                event.replacement = ItemStack(Material.GLASS_BOTTLE, 1).also {
+                    it.itemMeta.setCustomModelData(potionMeta.customModelData)
+                }
             }
         }
     }
@@ -140,7 +151,7 @@ object OdysseyAlchemyListeners : Listener, AlchemyManager {
     @EventHandler
     fun alchemyPotionSplashHandler(event: PotionSplashEvent) {
         val potionMeta = event.entity.item.itemMeta as PotionMeta
-        if (potionMeta.persistentDataContainer.has(NamespacedKey(Odyssey.instance, "item")) && potionMeta.basePotionData.type == PotionType.UNCRAFTABLE) {
+        if (potionMeta.persistentDataContainer.hasOdysseyTag() && potionMeta.basePotionData.type == PotionType.UNCRAFTABLE) {
             val potionName = potionMeta.persistentDataContainer[NamespacedKey(Odyssey.instance, "item"), PersistentDataType.STRING]!!
             potionEffectAssigner(event.affectedEntities, listOf(potionName), false)
         }
@@ -151,7 +162,7 @@ object OdysseyAlchemyListeners : Listener, AlchemyManager {
     @EventHandler
     fun alchemyLingeringSplashHandler(event: LingeringPotionSplashEvent) {
         val potionMeta = event.entity.item.itemMeta as PotionMeta
-        if (potionMeta.persistentDataContainer.has(NamespacedKey(Odyssey.instance, "item")) && potionMeta.basePotionData.type == PotionType.UNCRAFTABLE) {
+        if (potionMeta.persistentDataContainer.hasOdysseyTag() && potionMeta.basePotionData.type == PotionType.UNCRAFTABLE) {
             val potionName = potionMeta.persistentDataContainer[NamespacedKey(Odyssey.instance, "item"), PersistentDataType.STRING]!!
             createEffectCloud(event.entity, event.areaEffectCloud, potionName)
         }
