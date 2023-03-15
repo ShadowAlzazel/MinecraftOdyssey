@@ -7,16 +7,19 @@ object ItemModels {
     /* ---------------------------------------------------------------------------------------------- */
     /* -------------------------------------------ALCHEMY-------------------------------------------- */
     /* ---------------------------------------------------------------------------------------------- */
+    //6905-3XX
 
-    const val OIL_BOTTLE: Int = 6905000 // For Weapon Oils
-    const val VIAL: Int = 6905000 // For Small Potions
-    const val FLASK: Int = 6905000 // For Odyssey Effect Potions
+    const val CONICAL_POTION: Int = 6905310 // For Odyssey Effect Potions With Time
+    const val PEARSHAPE_POTION: Int = 6905317 // For Odyssey Effect Potions Without Time
+    const val OIL_POTION: Int = 6905000 // For Weapon Oils
+    const val VIAL_POTION: Int = 6905000 // For Small Potions
     const val LARGE_POTION: Int = 6905000 // Large Potions
-    const val REINFORCED_POTION: Int = 6905000 // For Multiple Effect Potions
+    const val SQUARE_POTION: Int = 6905000
 
     /* ---------------------------------------------------------------------------------------------- */
-    /* ------------------------------------------RUNES------------------------------------------- */
+    /* ------------------------------------------RUNIC------------------------------------------- */
     /* ---------------------------------------------------------------------------------------------- */
+    //6905-5XX
 
     const val ARCANE_BOOK: Int = 6906065
     const val GILDED_BOOK: Int = 6906066
@@ -31,6 +34,13 @@ object ItemModels {
     const val TOME_OF_INFUSION: Int = 6906074
     const val TOME_OF_EUPHONY: Int = 6906075
     const val TOME_OF_AVARICE: Int = 6906076
+
+    const val VOLUME_OF_TOOLS: Int = 6905520
+    const val VOLUME_OF_POLE_ARMS: Int = 6905521
+    const val VOLUME_OF_SWORDS: Int = 6905522
+    const val VOLUME_OF_SPEARS: Int = 6905523
+    const val VOLUME_OF_AXES: Int = 6905524
+    const val VOLUME_OF_CLUBS: Int = 6905525
 
     /* ---------------------------------------------------------------------------------------------- */
     /* --------------------------------------------FOODS--------------------------------------------- */
@@ -131,6 +141,7 @@ object ItemModels {
     /* -------------------------------------------WEAPONS-------------------------------------------- */
     /* ---------------------------------------------------------------------------------------------- */
 
+    // 6905-6XX
     const val SOUL_STEEL_KATANA: Int = 6906644
     const val KATANA: Int = 6905744
 

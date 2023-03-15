@@ -200,7 +200,6 @@ object OdysseyDropsListeners : Listener {
     }
 
 
-    @EventHandler
     fun blockDrops(event: BlockDropItemEvent) {
         when(event.block.type) {
             Material.AMETHYST_CLUSTER, Material.LARGE_AMETHYST_BUD -> {

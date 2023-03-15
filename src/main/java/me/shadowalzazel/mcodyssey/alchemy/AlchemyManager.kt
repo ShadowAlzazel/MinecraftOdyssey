@@ -5,9 +5,12 @@ import me.shadowalzazel.mcodyssey.effects.OdysseyEffectsHandler
 import me.shadowalzazel.mcodyssey.items.Potions
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
+import net.kyori.adventure.text.format.TextDecoration
+import org.bukkit.Material
 import org.bukkit.entity.AreaEffectCloud
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.ThrownPotion
+import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
@@ -28,18 +31,38 @@ interface AlchemyManager {
         return if (seconds < 9) { "($minutes:0$seconds)" } else { "($minutes:$seconds)" }
     }
 
-
-    // Used for
-    private fun potionItemHandler(nameToChange: String) {
-        //if (cauldronResult.itemMeta.persistentDataContainer.has(NamespacedKey(Odyssey.instance, "item"))) println("KEY!")
-        //println(cauldronResult.itemMeta.persistentDataContainer[NamespacedKey(Odyssey.instance, "item"), PersistentDataType.STRING])
-    }
-
     private fun getPotionDuration(potionLore: MutableList<Component>): Int {
         val timerLoreContent = (potionLore.first() as TextComponent).content()
         val i = timerLoreContent.lastIndex
         val potionLoreTimer = timerLoreContent.subSequence((i - 5)..i)
         return loreToSeconds(potionLoreTimer)
+    }
+
+
+    // Helper function to create lingering timed potions
+    fun createLingeringPotion(potionMaterial: Material, oldPotion: ItemStack): ItemStack {
+        val newPotion = ItemStack(potionMaterial, 1)
+        // Modify potion meta
+        newPotion.itemMeta = (oldPotion.itemMeta as PotionMeta).also {
+            val oldTextComponent = it.lore()!!.first() as TextComponent
+            val oldColor = oldTextComponent.color()
+            val timerLore = oldTextComponent.content()
+            val i = timerLore.lastIndex
+            // Get the time in seconds form String in "(M:SS)" format
+            val oldTime = loreToSeconds(timerLore.subSequence((i - 5)..i))
+            // Create lore by getting old effect and adding new time
+            val newTimerString = timerLore.subSequence(0..(i - 6)).toString() + timeToLore(oldTime / 4)
+            val newText = Component.text(newTimerString, oldColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+            it.lore(listOf(newText))
+        }
+        return newPotion
+    }
+
+    fun createCustomPotion(potionMaterial: Material, oldPotion: ItemStack, modelBottle: Int = 0): ItemStack {
+        val newPotion = ItemStack(potionMaterial, 1)
+        newPotion.itemMeta = (oldPotion.itemMeta as PotionMeta)
+        if (modelBottle != 0) { newPotion.itemMeta.setCustomModelData(modelBottle) }
+        return newPotion
     }
 
 
@@ -101,7 +124,7 @@ interface AlchemyManager {
     }
 
     fun potionEffectAssigner(affectedEntities: MutableCollection<LivingEntity>, effectApplierNames: List<String>, isCloud: Boolean) {
-        var duration: Int = 0
+        var duration: Int
         val durationModifier: Int = if (isCloud) 4 else 1
 
         for (someName in effectApplierNames) {

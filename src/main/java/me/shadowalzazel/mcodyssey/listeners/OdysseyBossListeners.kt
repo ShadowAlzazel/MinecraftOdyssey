@@ -9,7 +9,6 @@ import org.bukkit.event.world.TimeSkipEvent
 object OdysseyBossListeners : Listener {
 
     // Main function for calling a new boss
-    @EventHandler
     fun newBoss(event: TimeSkipEvent) {
         Odyssey.instance.run {
             if (!isBossActive) {

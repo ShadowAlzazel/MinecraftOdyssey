@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.mobs.hostile
 
 import me.shadowalzazel.mcodyssey.items.Weapons
-import me.shadowalzazel.mcodyssey.mobs.utility.OdysseyMob
+import me.shadowalzazel.mcodyssey.mobs.base.OdysseyMob
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Location

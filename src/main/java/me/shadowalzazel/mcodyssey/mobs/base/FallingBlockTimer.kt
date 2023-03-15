@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.mobs.utility
+package me.shadowalzazel.mcodyssey.mobs.base
 
 import org.bukkit.entity.FallingBlock
 import org.bukkit.scheduler.BukkitRunnable

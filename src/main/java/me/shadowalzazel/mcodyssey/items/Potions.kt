@@ -115,7 +115,7 @@ object Potions {
         name = "potion_of_levitation",
         material = Material.POTION,
         displayName = Component.text("Large Potion of Haste", TextColor.color(255, 255, 55)),
-        customModel = ItemModels.LARGE_POTION,
+        customModel = ItemModels.PEARSHAPE_POTION,
         potionEffects = listOf(PotionEffect(PotionEffectType.FAST_DIGGING, 20 * 60 , 0)),
         potionColor = Color.fromRGB(185, 255, 155))
 
@@ -124,7 +124,7 @@ object Potions {
         material = Material.POTION,
         displayName = Component.text("Flask o' Decay", TextColor.color(114, 227, 154)),
         lore = listOf(Component.text("Decaying (0:30)", TextColor.color(114, 227, 154)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.FLASK,
+        customModel = ItemModels.CONICAL_POTION,
         potionEffects = emptyList(),
         potionColor = Color.fromRGB(114, 227, 154))
 
@@ -133,16 +133,16 @@ object Potions {
         material = Material.POTION,
         displayName = Component.text("Flask o' Frost", TextColor.color(163, 211, 255)),
         lore = listOf(Component.text("Freezing (0:30)", TextColor.color(163, 211, 255)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.FLASK,
+        customModel = ItemModels.CONICAL_POTION,
         potionEffects = emptyList(),
-        potionColor = Color.fromRGB(114, 227, 154))
+        potionColor = Color.fromRGB(163, 211, 255))
 
     val FLASK_OF_DOUSE = OdysseyItem(
         name = "flask_of_douse",
         material = Material.POTION,
         displayName = Component.text("Flask o' Douse", TextColor.color(66, 66, 38)),
         lore = listOf(Component.text("Douse (0:40)", TextColor.color(66, 66, 38)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.FLASK,
+        customModel = ItemModels.CONICAL_POTION,
         potionEffects = emptyList(),
         potionColor = Color.fromRGB(66, 66, 38))
 
@@ -151,7 +151,7 @@ object Potions {
         material = Material.POTION,
         displayName = Component.text("Flask o' Ablaze", TextColor.color(247, 74, 0)),
         lore = listOf(Component.text("Blazing (0:30)", TextColor.color(247, 74, 0)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.FLASK,
+        customModel = ItemModels.CONICAL_POTION,
         potionEffects = emptyList(),
         potionColor = Color.fromRGB(247, 74, 0))
 
@@ -160,7 +160,7 @@ object Potions {
         material = Material.POTION,
         displayName = Component.text("Flask o' Rose", TextColor.color(250, 14, 60)),
         lore = listOf(Component.text("Rose (0:30)", TextColor.color(250, 14, 60)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.FLASK,
+        customModel = ItemModels.CONICAL_POTION,
         potionEffects = emptyList(),
         potionColor = Color.fromRGB(247, 74, 0))
 
@@ -169,7 +169,7 @@ object Potions {
         material = Material.POTION,
         displayName = Component.text("Flask o' Puffjuice", TextColor.color(222, 255, 166)),
         lore = listOf(Component.text("Puffy (0:30)", TextColor.color(222, 255, 166)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.FLASK,
+        customModel = ItemModels.CONICAL_POTION,
         potionEffects = emptyList(),
         potionColor = Color.fromRGB(247, 74, 0))
 
@@ -178,7 +178,7 @@ object Potions {
         material = Material.POTION,
         displayName = Component.text("Flask o' Miasma", TextColor.color(80, 20, 90)),
         lore = listOf(Component.text("Miasma (0:30)", TextColor.color(80, 20, 90)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.FLASK,
+        customModel = ItemModels.CONICAL_POTION,
         potionEffects = emptyList(),
         potionColor = Color.fromRGB(247, 74, 0))
 
@@ -187,7 +187,7 @@ object Potions {
         material = Material.POTION,
         displayName = Component.text("Bottled Souls", TextColor.color(94, 210, 215)),
         lore = listOf(Component.text("Soul Damage I", TextColor.color(94, 210, 215)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.FLASK,
+        customModel = ItemModels.PEARSHAPE_POTION,
         potionEffects = emptyList(),
         potionColor = Color.fromRGB(0, 255, 179))
 
@@ -196,7 +196,7 @@ object Potions {
         material = Material.POTION,
         displayName = Component.text("Bottle o' Shimmer", TextColor.color(78, 0, 161)),
         lore = listOf(Component.text("Shimmer (2:00)", TextColor.color(78, 0, 161)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.FLASK,
+        customModel = ItemModels.PEARSHAPE_POTION,
         potionEffects = listOf(
             PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 120 * 20, 1),
             PotionEffect(PotionEffectType.INCREASE_DAMAGE, 120 * 20, 1),
@@ -210,7 +210,7 @@ object Potions {
         material = Material.POTION,
         displayName = Component.text("Poltergeist Brew", TextColor.color(137, 24, 40)),
         lore = listOf(Component.text("Accursed (1:30)", TextColor.color(137, 24, 40)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.FLASK,
+        customModel = ItemModels.CONICAL_POTION,
         potionEffects = emptyList(),
         potionColor = Color.fromRGB(137, 24, 40))
 

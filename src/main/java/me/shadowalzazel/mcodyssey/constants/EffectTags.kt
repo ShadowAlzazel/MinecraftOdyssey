@@ -18,4 +18,6 @@ object EffectTags {
     const val DOUSE_FACTOR: String = "odyssey.douse_factor_"
 
 
+
+
 }

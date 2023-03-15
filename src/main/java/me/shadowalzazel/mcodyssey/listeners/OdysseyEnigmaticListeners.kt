@@ -16,6 +16,11 @@ import org.bukkit.event.entity.EntityDeathEvent
 
 object OdysseyEnigmaticListeners : Listener {
 
+    // TODO
+    // Spirit Mobs,
+    // HAVE INVIS AND GLOWING,
+    // are sumoned to fight and other cool stuff.
+
 
     @EventHandler
     fun soulItemHandlers(event: EntityDeathEvent) {

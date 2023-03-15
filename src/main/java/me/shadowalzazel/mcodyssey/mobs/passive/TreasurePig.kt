@@ -2,8 +2,8 @@ package me.shadowalzazel.mcodyssey.mobs.passive
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.items.Ingredients
-import me.shadowalzazel.mcodyssey.mobs.utility.FallingBlockTimer
-import me.shadowalzazel.mcodyssey.mobs.utility.OdysseyMob
+import me.shadowalzazel.mcodyssey.mobs.base.FallingBlockTimer
+import me.shadowalzazel.mcodyssey.mobs.base.OdysseyMob
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.*

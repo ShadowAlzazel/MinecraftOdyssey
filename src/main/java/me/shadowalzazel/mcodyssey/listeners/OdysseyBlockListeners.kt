@@ -17,7 +17,7 @@ import java.util.*
 
 object OdysseyBlockListeners : Listener {
 
-    @EventHandler
+
     fun onCustomBlockPlace(event: BlockPlaceEvent) {
         if (event.itemInHand.itemMeta?.hasCustomModelData() == true) {
             when(event.itemInHand.itemMeta.customModelData) {
