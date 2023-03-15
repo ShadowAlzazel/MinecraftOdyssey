@@ -17,9 +17,15 @@ object EntityTags {
 
     // Mobs
     const val ODYSSEY_MOB: String = "odyssey.mob"
+    const val GILDED_MOB: String = "odyssey.gilded_mob"
+    const val
 
     // ENCHANT_TAGS
 
+
+
+    // DEBUFF
+    const val MARKED_FOR_VENGEANCE: String = "odyssey.marked_for_vengeance"
 
 
 }
