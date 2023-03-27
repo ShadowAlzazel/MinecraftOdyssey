@@ -24,6 +24,11 @@ data class OdysseyItem(
     internal val potionEffects: List<PotionEffect>? = null,
     internal val potionColor: Color? = null) {
 
+    // CUSTOM AFFIXES
+    // ITEM SLOT STATS?
+    // ATK DAMAGE
+    // HEALTH
+
 
     fun createItemStack(amount: Int): ItemStack {
         val newItemStack = ItemStack(material, amount)
