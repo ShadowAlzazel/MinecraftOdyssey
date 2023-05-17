@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.listeners.tasks
 
+import me.shadowalzazel.mcodyssey.constants.EntityTags
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Particle
@@ -11,21 +12,25 @@ import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
 
-class BurstBarrageTask(private val someShooter: LivingEntity, private val burstAmount: Int, private val burstVelocity: Vector, private val burstProjectile: Projectile) : BukkitRunnable() {
+class BurstBarrageTask(
+    private val someShooter: LivingEntity,
+    private val burstAmount: Int,
+    private val burstVelocity: Vector,
+    private val burstProjectile: Projectile) : BukkitRunnable()
+{
     private var counter = 0
     private var burstTimer = System.currentTimeMillis()
-
     private val initialTags = mutableListOf<String>()
 
     override fun run() {
         counter += 1
         // Check if tag removed
-        if ("Burst_Shooting" !in someShooter.scoreboardTags) { this.cancel() }
+        if (EntityTags.IS_BURST_BARRAGING !in someShooter.scoreboardTags) { this.cancel() }
         if (counter == 1)  { initialTags.addAll(burstProjectile.scoreboardTags) }
 
         // Spawn projectile and set velocity
         someShooter.launchProjectile(burstProjectile.javaClass).also {
-            it.addScoreboardTag("Copied_Burst_Arrow")
+            it.addScoreboardTag(EntityTags.REPLICATED_ARROW)
             if (it is Arrow) {
                 it.shooter = someShooter
                 it.pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
@@ -39,11 +44,11 @@ class BurstBarrageTask(private val someShooter: LivingEntity, private val burstA
             it.scoreboardTags.addAll(initialTags)
             it.velocity = someShooter.eyeLocation.direction.clone().normalize().multiply(burstVelocity.length() - 0.1)
         }
-        // Fix for effect arrows !!!!
+        // TODO: Fix for effect arrows !!!!
 
         val timeElapsed = System.currentTimeMillis() - burstTimer
         if (counter > burstAmount || timeElapsed > (0.2 * (burstAmount + 1)) * 1000) {
-            someShooter.removeScoreboardTag("Burst_Shooting")
+            someShooter.removeScoreboardTag(EntityTags.IS_BURST_BARRAGING)
             this.cancel()
         }
     }

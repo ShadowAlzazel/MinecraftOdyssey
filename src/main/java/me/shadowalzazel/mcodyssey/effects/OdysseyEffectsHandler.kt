@@ -40,7 +40,7 @@ object OdysseyEffectsHandler {
         victimList.forEach {
             if (EffectTags.DOUSED !in it.scoreboardTags) {
                 it.addScoreboardTag(EffectTags.DOUSED)
-                it.addScoreboardTag("${EffectTags.DOUSE_FACTOR}${amplifier}")
+                it.addScoreboardTag("${EffectTags.DOUSE_MODIFIER}${amplifier}")
                 val dousedTask = DousedTask(it, duration)
                 dousedTask.runTaskTimer(Odyssey.instance, 0, 20)
             }

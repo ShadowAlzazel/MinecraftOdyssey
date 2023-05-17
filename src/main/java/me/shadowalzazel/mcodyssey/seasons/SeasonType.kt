@@ -15,4 +15,3 @@ enum class SeasonType {
 // Maybe if drought limit water.
 // In spring and summer crops grow faster.
 // In winter crops grow slower.
-// 
