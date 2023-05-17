@@ -40,100 +40,99 @@ object MeleeListeners : Listener {
     // Main function for enchantments relating to entity damage
     @EventHandler
     fun mainMeleeDamageHandler(event: EntityDamageByEntityEvent) {
-        // Check if event damager and damaged is living entity
-        if (event.damager is LivingEntity && event.entity is LivingEntity && event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
-            val someDamager = event.damager as LivingEntity
-            val someVictim = event.entity as LivingEntity
-            // Check if active item has lore
-            if (someDamager.equipment?.itemInMainHand?.hasItemMeta() == true) {
-                val someWeapon = someDamager.equipment!!.itemInMainHand
-                // Loop for all enchants
-                for (enchant in someWeapon.enchantments) {
-                    // When match
-                    when (enchant.key) {
-                        OdysseyEnchantments.ARCANE_CELL -> {
-                            if (cooldownManager(someDamager, "Runic Cell", arcaneCellCooldown, 5.25)) {
-                                arcaneCellEnchantment(someVictim, enchant.value)
-                            }
-                        }
-                        OdysseyEnchantments.BACKSTABBER -> {
-                            if (cooldownManager(someDamager, "Backstabber", backstabberCooldown, 3.25)) {
-                                event.damage += backstabberEnchantment(someDamager, someVictim, enchant.value)
-                            }
-                        }
-                        OdysseyEnchantments.BANE_OF_THE_ILLAGER -> {
-                            event.damage += baneOfTheIllagerEnchantment(someVictim, enchant.value)
-                        }
-                        OdysseyEnchantments.BANE_OF_THE_SEA -> {
-                            event.damage += baneOfTheSeaEnchantment(someDamager, someVictim, enchant.value)
-                        }
-                        OdysseyEnchantments.BANE_OF_THE_SWINE -> {
-                            event.damage += baneOfTheSwineEnchantment(someVictim, enchant.value)
-                        }
-                        OdysseyEnchantments.BUZZY_BEES -> {
-                            if (cooldownManager(someDamager, "Buzzy Bees", buzzyBeesCooldown, 4.25)) {
-                                buzzyBeesEnchantment(someVictim, enchant.value)
-                            }
-                        }
-                        OdysseyEnchantments.COMMITTED -> {
-                            event.damage += committedEnchantment(someVictim, enchant.value)
-                        }
-                        OdysseyEnchantments.CULL_THE_WEAK -> {
-                            event.damage += cullTheWeakEnchantment(someVictim, enchant.value)
-                        }
-                        OdysseyEnchantments.DECAYING_TOUCH -> {
-                            if (cooldownManager(someDamager, "Decaying Touch", decayingTouchCooldown, 3.0)) {
-                                decayingTouchEnchantment(someVictim, enchant.value)
-                            }
-                        }
-                        OdysseyEnchantments.DOUSE -> {
-                            douseEnchantment(someVictim, enchant.value)
-                        }
-                        OdysseyEnchantments.ECHO -> {
-                            echoEnchantment(someDamager, someVictim, enchant.value)
-                        }
-                        OdysseyEnchantments.FREEZING_ASPECT -> {
-                            freezingAspectEnchantment(someVictim, enchant.value)
-                        }
-                        OdysseyEnchantments.FROG_FRIGHT -> {
-                            frogFrightEnchantment(someDamager, someVictim, enchant.value)
-                        }
-                        OdysseyEnchantments.FROSTY_FUSE -> {
-                            if (cooldownManager(someDamager, "Frosty Fuse", frostyFuseCooldown, 5.0)) {
-                                frostyFuseEnchantment(someVictim, enchant.value)
-                            }
-                        }
-                        OdysseyEnchantments.GRAVITY_WELL -> {
-                            if (cooldownManager(someDamager, "Gravity Well", gravityWellCooldown, 8.0)) {
-                                gravityWellEnchantment(someDamager, someVictim, enchant.value)
-                            }
-                        }
-                        OdysseyEnchantments.GUARDING_STRIKE -> {
-                            if (cooldownManager(someDamager, "Guarding Strike", guardingStrikeCooldown, 4.0)) {
-                                guardingStrikeEnchantment(someDamager, enchant.value)
-                            }
-                        }
-                        OdysseyEnchantments.HEMORRHAGE -> {
-                            if (cooldownManager(someDamager, "Hemorrhage", hemorrhageCooldown, 3.0)) {
-                                hemorrhageEnchantment(someVictim, enchant.value)
-                            }
-                        }
-                        OdysseyEnchantments.ILLUCIDATION -> {
-                            event.damage += illucidationEnchantment(someVictim, enchant.value, event.isCritical)
-                        }
-                        OdysseyEnchantments.RUPTURING_STRIKE -> {
-                            event.damage -= rupturingStrikeEnchantment(someVictim, event.damage, enchant.value)
-                        }
-                        OdysseyEnchantments.VOID_STRIKE -> {
-                            if (cooldownManager(someDamager, "Void Strike", voidStrikeCooldown, 0.45)) {
-                                event.damage += voidStrikeEnchantment(someDamager, someVictim, enchant.value)
-                            }
-                        }
-                        OdysseyEnchantments.WHIRLWIND -> {
-                            if (cooldownManager(someDamager, "Whirlwind", whirlwindCooldown, 3.0)) {
-                                whirlwindEnchantment(someDamager, someVictim, event.damage, enchant.value)
-                            }
-                        }
+        if (event.damager !is LivingEntity) { return }
+        if (event.entity !is LivingEntity) { return }
+        if (event.cause != EntityDamageEvent.DamageCause.ENTITY_ATTACK) { return }
+        val someDamager = event.damager as LivingEntity
+        if (someDamager.equipment?.itemInMainHand?.hasItemMeta() == false) { return }
+        val someVictim = event.entity as LivingEntity
+        val someWeapon = someDamager.equipment!!.itemInMainHand
+
+        // Loop for all enchants
+        for (enchant in someWeapon.enchantments) {
+            // When match
+            when (enchant.key) {
+                OdysseyEnchantments.ARCANE_CELL -> {
+                    if (cooldownManager(someDamager, "Runic Cell", arcaneCellCooldown, 5.25)) {
+                        arcaneCellEnchantment(someVictim, enchant.value)
+                    }
+                }
+                OdysseyEnchantments.BACKSTABBER -> {
+                    if (cooldownManager(someDamager, "Backstabber", backstabberCooldown, 3.25)) {
+                        event.damage += backstabberEnchantment(someDamager, someVictim, enchant.value)
+                    }
+                }
+                OdysseyEnchantments.BANE_OF_THE_ILLAGER -> {
+                    event.damage += baneOfTheIllagerEnchantment(someVictim, enchant.value)
+                }
+                OdysseyEnchantments.BANE_OF_THE_SEA -> {
+                    event.damage += baneOfTheSeaEnchantment(someDamager, someVictim, enchant.value)
+                }
+                OdysseyEnchantments.BANE_OF_THE_SWINE -> {
+                    event.damage += baneOfTheSwineEnchantment(someVictim, enchant.value)
+                }
+                OdysseyEnchantments.BUZZY_BEES -> {
+                    if (cooldownManager(someDamager, "Buzzy Bees", buzzyBeesCooldown, 4.25)) {
+                        buzzyBeesEnchantment(someVictim, enchant.value)
+                    }
+                }
+                OdysseyEnchantments.COMMITTED -> {
+                    event.damage += committedEnchantment(someVictim, enchant.value)
+                }
+                OdysseyEnchantments.CULL_THE_WEAK -> {
+                    event.damage += cullTheWeakEnchantment(someVictim, enchant.value)
+                }
+                OdysseyEnchantments.DECAYING_TOUCH -> {
+                    if (cooldownManager(someDamager, "Decaying Touch", decayingTouchCooldown, 3.0)) {
+                        decayingTouchEnchantment(someVictim, enchant.value)
+                    }
+                }
+                OdysseyEnchantments.DOUSE -> {
+                    douseEnchantment(someVictim, enchant.value)
+                }
+                OdysseyEnchantments.ECHO -> {
+                    echoEnchantment(someDamager, someVictim, enchant.value)
+                }
+                OdysseyEnchantments.FREEZING_ASPECT -> {
+                    freezingAspectEnchantment(someVictim, enchant.value)
+                }
+                OdysseyEnchantments.FROG_FRIGHT -> {
+                    frogFrightEnchantment(someDamager, someVictim, enchant.value)
+                }
+                OdysseyEnchantments.FROSTY_FUSE -> {
+                    if (cooldownManager(someDamager, "Frosty Fuse", frostyFuseCooldown, 5.0)) {
+                        frostyFuseEnchantment(someVictim, enchant.value)
+                    }
+                }
+                OdysseyEnchantments.GRAVITY_WELL -> {
+                    if (cooldownManager(someDamager, "Gravity Well", gravityWellCooldown, 8.0)) {
+                        gravityWellEnchantment(someDamager, someVictim, enchant.value)
+                    }
+                }
+                OdysseyEnchantments.GUARDING_STRIKE -> {
+                    if (cooldownManager(someDamager, "Guarding Strike", guardingStrikeCooldown, 4.0)) {
+                        guardingStrikeEnchantment(someDamager, enchant.value)
+                    }
+                }
+                OdysseyEnchantments.HEMORRHAGE -> {
+                    if (cooldownManager(someDamager, "Hemorrhage", hemorrhageCooldown, 3.0)) {
+                        hemorrhageEnchantment(someVictim, enchant.value)
+                    }
+                }
+                OdysseyEnchantments.ILLUCIDATION -> {
+                    event.damage += illucidationEnchantment(someVictim, enchant.value, event.isCritical)
+                }
+                OdysseyEnchantments.RUPTURING_STRIKE -> {
+                    event.damage -= rupturingStrikeEnchantment(someVictim, event.damage, enchant.value)
+                }
+                OdysseyEnchantments.VOID_STRIKE -> {
+                    if (cooldownManager(someDamager, "Void Strike", voidStrikeCooldown, 0.45)) {
+                        event.damage += voidStrikeEnchantment(someDamager, someVictim, enchant.value)
+                    }
+                }
+                OdysseyEnchantments.WHIRLWIND -> {
+                    if (cooldownManager(someDamager, "Whirlwind", whirlwindCooldown, 3.0)) {
+                        whirlwindEnchantment(someDamager, someVictim, event.damage, enchant.value)
                     }
                 }
             }
@@ -143,26 +142,22 @@ object MeleeListeners : Listener {
     // Main function for enchantments relating to entity deaths
     @EventHandler
     fun mainMeleeDeathHandler(event: EntityDeathEvent) {
-        // Check if event killer and entity are living entity
-        if (event.entity.killer is LivingEntity) { // Make thorns bug new enchant apply ranged effects
-            val someKiller = event.entity.killer as LivingEntity
-            val someVictim: LivingEntity = event.entity
-            // Check if active item has lore
-            if (someKiller.equipment?.itemInMainHand?.hasItemMeta() == true) {
-                val someWeapon = someKiller.equipment?.itemInMainHand
-                // Loop for all enchants
-                for (enchant in someWeapon!!.enchantments) {
-                    // When Match
-                    when (enchant.key) {
-                        OdysseyEnchantments.EXPLODING -> {
-                            if (cooldownManager(someKiller, "Exploding", explodingCooldown, 1.25)) {
-                                explodingEnchantment(someVictim, enchant.value)
-                            }
-                        }
-                        OdysseyEnchantments.FEARFUL_FINISHER -> {
-                            // TODO: Make Soul Socket or Enchant
-                        }
+        if (event.entity.killer !is LivingEntity) { return }
+        val someKiller = event.entity.killer as LivingEntity
+        if (someKiller.equipment?.itemInMainHand?.hasItemMeta() == false) { return }
+        val someVictim: LivingEntity = event.entity
+        val someWeapon = someKiller.equipment?.itemInMainHand
+
+        // Loop for all enchants
+        for (enchant in someWeapon!!.enchantments) {
+            when (enchant.key) {
+                OdysseyEnchantments.EXPLODING -> {
+                    if (cooldownManager(someKiller, "Exploding", explodingCooldown, 1.25)) {
+                        explodingEnchantment(someVictim, enchant.value)
                     }
+                }
+                OdysseyEnchantments.FEARFUL_FINISHER -> {
+                    // TODO: Make Soul Socket or Enchant
                 }
             }
         }
@@ -205,14 +200,11 @@ object MeleeListeners : Listener {
                     )
                 )
                 addScoreboardTag("Arcane_Jailed")
-                // Particles and Sound
-                // TODO: Make circle
+                // TODO: Make circle Particles and Sound
                 world.spawnParticle(Particle.SPELL_WITCH, location, 35, 1.0, 0.5, 1.0)
                 world.playSound(location, Sound.ENTITY_VEX_CHARGE, 1.5F, 0.5F)
 
-
-                val arcaneCellTask = ArcaneCellTask(eventVictim, location, (2 + (enchantmentStrength * 2)) * 4)
-                arcaneCellTask.runTaskTimer(Odyssey.instance, 5, 5)
+                ArcaneCellTask(eventVictim, location, (2 + (enchantmentStrength * 2)) * 4).runTaskTimer(Odyssey.instance, 5, 5)
             }
         }
 

@@ -29,69 +29,71 @@ object ArmorListeners : Listener {
     // Main function for enchantments relating to entity damage for armor
     @EventHandler
     fun mainArmorDamageHandler(event: EntityDamageByEntityEvent) {
-        // Check if event damager and defender is living entity
-        if (event.damager is LivingEntity && event.entity is LivingEntity && event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK) { // Make thorns bug new enchant apply ranged effects
-            val someDamager = event.damager as LivingEntity
-            val someDefender = event.entity as LivingEntity
-            // --------------------------------------------------------------
-            // Check if helmet item has lore
-            if (someDefender.equipment?.helmet?.hasItemMeta() == true) {
-                val someHelmet = someDefender.equipment?.helmet
-                // Loop for all enchants
-                for (enchant in someHelmet!!.enchantments) {
-                    // Check when
-                    when (enchant.key) {
+        if (event.damager !is LivingEntity) { return }
+        if (event.entity !is LivingEntity) { return }
+        if (event.cause != EntityDamageEvent.DamageCause.ENTITY_ATTACK) { return }
 
-                    }
-                }
-            }
-            // --------------------------------------------------------------
-            // Check if chestplate item has lore
-            if (someDefender.equipment?.chestplate?.hasItemMeta() == true) {
-                val someChestplate = someDefender.equipment?.chestplate
-                // Loop for all enchants
-                for (enchant in someChestplate!!.enchantments) {
-                    // Check when
-                    when (enchant.key) {
-                        OdysseyEnchantments.VENGEFUL -> {
-                            vengefulEnchantment(someDamager, enchant.value)
-                        }
-                        OdysseyEnchantments.BEASTLY_BRAWLER -> {
-                            beastlyBrawlerEnchantment(someDefender, enchant.value)
-                        }
-                    }
-                }
-            }
-            // --------------------------------------------------------------
-            // Check if legging item has lore
-            if (someDefender.equipment?.leggings?.hasItemMeta() == true) {
-                val someLeggings = someDefender.equipment?.leggings
-                // Loop for all enchants
-                for (enchant in someLeggings!!.enchantments) {
-                    // Check when
-                    when (enchant.key) {
-                        OdysseyEnchantments.COWARDICE -> {
-                            cowardiceEnchantment(someDamager, someDefender, enchant.value)
-                        }
-                        OdysseyEnchantments.SPOREFUL -> {
-                            sporefulEnchantment(someDefender, enchant.value)
-                        }
-                        OdysseyEnchantments.SQUIDIFY -> {
-                            squidifyEnchantment(someDefender, enchant.value)
-                        }
-                    }
-                }
-            }
-            // --------------------------------------------------------------
-            // Check if boot item has lore
-            if (someDefender.equipment?.boots?.hasItemMeta() == true) {
-                val someBoots = someDefender.equipment?.boots
-                // Loop for all enchants
-                for (enchant in someBoots!!.enchantments) {
-                    // Check when
-                    when (enchant.key) {
+        // Make thorns bug new enchant apply ranged effects
+        val someDamager = event.damager as LivingEntity
+        val someDefender = event.entity as LivingEntity
+        // --------------------------------------------------------------
+        // Check if helmet item has lore
+        if (someDefender.equipment?.helmet?.hasItemMeta() == true) {
+            val someHelmet = someDefender.equipment?.helmet
+            // Loop for all enchants
+            for (enchant in someHelmet!!.enchantments) {
+                // Check when
+                when (enchant.key) {
 
+                }
+            }
+        }
+        // --------------------------------------------------------------
+        // Check if chestplate item has lore
+        if (someDefender.equipment?.chestplate?.hasItemMeta() == true) {
+            val someChestplate = someDefender.equipment?.chestplate
+            // Loop for all enchants
+            for (enchant in someChestplate!!.enchantments) {
+                // Check when
+                when (enchant.key) {
+                    OdysseyEnchantments.VENGEFUL -> {
+                        vengefulEnchantment(someDamager, enchant.value)
                     }
+                    OdysseyEnchantments.BEASTLY_BRAWLER -> {
+                        beastlyBrawlerEnchantment(someDefender, enchant.value)
+                    }
+                }
+            }
+        }
+        // --------------------------------------------------------------
+        // Check if legging item has lore
+        if (someDefender.equipment?.leggings?.hasItemMeta() == true) {
+            val someLeggings = someDefender.equipment?.leggings
+            // Loop for all enchants
+            for (enchant in someLeggings!!.enchantments) {
+                // Check when
+                when (enchant.key) {
+                    OdysseyEnchantments.COWARDICE -> {
+                        cowardiceEnchantment(someDamager, someDefender, enchant.value)
+                    }
+                    OdysseyEnchantments.SPOREFUL -> {
+                        sporefulEnchantment(someDefender, enchant.value)
+                    }
+                    OdysseyEnchantments.SQUIDIFY -> {
+                        squidifyEnchantment(someDefender, enchant.value)
+                    }
+                }
+            }
+        }
+        // --------------------------------------------------------------
+        // Check if boot item has lore
+        if (someDefender.equipment?.boots?.hasItemMeta() == true) {
+            val someBoots = someDefender.equipment?.boots
+            // Loop for all enchants
+            for (enchant in someBoots!!.enchantments) {
+                // Check when
+                when (enchant.key) {
+
                 }
             }
         }
