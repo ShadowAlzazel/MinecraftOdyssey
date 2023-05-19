@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.constants.EffectTags
+import me.shadowalzazel.mcodyssey.constants.EntityTags
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.entity.EntityType
@@ -14,47 +15,43 @@ import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object OdysseyEffectTagListeners : Listener {
+object ScoreboardTagListeners : Listener {
 
     // Main Function regarding effects and tags
+    // TODO: Fix
     @EventHandler
     fun mainTagAndEffectHandler(event: EntityDamageByEntityEvent) {
-        if (event.entity is LivingEntity) {
-            val someVictim = event.entity
-            val tagsToRemove = mutableListOf<String>()
-            // Check Tags
-            someVictim.scoreboardTags.forEach {
-                var remove = true
-                when (it) {
-                    "Vengeance_Marked_1" -> {
-                        event.damage += 2
-                    }
-                    "Vengeance_Marked_2" -> {
-                        event.damage += 4.5
-                    }
-                    "Vengeance_Marked_3" -> {
-                        event.damage += 7
-                    }
-                    EffectTags.THORNY -> {
-                        if (event.damager is LivingEntity) { (event.damager as LivingEntity).damage(2.0) }
-                        remove = false
-                    }
-                    EffectTags.MIASMA -> {
-                        if (event.damager is LivingEntity) {
-                            (event.damager as LivingEntity).damage(2.0)
-                            (event.damager as LivingEntity).addPotionEffect(PotionEffect(PotionEffectType.POISON, 20 * 10, 0)) // TODO: Maybe make proper effect
-                        }
-                        remove = false
-                    }
-                    else -> {
-                        remove = false
+        if (event.entity !is LivingEntity) {
+            return
+        }
+
+        val tagsToRemove = mutableListOf<String>()
+        // Check Tags
+        event.entity.scoreboardTags.forEach {
+            var remove = true
+            when (it) {
+                EntityTags.MARKED_FOR_VENGEANCE -> {
+                    event.damage += 4
+                }
+                EffectTags.THORNY -> {
+                    remove = false
+                    if (event.damager is LivingEntity) { (event.damager as LivingEntity).damage(2.0) }
+                }
+                EffectTags.MIASMA -> {
+                    remove = false
+                    if (event.damager is LivingEntity) {
+                        (event.damager as LivingEntity).damage(2.0)
+                        (event.damager as LivingEntity).addPotionEffect(PotionEffect(PotionEffectType.POISON, 20 * 10, 0)) // TODO: Maybe make proper effect
                     }
                 }
-                if (remove) { tagsToRemove.add(it) }
+                else -> {
+                    remove = false
+                }
             }
-            // Remove tags
-            tagsToRemove.forEach { someVictim.scoreboardTags.remove(it) }
+            if (remove) { tagsToRemove.add(it) }
         }
+        // Remove tags
+        tagsToRemove.forEach { event.entity.scoreboardTags.remove(it) }
     }
 
     @EventHandler
@@ -81,12 +78,6 @@ object OdysseyEffectTagListeners : Listener {
                 }
             }
         }
-    }
-
-
-
-    fun todo() {
-        TODO("Check if glowing then do more damage")
     }
 
 }

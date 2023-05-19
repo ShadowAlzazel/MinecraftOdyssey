@@ -18,7 +18,7 @@ object Runic {
         newBook.itemMeta = newBook.itemMeta.also {
             if (someEnchant is OdysseyEnchantment) {
                 it.addEnchant(someEnchant, level, true)
-                val textLore = (it as OdysseyEnchantment).createEnchantmentLore(level)
+                val textLore = someEnchant.createEnchantmentLore(level)
                 val nameComponent = it.displayName()
                 it.displayName(nameComponent?.append(Component.text(" - " + someEnchant.enchantName, someEnchant.subtype.displayColor)))
                 it.lore(listOf(textLore))
@@ -31,10 +31,14 @@ object Runic {
         return newBook
     }
 
+    // TODO:
+    // MAKE RUNIC ??
+    // MAKE ARCANE ??
+
     val ARCANE_BOOK = OdysseyItem(
         name = "arcane_book",
         material = Material.BOOK,
-        displayName = Component.text("Runic Book", TextColor.color(191, 146, 239), TextDecoration.ITALIC),
+        displayName = Component.text("Arcane Book", TextColor.color(191, 146, 239), TextDecoration.ITALIC),
         lore = listOf(Component.text("A book with arcane potential", TextColor.color(191, 146, 239)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.ARCANE_BOOK)
 

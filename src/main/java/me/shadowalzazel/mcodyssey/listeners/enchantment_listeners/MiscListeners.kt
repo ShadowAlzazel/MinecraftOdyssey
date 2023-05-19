@@ -46,16 +46,16 @@ object MiscListeners : Listener {
 
     // ---------------------------------------------- VOID_JUMP -------------------------------------------
 
-    private fun voidJumpConditionsMet(eventPlayer: Player) : Boolean {
+    private fun voidJumpConditionsMet(player: Player) : Boolean {
         // Check if player has chestplate and not in spectator
-        if (eventPlayer.equipment.chestplate != null && eventPlayer.equipment.chestplate.hasItemMeta() && eventPlayer.gameMode != GameMode.SPECTATOR) {
-            val someElytra = eventPlayer.equipment.chestplate
+        if (player.equipment.chestplate != null && player.equipment.chestplate.hasItemMeta() && player.gameMode != GameMode.SPECTATOR) {
+            val elytra = player.equipment.chestplate
             // Check if player has enchantment
-            if (someElytra.itemMeta.hasEnchant(OdysseyEnchantments.VOID_JUMP)) {
+            if (elytra.itemMeta.hasEnchant(OdysseyEnchantments.VOID_JUMP)) {
                 // Check Speed
-                val someSpeed = eventPlayer.velocity.clone().length()
-                if (someSpeed > 0.125) {
-                    if (eventPlayer.gameMode != GameMode.SPECTATOR && !eventPlayer.isDead) {
+                val speed = player.velocity.clone().length()
+                if (speed > 0.125) {
+                    if (player.gameMode != GameMode.SPECTATOR && !player.isDead) {
                         return true
                     }
                 }
@@ -64,12 +64,12 @@ object MiscListeners : Listener {
         return false
     }
 
-    private fun voidJumpParticles(someLocation: Location) {
-        with(someLocation.world) {
-            spawnParticle(Particle.FLASH, someLocation, 15, 0.0, 0.0, 0.0)
-            spawnParticle(Particle.SONIC_BOOM, someLocation, 5, 0.0, 0.0, 0.0)
-            spawnParticle(Particle.PORTAL, someLocation, 85, 1.5, 1.5, 1.5)
-            playSound(someLocation, Sound.BLOCK_BEACON_DEACTIVATE, 2.5F, 2.5F)
+    private fun voidJumpParticles(location: Location) {
+        with(location.world) {
+            spawnParticle(Particle.FLASH, location, 15, 0.0, 0.0, 0.0)
+            spawnParticle(Particle.SONIC_BOOM, location, 5, 0.0, 0.0, 0.0)
+            spawnParticle(Particle.PORTAL, location, 85, 1.5, 1.5, 1.5)
+            playSound(location, Sound.BLOCK_BEACON_DEACTIVATE, 2.5F, 2.5F)
         }
     }
 
@@ -84,7 +84,7 @@ object MiscListeners : Listener {
             }
 
             // Apply
-            with((event.entity.shooter as Player)) {
+            with(event.entity.shooter as Player) {
                 // Cooldown
                 if (!voidJumpCooldown.containsKey(uniqueId)) { voidJumpCooldown[uniqueId] = 0L }
                 val timeElapsed: Long = System.currentTimeMillis() - voidJumpCooldown[uniqueId]!!

@@ -49,10 +49,13 @@ object EntityTags {
     const val IS_BURST_BARRAGING: String = "odyssey.is_burst_barraging"
     const val SOUL_RENDED_BY: String = "odyssey.soul_rended_by."
 
-    // ENCHANT_TAGS
-
-    // DEBUFFS
+    // ENCHANTS
+    const val FALLING_SINGULARITY: String = "odyssey.falling_singularity"
+    const val MOVING_SINGULARITY: String = "odyssey.moving_singularity"
     const val MARKED_FOR_VENGEANCE: String = "odyssey.marked_for_vengeance"
+    const val VENGEFUL_MODIFIER: String = "odyssey.vengeful_modifier.0"
+    const val MARKED_BY: String = "odyssey.marked_by."
+    const val ECHO_STRUCK: String = "odyssey.echo_struck"
 
 
 }

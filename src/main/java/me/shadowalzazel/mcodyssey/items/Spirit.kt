@@ -15,6 +15,11 @@ import java.util.UUID
 
 object Spirit {
 
+
+    // TO DIFFERENT TYPES OF BUFFING ITEMS
+    // TOTEMS ARE FOUND -> More Potent / Effects can be spread
+    // CHARMS ARE MADE -> Less Potent / Personal
+
     // Used to imbue a totem (or object) with attributes
     fun OdysseyItem.createSpiritTotem(
         statAttribute: Attribute,

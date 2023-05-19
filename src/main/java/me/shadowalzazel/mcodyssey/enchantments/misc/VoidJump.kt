@@ -5,7 +5,7 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object VoidDrive : OdysseyEnchantment("void_drive", "Void Drive", 3) {
+object VoidJump : OdysseyEnchantment("void_jump", "Void Jump", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {

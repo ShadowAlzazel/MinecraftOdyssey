@@ -42,7 +42,7 @@ object EnchantingListeners {
             ItemModels.VOLUME_OF_SPEARS -> {
                 eventItem.enchantments.filter { it.key.canEnchantItem(ItemStack(Material.WOODEN_SHOVEL, 1)) }
             }
-            ItemModels.VOLUME_OF_CLUBS -> { // CLubs
+            ItemModels.VOLUME_OF_CLUBS -> {
                 eventItem.enchantments.filter { it.key.canEnchantItem(ItemStack(Material.WOODEN_PICKAXE, 1)) }
             }
         }

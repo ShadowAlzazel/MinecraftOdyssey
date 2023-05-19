@@ -7,7 +7,7 @@ import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.enchantments.melee.*
 import me.shadowalzazel.mcodyssey.enchantments.misc.HookShot
 import me.shadowalzazel.mcodyssey.enchantments.misc.MirrorForce
-import me.shadowalzazel.mcodyssey.enchantments.misc.VoidDrive
+import me.shadowalzazel.mcodyssey.enchantments.misc.VoidJump
 import me.shadowalzazel.mcodyssey.enchantments.ranged.*
 import org.bukkit.enchantments.Enchantment
 import java.util.*
@@ -38,43 +38,43 @@ object OdysseyEnchantments {
     val DEVASTATING_DROP: OdysseyEnchantment = DevastatingDrop
     val DOUSE: OdysseyEnchantment = Douse
     val ECHO: OdysseyEnchantment = Echo
-    val ENTANGLEMENT: OdysseyEnchantment = Entanglement
+    val ENTANGLEMENT: OdysseyEnchantment = Entanglement // TODO
     val EXPLODING: OdysseyEnchantment = Exploding
     val FEARFUL_FINISHER: OdysseyEnchantment = FearfulFinisher
     val FREEZING_ASPECT: OdysseyEnchantment = FreezingAspect
-    val FROG_FRIGHT: OdysseyEnchantment = FrogFright
+    val FROG_FRIGHT: OdysseyEnchantment = FrogFright // FIX
     val FROSTY_FUSE: OdysseyEnchantment = FrostyFuse
     val FRUITFUL_FARE: OdysseyEnchantment = FruitfulFare
     val GALE_WIND: OdysseyEnchantment = GaleWind
-    val GRAVITY_WELL: OdysseyEnchantment = GravityWell  // drop
+    val GRAVITY_WELL: OdysseyEnchantment = GravityWell
     val GUARDING_STRIKE: OdysseyEnchantment = GuardingStrike
     val HEMORRHAGE: OdysseyEnchantment = Hemorrhage
     val HOOK_SHOT: OdysseyEnchantment = HookShot
     val ILLUCIDATION: OdysseyEnchantment = Illucidation
-    val IGNORE_PAIN: OdysseyEnchantment = IgnorePain
+    val IGNORE_PAIN: OdysseyEnchantment = IgnorePain // TODO
     val LUCKY_DRAW: OdysseyEnchantment = LuckyDraw
-    val MIRROR_FORCE: OdysseyEnchantment = MirrorForce
+    val MIRROR_FORCE: OdysseyEnchantment = MirrorForce // TODO
     val OVERCHARGE: OdysseyEnchantment = Overcharge
     val PERPETUAL_PROJECTILE: OdysseyEnchantment = PerpetualProjectile
     val POTION_BARRIER: OdysseyEnchantment = PotionBarrier
-    val RECKLESS: OdysseyEnchantment = Reckless
-    val RELENTLESS: OdysseyEnchantment = Relentless
+    val RECKLESS: OdysseyEnchantment = Reckless // TODO
+    val RELENTLESS: OdysseyEnchantment = Relentless // TODO
     val RICOCHET: OdysseyEnchantment = Ricochet
     val RUPTURING_STRIKE: OdysseyEnchantment = RupturingStrike
-    val SINGULARITY_SHOT: OdysseyEnchantment = SingularityShot // drop
+    val SINGULARITY_SHOT: OdysseyEnchantment = SingularityShot // TODO
     val SHARPSHOOTER: OdysseyEnchantment = Sharpshooter
     val SOUL_REND: OdysseyEnchantment = SoulRend
     val SPEEDY_SPURS: OdysseyEnchantment = SpeedySpurs
     val SPOREFUL: OdysseyEnchantment = Sporeful
     val SQUIDIFY: OdysseyEnchantment = Squidify
-    val STELLAR_SHOWER: OdysseyEnchantment = StellarShower
-    val TEMPORAL_TORRENT: OdysseyEnchantment = TemporalTorrent
-    val UNTOUCHABLE: OdysseyEnchantment = Untouchable
-    val VENGEFUL: OdysseyEnchantment = Vengeful
-    val VICIOUS_VIGOR: OdysseyEnchantment = ViciousVigor
-    val VOID_JUMP: OdysseyEnchantment = VoidDrive
+    val STELLAR_SHOWER: OdysseyEnchantment = StellarShower // TODO
+    val TEMPORAL_TORRENT: OdysseyEnchantment = TemporalTorrent // TODO
+    val UNTOUCHABLE: OdysseyEnchantment = Untouchable // TODO
+    val VENGEFUL: OdysseyEnchantment = Vengeful // TODO
+    val VICIOUS_VIGOR: OdysseyEnchantment = ViciousVigor // TODO
+    val VOID_JUMP: OdysseyEnchantment = VoidJump
     val VOID_STRIKE: OdysseyEnchantment = VoidStrike
-    val WAR_CRY: OdysseyEnchantment = WarCry
+    val WAR_CRY: OdysseyEnchantment = WarCry // TODO
     val WHIRLWIND: OdysseyEnchantment = Whirlwind
 
     // Set of all enchantments
