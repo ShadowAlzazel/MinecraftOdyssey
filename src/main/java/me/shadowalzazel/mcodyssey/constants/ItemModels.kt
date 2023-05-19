@@ -9,15 +9,18 @@ object ItemModels {
     /* ---------------------------------------------------------------------------------------------- */
     //6905-3XX
 
-    const val CONICAL_POTION: Int = 6905310 // For Odyssey Effect Potions With Time
-    const val PEARSHAPE_POTION: Int = 6905317 // For Odyssey Effect Potions Without Time
-    const val OIL_POTION: Int = 6905000 // For Weapon Oils
-    const val VIAL_POTION: Int = 6905000 // For Small Potions
-    const val LARGE_POTION: Int = 6905000 // Large Potions
-    const val SQUARE_POTION: Int = 6905000
+    const val CONICAL_BOTTLE: Int = 6905310 // For Odyssey Effect Potions With Time
+    const val PEARSHAPE_BOTTLE: Int = 6905317 // For Enhance potion
+    const val SPHERICAL_BOTTLE: Int = 6905317 // For Odyssey Effect Potions Without Time
+    const val OIL_BOTTLE: Int = 6905000 // For Weapon Oils
+    const val VIAL: Int = 6905000 // For Small Potions
+    const val LARGE_BOTTLE: Int = 6905000 // Large Potions
+    const val SQUARE_BOTTLE: Int = 6905000 // Higher Amplifier
+    const val VOLUMETRIC_BOTTLE: Int = 0 // Higher Duration
+
 
     /* ---------------------------------------------------------------------------------------------- */
-    /* ------------------------------------------RUNIC----------------------------------------------- */
+    /* ------------------------------------------SPIRIT----------------------------------------------- */
     /* ---------------------------------------------------------------------------------------------- */
     //6905-4XX
 

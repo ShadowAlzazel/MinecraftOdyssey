@@ -4,6 +4,12 @@ import com.destroystokyo.paper.event.player.PlayerReadyArrowEvent
 import io.papermc.paper.event.entity.EntityLoadCrossbowEvent
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.constants.EntityTags
+import me.shadowalzazel.mcodyssey.constants.ItemTags
+import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.getUUIDString
+import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.removeTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.setUUIDTag
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.listeners.tasks.BurstBarrageTask
 import me.shadowalzazel.mcodyssey.listeners.tasks.GaleWindTask
@@ -34,60 +40,62 @@ import kotlin.math.sin
 
 object RangedListeners : Listener {
 
-    private var entityAlchemyArtilleryAmmo = mutableMapOf<UUID, ItemStack?>()
-    private var entityAlchemyArtilleryCounter = mutableMapOf<UUID, Int>()
-    //
+    private var ALCHEMY_ARTILLERY_AMMO = mutableMapOf<UUID, ItemStack?>() // DOES NOT SAVE AFTER SERVER SHUTDOWN
+    private var ALCHEMY_ARTILLERY_COUNTER = mutableMapOf<UUID, Int>()
+
     private var galewindCooldown = mutableMapOf<UUID, Long>()
 
     // Main function for enchantments relating to shooting bows
     @EventHandler
     fun mainBowShotHandler(event: EntityShootBowEvent) {
         if (event.bow?.hasItemMeta() == false) { return }
-        val someProjectile = event.projectile
-        if (someProjectile.scoreboardTags.contains(EntityTags.REPLICATED_ARROW)) { return }
-        val someShooter = event.entity
+        val projectile = event.projectile
+        if (projectile.scoreboardTags.contains(EntityTags.REPLICATED_ARROW)) { return }
+        val shooter = event.entity
+        if (event.bow == null) { return }
+        val bow = event.bow!!
         // TODO: Make priority for some enchants
 
         // Loop for all enchants
-        for (enchant in event.bow!!.enchantments) {
+        for (enchant in bow.enchantments) {
             when (enchant.key) {
                 OdysseyEnchantments.ALCHEMY_ARTILLERY -> {
-                    event.projectile = alchemyArtilleryEnchantmentShoot(someProjectile, someShooter, enchant.value) ?: event.projectile
+                    event.projectile = alchemyArtilleryEnchantmentShoot(projectile, bow, shooter, enchant.value) ?: event.projectile
                 }
                 OdysseyEnchantments.BOLA_SHOT -> {
-                    bolaShotEnchantmentShoot(someProjectile, enchant.value)
+                    bolaShotEnchantmentShoot(projectile, enchant.value)
                 }
                 OdysseyEnchantments.BURST_BARRAGE -> {
-                    burstBarrageEnchantmentShoot(someProjectile, someShooter, enchant.value)
+                    burstBarrageEnchantmentShoot(projectile, shooter, enchant.value)
                 }
                 OdysseyEnchantments.CHAIN_REACTION -> {
-                    chainReactionEnchantmentShoot(someProjectile, enchant.value)
+                    chainReactionEnchantmentShoot(projectile, enchant.value)
                 }
                 OdysseyEnchantments.CLUSTER_SHOT -> {
-                    clusterShotEnchantmentShoot(someProjectile, enchant.value)
+                    clusterShotEnchantmentShoot(projectile, enchant.value)
                 }
                 OdysseyEnchantments.LUCKY_DRAW -> {
                     event.setConsumeItem(!luckyDrawEnchantmentShoot(enchant.value))
                 }
                 OdysseyEnchantments.GALE_WIND -> {
-                    if (cooldownManager(someShooter, "Gale Wind", galewindCooldown, 3.0)) {
-                        galeWindEnchantmentShoot(someShooter, enchant.value)
+                    if (cooldownManager(shooter, "Gale Wind", galewindCooldown, 3.0)) {
+                        galeWindEnchantmentShoot(shooter, enchant.value)
                     }
                 }
                 OdysseyEnchantments.OVERCHARGE -> {
-                    overchargeEnchantmentShoot(someShooter, someProjectile)
+                    overchargeEnchantmentShoot(shooter, projectile)
                 }
                 OdysseyEnchantments.PERPETUAL_PROJECTILE -> {
-                    perpetualProjectileEnchantmentShoot(someProjectile, enchant.value)
+                    perpetualProjectileEnchantmentShoot(projectile, enchant.value)
                 }
                 OdysseyEnchantments.RICOCHET -> {
-                    ricochetEnchantmentShoot(someProjectile, enchant.value)
+                    ricochetEnchantmentShoot(projectile, enchant.value)
                 }
                 OdysseyEnchantments.SHARPSHOOTER -> {
-                    sharpshooterEnchantmentShoot(someProjectile, enchant.value)
+                    sharpshooterEnchantmentShoot(projectile, enchant.value)
                 }
                 OdysseyEnchantments.SOUL_REND -> {
-                    soulRendEnchantmentShoot(someProjectile, enchant.value)
+                    soulRendEnchantmentShoot(projectile, enchant.value)
                 }
             }
         }
@@ -98,25 +106,26 @@ object RangedListeners : Listener {
         if (event.cause != EntityDamageEvent.DamageCause.PROJECTILE) { return }
         if (event.damager !is Projectile) { return }
         if (event.entity !is LivingEntity) { return }
-        val someProjectile = event.damager as Projectile
-        if (someProjectile.shooter == null) { return }
-        val someShooter: LivingEntity = someProjectile.shooter as LivingEntity
-        val someHitEntity: LivingEntity = event.entity as LivingEntity
+        val projectile = event.damager as Projectile
+        if (projectile.shooter == null) { return }
+        val shooter: LivingEntity = projectile.shooter as LivingEntity
+        val victim: LivingEntity = event.entity as LivingEntity
 
         // Loop over arrow projectile tags
-        for (projectileTag in someProjectile.scoreboardTags) {
-            when (projectileTag) {
+        // TODO: Maybe sort in priority the tags
+        for (tag in projectile.scoreboardTags) {
+            when (tag) {
                 EntityTags.OVERCHARGE_ARROW -> {
-                    event.damage += overchargeEnchantmentHit(someProjectile)
+                    event.damage += overchargeEnchantmentHit(projectile)
                 }
                 EntityTags.RICOCHET_ARROW -> {
-                    event.damage += ricochetEnchantmentEntityHit(someProjectile)
+                    event.damage += ricochetEnchantmentEntityHit(projectile)
                 }
                 EntityTags.SHARPSHOOTER_ARROW -> {
-                    event.damage += sharpshooterEnchantmentHit(someProjectile)
+                    event.damage += sharpshooterEnchantmentHit(projectile)
                 }
                 EntityTags.SOUL_REND_ARROW -> {
-                    soulRendEnchantmentHit(someShooter, someProjectile, someHitEntity)
+                    soulRendEnchantmentHit(shooter, projectile, victim)
                 }
             }
         }
@@ -127,28 +136,28 @@ object RangedListeners : Listener {
     @EventHandler
     fun mainProjectileHitHandler(event: ProjectileHitEvent) {
         if (event.entity.shooter !is LivingEntity) { return }
-        val someShooter: LivingEntity = event.entity.shooter as LivingEntity
-        val someProjectile: Projectile = event.entity
+        val shooter: LivingEntity = event.entity.shooter as LivingEntity
+        val projectile: Projectile = event.entity
 
         if (event.hitEntity is LivingEntity) {
-            val someHitEntity: LivingEntity = event.hitEntity as LivingEntity
-            for (projectileTag in someProjectile.scoreboardTags) {
-                when (projectileTag) {
+            val victim: LivingEntity = event.hitEntity as LivingEntity
+            for (tag in projectile.scoreboardTags) {
+                when (tag) {
                     EntityTags.BOLA_SHOT_ARROW -> {
-                        bolaShotEnchantmentHit(someProjectile, someHitEntity)
+                        bolaShotEnchantmentHit(projectile, victim)
                     }
                     EntityTags.CHAIN_REACTION_ARROW -> {
-                        chainReactionEnchantmentHit(someProjectile, someHitEntity)
+                        chainReactionEnchantmentHit(projectile, victim)
                     }
                     EntityTags.CLUSTER_SHOT_ARROW -> {
-                        clusterShotEnchantmentHit(someProjectile, someHitEntity)
+                        clusterShotEnchantmentHit(projectile, victim)
                     }
                 }
             }
         }
         else if (event.hitBlock != null) {
-            if (someProjectile.scoreboardTags.contains(EntityTags.RICOCHET_ARROW)) {
-                ricochetEnchantmentBlockHit(someProjectile, event.hitBlockFace!!.direction)
+            if (projectile.scoreboardTags.contains(EntityTags.RICOCHET_ARROW)) {
+                ricochetEnchantmentBlockHit(projectile, event.hitBlockFace!!.direction)
             }
         }
     }
@@ -174,12 +183,12 @@ object RangedListeners : Listener {
     fun bowReadyHandler(event: PlayerReadyArrowEvent) {
         // Only works in survival
         if (event.bow.hasItemMeta()) {
-            val someBow = event.bow
-            val somePlayer = event.player
-            for (enchant in someBow.enchantments) {
+            val bow = event.bow
+            val player = event.player
+            for (enchant in bow.enchantments) {
                 when (enchant.key) {
                     OdysseyEnchantments.OVERCHARGE -> {
-                        overchargeEnchantmentLoad(somePlayer, someBow, enchant.value)
+                        overchargeEnchantmentLoad(player, bow, enchant.value)
                     }
                 }
             }
@@ -224,64 +233,66 @@ object RangedListeners : Listener {
 
     // ------------------------------- ALCHEMY_ARTILLERY ------------------------------------
 
-    private fun alchemyArtilleryEnchantmentLoad(eventEntity: LivingEntity, eventCrossbow: ItemStack): Boolean {
-        if (eventEntity.equipment!!.itemInOffHand.type == Material.SPLASH_POTION || eventEntity.equipment!!.itemInOffHand.type == Material.LINGERING_POTION) {
-            val someOffHandPotion = eventEntity.equipment!!.itemInOffHand
-            // TODO: Move data to item tag!!!!!!!!
-            return if ("Alchemy_Artillery_Loaded" !in eventEntity.scoreboardTags) {
-                eventEntity.scoreboardTags.add("Alchemy_Artillery_Loaded")
-                // Check if potion
-                entityAlchemyArtilleryAmmo[eventEntity.uniqueId] = someOffHandPotion
-                // Check counter
-                val multiCounter = if (eventCrossbow.itemMeta.hasEnchant(Enchantment.MULTISHOT)) 3 else 1
-                entityAlchemyArtilleryCounter[eventEntity.uniqueId] = multiCounter
-                // Remove off-hand potion
-                eventEntity.equipment!!.setItemInOffHand(ItemStack(Material.AIR, 1))
-                false
-            } else {
-                true
-            }
+    private fun alchemyArtilleryEnchantmentLoad(loader: LivingEntity, crossbow: ItemStack): Boolean {
+        if (!(loader.equipment!!.itemInOffHand.type == Material.SPLASH_POTION || loader.equipment!!.itemInOffHand.type == Material.LINGERING_POTION)) {
+            return false
         }
-        return false
+        val potionOffHand = loader.equipment!!.itemInOffHand
+        return if (!crossbow.hasTag(ItemTags.ALCHEMY_ARTILLERY_LOADED)) {
+            val newUUID = UUID.randomUUID()
+            crossbow.addTag(ItemTags.ALCHEMY_ARTILLERY_LOADED)
+            crossbow.setUUIDTag(newUUID)
+            // Load Item to UUID
+            ALCHEMY_ARTILLERY_AMMO[newUUID] = potionOffHand
+            val multiCounter = if (crossbow.itemMeta.hasEnchant(Enchantment.MULTISHOT)) 3 else 1
+            // Load Counter to UUID
+            ALCHEMY_ARTILLERY_COUNTER[newUUID] = multiCounter
+            loader.equipment!!.setItemInOffHand(ItemStack(Material.AIR, 1))
+            false
+        } else {
+            true
+        }
     }
 
-    private fun alchemyArtilleryEnchantmentShoot(eventProjectile: Entity, eventShooter: LivingEntity, enchantmentStrength: Int): ThrownPotion? {
-        var removeTag = false
-        var someThrownPotion: ThrownPotion? = null
-        if ("Alchemy_Artillery_Loaded" in eventShooter.scoreboardTags) {
-            val someCount = entityAlchemyArtilleryCounter[eventShooter.uniqueId]
-            if (someCount!! >= 1) {
-                // Spawn potion with item
-                someThrownPotion = (eventShooter.world.spawnEntity(eventProjectile.location, EntityType.SPLASH_POTION) as ThrownPotion).also {
-                    it.item = entityAlchemyArtilleryAmmo[eventShooter.uniqueId] ?: ItemStack(Material.SPLASH_POTION, 1)
-                    it.velocity = eventProjectile.velocity.clone().multiply((enchantmentStrength * 0.2) + 0.1)
-                    it.shooter = eventShooter
-                }
-                entityAlchemyArtilleryCounter[eventShooter.uniqueId] = someCount - 1
-                if (entityAlchemyArtilleryCounter[eventShooter.uniqueId] == 0) removeTag = true
+    private fun alchemyArtilleryEnchantmentShoot(projectile: Entity, crossbow: ItemStack, shooter: LivingEntity, enchantmentStrength: Int): ThrownPotion? {
+        var lastShot = false
+        var potion: ThrownPotion? = null
+        if (!crossbow.hasTag(ItemTags.ALCHEMY_ARTILLERY_LOADED)) {
+            return null
+        }
+        val bowUUID = UUID.fromString(crossbow.getUUIDString())
+        val count = ALCHEMY_ARTILLERY_COUNTER[bowUUID] ?: 1
+        if (count >= 1) {
+            // Spawn potion with item
+            potion = (shooter.world.spawnEntity(projectile.location, EntityType.SPLASH_POTION) as ThrownPotion).also {
+                it.item = ALCHEMY_ARTILLERY_AMMO[bowUUID] ?: ItemStack(Material.SPLASH_POTION, 1)
+                it.velocity = projectile.velocity.clone().multiply((enchantmentStrength * 0.2) + 0.1)
+                it.shooter = shooter
             }
-            if (removeTag) {
-                eventShooter.scoreboardTags.remove("Alchemy_Artillery_Loaded")
-                entityAlchemyArtilleryAmmo[eventShooter.uniqueId] = null
+            ALCHEMY_ARTILLERY_COUNTER[bowUUID] = count - 1
+            if (ALCHEMY_ARTILLERY_COUNTER[bowUUID] == 0) {
+                lastShot = true
             }
         }
-        return someThrownPotion
-
+        if (lastShot) {
+            crossbow.removeTag(ItemTags.ALCHEMY_ARTILLERY_LOADED)
+            ALCHEMY_ARTILLERY_AMMO[bowUUID] = null
+        }
+        return potion
     }
 
     // ------------------------------- BOLA_SHOT ------------------------------------
-    private fun bolaShotEnchantmentShoot(eventProjectile: Entity, enchantmentStrength: Int) {
-        eventProjectile.addScoreboardTag(EntityTags.BOLA_SHOT_ARROW)
-        eventProjectile.addScoreboardTag(EntityTags.BOLA_SHOT_MODIFIER + enchantmentStrength)
+    private fun bolaShotEnchantmentShoot(projectile: Entity, enchantmentStrength: Int) {
+        projectile.addScoreboardTag(EntityTags.BOLA_SHOT_ARROW)
+        projectile.addScoreboardTag(EntityTags.BOLA_SHOT_MODIFIER + enchantmentStrength)
     }
 
-    private fun bolaShotEnchantmentHit(eventProjectile: Projectile, eventHitEntity: LivingEntity) {
-        // Loop
+    private fun bolaShotEnchantmentHit(projectile: Projectile, victim: LivingEntity) {
         for (x in 1..3) {
-            if (eventProjectile.scoreboardTags.contains(EntityTags.BOLA_SHOT_MODIFIER + x)) {
-                if (eventHitEntity.location.block.type == Material.AIR) {
-                    eventHitEntity.location.block.type = Material.COBWEB
-                    eventHitEntity.addPotionEffects(listOf(
+            if (projectile.scoreboardTags.contains(EntityTags.BOLA_SHOT_MODIFIER + x)) {
+                if (victim.location.block.type == Material.AIR) {
+                    victim.location.block.type = Material.COBWEB
+                    victim.addPotionEffects(listOf(
                         PotionEffect(PotionEffectType.SLOW, 20 * (4 + x), 0),
                         PotionEffect(PotionEffectType.SLOW_DIGGING, 20 * (4 + x), 0)))
                 }
@@ -291,31 +302,31 @@ object RangedListeners : Listener {
     }
 
     // ------------------------------- BURST_BARRAGE ------------------------------------
-    private fun burstBarrageEnchantmentShoot(eventProjectile: Entity, eventShooter: LivingEntity, enchantmentStrength: Int) {
-        if (!eventShooter.scoreboardTags.contains(EntityTags.IS_BURST_BARRAGING) && !eventProjectile.scoreboardTags.contains(EntityTags.REPLICATED_ARROW) && eventProjectile is Projectile)  {
-            eventShooter.addScoreboardTag(EntityTags.IS_BURST_BARRAGING)
-            val initialVelocity = eventProjectile.velocity.clone()
-            BurstBarrageTask(eventShooter, enchantmentStrength, initialVelocity, eventProjectile).runTaskTimer(Odyssey.instance, 3, 3)
+    private fun burstBarrageEnchantmentShoot(projectile: Entity, shooter: LivingEntity, enchantmentStrength: Int) {
+        if (!shooter.scoreboardTags.contains(EntityTags.IS_BURST_BARRAGING) && !projectile.scoreboardTags.contains(EntityTags.REPLICATED_ARROW) && projectile is Projectile)  {
+            shooter.addScoreboardTag(EntityTags.IS_BURST_BARRAGING)
+            val initialVelocity = projectile.velocity.clone()
+            BurstBarrageTask(shooter, enchantmentStrength, initialVelocity, projectile).runTaskTimer(Odyssey.instance, 3, 3)
         }
 
     }
 
     // ------------------------------- CHAIN_REACTION ------------------------------------
-    private fun chainReactionEnchantmentShoot(eventProjectile: Entity, enchantmentStrength: Int) {
-        with(eventProjectile) {
+    private fun chainReactionEnchantmentShoot(projectile: Entity, enchantmentStrength: Int) {
+        with(projectile) {
             addScoreboardTag(EntityTags.CHAIN_REACTION_ARROW)
             addScoreboardTag(EntityTags.CHAIN_REACTION_MODIFIER + enchantmentStrength)
         }
     }
 
-    private fun chainReactionEnchantmentHit(eventProjectile: Projectile, eventHitEntity: LivingEntity) {
-        val closeEntities = eventHitEntity.location.getNearbyLivingEntities(10.0).filter { it != eventProjectile.shooter!! }
+    private fun chainReactionEnchantmentHit(projectile: Projectile, victim: LivingEntity) {
+        val closeEntities = victim.location.getNearbyLivingEntities(10.0).filter { it != projectile.shooter!! }
         for (x in 1..6) {
-            if (eventProjectile.scoreboardTags.contains(EntityTags.CHAIN_REACTION_MODIFIER + (x - 1))) { break }
+            if (projectile.scoreboardTags.contains(EntityTags.CHAIN_REACTION_MODIFIER + (x - 1))) { break }
             // Spawn projectiles
             if (x <= closeEntities.size) {
-                val chainVelocity = closeEntities.elementAt(x - 1).location.clone().subtract(eventHitEntity.location.add(0.0, 0.5, 0.0)).toVector().normalize().multiply(1.5)
-                eventProjectile.world.spawnEntity(eventProjectile.location, eventProjectile.type).also {
+                val chainVelocity = closeEntities.elementAt(x - 1).location.clone().subtract(victim.location.add(0.0, 0.5, 0.0)).toVector().normalize().multiply(1.5)
+                projectile.world.spawnEntity(projectile.location, projectile.type).also {
                     it.velocity = chainVelocity
                 }
             }
@@ -324,16 +335,18 @@ object RangedListeners : Listener {
     }
 
     // ------------------------------- CLUSTER_SHOT ------------------------------------
-    private fun clusterShotEnchantmentShoot(eventProjectile: Entity, enchantmentStrength: Int) {
-        eventProjectile.addScoreboardTag(EntityTags.CLUSTER_SHOT_ARROW)
-        eventProjectile.addScoreboardTag(EntityTags.CLUSTER_SHOT_MODIFIER + enchantmentStrength)
-        if (eventProjectile is Arrow) { eventProjectile.pickupStatus = AbstractArrow.PickupStatus.DISALLOWED }
+    private fun clusterShotEnchantmentShoot(projectile: Entity, enchantmentStrength: Int) {
+        projectile.run {
+            addScoreboardTag(EntityTags.CLUSTER_SHOT_ARROW)
+            addScoreboardTag(EntityTags.CLUSTER_SHOT_MODIFIER + enchantmentStrength)
+            if (this is Arrow) { pickupStatus = AbstractArrow.PickupStatus.DISALLOWED }
+        }
     }
 
-    private fun clusterShotEnchantmentHit(eventProjectile: Projectile, eventHitEntity: LivingEntity) {
+    private fun clusterShotEnchantmentHit(projectile: Projectile, victim: LivingEntity) {
         var modifier = 0
         for (x in 1..5) {
-            if (eventProjectile.scoreboardTags.contains(EntityTags.CHAIN_REACTION_MODIFIER + x)) {
+            if (projectile.scoreboardTags.contains(EntityTags.CHAIN_REACTION_MODIFIER + x)) {
                 modifier = x
                 break
             }
@@ -345,22 +358,22 @@ object RangedListeners : Listener {
             val angle = Math.random() * Math.PI * 2
             val coordinates: Pair<Double, Double> = Pair(cos(angle) * (5..12).random() * 0.1, sin(angle) * (5..12).random() * 0.1)
             // Make Random radii?
-            val someVelocity = eventProjectile.location.clone().add(coordinates.first, 7.6, coordinates.second).subtract(eventProjectile.location).toVector().normalize().multiply(1.0)
-            eventHitEntity.world.spawnEntity(eventHitEntity.location.clone().add(0.0, 0.5, 0.0), eventProjectile.type).also {
+            val someVelocity = projectile.location.clone().add(coordinates.first, 7.6, coordinates.second).subtract(projectile.location).toVector().normalize().multiply(1.0)
+            victim.world.spawnEntity(victim.location.clone().add(0.0, 0.5, 0.0), projectile.type).also {
                 if (it is Arrow) {
-                    it.basePotionData = (eventProjectile as Arrow).basePotionData
+                    it.basePotionData = (projectile as Arrow).basePotionData
                     it.isPersistent = false
-                    it.fireTicks = eventProjectile.fireTicks
+                    it.fireTicks = projectile.fireTicks
                     it.pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
                 }
                 else if (it is ThrownPotion) {
-                    it.item = (eventProjectile as ThrownPotion).item
+                    it.item = (projectile as ThrownPotion).item
                 }
                 // Projectile
                 if (it is Projectile) {
-                    it.shooter = eventProjectile.shooter
+                    it.shooter = projectile.shooter
                     it.velocity = someVelocity
-                    for (tag in eventProjectile.scoreboardTags) {
+                    for (tag in projectile.scoreboardTags) {
                         if (tag != EntityTags.CLUSTER_SHOT_ARROW) { it.scoreboardTags.add(tag) }
                     }
                 }
@@ -369,9 +382,9 @@ object RangedListeners : Listener {
     }
 
     // ------------------------------- GALE_WIND ------------------------------------
-    private fun galeWindEnchantmentShoot(eventShooter: LivingEntity, enchantmentStrength: Int) {
-        eventShooter.world.playSound(eventShooter.location, Sound.ENTITY_WARDEN_SONIC_CHARGE, 2.5F, 1.5F)
-        GaleWindTask(eventShooter, enchantmentStrength).runTaskLater(Odyssey.instance, 6)
+    private fun galeWindEnchantmentShoot(shooter: LivingEntity, enchantmentStrength: Int) {
+        shooter.world.playSound(shooter.location, Sound.ENTITY_WARDEN_SONIC_CHARGE, 2.5F, 1.5F)
+        GaleWindTask(shooter, enchantmentStrength).runTaskLater(Odyssey.instance, 6)
     }
 
     // ------------------------------- LUCKY_DRAW ------------------------------------
@@ -380,23 +393,23 @@ object RangedListeners : Listener {
     }
 
     // ------------------------------- OVERCHARGE ------------------------------------
-    private fun overchargeEnchantmentLoad(eventPlayer: Player, eventBow: ItemStack, enchantmentStrength: Int) {
+    private fun overchargeEnchantmentLoad(player: Player, bow: ItemStack, enchantmentStrength: Int) {
         // TODO: Move Overcharge cooldown to bow
-        if (eventPlayer.scoreboardTags.contains("Bow_Overcharge_Cooldown")) {
-            eventPlayer.scoreboardTags.remove("Bow_Overcharge_Cooldown")
+        if (player.scoreboardTags.contains("Bow_Overcharge_Cooldown")) {
+            player.scoreboardTags.remove("Bow_Overcharge_Cooldown")
             return
         }
 
-        if (!eventPlayer.scoreboardTags.contains("Bow_Overcharging")) {
-            eventPlayer.scoreboardTags.add("Bow_Overcharging")
-            eventPlayer.scoreboardTags.add("Bow_Overcharge_Modifier_0")
-            val overchargeTask = OverchargeTask(eventPlayer, eventBow, enchantmentStrength)
+        if (!player.scoreboardTags.contains("Bow_Overcharging")) {
+            player.scoreboardTags.add("Bow_Overcharging")
+            player.scoreboardTags.add("Bow_Overcharge_Modifier_0")
+            val overchargeTask = OverchargeTask(player, bow, enchantmentStrength)
             overchargeTask.runTaskTimer(Odyssey.instance, (20 * 2) + 10, 20 * 2)
         }
     }
 
-    private fun overchargeEnchantmentShoot(eventShooter: LivingEntity, eventProjectile: Entity) {
-        with(eventShooter.scoreboardTags) {
+    private fun overchargeEnchantmentShoot(shooter: LivingEntity, eventProjectile: Entity) {
+        with(shooter.scoreboardTags) {
             for (x in 1..5) {
                 if (contains("Bow_Overcharge_Modifier_$x") && contains("Bow_Overcharging")) {
                     remove("Bow_Overcharge_Modifier_$x")
@@ -411,9 +424,9 @@ object RangedListeners : Listener {
         eventProjectile.scoreboardTags.add("Overcharge_Arrow")
     }
 
-    private fun overchargeEnchantmentHit(eventProjectile: Projectile): Double {
+    private fun overchargeEnchantmentHit(projectile: Projectile): Double {
         for (x in 1..5) {
-            if (eventProjectile.scoreboardTags.contains(EntityTags.OVERCHARGE_MODIFIER + x)) {
+            if (projectile.scoreboardTags.contains(EntityTags.OVERCHARGE_MODIFIER + x)) {
                 return x * 3.0
             }
         }
@@ -421,8 +434,8 @@ object RangedListeners : Listener {
     }
 
     // ------------------------------- PERPETUAL_PROJECTILE ------------------------------------
-    private fun perpetualProjectileEnchantmentShoot(eventProjectile: Entity, enchantmentStrength: Int) {
-        eventProjectile.run {
+    private fun perpetualProjectileEnchantmentShoot(projectile: Entity, enchantmentStrength: Int) {
+        projectile.run {
             addScoreboardTag(EntityTags.PERPETUAL_ARROW)
             addScoreboardTag(EntityTags.PERPETUAL_MODIFIER + enchantmentStrength)
             setGravity(false)
@@ -431,30 +444,27 @@ object RangedListeners : Listener {
     }
 
     // ------------------------------- RICOCHET ------------------------------------
-    private fun ricochetEnchantmentShoot(eventProjectile: Entity, enchantmentStrength: Int) {
-        with(eventProjectile) {
+    private fun ricochetEnchantmentShoot(projectile: Entity, enchantmentStrength: Int) {
+        with(projectile) {
             addScoreboardTag(EntityTags.RICOCHET_ARROW)
             addScoreboardTag(EntityTags.RICOCHET_BOUNCE + 0)
             addScoreboardTag(EntityTags.RICOCHET_MODIFIER + enchantmentStrength)
         }
     }
 
-    // RICOCHET enchantment function regarding entity hit
-    private fun ricochetEnchantmentEntityHit(eventProjectile: Projectile): Double {
+    private fun ricochetEnchantmentEntityHit(projectile: Projectile): Double {
         for (x in 1..5) {
-            if (eventProjectile.scoreboardTags.contains(EntityTags.RICOCHET_BOUNCE + x)) {
+            if (projectile.scoreboardTags.contains(EntityTags.RICOCHET_BOUNCE + x)) {
                 return x * 2.0
             }
         }
         return 0.0
     }
 
-
-    // RICOCHET enchantment function regarding hit
-    private fun ricochetEnchantmentBlockHit(eventProjectile: Entity, eventNormalVector: Vector) {
+    private fun ricochetEnchantmentBlockHit(projectile: Entity, eventNormalVector: Vector) {
         var bounce = 0
         var modifier = 0
-        with(eventProjectile.scoreboardTags) {
+        with(projectile.scoreboardTags) {
             for (x in 1..4) {
                 if (contains(EntityTags.RICOCHET_BOUNCE + x)) { bounce = x }
                 if (contains(EntityTags.RICOCHET_MODIFIER + x)) {
@@ -471,32 +481,32 @@ object RangedListeners : Listener {
             }
         }
         // Spawn New Arrow
-        eventProjectile.world.spawnEntity(eventProjectile.location.clone(), eventProjectile.type).also {
+        projectile.world.spawnEntity(projectile.location.clone(), projectile.type).also {
             if (it is Arrow) {
                 it.basePotionData = it.basePotionData
                 it.isPersistent = false
-                it.fireTicks = eventProjectile.fireTicks
+                it.fireTicks = projectile.fireTicks
                 it.pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
             }
             else if (it is ThrownPotion) {
-                it.item = (eventProjectile as ThrownPotion).item
+                it.item = (projectile as ThrownPotion).item
             }
             // Projectile
             if (it is Projectile) {
-                it.scoreboardTags.addAll(eventProjectile.scoreboardTags)
-                it.shooter = (eventProjectile as Projectile).shooter
+                it.scoreboardTags.addAll(projectile.scoreboardTags)
+                it.shooter = (projectile as Projectile).shooter
                 // Math
                 val normal = eventNormalVector.clone().normalize()
-                val input = eventProjectile.velocity.clone().normalize()
-                it.velocity = input.subtract(normal.multiply(input.dot(normal) * 2.0)).normalize().multiply(max(eventProjectile.velocity.length() - 0.3, 0.0))
+                val input = projectile.velocity.clone().normalize()
+                it.velocity = input.subtract(normal.multiply(input.dot(normal) * 2.0)).normalize().multiply(max(projectile.velocity.length() - 0.3, 0.0))
             }
         }
-        eventProjectile.remove()
+        projectile.remove()
     }
 
     // ------------------------------- SHARPSHOOTER ------------------------------------
-    private fun sharpshooterEnchantmentShoot(eventProjectile: Entity, enchantmentStrength: Int) {
-        with(eventProjectile) {
+    private fun sharpshooterEnchantmentShoot(projectile: Entity, enchantmentStrength: Int) {
+        with(projectile) {
             if (velocity.length() >= 2.94) {
                 addScoreboardTag(EntityTags.SHARPSHOOTER_ARROW)
                 addScoreboardTag(EntityTags.SHARPSHOOTER_MODIFIER + enchantmentStrength)
@@ -504,9 +514,9 @@ object RangedListeners : Listener {
         }
     }
 
-    private fun sharpshooterEnchantmentHit(eventProjectile: Entity): Double {
+    private fun sharpshooterEnchantmentHit(projectile: Entity): Double {
         for (x in 1..3) {
-            if (eventProjectile.scoreboardTags.contains(EntityTags.SHARPSHOOTER_MODIFIER + x)) {
+            if (projectile.scoreboardTags.contains(EntityTags.SHARPSHOOTER_MODIFIER + x)) {
                 return x + 1.0
             }
         }
@@ -514,31 +524,31 @@ object RangedListeners : Listener {
     }
 
     // ------------------------------- SOUL_REND ------------------------------------
-    private fun soulRendEnchantmentShoot(eventProjectile: Entity, enchantmentStrength: Int) {
-        with(eventProjectile) {
+    private fun soulRendEnchantmentShoot(projectile: Entity, enchantmentStrength: Int) {
+        with(projectile) {
             addScoreboardTag(EntityTags.SOUL_REND_ARROW)
             addScoreboardTag(EntityTags.SOUL_REND_MODIFIER + enchantmentStrength)
         }
     }
 
-    private fun soulRendEnchantmentHit(eventShooter: LivingEntity, eventProjectile: Projectile, eventHitEntity: LivingEntity) {
-        val shooterRendID: String = EntityTags.SOUL_RENDED_BY + eventShooter.uniqueId
-        if (shooterRendID !in eventHitEntity.scoreboardTags) {
-            eventHitEntity.scoreboardTags.add(shooterRendID)
+    private fun soulRendEnchantmentHit(shooter: LivingEntity, projectile: Projectile, victim: LivingEntity) {
+        val shooterRendID: String = EntityTags.SOUL_RENDED_BY + shooter.uniqueId
+        if (shooterRendID !in victim.scoreboardTags) {
+            victim.scoreboardTags.add(shooterRendID)
             for (x in 1..3) {
-                if (eventProjectile.scoreboardTags.contains(EntityTags.SOUL_REND_MODIFIER + x)) {
-                    eventHitEntity.scoreboardTags.add(EntityTags.SOUL_REND_MODIFIER + x)
+                if (projectile.scoreboardTags.contains(EntityTags.SOUL_REND_MODIFIER + x)) {
+                    victim.scoreboardTags.add(EntityTags.SOUL_REND_MODIFIER + x)
                     break
                 }
             }
-            eventHitEntity.world.spawnParticle(Particle.SCULK_SOUL, eventHitEntity.location, 25, 0.15, 0.15, 0.15)
+            victim.world.spawnParticle(Particle.SCULK_SOUL, victim.location, 25, 0.15, 0.15, 0.15)
         }
     }
 
-    private fun soulRendEnchantmentActivate(eventPlayer: Player): Boolean {
+    private fun soulRendEnchantmentActivate(player: Player): Boolean {
         var soulRendMultiplier = 0
-        eventPlayer.location.getNearbyLivingEntities(32.0).forEach {
-            if (it.scoreboardTags.contains(EntityTags.SOUL_RENDED_BY + eventPlayer.uniqueId)) {
+        player.location.getNearbyLivingEntities(32.0).forEach {
+            if (it.scoreboardTags.contains(EntityTags.SOUL_RENDED_BY + player.uniqueId)) {
                 // Soul Rend Modifier Multiplier
                 for (x in 1..3) {
                     if (it.scoreboardTags.contains(EntityTags.SOUL_REND_MODIFIER + x)) {
@@ -549,8 +559,8 @@ object RangedListeners : Listener {
                 }
                 // Damage
                 val soulRendDamage = (it.arrowsInBody * soulRendMultiplier) + 2.0
-                it.scoreboardTags.remove(EntityTags.SOUL_RENDED_BY + eventPlayer.uniqueId)
-                it.damage(soulRendDamage, eventPlayer)
+                it.scoreboardTags.remove(EntityTags.SOUL_RENDED_BY + player.uniqueId)
+                it.damage(soulRendDamage, player)
                 it.world.spawnParticle(Particle.SOUL, it.location, 25, 0.05, 0.35, 0.05)
                 it.world.spawnParticle(Particle.SCULK_SOUL, it.location, 25, 0.25, 0.35, 0.25)
             }

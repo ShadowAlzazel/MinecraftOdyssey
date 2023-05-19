@@ -23,6 +23,15 @@ object EffectTags {
     const val HARDEN: String = "odyssey.harden" // Have more armor (temp 2.0) flat
 
 
+    // ENCHANT
+    const val ARCANE_JAILED: String = "odyssey.arcane_jailed"
+    const val FROSTY_FUSED: String = "odyssey.frosty_fused"
+    const val GRAVITY_WELLED: String = "odyssey.gravity_welled"
+
+    const val PARTLY_RUPTURED: String = "odyssey.partly_ruptured"
+    const val FULLY_RUPTURED: String = "odyssey.fully_ruptured"
+
+
     // TYPE MODIFIERS
     const val DOUSE_MODIFIER: String = "odyssey.douse_factor."
 

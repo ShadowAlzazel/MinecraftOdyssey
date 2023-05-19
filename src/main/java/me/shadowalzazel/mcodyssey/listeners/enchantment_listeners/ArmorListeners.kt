@@ -1,6 +1,8 @@
 package me.shadowalzazel.mcodyssey.listeners.enchantment_listeners
 
 import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.constants.EntityTags
+import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.listeners.tasks.SpeedySpursTask
 import org.bukkit.Material
@@ -29,19 +31,25 @@ object ArmorListeners : Listener {
     // Main function for enchantments relating to entity damage for armor
     @EventHandler
     fun mainArmorDamageHandler(event: EntityDamageByEntityEvent) {
-        if (event.damager !is LivingEntity) { return }
-        if (event.entity !is LivingEntity) { return }
-        if (event.cause != EntityDamageEvent.DamageCause.ENTITY_ATTACK) { return }
+        if (event.damager !is LivingEntity) {
+            return
+        }
+        if (event.entity !is LivingEntity) {
+            return
+        }
+        if (event.cause != EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
+            return
+        }
 
         // Make thorns bug new enchant apply ranged effects
-        val someDamager = event.damager as LivingEntity
-        val someDefender = event.entity as LivingEntity
+        val attacker = event.damager as LivingEntity
+        val defender = event.entity as LivingEntity
         // --------------------------------------------------------------
         // Check if helmet item has lore
-        if (someDefender.equipment?.helmet?.hasItemMeta() == true) {
-            val someHelmet = someDefender.equipment?.helmet
+        if (defender.equipment?.helmet?.hasItemMeta() == true) {
+            val helmet = defender.equipment?.helmet
             // Loop for all enchants
-            for (enchant in someHelmet!!.enchantments) {
+            for (enchant in helmet!!.enchantments) {
                 // Check when
                 when (enchant.key) {
 
@@ -50,47 +58,47 @@ object ArmorListeners : Listener {
         }
         // --------------------------------------------------------------
         // Check if chestplate item has lore
-        if (someDefender.equipment?.chestplate?.hasItemMeta() == true) {
-            val someChestplate = someDefender.equipment?.chestplate
+        if (defender.equipment?.chestplate?.hasItemMeta() == true) {
+            val chestplate = defender.equipment?.chestplate
             // Loop for all enchants
-            for (enchant in someChestplate!!.enchantments) {
+            for (enchant in chestplate!!.enchantments) {
                 // Check when
                 when (enchant.key) {
                     OdysseyEnchantments.VENGEFUL -> {
-                        vengefulEnchantment(someDamager, enchant.value)
+                        vengefulEnchantment(attacker, enchant.value)
                     }
                     OdysseyEnchantments.BEASTLY_BRAWLER -> {
-                        beastlyBrawlerEnchantment(someDefender, enchant.value)
+                        beastlyBrawlerEnchantment(defender, enchant.value)
                     }
                 }
             }
         }
         // --------------------------------------------------------------
         // Check if legging item has lore
-        if (someDefender.equipment?.leggings?.hasItemMeta() == true) {
-            val someLeggings = someDefender.equipment?.leggings
+        if (defender.equipment?.leggings?.hasItemMeta() == true) {
+            val leggings = defender.equipment?.leggings
             // Loop for all enchants
-            for (enchant in someLeggings!!.enchantments) {
+            for (enchant in leggings!!.enchantments) {
                 // Check when
                 when (enchant.key) {
                     OdysseyEnchantments.COWARDICE -> {
-                        cowardiceEnchantment(someDamager, someDefender, enchant.value)
+                        cowardiceEnchantment(attacker, defender, enchant.value)
                     }
                     OdysseyEnchantments.SPOREFUL -> {
-                        sporefulEnchantment(someDefender, enchant.value)
+                        sporefulEnchantment(defender, enchant.value)
                     }
                     OdysseyEnchantments.SQUIDIFY -> {
-                        squidifyEnchantment(someDefender, enchant.value)
+                        squidifyEnchantment(defender, enchant.value)
                     }
                 }
             }
         }
         // --------------------------------------------------------------
         // Check if boot item has lore
-        if (someDefender.equipment?.boots?.hasItemMeta() == true) {
-            val someBoots = someDefender.equipment?.boots
+        if (defender.equipment?.boots?.hasItemMeta() == true) {
+            val boots = defender.equipment?.boots
             // Loop for all enchants
-            for (enchant in someBoots!!.enchantments) {
+            for (enchant in boots!!.enchantments) {
                 // Check when
                 when (enchant.key) {
 
@@ -102,36 +110,36 @@ object ArmorListeners : Listener {
     // Main function for enchantments relating to consuming items
     @EventHandler
     fun mainArmorConsumingHandler(event: PlayerItemConsumeEvent) {
-        val someConsumer = event.player
+        val player = event.player
         // --------------------------------------------------------------
         // Check if chestplate item has lore
-        if (someConsumer.equipment.chestplate?.hasItemMeta() == true) {
-            val someChestplate = someConsumer.equipment.chestplate
+        if (player.equipment.chestplate?.hasItemMeta() == true) {
+            val chestplate = player.equipment.chestplate
             // Loop for all enchants
-            for (enchant in someChestplate!!.enchantments) {
+            for (enchant in chestplate!!.enchantments) {
                 // Check when
                 when (enchant.key) {
                     OdysseyEnchantments.FRUITFUL_FARE -> {
-                        if (!fruitfulFareCooldown.containsKey(someConsumer.uniqueId)) {
-                            fruitfulFareCooldown[someConsumer.uniqueId] = 0L
+                        if (!fruitfulFareCooldown.containsKey(player.uniqueId)) {
+                            fruitfulFareCooldown[player.uniqueId] = 0L
                         }
                         val timeElapsed: Long =
-                            System.currentTimeMillis() - fruitfulFareCooldown[someConsumer.uniqueId]!!
+                            System.currentTimeMillis() - fruitfulFareCooldown[player.uniqueId]!!
                         if (timeElapsed > 8 * 1000) {
-                            fruitfulFareCooldown[someConsumer.uniqueId] = System.currentTimeMillis()
-                            fruitfulFareEnchantment(someConsumer, event.item, enchant.value)
+                            fruitfulFareCooldown[player.uniqueId] = System.currentTimeMillis()
+                            fruitfulFareEnchantment(player, event.item, enchant.value)
                         }
                     }
                     // Add if eat rotten or raw heal + other
                     OdysseyEnchantments.POTION_BARRIER -> {
-                        if (!potionBarrierCooldown.containsKey(someConsumer.uniqueId)) {
-                            potionBarrierCooldown[someConsumer.uniqueId] = 0L
+                        if (!potionBarrierCooldown.containsKey(player.uniqueId)) {
+                            potionBarrierCooldown[player.uniqueId] = 0L
                         }
                         val timeElapsed: Long =
-                            System.currentTimeMillis() - potionBarrierCooldown[someConsumer.uniqueId]!!
+                            System.currentTimeMillis() - potionBarrierCooldown[player.uniqueId]!!
                         if (timeElapsed > 12 * 1000) {
-                            potionBarrierCooldown[someConsumer.uniqueId] = System.currentTimeMillis()
-                            potionBarrierEnchantment(someConsumer, event.item, enchant.value)
+                            potionBarrierCooldown[player.uniqueId] = System.currentTimeMillis()
+                            potionBarrierEnchantment(player, event.item, enchant.value)
                         }
                     }
 
@@ -144,17 +152,17 @@ object ArmorListeners : Listener {
     @EventHandler
     fun mainArmorHitHandler(event: EntityDamageEvent) {
         if (event.cause == EntityDamageEvent.DamageCause.FALL) {
-            val someDefender = event.entity as LivingEntity
+            val defender = event.entity as LivingEntity
             // --------------------------------------------------------------
             // Check if boot item has lore
-            if (someDefender.equipment?.boots?.hasItemMeta() == true) {
-                val someBoots = someDefender.equipment?.boots
+            if (defender.equipment?.boots?.hasItemMeta() == true) {
+                val someBoots = defender.equipment?.boots
                 // Loop for all enchants
                 for (enchant in someBoots!!.enchantments) {
                     // Check when
                     when (enchant.key) {
                         OdysseyEnchantments.DEVASTATING_DROP -> {
-                            devastatingDrop(someDefender, event.damage, enchant.value)
+                            devastatingDrop(defender, event.damage, enchant.value)
                         }
                     }
                 }
@@ -173,7 +181,6 @@ object ArmorListeners : Listener {
             // IDK
 
 
-
         }
 
     }
@@ -183,18 +190,18 @@ object ArmorListeners : Listener {
     @EventHandler
     fun miscArmorVehicleHandler(event: VehicleEnterEvent) { // Move Horse Armor Enchant Here
         if (event.entered is LivingEntity && event.vehicle is LivingEntity) {
-            val someRider = event.entered as LivingEntity
-            val someMount = event.vehicle as LivingEntity
+            val rider = event.entered as LivingEntity
+            val mount = event.vehicle as LivingEntity
             // --------------------------------------------------------------
             // Check if boot item has lore
-            if (someRider.equipment?.boots?.hasItemMeta() == true) {
-                val someBoots = someRider.equipment?.boots
+            if (rider.equipment?.boots?.hasItemMeta() == true) {
+                val boots = rider.equipment?.boots
                 // Loop for all enchants
-                for (enchant in someBoots!!.enchantments) {
+                for (enchant in boots!!.enchantments) {
                     // Check when
                     when (enchant.key) {
                         OdysseyEnchantments.SPEEDY_SPURS -> {
-                            speedySpursEnchantment(someRider, someMount, enchant.value)
+                            speedySpursEnchantment(rider, mount, enchant.value)
                         }
                     }
                 }
@@ -202,13 +209,17 @@ object ArmorListeners : Listener {
         }
     }
 
-    /*----------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
 
-    // BEASTLY_BRAWLER Enchantment Function
-    private fun beastlyBrawlerEnchantment(eventDefender: LivingEntity, enchantmentStrength: Int) {
-        // Effects
-        if (eventDefender.location.getNearbyLivingEntities(4.0).size > 5) {
-            eventDefender.addPotionEffect(
+    // ------------------------------- BEASTLY_BRAWLER ------------------------------------
+    // TODO: Add Temp Attribute Attack Damage instead of Potion
+    private fun beastlyBrawlerEnchantment(
+        defender: LivingEntity,
+        enchantmentStrength: Int
+    ) {
+        if (defender.location.getNearbyLivingEntities(4.0).size > 5) {
+            defender.addPotionEffect(
                 PotionEffect(
                     PotionEffectType.INCREASE_DAMAGE,
                     6 * 20,
@@ -218,32 +229,44 @@ object ArmorListeners : Listener {
         }
     }
 
-    // COWARDICE Enchantment Function
+    // ------------------------------- COWARDICE ------------------------------------
     private fun cowardiceEnchantment(
-        eventDamager: LivingEntity,
-        eventDefender: LivingEntity,
+        attacker: LivingEntity,
+        defender: LivingEntity,
         enchantmentStrength: Int
     ) {
-        // Effects
-        eventDefender.addPotionEffect(PotionEffect(PotionEffectType.SPEED, 6 * 20, enchantmentStrength))
+        defender.addPotionEffect(
+            PotionEffect(
+                PotionEffectType.SPEED,
+                6 * 20,
+                enchantmentStrength
+            )
+        )
         // Movement Math
-        if (eventDamager.location.distance(eventDefender.location) <= 5.0) {
-            eventDefender.location.clone().subtract(eventDamager.location).toVector().normalize().multiply(1.6)
+        if (attacker.location.distance(defender.location) <= 5.0) {
+            defender.location.clone().subtract(attacker.location).toVector().normalize().multiply(1.6)
         }
     }
 
-
-    private fun devastatingDrop(eventDefender: LivingEntity, eventDamage: Double, enchantmentStrength: Int) {
-        eventDefender.location.getNearbyLivingEntities(4.0).forEach {
-            if (it != eventDefender) {
-                it.damage(eventDamage * (0.4 * enchantmentStrength))
+    // ------------------------------- DEVASTATING_DROP ------------------------------------
+    private fun devastatingDrop(
+        dropper: LivingEntity,
+        receivedDamage: Double,
+        enchantmentStrength: Int
+    ) {
+        dropper.location.getNearbyLivingEntities(4.0).forEach {
+            if (it != dropper) {
+                it.damage(receivedDamage * (0.4 * enchantmentStrength))
             }
         }
     }
 
-
-    // FRUITFUL_FARE Enchantment Function
-    private fun fruitfulFareEnchantment(eventConsumer: Player, eventItem: ItemStack, enchantmentStrength: Int) {
+    // ------------------------------- FRUITFUL_FARE ------------------------------------
+    private fun fruitfulFareEnchantment(
+        player: Player,
+        food: ItemStack,
+        enchantmentStrength: Int
+    ) {
         // list of materials that can not be consumed
         val notFood = listOf(
             Material.POTION,
@@ -252,32 +275,39 @@ object ArmorListeners : Listener {
             Material.SPIDER_EYE,
             Material.PUFFERFISH
         )
-        if (eventItem.type !in notFood) { // Currently non-forgiving
+        if (food.type !in notFood) { // Currently non-forgiving
             // Check Health
-            val currentHealth = eventConsumer.health
-            if (eventConsumer.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value < currentHealth + (1 + enchantmentStrength)) {
-                eventConsumer.health = eventConsumer.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value
+            val currentHealth = player.health
+            if (player.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value < currentHealth + (1 + enchantmentStrength)) {
+                player.health = player.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value
             } else {
-                eventConsumer.health += (1 + enchantmentStrength)
+                player.health += (1 + enchantmentStrength)
             }
             // Particles
-            with(eventConsumer.world) {
-                spawnParticle(Particle.HEART, eventConsumer.location, 35, 0.5, 0.5, 0.5)
-                spawnParticle(Particle.VILLAGER_HAPPY, eventConsumer.location, 35, 0.5, 0.5, 0.5)
-                spawnParticle(Particle.COMPOSTER, eventConsumer.location, 35, 0.5, 0.5, 0.5)
-                playSound(eventConsumer.location, Sound.ENTITY_STRIDER_HAPPY, 1.5F, 0.5F)
-                playSound(eventConsumer.location, Sound.BLOCK_RESPAWN_ANCHOR_SET_SPAWN, 1.5F, 0.5F)
-                playSound(eventConsumer.location, Sound.ENTITY_WANDERING_TRADER_DRINK_POTION, 1.5F, 0.8F)
+            with(player.world) {
+                spawnParticle(Particle.HEART, player.location, 35, 0.5, 0.5, 0.5)
+                spawnParticle(Particle.VILLAGER_HAPPY, player.location, 35, 0.5, 0.5, 0.5)
+                spawnParticle(Particle.COMPOSTER, player.location, 35, 0.5, 0.5, 0.5)
+                playSound(player.location, Sound.ENTITY_STRIDER_HAPPY, 1.5F, 0.5F)
+                playSound(player.location, Sound.BLOCK_RESPAWN_ANCHOR_SET_SPAWN, 1.5F, 0.5F)
+                playSound(player.location, Sound.ENTITY_WANDERING_TRADER_DRINK_POTION, 1.5F, 0.8F)
             }
         }
     }
 
-    // POTION_BARRIER Enchantment Function
-    private fun potionBarrierEnchantment(eventConsumer: Player, eventItem: ItemStack, enchantmentStrength: Int) {
+    // ------------------------------- POTION_BARRIER ------------------------------------
+    private fun potionBarrierEnchantment(
+        player: Player,
+        potion: ItemStack,
+        enchantmentStrength: Int
+    ) {
         // Check if potion
-        if (eventItem.type == Material.POTION) { // Currently non-forgiving
+        if (potion.type != Material.POTION) {
+            return
+        }
+        if (!potion.itemMeta.hasCustomModelData() || potion.itemMeta.customModelData == ItemModels.SQUARE_BOTTLE) {
             // Effects
-            eventConsumer.addPotionEffect(
+            player.addPotionEffect(
                 PotionEffect(
                     PotionEffectType.DAMAGE_RESISTANCE,
                     ((enchantmentStrength * 2) + 2) * 20,
@@ -285,33 +315,29 @@ object ArmorListeners : Listener {
                 )
             )
             // Particles
-            with(eventConsumer.world) {
-                spawnParticle(Particle.SCRAPE, eventConsumer.location, 35, 0.5, 0.5, 0.5)
-                spawnParticle(Particle.ELECTRIC_SPARK, eventConsumer.location, 35, 0.5, 0.5, 0.5)
-                spawnParticle(Particle.COMPOSTER, eventConsumer.location, 35, 0.5, 0.5, 0.5)
-                playSound(eventConsumer.location, Sound.ITEM_SHIELD_BLOCK, 1.5F, 0.5F)
-                playSound(eventConsumer.location, Sound.BLOCK_DEEPSLATE_BREAK, 1.5F, 0.5F)
-                playSound(eventConsumer.location, Sound.ENTITY_WANDERING_TRADER_DRINK_POTION, 1.5F, 0.8F)
+            with(player.world) {
+                spawnParticle(Particle.SCRAPE, player.location, 35, 0.5, 0.5, 0.5)
+                spawnParticle(Particle.ELECTRIC_SPARK, player.location, 35, 0.5, 0.5, 0.5)
+                spawnParticle(Particle.COMPOSTER, player.location, 35, 0.5, 0.5, 0.5)
+                playSound(player.location, Sound.ITEM_SHIELD_BLOCK, 1.5F, 0.5F)
+                playSound(player.location, Sound.BLOCK_DEEPSLATE_BREAK, 1.5F, 0.5F)
+                playSound(player.location, Sound.ENTITY_WANDERING_TRADER_DRINK_POTION, 1.5F, 0.8F)
             }
         }
     }
 
-    // TODO: Item if in hand, create aura?
-    // Enchantment: Things around get chilling? flame?
-
-    // SPEEDY_SPURS enchantment effects
-    private fun speedySpursEnchantment(eventRider: LivingEntity, eventMount: LivingEntity, enchantmentStrength: Int) {
-        // Tasks
-        val someSpeedySpursTask = SpeedySpursTask(eventRider, eventMount, enchantmentStrength)
+    // ------------------------------- SPEEDY_SPURS ------------------------------------
+    private fun speedySpursEnchantment(rider: LivingEntity, mount: LivingEntity, enchantmentStrength: Int) {
+        val someSpeedySpursTask = SpeedySpursTask(rider, mount, enchantmentStrength)
         someSpeedySpursTask.runTaskTimer(Odyssey.instance, 0, 10 * 20)
     }
 
-    // SPOREFUL Enchantment Function
-    private fun sporefulEnchantment(eventDefender: LivingEntity, enchantmentStrength: Int) {
+    // ------------------------------- SPOREFUL ------------------------------------
+    private fun sporefulEnchantment(defender: LivingEntity, enchantmentStrength: Int) {
         // List effects
-        eventDefender.world.getNearbyLivingEntities(eventDefender.location, enchantmentStrength.toDouble() * 0.75)
+        defender.world.getNearbyLivingEntities(defender.location, enchantmentStrength.toDouble() * 0.75)
             .forEach {
-                if (it != eventDefender) {
+                if (it != defender) {
                     it.addPotionEffects(
                         listOf(
                             PotionEffect(PotionEffectType.POISON, ((enchantmentStrength * 2) + 2) * 20, 0),
@@ -321,23 +347,21 @@ object ArmorListeners : Listener {
                     )
                 }
             }
-
         // TODO: Make purple-ish
         // Particles
-        with(eventDefender.world) {
-            spawnParticle(Particle.PORTAL, eventDefender.location, 65, 0.5, 0.5, 0.5)
-            spawnParticle(Particle.GLOW, eventDefender.location, 45, 0.5, 0.5, 0.5)
-            spawnParticle(Particle.SCRAPE, eventDefender.location, 65, 0.15, 0.15, 0.15)
-            spawnParticle(Particle.FALLING_SPORE_BLOSSOM, eventDefender.location, 85, 1.0, 0.5, 1.0)
+        with(defender.world) {
+            spawnParticle(Particle.PORTAL, defender.location, 65, 0.5, 0.5, 0.5)
+            spawnParticle(Particle.GLOW, defender.location, 45, 0.5, 0.5, 0.5)
+            spawnParticle(Particle.SCRAPE, defender.location, 65, 0.15, 0.15, 0.15)
+            spawnParticle(Particle.FALLING_SPORE_BLOSSOM, defender.location, 85, 1.0, 0.5, 1.0)
         }
     }
 
-    // SQUIDIFY Enchantment Function
-    private fun squidifyEnchantment(eventDefender: LivingEntity, enchantmentStrength: Int) {
-        // List effects
-        eventDefender.world.getNearbyLivingEntities(eventDefender.location, enchantmentStrength.toDouble() * 0.75)
+    // ------------------------------- SQUIDIFY ------------------------------------
+    private fun squidifyEnchantment(defender: LivingEntity, enchantmentStrength: Int) {
+        defender.world.getNearbyLivingEntities(defender.location, enchantmentStrength.toDouble() * 0.75)
             .forEach {
-                if (it != eventDefender) {
+                if (it != defender) {
                     it.addPotionEffects(
                         listOf(
                             PotionEffect(PotionEffectType.BLINDNESS, (enchantmentStrength * 2) + 2, 1),
@@ -346,21 +370,19 @@ object ArmorListeners : Listener {
                     )
                 }
             }
-
         // Particles
-        with(eventDefender.world) {
-            spawnParticle(Particle.ASH, eventDefender.location, 95, 1.5, 0.5, 1.5)
-            spawnParticle(Particle.SPELL_MOB_AMBIENT, eventDefender.location, 55, 0.75, 0.5, 0.75)
-            spawnParticle(Particle.SQUID_INK, eventDefender.location, 85, 0.75, 0.5, 0.75)
-            spawnParticle(Particle.SMOKE_LARGE, eventDefender.location, 85, 1.0, 0.5, 1.0)
+        with(defender.world) {
+            spawnParticle(Particle.ASH, defender.location, 95, 1.5, 0.5, 1.5)
+            spawnParticle(Particle.SPELL_MOB_AMBIENT, defender.location, 55, 0.75, 0.5, 0.75)
+            spawnParticle(Particle.SQUID_INK, defender.location, 85, 0.75, 0.5, 0.75)
+            spawnParticle(Particle.SMOKE_LARGE, defender.location, 85, 1.0, 0.5, 1.0)
         }
     }
 
-    // VENGEFUL Enchantment Function
-    private fun vengefulEnchantment(eventDamager: LivingEntity, enchantmentStrength: Int) {
-        // Mark
-        eventDamager.addScoreboardTag("Vengeance_Marked")
-        eventDamager.addScoreboardTag("Vengeance_Marked_$enchantmentStrength")
+    // ------------------------------- VENGEFUL ------------------------------------
+    private fun vengefulEnchantment(attacker: LivingEntity, enchantmentStrength: Int) {
+        attacker.addScoreboardTag(EntityTags.MARKED_FOR_VENGEANCE)
+        attacker.addScoreboardTag(EntityTags.VENGEFUL_MODIFIER + enchantmentStrength)
         // Add Particles Timer?
     }
 

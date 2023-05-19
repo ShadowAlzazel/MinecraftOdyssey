@@ -49,7 +49,7 @@ object OdysseyAlchemyListeners : Listener, AlchemyManager {
                 brewedPotions[x] = ItemStack(Material.AIR)
             } else if (!(itemAtX.itemMeta.persistentDataContainer.hasOdysseyTag())) {
                 if (brewingIngredient == Material.REDSTONE) {
-                    itemAtX.itemMeta.setCustomModelData(ItemModels.SQUARE_POTION)
+                    itemAtX.itemMeta.setCustomModelData(ItemModels.SQUARE_BOTTLE)
                 }
             } else if (itemAtX.itemMeta.hasCustomModelData()) {/*
                 val potionModel = itemAtX.itemMeta.customModelData
@@ -178,7 +178,7 @@ object OdysseyAlchemyListeners : Listener, AlchemyManager {
     }
 
 
-    //
+    // TODO: FIX
     @EventHandler
     fun tippedArrowTableInteract(event: PlayerInteractEvent) {
         if (event.clickedBlock != null) {
@@ -211,7 +211,7 @@ object OdysseyAlchemyListeners : Listener, AlchemyManager {
             if (someArrow.itemStack.type == Material.TIPPED_ARROW) {
                 // checks if lore and display component
                 if (someArrow.itemStack.itemMeta.hasLore() && someArrow.itemStack.itemMeta.hasDisplayName()) {
-
+                    // TODO:
                 }
             }
         }

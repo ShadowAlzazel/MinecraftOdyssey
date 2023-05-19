@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.constants
 
-object IdentifierAttributes {
+object IdentifierMaps {
 
     val HEALTH_MAP = mapOf(
         Identifiers.EXTRA_HEALTH_ERISHKIGAL_FRUIT to Pair("odyssey.extra_health_erishkigal_fruit", 4.0),

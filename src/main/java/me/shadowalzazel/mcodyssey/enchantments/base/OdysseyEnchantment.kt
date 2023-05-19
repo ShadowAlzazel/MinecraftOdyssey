@@ -20,7 +20,7 @@ open class OdysseyEnchantment(
     val subtype: Subtype = Subtype.GILDED) :
     Enchantment(NamespacedKey(Odyssey.instance, namespace!!)) {
 
-    private val romanNumeralList = mapOf(1 to "I", 2 to "II", 3 to "III", 4 to "IV", 5 to "V", 6 to "VI", 7 to "VII", 8 to "VIII", 9 to "IX", 10 to "X")
+    val ROMAN_NUMERAL_LIST = mapOf(1 to "I", 2 to "II", 3 to "III", 4 to "IV", 5 to "V", 6 to "VI", 7 to "VII", 8 to "VIII", 9 to "IX", 10 to "X")
 
     override fun translationKey(): String {
         TODO("Not yet implemented")
@@ -66,12 +66,12 @@ open class OdysseyEnchantment(
         }
     }
 
-    override fun displayName(level: Int): Component {
-        return Component.text(enchantName, subtype.displayColor)
+    fun createEnchantmentLore(level: Int): TextComponent {
+        return Component.text("$enchantName ${ROMAN_NUMERAL_LIST[level]}", subtype.displayColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
     }
 
-    fun createEnchantmentLore(level: Int): TextComponent {
-        return Component.text("$enchantName ${romanNumeralList[level]}", subtype.displayColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+    override fun displayName(level: Int): Component {
+        return Component.text(enchantName, subtype.displayColor)
     }
 
     override fun isTradeable(): Boolean {

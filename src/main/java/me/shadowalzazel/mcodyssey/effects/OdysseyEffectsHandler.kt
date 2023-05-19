@@ -17,8 +17,7 @@ object OdysseyEffectsHandler {
         victimList.forEach {
             it.addPotionEffect(decayingPotionEffect)
             if (EffectTags.DECAYING !in it.scoreboardTags) { it.addScoreboardTag(EffectTags.DECAYING) }
-            val decayingTask = DecayingTask(it, 1, duration / 2)
-            decayingTask.runTaskTimer(Odyssey.instance, 0, 20 * 2)
+            DecayingTask(it, 1, duration / 2).runTaskTimer(Odyssey.instance, 0, 20 * 2)
         }
     }
 
@@ -29,8 +28,7 @@ object OdysseyEffectsHandler {
             if (EffectTags.FREEZING !in it.scoreboardTags) {
                 it.addPotionEffect(freezingPotionEffect)
                 it.addScoreboardTag(EffectTags.FREEZING)
-                val freezingTask = FreezingTask(it, amplifier, duration)
-                freezingTask.runTaskTimer(Odyssey.instance, 0, 20)
+                FreezingTask(it, amplifier, duration).runTaskTimer(Odyssey.instance, 0, 20)
             }
         }
     }
@@ -41,8 +39,7 @@ object OdysseyEffectsHandler {
             if (EffectTags.DOUSED !in it.scoreboardTags) {
                 it.addScoreboardTag(EffectTags.DOUSED)
                 it.addScoreboardTag("${EffectTags.DOUSE_MODIFIER}${amplifier}")
-                val dousedTask = DousedTask(it, duration)
-                dousedTask.runTaskTimer(Odyssey.instance, 0, 20)
+                DousedTask(it, duration).runTaskTimer(Odyssey.instance, 0, 20)
             }
         }
     }
@@ -53,8 +50,7 @@ object OdysseyEffectsHandler {
             if (EffectTags.ABLAZE !in it.scoreboardTags) {
                 it.fireTicks = duration * 20
                 it.addScoreboardTag(EffectTags.ABLAZE)
-                val blazingTask = BlazingTask(it, amplifier, duration)
-                blazingTask.runTaskTimer(Odyssey.instance, 0, 20)
+                BlazingTask(it, amplifier, duration).runTaskTimer(Odyssey.instance, 0, 20)
             }
         }
     }
@@ -64,8 +60,7 @@ object OdysseyEffectsHandler {
         victimList.forEach {
             if (EffectTags.THORNY !in it.scoreboardTags) {
                 it.addScoreboardTag(EffectTags.THORNY)
-                val thornyTask = ThornyTask(it, duration)
-                thornyTask.runTaskTimer(Odyssey.instance, 0, 20)
+                ThornyTask(it, duration).runTaskTimer(Odyssey.instance, 0, 20)
             }
         }
     }
@@ -75,8 +70,7 @@ object OdysseyEffectsHandler {
         victimList.forEach {
             if (EffectTags.MIASMA !in it.scoreboardTags) {
                 it.addScoreboardTag(EffectTags.MIASMA)
-                val puffyPricklyTask = MiasmaTask(it, duration)
-                puffyPricklyTask.runTaskTimer(Odyssey.instance, 0, 20)
+                MiasmaTask(it, duration).runTaskTimer(Odyssey.instance, 0, 20)
             }
         }
     }
@@ -86,8 +80,7 @@ object OdysseyEffectsHandler {
         victimList.forEach {
             if (EffectTags.ACCURSED !in it.scoreboardTags) {
                 it.addScoreboardTag(EffectTags.ACCURSED)
-                val accursedTask = AccursedTask(it, duration)
-                accursedTask.runTaskTimer(Odyssey.instance, 0, 20)
+                AccursedTask(it, duration).runTaskTimer(Odyssey.instance, 0, 20)
             }
         }
     }
@@ -110,8 +103,7 @@ object OdysseyEffectsHandler {
         victimList.forEach {
             if (EffectTags.HONEYED !in it.scoreboardTags) {
                 it.addScoreboardTag(EffectTags.HONEYED)
-                val honeyedTask = HoneyedTask(it, duration * 2)
-                honeyedTask.runTaskTimer(Odyssey.instance, 0, 10)
+                HoneyedTask(it, duration * 2).runTaskTimer(Odyssey.instance, 0, 10)
             }
         }
     }
@@ -120,8 +112,7 @@ object OdysseyEffectsHandler {
     fun hemorrhagingEffect(victimList: MutableCollection<LivingEntity>, amplifier: Int = 1) {
         victimList.forEach {
             if (EffectTags.HEMORRHAGING !in it.scoreboardTags) { it.addScoreboardTag(EffectTags.HEMORRHAGING) }
-            val hemorrhageTask = HemorrhageTask(it, amplifier)
-            hemorrhageTask.runTaskTimer(Odyssey.instance, 0, 20)
+            HemorrhageTask(it, amplifier).runTaskTimer(Odyssey.instance, 0, 20)
         }
     }
 
