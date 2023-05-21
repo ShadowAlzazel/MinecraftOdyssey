@@ -1,12 +1,14 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.items.Runic
 import me.shadowalzazel.mcodyssey.items.Runic.createEnchantedBook
 import me.shadowalzazel.mcodyssey.items.Foods
 import me.shadowalzazel.mcodyssey.items.Ingredients
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
+import me.shadowalzazel.mcodyssey.listeners.utility.LootLogic
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
@@ -31,6 +33,158 @@ object OdysseyDropsListeners : Listener {
             world.spawnParticle(Particle.GLOW, location, 35, 2.0, 1.0, 2.0)
         }
     }
+
+
+    @EventHandler
+    fun mobDeathDropHandler(event: EntityDeathEvent) {
+        if (event.entity.killer !is Player) {
+            return
+        }
+        if (!event.entity.hasLineOfSight(event.entity.killer as Player)) {
+            return
+        }
+
+
+    }
+
+    // Create a calculation class that handles all the logic
+
+    private fun mobLootManager(mob: LivingEntity, player: Player) {
+        mob.also {
+            // Enchantment set
+            val enchantmentSet = OdysseyEnchantments.MELEE_SET + OdysseyEnchantments.RANGED_SET
+
+            val mobLootLogic = LootLogic(1.0, mob, player)
+
+            // Loot check and entity check
+            when (it) {
+                is Skeleton -> {
+                    if (mobLootLogic.roll(2.5)) {
+                        it.world.dropItem(it.location, (Runic.GILDED_BOOK.createEnchantedBook(enchantmentSet.random(), 1)))
+                        droppedItemSound(player)
+                    }
+                }
+                is Husk -> {
+                    if (mobLootLogic.roll(1.5)) {
+                        it.world.dropItem(it.location, (Runic.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.DECAYING_TOUCH, 1)))
+                        droppedItemSound(player)
+                    }
+                }
+                is Drowned -> {
+                    if (mobLootLogic.roll(1.5)) {
+                        it.world.dropItem(it.location, (Runic.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.BANE_OF_THE_SEA, 1)))
+                        droppedItemSound(player)
+                    }
+                }
+                is PigZombie -> {
+                    if (mobLootLogic.roll(1.5)) {
+                        it.world.dropItem(it.location, (Runic.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.BANE_OF_THE_SWINE, 1)))
+                        droppedItemSound(player)
+                    }
+                }
+                is Zombie -> {
+                    if (mobLootLogic.roll(2.5)) {
+                        it.world.dropItem(it.location, (Runic.GILDED_BOOK.createEnchantedBook(enchantmentSet.random(), 1)))
+                        droppedItemSound(player)
+                    }
+                    // TODO: Is Blood Moon
+                    it.world.dropItem(it.location, (Ingredients.COAGULATED_BLOOD.createItemStack((1..3).random())))
+                }
+                is Witch -> {
+                    if (mobLootLogic.roll(2.5)) {
+                        it.world.dropItem(it.location, (Runic.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.ALCHEMY_ARTILLERY, 1)))
+                        droppedItemSound(player)
+                    }
+                }
+                is Stray -> {
+                    if (mobLootLogic.roll(1.5)) {
+                        it.world.dropItem(it.location, (Runic.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.FREEZING_ASPECT, 1)))
+                        droppedItemSound(player)
+                    }
+                }
+                is Creeper -> {
+                    // If charged creeper kills catalyst, drop echo shard
+                    if (mobLootLogic.roll(1.5)) {
+                        it.world.dropItem(it.location, (Runic.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.EXPLODING, 1)))
+                        droppedItemSound(player)
+                    }
+                }
+                is Hoglin -> {
+                    if (mobLootLogic.roll(1.5)) {
+                        it.world.dropItem(it.location, (Runic.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.HEMORRHAGE, 1)))
+                        droppedItemSound(player)
+                    }
+                }
+                is Vindicator -> {
+                    if (mobLootLogic.roll(3.5)) {
+                        it.world.dropItem(it.location, (Runic.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.BANE_OF_THE_ILLAGER, 1)))
+                        droppedItemSound(player)
+                    }
+                }
+                is Pillager -> {
+                    if (mobLootLogic.roll(2.5)) {
+                        it.world.dropItem(it.location, (Runic.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.BURST_BARRAGE, 1)))
+                        droppedItemSound(player)
+                    }
+                }
+                is Ravager -> {
+                    if (mobLootLogic.roll(5.5)) {
+                        it.world.dropItem(it.location, (Runic.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.WHIRLWIND, 1)))
+                        droppedItemSound(player)
+                    }
+                }
+                is Squid -> {
+                    if (mobLootLogic.roll(3.5)) {
+                        it.world.dropItem(it.location, (Runic.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.SQUIDIFY, 1)))
+                        droppedItemSound(player)
+                    }
+                }
+                is Shulker -> {
+                    if (mobLootLogic.roll(2.5)) {
+                        it.world.dropItem(it.location, (Runic.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.VOID_STRIKE, 1))) // change
+                        droppedItemSound(player)
+                    }
+                }
+                is Endermite -> {
+                    if (mobLootLogic.roll(3.5)) {
+                        it.world.dropItem(it.location, (Runic.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.VOID_STRIKE, 1)))
+                        droppedItemSound(player)
+                    }
+                }
+                is Enderman -> {
+                    if (mobLootLogic.roll(2.5)) {
+                        it.world.dropItem(it.location, (Runic.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.VOID_JUMP, 1)))
+                        droppedItemSound(player)
+                    }
+                }
+                is Vex -> {
+                    if (mobLootLogic.roll(4.5)) {
+                        it.world.dropItem(it.location, (Miscellaneous.TOTEM_OF_VEXING.createItemStack(1)))
+                    }
+                }
+                is ElderGuardian -> {
+                    it.world.dropItem(it.location, (Ingredients.IRRADIATED_ROD.createItemStack((1..3).random())))
+                    it.world.dropItem(it.location, (Ingredients.IRRADIATED_SHARD.createItemStack((2..5).random())))
+                }
+                is Warden -> {
+                    // If has echo? drop echo shards?
+                    it.world.dropItem(it.location, (Ingredients.WARDEN_ENTRAILS.createItemStack(1)))
+                    it.world.dropItem(it.location, (Miscellaneous.PRIMO_GEM.createItemStack((10..15).random())))
+                }
+                is Wither -> {
+                    it.world.dropItem(it.location, (Miscellaneous.PRIMO_GEM.createItemStack((8..12).random())))
+                }
+                is EnderDragon -> {
+                    it.world.dropItem(it.location, (Miscellaneous.PRIMO_GEM.createItemStack((10..15).random())))
+                }
+                else -> {
+                }
+            }
+        }
+    }
+
+
+
 
     @EventHandler
     fun mobDropsHandler(event: EntityDeathEvent) {
