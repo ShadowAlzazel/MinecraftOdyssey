@@ -25,6 +25,7 @@ interface AlchemyManager {
         return (minute * 60) + (tensSecond * 10) + (onesSecond)
     }
 
+
     private fun timeToLore(time: Int): CharSequence {
         val seconds = time % 60
         val minutes = time / 60
