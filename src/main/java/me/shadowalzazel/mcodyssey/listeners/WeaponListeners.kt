@@ -32,7 +32,7 @@ import kotlin.math.min
 
 // RUNE STONES vs ENCHANTMENTS
 
-object OdysseyWeaponListeners : Listener {
+object WeaponListeners : Listener {
 
     // Entities have custom dual and range wield mechanics!!!!!
 
@@ -55,21 +55,21 @@ object OdysseyWeaponListeners : Listener {
     // TODO: If Crouching more damage
 
     // Function for critical hits that sweep
-    private fun doWeaponSweep(someVictim: LivingEntity, someDamager: LivingEntity, radius: Double, eventDamage: Double) {
-        val midpoint = someDamager.location.clone().set(
-            ((someVictim.location.x + someDamager.location.x) / 2),
-            ((someVictim.location.y + someDamager.location.y) / 2),
-            ((someVictim.location.z + someDamager.location.z) / 2)
+    private fun weaponSweep(victim: LivingEntity, attacker: LivingEntity, radius: Double, damage: Double) {
+        val midpoint = attacker.location.clone().set(
+            ((victim.location.x + attacker.location.x) / 2),
+            ((victim.location.y + attacker.location.y) / 2),
+            ((victim.location.z + attacker.location.z) / 2)
         )
 
-        someVictim.scoreboardTags.add("Weapon_Comboed")
+        victim.scoreboardTags.add("Weapon_Comboed")
         val comboEntities = midpoint.getNearbyEntities(radius, radius, radius).filter {
-            !(it == someVictim || it == someDamager)
+            !(it == victim || it == attacker)
         }
         for (entity in comboEntities) {
             if (entity is LivingEntity && !entity.scoreboardTags.contains("Weapon_Comboed")) {
                 entity.scoreboardTags.add("Weapon_Comboed")
-                entity.damage(eventDamage, someDamager)
+                entity.damage(damage, attacker)
                 // Attack? instead of damage? method
             }
         }
@@ -305,9 +305,9 @@ object OdysseyWeaponListeners : Listener {
                     }
                     ItemModels.BAMBOO_STAFF, ItemModels.WOODEN_STAFF, ItemModels.BONE_STAFF, ItemModels.BLAZE_ROD_STAFF -> {
                         if (event.isCritical) {
-                            doWeaponSweep(someVictim, someDamager, SWEEP_MAP[weaponData]!!, event.damage + 2)
+                            weaponSweep(someVictim, someDamager, SWEEP_MAP[weaponData]!!, event.damage + 2)
                         } else {
-                            doWeaponSweep(someVictim, someDamager, SWEEP_MAP[weaponData]!!, event.damage - 1)
+                            weaponSweep(someVictim, someDamager, SWEEP_MAP[weaponData]!!, event.damage - 1)
                         }
 
                     }
@@ -320,7 +320,7 @@ object OdysseyWeaponListeners : Listener {
                     ItemModels.KATANA, ItemModels.SOUL_STEEL_KATANA -> {
                         // Rabbit Hide -> Sheath
                         if (event.isCritical && (someOffHand.type == Material.AIR || someOffHand.type == Material.RABBIT_HIDE)) {
-                            doWeaponSweep(someVictim, someDamager, SWEEP_MAP[weaponData]!!, event.damage)
+                            weaponSweep(someVictim, someDamager, SWEEP_MAP[weaponData]!!, event.damage)
                         } else if (someOffHand.type != Material.AIR && someOffHand.type != Material.RABBIT_HIDE) {
                             val minimumDamage = minOf(event.damage, 3.0)
                             event.damage -= minimumDamage
@@ -337,7 +337,7 @@ object OdysseyWeaponListeners : Listener {
                             } else {
                                 event.damage - 3.0
                             }
-                            doWeaponSweep(someVictim, someDamager, SWEEP_MAP[weaponData]!!, sweepDamage)
+                            weaponSweep(someVictim, someDamager, SWEEP_MAP[weaponData]!!, sweepDamage)
                         }
                         // SWEEP PARTICLES!!!
                     }
