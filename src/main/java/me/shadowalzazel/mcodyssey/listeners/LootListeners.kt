@@ -1,7 +1,6 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.items.Runic
 import me.shadowalzazel.mcodyssey.items.Runic.createEnchantedBook
@@ -20,7 +19,7 @@ import org.bukkit.event.block.BlockDropItemEvent
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.potion.PotionEffectType
 
-object OdysseyDropsListeners : Listener {
+object LootListeners : Listener {
 
     private fun droppedItemSound(somePlayer: Player) {
         with(somePlayer) {
@@ -40,10 +39,11 @@ object OdysseyDropsListeners : Listener {
         if (event.entity.killer !is Player) {
             return
         }
-        if (!event.entity.hasLineOfSight(event.entity.killer as Player)) {
+        if (!event.entity.hasLineOfSight(event.entity.killer!!)) {
             return
         }
 
+        mobLootManager(event.entity, event.entity.killer!!)
 
     }
 
@@ -184,9 +184,6 @@ object OdysseyDropsListeners : Listener {
     }
 
 
-
-
-    @EventHandler
     fun mobDropsHandler(event: EntityDeathEvent) {
         if (Odyssey.instance.isAmbassadorDefeated) {
             if (event.entity.killer is Player) {
