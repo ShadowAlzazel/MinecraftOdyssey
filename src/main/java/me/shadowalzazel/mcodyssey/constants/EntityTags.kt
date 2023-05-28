@@ -57,5 +57,8 @@ object EntityTags {
     const val MARKED_BY: String = "odyssey.marked_by."
     const val ECHO_STRUCK: String = "odyssey.echo_struck"
 
+    // WEAPONS
+    const val COMBOED: String = "odyssey.comboed"
+
 
 }
