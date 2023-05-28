@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.listeners
 
+import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.BLUDGEON_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.CLEAVE_MAP
@@ -62,13 +63,14 @@ object WeaponListeners : Listener {
             ((victim.location.z + attacker.location.z) / 2)
         )
 
-        victim.scoreboardTags.add("Weapon_Comboed")
-        val comboEntities = midpoint.getNearbyEntities(radius, radius, radius).filter {
-            !(it == victim || it == attacker)
+        victim.scoreboardTags.add(EntityTags.COMBOED)
+        val enemyList = midpoint.getNearbyEntities(radius, radius, radius).filter {
+            it != victim && it != attacker
         }
-        for (entity in comboEntities) {
-            if (entity is LivingEntity && !entity.scoreboardTags.contains("Weapon_Comboed")) {
-                entity.scoreboardTags.add("Weapon_Comboed")
+        for (entity in enemyList) {
+            if (entity is LivingEntity && !entity.scoreboardTags.contains(EntityTags.COMBOED)) {
+                // TODO: Use New Attack Functions
+                entity.scoreboardTags.add(EntityTags.COMBOED)
                 entity.damage(damage, attacker)
                 // Attack? instead of damage? method
             }
@@ -76,10 +78,10 @@ object WeaponListeners : Listener {
     }
 
     // Stat handler
-    private fun weaponStatsHandler(weaponData: Int, someVictim: LivingEntity, oldDamage: Double): Pair<Double, Double> {
-        return if (!someVictim.isDead && someVictim.getAttribute(Attribute.GENERIC_ARMOR)?.value != null) {
+    private fun weaponStatsHandler(mapNum: Int, victim: LivingEntity, damage: Double): Pair<Double, Double> {
+        return if (!victim.isDead && victim.getAttribute(Attribute.GENERIC_ARMOR)?.value != null) {
             // Armor Point
-            val armorPoints = someVictim.getAttribute(Attribute.GENERIC_ARMOR)!!.value
+            val armorPoints = victim.getAttribute(Attribute.GENERIC_ARMOR)!!.value
 
             // Piercing ignores some armor
             // Bludgeon is true damage
@@ -88,22 +90,22 @@ object WeaponListeners : Listener {
 
 
             // Cleaving
-            val cleaveDamage = if (CLEAVE_MAP[weaponData] != null) {
-                CLEAVE_MAP[weaponData]
+            val cleaveDamage = if (CLEAVE_MAP[mapNum] != null) {
+                CLEAVE_MAP[mapNum]
             } else {
                 0.0
             }
 
             // Bludgeon
-            val bludgeoningDamage = if (BLUDGEON_MAP[weaponData] != null) {
-                min(BLUDGEON_MAP[weaponData]!! + (armorPoints * 0.2), armorPoints)
+            val bludgeoningDamage = if (BLUDGEON_MAP[mapNum] != null) {
+                min(BLUDGEON_MAP[mapNum]!! + (armorPoints * 0.2), armorPoints)
             } else {
                 0.0
             }
             // Lacerate
-            val laceratingDamage = if (LACERATE_MAP[weaponData] != null) {
+            val laceratingDamage = if (LACERATE_MAP[mapNum] != null) {
                 if (armorPoints <= 1.5) {
-                    LACERATE_MAP[weaponData]!!
+                    LACERATE_MAP[mapNum]!!
                 } else {
                     0.0
                 }
@@ -111,14 +113,14 @@ object WeaponListeners : Listener {
                 0.0
             }
             // Pierce
-            val trueDamage = if (PIERCE_MAP[weaponData] != null) {
-                min(armorPoints, PIERCE_MAP[weaponData]!!)
+            val trueDamage = if (PIERCE_MAP[mapNum] != null) {
+                min(armorPoints, PIERCE_MAP[mapNum]!!)
             } else {
                 0.0
             }
 
             // Extra damage, True Damage
-            val bonusDamage = if (oldDamage >= bludgeoningDamage + laceratingDamage) {
+            val bonusDamage = if (damage >= bludgeoningDamage + laceratingDamage) {
                 bludgeoningDamage + laceratingDamage
             } else {
                 0.0
@@ -147,17 +149,17 @@ object WeaponListeners : Listener {
         // Right click and left click combos
 
         // Player and weapons
-        val somePlayer = event.player
-        val mainWeapon = somePlayer.equipment.itemInMainHand
-        val offHandWeapon = somePlayer.equipment.itemInOffHand
+        val player = event.player
+        val mainWeapon = player.equipment.itemInMainHand
+        val offHandWeapon = player.equipment.itemInOffHand
 
         // Left Click
         if (event.action.isLeftClick && mainWeapon.itemMeta?.hasCustomModelData() == true && REACH_MAP[mainWeapon.itemMeta.customModelData] != null) {
-            getReachedTarget(somePlayer, REACH_MAP[mainWeapon.itemMeta.customModelData])
+            getReachedTarget(player, REACH_MAP[mainWeapon.itemMeta.customModelData])
             // Get If entity reached
-            val reachedEntity = getReachedTarget(somePlayer, REACH_MAP[mainWeapon.itemMeta.customModelData])
-            if (reachedEntity is LivingEntity) {
-                somePlayer.attack(reachedEntity)
+            val entity = getReachedTarget(player, REACH_MAP[mainWeapon.itemMeta.customModelData])
+            if (entity is LivingEntity) {
+                player.attack(entity)
             }
         }
         // Right Click
@@ -168,54 +170,54 @@ object WeaponListeners : Listener {
                     // Staff AOE
                     ItemModels.WOODEN_STAFF, ItemModels.BONE_STAFF, ItemModels.BAMBOO_STAFF, ItemModels.BLAZE_ROD_STAFF -> {
                         // Empty Hand
-                        if (somePlayer.equipment.itemInOffHand.type == Material.AIR) {
+                        if (player.equipment.itemInOffHand.type == Material.AIR) {
                             // TODO: Fix
-                            val nearbyEnemies = somePlayer.getNearbyEntities(1.5, 1.5, 1.5).also { it.remove(somePlayer) }
+                            val nearbyEnemies = player.getNearbyEntities(1.5, 1.5, 1.5).also { it.remove(player) }
                             for (enemy in nearbyEnemies) {
-                                somePlayer.attack(enemy)
-                                somePlayer.swingMainHand()
+                                player.attack(enemy)
+                                player.swingMainHand()
                             }
                         }
                     }
                     // Warhammer
                     ItemModels.WARHAMMER -> {
                         // SUPER ATTACK?
-                        if (somePlayer.equipment.itemInOffHand.type == Material.AIR) {
+                        if (player.equipment.itemInOffHand.type == Material.AIR) {
                             //  Step Forward
-                            val movingVector = somePlayer.eyeLocation.direction.clone().normalize().setY(0.0)
+                            val movingVector = player.eyeLocation.direction.clone().normalize().setY(0.0)
                             // Get swing arc
-                            val midPointSwing = somePlayer.eyeLocation.direction.clone().add(movingVector.multiply(2.0)).toLocation(somePlayer.world)
-                            val nearbyEnemies = midPointSwing.getNearbyEntities(2.5, 1.0, 2.5).also { it.remove(somePlayer) }
+                            val midPointSwing = player.eyeLocation.direction.clone().add(movingVector.multiply(2.0)).toLocation(player.world)
+                            val nearbyEnemies = midPointSwing.getNearbyEntities(2.5, 1.0, 2.5).also { it.remove(player) }
                             for (enemy in nearbyEnemies) {
-                                somePlayer.attack(enemy)
+                                player.attack(enemy)
                             }
                             //if hit
-                            if (nearbyEnemies.isNotEmpty() && !somePlayer.isFlying) {
+                            if (nearbyEnemies.isNotEmpty() && !player.isFlying) {
                                 // Particles and Sounds
-                                somePlayer.world.playSound(somePlayer.location, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 0.5F, 2.75F)
+                                player.world.playSound(player.location, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 0.5F, 2.75F)
                                 println("X")
-                                somePlayer.velocity = movingVector.clone().multiply(0.35)
+                                player.velocity = movingVector.clone().multiply(0.35)
                             }
 
                         }
                     }
                     ItemModels.ZWEIHANDER -> {
                         // Empty Hand
-                        if (somePlayer.equipment.itemInOffHand.type == Material.AIR) {
+                        if (player.equipment.itemInOffHand.type == Material.AIR) {
                             //  Step Forward
-                            val movingVector = somePlayer.eyeLocation.direction.clone().normalize().setY(0.0)
+                            val movingVector = player.eyeLocation.direction.clone().normalize().setY(0.0)
                             // Get swing arc
-                            val midPointSwing = somePlayer.eyeLocation.direction.clone().add(movingVector.multiply(2.0)).toLocation(somePlayer.world)
-                            val nearbyEnemies = midPointSwing.getNearbyEntities(2.5, 1.0, 2.5).also { it.remove(somePlayer) }
+                            val midPointSwing = player.eyeLocation.direction.clone().add(movingVector.multiply(2.0)).toLocation(player.world)
+                            val nearbyEnemies = midPointSwing.getNearbyEntities(2.5, 1.0, 2.5).also { it.remove(player) }
                             for (enemy in nearbyEnemies) {
-                                somePlayer.attack(enemy)
+                                player.attack(enemy)
                             }
                             //if hit
-                            if (nearbyEnemies.isNotEmpty() && !somePlayer.isFlying) {
+                            if (nearbyEnemies.isNotEmpty() && !player.isFlying) {
                                 // Particles and Sounds
-                                somePlayer.world.playSound(somePlayer.location, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 0.5F, 2.75F)
+                                player.world.playSound(player.location, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 0.5F, 2.75F)
                                 println("X")
-                                somePlayer.velocity = movingVector.clone().multiply(0.35)
+                                player.velocity = movingVector.clone().multiply(0.35)
                             }
 
                         }
@@ -244,15 +246,15 @@ object WeaponListeners : Listener {
                     // Dagger
                     ItemModels.DAGGER -> {
                         // Left click offhand
-                        val reachedEntity = getReachedTarget(somePlayer, REACH_MAP[offHandWeapon.itemMeta.customModelData])
+                        val reachedEntity = getReachedTarget(player, REACH_MAP[offHandWeapon.itemMeta.customModelData])
                         if (reachedEntity is LivingEntity) {
-                            somePlayer.swingOffHand()
-                            with(somePlayer.equipment) {
+                            player.swingOffHand()
+                            with(player.equipment) {
                                 val mainHand = itemInMainHand.clone()
                                 val offHand = itemInOffHand.clone()
                                 setItemInOffHand(mainHand)
                                 setItemInMainHand(offHand)
-                                somePlayer.attack(reachedEntity)
+                                player.attack(reachedEntity)
                                 setItemInMainHand(mainHand)
                                 setItemInOffHand(offHand)
                             }
@@ -268,10 +270,10 @@ object WeaponListeners : Listener {
     fun mainWeaponDamageHandler(event: EntityDamageByEntityEvent) {
         // Check if event damager and damaged is living entity
         if (event.damager is Player && event.entity is LivingEntity && event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
-            val someDamager = event.damager as Player
-            val someVictim = event.entity as LivingEntity
+            val player = event.damager as Player
+            val victim = event.entity as LivingEntity
             // Check if entity recently comboed to stop recursive call
-            with(someVictim.scoreboardTags) {
+            with(victim.scoreboardTags) {
                 if (contains("Weapon_Comboed")) {
                     remove("Weapon_Comboed")
                     return
@@ -279,65 +281,65 @@ object WeaponListeners : Listener {
             }
 
             // Check if active item has custom model data
-            if (someDamager.equipment.itemInMainHand.itemMeta?.hasCustomModelData() == true) {
-                val someWeapon = someDamager.equipment.itemInMainHand
-                val someOffHand = someDamager.equipment.itemInOffHand
+            if (player.equipment.itemInMainHand.itemMeta?.hasCustomModelData() == true) {
+                val mainWeapon = player.equipment.itemInMainHand
+                val offHandWeapon = player.equipment.itemInOffHand
 
                 // Make crit and still combos !!
-                when (val weaponData = someWeapon.itemMeta.customModelData) {
+                when (val weaponData = mainWeapon.itemMeta.customModelData) {
                     ItemModels.DAGGER -> {
-                        if (someVictim !in someDamager.getNearbyEntities(1.9, 1.9, 1.9)) {
+                        if (victim !in player.getNearbyEntities(1.9, 1.9, 1.9)) {
                             event.isCancelled = true
                             return
                         }
                     }
                     ItemModels.WOODEN_SPEAR -> {
-                        if (someVictim in someDamager.getNearbyEntities(1.25, 1.25, 1.25)) {
+                        if (victim in player.getNearbyEntities(1.25, 1.25, 1.25)) {
                             event.isCancelled = true
                             return
                         }
                     }
                     ItemModels.WOODEN_HALBERD -> {
-                        if (someVictim in someDamager.getNearbyEntities(1.5, 1.5, 1.5) || (someOffHand.type != Material.AIR && someOffHand.type != Material.SHIELD)) {
+                        if (victim in player.getNearbyEntities(1.5, 1.5, 1.5) || (offHandWeapon.type != Material.AIR && offHandWeapon.type != Material.SHIELD)) {
                             event.isCancelled = true
                             return
                         }
                     }
                     ItemModels.BAMBOO_STAFF, ItemModels.WOODEN_STAFF, ItemModels.BONE_STAFF, ItemModels.BLAZE_ROD_STAFF -> {
                         if (event.isCritical) {
-                            weaponSweep(someVictim, someDamager, SWEEP_MAP[weaponData]!!, event.damage + 2)
+                            weaponSweep(victim, player, SWEEP_MAP[weaponData]!!, event.damage + 2)
                         } else {
-                            weaponSweep(someVictim, someDamager, SWEEP_MAP[weaponData]!!, event.damage - 1)
+                            weaponSweep(victim, player, SWEEP_MAP[weaponData]!!, event.damage - 1)
                         }
 
                     }
                     ItemModels.LONG_AXE -> {
-                        if (someOffHand.type != Material.AIR) {
+                        if (offHandWeapon.type != Material.AIR) {
                             val minimumDamage = minOf(event.damage, 5.0)
                             event.damage -= minimumDamage
                         }
                     }
                     ItemModels.KATANA, ItemModels.SOUL_STEEL_KATANA -> {
                         // Rabbit Hide -> Sheath
-                        if (event.isCritical && (someOffHand.type == Material.AIR || someOffHand.type == Material.RABBIT_HIDE)) {
-                            weaponSweep(someVictim, someDamager, SWEEP_MAP[weaponData]!!, event.damage)
-                        } else if (someOffHand.type != Material.AIR && someOffHand.type != Material.RABBIT_HIDE) {
+                        if (event.isCritical && (offHandWeapon.type == Material.AIR || offHandWeapon.type == Material.RABBIT_HIDE)) {
+                            weaponSweep(victim, player, SWEEP_MAP[weaponData]!!, event.damage)
+                        } else if (offHandWeapon.type != Material.AIR && offHandWeapon.type != Material.RABBIT_HIDE) {
                             val minimumDamage = minOf(event.damage, 3.0)
                             event.damage -= minimumDamage
                         }
                         // Piercing?
                     }
                     ItemModels.CLAYMORE -> {
-                        if (someOffHand.type != Material.AIR) {
+                        if (offHandWeapon.type != Material.AIR) {
                             val minimumDamage = minOf(event.damage, 5.0)
                             event.damage -= minimumDamage
-                        } else if (someOffHand.type == Material.AIR) {
+                        } else if (offHandWeapon.type == Material.AIR) {
                             val sweepDamage = if (event.isCritical) {
                                 event.damage
                             } else {
                                 event.damage - 3.0
                             }
-                            weaponSweep(someVictim, someDamager, SWEEP_MAP[weaponData]!!, sweepDamage)
+                            weaponSweep(victim, player, SWEEP_MAP[weaponData]!!, sweepDamage)
                         }
                         // SWEEP PARTICLES!!!
                     }
@@ -353,13 +355,13 @@ object WeaponListeners : Listener {
                     // righclick short dash and AOE
 
                 }
-                val extraDamages = weaponStatsHandler(someWeapon.itemMeta.customModelData, someVictim, event.damage)
+                val extraDamages = weaponStatsHandler(mainWeapon.itemMeta.customModelData, victim, event.damage)
                 event.damage -= extraDamages.second
                 event.damage += extraDamages.first
-                if (someVictim.health < extraDamages.second) {
-                    someVictim.health -= extraDamages.second - someVictim.health
+                if (victim.health < extraDamages.second) {
+                    victim.health -= extraDamages.second - victim.health
                 } else {
-                    someVictim.health -= extraDamages.second
+                    victim.health -= extraDamages.second
                 }
 
             }
