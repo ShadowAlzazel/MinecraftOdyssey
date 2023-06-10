@@ -179,7 +179,6 @@ object OdysseyAlchemyListeners : Listener, AlchemyManager {
 
 
     // TODO: FIX
-    @EventHandler
     fun tippedArrowTableInteract(event: PlayerInteractEvent) {
         if (event.clickedBlock != null) {
             if (event.action.isLeftClick && event.clickedBlock!!.type == Material.FLETCHING_TABLE) {
@@ -199,6 +198,27 @@ object OdysseyAlchemyListeners : Listener, AlchemyManager {
             }
         }
     }
+
+    @EventHandler
+    fun arrowTableAlchemyHandler(event: PlayerInteractEvent) {
+        if (event.clickedBlock == null) return
+        if (!event.action.isLeftClick) return
+        if (event.clickedBlock!!.type != Material.FLETCHING_TABLE) return
+        val playerEquipment = event.player.equipment
+        if (playerEquipment.itemInMainHand.type != Material.ARROW) return
+        if (playerEquipment.itemInMainHand.amount < 8) return
+        if (playerEquipment.itemInOffHand.type != Material.LINGERING_POTION) return // TODO: temp -> change to model data
+
+        val tippedArrows = ItemStack(Material.TIPPED_ARROW, 1)
+        tippedArrows.itemMeta = playerEquipment.itemInOffHand.itemMeta as PotionMeta
+
+        playerEquipment.itemInMainHand.subtract(8)
+        playerEquipment.itemInOffHand.subtract(1)
+        event.player.inventory.addItem(tippedArrows)
+        event.player.updateInventory()
+
+    }
+
 
 
     //
