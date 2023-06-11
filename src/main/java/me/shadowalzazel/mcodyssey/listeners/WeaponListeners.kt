@@ -29,7 +29,7 @@ import kotlin.math.min
 // TODO: Scepter -> checks if offhand is a tome of _enchantment_, does spell.
 
 // Can craft weapons without recipe, but with recipe, it is greater quality
-// Weapon that can ignore I-frames
+// DeprecatedWeapon that can ignore I-frames
 
 // RUNE STONES vs ENCHANTMENTS
 
@@ -164,7 +164,7 @@ object WeaponListeners : Listener {
         }
         // Right Click
         else if (event.action.isRightClick) {
-            // Main Weapon
+            // Main DeprecatedWeapon
             if (mainWeapon.itemMeta?.hasCustomModelData() == true) {
                 when (mainWeapon.itemMeta.customModelData) {
                     // Staff AOE
@@ -240,7 +240,7 @@ object WeaponListeners : Listener {
             // can tp if throw another
             //
 
-            // Offhand Weapon
+            // Offhand DeprecatedWeapon
             if (offHandWeapon.itemMeta?.hasCustomModelData() == true) {
                 when (offHandWeapon.itemMeta.customModelData) {
                     // Dagger

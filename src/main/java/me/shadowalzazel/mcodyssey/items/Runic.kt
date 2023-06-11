@@ -18,7 +18,7 @@ object Runic {
         newBook.itemMeta = newBook.itemMeta.also {
             if (someEnchant is OdysseyEnchantment) {
                 it.addEnchant(someEnchant, level, true)
-                val textLore = someEnchant.createEnchantmentLore(level)
+                val textLore = someEnchant.displayLore(level)
                 val nameComponent = it.displayName()
                 it.displayName(nameComponent?.append(Component.text(" - " + someEnchant.enchantName, someEnchant.subtype.displayColor)))
                 it.lore(listOf(textLore))

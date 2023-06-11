@@ -56,7 +56,7 @@ object OdysseySocketListeners : Listener {
         // IF has special DUngeon gem
         // DO effects
 
-        // Diamond (Armor: 10% more resistance) (Weapon: )
+        // Diamond (Armor: 10% more resistance) (DeprecatedWeapon: )
         // Emerald
         // Amethyst
         // Soul Quartz

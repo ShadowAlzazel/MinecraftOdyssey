@@ -49,7 +49,7 @@ object OdysseyEnigmaticListeners : Listener {
         if (event.entity.killer != null && event.droppedExp > 0) {
             var expDrop = 0.0
             val someKiller = event.entity.killer!!
-            // Weapon
+            // DeprecatedWeapon
             if (someKiller.equipment.itemInMainHand.hasItemMeta()) {
                 if (someKiller.equipment.itemInMainHand.itemMeta.hasCustomModelData()) {
                     if (someKiller.equipment.itemInMainHand.itemMeta.customModelData == ItemModels.SOUL_STEEL_KATANA) {
