@@ -15,6 +15,7 @@ class RecipeManager {
             addAll(Food().getRecipes())
             addAll(Merchant().getRecipes())
             addAll(Weapon().getRecipes())
+            addAll(Smithing().getRecipes())
         }
 
         return recipeList

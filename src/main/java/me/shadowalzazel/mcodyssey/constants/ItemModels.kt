@@ -15,8 +15,8 @@ object ItemModels {
     const val OIL_BOTTLE: Int = 6905000 // For DeprecatedWeapon Oils
     const val VIAL: Int = 6905000 // For Small Potions
     const val LARGE_BOTTLE: Int = 6905000 // Large Potions
-    const val SQUARE_BOTTLE: Int = 6905000 // Higher Amplifier
-    const val VOLUMETRIC_BOTTLE: Int = 0 // Higher Duration
+    const val SQUARE_BOTTLE: Int = 6905315 // Higher Amplifier
+    const val VOLUMETRIC_BOTTLE: Int = 6905316 // Higher Duration
 
 
     /* ---------------------------------------------------------------------------------------------- */
@@ -149,6 +149,11 @@ object ItemModels {
 
     const val SAYA: Int = 6903819
 
+    /* ---------------------------------------------------------------------------------------------- */
+    /* -------------------------------------------WEAPONS-------------------------------------------- */
+    /* ---------------------------------------------------------------------------------------------- */
+
+    const val KATANA_TEMPLATE: Int = 6905819
 
     /* ---------------------------------------------------------------------------------------------- */
     /* -------------------------------------------WEAPONS-------------------------------------------- */
