@@ -20,7 +20,7 @@ open class OdysseyEnchantment(
     val subtype: Subtype = Subtype.GILDED) :
     Enchantment(NamespacedKey(Odyssey.instance, namespace!!)) {
 
-    val ROMAN_NUMERAL_LIST = mapOf(1 to "I", 2 to "II", 3 to "III", 4 to "IV", 5 to "V", 6 to "VI", 7 to "VII", 8 to "VIII", 9 to "IX", 10 to "X")
+    private val ROMAN_NUMERAL_LIST = mapOf(1 to "I", 2 to "II", 3 to "III", 4 to "IV", 5 to "V", 6 to "VI", 7 to "VII", 8 to "VIII", 9 to "IX", 10 to "X")
 
     override fun translationKey(): String {
         TODO("Not yet implemented")
@@ -66,7 +66,7 @@ open class OdysseyEnchantment(
         }
     }
 
-    fun createEnchantmentLore(level: Int): TextComponent {
+    fun displayLore(level: Int): TextComponent {
         return Component.text("$enchantName ${ROMAN_NUMERAL_LIST[level]}", subtype.displayColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
     }
 

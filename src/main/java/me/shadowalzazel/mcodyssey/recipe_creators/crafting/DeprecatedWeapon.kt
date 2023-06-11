@@ -8,7 +8,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.inventory.RecipeChoice
 import org.bukkit.inventory.ShapedRecipe
 
-class Weapon {
+class DeprecatedWeapon {
 
     // Register Recipes
     fun getRecipes(): List<ShapedRecipe> {

@@ -40,7 +40,7 @@ object OdysseyArcaneSlotListeners : Listener {
     private val gildedEnchantColor = TextColor.color(255, 170, 0)
     private val statColor = TextColor.color(167, 125, 255)
     // Headers
-    private val statHeader = Component.text("Weapon in Main Hand: " , separatorColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+    private val statHeader = Component.text("DeprecatedWeapon in Main Hand: " , separatorColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
     private val loreSeparator = Component.text("----------------------" , separatorColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
     // Damage
     private val baseDamage = Component.text("Base Damage: " , statColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
@@ -220,7 +220,7 @@ object OdysseyArcaneSlotListeners : Listener {
                         val newLore = result!!.clone().lore()?.also { lore ->
                             for (enchant in itemEnchants) {
                                 if (enchant.key is OdysseyEnchantment) {
-                                    val gildedLore = enchant.key.displayName(enchant.value).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                                    val gildedLore = (enchant.key as OdysseyEnchantment).displayLore(enchant.value).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                                     val someIndex = lore.indexOf(gildedLore)
                                     lore[someIndex] = emptyGildedSlot
                                 }
@@ -475,11 +475,11 @@ object OdysseyArcaneSlotListeners : Listener {
     }
 
 
-    // Main Handler that handles Odyssey Smithing: Needs corresponding smithing recipe
+    // Main Handler that handles Odyssey DeprecatedSmithing: Needs corresponding smithing recipe
     @EventHandler
     fun odysseySmithingHandler(event: PrepareSmithingEvent) {
         // TODO: Rose Gold Armor upgrades
-        // TODO: Smithing table for attributes and modifiers
+        // TODO: DeprecatedSmithing table for attributes and modifiers
         // With event inventory
         with(event.inventory) {
             if (inputEquipment != null && inputMineral != null) {

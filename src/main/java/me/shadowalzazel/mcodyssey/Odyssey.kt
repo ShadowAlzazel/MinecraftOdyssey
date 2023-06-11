@@ -101,7 +101,7 @@ class Odyssey : JavaPlugin(), AssetManager {
         listOf(AssetListeners,
             OdysseyAlchemyListeners,
             OdysseyEnigmaticListeners,
-            OdysseyArcaneSlotListeners,
+            EnchantingListeners,
             OdysseyBossListeners,
             AmbassadorListeners,
             HogRiderListeners,
@@ -118,17 +118,17 @@ class Odyssey : JavaPlugin(), AssetManager {
             WeaponListeners,
             OdysseyMiscListeners).forEach { eventRegister(it) }
 
-        server.pluginManager.registerEvents(OdysseyPhenomenaListeners, this)
+        //server.pluginManager.registerEvents(OdysseyPhenomenaListeners, this)
         playersRequiredForLuck = 4
         // Getting main world for phenomenon timer
-        val cycleHandler = PhenomenonCycleHandler(mainWorld!!)
-        cycleHandler.runTaskTimer(this, 20 * 10L, 20 * 10)
-        val persistentHandler = PersistentPhenomenonHandler()
-        persistentHandler.runTaskTimer(this, 20 * 5, 20 * 5)
+        //val cycleHandler = PhenomenonCycleHandler(mainWorld!!)
+        //cycleHandler.runTaskTimer(this, 20 * 10L, 20 * 10)
+        //val persistentHandler = PersistentPhenomenonHandler()
+        //persistentHandler.runTaskTimer(this, 20 * 5, 20 * 5)
 
         // Run situations
-        val situationHandler = OldOccurrenceHandler(mainWorld!!)
-        situationHandler.runTaskTimer(this, 20 * 10L, 20 * 10)
+        //val situationHandler = OldOccurrenceHandler(mainWorld!!)
+        //situationHandler.runTaskTimer(this, 20 * 10L, 20 * 10)
 
         // Hello World!
         val timeElapsed = (System.currentTimeMillis() - timerStart).div(1000.0)

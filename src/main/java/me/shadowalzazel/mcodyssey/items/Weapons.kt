@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemStack
 
 object Weapons {
 
-    // Weapon (Odyssey Item) is a holder for enums
+    // DeprecatedWeapon (Odyssey Item) is a holder for enums
     // Used to create multiple weapons of different materials from the same type
     fun OdysseyItem.createWeapon(damageOverride: Double = 0.0): ItemStack {
         val newWeapon = this.createItemStack(1)

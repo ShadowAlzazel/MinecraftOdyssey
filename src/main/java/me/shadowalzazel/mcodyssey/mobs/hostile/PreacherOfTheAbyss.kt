@@ -29,7 +29,7 @@ object PreacherOfTheAbyss : OdysseyMob("Preacher of the Abyss", EntityType.WITHE
             canPickupItems = true
             clearActiveItem()
             customName(Component.text(this@PreacherOfTheAbyss.odysseyName, TextColor.color(40, 6, 25)))
-            // Weapon
+            // DeprecatedWeapon
             val newBlade = Weapons.ABZU_BLADE.createItemStack(1).apply {
             }
             // Add Items
