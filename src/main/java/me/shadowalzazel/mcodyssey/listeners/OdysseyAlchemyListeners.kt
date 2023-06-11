@@ -37,55 +37,73 @@ object OdysseyAlchemyListeners : Listener, AlchemyManager {
     // TODO: Fix bug if multiple types, converts all
     // If Handler for materials and types
     private fun brewingHandler(brewingIngredient: Material, brewerPotions: List<ItemStack?>): Map<Int, ItemStack> {
-        val brewedPotions = mutableMapOf<Int, ItemStack>()
-        val resultType = if (brewingIngredient == Material.GUNPOWDER) {
-            Material.SPLASH_POTION
-        } else {
-            Material.LINGERING_POTION
+        val newPotions = mutableMapOf<Int, ItemStack>()
+        val resultMaterial = when (brewingIngredient) {
+            Material.GUNPOWDER -> {
+                Material.SPLASH_POTION
+            }
+            Material.DRAGON_BREATH -> {
+                Material.LINGERING_POTION
+            }
+            else -> {
+                Material.POTION
+            }
         }
         for (x in 0..2) {
             val itemAtX = brewerPotions[x]
             if (itemAtX == null) {
-                brewedPotions[x] = ItemStack(Material.AIR)
+                newPotions[x] = ItemStack(Material.AIR)
+            } else if (itemAtX.type == Material.AIR) {
+                continue
             } else if (!(itemAtX.itemMeta.persistentDataContainer.hasOdysseyTag())) {
-                if (brewingIngredient == Material.REDSTONE) {
-                    itemAtX.itemMeta.setCustomModelData(ItemModels.SQUARE_BOTTLE)
-                }
-            } else if (itemAtX.itemMeta.hasCustomModelData()) {/*
-                val potionModel = itemAtX.itemMeta.customModelData
-                if (potionModel == ItemModels.CONICAL_POTION) {
-                    brewedPotions[x] = createOdysseyEffectPotion(resultType, itemAtX)
-                    println("This Happened!")
-                    println("$x $brewedPotions")
-                }
-                else {
-                    brewedPotions[x] = createCustomPotion(resultType, itemAtX)
-                }
-                */
-                if (resultType == Material.LINGERING_POTION) {
-                    brewedPotions[x] = createLingeringPotion(resultType, itemAtX)
+                continue
+            } else if (itemAtX.itemMeta.hasCustomModelData()) {
+                if (resultMaterial == Material.LINGERING_POTION) {
+                    newPotions[x] = createLingeringPotion(resultMaterial, itemAtX)
                 } else {
-                    brewedPotions[x] = createCustomPotion(resultType, itemAtX)
+                    newPotions[x] = createCustomPotion(resultMaterial, itemAtX)
                 }
             } else if (brewingIngredient == Material.HONEY_BOTTLE) {
                 // FOR STICKY POTION
             } else {
-                brewedPotions[x] = createCustomPotion(resultType, itemAtX)
+                newPotions[x] = createCustomPotion(resultMaterial, itemAtX)
             }
         }
-        return brewedPotions
+        return newPotions
     }
 
 
     @EventHandler
     fun brewPotionHandler(event: BrewEvent) {
-        if (event.contents.ingredient == null) return
+        if (event.contents.ingredient == null) { return }
         // Function to async
         val newPotionMap = brewingHandler(event.contents.ingredient!!.type, event.contents.contents.toList())
         //for (brew in newPotionMap) { event.contents.setItem(brew.key, brew.value) }
         for (brew in newPotionMap) {
             event.results[brew.key] = brew.value
         }
+        // Get Potion Model
+        val potionModel = when(event.contents.ingredient!!.type) {
+            Material.REDSTONE -> {
+                ItemModels.VOLUMETRIC_BOTTLE
+            }
+            Material.GLOWSTONE_DUST -> {
+                ItemModels.SQUARE_BOTTLE
+            }
+            else -> {
+                0
+            }
+        }
+        if (potionModel == 0) { return }
+        for (result in event.results) {
+            if (result == null) { continue }
+            if (result.type == Material.AIR) { continue }
+            result.itemMeta = result.itemMeta.also {
+                it.setCustomModelData(potionModel)
+            }
+            println(potionModel)
+        }
+
     }
 
 
@@ -139,8 +157,9 @@ object OdysseyAlchemyListeners : Listener, AlchemyManager {
             }
             // Check if custom bottle
             if (potionMeta.hasCustomModelData()) {
-                event.replacement = ItemStack(Material.GLASS_BOTTLE, 1).also {
-                    it.itemMeta.setCustomModelData(potionMeta.customModelData)
+                if (event.replacement == null) { return }
+                event.replacement!!.itemMeta = event.replacement!!.itemMeta.also {
+                    it.setCustomModelData(potionMeta.customModelData)
                 }
             }
         }

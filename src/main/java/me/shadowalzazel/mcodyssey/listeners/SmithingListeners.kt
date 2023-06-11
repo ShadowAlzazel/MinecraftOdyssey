@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.listeners
 
+import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.PrepareSmithingEvent
@@ -12,7 +13,12 @@ object SmithingListeners : Listener {
     // Handle weapon quality
 
     @EventHandler
-    fun smithingHandler(event: SmithItemEvent) {
+    fun smithingHandler(event: PrepareSmithingEvent) {
+        val q = event.inventory.recipe
+        println(q)
+        if (event.inventory.recipe == null) { return }
+        println("PASS")
+
 
     }
 
