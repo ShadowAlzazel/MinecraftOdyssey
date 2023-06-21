@@ -10,17 +10,13 @@ import org.bukkit.FireworkEffect
 import org.bukkit.Location
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Firework
-import org.bukkit.entity.Snowman
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.weather.LightningStrikeEvent
 import org.bukkit.inventory.meta.FireworkMeta
-import org.bukkit.potion.PotionEffect
-import org.bukkit.potion.PotionEffectType
 
-object OdysseyMiscListeners : Listener {
+object MiscListeners : Listener {
 
     // Check if Ender Dragon Dies
     @EventHandler
@@ -28,8 +24,8 @@ object OdysseyMiscListeners : Listener {
         val dragon = event.entity
         val endWorld = event.entity.world
         if (dragon.type == EntityType.ENDER_DRAGON) {
-            for (aPlayer in endWorld.players) {
-                aPlayer.sendMessage("${ChatColor.DARK_PURPLE}The end has just begun ...")
+            for (player in endWorld.players) {
+                player.sendMessage("${ChatColor.DARK_PURPLE}The end has just begun ...")
 
             }
         }

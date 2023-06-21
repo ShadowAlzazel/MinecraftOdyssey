@@ -33,7 +33,7 @@ class Food {
     // SHAPED
     private fun createBeetrootCookieRecipe(): ShapedRecipe {
         val someResult = Foods.BEETROOT_COOKIE.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "beetrootcookie"), someResult)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "beetroot_cookie"), someResult)
         someRecipe.shape("X", "Y", "X")
         someRecipe.setIngredient('X', Material.BEETROOT)
         someRecipe.setIngredient('Y', Material.COOKIE)
@@ -42,7 +42,7 @@ class Food {
 
     private fun createPumpkinCookieRecipe(): ShapedRecipe {
         val someCookie = Foods.PUMPKIN_COOKIE.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "pumpkincookie"), someCookie)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "pumpkin_cookie"), someCookie)
         someRecipe.shape("X", "Y", "X")
         someRecipe.setIngredient('X', Material.PUMPKIN_SEEDS)
         someRecipe.setIngredient('Y', Material.COOKIE)
@@ -51,7 +51,7 @@ class Food {
 
     private fun createHoneyCookieRecipe(): ShapedRecipe {
         val someCookie = Foods.HONEY_COOKIE.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "honeycookie"), someCookie)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "honey_cookie"), someCookie)
         someRecipe.shape("X", "Y", "X")
         someRecipe.setIngredient('X', Material.HONEY_BOTTLE)
         someRecipe.setIngredient('Y', Material.COOKIE)
@@ -60,7 +60,7 @@ class Food {
 
     private fun createAppleCookieRecipe(): ShapedRecipe {
         val someCookie = Foods.APPLE_COOKIE.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "applecookie"), someCookie)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "apple_cookie"), someCookie)
         someRecipe.shape("X", "Y", "X")
         someRecipe.setIngredient('X', Material.APPLE)
         someRecipe.setIngredient('Y', Material.COOKIE)
@@ -69,7 +69,7 @@ class Food {
 
     private fun createBerryCookieRecipe(): ShapedRecipe {
         val someCookie = Foods.BERRY_COOKIE.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "berrycookie"), someCookie)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "berry_cookie"), someCookie)
         someRecipe.shape("X", "Y", "X")
         someRecipe.setIngredient('X', Material.SWEET_BERRIES)
         someRecipe.setIngredient('Y', Material.COOKIE)
@@ -78,7 +78,7 @@ class Food {
 
     private fun createGlowBerryCookieRecipe(): ShapedRecipe {
         val someCookie = Foods.GLOW_BERRY_COOKIE.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "glowberrycookie"), someCookie)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "glowberry_cookie"), someCookie)
         someRecipe.shape("X", "Y", "X")
         someRecipe.setIngredient('X', Material.GLOW_BERRIES)
         someRecipe.setIngredient('Y', Material.COOKIE)
@@ -87,7 +87,7 @@ class Food {
 
     private fun createMelonCookieRecipe(): ShapedRecipe {
         val someCookie = Foods.MELON_COOKIE.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "meloncookie"), someCookie)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "melon_cookie"), someCookie)
         someRecipe.shape("X", "Y", "X")
         someRecipe.setIngredient('X', Material.MELON_SLICE)
         someRecipe.setIngredient('Y', Material.COOKIE)
@@ -96,7 +96,7 @@ class Food {
 
     private fun createSugarCookieRecipe(): ShapedRecipe {
         val someCookie = Foods.SUGAR_COOKIE.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "sugarcookie"), someCookie)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "sugar_cookie"), someCookie)
         someRecipe.shape("X", "Y", "X")
         someRecipe.setIngredient('X', Material.SUGAR)
         someRecipe.setIngredient('Y', Material.COOKIE)
@@ -105,7 +105,7 @@ class Food {
 
     private fun createGoldenCookieRecipe(): ShapedRecipe {
         val someCookie = Foods.GOLDEN_COOKIE.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "goldencookie"), someCookie)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "golden_cookie"), someCookie)
         someRecipe.shape("XXX", "XYX", "XXX")
         someRecipe.setIngredient('X', Material.GOLD_INGOT)
         someRecipe.setIngredient('Y', Material.COOKIE)
@@ -114,7 +114,7 @@ class Food {
 
     private fun createSugaryBreadRecipe(): ShapedRecipe {
         val someResult = Foods.SUGARY_BREAD.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "sugarybread"), someResult)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "sugary_bread"), someResult)
         someRecipe.shape("X", "Y", "X")
         someRecipe.setIngredient('X', Material.SUGAR)
         someRecipe.setIngredient('Y', Material.BREAD)
@@ -123,7 +123,7 @@ class Food {
 
     private fun createSalmonRollRecipe(): ShapedRecipe {
         val someResult = Foods.SALMON_ROLL.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "salmonroll"), someResult)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "salmon_roll"), someResult)
         someRecipe.shape("X", "Y", "X")
         someRecipe.setIngredient('X', Material.DRIED_KELP)
         someRecipe.setIngredient('Y', Material.SALMON)
@@ -144,7 +144,7 @@ class Food {
         val someResult = Foods.FRENCH_TOAST.createItemStack(1)
         val someExactIngredient = Foods.SUGARY_BREAD.createItemStack(1)
         return SmokingRecipe(
-            NamespacedKey(Odyssey.instance, "frenchtoast"),
+            NamespacedKey(Odyssey.instance, "french_toast"),
             someResult, RecipeChoice.ExactChoice(someExactIngredient), 3.5F, 15 * 20
         )
     }

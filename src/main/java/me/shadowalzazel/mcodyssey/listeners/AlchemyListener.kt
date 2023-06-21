@@ -31,7 +31,7 @@ import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionType
 import org.bukkit.scheduler.BukkitRunnable
 
-object OdysseyAlchemyListeners : Listener, AlchemyManager {
+object AlchemyListener : Listener, AlchemyManager {
 
 
     // TODO: Fix bug if multiple types, converts all

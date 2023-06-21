@@ -71,6 +71,11 @@ open class OdysseyEnchantment(
     }
 
     override fun displayName(level: Int): Component {
+        return Component.text("$enchantName ${ROMAN_NUMERAL_LIST[level]}", subtype.displayColor)
+            .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+    }
+
+    fun titleName(): Component {
         return Component.text(enchantName, subtype.displayColor)
     }
 

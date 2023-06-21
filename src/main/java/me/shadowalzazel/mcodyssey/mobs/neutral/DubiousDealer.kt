@@ -2,6 +2,7 @@ package me.shadowalzazel.mcodyssey.mobs.neutral
 
 import me.shadowalzazel.mcodyssey.mobs.base.OdysseyMob
 import me.shadowalzazel.mcodyssey.recipe_creators.Merchant
+import me.shadowalzazel.mcodyssey.recipe_creators.merchant.Sales
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Location
@@ -41,8 +42,12 @@ object DubiousDealer : OdysseyMob("Dubious Dealer", EntityType.WANDERING_TRADER,
                 it.bootsDropChance = 0F
             }
             // TODO!! Recipe
-            val trade = Merchant().createHourglassTradeRecipe()
-            setRecipe(1, trade)
+            setRecipe(1, Sales.createArcaneBookTrade())
+            setRecipe(2, Sales.createLowTierTomeTrade())
+            setRecipe(3, Sales.createLowTierTomeTrade())
+            setRecipe(4, Sales.createLowTierTomeTrade())
+            setRecipe(5, Sales.createLowTierGildedEnchantTrade())
+            setRecipe(6, Sales.createLowTierGildedEnchantTrade())
         }
         return dubiousDealerEntity
     }

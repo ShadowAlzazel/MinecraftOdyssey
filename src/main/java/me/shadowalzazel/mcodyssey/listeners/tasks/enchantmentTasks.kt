@@ -32,14 +32,21 @@ class BurstBarrageTask(
         // Spawn projectile and set velocity
         shooter.launchProjectile(projectile.javaClass).also {
             it.addScoreboardTag(EntityTags.REPLICATED_ARROW)
-            if (it is Arrow) {
-                it.shooter = shooter
-                it.pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
-                it.basePotionData = (projectile as Arrow).basePotionData
-            }
-            else if (it is ThrownPotion) {
-                it.shooter = shooter
-                it.item = (projectile as ThrownPotion).item
+            when (it) {
+                is Arrow -> {
+                    it.basePotionData = (projectile as Arrow).basePotionData
+                    it.isPersistent = false
+                    it.fireTicks = projectile.fireTicks
+                    it.pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
+                }
+                is SpectralArrow -> {
+                    it.isPersistent = false
+                    it.fireTicks = projectile.fireTicks
+                    it.pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
+                }
+                is ThrownPotion -> {
+                    it.item = (projectile as ThrownPotion).item
+                }
             }
             // Projectile
             it.scoreboardTags.addAll(initialTags)
@@ -212,32 +219,33 @@ class OverchargeTask(
         player.also {
             // Checks if mount is player to add effects
             if (it.activeItem != bow) {
-                if (it.scoreboardTags.contains("Bow_Overcharging")) {
-                    it.scoreboardTags.remove("Bow_Overcharging")
+                if (it.scoreboardTags.contains(EntityTags.OVERCHARGING)) {
+                    it.scoreboardTags.remove(EntityTags.OVERCHARGING)
                 }
 
-                for (x in 1..5) {
-                    if (it.scoreboardTags.contains("Bow_Overcharge_Modifier_$x")) {
-                        it.scoreboardTags.remove("Bow_Overcharge_Modifier_$x")
+                for (x in 0..5) {
+                    if (it.scoreboardTags.contains(EntityTags.OVERCHARGE_MODIFIER + x)) {
+                        it.scoreboardTags.remove(EntityTags.OVERCHARGE_MODIFIER + x)
                     }
                 }
                 this.cancel()
                 return
             }
 
-            for (x in 0..5) {
-                if (it.scoreboardTags.contains("Bow_Overcharge_Modifier_$x") && x <= factor) {
-                    it.scoreboardTags.remove("Bow_Overcharge_Modifier_$x")
-                    it.scoreboardTags.add("Bow_Overcharge_Modifier_${x + 1}")
+            for (x in 0..4) {
+                if (it.scoreboardTags.contains(EntityTags.OVERCHARGE_MODIFIER + x) && x <= factor) {
+                    it.scoreboardTags.remove(EntityTags.OVERCHARGE_MODIFIER + x)
+                    val y = x + 1
+                    it.scoreboardTags.add(EntityTags.OVERCHARGE_MODIFIER + y)
                     with(it.world) {
                         spawnParticle(Particle.END_ROD, it.location, 15 * x, 0.5, 0.5, 0.5)
                         spawnParticle(Particle.ELECTRIC_SPARK, it.location, 15 * x, 0.5, 0.5, 0.5)
                         playSound(it.location, Sound.BLOCK_MANGROVE_ROOTS_PLACE, 2.5F, 0.9F)
-                        if (x == factor) {
+                        if (y == factor) {
                             playSound(it.location, Sound.ENTITY_WARDEN_SONIC_BOOM, 1.5F, 1.8F)
                         }
                     }
-                    it.addPotionEffect(PotionEffect(PotionEffectType.SLOW, 20 * 3, x * 2))
+                    it.addPotionEffect(PotionEffect(PotionEffectType.SLOW, 20 * 2, x * 2))
                     break
                 }
             }

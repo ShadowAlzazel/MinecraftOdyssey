@@ -49,7 +49,7 @@ object Ingredients {
         material = Material.PRISMARINE_SHARD,
         displayName = Component.text("Irradiated Rod", TextColor.color(58, 50, 95), TextDecoration.ITALIC),
         lore = listOf(Component.text("A mechanical piece, dangerous to handle...", TextColor.color(58, 50, 95)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.IRRADIATED_SHARD)
+        customModel = ItemModels.IRRADIATED_ROD)
 
     val BONE_OF_FROST = OdysseyItem( // TODO
         name = "bone_of_frost",

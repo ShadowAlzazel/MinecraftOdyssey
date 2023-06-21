@@ -1,19 +1,15 @@
 package me.shadowalzazel.mcodyssey.recipe_creators.crafting
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.items.Runic
 import me.shadowalzazel.mcodyssey.items.Ingredients
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
+import me.shadowalzazel.mcodyssey.items.Runic
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
-import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.Recipe
-import org.bukkit.inventory.RecipeChoice
-import org.bukkit.inventory.ShapedRecipe
-import org.bukkit.inventory.ShapelessRecipe
+import org.bukkit.inventory.*
 import org.bukkit.inventory.meta.FireworkMeta
 
 class Misc {
@@ -28,7 +24,6 @@ class Misc {
             createEnigmaticOmamoriRecipe(),
             createIrradiatedFruitRecipe(),
             createArcaneBookRecipe(),
-            createHourglassOfBabelRecipe(),
             createDurationRocket(1, "one"),
             createDurationRocket(2, "two"),
             createDurationRocket(3, "three"),
@@ -102,38 +97,10 @@ class Misc {
         return someRecipe
     }
 
-     */
-
-    // IRRADIATED_FRUIT
-    private fun createIrradiatedFruitRecipe(): ShapedRecipe {
-        val someResult = Miscellaneous.IRRADIATED_FRUIT.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "irradiatedfruit"), someResult)
-        val exactIrradiatedRod = Ingredients.IRRADIATED_ROD.createItemStack(1)
-
-        someRecipe.shape("XZX", "ZYZ", "XZX")
-        someRecipe.setIngredient('X', RecipeChoice.ExactChoice(exactIrradiatedRod))
-        someRecipe.setIngredient('Y', Material.GLOW_BERRIES)
-        someRecipe.setIngredient('Z', Material.TINTED_GLASS)
-        return someRecipe
-    }
-
-    // ARCANE_BOOK
-    private fun createArcaneBookRecipe(): ShapedRecipe {
-        val someResult = Runic.ARCANE_BOOK.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "arcanebook"), someResult)
-
-        someRecipe.shape("DDB", "DAB", "BBC")
-        someRecipe.setIngredient('A', Material.ENCHANTED_BOOK)
-        someRecipe.setIngredient('B', Material.AMETHYST_SHARD)
-        someRecipe.setIngredient('C', Material.DIAMOND)
-        someRecipe.setIngredient('D', Material.CHORUS_FLOWER)
-        return someRecipe
-    }
-
     //
     private fun createHourglassOfBabelRecipe(): ShapedRecipe {
         val someResult = Miscellaneous.HOURGLASS_FROM_BABEL.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "hourglassfrombabel"), someResult)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "hourglass_from_babel"), someResult)
         val exactShard = Ingredients.IRRADIATED_SHARD.createItemStack(1)
         val exactGoldAlloy = ItemStack(Material.GOLD_BLOCK)
 
@@ -144,9 +111,35 @@ class Misc {
         return someRecipe
     }
 
+
+     */
+
+    private fun createIrradiatedFruitRecipe(): ShapedRecipe {
+        val someResult = Miscellaneous.IRRADIATED_FRUIT.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "irradiated_fruit"), someResult)
+        val exactIrradiatedRod = Ingredients.IRRADIATED_ROD.createItemStack(1)
+
+        someRecipe.shape("XZX", "ZYZ", "XZX")
+        someRecipe.setIngredient('X', RecipeChoice.ExactChoice(exactIrradiatedRod))
+        someRecipe.setIngredient('Y', Material.GLOW_BERRIES)
+        someRecipe.setIngredient('Z', Material.TINTED_GLASS)
+        return someRecipe
+    }
+
+    private fun createArcaneBookRecipe(): ShapedRecipe {
+        val someResult = Runic.ARCANE_BOOK.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "arcane_book"), someResult)
+
+        someRecipe.shape(" A ", "ABA", " AC")
+        someRecipe.setIngredient('A', Material.AMETHYST_SHARD)
+        someRecipe.setIngredient('B', Material.ENCHANTED_BOOK)
+        someRecipe.setIngredient('C', Material.PRISMARINE_CRYSTALS)
+        return someRecipe
+    }
+
     private fun createSoulCatalystRecipe(): ShapedRecipe {
         val someResult = Miscellaneous.SOUL_CATALYST.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "soulcatalyst"), someResult)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "soul_catalyst"), someResult)
         val exactSoulCrystal = Ingredients.SOUL_CRYSTAL.createItemStack(1)
         val exactEctoplasm = Ingredients.ECTOPLASM.createItemStack(1)
 
@@ -159,7 +152,7 @@ class Misc {
 
     private fun createEnigmaticOmamoriRecipe(): ShapedRecipe {
         val someResult = Miscellaneous.ENIGMATIC_OMAMORI.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "enigmaticomamori"), someResult)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "enigmatic_omamori"), someResult)
         val exactSoulCrystal = Ingredients.SOUL_CRYSTAL.createItemStack(1)
         val exactSoulIngot = Ingredients.SOUL_STEEL_INGOT.createItemStack(1)
 

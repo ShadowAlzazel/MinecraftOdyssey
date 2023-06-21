@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.listeners
+package me.shadowalzazel.mcodyssey.listeners.unused
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.constants.ItemModels
@@ -10,7 +10,6 @@ import org.bukkit.block.structure.Mirror
 import org.bukkit.block.structure.StructureRotation
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.ItemFrame
-import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockPlaceEvent
 import java.util.*

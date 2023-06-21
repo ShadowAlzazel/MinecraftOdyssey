@@ -1,6 +1,5 @@
 package me.shadowalzazel.mcodyssey.listeners
 
-import me.shadowalzazel.mcodyssey.items.Spirit.createSpiritTotem
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier

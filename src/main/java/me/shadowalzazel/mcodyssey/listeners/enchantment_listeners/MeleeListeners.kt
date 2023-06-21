@@ -176,9 +176,11 @@ object MeleeListeners : Listener {
             cooldownMap[attacker.uniqueId] = System.currentTimeMillis()
             true
         } else {
+            val cooldownTime = timer - ((timeElapsed / 1) * 0.001)
+            val actionMessage = String.format("%s on Cooldown (Time Remaining: %.2f s)", message, cooldownTime)
             attacker.sendActionBar(
                 Component.text(
-                    "$message on Cooldown (Time Remaining: ${timer - ((timeElapsed / 1) * 0.001)}s)",
+                    actionMessage,
                     TextColor.color(155, 155, 155)
                 )
             )

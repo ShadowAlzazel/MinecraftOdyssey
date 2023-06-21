@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.listeners
+package me.shadowalzazel.mcodyssey.listeners.unused
 
 
 import net.kyori.adventure.text.Component

@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.listeners
+package me.shadowalzazel.mcodyssey.listeners.unused
 
 import me.shadowalzazel.mcodyssey.constants.Identifiers.ODYSSEY_ENHANCED_MOB_HEALTH_UUID
 import me.shadowalzazel.mcodyssey.constants.Identifiers.ODYSSEY_GILDED_MOB_HEALTH_UUID

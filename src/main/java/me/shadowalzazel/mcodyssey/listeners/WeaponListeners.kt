@@ -287,19 +287,19 @@ object WeaponListeners : Listener {
 
                 // Make crit and still combos !!
                 when (val weaponData = mainWeapon.itemMeta.customModelData) {
-                    ItemModels.DAGGER -> {
+                    ItemModels.DAGGER, ItemModels.SICKLE, ItemModels.CHAKRAM -> {
                         if (victim !in player.getNearbyEntities(1.9, 1.9, 1.9)) {
                             event.isCancelled = true
                             return
                         }
                     }
-                    ItemModels.WOODEN_SPEAR -> {
+                    ItemModels.SPEAR -> {
                         if (victim in player.getNearbyEntities(1.25, 1.25, 1.25)) {
                             event.isCancelled = true
                             return
                         }
                     }
-                    ItemModels.WOODEN_HALBERD -> {
+                    ItemModels.HALBERD -> {
                         if (victim in player.getNearbyEntities(1.5, 1.5, 1.5) || (offHandWeapon.type != Material.AIR && offHandWeapon.type != Material.SHIELD)) {
                             event.isCancelled = true
                             return
