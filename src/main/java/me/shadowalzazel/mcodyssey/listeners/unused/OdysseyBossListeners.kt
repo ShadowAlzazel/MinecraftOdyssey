@@ -1,8 +1,7 @@
-package me.shadowalzazel.mcodyssey.listeners
+package me.shadowalzazel.mcodyssey.listeners.unused
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.bosses.the_ambassador.AmbassadorBoss
-import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.world.TimeSkipEvent
 

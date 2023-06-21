@@ -4,7 +4,7 @@ import me.shadowalzazel.mcodyssey.constants.ItemModels
 
 enum class WeaponType(val baseDamage: Double, val baseAttackSpeed: Double, val baseName: String, val model: Int) {
 
-    // BASE
+    // CATEGORY
     AXE(3.0, 1.6, "Axe", 69),
     POLE_ARM(3.0, 1.6, "Pole-Arm", 69),
     SWORD(3.0, 1.6, "Sword", 69),
@@ -16,16 +16,17 @@ enum class WeaponType(val baseDamage: Double, val baseAttackSpeed: Double, val b
 
     // TYPES
     KATANA(4.0, 1.5, "Katana", ItemModels.KATANA),
-    CLAYMORE(7.75, 0.7, "Claymore", ItemModels.CLAYMORE),
+    CLAYMORE(7.5, 0.7, "Claymore", ItemModels.CLAYMORE),
     RAPIER(1.5, 3.4, "Rapier", ItemModels.RAPIER),
     CUTLASS(2.5, 2.1, "Cutlass", ItemModels.CUTLASS),
     SABER(3.0, 1.8, "Saber", ItemModels.SABER),
 
-    HALBERD(4.5, 0.8, "Halberd", ItemModels.WOODEN_HALBERD),
+    HALBERD(4.5, 0.8, "Halberd", ItemModels.HALBERD),
 
-    DAGGER(4.5, 0.8, "Halberd", ItemModels.WOODEN_SPEAR),
+    DAGGER(1.0, 3.0, "Dagger", ItemModels.DAGGER),
+    SICKLE(1.5, 2.3, "Sickle", ItemModels.SICKLE),
 
-    LONG_AXE(4.5, 0.8, "Halberd", ItemModels.WOODEN_SPEAR),
+    LONG_AXE(8.5, 0.7, "Long-Axe", ItemModels.LONG_AXE),
 
     WARHAMMER(4.5, 1.2, "Warhammer", ItemModels.WARHAMMER),
 

@@ -32,9 +32,16 @@ object ItemModels {
     /* ---------------------------------------------------------------------------------------------- */
     /* ------------------------------------------RUNIC----------------------------------------------- */
     /* ---------------------------------------------------------------------------------------------- */
-    //6905-5XX
 
-    const val ARCANE_BOOK: Int = 6906065
+    const val ARCANE_BOOK: Int = 6905501
+
+    const val VOLUME_OF_TOOLS: Int = 6905520
+    const val VOLUME_OF_POLE_ARMS: Int = 6905521
+    const val VOLUME_OF_SWORDS: Int = 6905522
+    const val VOLUME_OF_SPEARS: Int = 6905523
+    const val VOLUME_OF_AXES: Int = 6905524
+    const val VOLUME_OF_CLUBS: Int = 6905525
+
     const val GILDED_BOOK: Int = 6906066
 
     const val TOME_OF_DISCHARGE: Int = 6906067
@@ -48,12 +55,7 @@ object ItemModels {
     const val TOME_OF_EUPHONY: Int = 6906075
     const val TOME_OF_AVARICE: Int = 6906076
 
-    const val VOLUME_OF_TOOLS: Int = 6905520
-    const val VOLUME_OF_POLE_ARMS: Int = 6905521
-    const val VOLUME_OF_SWORDS: Int = 6905522
-    const val VOLUME_OF_SPEARS: Int = 6905523
-    const val VOLUME_OF_AXES: Int = 6905524
-    const val VOLUME_OF_CLUBS: Int = 6905525
+
 
     /* ---------------------------------------------------------------------------------------------- */
     /* --------------------------------------------FOODS--------------------------------------------- */
@@ -150,7 +152,7 @@ object ItemModels {
     const val SAYA: Int = 6903819
 
     /* ---------------------------------------------------------------------------------------------- */
-    /* -------------------------------------------WEAPONS-------------------------------------------- */
+    /* -------------------------------------------TEMPLATE-------------------------------------------- */
     /* ---------------------------------------------------------------------------------------------- */
 
     const val KATANA_TEMPLATE: Int = 6905819
@@ -159,8 +161,10 @@ object ItemModels {
     /* -------------------------------------------WEAPONS-------------------------------------------- */
     /* ---------------------------------------------------------------------------------------------- */
 
-    // 6905-6XX
     const val SOUL_STEEL_KATANA: Int = 6906644
+
+    // -----------------------------------------------
+
     const val KATANA: Int = 6905744
 
     const val CLAYMORE: Int = 6905745
@@ -173,26 +177,41 @@ object ItemModels {
 
     const val SABER: Int = 6905749
 
+    const val SICKLE: Int = 6905750
+
+    const val CHAKRAM: Int = 6905751
+
+    // -----------------------------------------------
+
+    const val SPEAR: Int = 6905774
+
+    const val HALBERD: Int = 6905775
+
+    const val GUAN_DAO: Int = 6905776
+
+    // -----------------------------------------------
+
     const val SCYTHE: Int = 6905757
 
     const val MACE: Int = 6905762
 
-    const val WOODEN_SPEAR: Int = 6905774
+    const val WARHAMMER: Int = 6905802
 
-    const val WOODEN_HALBERD: Int = 6905775
-
-    const val GUAN_DAO: Int = 6905776
+    // -----------------------------------------------
 
     const val BATTLE_AXE: Int = 6905784
 
     const val LONG_AXE: Int = 6905785
 
+    // -----------------------------------------------
+
+    const val WOODEN_SPEAR: Int = 6905774
+    const val WOODEN_HALBERD: Int = 6905775
+
     const val BAMBOO_STAFF: Int = 6905793
     const val BONE_STAFF: Int = 6905794
     const val WOODEN_STAFF: Int = 6905795
     const val BLAZE_ROD_STAFF: Int = 6905796
-
-    const val WARHAMMER: Int = 6905802
 
     const val ZWEIHANDER: Int = 6905777
 

@@ -14,18 +14,17 @@ object AssetListeners : Listener {
     private fun resourcePackHandler(joiningPlayer: Player) {
 
         val resourcePackLink = "https://www.dropbox.com/s/2sdfqy76ym39h44/odyssey-resource-pack.zip?dl=1"
-        val resourcePackHash = "7bb4ac4579066307c2d770bdeb6bfe1e67edbd22"
+        val resourcePackHash = "77f6a4b4c99b687afeeab91f764a4501d61dfc4b"
 
         joiningPlayer.setResourcePack(
             resourcePackLink,
             resourcePackHash,
             true,
-            Component.text("Odyssey requires its respective resource pack to function properly! Please download it to begin your journey!", TextColor.color(255, 170, 0))
+            Component.text("Odyssey requires its respective resource pack to function properly!", TextColor.color(255, 170, 0))
         )
     }
 
-    // DISABLED
-   //  @EventHandler
+    @EventHandler
     fun playerJoinHandler(event: PlayerJoinEvent) {
         // Force the player to use the resource pack
         resourcePackHandler(event.player)

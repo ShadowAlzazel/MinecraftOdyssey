@@ -65,7 +65,7 @@ object ScoreboardTagListeners : Listener {
                         someVictim.scoreboardTags.remove(it)
                     }
                     else if (someVictim.type == EntityType.PLAYER) {
-                        val accursedZombie = (someVictim.world.spawnEntity(someVictim.location, EntityType.ZOMBIE) as Zombie).apply {
+                        (someVictim.world.spawnEntity(someVictim.location, EntityType.ZOMBIE) as Zombie).apply {
                             setShouldBurnInDay(false)
                             canPickupItems = true
                             isPersistent = true

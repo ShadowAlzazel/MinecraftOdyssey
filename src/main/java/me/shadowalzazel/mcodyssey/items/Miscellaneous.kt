@@ -50,7 +50,7 @@ object Miscellaneous {
 
     val IRRADIATED_FRUIT = OdysseyItem(
         name = "irradiated_fruit",
-        material = Material.RAW_IRON,
+        material = Material.APPLE,
         displayName = Component.text("Irradiated Fruit", TextColor.color(255, 84, 255), TextDecoration.ITALIC),
         lore = listOf(Component.text("They say its good for you...", TextColor.color(87, 67, 96)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.IRRADIATED_FRUIT)

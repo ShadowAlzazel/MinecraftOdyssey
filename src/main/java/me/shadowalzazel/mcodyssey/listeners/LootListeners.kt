@@ -1,23 +1,20 @@
 package me.shadowalzazel.mcodyssey.listeners
 
-import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.items.Runic
-import me.shadowalzazel.mcodyssey.items.Runic.createEnchantedBook
 import me.shadowalzazel.mcodyssey.items.Foods
 import me.shadowalzazel.mcodyssey.items.Ingredients
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
+import me.shadowalzazel.mcodyssey.items.Runic
+import me.shadowalzazel.mcodyssey.items.Runic.createEnchantedBook
 import me.shadowalzazel.mcodyssey.listeners.utility.LootLogic
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
-import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockDropItemEvent
 import org.bukkit.event.entity.EntityDeathEvent
-import org.bukkit.potion.PotionEffectType
 
 object LootListeners : Listener {
 
@@ -88,7 +85,9 @@ object LootListeners : Listener {
                         droppedItemSound(player)
                     }
                     // TODO: Is Blood Moon
-                    it.world.dropItem(it.location, (Ingredients.COAGULATED_BLOOD.createItemStack((1..3).random())))
+                    if (mobLootLogic.roll(4.0)) {
+                        it.world.dropItem(it.location, (Ingredients.COAGULATED_BLOOD.createItemStack((1..3).random())))
+                    }
                 }
                 is Witch -> {
                     if (mobLootLogic.roll(2.5)) {

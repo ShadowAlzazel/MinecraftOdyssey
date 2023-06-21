@@ -9,9 +9,7 @@ import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.ArmorListeners
 import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.MeleeListeners
 import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.MiscListeners
 import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.RangedListeners
-import me.shadowalzazel.mcodyssey.occurrences.OldOccurrenceHandler
-import me.shadowalzazel.mcodyssey.phenomenon.PersistentPhenomenonHandler
-import me.shadowalzazel.mcodyssey.phenomenon.PhenomenonCycleHandler
+import me.shadowalzazel.mcodyssey.listeners.unused.OdysseyMobListeners
 import me.shadowalzazel.mcodyssey.phenomenon.base.OdysseyPhenomenon
 import me.shadowalzazel.mcodyssey.recipe_creators.RecipeManager
 import org.bukkit.Bukkit
@@ -99,10 +97,10 @@ class Odyssey : JavaPlugin(), AssetManager {
         // Register Events
         logger.info("Registering Events...")
         listOf(AssetListeners,
-            OdysseyAlchemyListeners,
+            SmithingListeners,
+            AlchemyListener,
             OdysseyEnigmaticListeners,
             EnchantingListeners,
-            OdysseyBossListeners,
             AmbassadorListeners,
             HogRiderListeners,
             ArmorListeners,
@@ -114,9 +112,9 @@ class Odyssey : JavaPlugin(), AssetManager {
             OdysseyMobListeners,
             FoodListeners,
             OdysseyItemListeners,
-            OdysseyBlockListeners,
             WeaponListeners,
-            OdysseyMiscListeners).forEach { eventRegister(it) }
+            SpawningListeners,
+        ).forEach { eventRegister(it) }
 
         //server.pluginManager.registerEvents(OdysseyPhenomenaListeners, this)
         playersRequiredForLuck = 4

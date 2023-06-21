@@ -29,7 +29,7 @@ object Weapons {
                 val resetSpeedModifier = AttributeModifier(Identifiers.ATTACK_SPEED_RESET_UUID, "odyssey.attack_speed", -4.0, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND)
                 val newSpeedModifier = AttributeModifier(Identifiers.ATTACK_SPEED_UUID, "odyssey.attack_speed", weaponType.baseAttackSpeed, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND)
                 it.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, resetSpeedModifier)
-                it.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, newSpeedModifier)
+                it.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, newSpeedModifier)
                 // Set Appearances
                 it.displayName(Component.text(weaponMaterial.namePrefix + " " + weaponType.baseName).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))
                 if (customModel != null) { it.setCustomModelData(customModel) } else { it.setCustomModelData(weaponType.model) }
@@ -306,6 +306,37 @@ object Weapons {
         material = Material.DIAMOND_SWORD,
         weaponMaterial = WeaponMaterial.DIAMOND,
         weaponType = WeaponType.DAGGER)
+
+    // Sickles
+    val WOODEN_SICKLE = OdysseyItem(
+        name = "wooden_sickle",
+        material = Material.WOODEN_SWORD,
+        weaponMaterial = WeaponMaterial.WOOD,
+        weaponType = WeaponType.SICKLE)
+
+    val GOLDEN_SICKLE = OdysseyItem(
+        name = "golden_sickle",
+        material = Material.GOLDEN_SWORD,
+        weaponMaterial = WeaponMaterial.GOLD,
+        weaponType = WeaponType.SICKLE)
+
+    val STONE_SICKLE = OdysseyItem(
+        name = "stone_sickle",
+        material = Material.STONE_SWORD,
+        weaponMaterial = WeaponMaterial.STONE,
+        weaponType = WeaponType.SICKLE)
+
+    val IRON_SICKLE = OdysseyItem(
+        name = "iron_sickle",
+        material = Material.IRON_SWORD,
+        weaponMaterial = WeaponMaterial.IRON,
+        weaponType = WeaponType.SICKLE)
+
+    val DIAMOND_SICKLE = OdysseyItem(
+        name = "diamond_sickle",
+        material = Material.DIAMOND_SWORD,
+        weaponMaterial = WeaponMaterial.DIAMOND,
+        weaponType = WeaponType.SICKLE)
 
     // -----------------------------------------AXES--------------------------------------------
 

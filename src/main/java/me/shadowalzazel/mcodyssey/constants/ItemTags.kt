@@ -5,11 +5,12 @@ import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataContainer
 import org.bukkit.persistence.PersistentDataType
-import java.util.UUID
+import java.util.*
 
 object ItemTags {
 
     const val ALCHEMY_ARTILLERY_LOADED: String = "alchemy_artillery_loaded"
+    const val ENGRAVED: String = "engraved"
 
     fun PersistentDataContainer.hasOdysseyTag(): Boolean {
         return has(NamespacedKey(Odyssey.instance, "item"))

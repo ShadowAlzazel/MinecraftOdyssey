@@ -2,7 +2,6 @@ package me.shadowalzazel.mcodyssey.recipe_creators
 
 import me.shadowalzazel.mcodyssey.recipe_creators.crafting.Food
 import me.shadowalzazel.mcodyssey.recipe_creators.crafting.Misc
-import me.shadowalzazel.mcodyssey.recipe_creators.crafting.DeprecatedWeapon
 import me.shadowalzazel.mcodyssey.recipe_creators.smithing.Weapon
 import org.bukkit.inventory.Recipe
 

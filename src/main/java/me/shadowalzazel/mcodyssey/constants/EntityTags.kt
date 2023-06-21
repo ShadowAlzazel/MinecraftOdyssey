@@ -44,7 +44,10 @@ object EntityTags {
     const val BOLA_SHOT_MODIFIER: String = "odyssey.bola_shot_modifier.0"
     const val CHAIN_REACTION_MODIFIER: String = "odyssey.chain_reaction_modifier.0"
     const val CLUSTER_SHOT_MODIFIER: String = "odyssey.cluster_shot_modifier.0"
+
     const val OVERCHARGE_MODIFIER: String = "odyssey.overcharge_modifier.0"
+    const val OVERCHARGING: String = "odyssey.bow_overcharging"
+    const val OVERCHARGE_COOLDOWN: String = "odyssey.bow_overcharge_cooldown"
 
     const val IS_BURST_BARRAGING: String = "odyssey.is_burst_barraging"
     const val SOUL_RENDED_BY: String = "odyssey.soul_rended_by."

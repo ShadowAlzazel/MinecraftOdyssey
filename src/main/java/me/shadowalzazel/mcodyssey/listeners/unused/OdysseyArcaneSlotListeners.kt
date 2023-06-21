@@ -1,13 +1,13 @@
 
-package me.shadowalzazel.mcodyssey.listeners
+package me.shadowalzazel.mcodyssey.listeners.unused
 
 import com.destroystokyo.paper.event.inventory.PrepareResultEvent
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import me.shadowalzazel.mcodyssey.items.Ingredients
 import me.shadowalzazel.mcodyssey.items.Runic
 import me.shadowalzazel.mcodyssey.items.Runic.createEnchantedBook
-import me.shadowalzazel.mcodyssey.items.Ingredients
 import me.shadowalzazel.mcodyssey.items.Weapons
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import net.kyori.adventure.text.Component
@@ -734,7 +734,9 @@ object OdysseyArcaneSlotListeners : Listener {
                                             lore[infoIndex] = Component.text("Enchantment Slots: [${inputEquipment!!.enchantments.size - 1}/$newTotal]", experienceEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                                         }
                                         else {
-                                            val banishedIndex = if (lore.count { it == emptyEnchantSlot } >= 1) { lore.indexOf(emptyEnchantSlot) } else { lore.indexOf(emptyGildedSlot) }
+                                            val banishedIndex = if (lore.count { it == emptyEnchantSlot } >= 1) { lore.indexOf(emptyEnchantSlot) } else { lore.indexOf(
+                                                emptyGildedSlot
+                                            ) }
                                             lore.removeAt(banishedIndex)
                                             lore[infoIndex] = Component.text("Enchantment Slots: [${inputEquipment!!.enchantments.size}/$newTotal]", experienceEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                                         }
@@ -804,7 +806,7 @@ object OdysseyArcaneSlotListeners : Listener {
                                             val newLore = inputEquipment!!.clone().lore()!!.also { lore ->
                                                 // Change info
                                                 val infoIndex = lore.indexOf(loreSeparator) - 1
-                                                val totalSlots = lore.count{ it == emptyGildedSlot || it == emptyEnchantSlot} + inputEquipment!!.enchantments.size - 1
+                                                val totalSlots = lore.count{ it == emptyGildedSlot || it == emptyEnchantSlot } + inputEquipment!!.enchantments.size - 1
                                                 lore[infoIndex] = Component.text("Enchantment Slots: [${inputEquipment!!.enchantments.size}/$totalSlots]", experienceEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                                                 // Change slot
                                                 val randomLore = randomEnchant!!.first.displayName(randomEnchant!!.second).color(experienceEnchantColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
@@ -867,7 +869,6 @@ object OdysseyArcaneSlotListeners : Listener {
                                     }
                                 }
                             }
-
                             // Tome of Harmony
                             ItemModels.TOME_OF_HARMONY -> {
                                 val newMeta = inputEquipment!!.clone().itemMeta.also {

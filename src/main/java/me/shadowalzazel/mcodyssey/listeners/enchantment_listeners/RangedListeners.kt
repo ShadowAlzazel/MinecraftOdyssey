@@ -304,6 +304,14 @@ object RangedListeners : Listener {
     // ------------------------------- BURST_BARRAGE ------------------------------------
     private fun burstBarrageEnchantmentShoot(projectile: Entity, shooter: LivingEntity, enchantmentStrength: Int) {
         if (!shooter.scoreboardTags.contains(EntityTags.IS_BURST_BARRAGING) && !projectile.scoreboardTags.contains(EntityTags.REPLICATED_ARROW) && projectile is Projectile)  {
+            projectile.run {
+                if (this is Arrow) {
+                    pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
+                }
+                if (this is SpectralArrow) {
+                    pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
+                }
+            }
             shooter.addScoreboardTag(EntityTags.IS_BURST_BARRAGING)
             val initialVelocity = projectile.velocity.clone()
             BurstBarrageTask(shooter, enchantmentStrength, initialVelocity, projectile).runTaskTimer(Odyssey.instance, 3, 3)
@@ -339,7 +347,12 @@ object RangedListeners : Listener {
         projectile.run {
             addScoreboardTag(EntityTags.CLUSTER_SHOT_ARROW)
             addScoreboardTag(EntityTags.CLUSTER_SHOT_MODIFIER + enchantmentStrength)
-            if (this is Arrow) { pickupStatus = AbstractArrow.PickupStatus.DISALLOWED }
+            if (this is Arrow) {
+                pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
+            }
+            if (this is SpectralArrow) {
+                pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
+            }
         }
     }
 
@@ -360,14 +373,21 @@ object RangedListeners : Listener {
             // Make Random radii?
             val someVelocity = projectile.location.clone().add(coordinates.first, 7.6, coordinates.second).subtract(projectile.location).toVector().normalize().multiply(1.0)
             victim.world.spawnEntity(victim.location.clone().add(0.0, 0.5, 0.0), projectile.type).also {
-                if (it is Arrow) {
-                    it.basePotionData = (projectile as Arrow).basePotionData
-                    it.isPersistent = false
-                    it.fireTicks = projectile.fireTicks
-                    it.pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
-                }
-                else if (it is ThrownPotion) {
-                    it.item = (projectile as ThrownPotion).item
+                when (it) {
+                    is Arrow -> {
+                        it.basePotionData = (projectile as Arrow).basePotionData
+                        it.isPersistent = false
+                        it.fireTicks = projectile.fireTicks
+                        it.pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
+                    }
+                    is SpectralArrow -> {
+                        it.isPersistent = false
+                        it.fireTicks = projectile.fireTicks
+                        it.pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
+                    }
+                    is ThrownPotion -> {
+                        it.item = (projectile as ThrownPotion).item
+                    }
                 }
                 // Projectile
                 if (it is Projectile) {
@@ -395,14 +415,14 @@ object RangedListeners : Listener {
     // ------------------------------- OVERCHARGE ------------------------------------
     private fun overchargeEnchantmentLoad(player: Player, bow: ItemStack, enchantmentStrength: Int) {
         // TODO: Move Overcharge cooldown to bow
-        if (player.scoreboardTags.contains("Bow_Overcharge_Cooldown")) {
-            player.scoreboardTags.remove("Bow_Overcharge_Cooldown")
+        if (player.scoreboardTags.contains(EntityTags.OVERCHARGE_COOLDOWN)) {
+            player.scoreboardTags.remove(EntityTags.OVERCHARGE_COOLDOWN)
             return
         }
 
-        if (!player.scoreboardTags.contains("Bow_Overcharging")) {
-            player.scoreboardTags.add("Bow_Overcharging")
-            player.scoreboardTags.add("Bow_Overcharge_Modifier_0")
+        if (!player.scoreboardTags.contains(EntityTags.OVERCHARGING)) {
+            player.scoreboardTags.add(EntityTags.OVERCHARGING)
+            player.scoreboardTags.add(EntityTags.OVERCHARGE_MODIFIER + 0)
             val overchargeTask = OverchargeTask(player, bow, enchantmentStrength)
             overchargeTask.runTaskTimer(Odyssey.instance, (20 * 2) + 10, 20 * 2)
         }
@@ -411,17 +431,17 @@ object RangedListeners : Listener {
     private fun overchargeEnchantmentShoot(shooter: LivingEntity, eventProjectile: Entity) {
         with(shooter.scoreboardTags) {
             for (x in 1..5) {
-                if (contains("Bow_Overcharge_Modifier_$x") && contains("Bow_Overcharging")) {
-                    remove("Bow_Overcharge_Modifier_$x")
-                    remove("Bow_Overcharging")
-                    add("Bow_Overcharge_Cooldown")
+                if (contains(EntityTags.OVERCHARGE_MODIFIER + x) && contains(EntityTags.OVERCHARGING)) {
+                    remove(EntityTags.OVERCHARGE_MODIFIER + x)
+                    remove(EntityTags.OVERCHARGING)
+                    //if (x != 0) { add(EntityTags.OVERCHARGE_COOLDOWN) }
                     eventProjectile.velocity.multiply(1 + (x * 0.2))
                     eventProjectile.scoreboardTags.add(EntityTags.OVERCHARGE_MODIFIER + x)
                     break
                 }
             }
         }
-        eventProjectile.scoreboardTags.add("Overcharge_Arrow")
+        eventProjectile.scoreboardTags.add(EntityTags.OVERCHARGE_ARROW)
     }
 
     private fun overchargeEnchantmentHit(projectile: Projectile): Double {
