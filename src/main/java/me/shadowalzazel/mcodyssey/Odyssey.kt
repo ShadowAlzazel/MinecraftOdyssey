@@ -99,7 +99,7 @@ class Odyssey : JavaPlugin(), AssetManager {
         listOf(AssetListeners,
             SmithingListeners,
             AlchemyListener,
-            OdysseyEnigmaticListeners,
+            SoulBraisingListener,
             EnchantingListeners,
             AmbassadorListeners,
             HogRiderListeners,
@@ -111,9 +111,9 @@ class Odyssey : JavaPlugin(), AssetManager {
             LootListeners,
             OdysseyMobListeners,
             FoodListeners,
-            OdysseyItemListeners,
             WeaponListeners,
             SpawningListeners,
+            OtherListeners
         ).forEach { eventRegister(it) }
 
         //server.pluginManager.registerEvents(OdysseyPhenomenaListeners, this)

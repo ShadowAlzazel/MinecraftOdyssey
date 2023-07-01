@@ -86,6 +86,9 @@ object Foods {
         lore = listOf(Component.text("Sugary Bread!", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.SUGARY_BREAD)
 
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
+
     val CRYSTAL_CANDY = OdysseyItem(
         name = "crystal_candy",
         material = Material.SWEET_BERRIES,
@@ -104,7 +107,28 @@ object Foods {
         name = "salmon_roll",
         material = Material.COOKED_SALMON,
         displayName = Component.text("Salmon Roll", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
-        lore = listOf(Component.text("Salmon Roll Sushi!", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        lore = listOf(Component.text("Salmon Sushi!", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.SALMON_ROLL)
+
+    val FISH_N_CHIPS = OdysseyItem(
+        name = "fish_n_chips",
+        material = Material.COOKED_BEEF,
+        displayName = Component.text("Fish n' Chips", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
+        lore = listOf(Component.text("Fish with Fries!", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.FISH_N_CHIPS)
+
+    val FRUIT_BOWL = OdysseyItem(
+        name = "fruit_bowl",
+        material = Material.RABBIT_STEW,
+        displayName = Component.text("Fruit Bowl", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
+        lore = listOf(Component.text("A Pick of Fruits", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.FRUIT_BOWL)
+
+    val COFFEE = OdysseyItem(
+        name = "coffee",
+        material = Material.POTION,
+        displayName = Component.text("Coffee", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
+        lore = listOf(Component.text("Extra Caffeinated", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.COFFEE)
 
 }

@@ -4,56 +4,46 @@ import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
-import org.bukkit.ChatColor
-import org.bukkit.Color
-import org.bukkit.FireworkEffect
-import org.bukkit.Location
+import org.bukkit.*
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Firework
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.weather.LightningStrikeEvent
 import org.bukkit.inventory.meta.FireworkMeta
 
-object MiscListeners : Listener {
+object OtherListeners : Listener {
 
-    // Check if Ender Dragon Dies
+
+
     @EventHandler
-    fun onDefeatEnderDragon(event: EntityDeathEvent) {
-        val dragon = event.entity
-        val endWorld = event.entity.world
-        if (dragon.type == EntityType.ENDER_DRAGON) {
-            for (player in endWorld.players) {
-                player.sendMessage("${ChatColor.DARK_PURPLE}The end has just begun ...")
-
-            }
+    fun preventHelmetPlace(event: BlockPlaceEvent) {
+        if (!event.itemInHand.hasItemMeta()) return
+        if (event.blockPlaced.type != Material.CARVED_PUMPKIN) return
+        if (event.itemInHand.itemMeta!!.hasCustomModelData()) {
+            event.isCancelled = true
         }
     }
 
     @EventHandler
-    fun chargeAmethyst(event: LightningStrikeEvent) {
-        if (event.cause != LightningStrikeEvent.Cause.TRIDENT) {
-            // DO CHARGE? ->
-        }
+    fun chargedCreeperDeath(event: EntityDeathEvent) {
+
     }
 
-    // TEST
-    // Elytra Mechanics
-    @EventHandler
+    //EventHandler
     fun elytraBoost(event: PlayerElytraBoostEvent) {
         if ((event.itemStack.itemMeta!! as FireworkMeta).power > 3) {
             var boostFailureChance = 0.05 + ((event.itemStack.itemMeta as FireworkMeta).power * 0.05) // FOR DURATION
             var boostFailureDamage = 3.0
             var dudChance = 0.1
-
             val loreComponent = listOf(Component.text("Danger!", TextColor.color(255, 55, 55)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))
 
             // Maybe
             if (event.itemStack.lore()?.contains(Component.text("Safe!")) == true) { // Change to detect component var
                 boostFailureDamage -= 2.0
             }
-
             if ((boostFailureChance * 100) > (0..100).random()) {
                 event.firework.detonate()
                 createDetonatingFirework(event.player.location)
@@ -62,6 +52,9 @@ object MiscListeners : Listener {
         }
     }
 
+
+    // WHEN CRAFTING
+    // DETECT IF ROCKET
 
     private fun createDetonatingFirework(targetLocation: Location): Firework {
         val randomColors = listOf(Color.BLUE, Color.RED, Color.YELLOW, Color.FUCHSIA, Color.AQUA)
@@ -82,9 +75,5 @@ object MiscListeners : Listener {
         }
         return superFirework
     }
-
-
-    // WHEN CRAFTING
-    // DETECT IF ROCKET
 
 }

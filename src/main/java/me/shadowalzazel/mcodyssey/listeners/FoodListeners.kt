@@ -61,6 +61,16 @@ object FoodListeners : Listener {
                     }
                 }
             }
+            Material.POTION -> {
+                when (event.item.itemMeta.customModelData) {
+                    ItemModels.COFFEE -> {
+                        event.player.addPotionEffect(PotionEffect(PotionEffectType.SPEED, 10 * 20, 0))
+                    }
+                    else -> {
+                        satisfyingFood = false
+                    }
+                }
+            }
             else -> {
                 satisfyingFood = false
             }

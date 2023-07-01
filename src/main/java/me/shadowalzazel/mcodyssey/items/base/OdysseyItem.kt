@@ -24,12 +24,6 @@ data class OdysseyItem(
     internal val potionEffects: List<PotionEffect>? = null,
     internal val potionColor: Color? = null) {
 
-    // CUSTOM AFFIXES
-    // ITEM SLOT STATS?
-    // ATK DAMAGE
-    // HEALTH
-
-
     fun createItemStack(amount: Int): ItemStack {
         val newItemStack = ItemStack(material, amount)
         // On item meta; Add lore, display name, custom model, damage stats, effects, color if applicable
@@ -43,8 +37,13 @@ data class OdysseyItem(
         return newItemStack
     }
 
+
     // NOTES: Potions
 
+    // CUSTOM AFFIXES
+    // ITEM SLOT STATS?
+    // ATK DAMAGE
+    // HEALTH
     // MAKE POTION THAT CONVERTS POISON DAMAGE TO HEAL. THO TAKES DOUBLE DAMAGE FROM WITHER
 
     // flask_of_rose -> do damage when hit?

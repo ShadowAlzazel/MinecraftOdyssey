@@ -62,6 +62,6 @@ object EntityTags {
 
     // WEAPONS
     const val COMBOED: String = "odyssey.comboed"
-
+    const val MELEE_AOE_HIT: String = "odyssey.melee_aoe_hit"
 
 }

@@ -1,7 +1,9 @@
 package me.shadowalzazel.mcodyssey.recipe_creators
 
 import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.items.Ingredients
 import me.shadowalzazel.mcodyssey.items.Templates
+import me.shadowalzazel.mcodyssey.trims.materials.Kunzite
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
@@ -9,24 +11,17 @@ import org.bukkit.inventory.Recipe
 import org.bukkit.inventory.RecipeChoice
 import org.bukkit.inventory.ShapedRecipe
 import org.bukkit.inventory.SmithingTransformRecipe
+import org.bukkit.inventory.SmithingTrimRecipe
 
 class Smithing {
 
     fun getRecipes(): List<Recipe> {
         return listOf(
             bookCombining(),
-            itemBookSmithing()
-        )
-    }
+            itemBookSmithing(),
 
-    // SHAPED
-    private fun templateTestRecipe(): ShapedRecipe {
-        val someResult = Templates.KATANA_TEMPLATE.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "template_test_recipe"), someResult)
-        someRecipe.shape("X", "Y", "X")
-        someRecipe.setIngredient('X', Material.DRAGON_EGG)
-        someRecipe.setIngredient('Y', Material.GOLDEN_SWORD)
-        return someRecipe
+            kunziteTrimSmithing()
+        )
     }
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -100,5 +95,43 @@ class Smithing {
         )
     }
 
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
+
+    private fun kunziteTrimSmithing(): SmithingTrimRecipe {
+        val template = RecipeChoice.MaterialChoice(
+            Material.DUNE_ARMOR_TRIM_SMITHING_TEMPLATE,
+            Material.EYE_ARMOR_TRIM_SMITHING_TEMPLATE,
+            Material.HOST_ARMOR_TRIM_SMITHING_TEMPLATE,
+            Material.COAST_ARMOR_TRIM_SMITHING_TEMPLATE,
+            Material.RAISER_ARMOR_TRIM_SMITHING_TEMPLATE,
+            Material.RIB_ARMOR_TRIM_SMITHING_TEMPLATE,
+            Material.SENTRY_ARMOR_TRIM_SMITHING_TEMPLATE,
+            Material.SHAPER_ARMOR_TRIM_SMITHING_TEMPLATE,
+            Material.SILENCE_ARMOR_TRIM_SMITHING_TEMPLATE,
+            Material.SNOUT_ARMOR_TRIM_SMITHING_TEMPLATE,
+            Material.SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE,
+            Material.TIDE_ARMOR_TRIM_SMITHING_TEMPLATE,
+            Material.VEX_ARMOR_TRIM_SMITHING_TEMPLATE,
+            Material.WARD_ARMOR_TRIM_SMITHING_TEMPLATE,
+            Material.WAYFINDER_ARMOR_TRIM_SMITHING_TEMPLATE,
+            Material.WILD_ARMOR_TRIM_SMITHING_TEMPLATE
+        )
+
+        val armor = RecipeChoice.MaterialChoice(
+            Material.NETHERITE_BOOTS, Material.DIAMOND_BOOTS, Material.IRON_BOOTS, Material.GOLDEN_BOOTS, Material.CHAINMAIL_BOOTS, Material.LEATHER_BOOTS,
+            Material.NETHERITE_LEGGINGS, Material.DIAMOND_LEGGINGS, Material.IRON_LEGGINGS, Material.GOLDEN_LEGGINGS, Material.CHAINMAIL_LEGGINGS, Material.LEATHER_LEGGINGS,
+            Material.NETHERITE_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.IRON_CHESTPLATE, Material.GOLDEN_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, Material.LEATHER_CHESTPLATE,
+            Material.NETHERITE_HELMET, Material.DIAMOND_HELMET, Material.IRON_HELMET, Material.GOLDEN_HELMET, Material.CHAINMAIL_HELMET, Material.LEATHER_HELMET,
+
+        )
+
+        return SmithingTrimRecipe(
+            NamespacedKey(Odyssey.instance, "kunzite_trims"),
+            template,
+            armor,
+            RecipeChoice.ExactChoice(Ingredients.KUNZITE.createItemStack(1))
+        )
+    }
 
 }

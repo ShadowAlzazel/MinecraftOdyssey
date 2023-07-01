@@ -7,15 +7,7 @@ import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 
-// MAKE OBJECTS LATER
 object Miscellaneous {
-
-    val ELENCUILE_SAPLING = OdysseyItem(
-        name = "elencuile_sapling",
-        material = Material.OAK_SAPLING,
-        displayName = Component.text("Elencuile Sapling", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
-        lore = listOf(Component.text("A seed from the stars...", TextColor.color(205, 205, 245)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.TOTEM_OF_VEXING)
 
     val PRIMO_GEM = OdysseyItem(
         name = "Primogem",
@@ -26,13 +18,6 @@ object Miscellaneous {
             Component.text("the test world. Shines with the condensed hopes", TextColor.color(215, 215, 215)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE),
             Component.text("and dreams of universes that once were.", TextColor.color(215, 215, 215)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.PRIMOGEM)
-
-    val IMPURE_ANTIMATTER_SHARD = OdysseyItem( // TODO: When opened -> turn to antimatter
-        name = "kugelblitz_containment_unit",
-        material = Material.MILK_BUCKET,
-        displayName = Component.text("Totem of Vexing", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
-        lore = listOf(Component.text("A totem with vexing properties", TextColor.color(112, 123, 153)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.TOTEM_OF_VEXING)
 
     val TOTEM_OF_VEXING = OdysseyItem(
         name = "totem_of_vexing",
@@ -62,13 +47,6 @@ object Miscellaneous {
         lore = listOf(Component.text("An hourglass that stops time for all but itself", TextColor.color(3, 170, 177)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.HOURGLASS_FROM_BABEL)
 
-    val ENIGMATIC_ANCHOR = OdysseyItem(
-        name = "enigmatic_anchor",
-        material = Material.RAW_IRON,
-        displayName = Component.text("Sculk Heart", TextColor.color(57, 63, 84), TextDecoration.ITALIC),
-        lore = listOf(Component.text("WIP TODO", TextColor.color(3, 170, 177)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.ENIGMATIC_ANCHOR)
-
     val SCULK_HEART = OdysseyItem(
         name = "sculk_heart",
         material = Material.ROTTEN_FLESH,
@@ -76,7 +54,8 @@ object Miscellaneous {
         lore = listOf(Component.text("A beating heart of the sculk", TextColor.color(24, 130, 154)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.SCULK_HEART)
 
-    val ENIGMATIC_OMAMORI = OdysseyItem( // RENAME TO SPIRITS -> ?
+    // RENAME TO SPIRITS -> ?
+    val ENIGMATIC_OMAMORI = OdysseyItem(
         name = "enigmatic_omamori",
         material = Material.PAPER,
         displayName = Component.text("Enigmatic Omamori", TextColor.color(57, 63, 84), TextDecoration.ITALIC),

@@ -9,7 +9,8 @@ enum class WeaponMaterial(val damage: Double, val namePrefix: String) {
     IRON(3.0, "Iron"),
     DIAMOND(4.0, "Diamond"),
     NETHERITE(5.0, "Netherite"),
-    SOUL_STEEL(4.25, "Soul Steel"),
+    SOUL_STEEL(4.0, "Soul Steel"),
+
     BAMBOO(1.5, "Bamboo"),
     BONE(2.0, "Bone"),
     BLAZE_ROD(2.5, "Blaze Rod")

@@ -11,6 +11,7 @@ import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.inventory.EquipmentSlot
+import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 
 object Weapons {
@@ -33,14 +34,20 @@ object Weapons {
                 // Set Appearances
                 it.displayName(Component.text(weaponMaterial.namePrefix + " " + weaponType.baseName).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))
                 if (customModel != null) { it.setCustomModelData(customModel) } else { it.setCustomModelData(weaponType.model) }
+                //it.addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
+                // TODO: Add Recipe to show and hide attributes
             }
         }
         return newWeapon
     }
 
-    // ---------------------------------------SWORDS---------------------------------------------
+    /* ---------------------------------------------------------------------------------------------- */
+    /* --------------------------------------------SWORDS-------------------------------------------- */
+    /* ---------------------------------------------------------------------------------------------- */
 
-    // Katanas
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
+
     val WOODEN_KATANA = OdysseyItem(
         name = "wooden_katana",
         material = Material.WOODEN_SWORD,
@@ -71,6 +78,12 @@ object Weapons {
         weaponMaterial = WeaponMaterial.DIAMOND,
         weaponType = WeaponType.KATANA)
 
+    val NETHERITE_KATANA = OdysseyItem(
+        name = "diamond_katana",
+        material = Material.NETHERITE_SWORD,
+        weaponMaterial = WeaponMaterial.NETHERITE,
+        weaponType = WeaponType.KATANA)
+
     val SOUL_STEEL_KATANA = OdysseyItem(
         name = "soul_steel_katana",
         material = Material.IRON_SWORD,
@@ -78,7 +91,9 @@ object Weapons {
         weaponMaterial = WeaponMaterial.SOUL_STEEL,
         weaponType = WeaponType.KATANA)
 
-    // Claymores
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
+
     val WOODEN_CLAYMORE = OdysseyItem(
         name = "wooden_claymore",
         material = Material.WOODEN_SWORD,
@@ -109,7 +124,15 @@ object Weapons {
         weaponMaterial = WeaponMaterial.DIAMOND,
         weaponType = WeaponType.CLAYMORE)
 
-    // Rapiers
+    val NETHERITE_CLAYMORE = OdysseyItem(
+        name = "netherite_claymore",
+        material = Material.NETHERITE_SWORD,
+        weaponMaterial = WeaponMaterial.NETHERITE,
+        weaponType = WeaponType.CLAYMORE)
+
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
+
     val WOODEN_RAPIER = OdysseyItem(
         name = "wooden_rapier",
         material = Material.WOODEN_SWORD,
@@ -140,7 +163,15 @@ object Weapons {
         weaponMaterial = WeaponMaterial.DIAMOND,
         weaponType = WeaponType.RAPIER)
 
-    // Cutlass
+    val NETHERITE_RAPIER = OdysseyItem(
+        name = "netherite_rapier",
+        material = Material.NETHERITE_SWORD,
+        weaponMaterial = WeaponMaterial.NETHERITE,
+        weaponType = WeaponType.RAPIER)
+
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
+
     val WOODEN_CUTLASS = OdysseyItem(
         name = "wooden_cutlass",
         material = Material.WOODEN_SWORD,
@@ -171,7 +202,15 @@ object Weapons {
         weaponMaterial = WeaponMaterial.DIAMOND,
         weaponType = WeaponType.CUTLASS)
 
-    // Sabers
+    val NETHERITE_CUTLASS = OdysseyItem(
+        name = "netherite_cutlass",
+        material = Material.NETHERITE_SWORD,
+        weaponMaterial = WeaponMaterial.NETHERITE,
+        weaponType = WeaponType.CUTLASS)
+
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
+
     val WOODEN_SABER = OdysseyItem(
         name = "wooden_saber",
         material = Material.WOODEN_SWORD,
@@ -202,17 +241,19 @@ object Weapons {
         weaponMaterial = WeaponMaterial.DIAMOND,
         weaponType = WeaponType.SABER)
 
-    // Zweihanders
-    val NETHERITE_ZWEIHANDER = OdysseyItem(
-        name = "netherite_zweihander",
+    val NETHERITE_SABER = OdysseyItem(
+        name = "netherite_saber",
         material = Material.NETHERITE_SWORD,
         weaponMaterial = WeaponMaterial.NETHERITE,
-        weaponType = WeaponType.ZWEIHANDER)
+        weaponType = WeaponType.SABER)
+
+    /* ---------------------------------------------------------------------------------------------- */
+    /* --------------------------------------------SPEARS-------------------------------------------- */
+    /* ---------------------------------------------------------------------------------------------- */
 
 
-    // ---------------------------------------SPEARS--------------------------------------------
-
-    // Spears
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
     val WOODEN_SPEAR = OdysseyItem(
         name = "wooden_spear",
         material = Material.WOODEN_SHOVEL,
@@ -243,7 +284,14 @@ object Weapons {
         weaponMaterial = WeaponMaterial.DIAMOND,
         weaponType = WeaponType.SPEAR)
 
-    // Halberds
+    val NETHERITE_SPEAR = OdysseyItem(
+        name = "netherite_spear",
+        material = Material.NETHERITE_SHOVEL,
+        weaponMaterial = WeaponMaterial.NETHERITE,
+        weaponType = WeaponType.SPEAR)
+
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
     val WOODEN_HALBERD = OdysseyItem(
         name = "wooden_halberd",
         material = Material.WOODEN_SHOVEL,
@@ -274,9 +322,56 @@ object Weapons {
         weaponMaterial = WeaponMaterial.DIAMOND,
         weaponType = WeaponType.HALBERD)
 
-    // ---------------------------------------KNIFES--------------------------------------------
+    val NETHERITE_HALBERD = OdysseyItem(
+        name = "netherite_halberd",
+        material = Material.NETHERITE_SHOVEL,
+        weaponMaterial = WeaponMaterial.NETHERITE,
+        weaponType = WeaponType.HALBERD)
 
-    // Daggers
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
+    val WOODEN_LANCE = OdysseyItem(
+        name = "wooden_lance",
+        material = Material.WOODEN_SHOVEL,
+        weaponMaterial = WeaponMaterial.WOOD,
+        weaponType = WeaponType.LANCE)
+
+    val GOLDEN_LANCE = OdysseyItem(
+        name = "golden_lance",
+        material = Material.GOLDEN_SHOVEL,
+        weaponMaterial = WeaponMaterial.GOLD,
+        weaponType = WeaponType.LANCE)
+
+    val STONE_LANCE = OdysseyItem(
+        name = "stone_lance",
+        material = Material.STONE_SHOVEL,
+        weaponMaterial = WeaponMaterial.STONE,
+        weaponType = WeaponType.LANCE)
+
+    val IRON_LANCE = OdysseyItem(
+        name = "iron_lance",
+        material = Material.IRON_SHOVEL,
+        weaponMaterial = WeaponMaterial.IRON,
+        weaponType = WeaponType.LANCE)
+
+    val DIAMOND_LANCE = OdysseyItem(
+        name = "diamond_lance",
+        material = Material.DIAMOND_SHOVEL,
+        weaponMaterial = WeaponMaterial.DIAMOND,
+        weaponType = WeaponType.LANCE)
+
+    val NETHERITE_LANCE = OdysseyItem(
+        name = "netherite_lance",
+        material = Material.NETHERITE_SHOVEL,
+        weaponMaterial = WeaponMaterial.NETHERITE,
+        weaponType = WeaponType.LANCE)
+
+    /* ---------------------------------------------------------------------------------------------- */
+    /* --------------------------------------------KNIFES-------------------------------------------- */
+    /* ---------------------------------------------------------------------------------------------- */
+
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
     val WOODEN_DAGGER = OdysseyItem(
         name = "wooden_dagger",
         material = Material.WOODEN_SWORD,
@@ -307,7 +402,14 @@ object Weapons {
         weaponMaterial = WeaponMaterial.DIAMOND,
         weaponType = WeaponType.DAGGER)
 
-    // Sickles
+    val NETHERITE_DAGGER = OdysseyItem(
+        name = "netherite_dagger",
+        material = Material.NETHERITE_SWORD,
+        weaponMaterial = WeaponMaterial.NETHERITE,
+        weaponType = WeaponType.DAGGER)
+
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
     val WOODEN_SICKLE = OdysseyItem(
         name = "wooden_sickle",
         material = Material.WOODEN_SWORD,
@@ -338,9 +440,56 @@ object Weapons {
         weaponMaterial = WeaponMaterial.DIAMOND,
         weaponType = WeaponType.SICKLE)
 
-    // -----------------------------------------AXES--------------------------------------------
+    val NETHERITE_SICKLE = OdysseyItem(
+        name = "netherite_sickle",
+        material = Material.NETHERITE_SWORD,
+        weaponMaterial = WeaponMaterial.NETHERITE,
+        weaponType = WeaponType.SICKLE)
 
-    // Long Axe
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
+    val WOODEN_CHAKRAM = OdysseyItem(
+        name = "wooden_chakram",
+        material = Material.WOODEN_SWORD,
+        weaponMaterial = WeaponMaterial.WOOD,
+        weaponType = WeaponType.CHAKRAM)
+
+    val GOLDEN_CHAKRAM = OdysseyItem(
+        name = "golden_chakram",
+        material = Material.GOLDEN_SWORD,
+        weaponMaterial = WeaponMaterial.GOLD,
+        weaponType = WeaponType.CHAKRAM)
+
+    val STONE_CHAKRAM = OdysseyItem(
+        name = "stone_chakram",
+        material = Material.STONE_SWORD,
+        weaponMaterial = WeaponMaterial.STONE,
+        weaponType = WeaponType.CHAKRAM)
+
+    val IRON_CHAKRAM = OdysseyItem(
+        name = "iron_chakram",
+        material = Material.IRON_SWORD,
+        weaponMaterial = WeaponMaterial.IRON,
+        weaponType = WeaponType.CHAKRAM)
+
+    val DIAMOND_CHAKRAM = OdysseyItem(
+        name = "diamond_chakram",
+        material = Material.DIAMOND_SWORD,
+        weaponMaterial = WeaponMaterial.DIAMOND,
+        weaponType = WeaponType.CHAKRAM)
+
+    val NETHERITE_CHAKRAM = OdysseyItem(
+        name = "netherite_chakram",
+        material = Material.NETHERITE_SWORD,
+        weaponMaterial = WeaponMaterial.NETHERITE,
+        weaponType = WeaponType.CHAKRAM)
+
+    /* ---------------------------------------------------------------------------------------------- */
+    /* ---------------------------------------------AXES--------------------------------------------- */
+    /* ---------------------------------------------------------------------------------------------- */
+
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
     val WOODEN_LONG_AXE = OdysseyItem(
         name = "wooden_long_axe",
         material = Material.WOODEN_AXE,
@@ -367,13 +516,22 @@ object Weapons {
 
     val DIAMOND_LONG_AXE = OdysseyItem(
         name = "diamond_long_axe",
-        material = Material.WOODEN_AXE,
+        material = Material.DIAMOND_AXE,
         weaponMaterial = WeaponMaterial.DIAMOND,
         weaponType = WeaponType.LONG_AXE)
 
-    // --------------------------------------POLE-ARMS------------------------------------------
+    val NETHERITE_LONG_AXE = OdysseyItem(
+        name = "netherite_long_axe",
+        material = Material.NETHERITE_AXE,
+        weaponMaterial = WeaponMaterial.NETHERITE,
+        weaponType = WeaponType.LONG_AXE)
 
-    // War Hammer
+    /* ---------------------------------------------------------------------------------------------- */
+    /* -----------------------------------------POLE-ARMS-------------------------------------------- */
+    /* ---------------------------------------------------------------------------------------------- */
+
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
     val WOODEN_WARHAMMER = OdysseyItem(
         name = "wooden_warhammer",
         material = Material.WOODEN_PICKAXE,
@@ -404,9 +562,18 @@ object Weapons {
         weaponMaterial = WeaponMaterial.DIAMOND,
         weaponType = WeaponType.WARHAMMER)
 
-    // --------------------------------------STAFFS---------------------------------------------
+    val NETHERITE_WARHAMMER = OdysseyItem(
+        name = "netherite_warhammer",
+        material = Material.NETHERITE_PICKAXE,
+        weaponMaterial = WeaponMaterial.NETHERITE,
+        weaponType = WeaponType.WARHAMMER)
 
-    // Staff
+    /* ---------------------------------------------------------------------------------------------- */
+    /* --------------------------------------------STAFFS-------------------------------------------- */
+    /* ---------------------------------------------------------------------------------------------- */
+
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
     val BAMBOO_STAFF = OdysseyItem(
         name = "bamboo_staff",
         material = Material.STONE_SHOVEL,
@@ -431,24 +598,33 @@ object Weapons {
         weaponMaterial = WeaponMaterial.BLAZE_ROD,
         weaponType = WeaponType.STAFF)
 
-    // --------------------------------------CLUBS----------------------------------------------
+    /* ---------------------------------------------------------------------------------------------- */
+    /* ---------------------------------------------CLUBS-------------------------------------------- */
+    /* ---------------------------------------------------------------------------------------------- */
 
-    // --------------------------------------OTHERS---------------------------------------------
+    /* ---------------------------------------------------------------------------------------------- */
+    /* --------------------------------------------OTHERS-------------------------------------------- */
+    /* ---------------------------------------------------------------------------------------------- */
+    // Change to Sealed Class
 
     // Exotics
     val ABZU_BLADE = OdysseyItem(
         name = "TODO!!",
         material = Material.DIAMOND_SWORD,
         weaponMaterial = WeaponMaterial.NETHERITE,
-        weaponType = WeaponType.STAFF) // TODO: Change to Sealed Class
+        weaponType = WeaponType.STAFF)
 
     // Bosses
     val KINETIC_BLASTER = OdysseyItem(
         name = "TODO!!",
         material = Material.DIAMOND_SWORD,
         weaponMaterial = WeaponMaterial.NETHERITE,
-        weaponType = WeaponType.STAFF) // TODO: Change to Sealed Class
+        weaponType = WeaponType.STAFF)
 
-
-
+    // Zweihanders
+    val NETHERITE_ZWEIHANDER = OdysseyItem(
+        name = "netherite_zweihander",
+        material = Material.NETHERITE_SWORD,
+        weaponMaterial = WeaponMaterial.NETHERITE,
+        weaponType = WeaponType.ZWEIHANDER)
 }

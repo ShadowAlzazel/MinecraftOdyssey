@@ -22,7 +22,7 @@ object SpawningListeners : Listener {
                 }
                 else {
                     (event.entity as WanderingTrader).apply {
-                        setRecipe(recipeCount + 1, Sales.createArcaneBookTrade())
+                        setRecipe(recipeCount - 1, Sales.createArcaneBookTrade())
                     }
                 }
             }

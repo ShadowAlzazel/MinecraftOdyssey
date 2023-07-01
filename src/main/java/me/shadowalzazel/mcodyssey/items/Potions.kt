@@ -40,6 +40,7 @@ object Potions {
         name = "crystalline_potion",
         material = Material.POTION,
         displayName =  Component.text("Crystalline Potion", TextColor.color(170, 0, 255)),
+        customModel = ItemModels.PEARSHAPE_BOTTLE,
         lore = listOf(Component.text("A crystalline liquid...", TextColor.color(170, 0, 255)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         potionEffects = listOf(PotionEffect(PotionEffectType.LUCK, 0 , 0)),
         potionColor = Color.fromRGB(147, 84, 255))
@@ -48,6 +49,7 @@ object Potions {
         name = "potion_of_levitation",
         material = Material.POTION,
         displayName = Component.text("Potion of Levitation", TextColor.color(85, 255, 255)),
+        customModel = ItemModels.PEARSHAPE_BOTTLE,
         potionEffects = listOf(PotionEffect(PotionEffectType.LEVITATION, 10 * 20 , 0)),
         potionColor = Color.fromRGB(85, 255, 255))
 
@@ -55,6 +57,7 @@ object Potions {
         name = "potion_of_withering",
         material = Material.POTION,
         displayName = Component.text("Potion of Levitation", TextColor.color(85, 255, 255)),
+        customModel = ItemModels.PEARSHAPE_BOTTLE,
         potionEffects = listOf(PotionEffect(PotionEffectType.LEVITATION, 10 * 20 , 0)),
         potionColor = Color.fromRGB(85, 255, 255))
 
@@ -62,6 +65,7 @@ object Potions {
         name = "potion_of_luck",
         material = Material.POTION,
         displayName = Component.text("Potion of Luck", TextColor.color(85, 255, 255)),
+        customModel = ItemModels.PEARSHAPE_BOTTLE,
         potionEffects = listOf(PotionEffect(PotionEffectType.LUCK, 300 * 20 , 0)),
         potionColor = Color.fromRGB(255, 157, 0))
 
@@ -69,6 +73,7 @@ object Potions {
         name = "potion_of_resistance",
         material = Material.POTION,
         displayName = Component.text("Potion of Resistance", TextColor.color(85, 255, 255)),
+        customModel = ItemModels.PEARSHAPE_BOTTLE,
         potionEffects = listOf(PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 150 * 20 , 0)),
         potionColor = Color.fromRGB(65, 97, 122))
 
@@ -76,6 +81,7 @@ object Potions {
         name = "potion_of_resistance",
         material = Material.POTION,
         displayName = Component.text("Potion of Haste", TextColor.color(85, 255, 255)),
+        customModel = ItemModels.PEARSHAPE_BOTTLE,
         potionEffects = listOf(PotionEffect(PotionEffectType.FAST_DIGGING, 150 * 20 , 0)),
         potionColor = Color.fromRGB(255, 233, 133))
 
@@ -83,6 +89,7 @@ object Potions {
         name = "potion_of_bioluminescence",
         material = Material.POTION,
         displayName = Component.text("Potion of Bioluminescence", TextColor.color(55, 55, 255)),
+        customModel = ItemModels.PEARSHAPE_BOTTLE,
         potionEffects = listOf(PotionEffect(PotionEffectType.GLOWING, 300 * 20 , 0)),
         potionColor = Color.fromRGB(0, 255, 179))
 
@@ -90,6 +97,7 @@ object Potions {
         name = "potion_of_constitution",
         material = Material.POTION,
         displayName = Component.text("Potion of Constitution", TextColor.color(55, 55, 255)),
+        customModel = ItemModels.PEARSHAPE_BOTTLE,
         potionEffects = listOf(PotionEffect(PotionEffectType.HEALTH_BOOST, 180 * 20 , 0)),
         potionColor = Color.fromRGB(209, 0, 49))
 
@@ -97,6 +105,7 @@ object Potions {
         name = "potion_of_stone_skin",
         material = Material.POTION,
         displayName = Component.text("Potion of Stone Skin", TextColor.color(55, 55, 255)),
+        customModel = ItemModels.PEARSHAPE_BOTTLE,
         potionEffects = listOf(
             PotionEffect(PotionEffectType.ABSORPTION, 180 * 20 , 2),
             PotionEffect(PotionEffectType.SLOW, 180 * 20 , 0)),
@@ -106,16 +115,28 @@ object Potions {
         name = "potion_of_wrath",
         material = Material.POTION,
         displayName = Component.text("Potion of Wrath", TextColor.color(55, 55, 255)),
+        customModel = ItemModels.PEARSHAPE_BOTTLE,
         potionEffects = listOf(
             PotionEffect(PotionEffectType.INCREASE_DAMAGE, 120 * 20 , 2),
             PotionEffect(PotionEffectType.HUNGER, 120 * 20 , 1)),
         potionColor = Color.fromRGB(250, 60, 17))
 
+    val POTION_OF_WHIZ = OdysseyItem(
+        name = "potion_of_whiz",
+        material = Material.POTION,
+        displayName = Component.text("Whiz Potion", TextColor.color(55, 55, 255)),
+        customModel = ItemModels.PEARSHAPE_BOTTLE,
+        potionEffects = listOf(
+            PotionEffect(PotionEffectType.SPEED, 120 * 20 , 2),
+            PotionEffect(PotionEffectType.CONFUSION, 10 * 20 , 0),
+            PotionEffect(PotionEffectType.HUNGER, 120 * 20 , 1)),
+        potionColor = Color.fromRGB(220, 210, 217))
+
     val LARGE_POTION_OF_HASTE = OdysseyItem(
         name = "potion_of_levitation",
         material = Material.POTION,
         displayName = Component.text("Large Potion of Haste", TextColor.color(255, 255, 55)),
-        customModel = ItemModels.SPHERICAL_BOTTLE,
+        customModel = ItemModels.LARGE_BOTTLE,
         potionEffects = listOf(PotionEffect(PotionEffectType.FAST_DIGGING, 20 * 60 , 0)),
         potionColor = Color.fromRGB(185, 255, 155))
 
@@ -187,7 +208,7 @@ object Potions {
         material = Material.POTION,
         displayName = Component.text("Bottled Souls", TextColor.color(94, 210, 215)),
         lore = listOf(Component.text("Soul Damage I", TextColor.color(94, 210, 215)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.SPHERICAL_BOTTLE,
+        customModel = ItemModels.ROUND_BOTTLE,
         potionEffects = emptyList(),
         potionColor = Color.fromRGB(0, 255, 179))
 
@@ -196,7 +217,7 @@ object Potions {
         material = Material.POTION,
         displayName = Component.text("Bottle o' Shimmer", TextColor.color(78, 0, 161)),
         lore = listOf(Component.text("Shimmer (2:00)", TextColor.color(78, 0, 161)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.SPHERICAL_BOTTLE,
+        customModel = ItemModels.DAIRYSHAPE_BOTTLE,
         potionEffects = listOf(
             PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 120 * 20, 1),
             PotionEffect(PotionEffectType.INCREASE_DAMAGE, 120 * 20, 1),
@@ -210,7 +231,7 @@ object Potions {
         material = Material.POTION,
         displayName = Component.text("Poltergeist Brew", TextColor.color(137, 24, 40)),
         lore = listOf(Component.text("Accursed (1:30)", TextColor.color(137, 24, 40)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.CONICAL_BOTTLE,
+        customModel = ItemModels.ROUND_BOTTLE,
         potionEffects = emptyList(),
         potionColor = Color.fromRGB(137, 24, 40))
 

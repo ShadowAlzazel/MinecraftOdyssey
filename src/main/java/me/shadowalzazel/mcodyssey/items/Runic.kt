@@ -31,10 +31,6 @@ object Runic {
         return newBook
     }
 
-    // TODO:
-    // MAKE RUNIC ??
-    // MAKE ARCANE ??
-
     val ARCANE_BOOK = OdysseyItem(
         name = "arcane_book",
         material = Material.BOOK,
@@ -100,24 +96,33 @@ object Runic {
         name = "tome_of_expenditure",
         material = Material.ENCHANTED_BOOK,
         displayName = Component.text("Tome of Expenditure", TextColor.color(255, 170, 0), TextDecoration.ITALIC),
-        lore = listOf(Component.text("Converts one enchantment to an enchanted book, but it destroys the item",
-            TextColor.color(114, 176, 54)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        lore = listOf(
+            Component.text("Converts one enchantment to an enchanted book", TextColor.color(114, 176, 54))
+                .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE),
+            Component.text("Destroys the Item in the Process", TextColor.color(114, 176, 54))
+                .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.TOME_OF_EXPENDITURE)
 
-    val TOME_OF_EUPHONY = OdysseyItem( // TODO!
+    val TOME_OF_EUPHONY = OdysseyItem(
         name = "tome_of_euphony",
         material = Material.ENCHANTED_BOOK,
         displayName = Component.text("Tome of Euphony", TextColor.color(255, 170, 0), TextDecoration.ITALIC),
-        lore = listOf(Component.text("Increases the level of one normal enchantment, up to twice the max. Requires one empty TODO_SLOT",
-            TextColor.color(94, 210, 215)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        lore = listOf(
+            Component.text("Increases the level of one normal enchantment, up to twice the max", TextColor.color(94, 210, 215))
+                .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE),
+            Component.text("Requires one empty Gilded Slot", TextColor.color(94, 210, 215))
+                .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.TOME_OF_EUPHONY)
 
-    val TOME_OF_AVARICE = OdysseyItem( // TODO!
+    val TOME_OF_AVARICE = OdysseyItem(
         name = "tome_of_avarice",
         material = Material.ENCHANTED_BOOK,
         displayName = Component.text("Tome of Avarice", TextColor.color(255, 170, 0), TextDecoration.ITALIC),
-        lore = listOf(Component.text("Adds one TODO_SLOT at the cost of five enchant slots, up to two",
-            TextColor.color(94, 210, 215)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        lore = listOf(
+            Component.text("Adds one Gilded Slot to up to a max of 3", TextColor.color(169, 48, 48))
+                .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE),
+            Component.text("Requires at least four regular enchantments", TextColor.color(169, 48, 48))
+                .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.TOME_OF_AVARICE)
 
 }

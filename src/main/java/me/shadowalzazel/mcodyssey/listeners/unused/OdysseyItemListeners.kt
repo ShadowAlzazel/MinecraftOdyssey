@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.listeners
+package me.shadowalzazel.mcodyssey.listeners.unused
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent
 import me.shadowalzazel.mcodyssey.Odyssey
@@ -113,13 +113,15 @@ object OdysseyItemListeners : Listener {
     }
 
     // Main handler for events related to dropped items
-    @EventHandler(priority = EventPriority.HIGH)
     fun itemDropHandler(event: PlayerDropItemEvent) {
         when (event.itemDrop.itemStack) {
+            /*
             Miscellaneous.HOURGLASS_FROM_BABEL.createItemStack(1) -> {
                 event.itemDrop.remove()
                 hourglassDrop(event.player)
             }
+
+             */
         }
     }
 

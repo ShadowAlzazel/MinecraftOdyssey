@@ -5,9 +5,7 @@ import me.shadowalzazel.mcodyssey.enchantments.armor.*
 import me.shadowalzazel.mcodyssey.enchantments.base.GildedPower
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.enchantments.melee.*
-import me.shadowalzazel.mcodyssey.enchantments.misc.HookShot
-import me.shadowalzazel.mcodyssey.enchantments.misc.MirrorForce
-import me.shadowalzazel.mcodyssey.enchantments.misc.VoidJump
+import me.shadowalzazel.mcodyssey.enchantments.misc.*
 import me.shadowalzazel.mcodyssey.enchantments.ranged.*
 import org.bukkit.enchantments.Enchantment
 import java.util.*
@@ -27,6 +25,7 @@ object OdysseyEnchantments {
     val BANE_OF_THE_SWINE: OdysseyEnchantment = BaneOfTheSwine
     val BEASTLY_BRAWLER: OdysseyEnchantment = BeastlyBrawler
     val BOLA_SHOT: OdysseyEnchantment = BolaShot
+    val BOMB_OB: OdysseyEnchantment = BombOb
     val BURST_BARRAGE: OdysseyEnchantment = BurstBarrage
     val BUZZY_BEES: OdysseyEnchantment = BuzzyBees
     val CHAIN_REACTION: OdysseyEnchantment = ChainReaction
@@ -52,8 +51,10 @@ object OdysseyEnchantments {
     val HOOK_SHOT: OdysseyEnchantment = HookShot
     val ILLUCIDATION: OdysseyEnchantment = Illucidation
     val IGNORE_PAIN: OdysseyEnchantment = IgnorePain // TODO
+    val LENGTHY_LINE: OdysseyEnchantment = LengthyLine
     val LUCKY_DRAW: OdysseyEnchantment = LuckyDraw
     val MIRROR_FORCE: OdysseyEnchantment = MirrorForce // TODO
+    val O_SHINY: OdysseyEnchantment = OShiny
     val OVERCHARGE: OdysseyEnchantment = Overcharge
     val PERPETUAL_PROJECTILE: OdysseyEnchantment = PerpetualProjectile
     val POTION_BARRIER: OdysseyEnchantment = PotionBarrier
@@ -75,7 +76,9 @@ object OdysseyEnchantments {
     val VOID_JUMP: OdysseyEnchantment = VoidJump
     val VOID_STRIKE: OdysseyEnchantment = VoidStrike
     val WAR_CRY: OdysseyEnchantment = WarCry // TODO
+    val WISE_BAIT: OdysseyEnchantment = WiseBait
     val WHIRLWIND: OdysseyEnchantment = Whirlwind
+    val YANK: OdysseyEnchantment = Yank
 
     // Set of all enchantments
     val REGISTERED_SET = setOf(
@@ -88,6 +91,7 @@ object OdysseyEnchantments {
         BANE_OF_THE_SWINE,
         BEASTLY_BRAWLER,
         BOLA_SHOT,
+        BOMB_OB,
         BURST_BARRAGE,
         BUZZY_BEES,
         CHAIN_REACTION,
@@ -112,8 +116,10 @@ object OdysseyEnchantments {
         HOOK_SHOT,
         IGNORE_PAIN,
         ILLUCIDATION,
+        LENGTHY_LINE,
         LUCKY_DRAW,
         MIRROR_FORCE,
+        O_SHINY,
         OVERCHARGE,
         PERPETUAL_PROJECTILE,
         RECKLESS,
@@ -133,7 +139,9 @@ object OdysseyEnchantments {
         VOID_STRIKE,
         VOID_JUMP,
         WAR_CRY,
-        WHIRLWIND
+        WISE_BAIT,
+        WHIRLWIND,
+        YANK
     )
 
 
@@ -198,7 +206,12 @@ object OdysseyEnchantments {
     )
 
     val MISC_SET = setOf(
-        VOID_JUMP
+        BOMB_OB,
+        LENGTHY_LINE,
+        O_SHINY,
+        VOID_JUMP,
+        WISE_BAIT,
+        YANK
     )
 
 
