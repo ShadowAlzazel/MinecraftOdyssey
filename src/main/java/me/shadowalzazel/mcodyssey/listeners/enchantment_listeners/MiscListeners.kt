@@ -1,19 +1,166 @@
 package me.shadowalzazel.mcodyssey.listeners.enchantment_listeners
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
+import me.shadowalzazel.mcodyssey.items.Ingredients
 import org.bukkit.*
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.ProjectileHitEvent
 import org.bukkit.event.entity.ProjectileLaunchEvent
+import org.bukkit.event.player.PlayerFishEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
+import org.bukkit.util.Vector
 import java.util.*
 
 object MiscListeners : Listener {
 
     private var voidJumpCooldown = mutableMapOf<UUID, Long>()
+
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
+
+    @EventHandler
+    fun fishingHandler(event: PlayerFishEvent) {
+        when(event.state) {
+            PlayerFishEvent.State.CAUGHT_FISH -> {
+                caughtFish(event)
+            }
+            PlayerFishEvent.State.CAUGHT_ENTITY -> {
+                caughtEntity(event)
+            }
+            PlayerFishEvent.State.FISHING -> {
+                castLine(event)
+            }
+            else -> {
+
+            }
+        }
+
+    }
+
+    private fun caughtEntity(event: PlayerFishEvent) {
+        if (event.caught == null) { return }
+        val rod = if (event.player.inventory.itemInMainHand.type == Material.FISHING_ROD) {
+            event.player.inventory.itemInMainHand
+        }
+        else {
+            event.player.inventory.itemInOffHand
+        }
+        for (enchant in rod.enchantments) {
+            when (enchant.key) {
+                OdysseyEnchantments.BOMB_OB -> {
+                    if (event.caught!! is LivingEntity) {
+                        bombObEnchantment(event.caught!! as LivingEntity, enchant.value)
+                    }
+                }
+                OdysseyEnchantments.YANK -> {
+                    if (event.caught!! is LivingEntity) {
+                        yankEnchantment(event.caught!! as LivingEntity, enchant.value)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun caughtFish(event: PlayerFishEvent) {
+        if (event.caught == null) { return }
+        if (event.caught!!.type != EntityType.DROPPED_ITEM) { return }
+        //
+        val rod = if (event.player.inventory.itemInMainHand.type == Material.FISHING_ROD) {
+            event.player.inventory.itemInMainHand
+        }
+        else {
+            event.player.inventory.itemInOffHand
+        }
+        //
+        for (enchant in rod.enchantments) {
+            when (enchant.key) {
+                OdysseyEnchantments.O_SHINY -> {
+                    val item = event.caught as Item
+
+                    val goodPulls = listOf(
+                        Material.COD, Material.SALMON, Material.TROPICAL_FISH, Material.PUFFERFISH,
+                        Material.ENCHANTED_BOOK, Material.NAME_TAG, Material.NAUTILUS_SHELL, Material.SADDLE)
+
+                    val gems = listOf(
+                        ItemStack(Material.EMERALD, (1..(enchant.value)).random()),
+                        ItemStack(Material.DIAMOND, (1..(enchant.value)).random()),
+                        Ingredients.JADE.createItemStack((1..(enchant.value)).random()),
+                        Ingredients.RUBY.createItemStack((1..(enchant.value)).random()),
+                        Ingredients.KUNZITE.createItemStack((1..(enchant.value)).random()),
+                        Ingredients.ALEXANDRITE.createItemStack((1..(enchant.value)).random()),
+                    )
+
+                    //item.itemStack = gems.random()
+                    if (item.itemStack.type !in goodPulls) {
+                        item.itemStack = gems.random()
+                    }
+
+                }
+                OdysseyEnchantments.WISE_BAIT -> {
+                    event.expToDrop *= (1 + (0.5 * enchant.value)).toInt()
+                }
+            }
+        }
+    }
+
+    private fun castLine(event: PlayerFishEvent) {
+        val rod = if (event.player.inventory.itemInMainHand.type == Material.FISHING_ROD) {
+            event.player.inventory.itemInMainHand
+        }
+        else {
+            event.player.inventory.itemInOffHand
+        }
+        for (enchant in rod.enchantments) {
+            when (enchant.key) {
+                OdysseyEnchantments.LENGTHY_LINE -> {
+                    println(event.hook.velocity)
+                    event.hook.velocity = event.hook.velocity.multiply(1 + (0.5 * enchant.value))
+                    event.hook.velocity
+                }
+            }
+        }
+    }
+
+    private fun bombObEnchantment(victim: LivingEntity, enchantmentStrength: Int) {
+        val randomColors = listOf(Color.GREEN, Color.LIME, Color.OLIVE, Color.AQUA, Color.BLUE)
+        with(victim.world) {
+            // Particles
+            spawnParticle(Particle.FLASH, victim.location, 2, 0.2, 0.2, 0.2)
+            spawnParticle(Particle.SCRAPE, victim.location, 25, 1.5, 1.0, 1.5)
+            // Fireball
+            (spawnEntity(victim.location, EntityType.FIREBALL) as Fireball).also {
+                it.setIsIncendiary(false)
+                it.yield = 0.0F
+                it.direction = Vector(0.0, -3.0, 0.0)
+            }
+            // Firework
+            (spawnEntity(victim.location, EntityType.FIREWORK) as Firework).also {
+                val newMeta = it.fireworkMeta
+                newMeta.power = enchantmentStrength * 30
+                newMeta.addEffect(
+                    FireworkEffect.builder().with(FireworkEffect.Type.BALL_LARGE).withColor(randomColors.random())
+                        .withFade(randomColors.random()).trail(true).flicker(true).build()
+                )
+                it.fireworkMeta = newMeta
+                it.velocity = Vector(0.0, -3.0, 0.0)
+                it.ticksToDetonate = 1
+            }
+        }
+    }
+
+    private fun yankEnchantment(victim: LivingEntity, enchantmentStrength: Int) {
+        println(victim.velocity)
+        victim.velocity = victim.velocity.multiply(1 + (0.35 * enchantmentStrength))
+        println(victim.velocity)
+    }
+
+
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
+
 
     // MIRROR_FORCE enchantment effects
     @EventHandler

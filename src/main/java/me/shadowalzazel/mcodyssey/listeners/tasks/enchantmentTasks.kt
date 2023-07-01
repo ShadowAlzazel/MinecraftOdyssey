@@ -34,14 +34,20 @@ class BurstBarrageTask(
             it.addScoreboardTag(EntityTags.REPLICATED_ARROW)
             when (it) {
                 is Arrow -> {
-                    it.basePotionData = (projectile as Arrow).basePotionData
                     it.isPersistent = false
                     it.fireTicks = projectile.fireTicks
                     it.pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
+                    if (it.hasCustomEffects()) {
+                        it.basePotionData = (projectile as Arrow).basePotionData
+                    }
                 }
                 is SpectralArrow -> {
                     it.isPersistent = false
                     it.fireTicks = projectile.fireTicks
+                    it.pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
+                }
+                is AbstractArrow -> {
+                    it.isPersistent = false
                     it.pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
                 }
                 is ThrownPotion -> {

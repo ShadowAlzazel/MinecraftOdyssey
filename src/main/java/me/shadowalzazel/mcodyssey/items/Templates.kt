@@ -11,10 +11,21 @@ object Templates {
 
     val KATANA_TEMPLATE = OdysseyItem(
         name = "katana_template",
-        material = Material.PAPER,
+        material = Material.COPPER_INGOT,
         displayName = Component.text("Katana Template", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
-        lore = listOf(Component.text("A Smithing Template used to upgrade a sword into a katana", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        lore = listOf(Component.text(
+            "A Smithing Template used to upgrade a sword into a katana",
+            TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.KATANA_TEMPLATE)
+
+    val KATANA_MOLD = OdysseyItem(
+        name = "katana_mold",
+        material = Material.BRICK,
+        displayName = Component.text("Katana Mold", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
+        lore = listOf(Component.text(
+            "A Smithing Mold used to create a new katana",
+            TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.KATANA_MOLD)
 
 
 }

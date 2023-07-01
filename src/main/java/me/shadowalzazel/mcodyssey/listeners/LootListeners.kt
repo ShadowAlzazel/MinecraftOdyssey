@@ -30,7 +30,6 @@ object LootListeners : Listener {
         }
     }
 
-
     @EventHandler
     fun mobDeathDropHandler(event: EntityDeathEvent) {
         if (event.entity.killer !is Player) {
@@ -39,25 +38,19 @@ object LootListeners : Listener {
         if (!event.entity.hasLineOfSight(event.entity.killer!!)) {
             return
         }
-
         mobLootManager(event.entity, event.entity.killer!!)
-
     }
 
     // Create a calculation class that handles all the logic
-
     private fun mobLootManager(mob: LivingEntity, player: Player) {
         mob.also {
-            // Enchantment set
-            val enchantmentSet = OdysseyEnchantments.MELEE_SET + OdysseyEnchantments.RANGED_SET
-
             val mobLootLogic = LootLogic(1.0, mob, player)
 
             // Loot check and entity check
             when (it) {
                 is Skeleton -> {
                     if (mobLootLogic.roll(2.5)) {
-                        it.world.dropItem(it.location, (Runic.GILDED_BOOK.createEnchantedBook(enchantmentSet.random(), 1)))
+                        it.world.dropItem(it.location, (Runic.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.RANGED_SET.random(), 1)))
                         droppedItemSound(player)
                     }
                 }
@@ -81,7 +74,7 @@ object LootListeners : Listener {
                 }
                 is Zombie -> {
                     if (mobLootLogic.roll(2.5)) {
-                        it.world.dropItem(it.location, (Runic.GILDED_BOOK.createEnchantedBook(enchantmentSet.random(), 1)))
+                        it.world.dropItem(it.location, (Runic.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.MELEE_SET.random(), 1)))
                         droppedItemSound(player)
                     }
                     // TODO: Is Blood Moon
@@ -166,22 +159,17 @@ object LootListeners : Listener {
                     it.world.dropItem(it.location, (Ingredients.IRRADIATED_SHARD.createItemStack((2..5).random())))
                 }
                 is Warden -> {
-                    // If has echo? drop echo shards?
                     it.world.dropItem(it.location, (Ingredients.WARDEN_ENTRAILS.createItemStack(1)))
-                    it.world.dropItem(it.location, (Miscellaneous.PRIMO_GEM.createItemStack((10..15).random())))
                 }
                 is Wither -> {
-                    it.world.dropItem(it.location, (Miscellaneous.PRIMO_GEM.createItemStack((8..12).random())))
                 }
                 is EnderDragon -> {
-                    it.world.dropItem(it.location, (Miscellaneous.PRIMO_GEM.createItemStack((10..15).random())))
                 }
                 else -> {
                 }
             }
         }
     }
-
 
     fun blockDrops(event: BlockDropItemEvent) {
         when(event.block.type) {
@@ -197,6 +185,5 @@ object LootListeners : Listener {
             }
         }
     }
-
 
 }

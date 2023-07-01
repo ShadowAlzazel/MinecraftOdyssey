@@ -311,6 +311,9 @@ object RangedListeners : Listener {
                 if (this is SpectralArrow) {
                     pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
                 }
+                if (this is AbstractArrow) {
+                    pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
+                }
             }
             shooter.addScoreboardTag(EntityTags.IS_BURST_BARRAGING)
             val initialVelocity = projectile.velocity.clone()
@@ -353,13 +356,16 @@ object RangedListeners : Listener {
             if (this is SpectralArrow) {
                 pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
             }
+            if (this is AbstractArrow) {
+                pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
+            }
         }
     }
 
     private fun clusterShotEnchantmentHit(projectile: Projectile, victim: LivingEntity) {
         var modifier = 0
         for (x in 1..5) {
-            if (projectile.scoreboardTags.contains(EntityTags.CHAIN_REACTION_MODIFIER + x)) {
+            if (projectile.scoreboardTags.contains(EntityTags.CLUSTER_SHOT_MODIFIER + x)) {
                 modifier = x
                 break
             }
@@ -371,18 +377,25 @@ object RangedListeners : Listener {
             val angle = Math.random() * Math.PI * 2
             val coordinates: Pair<Double, Double> = Pair(cos(angle) * (5..12).random() * 0.1, sin(angle) * (5..12).random() * 0.1)
             // Make Random radii?
-            val someVelocity = projectile.location.clone().add(coordinates.first, 7.6, coordinates.second).subtract(projectile.location).toVector().normalize().multiply(1.0)
+            val velocity = projectile.location.clone().add(coordinates.first, 7.5 + ((-20..20).random() * 0.01), coordinates.second).subtract(projectile.location).toVector().normalize().multiply(1.0)
+            //victim.launchProjectile(projectile.javaClass).also { }
             victim.world.spawnEntity(victim.location.clone().add(0.0, 0.5, 0.0), projectile.type).also {
                 when (it) {
                     is Arrow -> {
-                        it.basePotionData = (projectile as Arrow).basePotionData
                         it.isPersistent = false
                         it.fireTicks = projectile.fireTicks
                         it.pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
+                        if (it.hasCustomEffects()) {
+                            it.basePotionData = (projectile as Arrow).basePotionData
+                        }
                     }
                     is SpectralArrow -> {
                         it.isPersistent = false
                         it.fireTicks = projectile.fireTicks
+                        it.pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
+                    }
+                    is AbstractArrow -> {
+                        it.isPersistent = false
                         it.pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
                     }
                     is ThrownPotion -> {
@@ -392,10 +405,10 @@ object RangedListeners : Listener {
                 // Projectile
                 if (it is Projectile) {
                     it.shooter = projectile.shooter
-                    it.velocity = someVelocity
-                    for (tag in projectile.scoreboardTags) {
-                        if (tag != EntityTags.CLUSTER_SHOT_ARROW) { it.scoreboardTags.add(tag) }
-                    }
+                }
+                it.velocity = velocity
+                for (tag in projectile.scoreboardTags) {
+                    if (tag != EntityTags.CLUSTER_SHOT_ARROW) { it.scoreboardTags.add(tag) }
                 }
             }
         }

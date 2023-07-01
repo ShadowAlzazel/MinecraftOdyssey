@@ -1,23 +1,22 @@
 package me.shadowalzazel.mcodyssey.constants
 
 object ItemModels {
-
     // All Odyssey Items start with 6905
 
     /* ---------------------------------------------------------------------------------------------- */
     /* -------------------------------------------ALCHEMY-------------------------------------------- */
     /* ---------------------------------------------------------------------------------------------- */
-    //6905-3XX
 
     const val CONICAL_BOTTLE: Int = 6905310 // For Odyssey Effect Potions With Time
-    const val PEARSHAPE_BOTTLE: Int = 6905317 // For Enhance potion
-    const val SPHERICAL_BOTTLE: Int = 6905317 // For Odyssey Effect Potions Without Time
-    const val OIL_BOTTLE: Int = 6905000 // For DeprecatedWeapon Oils
-    const val VIAL: Int = 6905000 // For Small Potions
-    const val LARGE_BOTTLE: Int = 6905000 // Large Potions
+    const val LARGE_BOTTLE: Int = 6905311 // Large Potions
+    const val OIL_BOTTLE: Int = 6905312 // For Deprecated Weapon Oils
+    const val VIAL: Int = 6905313 // For Small Potions
+    const val JAR: Int = 6905314 //
     const val SQUARE_BOTTLE: Int = 6905315 // Higher Amplifier
     const val VOLUMETRIC_BOTTLE: Int = 6905316 // Higher Duration
-
+    const val PEARSHAPE_BOTTLE: Int = 6905317 // For Enhance potion
+    const val DAIRYSHAPE_BOTTLE: Int = 6905318 // Super
+    const val ROUND_BOTTLE: Int = 6905319 // For Odyssey Effect Potions Without Time
 
     /* ---------------------------------------------------------------------------------------------- */
     /* ------------------------------------------SPIRIT----------------------------------------------- */
@@ -25,9 +24,7 @@ object ItemModels {
     //6905-4XX
 
     const val TOTEM_OF_INSIGHT: Int = 6905400 // Totem for pottery shards?
-
     const val TOTEM_OF_VEXING: Int = 6905404
-
 
     /* ---------------------------------------------------------------------------------------------- */
     /* ------------------------------------------RUNIC----------------------------------------------- */
@@ -55,8 +52,6 @@ object ItemModels {
     const val TOME_OF_EUPHONY: Int = 6906075
     const val TOME_OF_AVARICE: Int = 6906076
 
-
-
     /* ---------------------------------------------------------------------------------------------- */
     /* --------------------------------------------FOODS--------------------------------------------- */
     /* ---------------------------------------------------------------------------------------------- */
@@ -69,6 +64,7 @@ object ItemModels {
     const val SUGARY_BREAD: Int = 6904710
     const val FRENCH_TOAST: Int = 6904711
 
+    // Cookies
     const val APPLE_COOKIE: Int = 6905040
     const val BEETROOT_COOKIE: Int = 6905041
     const val PUMPKIN_COOKIE: Int = 6905042
@@ -80,10 +76,14 @@ object ItemModels {
     const val GOLDEN_COOKIE: Int = 6905048
     const val CHORUS_COOKIE: Int = 6905049
 
+    //
     const val CRYSTAL_CANDY: Int = 6905868
-
     const val BACON: Int = 6908047
+
     const val SALMON_ROLL: Int = 6908048
+    const val FISH_N_CHIPS: Int = 6908049
+    const val COFFEE: Int = 6908050
+    const val FRUIT_BOWL: Int = 6908051
 
     /* ---------------------------------------------------------------------------------------------- */
     /* ------------------------------------------MATERIALS------------------------------------------- */
@@ -98,6 +98,12 @@ object ItemModels {
     const val COAGULATED_BLOOD: Int = 6906616
     const val NEPTUNIAN_DIAMOND: Int = 6905006
     const val JOVIAN_EMERALD: Int = 6905105
+
+    const val RUBY: Int = 6905106
+    const val JADE: Int = 6905107
+    const val KUNZITE: Int = 6905108
+    const val ALEXANDRITE: Int = 6905109
+
     const val SOUL_STEEL_INGOT: Int = 6906618
 
     /* ---------------------------------------------------------------------------------------------- */
@@ -138,7 +144,6 @@ object ItemModels {
     // Scythe, Sickle, Kama, Katana, Dagger
     const val ENIGMATIC_OMAMORI: Int = 6906649
 
-
     const val BREEZE_IN_A_BOTTLE: Int = 6903617
     const val HOURGLASS_FROM_BABEL: Int = 6903618
     const val ENIGMATIC_ANCHOR: Int = 6903619
@@ -152,72 +157,67 @@ object ItemModels {
     const val SAYA: Int = 6903819
 
     /* ---------------------------------------------------------------------------------------------- */
-    /* -------------------------------------------TEMPLATE-------------------------------------------- */
+    /* -------------------------------------------HELMETS-------------------------------------------- */
+    /* ---------------------------------------------------------------------------------------------- */
+
+    const val HORNED_HELMET: Int = 6900773
+
+    /* ---------------------------------------------------------------------------------------------- */
+    /* ------------------------------------------TEMPLATES------------------------------------------- */
     /* ---------------------------------------------------------------------------------------------- */
 
     const val KATANA_TEMPLATE: Int = 6905819
+    const val KATANA_MOLD: Int = 6905819
 
     /* ---------------------------------------------------------------------------------------------- */
     /* -------------------------------------------WEAPONS-------------------------------------------- */
     /* ---------------------------------------------------------------------------------------------- */
 
+    // -----------------------------------------------
     const val SOUL_STEEL_KATANA: Int = 6906644
 
     // -----------------------------------------------
-
     const val KATANA: Int = 6905744
-
     const val CLAYMORE: Int = 6905745
-
     const val DAGGER: Int = 6905746
-
     const val RAPIER: Int = 6905747
-
     const val CUTLASS: Int = 6905748
-
     const val SABER: Int = 6905749
-
     const val SICKLE: Int = 6905750
-
     const val CHAKRAM: Int = 6905751
 
     // -----------------------------------------------
-
     const val SPEAR: Int = 6905774
-
     const val HALBERD: Int = 6905775
-
-    const val GUAN_DAO: Int = 6905776
+    const val LANCE: Int = 6905776
+    const val NAGINATA: Int = 6905777 // CQ
+    const val PIKE: Int = 6905778 // Stationary
 
     // -----------------------------------------------
-
-    const val SCYTHE: Int = 6905757
-
-    const val MACE: Int = 6905762
-
     const val WARHAMMER: Int = 6905802
+    const val MACE: Int = 6905803  // One-handed
+    const val MAUL: Int = 6905804  // Two-Handed
+
+    const val GUANDAO: Int = 6905805
+    const val SCYTHE: Int = 6905806
 
     // -----------------------------------------------
-
     const val BATTLE_AXE: Int = 6905784
-
     const val LONG_AXE: Int = 6905785
+    const val POLEAXE: Int = 6905786
+    const val LABRYS: Int = 6905787
 
     // -----------------------------------------------
-
-    const val WOODEN_SPEAR: Int = 6905774
-    const val WOODEN_HALBERD: Int = 6905775
-
     const val BAMBOO_STAFF: Int = 6905793
     const val BONE_STAFF: Int = 6905794
     const val WOODEN_STAFF: Int = 6905795
     const val BLAZE_ROD_STAFF: Int = 6905796
 
+    // -----------------------------------------------
     const val ZWEIHANDER: Int = 6905777
 
     // Drops
     const val ABZU_BLADE: Int = 6905002
     const val KINETIC_BLASTER: Int = 6905003
-
 
 }

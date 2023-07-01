@@ -6,10 +6,8 @@ import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.*
 
-
 class Food {
 
-    // Register Recipes
     fun getRecipes(): List<Recipe> {
         return listOf(
             createBeetrootCookieRecipe(),
@@ -22,15 +20,19 @@ class Food {
             createSugarCookieRecipe(),
             createGoldenCookieRecipe(),
             createSugaryBreadRecipe(),
-            createSalmonRollRecipe(),
             createBaconRecipe(),
-            createFrenchToastRecipe()
+            createFrenchToastRecipe(),
+
+            salmonRollRecipe(),
+            fishNChipsRecipe(),
+            fruitBowlRecipe(),
+            coffeeRecipe()
         )
     }
 
-    /* ---------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
 
-    // SHAPED
     private fun createBeetrootCookieRecipe(): ShapedRecipe {
         val someResult = Foods.BEETROOT_COOKIE.createItemStack(1)
         val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "beetroot_cookie"), someResult)
@@ -121,16 +123,54 @@ class Food {
         return someRecipe
     }
 
-    private fun createSalmonRollRecipe(): ShapedRecipe {
-        val someResult = Foods.SALMON_ROLL.createItemStack(1)
-        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "salmon_roll"), someResult)
-        someRecipe.shape("X", "Y", "X")
-        someRecipe.setIngredient('X', Material.DRIED_KELP)
-        someRecipe.setIngredient('Y', Material.SALMON)
-        return someRecipe
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
+
+    private fun fishNChipsRecipe(): ShapedRecipe {
+        val result = Foods.FISH_N_CHIPS.createItemStack(1)
+        return ShapedRecipe(NamespacedKey(Odyssey.instance, "fish_n_chips"), result).apply {
+            shape("PP ", " C ", "   ")
+            setIngredient('P', Material.BAKED_POTATO)
+            setIngredient('C', Material.COOKED_COD)
+        }
     }
 
+    private fun fruitBowlRecipe(): ShapelessRecipe {
+        val result = Foods.FRUIT_BOWL.createItemStack(1)
+        return ShapelessRecipe(NamespacedKey(Odyssey.instance, "fruit_bowl"), result).apply {
+            addIngredient(Material.BOWL)
+            addIngredient(Material.APPLE)
+            addIngredient(Material.MELON_SLICE)
+            addIngredient(Material.GLOW_BERRIES)
+            addIngredient(Material.SWEET_BERRIES)
+        }
+    }
+
+    private fun coffeeRecipe(): ShapedRecipe {
+        val result = Foods.COFFEE.createItemStack(1)
+        return ShapedRecipe(NamespacedKey(Odyssey.instance, "coffee"), result).apply {
+            shape("SCC", " B ", " X ")
+            setIngredient('S', Material.SUGAR)
+            setIngredient('C', Material.COCOA_BEANS)
+            setIngredient('B', Material.GLASS_BOTTLE)
+            setIngredient('X', Material.BRICK)
+        }
+    }
+
+    private fun salmonRollRecipe(): ShapedRecipe {
+        val result = Foods.SALMON_ROLL.createItemStack(2)
+        return ShapedRecipe(NamespacedKey(Odyssey.instance, "salmon_roll"), result).apply {
+            shape(" C ", "KSK", " K ")
+            setIngredient('C', Material.CARROT)
+            setIngredient('K', Material.DRIED_KELP)
+            setIngredient('S', Material.SALMON)
+        }
+    }
+
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
     // CAMPFIRE
+
     private fun createBaconRecipe(): CampfireRecipe {
         val someResult = Foods.BACON.createItemStack(1)
         return CampfireRecipe(
@@ -139,7 +179,10 @@ class Food {
         )
     }
 
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
     // SMOKING
+
     private fun createFrenchToastRecipe(): SmokingRecipe {
         val someResult = Foods.FRENCH_TOAST.createItemStack(1)
         val someExactIngredient = Foods.SUGARY_BREAD.createItemStack(1)
