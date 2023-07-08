@@ -1,5 +1,8 @@
 package me.shadowalzazel.mcodyssey.listeners
 
+import me.shadowalzazel.mcodyssey.constants.Identifiers
+import me.shadowalzazel.mcodyssey.constants.ItemModels
+import me.shadowalzazel.mcodyssey.constants.ItemTags
 import me.shadowalzazel.mcodyssey.constants.ItemTags.ENGRAVED
 import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
@@ -9,9 +12,12 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
+import org.bukkit.attribute.Attribute
+import org.bukkit.attribute.AttributeModifier
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.PrepareSmithingEvent
+import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ArmorMeta
 import org.bukkit.inventory.meta.trim.ArmorTrim
@@ -36,7 +42,10 @@ object SmithingListeners : Listener {
         // Make Sure Recipe has result
         if (event.result == null) { return }
         val eventResult = event.result!!
+        val addition = event.inventory.inputMineral!!
 
+        /*-----------------------------------------------------------------------------------------------*/
+        /*-----------------------------------------------------------------------------------------------*/
         // Engraving
         if (eventResult.type == Material.AMETHYST_SHARD) {
             val engraved = equipment.clone()
@@ -65,6 +74,81 @@ object SmithingListeners : Listener {
             return
         }
 
+        /*-----------------------------------------------------------------------------------------------*/
+        /*-----------------------------------------------------------------------------------------------*/
+        // Soul Steel
+        if (eventResult.type == Material.IRON_INGOT) {
+            event.result = ItemStack(Material.AIR)
+            if (!addition.hasItemMeta()) return
+            if (!addition.itemMeta.hasCustomModelData()) return
+            if (!equipment.itemMeta.hasCustomModelData()) return
+            if (addition.itemMeta.customModelData != ItemModels.SOUL_STEEL_INGOT) return
+            if (equipment.hasTag(ItemTags.SOUL_STEEL_TOOL)) return
+            val equipmentModel = equipment.itemMeta.customModelData
+
+            // TEMP
+            val ironToSoulSteelMap = mapOf(
+                ItemModels.KATANA to ItemModels.SOUL_STEEL_KATANA,
+                ItemModels.CLAYMORE to ItemModels.SOUL_STEEL_CLAYMORE,
+                ItemModels.DAGGER to ItemModels.SOUL_STEEL_DAGGER,
+                ItemModels.RAPIER to ItemModels.SOUL_STEEL_RAPIER,
+                ItemModels.CUTLASS to ItemModels.SOUL_STEEL_CUTLASS,
+                ItemModels.SABER to ItemModels.SOUL_STEEL_SABER,
+                ItemModels.SICKLE to ItemModels.SOUL_STEEL_SICKLE,
+                ItemModels.CHAKRAM to ItemModels.SOUL_STEEL_CLAYMORE,
+                ItemModels.SPEAR to ItemModels.SOUL_STEEL_SPEAR,
+                ItemModels.HALBERD to ItemModels.SOUL_STEEL_HALBERD,
+                ItemModels.LANCE to ItemModels.SOUL_STEEL_LANCE,
+                ItemModels.WARHAMMER to ItemModels.SOUL_STEEL_WARHAMMER,
+                ItemModels.SCYTHE to ItemModels.SOUL_STEEL_SCYTHE,
+                ItemModels.LONG_AXE to ItemModels.SOUL_STEEL_LONG_AXE,
+            )
+
+            val soulSteelName = mapOf(
+                ItemModels.KATANA to "Katana",
+                ItemModels.CLAYMORE to "Claymore",
+                ItemModels.DAGGER to "Dagger",
+                ItemModels.RAPIER to "Rapier",
+                ItemModels.CUTLASS to "Cutlass",
+                ItemModels.SABER to "Saber",
+                ItemModels.SICKLE to "Sickle",
+                ItemModels.CHAKRAM to "Chakram",
+                ItemModels.SPEAR to "Spear",
+                ItemModels.HALBERD to "Halberd",
+                ItemModels.LANCE to "Lance",
+                ItemModels.WARHAMMER to "Warhammer",
+                ItemModels.SCYTHE to "Scythe",
+                ItemModels.LONG_AXE to "Long Axe",
+            )
+
+            if (!ironToSoulSteelMap.containsKey(equipmentModel)) return
+
+            val newItem = equipment.clone()
+            val oldDamageModifier = newItem.itemMeta.getAttributeModifiers(Attribute.GENERIC_ATTACK_DAMAGE)?.first {
+                it.uniqueId == Identifiers.ATTACK_DAMAGE_UUID
+            } ?: return
+
+            newItem.addTag(ItemTags.SOUL_STEEL_TOOL)
+            newItem.itemMeta = newItem.itemMeta.clone().also { meta ->
+                meta.setCustomModelData(ironToSoulSteelMap[equipmentModel]!!)
+                meta.displayName(Component.text("Soul Steel ${soulSteelName[equipmentModel]!!}", TextColor.color(88, 95, 123), TextDecoration.ITALIC))
+                val oldDamage = oldDamageModifier.amount
+                val newDamageModifier = AttributeModifier(
+                    Identifiers.ATTACK_DAMAGE_UUID,
+                    "odyssey.attack_damage",
+                    oldDamage + 1.0,
+                    AttributeModifier.Operation.ADD_NUMBER,
+                    EquipmentSlot.HAND)
+                meta.removeAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, oldDamageModifier)
+                meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, newDamageModifier)
+            }
+
+            event.result = newItem
+            return
+        }
+
+        /*-----------------------------------------------------------------------------------------------*/
+        /*-----------------------------------------------------------------------------------------------*/
         // Trims
         if (eventResult.itemMeta is ArmorMeta) {
             val armorMeta = eventResult.itemMeta as ArmorMeta
@@ -85,7 +169,7 @@ object SmithingListeners : Listener {
                     newTrimMaterial = Trims.RUBY
                 }
                 else -> {
-                    newTrimMaterial = (event.inventory.result!!.itemMeta as ArmorMeta).trim!!.material
+                    return
                 }
             }
 

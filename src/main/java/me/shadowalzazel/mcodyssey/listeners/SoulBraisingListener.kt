@@ -2,6 +2,8 @@ package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.alchemy.SoulBraiseRecipes
 import me.shadowalzazel.mcodyssey.constants.ItemModels
+import me.shadowalzazel.mcodyssey.constants.ItemTags
+import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
 import me.shadowalzazel.mcodyssey.items.Ingredients
 import org.bukkit.Material
 import org.bukkit.Particle
@@ -40,8 +42,10 @@ object SoulBraisingListener : Listener {
         val item = event.entity as Item
         // CAN ASYNC?!
         for (recipe in SoulBraiseRecipes.BRAISE_SET) {
-            recipe.braiseSuccessHandler(item.itemStack.amount, event.combuster!!.location.clone().toCenterLocation())
-            break
+            if (recipe.validateRecipe(listOf(item).toSet(), event.combuster!!)) {
+                recipe.braiseSuccessHandler(item.itemStack.amount, event.combuster!!.location)
+                break
+            }
         }
     }
 
@@ -51,7 +55,7 @@ object SoulBraisingListener : Listener {
 
         with(killer.equipment) {
             val hasSoulSteelWeapon = if (itemInMainHand.itemMeta?.hasCustomModelData() == true) {
-                itemInMainHand.itemMeta.customModelData == ItemModels.SOUL_STEEL_KATANA
+                itemInMainHand.hasTag(ItemTags.SOUL_STEEL_TOOL)
             } else {
                 false
             }
@@ -69,7 +73,6 @@ object SoulBraisingListener : Listener {
             if (hasSoulSteelWeapon) expDrop += 0.15
             if (hasOmamori) expDrop += 0.1
             if (hasSoulSteelHelmet) expDrop += 0.15
-
         }
 
         event.droppedExp += (event.droppedExp * (1 + expDrop)).toInt()

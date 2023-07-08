@@ -568,6 +568,39 @@ object Weapons {
         weaponMaterial = WeaponMaterial.NETHERITE,
         weaponType = WeaponType.WARHAMMER)
 
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
+    val WOODEN_SCYTHE = OdysseyItem(
+        name = "wooden_scythe",
+        material = Material.WOODEN_HOE,
+        weaponMaterial = WeaponMaterial.WOOD,
+        weaponType = WeaponType.SCYTHE)
+
+    val GOLDEN_SCYTHE = OdysseyItem(
+        name = "golden_scythe",
+        material = Material.GOLDEN_HOE,
+        weaponMaterial = WeaponMaterial.GOLD,
+        weaponType = WeaponType.SCYTHE)
+
+    val STONE_SCYTHE = OdysseyItem(
+        name = "stone_scythe",
+        material = Material.STONE_HOE,
+        weaponMaterial = WeaponMaterial.STONE,
+        weaponType = WeaponType.SCYTHE)
+
+    val IRON_SCYTHE = OdysseyItem(
+        name = "iron_scythe",
+        material = Material.IRON_HOE,
+        weaponMaterial = WeaponMaterial.IRON,
+        weaponType = WeaponType.SCYTHE)
+
+    val DIAMOND_SCYTHE = OdysseyItem(
+        name = "diamond_scythe",
+        material = Material.DIAMOND_HOE,
+        weaponMaterial = WeaponMaterial.DIAMOND,
+        weaponType = WeaponType.SCYTHE)
+
+
     /* ---------------------------------------------------------------------------------------------- */
     /* --------------------------------------------STAFFS-------------------------------------------- */
     /* ---------------------------------------------------------------------------------------------- */

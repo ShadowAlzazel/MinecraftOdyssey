@@ -234,8 +234,6 @@ object AlchemyListener : Listener, AlchemyManager {
         playerEquipment.itemInMainHand.subtract(8)
         playerEquipment.itemInOffHand.subtract(1)
         event.player.inventory.addItem(tippedArrows)
-        event.player.updateInventory()
-
     }
 
 

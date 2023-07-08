@@ -29,6 +29,7 @@ enum class WeaponType(
 
     POLE_ARM(3.0, 1.6, "Pole-Arm", 6900),
     WARHAMMER(4.0, 1.3, "Warhammer", ItemModels.WARHAMMER),
+    SCYTHE(3.0, 0.8, "Scythe", ItemModels.SCYTHE),
 
     CLUB(3.0, 1.6, "Club", 6900),
 

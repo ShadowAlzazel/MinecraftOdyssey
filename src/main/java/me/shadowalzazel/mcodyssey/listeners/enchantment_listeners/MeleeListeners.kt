@@ -125,7 +125,7 @@ object MeleeListeners : Listener {
                     event.damage += illucidationEnchantment(victim, enchant.value, event.isCritical)
                 }
                 OdysseyEnchantments.RUPTURING_STRIKE -> {
-                    event.damage -= rupturingStrikeEnchantment(victim, event.damage, enchant.value)
+                    event.damage -= rupturingStrikeEnchantment(attacker, victim, event.damage, enchant.value)
                 }
                 OdysseyEnchantments.VOID_STRIKE -> {
                     if (cooldownManager(attacker, "Void Strike", voidStrikeCooldown, 0.45)) {
@@ -490,33 +490,30 @@ object MeleeListeners : Listener {
         return illucidationDamage
     }
     // ------------------------------- RUPTURING_STRIKE ------------------------------------
-    private fun rupturingStrikeEnchantment(victim: LivingEntity, damage: Double, enchantmentStrength: Int): Double {
+    private fun rupturingStrikeEnchantment(attacker: LivingEntity, victim: LivingEntity, damage: Double, enchantmentStrength: Int): Double {
+        val fullCharge = if ((attacker is Player) && attacker.attackCooldown > 0.99) { true } else attacker !is Player
+        // Prevent Spam
+        if (!fullCharge) return 0.0
+
         var rupturingDamage = 0.0
         with(victim) {
-            if (scoreboardTags.contains("Fully_Ruptured")) {
-                scoreboardTags.remove("Fully_Ruptured")
+            if (scoreboardTags.contains(EffectTags.FULLY_RUPTURED)) {
+                scoreboardTags.remove(EffectTags.FULLY_RUPTURED)
                 if (damage + 2 > enchantmentStrength) {
                     rupturingDamage += enchantmentStrength
-                    health -= if (health < rupturingDamage) {
-                        rupturingDamage - health
-                    } else {
-                        rupturingDamage
-                    }
+                    health -= minOf(health, rupturingDamage)
                 }
+                world.playSound(victim.location, Sound.ITEM_CROSSBOW_QUICK_CHARGE_2, 2.5F, 1.7F)
+                world.spawnParticle(Particle.CRIT, victim.location, 25, 1.0, 0.5, 1.0)
+                world.spawnParticle(Particle.BLOCK_CRACK, victim.location, 25, 0.95, 0.8, 0.95, Material.QUARTZ_BRICKS.createBlockData())
             }
-            else if (scoreboardTags.contains("Partly_Ruptured")) {
-                scoreboardTags.remove("Partly_Ruptured")
-                scoreboardTags.add("Fully_Ruptured")
+            else if (scoreboardTags.contains(EffectTags.PARTLY_RUPTURED)) {
+                scoreboardTags.remove(EffectTags.PARTLY_RUPTURED)
+                scoreboardTags.add(EffectTags.FULLY_RUPTURED)
             } else {
-                scoreboardTags.add("Partly_Ruptured")
+                scoreboardTags.add(EffectTags.PARTLY_RUPTURED)
             }
             damage
-        }
-
-        with(victim.world) {
-            playSound(victim.location, Sound.ITEM_CROSSBOW_QUICK_CHARGE_2, 2.5F, 1.7F)
-            spawnParticle(Particle.CRIT, victim.location, 25, 1.0, 0.5, 1.0)
-            spawnParticle(Particle.BLOCK_CRACK, victim.location, 25, 0.95, 0.8, 0.95, Material.QUARTZ_BRICKS.createBlockData())
         }
         return rupturingDamage
     }

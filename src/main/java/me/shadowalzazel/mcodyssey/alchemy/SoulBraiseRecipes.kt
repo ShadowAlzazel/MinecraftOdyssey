@@ -20,8 +20,8 @@ object SoulBraiseRecipes {
     private val SOUL_STEEL_RECIPE = SoulBraiseRecipe(
         itemResult = Ingredients.SOUL_STEEL_INGOT,
         mobSummon = null,
-        braiseIngredients = listOf(Miscellaneous.SOUL_CATALYST.createItemStack(1)), // TODO: Change !!
-        braiseMaterial = setOf(Material.RAW_IRON_BLOCK),
+        braiseIngredients = listOf(ItemStack(Material.RAW_IRON, 1)),
+        braiseMaterial = setOf(Material.SCULK),
         BraiseBase.PLUS)
 
     private val SCULK_HEART_RECIPE = SoulBraiseRecipe(
@@ -33,9 +33,9 @@ object SoulBraiseRecipes {
 
     // Summon Results
     private val ROTTING_SUMMON_RECIPE = SoulBraiseRecipe(
-        itemResult = Miscellaneous.SCULK_HEART,
+        itemResult = Ingredients.SOUL_CRYSTAL,
         mobSummon = null,
-        braiseIngredients = listOf(ItemStack(Material.ROTTEN_FLESH, 1)), // TODO: Change !!
+        braiseIngredients = listOf(ItemStack(Material.ROTTEN_FLESH, 1)),
         braiseMaterial = setOf(Material.BONE_BLOCK),
         BraiseBase.PLUS)
 
@@ -44,7 +44,6 @@ object SoulBraiseRecipes {
         SOUL_CRYSTAL_RECIPE,
         SOUL_STEEL_RECIPE,
         SCULK_HEART_RECIPE,
-        ROTTING_SUMMON_RECIPE
     )
 
 }

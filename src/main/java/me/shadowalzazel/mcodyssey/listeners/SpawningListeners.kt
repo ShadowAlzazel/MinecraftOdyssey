@@ -11,7 +11,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent
 object SpawningListeners : Listener {
 
     @EventHandler
-    fun mobSpawningHandler(event: CreatureSpawnEvent) {
+    fun mobNaturalSpawningHandler(event: CreatureSpawnEvent) {
         if (event.spawnReason != CreatureSpawnEvent.SpawnReason.NATURAL) { return }
 
         when(event.entity.type) {
@@ -33,6 +33,10 @@ object SpawningListeners : Listener {
 
 
     }
+
+
+
+
 
 
 }

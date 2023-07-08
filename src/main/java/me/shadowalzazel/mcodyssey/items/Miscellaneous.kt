@@ -54,7 +54,6 @@ object Miscellaneous {
         lore = listOf(Component.text("A beating heart of the sculk", TextColor.color(24, 130, 154)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.SCULK_HEART)
 
-    // RENAME TO SPIRITS -> ?
     val ENIGMATIC_OMAMORI = OdysseyItem(
         name = "enigmatic_omamori",
         material = Material.PAPER,
@@ -68,6 +67,7 @@ object Miscellaneous {
         displayName = Component.text("Breeze in a Bottle", TextColor.color(74, 140, 234), TextDecoration.ITALIC),
         lore = listOf(Component.text("Somehow the winds are contained in this?", TextColor.color(74, 140, 234)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.BREEZE_IN_A_BOTTLE)
+
 
 }
 

@@ -18,7 +18,7 @@ object Ingredients {
 
     val JOVIAN_EMERALD = OdysseyItem(
         name = "jovian_emerald",
-        material = Material.DIAMOND,
+        material = Material.EMERALD,
         displayName = Component.text("Neptunian Diamond", TextColor.color(210, 234, 64), TextDecoration.ITALIC),
         lore = listOf(Component.text("An pristine emerald harvested from the clouds", TextColor.color(210, 234, 64)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.JOVIAN_EMERALD)
@@ -79,7 +79,7 @@ object Ingredients {
         name = "ectoplasm",
         material = Material.BONE,
         displayName = Component.text("Ectoplasm", TextColor.color(37, 198, 205), TextDecoration.ITALIC),
-        lore = listOf(Component.text("Escapist Souls trapped in a decaying substance...", TextColor.color(97, 75, 61)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        lore = listOf(Component.text("Souls trapped in a decaying substance...", TextColor.color(97, 75, 61)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.ECTOPLASM)
 
     val COAGULATED_BLOOD = OdysseyItem(
@@ -107,8 +107,8 @@ object Ingredients {
         name = "soul_steel_ingot",
         material = Material.IRON_INGOT,
         displayName = Component.text("Soul Steel Ingot", TextColor.color(88, 95, 123), TextDecoration.ITALIC),
-        lore = listOf(Component.text("A beating heart of the sculk", TextColor.color(57, 63, 84)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.SCULK_HEART)
+        lore = listOf(Component.text("A beating heart of the sculk", TextColor.color(37, 198, 205)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.SOUL_STEEL_INGOT)
 
 
 }

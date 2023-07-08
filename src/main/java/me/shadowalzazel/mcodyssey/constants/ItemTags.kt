@@ -11,6 +11,7 @@ object ItemTags {
 
     const val ALCHEMY_ARTILLERY_LOADED: String = "alchemy_artillery_loaded"
     const val ENGRAVED: String = "engraved"
+    const val SOUL_STEEL_TOOL: String = "soul_steel_tool"
 
     fun PersistentDataContainer.hasOdysseyTag(): Boolean {
         return has(NamespacedKey(Odyssey.instance, "item"))

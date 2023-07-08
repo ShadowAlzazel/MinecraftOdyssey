@@ -4,6 +4,7 @@ import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.items.Ingredients
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
 import me.shadowalzazel.mcodyssey.items.Runic
+import me.shadowalzazel.mcodyssey.items.Templates
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
@@ -22,6 +23,7 @@ class Misc {
             irradiatedFruitRecipe(),
             arcaneBookRecipe(),
             bundleRecipe(),
+            soulSteelUpgradeTemplateRecipe(),
 
             recklessRocketRecipes(1, "one"),
             recklessRocketRecipes(2, "two"),
@@ -112,6 +114,20 @@ class Misc {
             setIngredient('F', Material.RABBIT_FOOT)
             setIngredient('S', Material.STRING)
             setIngredient('R', Material.RABBIT_HIDE)
+            category = CraftingBookCategory.MISC
+        }
+        return recipe
+    }
+
+    private fun soulSteelUpgradeTemplateRecipe(): ShapedRecipe {
+        val result = Templates.SOUL_STEEL_UPGRADE_TEMPLATE.createItemStack(1)
+        val soulCrystal = Ingredients.SOUL_CRYSTAL.createItemStack(1)
+        val ectoplasm = Ingredients.ECTOPLASM.createItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "soul_steel_upgrade_template_crafting"), result).apply {
+            shape("SES", "SCS", "SSS")
+            setIngredient('C', RecipeChoice.ExactChoice(soulCrystal))
+            setIngredient('E', RecipeChoice.ExactChoice(ectoplasm))
+            setIngredient('S', Material.SOUL_SAND)
             category = CraftingBookCategory.MISC
         }
         return recipe

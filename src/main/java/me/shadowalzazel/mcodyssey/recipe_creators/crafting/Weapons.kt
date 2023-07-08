@@ -85,6 +85,12 @@ class Weapons {
             ironWarhammerRecipe(),
             diamondWarhammerRecipe(),
 
+            woodenScytheRecipe(),
+            goldenScytheRecipe(),
+            stoneScytheRecipe(),
+            ironScytheRecipe(),
+            diamondScytheRecipe(),
+
             woodenLongAxeRecipe(),
             goldenLongAxeRecipe(),
             stoneLongAxeRecipe(),
@@ -808,63 +814,130 @@ class Weapons {
     /*----------------------------------------WARHAMMERS-----------------------------------------*/
 
     private fun woodenWarhammerRecipe(): ShapedRecipe {
-        val someResult = Weapons.WOODEN_WARHAMMER.createWeapon()
-        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "wooden_warhammer_crafting"), someResult).apply {
+        val result = Weapons.WOODEN_WARHAMMER.createWeapon()
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "wooden_warhammer_crafting"), result).apply {
             shape(" X ", "XYX", " Y ")
             setIngredient('X', RecipeChoice.MaterialChoice(Material.ACACIA_PLANKS, Material.BIRCH_PLANKS, Material.DARK_OAK_PLANKS, Material.OAK_PLANKS, Material.SPRUCE_PLANKS, Material.JUNGLE_PLANKS))
             setIngredient('Y', Material.STICK)
             group = "warhammers"
             category = CraftingBookCategory.EQUIPMENT
         }
-        return someRecipe
+        return recipe
     }
 
     private fun goldenWarhammerRecipe(): ShapedRecipe {
-        val someResult = Weapons.GOLDEN_WARHAMMER.createWeapon()
-        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "golden_warhammer_crafting"), someResult).apply {
+        val result = Weapons.GOLDEN_WARHAMMER.createWeapon()
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "golden_warhammer_crafting"), result).apply {
             shape(" X ", "XYX", " Y ")
             setIngredient('X', Material.GOLD_INGOT)
             setIngredient('Y', Material.STICK)
             group = "warhammers"
             category = CraftingBookCategory.EQUIPMENT
         }
-        return someRecipe
+        return recipe
     }
 
     private fun stoneWarhammerRecipe(): ShapedRecipe {
-        val someResult = Weapons.STONE_WARHAMMER.createWeapon()
-        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "stone_warhammer_crafting"), someResult).apply {
+        val result = Weapons.STONE_WARHAMMER.createWeapon()
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "stone_warhammer_crafting"), result).apply {
             shape(" X ", "XYX", " Y ")
             setIngredient('X', Material.COBBLESTONE)
             setIngredient('Y', Material.STICK)
             group = "warhammers"
             category = CraftingBookCategory.EQUIPMENT
         }
-        return someRecipe
+        return recipe
     }
 
     private fun ironWarhammerRecipe(): ShapedRecipe {
-        val someResult = Weapons.IRON_WARHAMMER.createWeapon()
-        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "iron_warhammer_crafting"), someResult).apply {
+        val result = Weapons.IRON_WARHAMMER.createWeapon()
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "iron_warhammer_crafting"), result).apply {
             shape(" X ", "XYX", " Y ")
             setIngredient('X', Material.IRON_INGOT)
             setIngredient('Y', Material.STICK)
             group = "warhammers"
             category = CraftingBookCategory.EQUIPMENT
         }
-        return someRecipe
+        return recipe
     }
 
     private fun diamondWarhammerRecipe(): ShapedRecipe {
-        val someResult = Weapons.DIAMOND_WARHAMMER.createWeapon()
-        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "diamond_warhammer_crafting"), someResult).apply {
+        val result = Weapons.DIAMOND_WARHAMMER.createWeapon()
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "diamond_warhammer_crafting"), result).apply {
             shape(" X ", "XYX", " Y ")
             setIngredient('X', Material.DIAMOND)
             setIngredient('Y', Material.STICK)
             group = "warhammers"
             category = CraftingBookCategory.EQUIPMENT
         }
-        return someRecipe
+        return recipe
+    }
+
+    /*----------------------------------------WARHAMMERS-----------------------------------------*/
+
+    private fun woodenScytheRecipe(): ShapedRecipe {
+        val result = Weapons.WOODEN_SCYTHE.createWeapon()
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "wooden_scythe_crafting"), result).apply {
+            shape("CX ", "Y X", "Y  ")
+            setIngredient('C', Material.COPPER_INGOT)
+            setIngredient('X', RecipeChoice.MaterialChoice(Material.ACACIA_PLANKS, Material.BIRCH_PLANKS, Material.DARK_OAK_PLANKS, Material.OAK_PLANKS, Material.SPRUCE_PLANKS, Material.JUNGLE_PLANKS))
+            setIngredient('Y', Material.STICK)
+            group = "scythes"
+            category = CraftingBookCategory.EQUIPMENT
+        }
+        return recipe
+    }
+
+    private fun goldenScytheRecipe(): ShapedRecipe {
+        val result = Weapons.GOLDEN_SCYTHE.createWeapon()
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "golden_scythe_crafting"), result).apply {
+            shape("CX ", "Y X", "Y  ")
+            setIngredient('C', Material.COPPER_INGOT)
+            setIngredient('X', Material.GOLD_INGOT)
+            setIngredient('Y', Material.STICK)
+            group = "scythes"
+            category = CraftingBookCategory.EQUIPMENT
+        }
+        return recipe
+    }
+
+    private fun stoneScytheRecipe(): ShapedRecipe {
+        val result = Weapons.STONE_SCYTHE.createWeapon()
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "stone_scythe_crafting"), result).apply {
+            shape("CX ", "Y X", "Y  ")
+            setIngredient('C', Material.COPPER_INGOT)
+            setIngredient('X', Material.COBBLESTONE)
+            setIngredient('Y', Material.STICK)
+            group = "scythes"
+            category = CraftingBookCategory.EQUIPMENT
+        }
+        return recipe
+    }
+
+    private fun ironScytheRecipe(): ShapedRecipe {
+        val result = Weapons.IRON_SCYTHE.createWeapon()
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "iron_scythe_crafting"), result).apply {
+            shape("CX ", "Y X", "Y  ")
+            setIngredient('C', Material.COPPER_INGOT)
+            setIngredient('X', Material.IRON_INGOT)
+            setIngredient('Y', Material.STICK)
+            group = "scythes"
+            category = CraftingBookCategory.EQUIPMENT
+        }
+        return recipe
+    }
+
+    private fun diamondScytheRecipe(): ShapedRecipe {
+        val result = Weapons.DIAMOND_SCYTHE.createWeapon()
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "diamond_scythe_crafting"), result).apply {
+            shape("CX ", "Y X", "Y  ")
+            setIngredient('C', Material.COPPER_INGOT)
+            setIngredient('X', Material.DIAMOND)
+            setIngredient('Y', Material.STICK)
+            group = "scythes"
+            category = CraftingBookCategory.EQUIPMENT
+        }
+        return recipe
     }
 
     /*----------------------------------------LONG AXE-----------------------------------------*/

@@ -2,6 +2,7 @@ package me.shadowalzazel.mcodyssey.recipe_creators
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.items.Ingredients
+import me.shadowalzazel.mcodyssey.items.Miscellaneous
 import me.shadowalzazel.mcodyssey.items.Templates
 import me.shadowalzazel.mcodyssey.trims.materials.Kunzite
 import org.bukkit.Material
@@ -19,6 +20,7 @@ class Smithing {
         return listOf(
             bookCombining(),
             itemBookSmithing(),
+            soulSteelUpgrading(),
 
             kunziteTrimSmithing()
         )
@@ -64,6 +66,33 @@ class Smithing {
                 Material.SUNFLOWER,
             ),
             RecipeChoice.MaterialChoice(Material.PRISMARINE_CRYSTALS, Material.GOLD_NUGGET)
+        )
+    }
+
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
+
+    private fun soulSteelUpgrading(): SmithingTransformRecipe {
+        val result = Ingredients.SOUL_STEEL_INGOT.createItemStack(1)
+        val template = RecipeChoice.ExactChoice(Templates.SOUL_STEEL_UPGRADE_TEMPLATE.createItemStack(1))
+        val ingot = RecipeChoice.ExactChoice(Ingredients.SOUL_STEEL_INGOT.createItemStack(1))
+
+        return SmithingTransformRecipe(
+            NamespacedKey(Odyssey.instance, "soul_steel_upgrading"),
+            result,
+            template,
+            RecipeChoice.MaterialChoice(
+                Material.IRON_SWORD,
+                Material.IRON_AXE,
+                Material.IRON_PICKAXE,
+                Material.IRON_SHOVEL,
+                Material.IRON_HOE,
+                Material.IRON_BOOTS,
+                Material.IRON_LEGGINGS,
+                Material.IRON_CHESTPLATE,
+                Material.IRON_HELMET,
+            ),
+            ingot
         )
     }
 
