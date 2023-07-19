@@ -12,6 +12,7 @@ import me.shadowalzazel.mcodyssey.constants.WeaponMaps.MAX_RANGE_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.MIN_RANGE_MAP
 
 import org.bukkit.Material
+import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Entity
@@ -22,6 +23,8 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
+import org.bukkit.event.player.PlayerInteractAtEntityEvent
+import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import kotlin.math.min
 
@@ -113,7 +116,7 @@ object WeaponListeners : Listener {
         val fullAttack = player.attackCooldown > 0.99
 
         when (model) {
-            ItemModels.SICKLE -> {
+            ItemModels.SICKLE, ItemModels.SOUL_STEEL_SICKLE -> {
                 if (offHandWeapon.itemMeta?.customModelData == ItemModels.SICKLE) {
                     victim.shieldBlockingDelay = 20
                 }
@@ -128,7 +131,7 @@ object WeaponListeners : Listener {
                     event.damage -= minimumDamage
                 }
             }
-            ItemModels.CLAYMORE -> {
+            ItemModels.CLAYMORE, ItemModels.SOUL_STEEL_CLAYMORE -> {
                 if (!emptyOff) {
                     val minimumDamage = minOf(event.damage, 6.0)
                     event.damage -= minimumDamage
@@ -142,28 +145,37 @@ object WeaponListeners : Listener {
                 }
 
             }
-            ItemModels.SABER -> {
+            ItemModels.SABER, ItemModels.SOUL_STEEL_SABER -> {
                 if (isMounted && isCrit) {
                     event.damage += 3
                 }
             }
-            ItemModels.HALBERD -> {
+            ItemModels.CHAKRAM, ItemModels.SOUL_STEEL_CHAKRAM -> {
+                val sweepDamage = if (isCrit) { event.damage + 1.0 } else { maxOf(event.damage, 2.0) }
+                weaponSweep(victim, player, SWEEP_MAP[model]!!, sweepDamage)
+            }
+            ItemModels.HALBERD, ItemModels.SOUL_STEEL_HALBERD -> {
                 if (!emptyOff && !shieldInOff) {
-                    event.isCancelled = true
-                    return
+                    val minimumDamage = minOf(event.damage, 6.0)
+                    event.damage -= minimumDamage
                 }
             }
-            ItemModels.LANCE -> {
+            ItemModels.SCYTHE, ItemModels.SOUL_STEEL_SCYTHE -> {
+                if (fullAttack && emptyOff) {
+                    weaponSweep(victim, player, SWEEP_MAP[model]!!, maxOf(0.0, event.damage - 4.0))
+                }
+            }
+            ItemModels.LANCE, ItemModels.SOUL_STEEL_LANCE -> {
                 if (isMounted && fullAttack) {
                     event.damage += 14.0
                 }
             }
-            ItemModels.WARHAMMER -> {
+            ItemModels.WARHAMMER, ItemModels.SOUL_STEEL_WARHAMMER -> {
                 if (emptyOff) {
                     victim.shieldBlockingDelay = 60
                 }
             }
-            ItemModels.LONG_AXE -> {
+            ItemModels.LONG_AXE, ItemModels.SOUL_STEEL_LONG_AXE -> {
                 if (!emptyOff) {
                     val minimumDamage = minOf(event.damage, 6.0)
                     event.damage -= minimumDamage
@@ -173,7 +185,7 @@ object WeaponListeners : Listener {
                 if (event.isCritical) {
                     weaponSweep(victim, player, SWEEP_MAP[model]!!, event.damage + 2)
                 } else {
-                    weaponSweep(victim, player, SWEEP_MAP[model]!!, event.damage - 1)
+                    weaponSweep(victim, player, SWEEP_MAP[model]!!, maxOf(event.damage - 1, 1.0))
                 }
 
             }
@@ -185,7 +197,11 @@ object WeaponListeners : Listener {
         val attackCharge = player.attackCooldown
         val extraDamages = weaponStatsHandler(model, victim, event.damage)
         val physicalDamage = extraDamages.first * attackCharge
-        val trueDamage = maxOf(minOf(extraDamages.second, event.damage), 0.0) * attackCharge
+        val trueDamage = if (fullAttack) {
+            maxOf(minOf(extraDamages.second, event.damage), 0.0)
+        } else {
+            0.0
+        }
 
         event.damage -= trueDamage
         event.damage += physicalDamage
@@ -196,11 +212,13 @@ object WeaponListeners : Listener {
             victim.health -= trueDamage
         }
 
-        //println("Final Damage: " + event.finalDamage)
+        event.damage = maxOf(0.0, event.damage)
+        // println("Final Damage: " + event.finalDamage)
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     fun mainWeaponInteractionHandler(event: PlayerInteractEvent) {
+        //println("CLICK")
         if (event.action.isLeftClick) {
             leftClickHandler(event)
         }
@@ -208,6 +226,20 @@ object WeaponListeners : Listener {
             rightClickHandler(event)
         }
     }
+
+    /*
+    @EventHandler(priority = EventPriority.HIGH)
+    fun mainInteractEntityHandler(event: PlayerInteractEntityEvent) {
+        //println("Interact")
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    fun mainInteractAtEntityHandler(event: PlayerInteractAtEntityEvent) {
+        //println("Interact At Entity")
+    }
+    */
+
+
 
     private fun leftClickHandler(event: PlayerInteractEvent) {
         val player = event.player
@@ -219,7 +251,8 @@ object WeaponListeners : Listener {
         if (REACH_MAP[model] == null) return
         // Sentries Passed
 
-        val entity = getReachedTarget(player, REACH_MAP[model])
+        //val entity = getReachedTarget(player, REACH_MAP[model])
+        val entity = getRayTraceTarget(player, model)
         if (entity is LivingEntity) {
             player.attack(entity)
         }
@@ -235,9 +268,12 @@ object WeaponListeners : Listener {
         if (offHandWeapon.itemMeta?.hasCustomModelData() == true && fullAttack) {
             when(val model = offHandWeapon.itemMeta!!.customModelData) {
                 ItemModels.DAGGER, ItemModels.SICKLE, ItemModels.CHAKRAM -> {
-                    val entity = getReachedTarget(player, REACH_MAP[model])
+                    val entity = getRayTraceTarget(player, model)
                     if (entity is LivingEntity) {
                         dualWieldHandler(player, entity)
+                    }
+                    else {
+                        player.swingOffHand()
                     }
                 }
             }
@@ -249,6 +285,7 @@ object WeaponListeners : Listener {
     private fun getRayTraceTarget(player: Player, model: Int): Entity? {
         val reach = REACH_MAP[model] ?: return null
         val result = player.rayTraceEntities(reach.toInt()) ?: return null
+        println(result)
         val target = result.hitEntity ?: return null
         val distance = player.eyeLocation.distance(target.location)
         if (reach < distance) { return null }
@@ -288,10 +325,17 @@ object WeaponListeners : Listener {
             if (entity is LivingEntity && !entity.scoreboardTags.contains(EntityTags.MELEE_AOE_HIT)) {
                 entity.scoreboardTags.add(EntityTags.MELEE_AOE_HIT)
                 entity.damage(damage, attacker)
-                // TODO: Use New Attack Functions
-                // Attack? instead of damage? method
+                entity.world.spawnParticle(
+                    Particle.SWEEP_ATTACK,
+                    entity.location.clone().add(0.0, 1.75, 0.0),
+                    1,
+                    0.05,
+                    0.03,
+                    0.05
+                )
             }
         }
+        attacker.world.playSound(victim.location, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 2.75F, 0.5F)
     }
 
     private fun dualWieldHandler(player: Player, enemy: LivingEntity) {

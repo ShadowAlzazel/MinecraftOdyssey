@@ -110,45 +110,27 @@ object ItemModels {
     /* --------------------------------------------MISC---------------------------------------------- */
     /* ---------------------------------------------------------------------------------------------- */
 
-
-    const val PAPERS_OF_ARCUS: Int = 6905070
-    const val GALVANIZED_STEEL: Int = 6905071
-    const val PURE_ALLOY_COPPER: Int = 6905072
-    const val PURE_ALLOY_GOLD: Int = 6905073
-    const val HAWKING_ENTANGLED_UNIT: Int = 6905074
-    const val KUGELBLITZ_CONTAINMENT_UNIT: Int = 6905075
-
-    const val POLYMORPHIC_GLUE: Int = 6905076
-    const val NEUTRONIUM_BARK_SCRAPS: Int = 6905333
     const val ELENCUILE_SAPLING: Int = 6905464
 
-    // 6900XXX
     const val PRIMOGEM: Int = 6900000
-    const val BABEL_ANNULUS_SCHEMATICS: Int = 6900068
-    const val DORMANT_CYBER_STAR: Int = 6900069
-    const val IMPURE_ANTI_MATTER_SHARD: Int = 6900088
-    const val PURE_ANTIMATTER_CRYSTAL: Int = 6900089
-    const val NEUTRONIUM_BARK_INGOT: Int = 6900565
-    const val FRUIT_OF_ERISHKIGAL: Int = 6900555
-    const val SILMARIL_OF_YGGLADIEL: Int = 6900556
-    const val IRRADIATED_FRUIT: Int = 6905468
-
-    const val BONE_OF_FROST: Int = 6905304
-
-    // 69066XX
-    const val SORROWING_SOUL: Int = 6906615
-    const val SOUL_CATALYST: Int = 6906617
-
-    // Special variants like kama...
-    const val SOUL_STEEL_HELMET: Int = 6906645
-    // Scythe, Sickle, Kama, Katana, Dagger
-    const val ENIGMATIC_OMAMORI: Int = 6906649
 
     const val BREEZE_IN_A_BOTTLE: Int = 6903617
     const val HOURGLASS_FROM_BABEL: Int = 6903618
     const val ENIGMATIC_ANCHOR: Int = 6903619
     const val SCULK_HEART: Int = 6903621
+
     const val SUSPICIOUS_TOTEM: Int = 6903622
+
+    const val CRYING_GOLD: Int = 6903888
+
+    const val BONE_OF_FROST: Int = 6905304
+
+    const val IRRADIATED_FRUIT: Int = 6905468
+
+    const val SOUL_CATALYST: Int = 6906617
+    const val SOUL_STEEL_HELMET: Int = 6906645
+    const val SOUL_STEEL_UPGRADE_TEMPLATE: Int = 6906646
+    const val ENIGMATIC_OMAMORI: Int = 6906649
 
     /* ---------------------------------------------------------------------------------------------- */
     /* ------------------------------------------EQUIPMENT------------------------------------------- */
@@ -173,10 +155,6 @@ object ItemModels {
     /* -------------------------------------------WEAPONS-------------------------------------------- */
     /* ---------------------------------------------------------------------------------------------- */
 
-    // -----------------------------------------------
-    const val SOUL_STEEL_KATANA: Int = 6906644
-
-    // -----------------------------------------------
     const val KATANA: Int = 6905744
     const val CLAYMORE: Int = 6905745
     const val DAGGER: Int = 6905746
@@ -186,32 +164,58 @@ object ItemModels {
     const val SICKLE: Int = 6905750
     const val CHAKRAM: Int = 6905751
 
-    // -----------------------------------------------
     const val SPEAR: Int = 6905774
     const val HALBERD: Int = 6905775
     const val LANCE: Int = 6905776
     const val NAGINATA: Int = 6905777 // CQ
     const val PIKE: Int = 6905778 // Stationary
 
-    // -----------------------------------------------
     const val WARHAMMER: Int = 6905802
     const val MACE: Int = 6905803  // One-handed
     const val MAUL: Int = 6905804  // Two-Handed
-
     const val GUANDAO: Int = 6905805
     const val SCYTHE: Int = 6905806
 
-    // -----------------------------------------------
     const val BATTLE_AXE: Int = 6905784
     const val LONG_AXE: Int = 6905785
     const val POLEAXE: Int = 6905786
     const val LABRYS: Int = 6905787
 
-    // -----------------------------------------------
     const val BAMBOO_STAFF: Int = 6905793
     const val BONE_STAFF: Int = 6905794
     const val WOODEN_STAFF: Int = 6905795
     const val BLAZE_ROD_STAFF: Int = 6905796
+
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
+    const val SOUL_STEEL_KATANA: Int = 6906644
+    const val SOUL_STEEL_CLAYMORE: Int = 6906645
+    const val SOUL_STEEL_DAGGER: Int = 6906646
+    const val SOUL_STEEL_RAPIER: Int = 6906647
+    const val SOUL_STEEL_CUTLASS: Int = 6906648
+    const val SOUL_STEEL_SABER: Int = 6906649
+    const val SOUL_STEEL_SICKLE: Int = 6906650
+    const val SOUL_STEEL_CHAKRAM: Int = 6906651
+
+    const val SOUL_STEEL_SPEAR: Int = 6906674
+    const val SOUL_STEEL_HALBERD: Int = 6906675
+    const val SOUL_STEEL_LANCE: Int = 6906676
+    const val SOUL_STEEL_NAGINATA: Int = 6906677
+    const val SOUL_STEEL_PIKE: Int = 6906678
+
+    const val SOUL_STEEL_WARHAMMER: Int = 6906702
+    const val SOUL_STEEL_MACE: Int = 6906703
+    const val SOUL_STEEL_MAUL: Int = 6906704
+    const val SOUL_STEEL_GUANDAO: Int = 6906705
+    const val SOUL_STEEL_SCYTHE: Int = 6906706
+
+    const val SOUL_STEEL_BATTLE_AXE: Int = 6906684
+    const val SOUL_STEEL_LONG_AXE: Int = 6906685
+    const val SOUL_STEEL_POLEAXE: Int = 6906686
+    const val SOUL_STEEL_LABRYS: Int = 6906687
+
+
+
 
     // -----------------------------------------------
     const val ZWEIHANDER: Int = 6905777

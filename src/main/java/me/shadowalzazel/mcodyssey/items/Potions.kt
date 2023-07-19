@@ -56,9 +56,9 @@ object Potions {
     val POTION_OF_WITHERING = OdysseyItem(
         name = "potion_of_withering",
         material = Material.POTION,
-        displayName = Component.text("Potion of Levitation", TextColor.color(85, 255, 255)),
+        displayName = Component.text("Potion of Withering", TextColor.color(85, 255, 255)),
         customModel = ItemModels.PEARSHAPE_BOTTLE,
-        potionEffects = listOf(PotionEffect(PotionEffectType.LEVITATION, 10 * 20 , 0)),
+        potionEffects = listOf(PotionEffect(PotionEffectType.WITHER, 10 * 20 , 0)),
         potionColor = Color.fromRGB(85, 255, 255))
 
     val POTION_OF_LUCK = OdysseyItem(

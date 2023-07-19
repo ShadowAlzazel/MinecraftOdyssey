@@ -10,3 +10,5 @@ package me.shadowalzazel.mcodyssey.enchantments
 // Make thorns bug new enchant apply ranged effects !!!!!
 
 // LUNAR POTATOES
+
+// Shoot Bricks, Slimeballs, (CROSSBOW)

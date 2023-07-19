@@ -1,8 +1,32 @@
 package me.shadowalzazel.mcodyssey.enchantments.armor
 
-object Illumineye {
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
+import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import org.bukkit.Material
+import org.bukkit.enchantments.Enchantment
+import org.bukkit.inventory.ItemStack
 
-    // TODO: If hits enemy in eye, apply glow
+object Illumineye : OdysseyEnchantment("illumineye", "Illumineye", 3) {
 
-    // Get eye vector direction if collides
+    override fun conflictsWith(other: Enchantment): Boolean {
+        return when (other) {
+            OdysseyEnchantments.SCULK_SENSITIVE -> {
+                true
+            }
+            else -> {
+                false
+            }
+        }
+    }
+
+    override fun canEnchantItem(item: ItemStack): Boolean {
+        return when (item.type) {
+            Material.ENCHANTED_BOOK, Material.NETHERITE_HELMET, Material.DIAMOND_HELMET, Material.IRON_HELMET, Material.GOLDEN_HELMET, Material.CHAINMAIL_HELMET, Material.LEATHER_HELMET -> {
+                true
+            }
+            else -> {
+                false
+            }
+        }
+    }
 }

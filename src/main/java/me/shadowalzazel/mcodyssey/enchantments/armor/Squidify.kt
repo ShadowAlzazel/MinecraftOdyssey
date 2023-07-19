@@ -10,7 +10,7 @@ object Squidify : OdysseyEnchantment("squidify", "Squidify", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.SPOREFUL -> {
+            OdysseyEnchantments.SPOREFUL, OdysseyEnchantments.LEAP_FROG -> {
                 true
             }
             else -> {

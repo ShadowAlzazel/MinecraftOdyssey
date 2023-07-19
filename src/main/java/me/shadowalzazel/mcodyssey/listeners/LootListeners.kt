@@ -50,7 +50,8 @@ object LootListeners : Listener {
             when (it) {
                 is Skeleton -> {
                     if (mobLootLogic.roll(2.5)) {
-                        it.world.dropItem(it.location, (Runic.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.RANGED_SET.random(), 1)))
+                        val rangedSet = OdysseyEnchantments.RANGED_SET.filter { enchant -> enchant !in OdysseyEnchantments.EXOTIC_LIST }
+                        it.world.dropItem(it.location, (Runic.GILDED_BOOK.createEnchantedBook(rangedSet.random(), 1)))
                         droppedItemSound(player)
                     }
                 }
@@ -74,7 +75,8 @@ object LootListeners : Listener {
                 }
                 is Zombie -> {
                     if (mobLootLogic.roll(2.5)) {
-                        it.world.dropItem(it.location, (Runic.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.MELEE_SET.random(), 1)))
+                        val meleeSet = OdysseyEnchantments.MELEE_SET.filter { enchant -> enchant !in OdysseyEnchantments.EXOTIC_LIST }
+                        it.world.dropItem(it.location, (Runic.GILDED_BOOK.createEnchantedBook(meleeSet.random(), 1)))
                         droppedItemSound(player)
                     }
                     // TODO: Is Blood Moon
@@ -160,8 +162,12 @@ object LootListeners : Listener {
                 }
                 is Warden -> {
                     it.world.dropItem(it.location, (Ingredients.WARDEN_ENTRAILS.createItemStack(1)))
+                    it.world.dropItem(it.location, (Runic.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.SCULK_SENSITIVE, 1)))
+                    droppedItemSound(player)
                 }
                 is Wither -> {
+                    it.world.dropItem(it.location, (Runic.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.BLACK_ROSE, 1)))
+                    droppedItemSound(player)
                 }
                 is EnderDragon -> {
                 }

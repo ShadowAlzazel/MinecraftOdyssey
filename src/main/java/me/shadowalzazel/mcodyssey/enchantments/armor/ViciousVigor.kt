@@ -10,7 +10,7 @@ object ViciousVigor : OdysseyEnchantment("vicious_vigor", "Vicious Vigor", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            THORNS, OdysseyEnchantments.FRUITFUL_FARE -> {
+            OdysseyEnchantments.VICIOUS_VIGOR, OdysseyEnchantments.UNTOUCHABLE -> {
                 true
             }
             else -> {

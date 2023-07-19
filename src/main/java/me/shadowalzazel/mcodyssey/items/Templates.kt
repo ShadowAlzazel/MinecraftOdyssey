@@ -27,5 +27,15 @@ object Templates {
             TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.KATANA_MOLD)
 
+    val SOUL_STEEL_UPGRADE_TEMPLATE = OdysseyItem(
+        name = "soul_steel_upgrade_template",
+        material = Material.COPPER_INGOT,
+        displayName = Component.text("Soul Steel Upgrade Template", TextColor.color(255, 255, 85))
+            .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE),
+        lore = listOf(Component.text(
+            "A Smithing Template used to upgrade Iron tools into Soul Steel", TextColor.color(97, 75, 61))
+            .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.SOUL_STEEL_UPGRADE_TEMPLATE)
+
 
 }

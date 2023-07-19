@@ -15,7 +15,6 @@ class RecipeManager {
             addAll(Misc().getRecipes())
             addAll(Food().getRecipes())
             addAll(Merchant().getRecipes())
-            addAll(Templating().getRecipes())
             addAll(Smithing().getRecipes())
             addAll(Weapons().getRecipes())
             addAll(Helmets().getRecipes())

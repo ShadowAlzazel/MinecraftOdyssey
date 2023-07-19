@@ -10,7 +10,7 @@ object Untouchable : OdysseyEnchantment("untouchable", "Untouchable", 1) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.BEASTLY_BRAWLER -> {
+            OdysseyEnchantments.COWARDICE, OdysseyEnchantments.VENGEFUL -> {
                 true
             }
             else -> {
@@ -22,7 +22,7 @@ object Untouchable : OdysseyEnchantment("untouchable", "Untouchable", 1) {
     override fun canEnchantItem(item: ItemStack): Boolean {
         return when (item.type) {
             Material.ENCHANTED_BOOK,
-            Material.NETHERITE_LEGGINGS, Material.DIAMOND_LEGGINGS, Material.IRON_LEGGINGS, Material.GOLDEN_LEGGINGS, Material.CHAINMAIL_LEGGINGS, Material.LEATHER_LEGGINGS -> {
+            Material.NETHERITE_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.IRON_CHESTPLATE, Material.GOLDEN_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, Material.LEATHER_CHESTPLATE -> {
                 true
             }
             else -> {
@@ -30,8 +30,5 @@ object Untouchable : OdysseyEnchantment("untouchable", "Untouchable", 1) {
             }
         }
     }
-
-    // When you kill something, get a 1 time blocking shield
-    // 20 sec cooldown
 
 }

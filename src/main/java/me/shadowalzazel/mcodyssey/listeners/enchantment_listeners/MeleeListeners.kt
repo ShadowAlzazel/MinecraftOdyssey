@@ -125,7 +125,7 @@ object MeleeListeners : Listener {
                     event.damage += illucidationEnchantment(victim, enchant.value, event.isCritical)
                 }
                 OdysseyEnchantments.RUPTURING_STRIKE -> {
-                    event.damage -= rupturingStrikeEnchantment(victim, event.damage, enchant.value)
+                    event.damage -= rupturingStrikeEnchantment(attacker, victim, event.damage, enchant.value)
                 }
                 OdysseyEnchantments.VOID_STRIKE -> {
                     if (cooldownManager(attacker, "Void Strike", voidStrikeCooldown, 0.45)) {
@@ -159,7 +159,7 @@ object MeleeListeners : Listener {
                     }
                 }
                 OdysseyEnchantments.FEARFUL_FINISHER -> {
-                    // TODO: Make Soul Socket or Enchant
+                    fearfulFinisherEnchantment(victim, enchant.value)
                 }
             }
         }
@@ -355,7 +355,7 @@ object MeleeListeners : Listener {
         }
     }
     // ------------------------------- EXPLODING ------------------------------------
-    private fun explodingEnchantment(victim: LivingEntity, enchantmentStrength: Int) {
+    private fun explodingEnchantment(victim: LivingEntity, level: Int) {
         val randomColors = listOf(Color.BLUE, Color.RED, Color.YELLOW, Color.FUCHSIA, Color.AQUA, Color.ORANGE)
         with(victim.world) {
             // Particles
@@ -370,7 +370,7 @@ object MeleeListeners : Listener {
             // Firework
             (spawnEntity(victim.location, EntityType.FIREWORK) as Firework).also {
                 val newMeta = it.fireworkMeta
-                newMeta.power = enchantmentStrength * 30
+                newMeta.power = level * 30
                 newMeta.addEffect(
                     FireworkEffect.builder().with(FireworkEffect.Type.BALL_LARGE).withColor(randomColors.random())
                         .withFade(randomColors.random()).trail(true).flicker(true).build()
@@ -381,20 +381,31 @@ object MeleeListeners : Listener {
         }
     }
     // ------------------------------- FEARFUL_FINISHER ------------------------------------
-    private fun fearfulFinisherEnchantment(eventVictim: LivingEntity, enchantmentStrength: Int) {
+    private fun fearfulFinisherEnchantment(victim: LivingEntity, level: Int) {
 
         // TODO: For all mobs nearby, find get vector from eye location to target, normalize, then (flip), set mob goal.
-        with(eventVictim) {
+        val vector = victim.killer!!.eyeLocation.direction.clone().normalize()
+        vector.y = 0.0
+        vector.normalize().multiply((2 * level) + 2)
+        val newLocation = victim.location.clone().add(vector).toHighestLocation(HeightMap.MOTION_BLOCKING_NO_LEAVES)
+        with(victim) {
             world.playSound(location, Sound.ENTITY_VEX_CHARGE, 2.5F, 0.5F)
-            world.spawnParticle(Particle.SPELL_WITCH, location, 35, 1.0, 0.5, 1.0)
+            world.spawnParticle(Particle.SPELL_WITCH, newLocation, 35, 0.05, 0.5, 0.05)
         }
+
+        victim.getNearbyEntities(3.5, 2.0, 3.5).filterIsInstance<Creature>().forEach {
+            it.world.spawnParticle(Particle.SPELL_WITCH, it.location, 10, 0.05, 0.5, 0.05)
+            it.pathfinder.stopPathfinding()
+            it.pathfinder.moveTo(newLocation)
+        }
+
     }
 
     // ------------------------------- FREEZING_ASPECT ------------------------------------
-    private fun freezingAspectEnchantment(victim: LivingEntity, enchantmentStrength: Int) {
+    private fun freezingAspectEnchantment(victim: LivingEntity, level: Int) {
         with(victim) {
             if (freezeTicks <= 50) {
-                OdysseyEffectsHandler.freezingEffect(mutableListOf(this@with), 8, enchantmentStrength * 1)
+                OdysseyEffectsHandler.freezingEffect(mutableListOf(this@with), 8, level * 1)
                 world.spawnParticle(Particle.SNOWFLAKE, this@with.location, 25, 1.0, 0.5, 1.0)
             }
         }
@@ -490,33 +501,30 @@ object MeleeListeners : Listener {
         return illucidationDamage
     }
     // ------------------------------- RUPTURING_STRIKE ------------------------------------
-    private fun rupturingStrikeEnchantment(victim: LivingEntity, damage: Double, enchantmentStrength: Int): Double {
+    private fun rupturingStrikeEnchantment(attacker: LivingEntity, victim: LivingEntity, damage: Double, enchantmentStrength: Int): Double {
+        val fullCharge = if ((attacker is Player) && attacker.attackCooldown > 0.99) { true } else attacker !is Player
+        // Prevent Spam
+        if (!fullCharge) return 0.0
+
         var rupturingDamage = 0.0
         with(victim) {
-            if (scoreboardTags.contains("Fully_Ruptured")) {
-                scoreboardTags.remove("Fully_Ruptured")
+            if (scoreboardTags.contains(EffectTags.FULLY_RUPTURED)) {
+                scoreboardTags.remove(EffectTags.FULLY_RUPTURED)
                 if (damage + 2 > enchantmentStrength) {
                     rupturingDamage += enchantmentStrength
-                    health -= if (health < rupturingDamage) {
-                        rupturingDamage - health
-                    } else {
-                        rupturingDamage
-                    }
+                    health -= minOf(health, rupturingDamage)
                 }
+                world.playSound(victim.location, Sound.ITEM_CROSSBOW_QUICK_CHARGE_2, 2.5F, 1.7F)
+                world.spawnParticle(Particle.CRIT, victim.location, 25, 1.0, 0.5, 1.0)
+                world.spawnParticle(Particle.BLOCK_CRACK, victim.location, 25, 0.95, 0.8, 0.95, Material.QUARTZ_BRICKS.createBlockData())
             }
-            else if (scoreboardTags.contains("Partly_Ruptured")) {
-                scoreboardTags.remove("Partly_Ruptured")
-                scoreboardTags.add("Fully_Ruptured")
+            else if (scoreboardTags.contains(EffectTags.PARTLY_RUPTURED)) {
+                scoreboardTags.remove(EffectTags.PARTLY_RUPTURED)
+                scoreboardTags.add(EffectTags.FULLY_RUPTURED)
             } else {
-                scoreboardTags.add("Partly_Ruptured")
+                scoreboardTags.add(EffectTags.PARTLY_RUPTURED)
             }
             damage
-        }
-
-        with(victim.world) {
-            playSound(victim.location, Sound.ITEM_CROSSBOW_QUICK_CHARGE_2, 2.5F, 1.7F)
-            spawnParticle(Particle.CRIT, victim.location, 25, 1.0, 0.5, 1.0)
-            spawnParticle(Particle.BLOCK_CRACK, victim.location, 25, 0.95, 0.8, 0.95, Material.QUARTZ_BRICKS.createBlockData())
         }
         return rupturingDamage
     }

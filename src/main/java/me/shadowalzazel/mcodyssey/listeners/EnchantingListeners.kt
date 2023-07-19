@@ -135,7 +135,7 @@ object EnchantingListeners : Listener {
             }
             in 41..70 -> {
                 tierCost = 2
-                randomTome = listOf(Runic.TOME_OF_HARMONY, Runic.TOME_OF_PROMOTION).random()
+                randomTome = listOf(Runic.TOME_OF_PROMOTION, Runic.TOME_OF_HARMONY).random()
             }
             in 71..110 -> {
                 tierCost = 3
@@ -162,8 +162,7 @@ object EnchantingListeners : Listener {
             playSound(enchantLocation, Sound.ENTITY_ARROW_HIT_PLAYER, 2.5F, 1.6F)
         }
         (event.inventory as EnchantingInventory).item = randomTome.createItemStack(1)
-        event.inventory
-        event.enchanter.level -= tierCost + 1
+        event.enchanter.level -= minOf(tierCost + 1, event.enchanter.level)
         event.isCancelled = true
     }
 
@@ -185,14 +184,10 @@ object EnchantingListeners : Listener {
 
         val second = event.inventory.secondItem!!
         if (event.result == null) {
-            println("PROBLEM 1")
-            // TRY
-            // Adding Gilded Book
             if (!second.itemMeta.hasCustomModelData()) {
                 return
             }
             if (second.itemMeta.customModelData == ItemModels.GILDED_BOOK) {
-                println("BOOK")
                 event.result = gildedBookSmithing(first, second)
             }
             return
@@ -251,7 +246,6 @@ object EnchantingListeners : Listener {
             if (combineResult.type == Material.AIR) {
                 event.viewers.forEach { viewer ->
                     if (viewer is Player) {
-                        viewer.updateInventory()
                         viewer.sendActionBar(Component.text("There are not enough slots to combine the items!", TextColor.color(255, 255, 85)))
                     }
                 }
@@ -402,6 +396,10 @@ object EnchantingListeners : Listener {
             // Continue
             val newMax = max(equipmentLevel + 1, bookEnchant.value)
             // Lore
+            val startIndex = newLore.indexOf(slotSeperator) - 1
+            val totalSlots = newLore.count { it == emptyGildedSlot } + newLore.count { it == emptyEnchantSlot } + newItem.enchantments.size
+            newLore[startIndex] = Component.text("Enchantment Slots: [${newItem.enchantments.size}/${totalSlots}]", ENCHANT_COLOR)
+                .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
             val gildedLore = (bookEnchant.key as OdysseyEnchantment)
                 .displayLore(equipmentLevel)
                 .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
@@ -419,6 +417,10 @@ object EnchantingListeners : Listener {
         }
         // Add
         else {
+            val startIndex = newLore.indexOf(slotSeperator) - 1
+            val totalSlots = newLore.count { it == emptyGildedSlot } + newLore.count { it == emptyEnchantSlot } + newItem.enchantments.size
+            newLore[startIndex] = Component.text("Enchantment Slots: [${newItem.enchantments.size + 1}/${totalSlots}]", ENCHANT_COLOR)
+                .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
             val slotIndex = newLore.indexOf(emptyGildedSlot)
             newLore[slotIndex] = (bookEnchant.key as OdysseyEnchantment)
                 .displayLore(bookEnchant.value)
@@ -432,17 +434,17 @@ object EnchantingListeners : Listener {
         }
     }
 
-    private fun anvilCombine(equipment: ItemStack, secondEquipment: ItemStack, eventResult: ItemStack): ItemStack {
+    private fun anvilCombine(first: ItemStack, second: ItemStack, result: ItemStack): ItemStack {
         val currentGildedEnchants: MutableMap<Enchantment, Int> = mutableMapOf()
         // If first enchant has gilded enchants add to map
-        for (enchant in equipment.enchantments) {
+        for (enchant in first.enchantments) {
             if (enchant.key is OdysseyEnchantment) {
                 currentGildedEnchants[enchant.key] = enchant.value
             }
         }
 
-        var newItem = eventResult.clone()
-        val newLore = equipment.clone().lore()!!
+        var newItem = result.clone()
+        val newLore = first.clone().lore()!!
 
         // Index
         val infoIndex = newLore.indexOf(slotSeperator) - 1
@@ -450,16 +452,25 @@ object EnchantingListeners : Listener {
         val emptySlots = newLore.count { it == emptyEnchantSlot }
         val emptyGildedSlots = newLore.count { it == emptyGildedSlot }
         var usedGildedSlots = currentGildedEnchants.size
-        var usedSlots = equipment.enchantments.size - usedGildedSlots
+        var usedSlots = first.enchantments.size - usedGildedSlots
         val gildedSlots = emptyGildedSlots + usedGildedSlots
         val enchantSlots = emptySlots + usedSlots
         val totalSlots = gildedSlots + enchantSlots
+
+        if (second.type == Material.ENCHANTED_BOOK) {
+            val secondMeta = second.itemMeta as EnchantmentStorageMeta
+            val newEnchants = secondMeta.storedEnchants.filter { it.key in first.enchantments }
+            if (newEnchants.size > emptySlots) {
+                return ItemStack(Material.AIR)
+            }
+        }
+
         // Loop over all enchants to either add lore or add to removal enchants if over enchant slots
         val enchantsToRemove = mutableListOf<Enchantment>()
-        eventResult.enchantments.forEach {
+        result.enchantments.forEach {
             if (it.key !is OdysseyEnchantment) {
-                val lowestLevel = if (it.key in equipment.enchantments.keys) {
-                    equipment.getEnchantmentLevel(it.key)
+                val lowestLevel = if (it.key in first.enchantments.keys) {
+                    first.getEnchantmentLevel(it.key)
                 } else {
                     it.value
                 }
@@ -492,7 +503,7 @@ object EnchantingListeners : Listener {
             }
         }
         // Do not create result if more
-        if (eventResult.enchantments.size > totalSlots) {
+        if (result.enchantments.size > totalSlots) {
             newItem = ItemStack(Material.AIR)
             return newItem
         }
@@ -693,6 +704,9 @@ object EnchantingListeners : Listener {
             else {
                 removeEnchantment(enchantToRemove.first)
             }
+        }
+        newItem.itemMeta = newItem.itemMeta.also {
+            it.removeEnchant(enchantToRemove.first)
         }
 
         return newItem
@@ -1064,36 +1078,38 @@ object EnchantingListeners : Listener {
 
     // Get the compatible enchants for items
     private fun getCompatibleSet(itemType: Material): Set<OdysseyEnchantment> {
-        when (itemType) {
+        val enchantList = when (itemType) {
             Material.NETHERITE_SWORD, Material.DIAMOND_SWORD, Material.IRON_SWORD, Material.GOLDEN_SWORD, Material.STONE_SWORD, Material.WOODEN_SWORD,
             Material.NETHERITE_AXE, Material.DIAMOND_AXE, Material.IRON_AXE, Material.GOLDEN_AXE, Material.STONE_AXE, Material.WOODEN_AXE,
             Material.NETHERITE_PICKAXE, Material.DIAMOND_PICKAXE, Material.IRON_PICKAXE, Material.GOLDEN_PICKAXE, Material.STONE_PICKAXE, Material.WOODEN_PICKAXE,
             Material.NETHERITE_SHOVEL, Material.DIAMOND_SHOVEL, Material.IRON_SHOVEL, Material.GOLDEN_SHOVEL, Material.STONE_SHOVEL, Material.WOODEN_SHOVEL,
             Material.NETHERITE_HOE, Material.DIAMOND_HOE, Material.IRON_HOE, Material.GOLDEN_HOE, Material.STONE_HOE, Material.WOODEN_HOE -> {
-                return OdysseyEnchantments.MELEE_SET
+                OdysseyEnchantments.MELEE_SET
             }
             Material.NETHERITE_LEGGINGS, Material.DIAMOND_LEGGINGS, Material.IRON_LEGGINGS, Material.CHAINMAIL_LEGGINGS, Material.GOLDEN_LEGGINGS, Material.LEATHER_LEGGINGS -> {
-                return OdysseyEnchantments.ARMOR_SET
+                OdysseyEnchantments.ARMOR_SET
             }
             Material.NETHERITE_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.IRON_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, Material.GOLDEN_CHESTPLATE, Material.LEATHER_CHESTPLATE -> {
-                return OdysseyEnchantments.ARMOR_SET
+                OdysseyEnchantments.ARMOR_SET
             }
             Material.NETHERITE_BOOTS, Material.DIAMOND_BOOTS, Material.IRON_BOOTS, Material.CHAINMAIL_BOOTS, Material.GOLDEN_BOOTS, Material.LEATHER_BOOTS -> {
-                return OdysseyEnchantments.ARMOR_SET
+                OdysseyEnchantments.ARMOR_SET
             }
             Material.NETHERITE_HELMET, Material.DIAMOND_HELMET, Material.IRON_HELMET, Material.CHAINMAIL_HELMET, Material.GOLDEN_HELMET, Material.LEATHER_HELMET -> {
-                return OdysseyEnchantments.ARMOR_SET
+                OdysseyEnchantments.ARMOR_SET
             }
             Material.BOW, Material.CROSSBOW -> {
-                return OdysseyEnchantments.RANGED_SET
+                OdysseyEnchantments.RANGED_SET
             }
             Material.ELYTRA, Material.SHIELD, Material.FISHING_ROD -> {
-                return OdysseyEnchantments.MISC_SET
+                OdysseyEnchantments.MISC_SET
             }
             else -> {
-                return OdysseyEnchantments.MISC_SET
+                OdysseyEnchantments.MISC_SET
             }
         }
+        val enchantSet = enchantList.filter { it !in OdysseyEnchantments.EXOTIC_LIST }
+        return enchantSet.toSet()
     }
 
     // Get slots based on material and return Enchant-Gilded Pair

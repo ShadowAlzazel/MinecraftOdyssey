@@ -1,14 +1,11 @@
 package me.shadowalzazel.mcodyssey.alchemy.base
 
-import me.shadowalzazel.mcodyssey.Odyssey
 import org.bukkit.Material
-import org.bukkit.NamespacedKey
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.block.Block
 import org.bukkit.block.data.Levelled
 import org.bukkit.inventory.ItemStack
-import org.bukkit.persistence.PersistentDataType
 import org.bukkit.scheduler.BukkitRunnable
 
 class AlchemyCauldronTask(private val cauldronBlock: Block, private val cauldronResult: ItemStack) : BukkitRunnable() {
@@ -38,26 +35,27 @@ class AlchemyCauldronTask(private val cauldronBlock: Block, private val cauldron
     }
 
     private fun brewFinishedHandler() {
-        cauldronBlock.also {
+        cauldronBlock.run {
 
-            if (cauldronResult.itemMeta.persistentDataContainer.has(NamespacedKey(Odyssey.instance, "item"))) println("KEY!")
-            println(cauldronResult.itemMeta.persistentDataContainer[NamespacedKey(Odyssey.instance, "item"), PersistentDataType.STRING])
+            // WORK WITH NBT TAGS!
+            //if (cauldronResult.itemMeta.persistentDataContainer.has(NamespacedKey(Odyssey.instance, "item"))) println("KEY!")
+            //println(cauldronResult.itemMeta.persistentDataContainer[NamespacedKey(Odyssey.instance, "item"), PersistentDataType.STRING])
             // Change Cauldron Water level
-            val levelledData = it.blockData as Levelled
-            if (levelledData.level != 1) {
-                (it.blockData as Levelled).level -= 1
+            val levelledData = blockData as Levelled
+            if (levelledData.level != 1 && blockData is Levelled) {
+                (blockData as Levelled).level -= 1
             }
             else {
-                it.type = Material.CAULDRON
+                type = Material.CAULDRON
             }
             // Maker Color particles from color potion
-            with(it.world) {
+            with(world) {
                 dropItem(someLocation.clone().add(0.0, 0.5, 0.0), cauldronResult)
                 playSound(someLocation, Sound.BLOCK_BREWING_STAND_BREW, 2.5F, 0.5F)
                 spawnParticle(Particle.DRAGON_BREATH, someLocation, 45, 0.25, 0.25, 0.25)
             }
-            this.cancel()
         }
+        this.cancel()
     }
 
 }
