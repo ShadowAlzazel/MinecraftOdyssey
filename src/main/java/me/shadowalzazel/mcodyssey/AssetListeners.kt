@@ -18,12 +18,12 @@ object AssetListeners : Listener {
         // TEST
         //val resourcePackLink = "https://www.dropbox.com/s/6hob8iad499vz95/odyssey-resource-pack-test.zip?dl=1"
 
-        val resourcePackHash = "95c4322c56532eacd2230e664aad027339df49a7"
+        val resourcePackHash = "3287bbcf813fcae55846dc5162be5bfbcbe63825"
         joiningPlayer.setResourcePack(
             resourcePackLink,
             resourcePackHash,
             true,
-            Component.text("Odyssey requires its respective resource pack to function properly!", TextColor.color(255, 170, 0))
+            Component.text("Please Allow Odyssey to download a server side resource pack!", TextColor.color(255, 170, 0))
         )
     }
 

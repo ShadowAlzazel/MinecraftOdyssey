@@ -135,7 +135,7 @@ object EnchantingListeners : Listener {
             }
             in 41..70 -> {
                 tierCost = 2
-                randomTome = listOf(Runic.TOME_OF_HARMONY, Runic.TOME_OF_PROMOTION).random()
+                randomTome = listOf(Runic.TOME_OF_PROMOTION, Runic.TOME_OF_HARMONY).random()
             }
             in 71..110 -> {
                 tierCost = 3
@@ -162,8 +162,7 @@ object EnchantingListeners : Listener {
             playSound(enchantLocation, Sound.ENTITY_ARROW_HIT_PLAYER, 2.5F, 1.6F)
         }
         (event.inventory as EnchantingInventory).item = randomTome.createItemStack(1)
-        event.inventory
-        event.enchanter.level -= tierCost + 1
+        event.enchanter.level -= minOf(tierCost + 1, event.enchanter.level)
         event.isCancelled = true
     }
 
@@ -247,7 +246,6 @@ object EnchantingListeners : Listener {
             if (combineResult.type == Material.AIR) {
                 event.viewers.forEach { viewer ->
                     if (viewer is Player) {
-                        viewer.updateInventory()
                         viewer.sendActionBar(Component.text("There are not enough slots to combine the items!", TextColor.color(255, 255, 85)))
                     }
                 }
@@ -459,9 +457,10 @@ object EnchantingListeners : Listener {
         val enchantSlots = emptySlots + usedSlots
         val totalSlots = gildedSlots + enchantSlots
 
-        if (second.itemMeta is EnchantmentStorageMeta) {
+        if (second.type == Material.ENCHANTED_BOOK) {
             val secondMeta = second.itemMeta as EnchantmentStorageMeta
-            if (secondMeta.enchants.size > emptySlots) {
+            val newEnchants = secondMeta.storedEnchants.filter { it.key in first.enchantments }
+            if (newEnchants.size > emptySlots) {
                 return ItemStack(Material.AIR)
             }
         }
@@ -1079,36 +1078,38 @@ object EnchantingListeners : Listener {
 
     // Get the compatible enchants for items
     private fun getCompatibleSet(itemType: Material): Set<OdysseyEnchantment> {
-        when (itemType) {
+        val enchantList = when (itemType) {
             Material.NETHERITE_SWORD, Material.DIAMOND_SWORD, Material.IRON_SWORD, Material.GOLDEN_SWORD, Material.STONE_SWORD, Material.WOODEN_SWORD,
             Material.NETHERITE_AXE, Material.DIAMOND_AXE, Material.IRON_AXE, Material.GOLDEN_AXE, Material.STONE_AXE, Material.WOODEN_AXE,
             Material.NETHERITE_PICKAXE, Material.DIAMOND_PICKAXE, Material.IRON_PICKAXE, Material.GOLDEN_PICKAXE, Material.STONE_PICKAXE, Material.WOODEN_PICKAXE,
             Material.NETHERITE_SHOVEL, Material.DIAMOND_SHOVEL, Material.IRON_SHOVEL, Material.GOLDEN_SHOVEL, Material.STONE_SHOVEL, Material.WOODEN_SHOVEL,
             Material.NETHERITE_HOE, Material.DIAMOND_HOE, Material.IRON_HOE, Material.GOLDEN_HOE, Material.STONE_HOE, Material.WOODEN_HOE -> {
-                return OdysseyEnchantments.MELEE_SET
+                OdysseyEnchantments.MELEE_SET
             }
             Material.NETHERITE_LEGGINGS, Material.DIAMOND_LEGGINGS, Material.IRON_LEGGINGS, Material.CHAINMAIL_LEGGINGS, Material.GOLDEN_LEGGINGS, Material.LEATHER_LEGGINGS -> {
-                return OdysseyEnchantments.ARMOR_SET
+                OdysseyEnchantments.ARMOR_SET
             }
             Material.NETHERITE_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.IRON_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, Material.GOLDEN_CHESTPLATE, Material.LEATHER_CHESTPLATE -> {
-                return OdysseyEnchantments.ARMOR_SET
+                OdysseyEnchantments.ARMOR_SET
             }
             Material.NETHERITE_BOOTS, Material.DIAMOND_BOOTS, Material.IRON_BOOTS, Material.CHAINMAIL_BOOTS, Material.GOLDEN_BOOTS, Material.LEATHER_BOOTS -> {
-                return OdysseyEnchantments.ARMOR_SET
+                OdysseyEnchantments.ARMOR_SET
             }
             Material.NETHERITE_HELMET, Material.DIAMOND_HELMET, Material.IRON_HELMET, Material.CHAINMAIL_HELMET, Material.GOLDEN_HELMET, Material.LEATHER_HELMET -> {
-                return OdysseyEnchantments.ARMOR_SET
+                OdysseyEnchantments.ARMOR_SET
             }
             Material.BOW, Material.CROSSBOW -> {
-                return OdysseyEnchantments.RANGED_SET
+                OdysseyEnchantments.RANGED_SET
             }
             Material.ELYTRA, Material.SHIELD, Material.FISHING_ROD -> {
-                return OdysseyEnchantments.MISC_SET
+                OdysseyEnchantments.MISC_SET
             }
             else -> {
-                return OdysseyEnchantments.MISC_SET
+                OdysseyEnchantments.MISC_SET
             }
         }
+        val enchantSet = enchantList.filter { it !in OdysseyEnchantments.EXOTIC_LIST }
+        return enchantSet.toSet()
     }
 
     // Get slots based on material and return Enchant-Gilded Pair

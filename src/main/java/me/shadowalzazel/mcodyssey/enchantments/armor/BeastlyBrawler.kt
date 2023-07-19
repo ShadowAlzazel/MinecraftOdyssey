@@ -10,7 +10,7 @@ object BeastlyBrawler : OdysseyEnchantment("beastly_brawler", "Beastly Brawler",
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.FRUITFUL_FARE -> {
+            OdysseyEnchantments.MOLTEN_CORE -> {
                 true
             }
             else -> {
@@ -29,6 +29,7 @@ object BeastlyBrawler : OdysseyEnchantment("beastly_brawler", "Beastly Brawler",
             }
         }
     }
+
 
     // TODO: If there are at least 5 enemies nearby when hit, gain damage
 }

@@ -121,6 +121,8 @@ object ItemModels {
 
     const val SUSPICIOUS_TOTEM: Int = 6903622
 
+    const val CRYING_GOLD: Int = 6903888
+
     const val BONE_OF_FROST: Int = 6905304
 
     const val IRRADIATED_FRUIT: Int = 6905468

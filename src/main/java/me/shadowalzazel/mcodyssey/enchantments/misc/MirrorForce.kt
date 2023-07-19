@@ -10,7 +10,7 @@ object MirrorForce : OdysseyEnchantment("mirror_force", "Mirror Force", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.GRAVITY_WELL -> {
+            OdysseyEnchantments.REVERSED_RECOIL -> {
                 true
             }
             else -> {
@@ -29,9 +29,4 @@ object MirrorForce : OdysseyEnchantment("mirror_force", "Mirror Force", 3) {
             }
         }
     }
-
-    fun todo() {
-        TODO("Fix")
-    }
-
 }

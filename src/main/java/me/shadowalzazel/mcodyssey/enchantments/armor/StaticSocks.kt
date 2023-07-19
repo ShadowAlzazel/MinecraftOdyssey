@@ -1,15 +1,15 @@
-package me.shadowalzazel.mcodyssey.enchantments.misc
+package me.shadowalzazel.mcodyssey.enchantments.armor
 
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object HookShot : OdysseyEnchantment("hook_shot", "Hook Shot", 2) {
+object StaticSocks : OdysseyEnchantment("static_socks", "Static Socks", 5) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            ARROW_INFINITE -> {
+            DEPTH_STRIDER -> {
                 true
             }
             else -> {
@@ -20,7 +20,8 @@ object HookShot : OdysseyEnchantment("hook_shot", "Hook Shot", 2) {
 
     override fun canEnchantItem(item: ItemStack): Boolean {
         return when (item.type) {
-            Material.ENCHANTED_BOOK, Material.FISHING_ROD -> {
+            Material.ENCHANTED_BOOK,
+            Material.NETHERITE_BOOTS, Material.DIAMOND_BOOTS, Material.IRON_BOOTS, Material.GOLDEN_BOOTS, Material.CHAINMAIL_BOOTS, Material.LEATHER_BOOTS -> {
                 true
             }
             else -> {

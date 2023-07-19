@@ -10,7 +10,7 @@ object WarCry : OdysseyEnchantment("warcry", "War Cry", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.FRUITFUL_FARE -> {
+            OdysseyEnchantments.BREWFUL_BREATH -> {
                 true
             }
             else -> {
@@ -31,5 +31,5 @@ object WarCry : OdysseyEnchantment("warcry", "War Cry", 3) {
         }
     }
 
-    // TODO: Release an inspiring cry to all allies when hit
+    // When you use a goat horn, your allies get strength
 }

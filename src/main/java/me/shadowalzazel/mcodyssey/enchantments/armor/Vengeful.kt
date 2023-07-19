@@ -10,7 +10,7 @@ object Vengeful : OdysseyEnchantment("vengeful", "Vengeful", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.FRUITFUL_FARE, OdysseyEnchantments.POTION_BARRIER -> {
+            OdysseyEnchantments.UNTOUCHABLE -> {
                 true
             }
             else -> {
@@ -31,7 +31,4 @@ object Vengeful : OdysseyEnchantment("vengeful", "Vengeful", 3) {
         }
     }
 
-    fun todo() {
-        TODO("Add Vengeful tag and if attacked consumed + damage")
-    }
 }

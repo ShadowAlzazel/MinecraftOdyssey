@@ -29,7 +29,7 @@ object WeaponMaps {
 
     // Max Distance -> Outside attack is cancelled
     val MAX_RANGE_MAP = mapOf(
-        ItemModels.DAGGER to 2.15,
+        ItemModels.DAGGER to 2.1,
         ItemModels.SICKLE to 2.0,
         ItemModels.CHAKRAM to 1.8,
         ItemModels.SOUL_STEEL_DAGGER to 2.15,
@@ -39,12 +39,12 @@ object WeaponMaps {
 
     // Minimum Distance -> Inside attack is cancelled
     val MIN_RANGE_MAP = mapOf(
-        ItemModels.SPEAR to 1.25,
-        ItemModels.HALBERD to 1.5,
-        ItemModels.LANCE to 1.5,
-        ItemModels.SOUL_STEEL_SPEAR to 1.25,
-        ItemModels.SOUL_STEEL_HALBERD to 1.5,
-        ItemModels.SOUL_STEEL_LANCE to 1.5,
+        ItemModels.SPEAR to 0.75,
+        ItemModels.HALBERD to 1.0,
+        ItemModels.LANCE to 1.0,
+        ItemModels.SOUL_STEEL_SPEAR to 0.75,
+        ItemModels.SOUL_STEEL_HALBERD to 1.0,
+        ItemModels.SOUL_STEEL_LANCE to 1.0,
     )
 
     // Unarmored Damage
@@ -80,8 +80,8 @@ object WeaponMaps {
 
     // Extra damage to armored enemies
     val BLUDGEON_MAP = mapOf(
-        ItemModels.WARHAMMER to 4.0,
-        ItemModels.SOUL_STEEL_WARHAMMER to 4.0
+        ItemModels.WARHAMMER to 5.0,
+        ItemModels.SOUL_STEEL_WARHAMMER to 5.0
     )
 
     // Extra damage to durability

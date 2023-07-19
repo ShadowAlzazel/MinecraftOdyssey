@@ -156,17 +156,27 @@ object SmithingListeners : Listener {
             val newTrimMaterial: TrimMaterial
 
             when(event.inventory.inputMineral) {
+                Ingredients.ALEXANDRITE.createItemStack(count) -> {
+                    newTrimMaterial = Trims.ALEXANDRITE
+                }
                 Ingredients.KUNZITE.createItemStack(count) -> {
                     newTrimMaterial = Trims.KUNZITE
                 }
                 Ingredients.JADE.createItemStack(count) -> {
                     newTrimMaterial = Trims.JADE
                 }
-                Ingredients.ALEXANDRITE.createItemStack(count) -> {
-                    newTrimMaterial = Trims.ALEXANDRITE
-                }
                 Ingredients.RUBY.createItemStack(count) -> {
                     newTrimMaterial = Trims.RUBY
+                }
+                Ingredients.SOUL_QUARTZ.createItemStack(count) -> {
+                    newTrimMaterial = Trims.SOUL_QUARTZ
+                }
+                Ingredients.SOUL_STEEL_INGOT.createItemStack(count) -> {
+                    newTrimMaterial = Trims.SOUL_STEEL
+                }
+                ItemStack(Material.OBSIDIAN, count) -> {
+                    // CURRENTLY DOES NOT WORK AS NO EVENT RESULT IS MADE
+                    newTrimMaterial = Trims.OBSIDIAN
                 }
                 else -> {
                     return
@@ -181,12 +191,38 @@ object SmithingListeners : Listener {
             return
         }
 
+        /*-----------------------------------------------------------------------------------------------*/
+        /*-----------------------------------------------------------------------------------------------*/
+        // Netherite
+        if (addition.type == Material.NETHERITE_INGOT && eventResult.itemMeta.hasCustomModelData()) {
+            val newItem = event.inventory.result!!.clone()
+            if (newItem.hasTag(ItemTags.NETHERITE_TOOL)) return
+            val oldDamageModifier = newItem.itemMeta.getAttributeModifiers(Attribute.GENERIC_ATTACK_DAMAGE)?.first {
+                it.uniqueId == Identifiers.ATTACK_DAMAGE_UUID
+            } ?: return
+            newItem.itemMeta = newItem.itemMeta.clone().also { meta ->
+                val oldDamage = oldDamageModifier.amount
+                val newDamageModifier = AttributeModifier(
+                    Identifiers.ATTACK_DAMAGE_UUID,
+                    "odyssey.attack_damage",
+                    oldDamage + 1.0,
+                    AttributeModifier.Operation.ADD_NUMBER,
+                    EquipmentSlot.HAND)
+                meta.removeAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, oldDamageModifier)
+                meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, newDamageModifier)
+            }
+            newItem.addTag(ItemTags.NETHERITE_TOOL)
+            event.result = newItem
+            return
+        }
 
-        // Check Recipes
-        if (!recipe.result.hasItemMeta()) { return }
-        if (!recipe.result.itemMeta.hasCustomModelData()) { return }
+        /*-----------------------------------------------------------------------------------------------*/
+        /*-----------------------------------------------------------------------------------------------*/
         // CURRENTLY DOES MC DOES NOT COPY RESULT NBT
         if (!eventResult.itemMeta.hasCustomModelData()) {
+            // Check Recipes
+            if (!recipe.result.hasItemMeta()) { return }
+            if (!recipe.result.itemMeta.hasCustomModelData()) { return }
             event.inventory.result = recipe.result
             event.result = recipe.result
         }

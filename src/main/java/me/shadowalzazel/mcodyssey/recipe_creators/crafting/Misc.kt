@@ -61,7 +61,7 @@ class Misc {
 
     private fun soulCatalystRecipe(): ShapedRecipe {
         val result = Miscellaneous.SOUL_CATALYST.createItemStack(1)
-        val soulCrystal = Ingredients.SOUL_CRYSTAL.createItemStack(1)
+        val soulCrystal = Ingredients.SOUL_QUARTZ.createItemStack(1)
         val ectoplasm = Ingredients.ECTOPLASM.createItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "soul_catalyst"), result).apply {
             shape("XZX", "ZYZ", "XZX")
@@ -74,7 +74,7 @@ class Misc {
 
     private fun enigmaticOmamoriRecipe(): ShapedRecipe {
         val result = Miscellaneous.ENIGMATIC_OMAMORI.createItemStack(1)
-        val soulCrystal = Ingredients.SOUL_CRYSTAL.createItemStack(1)
+        val soulCrystal = Ingredients.SOUL_QUARTZ.createItemStack(1)
         val soulIngot = Ingredients.SOUL_STEEL_INGOT.createItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "enigmatic_omamori"), result).apply {
             shape(" W ", "XYX", "XZX")
@@ -121,7 +121,7 @@ class Misc {
 
     private fun soulSteelUpgradeTemplateRecipe(): ShapedRecipe {
         val result = Templates.SOUL_STEEL_UPGRADE_TEMPLATE.createItemStack(1)
-        val soulCrystal = Ingredients.SOUL_CRYSTAL.createItemStack(1)
+        val soulCrystal = Ingredients.SOUL_QUARTZ.createItemStack(1)
         val ectoplasm = Ingredients.ECTOPLASM.createItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "soul_steel_upgrade_template_crafting"), result).apply {
             shape("SES", "SCS", "SSS")

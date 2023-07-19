@@ -113,7 +113,9 @@ class Odyssey : JavaPlugin(), AssetManager {
             FoodListeners,
             WeaponListeners,
             SpawningListeners,
-            OtherListeners
+            OtherListeners,
+            MobListeners,
+            DragonListeners
         ).forEach { eventRegister(it) }
 
         //server.pluginManager.registerEvents(OdysseyPhenomenaListeners, this)

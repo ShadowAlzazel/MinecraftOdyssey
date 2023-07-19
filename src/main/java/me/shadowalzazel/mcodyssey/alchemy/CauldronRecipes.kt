@@ -173,7 +173,7 @@ object CauldronRecipes {
         brewedPotion = Potions.BOTTLE_OF_SOULS,
         ingredientList = listOf(
             Ingredients.ECTOPLASM.createItemStack(2),
-            Ingredients.SOUL_CRYSTAL.createItemStack(2),
+            Ingredients.SOUL_QUARTZ.createItemStack(2),
             ItemStack(Material.CRYING_OBSIDIAN, 1),
             Potions.CRYSTALLINE_POTION.createPotion()),
         ingredientSize = 4,

@@ -2,6 +2,13 @@ package me.shadowalzazel.mcodyssey.constants
 
 object EntityTags {
 
+    // PIGLINS
+    const val IS_HIRED: String = "odyssey.is_hired"
+    const val HIRED_BY: String = "odyssey.hired_by."
+    const val STARTED_RALLYING: String = "odyssey.started_rallying"
+    const val RUNNING_PIG: String = "odyssey.running_pig"
+    const val CLONED: String = "odyssey.cloned"
+
     // AREA_EFFECT_CLOUD
     const val FREEZING_CLOUD: String = "odyssey.freezing_cloud"
     const val DECAYING_CLOUD: String = "odyssey.decaying_cloud"
@@ -15,6 +22,11 @@ object EntityTags {
 
     // CLOUD UTILITY
     const val TIMED_CLOUD: String = "odyssey.timed_cloud"
+
+    // BOSS
+    const val DRAGON_BOMB: String = "odyssey.dragon_bomb"
+    const val LEFT_PORTAL: String = "odyssey.left_portal"
+    const val LIGHTNING_BALL: String = "odyssey.lightning_ball"
 
     // MOBS
     const val ODYSSEY_MOB: String = "odyssey.mob"
@@ -59,6 +71,11 @@ object EntityTags {
     const val VENGEFUL_MODIFIER: String = "odyssey.vengeful_modifier.0"
     const val MARKED_BY: String = "odyssey.marked_by."
     const val ECHO_STRUCK: String = "odyssey.echo_struck"
+    const val BREATH_CLOUD: String = "odyssey.breath_cloud"
+    const val BREATH_BY: String = "odyssey.breath_by."
+    const val IS_ROOTED: String = "odyssey.is_rooted"
+    const val IS_JAILED: String = "odyssey.is_jailed"
+    const val STATIC_SOCKS_CHARGE: String = "odyssey.static_socks_charge.0"
 
     // WEAPONS
     const val COMBOED: String = "odyssey.comboed"

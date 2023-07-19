@@ -12,6 +12,7 @@ object ItemTags {
     const val ALCHEMY_ARTILLERY_LOADED: String = "alchemy_artillery_loaded"
     const val ENGRAVED: String = "engraved"
     const val SOUL_STEEL_TOOL: String = "soul_steel_tool"
+    const val NETHERITE_TOOL: String = "netherite_tool"
 
     fun PersistentDataContainer.hasOdysseyTag(): Boolean {
         return has(NamespacedKey(Odyssey.instance, "item"))
@@ -23,6 +24,10 @@ object ItemTags {
 
     fun ItemStack.hasTag(tag: String): Boolean {
         return itemMeta.persistentDataContainer.has(NamespacedKey(Odyssey.instance, tag))
+    }
+
+    fun ItemStack.isItem(tag: String): Boolean {
+        return itemMeta.persistentDataContainer[NamespacedKey(Odyssey.instance, "item"), PersistentDataType.STRING] == tag
     }
 
     fun ItemStack.addTag(tag: String) {

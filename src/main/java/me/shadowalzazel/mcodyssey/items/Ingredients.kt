@@ -89,10 +89,10 @@ object Ingredients {
         lore = listOf(Component.text("A sticky bloody ball...", TextColor.color(210, 60, 62)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.COAGULATED_BLOOD)
 
-    val SOUL_CRYSTAL = OdysseyItem(
-        name = "soul_crystal",
+    val SOUL_QUARTZ = OdysseyItem(
+        name = "soul_quartz",
         material = Material.QUARTZ,
-        displayName = Component.text("Soul Crystal", TextColor.color(24, 90, 94), TextDecoration.ITALIC),
+        displayName = Component.text("Soul Quartz", TextColor.color(24, 90, 94), TextDecoration.ITALIC),
         lore = listOf(Component.text("A crystal forged to contain souls...", TextColor.color(3, 170, 177)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.SOUL_CRYSTAL)
 
@@ -107,7 +107,7 @@ object Ingredients {
         name = "soul_steel_ingot",
         material = Material.IRON_INGOT,
         displayName = Component.text("Soul Steel Ingot", TextColor.color(88, 95, 123), TextDecoration.ITALIC),
-        lore = listOf(Component.text("A beating heart of the sculk", TextColor.color(37, 198, 205)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        lore = listOf(Component.text("A crucible of metallic souls", TextColor.color(37, 198, 205)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.SOUL_STEEL_INGOT)
 
 

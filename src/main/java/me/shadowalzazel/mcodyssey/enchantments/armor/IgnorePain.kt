@@ -31,5 +31,4 @@ object IgnorePain : OdysseyEnchantment("ignore_pain", "Ignore Pain", 3) {
         }
     }
 
-    // TODO: Gain absorption when taking damage for a few seconds
 }

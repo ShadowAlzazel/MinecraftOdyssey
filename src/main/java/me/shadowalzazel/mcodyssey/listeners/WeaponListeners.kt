@@ -23,6 +23,8 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
+import org.bukkit.event.player.PlayerInteractAtEntityEvent
+import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import kotlin.math.min
 
@@ -154,8 +156,8 @@ object WeaponListeners : Listener {
             }
             ItemModels.HALBERD, ItemModels.SOUL_STEEL_HALBERD -> {
                 if (!emptyOff && !shieldInOff) {
-                    event.isCancelled = true
-                    return
+                    val minimumDamage = minOf(event.damage, 6.0)
+                    event.damage -= minimumDamage
                 }
             }
             ItemModels.SCYTHE, ItemModels.SOUL_STEEL_SCYTHE -> {
@@ -195,7 +197,11 @@ object WeaponListeners : Listener {
         val attackCharge = player.attackCooldown
         val extraDamages = weaponStatsHandler(model, victim, event.damage)
         val physicalDamage = extraDamages.first * attackCharge
-        val trueDamage = maxOf(minOf(extraDamages.second, event.damage), 0.0) * attackCharge
+        val trueDamage = if (fullAttack) {
+            maxOf(minOf(extraDamages.second, event.damage), 0.0)
+        } else {
+            0.0
+        }
 
         event.damage -= trueDamage
         event.damage += physicalDamage
@@ -206,11 +212,13 @@ object WeaponListeners : Listener {
             victim.health -= trueDamage
         }
 
+        event.damage = maxOf(0.0, event.damage)
         // println("Final Damage: " + event.finalDamage)
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     fun mainWeaponInteractionHandler(event: PlayerInteractEvent) {
+        //println("CLICK")
         if (event.action.isLeftClick) {
             leftClickHandler(event)
         }
@@ -218,6 +226,20 @@ object WeaponListeners : Listener {
             rightClickHandler(event)
         }
     }
+
+    /*
+    @EventHandler(priority = EventPriority.HIGH)
+    fun mainInteractEntityHandler(event: PlayerInteractEntityEvent) {
+        //println("Interact")
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    fun mainInteractAtEntityHandler(event: PlayerInteractAtEntityEvent) {
+        //println("Interact At Entity")
+    }
+    */
+
+
 
     private fun leftClickHandler(event: PlayerInteractEvent) {
         val player = event.player
@@ -229,7 +251,8 @@ object WeaponListeners : Listener {
         if (REACH_MAP[model] == null) return
         // Sentries Passed
 
-        val entity = getReachedTarget(player, REACH_MAP[model])
+        //val entity = getReachedTarget(player, REACH_MAP[model])
+        val entity = getRayTraceTarget(player, model)
         if (entity is LivingEntity) {
             player.attack(entity)
         }
@@ -245,9 +268,12 @@ object WeaponListeners : Listener {
         if (offHandWeapon.itemMeta?.hasCustomModelData() == true && fullAttack) {
             when(val model = offHandWeapon.itemMeta!!.customModelData) {
                 ItemModels.DAGGER, ItemModels.SICKLE, ItemModels.CHAKRAM -> {
-                    val entity = getReachedTarget(player, REACH_MAP[model])
+                    val entity = getRayTraceTarget(player, model)
                     if (entity is LivingEntity) {
                         dualWieldHandler(player, entity)
+                    }
+                    else {
+                        player.swingOffHand()
                     }
                 }
             }
@@ -259,6 +285,7 @@ object WeaponListeners : Listener {
     private fun getRayTraceTarget(player: Player, model: Int): Entity? {
         val reach = REACH_MAP[model] ?: return null
         val result = player.rayTraceEntities(reach.toInt()) ?: return null
+        println(result)
         val target = result.hitEntity ?: return null
         val distance = player.eyeLocation.distance(target.location)
         if (reach < distance) { return null }
