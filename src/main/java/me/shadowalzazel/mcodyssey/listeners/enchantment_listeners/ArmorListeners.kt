@@ -25,6 +25,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import org.bukkit.inventory.meta.Damageable as Repairable
 import java.util.*
 
 object ArmorListeners : Listener {
@@ -36,13 +37,22 @@ object ArmorListeners : Listener {
     // Main function for enchantments relating to entity damage for armor
     @EventHandler
     fun mainArmorDamageHandler(event: EntityDamageByEntityEvent) {
-        if (event.damager !is LivingEntity) { return }
-        if (event.entity !is LivingEntity) { return }
-        if (event.cause != EntityDamageEvent.DamageCause.ENTITY_ATTACK) { return }
+        if (event.damager !is LivingEntity) {
+            return
+        }
+        if (event.entity !is LivingEntity) {
+            return
+        }
+        if (event.cause != EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
+            return
+        }
 
         // Make thorns bug new enchant apply ranged effects
         val attacker = event.damager as LivingEntity
         val defender = event.entity as LivingEntity
+        // All Armors
+        var isChitin = false
+
         // --------------------------------------------------------------
         // Check if helmet item has lore
         if (defender.equipment?.helmet?.hasItemMeta() == true) {
@@ -51,6 +61,9 @@ object ArmorListeners : Listener {
                 when (enchant.key) {
                     OdysseyEnchantments.ANTIBONK -> {
                         event.damage = antibonkEnchantment(event.isCritical, event.damage, enchant.value)
+                    }
+                    OdysseyEnchantments.COPPER_CHITIN -> {
+                        if (copperChitinEnchantment(defender, helmet)) { isChitin = true }
                     }
                 }
             }
@@ -61,11 +74,14 @@ object ArmorListeners : Listener {
             val chestplate = defender.equipment?.chestplate
             for (enchant in chestplate!!.enchantments) {
                 when (enchant.key) {
-                    OdysseyEnchantments.VENGEFUL -> {
-                        vengefulEnchantment(attacker, enchant.value)
-                    }
                     OdysseyEnchantments.BEASTLY_BRAWLER -> {
                         beastlyBrawlerEnchantment(defender, enchant.value)
+                    }
+                    OdysseyEnchantments.COPPER_CHITIN -> {
+                        if (copperChitinEnchantment(defender, chestplate)) { isChitin = true }
+                    }
+                    OdysseyEnchantments.VENGEFUL -> {
+                        vengefulEnchantment(attacker, enchant.value)
                     }
                 }
             }
@@ -76,6 +92,9 @@ object ArmorListeners : Listener {
             val leggings = defender.equipment?.leggings
             for (enchant in leggings!!.enchantments) {
                 when (enchant.key) {
+                    OdysseyEnchantments.COPPER_CHITIN -> {
+                        if (copperChitinEnchantment(defender, leggings)) { isChitin = true }
+                    }
                     OdysseyEnchantments.COWARDICE -> {
                         cowardiceEnchantment(attacker, defender, enchant.value)
                     }
@@ -94,8 +113,17 @@ object ArmorListeners : Listener {
             val boots = defender.equipment?.boots
             for (enchant in boots!!.enchantments) {
                 when (enchant.key) {
-
+                    OdysseyEnchantments.COPPER_CHITIN -> {
+                        if (copperChitinEnchantment(defender, boots)) { isChitin = true }
+                    }
                 }
+            }
+        }
+        // Chitin
+        if (isChitin) {
+            val copper = defender.equipment?.itemInOffHand
+            if (copper?.type == Material.COPPER_INGOT) {
+                copper.subtract(1)
             }
         }
     }
@@ -319,7 +347,8 @@ object ArmorListeners : Listener {
         val cloud = player.world.spawnEntity(
             player.location,
             EntityType.AREA_EFFECT_CLOUD,
-            CreatureSpawnEvent.SpawnReason.CUSTOM) as AreaEffectCloud
+            CreatureSpawnEvent.SpawnReason.CUSTOM
+        ) as AreaEffectCloud
         cloud.apply {
             addCustomEffect(potionMeta.customEffects.first(), true)
             duration = (level + 3) * 20
@@ -329,6 +358,21 @@ object ArmorListeners : Listener {
             addScoreboardTag(EntityTags.BREATH_BY + player.uniqueId)
         }
         player.setCooldown(potion.type, 20 * 6)
+    }
+
+    // ------------------------------- COPPER_CHITIN ------------------------------------
+    private fun copperChitinEnchantment(
+        defender: LivingEntity,
+        armor: ItemStack
+    ): Boolean {
+        if (defender.equipment?.itemInOffHand?.type != Material.COPPER_INGOT) { return false }
+        val armorMeta = armor.itemMeta
+        if (armorMeta !is Repairable) { return false }
+        if (!armorMeta.hasDamage()) { return false }
+        armorMeta.damage -= 1
+        if (defender !is HumanEntity) { return false }
+        defender.saturation = maxOf(defender.saturation + 0.5F, 20.0F)
+        return true
     }
 
 
@@ -453,7 +497,8 @@ object ArmorListeners : Listener {
     }
 
     // ------------------------------- POTION_BARRIER ------------------------------------
-    private fun potionBarrierEnchantment(player: Player, potion: ItemStack, level: Int
+    private fun potionBarrierEnchantment(
+        player: Player, potion: ItemStack, level: Int
     ) {
         // Check if potion
         if (potion.type != Material.POTION) {
@@ -503,10 +548,11 @@ object ArmorListeners : Listener {
     // ------------------------------- ROOT_BOOTS -------------------------------
     private fun rootBootsHitEnchantment(defender: LivingEntity, level: Int): Double {
         //40 25 10
-        if (!defender.scoreboardTags.contains(EntityTags.IS_ROOTED)) { return 1.0 }
+        if (!defender.scoreboardTags.contains(EntityTags.IS_ROOTED)) {
+            return 1.0
+        }
         return (1.0 - (0.15 * (3 + level)))
     }
-
 
 
     // ------------------------------- SPEEDY_SPURS ------------------------------------
@@ -578,8 +624,8 @@ object ArmorListeners : Listener {
             it as LivingEntity
             it.addPotionEffects(
                 listOf(
-                    PotionEffect(PotionEffectType.INCREASE_DAMAGE, ((level * 2) + 2)  * 20, 0),
-                    PotionEffect(PotionEffectType.SPEED, (level * 20)  * 20, 0)
+                    PotionEffect(PotionEffectType.INCREASE_DAMAGE, ((level * 2) + 2) * 20, 0),
+                    PotionEffect(PotionEffectType.SPEED, (level * 20) * 20, 0)
                 )
             )
             it.world.spawnParticle(Particle.NOTE, it.location, 5, 0.3, 0.5, 0.3)

@@ -1,21 +1,20 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.TextColor
-import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.*
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Firework
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockPlaceEvent
+import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDeathEvent
-import org.bukkit.event.weather.LightningStrikeEvent
+import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.FireworkMeta
+import org.bukkit.inventory.meta.SkullMeta
 
 object OtherListeners : Listener {
-
 
 
     @EventHandler
@@ -27,24 +26,32 @@ object OtherListeners : Listener {
         }
     }
 
-    @EventHandler
-    fun chargedCreeperDeath(event: EntityDeathEvent) {
+    //@EventHandler
+    fun chargedCreeperDeath(event: EntityDamageByEntityEvent) {
+        if (event.entity !is Player) return
+        if (event.damager.type != EntityType.CREEPER) return
+        if (event.entity.isDead) println("DIED")
 
+        val player = event.entity as Player
+
+        val skull = ItemStack(Material.PLAYER_HEAD, 1).apply {
+            (itemMeta as SkullMeta).playerProfile = player.playerProfile
+        }
     }
 
-    //EventHandler
+    @EventHandler
     fun elytraBoost(event: PlayerElytraBoostEvent) {
         if ((event.itemStack.itemMeta!! as FireworkMeta).power > 3) {
-            var boostFailureChance = 0.05 + ((event.itemStack.itemMeta as FireworkMeta).power * 0.05) // FOR DURATION
-            var boostFailureDamage = 3.0
-            var dudChance = 0.1
-            val loreComponent = listOf(Component.text("Danger!", TextColor.color(255, 55, 55)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))
+            val power = ((event.itemStack.itemMeta as FireworkMeta).power)
+            val boostFailureChance = 0.05 + (power * 0.05)
+            val boostFailureDamage = power * 1.0
+            val dudChance = 0.1
 
-            // Maybe
-            if (event.itemStack.lore()?.contains(Component.text("Safe!")) == true) { // Change to detect component var
-                boostFailureDamage -= 2.0
-            }
             if ((boostFailureChance * 100) > (0..100).random()) {
+                if (dudChance * 10 > (0..10).random()) {
+                    event.isCancelled = true
+                    return
+                }
                 event.firework.detonate()
                 createDetonatingFirework(event.player.location)
                 event.player.damage(boostFailureDamage)
@@ -52,12 +59,8 @@ object OtherListeners : Listener {
         }
     }
 
-
-    // WHEN CRAFTING
-    // DETECT IF ROCKET
-
     private fun createDetonatingFirework(targetLocation: Location): Firework {
-        val randomColors = listOf(Color.BLUE, Color.RED, Color.YELLOW, Color.FUCHSIA, Color.AQUA)
+        val randomColors = listOf(Color.BLUE, Color.RED, Color.YELLOW, Color.ORANGE, Color.AQUA)
         val superFirework: Firework = (targetLocation.world.spawnEntity(targetLocation, EntityType.FIREWORK) as Firework).apply {
             fireworkMeta = fireworkMeta.clone().also {
                 it.addEffect(
@@ -75,5 +78,4 @@ object OtherListeners : Listener {
         }
         return superFirework
     }
-
 }

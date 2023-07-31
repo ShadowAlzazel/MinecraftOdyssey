@@ -71,14 +71,27 @@ object FoodListeners : Listener {
                     }
                 }
             }
+            Material.SPIDER_EYE -> {
+                when (event.item.itemMeta.customModelData) {
+                    ItemModels.SPIDER_EYE_BOBA -> {
+                        event.player.foodLevel += 1
+                        event.player.saturation += 2F
+                    }
+                    else -> {
+                        satisfyingFood = false
+                    }
+                }
+            }
             else -> {
                 satisfyingFood = false
             }
         }
+        /*
         if (satisfyingFood) {
+
             event.player.world.spawnParticle(Particle.HEART, event.player.location, 10, 0.5, 0.5, 0.5)
             event.player.world.spawnParticle(Particle.COMPOSTER, event.player.location, 15, 0.5, 0.5, 0.5)
         }
+         */
     }
-
 }

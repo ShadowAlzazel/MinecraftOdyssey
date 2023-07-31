@@ -131,4 +131,32 @@ object Foods {
         lore = listOf(Component.text("Extra Caffeinated", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.COFFEE)
 
+    val SPIDER_EYE_BOBA = OdysseyItem(
+        name = "spider_eye_boba",
+        material = Material.SPIDER_EYE,
+        displayName = Component.text("Spider Eye Boba", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
+        lore = listOf(Component.text("With Monster Milk", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.SPIDER_EYE_BOBA)
+
+    // FROGSPAWN POTION
+    // -> for more potions
+    // frogspawn boba?
+
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
+
+    val RAINBOW_TROUT = OdysseyItem(
+        name = "rainbow_trout",
+        material = Material.SALMON,
+        displayName = Component.text("Rainbow Trout", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
+        lore = listOf(Component.text("A freshwater fish with colorful markings", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.RAINBOW_TROUT)
+
+    val BLUEGILL = OdysseyItem(
+        name = "bluegill",
+        material = Material.SALMON,
+        displayName = Component.text("Bluegill", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
+        lore = listOf(Component.text("A common river fish", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.RAINBOW_TROUT)
+
 }

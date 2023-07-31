@@ -1,10 +1,12 @@
 package me.shadowalzazel.mcodyssey.alchemy.base
 
 import org.bukkit.Material
+import org.bukkit.NamespacedKey
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.block.Block
 import org.bukkit.block.data.Levelled
+import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 
@@ -53,6 +55,17 @@ class AlchemyCauldronTask(private val cauldronBlock: Block, private val cauldron
                 dropItem(someLocation.clone().add(0.0, 0.5, 0.0), cauldronResult)
                 playSound(someLocation, Sound.BLOCK_BREWING_STAND_BREW, 2.5F, 0.5F)
                 spawnParticle(Particle.DRAGON_BREATH, someLocation, 45, 0.25, 0.25, 0.25)
+                getNearbyEntities(location, 2.0, 2.0, 2.0).forEach {
+                    /*
+                    if (it is Player) {
+                        val advancement = it.server.getAdvancement(NamespacedKey.fromString("odyssey:odyssey/apply_gilded_enchant")!!)
+                        if (advancement != null) {
+                            it.getAdvancementProgress(advancement).awardCriteria("requirement")
+                        }
+                    }
+
+                     */
+                }
             }
         }
         this.cancel()

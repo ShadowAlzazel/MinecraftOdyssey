@@ -21,6 +21,7 @@ object OdysseyEnchantments {
     val BEASTLY_BRAWLER: OdysseyEnchantment = BeastlyBrawler
     val BLACK_ROSE: OdysseyEnchantment = BlackRose
     val BREWFUL_BREATH: OdysseyEnchantment = BrewfulBreath
+    val COPPER_CHITIN: OdysseyEnchantment = CopperChitin
     val COWARDICE: OdysseyEnchantment = Cowardice
     val DEVASTATING_DROP: OdysseyEnchantment = DevastatingDrop
     val DREADFUL_SHRIEK: OdysseyEnchantment = DreadfulShriek
@@ -135,6 +136,7 @@ object OdysseyEnchantments {
         BEASTLY_BRAWLER,
         BLACK_ROSE,
         BREWFUL_BREATH,
+        COPPER_CHITIN,
         COWARDICE,
         DEVASTATING_DROP,
         DREADFUL_SHRIEK,
