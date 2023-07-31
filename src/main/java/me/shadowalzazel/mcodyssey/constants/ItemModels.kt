@@ -56,15 +56,12 @@ object ItemModels {
     /* --------------------------------------------FOODS--------------------------------------------- */
     /* ---------------------------------------------------------------------------------------------- */
 
-    const val NECRONOMICON_BOOK: Int = 6905066
-
     const val GREEN_APPLE: Int = 6904511
     const val CANDY_APPLE: Int = 6904512
 
     const val SUGARY_BREAD: Int = 6904710
     const val FRENCH_TOAST: Int = 6904711
 
-    // Cookies
     const val APPLE_COOKIE: Int = 6905040
     const val BEETROOT_COOKIE: Int = 6905041
     const val PUMPKIN_COOKIE: Int = 6905042
@@ -76,14 +73,16 @@ object ItemModels {
     const val GOLDEN_COOKIE: Int = 6905048
     const val CHORUS_COOKIE: Int = 6905049
 
-    //
     const val CRYSTAL_CANDY: Int = 6905868
     const val BACON: Int = 6908047
-
     const val SALMON_ROLL: Int = 6908048
     const val FISH_N_CHIPS: Int = 6908049
     const val COFFEE: Int = 6908050
     const val FRUIT_BOWL: Int = 6908051
+    const val SPIDER_EYE_BOBA: Int = 6908052
+
+    const val RAINBOW_TROUT: Int = 6908121
+    const val BLUEGILL: Int = 6908122
 
     /* ---------------------------------------------------------------------------------------------- */
     /* ------------------------------------------MATERIALS------------------------------------------- */
@@ -110,6 +109,8 @@ object ItemModels {
     /* --------------------------------------------MISC---------------------------------------------- */
     /* ---------------------------------------------------------------------------------------------- */
 
+    const val NECRONOMICON_BOOK: Int = 6905066
+
     const val ELENCUILE_SAPLING: Int = 6905464
 
     const val PRIMOGEM: Int = 6900000
@@ -120,8 +121,10 @@ object ItemModels {
     const val SCULK_HEART: Int = 6903621
 
     const val SUSPICIOUS_TOTEM: Int = 6903622
+    const val EVOLUTION_TOTEM: Int = 6903623
 
     const val CRYING_GOLD: Int = 6903888
+    const val BLAZING_ROCKET: Int = 6903889
 
     const val BONE_OF_FROST: Int = 6905304
 

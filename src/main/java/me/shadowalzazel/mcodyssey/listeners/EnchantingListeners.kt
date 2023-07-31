@@ -12,6 +12,7 @@ import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.apache.commons.lang3.tuple.MutablePair
 import org.bukkit.Material
+import org.bukkit.NamespacedKey
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.enchantments.Enchantment
@@ -161,6 +162,12 @@ object EnchantingListeners : Listener {
             playSound(enchantLocation, Sound.BLOCK_AMETHYST_BLOCK_CHIME, 2.5F, 1.3F)
             playSound(enchantLocation, Sound.ENTITY_ARROW_HIT_PLAYER, 2.5F, 1.6F)
         }
+
+        val advancement = event.enchanter.server.getAdvancement(NamespacedKey.fromString("odyssey:odyssey/enchant_a_tome")!!)
+        if (advancement != null) {
+            event.enchanter.getAdvancementProgress(advancement).awardCriteria("requirement")
+        }
+
         (event.inventory as EnchantingInventory).item = randomTome.createItemStack(1)
         event.enchanter.level -= minOf(tierCost + 1, event.enchanter.level)
         event.isCancelled = true
@@ -325,6 +332,7 @@ object EnchantingListeners : Listener {
                 ItemModels.TOME_OF_REPLICATION -> {
                     event.inventory.inputTemplate = tomeOfReplicationToBook(equipment)
                     event.inventory.inputMineral!!.subtract(1)
+
                     ItemStack(Material.AIR)
                 }
                 else -> {

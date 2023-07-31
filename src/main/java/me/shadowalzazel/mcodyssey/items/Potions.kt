@@ -212,6 +212,15 @@ object Potions {
         potionEffects = emptyList(),
         potionColor = Color.fromRGB(0, 255, 179))
 
+    val POLTERGEIST_BREW = OdysseyItem(
+        name = "poltergeist_brew",
+        material = Material.POTION,
+        displayName = Component.text("Poltergeist Brew", TextColor.color(137, 24, 40)),
+        lore = listOf(Component.text("Accursed", TextColor.color(137, 24, 40)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.ROUND_BOTTLE,
+        potionEffects = emptyList(),
+        potionColor = Color.fromRGB(137, 24, 40))
+
     val BOTTLE_OF_SHIMMER = OdysseyItem(
         name = "bottle_of_shimmer",
         material = Material.POTION,
@@ -225,15 +234,6 @@ object Potions {
             PotionEffect(PotionEffectType.HUNGER, 120 * 20, 0),
             PotionEffect(PotionEffectType.CONFUSION, 120 * 20, 0)),
         potionColor = Color.fromRGB(247, 74, 0))
-
-    val POLTERGEIST_BREW = OdysseyItem(
-        name = "poltergeist_brew",
-        material = Material.POTION,
-        displayName = Component.text("Poltergeist Brew", TextColor.color(137, 24, 40)),
-        lore = listOf(Component.text("Accursed (1:30)", TextColor.color(137, 24, 40)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.ROUND_BOTTLE,
-        potionEffects = emptyList(),
-        potionColor = Color.fromRGB(137, 24, 40))
 
 
 

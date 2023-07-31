@@ -26,7 +26,8 @@ class Food {
             salmonRollRecipe(),
             fishNChipsRecipe(),
             fruitBowlRecipe(),
-            coffeeRecipe()
+            coffeeRecipe(),
+            spiderEyeBobaRecipe()
         )
     }
 
@@ -145,6 +146,17 @@ class Food {
             addIngredient(Material.SWEET_BERRIES)
         }
     }
+
+    private fun spiderEyeBobaRecipe(): ShapedRecipe {
+        val result = Foods.SPIDER_EYE_BOBA.createItemStack(1)
+        return ShapedRecipe(NamespacedKey(Odyssey.instance, "spider_eye_boba"), result).apply {
+            shape(" R ", " G ", " S ")
+            setIngredient('R', Material.ROTTEN_FLESH)
+            setIngredient('G', Material.GLASS_BOTTLE)
+            setIngredient('S', Material.SPIDER_EYE)
+        }
+    }
+
 
     private fun coffeeRecipe(): ShapedRecipe {
         val result = Foods.COFFEE.createItemStack(1)

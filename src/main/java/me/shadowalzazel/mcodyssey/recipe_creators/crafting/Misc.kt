@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.recipe_creators.crafting
 
 import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.items.Ingredients
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
 import me.shadowalzazel.mcodyssey.items.Runic
@@ -25,11 +26,11 @@ class Misc {
             bundleRecipe(),
             soulSteelUpgradeTemplateRecipe(),
 
-            recklessRocketRecipes(1, "one"),
-            recklessRocketRecipes(2, "two"),
-            recklessRocketRecipes(3, "three"),
-            recklessRocketRecipes(4, "four"),
-            recklessRocketRecipes(5, "five")
+            blazingRocketsRecipe(1, "one"),
+            blazingRocketsRecipe(2, "two"),
+            blazingRocketsRecipe(3, "three"),
+            blazingRocketsRecipe(4, "four"),
+            blazingRocketsRecipe(5, "five")
         )
     }
 
@@ -89,22 +90,24 @@ class Misc {
     /*-----------------------------------------------------------------------------------------------*/
     /*-----------------------------------------------------------------------------------------------*/
 
-    private fun recklessRocketRecipes(tier: Int, tierNum: String): ShapelessRecipe {
+    private fun blazingRocketsRecipe(tier: Int, tierName: String): ShapelessRecipe {
         // New Rocket
-        val newRocket = ItemStack(Material.FIREWORK_ROCKET, 1)
-        newRocket.itemMeta = (newRocket.itemMeta as FireworkMeta).also {
+        val rocket = ItemStack(Material.FIREWORK_ROCKET, 3)
+        rocket.itemMeta = (rocket.itemMeta as FireworkMeta).also {
             it.power = tier + 3
-            it.lore(listOf(Component.text("Danger!", TextColor.color(255, 55, 55)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+            it.setCustomModelData(ItemModels.BLAZING_ROCKET)
+            it.lore(listOf(Component.text("This rocket has a chance to explode!", TextColor.color(255, 55, 55)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
         }
         // Recipe
-        val someRecipe = ShapelessRecipe(NamespacedKey(Odyssey.instance, "duration_rocket_tier_$tierNum"), newRocket).apply {
+        val recipe = ShapelessRecipe(NamespacedKey(Odyssey.instance, "blazing_rocket_tier_$tierName"), rocket).apply {
             addIngredient(2, Material.GUNPOWDER)
             addIngredient(tier, Material.BLAZE_POWDER)
             addIngredient(1, Material.PAPER)
             addIngredient(RecipeChoice.MaterialChoice(listOf(Material.GUNPOWDER, Material.FIREWORK_STAR)))
-            group = "reckless_rockets"
+            category = CraftingBookCategory.MISC
+            group = "blazing_rockets"
         }
-        return someRecipe
+        return recipe
     }
 
     private fun bundleRecipe(): ShapedRecipe {
