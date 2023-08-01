@@ -58,8 +58,8 @@ object OdysseyEffectsHandler {
     // Thorns
     fun thornsEffect(victimList: MutableCollection<LivingEntity>, duration: Int) {
         victimList.forEach {
-            if (EffectTags.THORNY !in it.scoreboardTags) {
-                it.addScoreboardTag(EffectTags.THORNY)
+            if (EffectTags.ASPHYXIATE !in it.scoreboardTags) {
+                it.addScoreboardTag(EffectTags.ASPHYXIATE)
                 ThornyTask(it, duration).runTaskTimer(Odyssey.instance, 0, 20)
             }
         }
@@ -88,7 +88,6 @@ object OdysseyEffectsHandler {
     // Soul Damage
     fun soulDamageEffect(victimList: MutableCollection<LivingEntity>, amplifier: Int = 1) {
         victimList.forEach {
-            // Souls will not kill only escape violently
             if (it.health > 4.0) {
                 it.health -= 4.0 * amplifier
                 it.damage(0.01)

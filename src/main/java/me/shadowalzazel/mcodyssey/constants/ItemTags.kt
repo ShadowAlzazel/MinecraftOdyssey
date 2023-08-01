@@ -26,15 +26,22 @@ object ItemTags {
         return itemMeta.persistentDataContainer.has(NamespacedKey(Odyssey.instance, tag))
     }
 
-    fun ItemStack.isItem(tag: String): Boolean {
+    fun ItemStack.isThisItem(tag: String): Boolean {
         return itemMeta.persistentDataContainer[NamespacedKey(Odyssey.instance, "item"), PersistentDataType.STRING] == tag
     }
 
     fun ItemStack.addTag(tag: String) {
         itemMeta = itemMeta.also {
-            it.persistentDataContainer.set(NamespacedKey(Odyssey.instance, tag), PersistentDataType.INTEGER, 1)
+            it.persistentDataContainer.set(NamespacedKey(Odyssey.instance, tag), PersistentDataType.BOOLEAN, true)
         }
     }
+
+    fun ItemStack.addTag(tag: String, count: Int) {
+        itemMeta = itemMeta.also {
+            it.persistentDataContainer.set(NamespacedKey(Odyssey.instance, tag), PersistentDataType.INTEGER, count)
+        }
+    }
+
 
     fun ItemStack.removeTag(tag: String) {
         itemMeta = itemMeta.also {

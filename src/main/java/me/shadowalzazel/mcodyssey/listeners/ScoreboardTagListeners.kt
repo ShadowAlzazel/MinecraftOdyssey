@@ -33,7 +33,7 @@ object ScoreboardTagListeners : Listener {
                 EntityTags.MARKED_FOR_VENGEANCE -> {
                     event.damage += 4
                 }
-                EffectTags.THORNY -> {
+                EffectTags.ASPHYXIATE -> {
                     remove = false
                     if (event.damager is LivingEntity) { (event.damager as LivingEntity).damage(2.0) }
                 }
