@@ -10,7 +10,7 @@ object IgnorePain : OdysseyEnchantment("ignore_pain", "Ignore Pain", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.FRUITFUL_FARE -> {
+            OdysseyEnchantments.POTION_BARRIER, OdysseyEnchantments.UNTOUCHABLE -> {
                 true
             }
             else -> {

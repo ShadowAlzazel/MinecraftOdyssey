@@ -10,7 +10,7 @@ object Relentless : OdysseyEnchantment("relentless", "Relentless", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            THORNS -> {
+            OdysseyEnchantments.RECKLESS -> {
                 true
             }
             else -> {
@@ -34,5 +34,4 @@ object Relentless : OdysseyEnchantment("relentless", "Relentless", 3) {
         }
     }
 
-    // TODO: If below 35% health gain more damage
 }

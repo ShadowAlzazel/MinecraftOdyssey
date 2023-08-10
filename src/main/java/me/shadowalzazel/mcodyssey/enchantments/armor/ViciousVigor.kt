@@ -10,7 +10,7 @@ object ViciousVigor : OdysseyEnchantment("vicious_vigor", "Vicious Vigor", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.VICIOUS_VIGOR, OdysseyEnchantments.UNTOUCHABLE -> {
+            OdysseyEnchantments.VENGEFUL -> {
                 true
             }
             else -> {
@@ -31,5 +31,4 @@ object ViciousVigor : OdysseyEnchantment("vicious_vigor", "Vicious Vigor", 3) {
         }
     }
 
-    // TODO: If enemies have less health then you, and they hit you, damage them for (level * 2.5 damage) if nearby
 }

@@ -10,7 +10,7 @@ object BrewfulBreath : OdysseyEnchantment("brewful_breath", "Brewful Breath", 3)
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.WAR_CRY -> {
+            OdysseyEnchantments.DREADFUL_SHRIEK, OdysseyEnchantments.RAGING_ROAR, OdysseyEnchantments.WAR_CRY -> {
                 true
             }
             else -> {

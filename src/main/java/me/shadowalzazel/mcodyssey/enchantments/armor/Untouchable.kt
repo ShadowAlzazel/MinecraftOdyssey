@@ -10,7 +10,7 @@ object Untouchable : OdysseyEnchantment("untouchable", "Untouchable", 1) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.COWARDICE, OdysseyEnchantments.VENGEFUL -> {
+            OdysseyEnchantments.IGNORE_PAIN-> {
                 true
             }
             else -> {

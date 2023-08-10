@@ -10,7 +10,7 @@ object SculkSensitive : OdysseyEnchantment("sculk_sensitive", "Sculk Sensitive",
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.ILLUMINEYE -> {
+            OdysseyEnchantments.ILLUMINEYE, OdysseyEnchantments.ANTIBONK -> {
                 true
             }
             else -> {

@@ -197,9 +197,7 @@ object OdysseyEnchantments {
     )
 
     val REGISTERED_SET = setOf(GILDED_POWER) + ARMOR_SET + MELEE_SET + MISC_SET + RANGED_SET
-    val EXOTIC_LIST = setOf(SINGULARITY_SHOT, GRAVITY_WELL, SCULK_SENSITIVE)
-
-
+    val EXOTIC_LIST = setOf(SINGULARITY_SHOT, GRAVITY_WELL, SCULK_SENSITIVE, BLACK_ROSE)
 
     // Register
     fun register() {

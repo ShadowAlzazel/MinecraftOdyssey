@@ -29,6 +29,4 @@ object Opticalization : OdysseyEnchantment("opticalization", "Opticalization", 3
             }
         }
     }
-
-    // Look With Telescope
 }

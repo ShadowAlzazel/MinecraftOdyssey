@@ -30,6 +30,4 @@ object BlackRose : OdysseyEnchantment("black_rose", "Black Rose", 2) {
         }
     }
 
-
-    // TODO: If there are at least 5 enemies nearby when hit, gain damage
 }
