@@ -11,7 +11,7 @@ class AccursedTask(private val accursedEntity: LivingEntity, private val accurse
 
     override fun run() {
         counter += 1
-        if (EffectTags.THORNY !in accursedEntity.scoreboardTags) { this.cancel() }
+        if (EffectTags.ASPHYXIATE !in accursedEntity.scoreboardTags) { this.cancel() }
         val timeElapsed = System.currentTimeMillis() - accursedCooldown
         if (accursedCounter < counter || timeElapsed > accursedCounter * 1000) {
             accursedEntity.scoreboardTags.remove(EffectTags.ACCURSED)

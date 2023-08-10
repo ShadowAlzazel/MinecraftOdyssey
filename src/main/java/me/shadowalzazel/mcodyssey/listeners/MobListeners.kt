@@ -1,8 +1,7 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.constants.EntityTags
-import me.shadowalzazel.mcodyssey.constants.ItemTags.isItem
-import org.bukkit.Material
+import me.shadowalzazel.mcodyssey.constants.ItemTags.isThisItem
 import org.bukkit.entity.Piglin
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -32,7 +31,7 @@ object MobListeners : Listener{
     @EventHandler
     fun piglinHireHandler(event: PiglinBarterEvent) {
         if (!event.input.itemMeta.hasCustomModelData()) { return }
-        if (!event.input.isItem("crying_gold")) { return }
+        if (!event.input.isThisItem("crying_gold")) { return }
         // NOT KIDS
         if (event.entity.scoreboardTags.contains(EntityTags.IS_HIRED)) return
         //println(event.entity.target)

@@ -10,7 +10,7 @@ object FruitfulFare : OdysseyEnchantment("fruitful_fare", "Fruitful Fare", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.POTION_BARRIER -> {
+            OdysseyEnchantments.MOLTEN_CORE, OdysseyEnchantments.BLACK_ROSE -> {
                 true
             }
             else -> {

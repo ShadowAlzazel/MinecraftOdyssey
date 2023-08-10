@@ -10,7 +10,7 @@ object Reckless : OdysseyEnchantment("reckless", "Reckless", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            THORNS -> {
+            THORNS, OdysseyEnchantments.RELENTLESS -> {
                 true
             }
             else -> {
@@ -34,5 +34,4 @@ object Reckless : OdysseyEnchantment("reckless", "Reckless", 3) {
         }
     }
 
-    // TODO: Take more damage but do more damage
 }

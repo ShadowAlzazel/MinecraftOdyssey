@@ -11,10 +11,10 @@ class ThornyTask(private val thornEntity: LivingEntity, private val thornCount: 
 
     override fun run() {
         counter += 1
-        if (EffectTags.THORNY !in thornEntity.scoreboardTags) { this.cancel() }
+        if (EffectTags.ASPHYXIATE !in thornEntity.scoreboardTags) { this.cancel() }
         val timeElapsed = System.currentTimeMillis() - thornsCooldown
         if (thornCount < counter || timeElapsed > thornCount * 1000) {
-            thornEntity.scoreboardTags.remove(EffectTags.THORNY)
+            thornEntity.scoreboardTags.remove(EffectTags.ASPHYXIATE)
             this.cancel()
         }
     }

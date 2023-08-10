@@ -45,7 +45,7 @@ object AmbassadorListeners: Listener {
     fun itemGiftHandler(event: PlayerDropItemEvent) {
         if (ambassadorActiveCheck()) {
             val ambassadorBoss = Odyssey.instance.currentBoss as AmbassadorBoss
-            if (!ambassadorBoss.angered) {
+            if (!ambassadorBoss.isAngered) {
                 if (event.player in ambassadorBoss.bossEntity!!.getNearbyEntities(1.5, 1.5, 1.5)) {
                     ambassadorBoss.appeasementCheck(event.player, event.itemDrop)
                 }
@@ -57,7 +57,7 @@ object AmbassadorListeners: Listener {
     fun onElytraActivation(event: PlayerElytraBoostEvent) {
         if (ambassadorActiveCheck()) {
             val ambassadorBoss = Odyssey.instance.currentBoss as AmbassadorBoss
-            if (!ambassadorBoss.angered) {
+            if (!ambassadorBoss.isAngered) {
                 if (event.player in ambassadorBoss.bossEntity!!.getNearbyEntities(1.5, 1.5, 1.5)) {
                     event.isCancelled
                     ambassadorBoss.voidPullBackAttack(event.player)

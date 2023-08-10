@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.listeners.utility
+package me.shadowalzazel.mcodyssey.fishing
 
 import me.shadowalzazel.mcodyssey.items.Foods
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem

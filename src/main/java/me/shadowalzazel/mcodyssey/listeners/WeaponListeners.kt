@@ -239,8 +239,6 @@ object WeaponListeners : Listener {
     }
     */
 
-
-
     private fun leftClickHandler(event: PlayerInteractEvent) {
         val player = event.player
         val mainWeapon = player.equipment.itemInMainHand
@@ -285,7 +283,6 @@ object WeaponListeners : Listener {
     private fun getRayTraceTarget(player: Player, model: Int): Entity? {
         val reach = REACH_MAP[model] ?: return null
         val result = player.rayTraceEntities(reach.toInt()) ?: return null
-        println(result)
         val target = result.hitEntity ?: return null
         val distance = player.eyeLocation.distance(target.location)
         if (reach < distance) { return null }

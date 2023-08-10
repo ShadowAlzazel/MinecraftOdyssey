@@ -10,7 +10,7 @@ object MoltenCore : OdysseyEnchantment("molten_core", "Molten Core", 2) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            THORNS -> {
+            OdysseyEnchantments.BEASTLY_BRAWLER, OdysseyEnchantments.FRUITFUL_FARE -> {
                 true
             }
             else -> {
