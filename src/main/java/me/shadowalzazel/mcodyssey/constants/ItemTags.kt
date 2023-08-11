@@ -10,10 +10,16 @@ import java.util.*
 object ItemTags {
 
     const val ALCHEMY_ARTILLERY_LOADED: String = "alchemy_artillery_loaded"
-    const val ENGRAVED: String = "engraved"
+    const val IS_ENGRAVED: String = "odyssey.is_engraved"
     const val SOUL_STEEL_TOOL: String = "soul_steel_tool"
     const val NETHERITE_TOOL: String = "netherite_tool"
 
+    // ENCHANTING
+    const val GILDED_SLOTS: String = "gilded_slots"
+    const val ENCHANT_SLOTS: String = "enchant_slots"
+    const val IS_SLOTTED: String = "odyssey.is_slotted"
+
+    // POTIONS
     const val POTION_CHARGES_LEFT: String = "potion_uses_left" // NEEDS AN INT DATA TYPE
     const val LARGE_POTION: String = "large_potion" // Many charges
 

@@ -3,7 +3,7 @@ package me.shadowalzazel.mcodyssey.listeners
 import me.shadowalzazel.mcodyssey.constants.Identifiers
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.ItemTags
-import me.shadowalzazel.mcodyssey.constants.ItemTags.ENGRAVED
+import me.shadowalzazel.mcodyssey.constants.ItemTags.IS_ENGRAVED
 import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
 import me.shadowalzazel.mcodyssey.items.Ingredients
@@ -49,12 +49,12 @@ object SmithingListeners : Listener {
         // Engraving
         if (eventResult.type == Material.AMETHYST_SHARD) {
             val engraved = equipment.clone()
-            if (engraved.hasTag(ENGRAVED)) {
+            if (engraved.hasTag(IS_ENGRAVED)) {
                 event.result = ItemStack(Material.AIR)
                 return
             }
             engraved.also {
-                it.addTag(ENGRAVED)
+                it.addTag(IS_ENGRAVED)
                 val itemLore = it.lore()
                 val forgerLore = mutableListOf(Component.text(""))
                 for (viewer in event.viewers) {

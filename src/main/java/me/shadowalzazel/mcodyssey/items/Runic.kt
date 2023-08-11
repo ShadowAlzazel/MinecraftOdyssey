@@ -125,4 +125,16 @@ object Runic {
                 .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.TOME_OF_AVARICE)
 
+    val TOME_OF_POLYMERIZATION = OdysseyItem(
+        name = "tome_of_polymerization",
+        material = Material.ENCHANTED_BOOK,
+        displayName = Component.text("Tome of Polymerization", TextColor.color(255, 170, 0), TextDecoration.ITALIC),
+        lore = listOf(
+            Component.text("Can absorb any non conflicting enchantment.", TextColor.color(250, 128, 148))
+                .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE),
+            Component.text("Applies the stored enchantments to an item with no cost", TextColor.color(150, 228, 148))
+                .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.TOME_OF_AVARICE)
+
+
 }
