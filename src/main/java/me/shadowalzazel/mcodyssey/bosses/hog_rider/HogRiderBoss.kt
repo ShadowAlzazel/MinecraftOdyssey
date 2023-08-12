@@ -14,7 +14,10 @@ import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-class HogRiderBoss : OdysseyBoss("Hog Rider") {
+class HogRiderBoss : OdysseyBoss(
+    name = "Hog Rider",
+    type = EntityType.PIGLIN_BRUTE
+) {
 
     // Boss Spawning Logic
     var bossEntityRider: PiglinBrute? = null
@@ -22,10 +25,6 @@ class HogRiderBoss : OdysseyBoss("Hog Rider") {
     var despawnTimer: Long = 1
     var hogJumpAttackCooldown: Long = 0L
     var hogRiderBossBar: BossBar? = null
-
-    fun g() {
-        TODO("Finish")
-    }
 
     private fun createHogRiderWeapon(): ItemStack {
         val smokyWarHammer = ItemStack(Material.NETHERITE_AXE, 1)
@@ -96,7 +95,7 @@ class HogRiderBoss : OdysseyBoss("Hog Rider") {
 
         despawnTimer = System.currentTimeMillis()
         // Change Default Behaviour
-        hogRider.customName = "${ChatColor.GOLD}$bossName"
+        hogRider.customName = "${ChatColor.GOLD}$name"
         hogRider.isCustomNameVisible = true
         hogRider.removeWhenFarAway = false
         hogRider.isAware = true

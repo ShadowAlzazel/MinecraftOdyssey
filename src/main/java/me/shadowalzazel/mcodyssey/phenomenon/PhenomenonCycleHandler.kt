@@ -33,22 +33,23 @@ class PhenomenonCycleHandler(private val mainWorld: World) : BukkitRunnable() {
                 it.isLunarPhenomenonActive = false
                 it.currentLunarPhenomenon = null
                 // Check if end game
-                if (it.isBossProgressionEnabled && !it.isSolarPhenomenonActive) {
+                //it.isBossProgressionEnabled &&
+                if (!it.isSolarPhenomenonActive) {
                     val rolledRate = (0..100).random()
                     // Daily luck is not a true daily phenomenon
                     //val luckConfigAmount = Odyssey.instance.config.getInt("player-minimum-for-luck")
-                    if (it.mainWorld!!.players.size >= it.playersRequiredForLuck) {
-                        DrawOfFortunes.successfulActivation(it.mainWorld!!)
+                    if (it.overworld.players.size >= it.playersRequiredForLuck) {
+                        DrawOfFortunes.successfulActivation(it.overworld)
                     }
 
                     val leadingPhenomenon = utuSet[0]
-                    val activated: Boolean = leadingPhenomenon.rollActivation(it.mainWorld!!)
+                    val activated: Boolean = leadingPhenomenon.rollActivation(it.overworld)
                     if (activated) {
                         it.isSolarPhenomenonActive = true
                         it.currentSolarPhenomenon = leadingPhenomenon
                         utuSet.remove(leadingPhenomenon)
                         utuSet.add(leadingPhenomenon)
-                        if (utuSet[0].criticalWarning()) { utuSet[0].criticalityActivation(it.mainWorld!!.players) }
+                        if (utuSet[0].criticalWarning()) { utuSet[0].criticalityActivation(it.overworld.players) }
                     }
                     else {
                         utuSet.remove(leadingPhenomenon)
@@ -73,15 +74,16 @@ class PhenomenonCycleHandler(private val mainWorld: World) : BukkitRunnable() {
                 //it.suenPhenomenonActive = false
                 //it.currentSuenPhenomenon = null
                 // Check if end game
-                if (it.isBossProgressionEnabled && !it.isLunarPhenomenonActive) {
+                //it.isBossProgressionEnabled &&
+                if (!it.isLunarPhenomenonActive) {
                     val leadingPhenomenon = suenSet[0]
-                    val activated: Boolean = leadingPhenomenon.rollActivation(it.mainWorld!!)
+                    val activated: Boolean = leadingPhenomenon.rollActivation(it.overworld)
                     if (activated) {
                         it.isLunarPhenomenonActive = true
                         it.currentLunarPhenomenon = leadingPhenomenon
                         suenSet.remove(leadingPhenomenon)
                         suenSet.add(leadingPhenomenon)
-                        if (suenSet[0].criticalWarning()) { suenSet[0].criticalityActivation(it.mainWorld!!.players) }
+                        if (suenSet[0].criticalWarning()) { suenSet[0].criticalityActivation(it.overworld.players) }
                     }
                     else {
                         suenSet.remove(leadingPhenomenon)
@@ -107,10 +109,10 @@ class PhenomenonCycleHandler(private val mainWorld: World) : BukkitRunnable() {
         // Check if active for persistent
         with(Odyssey.instance) {
             if (isSolarPhenomenonActive) {
-                currentSolarPhenomenon!!.persistentPlayerActives(mainWorld!!)
+                currentSolarPhenomenon!!.persistentPlayerActives(overworld)
             }
             else if (isLunarPhenomenonActive) {
-                currentLunarPhenomenon!!.persistentPlayerActives(mainWorld!!)
+                currentLunarPhenomenon!!.persistentPlayerActives(overworld)
             }
         }
     }

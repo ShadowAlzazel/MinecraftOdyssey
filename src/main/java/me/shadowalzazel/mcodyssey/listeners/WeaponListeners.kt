@@ -35,7 +35,6 @@ import org.bukkit.event.player.PlayerInteractEvent
 // Make crit and still combos !!
 // SWEEP PARTICLES!
 // Rabbit Hide -> Sheath
-// TODO: !!!!!!!!
 // PARRY
 // IF hand raised
 // IF weapon can parry

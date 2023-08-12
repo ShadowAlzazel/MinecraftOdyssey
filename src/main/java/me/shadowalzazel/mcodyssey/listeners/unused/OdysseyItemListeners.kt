@@ -4,8 +4,8 @@ import com.destroystokyo.paper.event.player.PlayerJumpEvent
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.constants.Identifiers
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
-import me.shadowalzazel.mcodyssey.listeners.tasks.TemporalStasisTask
-import me.shadowalzazel.mcodyssey.listeners.tasks.UnstableAntimatterTask
+import me.shadowalzazel.mcodyssey.tasks.TemporalStasisTask
+import me.shadowalzazel.mcodyssey.tasks.UnstableAntimatterTask
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.*

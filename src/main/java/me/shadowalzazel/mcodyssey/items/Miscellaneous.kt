@@ -40,13 +40,6 @@ object Miscellaneous {
         lore = listOf(Component.text("They say its good for you...", TextColor.color(87, 67, 96)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.IRRADIATED_FRUIT)
 
-    val HOURGLASS_FROM_BABEL = OdysseyItem( // TODO: FIX
-        name = "WIP_hourglass",
-        material = Material.RAW_IRON,
-        displayName = Component.text("WIP Hourglass", TextColor.color(57, 63, 84), TextDecoration.ITALIC),
-        lore = listOf(Component.text("An hourglass that stops time for all but itself", TextColor.color(3, 170, 177)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.HOURGLASS_FROM_BABEL)
-
     val SCULK_HEART = OdysseyItem(
         name = "sculk_heart",
         material = Material.ROTTEN_FLESH,

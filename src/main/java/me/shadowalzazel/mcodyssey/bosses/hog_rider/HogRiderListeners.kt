@@ -12,6 +12,7 @@ import org.bukkit.event.entity.EntityDeathEvent
 object HogRiderListeners : Listener {
 
 
+    /*
     @EventHandler
     fun onHogTakeDamage(event: EntityDamageByEntityEvent) {
         if (Odyssey.instance.isBossActive) {
@@ -73,6 +74,8 @@ object HogRiderListeners : Listener {
             }
         }
     }
+
+     */
 
 
 

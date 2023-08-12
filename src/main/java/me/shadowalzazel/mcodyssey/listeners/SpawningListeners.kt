@@ -3,7 +3,7 @@ package me.shadowalzazel.mcodyssey.listeners
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.constants.Identifiers
-import me.shadowalzazel.mcodyssey.listeners.tasks.PiglinRallyTask
+import me.shadowalzazel.mcodyssey.tasks.PiglinRallyTask
 import me.shadowalzazel.mcodyssey.mobs.neutral.DubiousDealer
 import me.shadowalzazel.mcodyssey.recipe_creators.merchant.Sales
 import org.bukkit.Material

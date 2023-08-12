@@ -8,7 +8,7 @@ import org.bukkit.scheduler.BukkitRunnable
 
 // HONEYED task
 class HoneyedTask(private val honeyedVictim: LivingEntity, private val honeyCount: Int) : BukkitRunnable() {
-    private var honeyCooldown = System.currentTimeMillis() // TODO: IS this shared??
+    private var honeyCooldown = System.currentTimeMillis()
     private var counter = 0
     override fun run() {
         honeyedVictim.also {

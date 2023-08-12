@@ -9,10 +9,10 @@ class PersistentPhenomenonHandler : BukkitRunnable() {
         // Check if active for persistent
         with(Odyssey.instance) {
             if (isSolarPhenomenonActive) {
-                currentSolarPhenomenon!!.persistentPlayerActives(mainWorld!!)
+                currentSolarPhenomenon!!.persistentPlayerActives(overworld)
             }
             else if (isLunarPhenomenonActive) {
-                currentLunarPhenomenon!!.persistentPlayerActives(mainWorld!!)
+                currentLunarPhenomenon!!.persistentPlayerActives(overworld)
             }
         }
     }

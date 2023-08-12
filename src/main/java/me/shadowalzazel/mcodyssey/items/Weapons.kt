@@ -16,6 +16,8 @@ import org.bukkit.inventory.ItemStack
 object Weapons {
 
     // DeprecatedWeapon (Odyssey Item) is a holder for enums
+    // Add Recipe to show and hide attributes
+
     // Used to create multiple weapons of different materials from the same type
     fun OdysseyItem.createWeapon(damageOverride: Double = 0.0): ItemStack {
         val newWeapon = this.createItemStack(1)
@@ -34,7 +36,7 @@ object Weapons {
                 it.displayName(Component.text(weaponMaterial.namePrefix + " " + weaponType.baseName).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))
                 if (customModel != null) { it.setCustomModelData(customModel) } else { it.setCustomModelData(weaponType.model) }
                 //it.addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
-                // TODO: Add Recipe to show and hide attributes
+
             }
         }
         return newWeapon

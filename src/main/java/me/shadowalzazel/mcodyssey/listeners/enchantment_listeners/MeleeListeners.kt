@@ -5,10 +5,10 @@ import me.shadowalzazel.mcodyssey.constants.EffectTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.effects.OdysseyEffectsHandler
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.listeners.tasks.ArcaneCellTask
-import me.shadowalzazel.mcodyssey.listeners.tasks.FrogFrightTask
-import me.shadowalzazel.mcodyssey.listeners.tasks.FrostyFuseTask
-import me.shadowalzazel.mcodyssey.listeners.tasks.GravityWellTask
+import me.shadowalzazel.mcodyssey.tasks.ArcaneCellTask
+import me.shadowalzazel.mcodyssey.tasks.FrogFrightTask
+import me.shadowalzazel.mcodyssey.tasks.FrostyFuseTask
+import me.shadowalzazel.mcodyssey.tasks.GravityWellTask
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.*
@@ -382,8 +382,6 @@ object MeleeListeners : Listener {
     }
     // ------------------------------- FEARFUL_FINISHER ------------------------------------
     private fun fearfulFinisherEnchantment(victim: LivingEntity, level: Int) {
-
-        // TODO: For all mobs nearby, find get vector from eye location to target, normalize, then (flip), set mob goal.
         val vector = victim.killer!!.eyeLocation.direction.clone().normalize()
         vector.y = 0.0
         vector.normalize().multiply((2 * level) + 2)

@@ -14,17 +14,15 @@ object OdysseyPhenomenaListeners : Listener {
     @EventHandler
     fun playerPreventSleep(event: PlayerBedEnterEvent) {
         // Check if ambassador defeated
-        if (Odyssey.instance.isEnderDragonDefeated) {
-            if (Odyssey.instance.isLunarPhenomenonActive) {
-                val someWorld = event.player.world
-                if (someWorld == Odyssey.instance.mainWorld) {
-                    event.player.sendMessage("The night prevents you from sleeping.")
-                    event.isCancelled = true
-                }
+        // is Odyssey.instance.isEnderDragonDefeated
+        if (Odyssey.instance.isLunarPhenomenonActive) {
+            val someWorld = event.player.world
+            if (someWorld == Odyssey.instance.overworld) {
+                event.player.sendMessage("The night prevents you from sleeping.")
+                event.isCancelled = true
             }
         }
     }
-
 
     // Main function for creature related spawns regarding phenomena
     @EventHandler

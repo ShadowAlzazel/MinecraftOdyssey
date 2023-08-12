@@ -4,26 +4,17 @@ import java.io.File
 import java.io.FileNotFoundException
 
 
-interface AssetManager {
+class AssetManager(val odyssey: Odyssey) {
 
-    fun findMainWorld(): Boolean {
-        for (world in Odyssey.instance.server.worlds) {
-            val folderPath = world.worldFolder
-            try {
-                val dataPackFolderPath = File("${folderPath}/datapacks")
-                Odyssey.instance.mainWorld = world
-                return true
-            }
-            catch (ex: FileNotFoundException) {
-                continue
-            }
-        }
-        return false
-    }
+    /*
+    private val hasTerralith: Boolean = odyssey.overworld.isBedWorks
+    private val hasIncendium: Boolean = odyssey.overworld.isBedWorks
+    val hasContinents: Boolean = odyssey.overworld.isBedWorks
 
+     */
 
     fun findOdysseyDatapack(): Boolean {
-        val worldFilePath = Odyssey.instance.mainWorld!!.worldFolder.path
+        val worldFilePath = Odyssey.instance.overworld.worldFolder.path
         val datapackPathString = "/datapacks/OdysseyDataPack"
 
         return try {
@@ -34,15 +25,4 @@ interface AssetManager {
             false
         }
     }
-
-
-    fun findOtherDatapacks() {
-        val worldFilePath = Odyssey.instance.mainWorld!!.worldFolder.path
-        try {
-        }
-        catch (ex: FileNotFoundException) {
-            Odyssey.instance.logger.info(ex.message)
-        }
-    }
-
 }

@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.listeners.tasks
+package me.shadowalzazel.mcodyssey.tasks
 
 import org.bukkit.Color
 import org.bukkit.Particle
