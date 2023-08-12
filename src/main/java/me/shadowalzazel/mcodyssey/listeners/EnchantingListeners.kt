@@ -109,7 +109,7 @@ object EnchantingListeners : Listener {
     }
 
     // Usage for ONLY display not logic
-    private fun ItemStack.updateSlotLore(
+    fun ItemStack.updateSlotLore(
         newEnchants: MutableMap<Enchantment, Int>? = null,
         resetLore: Boolean = false
     ) {

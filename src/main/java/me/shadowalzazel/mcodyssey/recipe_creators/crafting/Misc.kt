@@ -92,11 +92,9 @@ class Misc {
 
     private fun blazingRocketsRecipe(tier: Int, tierName: String): ShapelessRecipe {
         // New Rocket
-        val rocket = ItemStack(Material.FIREWORK_ROCKET, 3)
+        val rocket = Miscellaneous.BLAZING_ROCKET.createItemStack(3)
         rocket.itemMeta = (rocket.itemMeta as FireworkMeta).also {
             it.power = tier + 3
-            it.setCustomModelData(ItemModels.BLAZING_ROCKET)
-            it.lore(listOf(Component.text("This rocket has a chance to explode!", TextColor.color(255, 55, 55)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
         }
         // Recipe
         val recipe = ShapelessRecipe(NamespacedKey(Odyssey.instance, "blazing_rocket_tier_$tierName"), rocket).apply {

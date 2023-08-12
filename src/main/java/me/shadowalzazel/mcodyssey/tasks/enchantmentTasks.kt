@@ -72,8 +72,8 @@ class BurstBarrageTask(
 class GravityWellTask(
     private val victim: LivingEntity,
     private val attacker: LivingEntity,
-    private val modifier: Int,
-    private val maxCounter: Int) : BukkitRunnable()
+    private val factor: Int,
+    private val maxCount: Int) : BukkitRunnable()
 {
     private var timer = System.currentTimeMillis()
     private var counter = 0
@@ -95,16 +95,16 @@ class GravityWellTask(
                 spawnParticle(Particle.SONIC_BOOM, someLocation, 2, 0.0, 0.0, 0.0)
             }
 
-            victim.location.getNearbyLivingEntities(modifier.toDouble()).forEach {
+            victim.location.getNearbyLivingEntities(3.0 ).forEach {
                 if (!it.scoreboardTags.contains(EntityTags.FALLING_SINGULARITY) && it != attacker) {
                     it.teleport(singularityLocation.clone().add((-3..3).random() * 0.08, 0.1, (-3..3).random() * 0.08))
-                    if (counter % 2 == 0) { it.damage(0.5 * modifier) }
+                    if (counter % 2 == 0) { it.damage(0.5 * factor, attacker) }
                 }
             }
 
             // Timer
             val timeElapsed = System.currentTimeMillis() - timer
-            if (counter > maxCounter || victim.health <= 0.25 || timeElapsed > (maxCounter / 2) * 1000) {
+            if (counter > maxCount || victim.health <= 0.25 || timeElapsed > (maxCount / 2) * 1000) {
                 if (!victim.isDead) { victim.scoreboardTags.remove(EffectTags.GRAVITY_WELLED) }
                 this.cancel()
             }

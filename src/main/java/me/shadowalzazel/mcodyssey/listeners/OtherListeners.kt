@@ -5,10 +5,12 @@ import org.bukkit.Color
 import org.bukkit.FireworkEffect
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.entity.Creeper
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Firework
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.entity.EntityDamageByEntityEvent
@@ -27,17 +29,26 @@ object OtherListeners : Listener {
         }
     }
 
-    //@EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     fun chargedCreeperDeath(event: EntityDamageByEntityEvent) {
         if (event.entity !is Player) return
         if (event.damager.type != EntityType.CREEPER) return
-        if (event.entity.isDead) println("DIED")
-
         val player = event.entity as Player
+        val creeper = event.damager as Creeper
+        if (!creeper.isPowered) return
+        if (event.finalDamage <= player.health) return
+        if (player.equipment.itemInOffHand.type == Material.TOTEM_OF_UNDYING || player.equipment.itemInMainHand.type == Material.TOTEM_OF_UNDYING) return
 
-        val skull = ItemStack(Material.PLAYER_HEAD, 1).apply {
-            (itemMeta as SkullMeta).playerProfile = player.playerProfile
+        val skull = ItemStack(Material.PLAYER_HEAD, 1)
+        val skullMeta = (skull.itemMeta as SkullMeta)
+        skullMeta.playerProfile = player.playerProfile
+        skullMeta.owningPlayer = player
+        skull.also {
+            it.itemMeta = skullMeta
         }
+
+        println("DROPPED SKULL")
+        player.world.dropItem(player.location, skull)
     }
 
     @EventHandler

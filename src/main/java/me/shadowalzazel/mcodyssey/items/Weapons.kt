@@ -6,10 +6,12 @@ import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import me.shadowalzazel.mcodyssey.items.utility.WeaponMaterial
 import me.shadowalzazel.mcodyssey.items.utility.WeaponType
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 
@@ -643,13 +645,6 @@ object Weapons {
 
     // Exotics
     val ABZU_BLADE = OdysseyItem(
-        name = "TODO!!",
-        material = Material.DIAMOND_SWORD,
-        weaponMaterial = WeaponMaterial.NETHERITE,
-        weaponType = WeaponType.STAFF)
-
-    // Bosses
-    val KINETIC_BLASTER = OdysseyItem(
         name = "TODO!!",
         material = Material.DIAMOND_SWORD,
         weaponMaterial = WeaponMaterial.NETHERITE,

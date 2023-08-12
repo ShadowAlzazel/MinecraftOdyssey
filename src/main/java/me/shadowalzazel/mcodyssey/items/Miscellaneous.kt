@@ -63,11 +63,18 @@ object Miscellaneous {
 
     val CRYING_GOLD = OdysseyItem(
         name = "crying_gold",
-        material = Material.GOLD_INGOT,
+        material = Material.RAW_GOLD,
         displayName = Component.text("Crying Gold", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
-        lore = listOf(Component.text("WIP", TextColor.color(112, 123, 153)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        lore = listOf(Component.text("An invaluable trinket to Piglins", TextColor.color(112, 123, 153)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.CRYING_GOLD)
 
+    val BLAZING_ROCKET = OdysseyItem(
+        name = "blazing_rocket",
+        material = Material.FIREWORK_ROCKET,
+        displayName = Component.text("Blazing Rocket", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
+        lore = listOf(Component.text("This rocket has a chance to explode!", TextColor.color(255, 55, 55)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.BLAZING_ROCKET
+    )
 
 }
 
