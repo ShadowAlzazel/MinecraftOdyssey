@@ -3,8 +3,8 @@ package me.shadowalzazel.mcodyssey.listeners.unused
 import me.shadowalzazel.mcodyssey.constants.Identifiers.ODYSSEY_ENHANCED_MOB_HEALTH_UUID
 import me.shadowalzazel.mcodyssey.constants.Identifiers.ODYSSEY_GILDED_MOB_HEALTH_UUID
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.items.Runic
-import me.shadowalzazel.mcodyssey.items.Runic.createEnchantedBook
+import me.shadowalzazel.mcodyssey.items.Arcane
+import me.shadowalzazel.mcodyssey.items.Arcane.createEnchantedBook
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Material
@@ -44,7 +44,7 @@ object OdysseySpawningListeners : Listener {
             // Add Item or enchant
             equipment!!.also {
                 if (it.itemInMainHand.type != Material.AIR) { it.itemInMainHand.addUnsafeEnchantment(gildedAffix, gildedAffix.maximumLevel) }
-                else { it.setItemInMainHand(Runic.GILDED_BOOK.createEnchantedBook(gildedAffix, gildedAffix.startLevel)) }
+                else { it.setItemInMainHand(Arcane.GILDED_BOOK.createEnchantedBook(gildedAffix, gildedAffix.startLevel)) }
                 it.itemInMainHandDropChance = 0.35F
             }
 

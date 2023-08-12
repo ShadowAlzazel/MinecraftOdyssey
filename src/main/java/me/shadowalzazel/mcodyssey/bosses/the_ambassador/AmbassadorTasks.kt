@@ -7,23 +7,23 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
 
-class AmbassadorHijackTasks(private val ambassadorEntity: Illusioner) : BukkitRunnable() {
+class AmbassadorHijackTasks(private val entity: Illusioner) : BukkitRunnable() {
 
     private var counter = 0
     override fun run() {
         counter += 1
         if (counter > 6) {
-            ambassadorEntity.addPotionEffect(PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 10, 1))
-            ambassadorEntity.teleport(ambassadorEntity.location.add(0.0, 8.0, 0.0))
+            entity.addPotionEffect(PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 10, 1))
+            entity.teleport(entity.location.add(0.0, 8.0, 0.0))
             this.cancel()
         }
     }
 }
 
 
-class AmbassadorSingularity(private val someStand: ArmorStand) : BukkitRunnable() {
+class RemoveSingularityStand(private val stand: ArmorStand) : BukkitRunnable() {
     override fun run() {
-        someStand.remove()
+        stand.remove()
     }
 
 }
@@ -31,14 +31,14 @@ class AmbassadorSingularity(private val someStand: ArmorStand) : BukkitRunnable(
 
 class AmbassadorDepartTask : BukkitRunnable() {
     override fun run() {
-        if (Odyssey.instance.currentBoss is AmbassadorBoss) {
-            val ambassadorBoss = Odyssey.instance.currentBoss as AmbassadorBoss
+        if (Odyssey.instance.worldBoss is AmbassadorBoss) {
+            val ambassadorBoss = Odyssey.instance.worldBoss as AmbassadorBoss
             if (ambassadorBoss.bossActive && ambassadorBoss.bossEntity != null) {
                 ambassadorBoss.departBoss()
                 Odyssey.instance.also {
                     it.isBossActive = false
                     it.isAmbassadorDefeated = true
-                    it.currentBoss = null
+                    it.worldBoss = null
                 }
                 this.cancel()
             }
@@ -52,8 +52,8 @@ class AmbassadorDepartTask : BukkitRunnable() {
 class AmbassadorAttackCycle(private val ambassadorEntity: Illusioner) : BukkitRunnable() {
 
     override fun run() {
-        if (Odyssey.instance.currentBoss is AmbassadorBoss) {
-            val ambassadorBoss = Odyssey.instance.currentBoss as AmbassadorBoss
+        if (Odyssey.instance.worldBoss is AmbassadorBoss) {
+            val ambassadorBoss = Odyssey.instance.worldBoss as AmbassadorBoss
             if (!ambassadorEntity.isDead && ambassadorEntity == ambassadorBoss.bossEntity!! && ambassadorBoss.bossActive) {
                 ambassadorBoss.attackPatterns()
             }

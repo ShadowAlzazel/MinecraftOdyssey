@@ -55,7 +55,7 @@ object MeleeListeners : Listener {
             // When match
             when (enchant.key) {
                 OdysseyEnchantments.ARCANE_CELL -> {
-                    if (cooldownManager(attacker, "Runic Cell", arcaneCellCooldown, 5.25)) {
+                    if (cooldownManager(attacker, "Arcane Cell", arcaneCellCooldown, 5.25)) {
                         arcaneCellEnchantment(victim, enchant.value)
                     }
                 }
@@ -463,7 +463,8 @@ object MeleeListeners : Listener {
     private fun guardingStrikeEnchantment(attacker: LivingEntity, enchantmentStrength: Int) {
         with(attacker) {
             // TODO: Add proper effect that adds raw armor
-            if (velocity.length() < 0.3) {
+            val isCrouching = attacker is Player && attacker.isSneaking
+            if (velocity.length() < 0.2 || isCrouching) {
                 addPotionEffect(PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, (3 + (enchantmentStrength * 2)) * 20, 0))
             }
             // Particles and Sounds

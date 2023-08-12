@@ -10,7 +10,7 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object Runic {
+object Arcane {
 
     // Extension function to create enchanted books when this is called
     fun OdysseyItem.createEnchantedBook(someEnchant: Enchantment, level: Int): ItemStack {
@@ -124,5 +124,17 @@ object Runic {
             Component.text("Requires at least four regular enchantments", TextColor.color(169, 48, 48))
                 .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.TOME_OF_AVARICE)
+
+    val TOME_OF_POLYMERIZATION = OdysseyItem(
+        name = "tome_of_polymerization",
+        material = Material.ENCHANTED_BOOK,
+        displayName = Component.text("Tome of Polymerization", TextColor.color(255, 170, 0), TextDecoration.ITALIC),
+        lore = listOf(
+            Component.text("Can absorb any non conflicting enchantment.", TextColor.color(250, 128, 148))
+                .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE),
+            Component.text("Applies the stored enchantments to an item with no cost", TextColor.color(150, 228, 148))
+                .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.TOME_OF_AVARICE)
+
 
 }

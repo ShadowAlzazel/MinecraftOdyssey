@@ -51,6 +51,7 @@ object ItemModels {
     const val TOME_OF_INFUSION: Int = 6906074
     const val TOME_OF_EUPHONY: Int = 6906075
     const val TOME_OF_AVARICE: Int = 6906076
+    const val TOME_OF_POLYMERIZATION: Int = 6906077
 
     /* ---------------------------------------------------------------------------------------------- */
     /* --------------------------------------------FOODS--------------------------------------------- */

@@ -15,8 +15,8 @@ object HogRiderListeners : Listener {
     @EventHandler
     fun onHogTakeDamage(event: EntityDamageByEntityEvent) {
         if (Odyssey.instance.isBossActive) {
-            if (Odyssey.instance.currentBoss is HogRiderBoss) {
-                val hogRiderBoss = Odyssey.instance.currentBoss as HogRiderBoss
+            if (Odyssey.instance.worldBoss is HogRiderBoss) {
+                val hogRiderBoss = Odyssey.instance.worldBoss as HogRiderBoss
                 val hogRiderBossID = hogRiderBoss.bossEntityRider!!.uniqueId
 
                 if (event.entity is Hoglin) {
@@ -38,8 +38,8 @@ object HogRiderListeners : Listener {
     @EventHandler
     fun onHogRiderDeath(event: EntityDeathEvent) {
         if (Odyssey.instance.isBossActive) {
-            if (Odyssey.instance.currentBoss is HogRiderBoss) {
-                val hogRiderBoss = Odyssey.instance.currentBoss as HogRiderBoss
+            if (Odyssey.instance.worldBoss is HogRiderBoss) {
+                val hogRiderBoss = Odyssey.instance.worldBoss as HogRiderBoss
                 val hogRiderBossID = hogRiderBoss.bossEntityRider!!.uniqueId
                 if (event.entity.uniqueId == hogRiderBossID) {
                     // Check if Player Kill
@@ -47,7 +47,7 @@ object HogRiderListeners : Listener {
                         //hogRiderBoss.defeatedBoss(hogRiderBoss.bossEntity!!, event.entity.killer as Player)
                         Odyssey.instance.isBossActive = false
                         Odyssey.instance.isAmbassadorDefeated = true
-                        Odyssey.instance.currentBoss = null
+                        Odyssey.instance.worldBoss = null
                         Odyssey.instance.bossDespawnTimer = System.currentTimeMillis()
                     }
                     // Last Hit
@@ -58,7 +58,7 @@ object HogRiderListeners : Listener {
                                 //hogRiderBoss.defeatedBoss(hogRiderBoss.bossEntity!!, vanquisher)
                                 Odyssey.instance.isBossActive = false
                                 Odyssey.instance.isAmbassadorDefeated = true
-                                Odyssey.instance.currentBoss = null
+                                Odyssey.instance.worldBoss = null
                                 Odyssey.instance.bossDespawnTimer = System.currentTimeMillis()
                             }
                             else {

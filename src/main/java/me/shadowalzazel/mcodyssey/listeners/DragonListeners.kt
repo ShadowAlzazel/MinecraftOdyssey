@@ -28,11 +28,9 @@ object DragonListeners : Listener {
                 return
             }
             else ->{
-
             }
         }
 
-        println("NEW PHASE: ${event.newPhase}")
         when (event.newPhase) {
             EnderDragon.Phase.ROAR_BEFORE_ATTACK -> {
                 event.entity.getNearbyEntities(24.0, 16.0, 24.0).forEach {

@@ -1,7 +1,6 @@
 package me.shadowalzazel.mcodyssey.mobs.neutral
 
 import me.shadowalzazel.mcodyssey.mobs.base.OdysseyMob
-import me.shadowalzazel.mcodyssey.recipe_creators.Merchant
 import me.shadowalzazel.mcodyssey.recipe_creators.merchant.Sales
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor

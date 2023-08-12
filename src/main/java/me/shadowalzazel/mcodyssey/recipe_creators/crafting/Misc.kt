@@ -2,9 +2,9 @@ package me.shadowalzazel.mcodyssey.recipe_creators.crafting
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.constants.ItemModels
+import me.shadowalzazel.mcodyssey.items.Arcane
 import me.shadowalzazel.mcodyssey.items.Ingredients
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
-import me.shadowalzazel.mcodyssey.items.Runic
 import me.shadowalzazel.mcodyssey.items.Templates
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -50,7 +50,7 @@ class Misc {
     }
 
     private fun arcaneBookRecipe(): ShapedRecipe {
-        val result = Runic.ARCANE_BOOK.createItemStack(1)
+        val result = Arcane.ARCANE_BOOK.createItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "arcane_book"), result).apply {
             shape(" A ", "ABA", " AC")
             setIngredient('A', Material.AMETHYST_SHARD)

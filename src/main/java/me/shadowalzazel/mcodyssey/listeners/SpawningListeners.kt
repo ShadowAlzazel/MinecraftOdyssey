@@ -6,24 +6,17 @@ import me.shadowalzazel.mcodyssey.constants.Identifiers
 import me.shadowalzazel.mcodyssey.listeners.tasks.PiglinRallyTask
 import me.shadowalzazel.mcodyssey.mobs.neutral.DubiousDealer
 import me.shadowalzazel.mcodyssey.recipe_creators.merchant.Sales
-import org.bukkit.HeightMap
 import org.bukkit.Material
 import org.bukkit.MusicInstrument
 import org.bukkit.Sound
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
-import org.bukkit.entity.EntityType
-import org.bukkit.entity.Illager
-import org.bukkit.entity.PiglinBrute
-import org.bukkit.entity.Player
-import org.bukkit.entity.Vindicator
-import org.bukkit.entity.WanderingTrader
+import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause
-import org.bukkit.event.entity.EntityTargetEvent
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent
 import org.bukkit.event.world.ChunkPopulateEvent
 import org.bukkit.inventory.ItemStack
@@ -57,8 +50,6 @@ object SpawningListeners : Listener {
 
             }
         }
-
-
     }
 
 
@@ -92,7 +83,6 @@ object SpawningListeners : Listener {
     }
 
     // INCENDIUM
-
     private fun handleSanctumSpawn(illager: Illager) {
         (illager.world.spawnEntity(illager.location, illager.type, CreatureSpawnEvent.SpawnReason.CUSTOM) as Illager).apply {
             isPersistent = true

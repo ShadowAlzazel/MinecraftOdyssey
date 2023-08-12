@@ -3,7 +3,7 @@ package me.shadowalzazel.mcodyssey.listeners
 import me.shadowalzazel.mcodyssey.constants.Identifiers
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.ItemTags
-import me.shadowalzazel.mcodyssey.constants.ItemTags.ENGRAVED
+import me.shadowalzazel.mcodyssey.constants.ItemTags.addStringTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
 import me.shadowalzazel.mcodyssey.items.Ingredients
@@ -14,6 +14,7 @@ import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
+import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.PrepareSmithingEvent
@@ -25,59 +26,60 @@ import org.bukkit.inventory.meta.trim.TrimMaterial
 
 object SmithingListeners : Listener {
 
-    // TODO: Handler upgrading tools using 1.20 smithing table!
-    // Handle weapon quality
+    private val AMETHYST_COLOR = TextColor.color(141, 109, 209)
 
-    private val AMETHYST_COLOR = TextColor.color(1141, 109, 209)
+    private fun LivingEntity.sendFailMessage(reason: String) {
+        this.sendActionBar(
+            Component.text(
+                reason,
+                AMETHYST_COLOR
+            )
+        )
+    }
+
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
 
     @EventHandler
     fun smithingHandler(event: PrepareSmithingEvent) {
         val recipe = event.inventory.recipe ?: return
 
         // Avoid Conflict with enchanting tomes
-        if (recipe.result.type == Material.ENCHANTED_BOOK) { return }
+        if (recipe.result.type == Material.ENCHANTED_BOOK) return
         // Check Equipment
-        if (event.inventory.inputEquipment == null) { return }
+        if (event.inventory.inputEquipment == null) return
         val equipment = event.inventory.inputEquipment!!
         // Make Sure Recipe has result
-        if (event.result == null) { return }
-        val eventResult = event.result!!
+        if (event.result == null) return
+        val result = event.result!!
         val addition = event.inventory.inputMineral!!
 
         /*-----------------------------------------------------------------------------------------------*/
-        /*-----------------------------------------------------------------------------------------------*/
         // Engraving
-        if (eventResult.type == Material.AMETHYST_SHARD) {
-            val engraved = equipment.clone()
-            if (engraved.hasTag(ENGRAVED)) {
+        if (result.type == Material.AMETHYST_SHARD && addition.type == Material.AMETHYST_SHARD) {
+            val isEngraved = equipment.hasTag(ItemTags.IS_ENGRAVED)
+            if (isEngraved) {
+                event.viewers.forEach { it.sendFailMessage("This Item Is Already Engraved!") }
                 event.result = ItemStack(Material.AIR)
                 return
             }
-            engraved.also {
-                it.addTag(ENGRAVED)
-                val itemLore = it.lore()
-                val forgerLore = mutableListOf(Component.text(""))
-                for (viewer in event.viewers) {
-                    forgerLore.add(Component.text("Created by ${viewer.name}",
-                        AMETHYST_COLOR,
-                        TextDecoration.ITALIC))
+            event.result = equipment.clone().also {
+                if (it.amount > 1) it.amount = 1
+                it.addTag(ItemTags.IS_ENGRAVED)
+                val newLore = it.itemMeta.lore() ?: mutableListOf()
+                for (engraver in event.viewers) {
+                    it.addStringTag(ItemTags.ENGRAVED_BY, engraver.name)
+                    val engraving = Component.text("Created by ${engraver.name}", AMETHYST_COLOR, TextDecoration.ITALIC)
+                    newLore.add(engraving)
                 }
-                if (itemLore == null) {
-                    it.lore(forgerLore as List<Component>?)
-                }
-                else {
-                    //if (itemLore.contains(Component.text(""))
-                    it.lore(itemLore + forgerLore)
-                }
+                it.lore(newLore)
             }
-            event.result = engraved
             return
         }
 
         /*-----------------------------------------------------------------------------------------------*/
-        /*-----------------------------------------------------------------------------------------------*/
         // Soul Steel
-        if (eventResult.type == Material.IRON_INGOT) {
+        if (result.type == Material.IRON_INGOT) {
             event.result = ItemStack(Material.AIR)
             if (!addition.hasItemMeta()) return
             if (!addition.itemMeta.hasCustomModelData()) return
@@ -86,7 +88,7 @@ object SmithingListeners : Listener {
             if (equipment.hasTag(ItemTags.SOUL_STEEL_TOOL)) return
             val equipmentModel = equipment.itemMeta.customModelData
 
-            // TEMP
+            // Temporary Maps -> Move to seperate Enums
             val ironToSoulSteelMap = mapOf(
                 ItemModels.KATANA to ItemModels.SOUL_STEEL_KATANA,
                 ItemModels.CLAYMORE to ItemModels.SOUL_STEEL_CLAYMORE,
@@ -148,10 +150,9 @@ object SmithingListeners : Listener {
         }
 
         /*-----------------------------------------------------------------------------------------------*/
-        /*-----------------------------------------------------------------------------------------------*/
         // Trims
-        if (eventResult.itemMeta is ArmorMeta) {
-            val armorMeta = eventResult.itemMeta as ArmorMeta
+        if (result.itemMeta is ArmorMeta) {
+            val armorMeta = result.itemMeta as ArmorMeta
             val count = event.inventory.inputMineral!!.amount
             val newTrimMaterial: TrimMaterial
 
@@ -175,7 +176,7 @@ object SmithingListeners : Listener {
                     newTrimMaterial = Trims.SOUL_STEEL
                 }
                 ItemStack(Material.OBSIDIAN, count) -> {
-                    // CURRENTLY DOES NOT WORK AS NO EVENT RESULT IS MADE
+                    // TODO: CURRENTLY DOES NOT WORK AS NO EVENT RESULT IS MADE
                     newTrimMaterial = Trims.OBSIDIAN
                 }
                 else -> {
@@ -192,9 +193,8 @@ object SmithingListeners : Listener {
         }
 
         /*-----------------------------------------------------------------------------------------------*/
-        /*-----------------------------------------------------------------------------------------------*/
         // Netherite
-        if (addition.type == Material.NETHERITE_INGOT && eventResult.itemMeta.hasCustomModelData()) {
+        if (addition.type == Material.NETHERITE_INGOT && result.itemMeta.hasCustomModelData()) {
             val newItem = event.inventory.result!!.clone()
             if (newItem.hasTag(ItemTags.NETHERITE_TOOL)) return
             val oldDamageModifier = newItem.itemMeta.getAttributeModifiers(Attribute.GENERIC_ATTACK_DAMAGE)?.first {
@@ -217,9 +217,8 @@ object SmithingListeners : Listener {
         }
 
         /*-----------------------------------------------------------------------------------------------*/
-        /*-----------------------------------------------------------------------------------------------*/
         // CURRENTLY DOES MC DOES NOT COPY RESULT NBT
-        if (!eventResult.itemMeta.hasCustomModelData()) {
+        if (!result.itemMeta.hasCustomModelData()) {
             // Check Recipes
             if (!recipe.result.hasItemMeta()) { return }
             if (!recipe.result.itemMeta.hasCustomModelData()) { return }

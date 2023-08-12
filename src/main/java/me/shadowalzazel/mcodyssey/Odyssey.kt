@@ -9,7 +9,6 @@ import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.ArmorListeners
 import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.MeleeListeners
 import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.MiscListeners
 import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.RangedListeners
-import me.shadowalzazel.mcodyssey.listeners.unused.OdysseyMobListeners
 import me.shadowalzazel.mcodyssey.phenomenon.base.OdysseyPhenomenon
 import me.shadowalzazel.mcodyssey.recipe_creators.RecipeManager
 import org.bukkit.Bukkit
@@ -44,7 +43,7 @@ class Odyssey : JavaPlugin(), AssetManager {
     var isAmbassadorDefeated: Boolean = true
 
     // Boss Mechanics
-    var currentBoss: OdysseyBoss? = null
+    var worldBoss: OdysseyBoss? = null
     var isBossActive: Boolean = false
     var timeSinceBoss: Long = System.currentTimeMillis()
     var bossDespawnTimer: Long = System.currentTimeMillis()
@@ -66,7 +65,6 @@ class Odyssey : JavaPlugin(), AssetManager {
     // Plugin startup logic
     override fun onEnable() {
         val timerStart: Long = System.currentTimeMillis()
-
         // Config start up
         config.options().copyDefaults()
         saveConfig()
@@ -109,7 +107,6 @@ class Odyssey : JavaPlugin(), AssetManager {
             RangedListeners,
             ScoreboardTagListeners,
             LootListeners,
-            OdysseyMobListeners,
             FoodListeners,
             WeaponListeners,
             SpawningListeners,
@@ -140,8 +137,6 @@ class Odyssey : JavaPlugin(), AssetManager {
     override fun onDisable() {
         // Plugin shutdown logic
         logger.info("The Odyssey will wait another day...")
-
-        // TODO: Add Saving OdysseyOccurrenceCreator
     }
 
 
