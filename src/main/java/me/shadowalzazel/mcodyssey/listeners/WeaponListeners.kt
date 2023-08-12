@@ -112,7 +112,7 @@ object WeaponListeners : Listener {
 
         when (model) {
             ItemModels.SICKLE, ItemModels.SOUL_STEEL_SICKLE -> {
-                if (offHandWeapon.itemMeta?.customModelData == ItemModels.SICKLE) {
+                if (offHandWeapon.itemMeta?.hasCustomModelData() == true && offHandWeapon.itemMeta.customModelData == ItemModels.SICKLE) {
                     victim.shieldBlockingDelay = 20
                 }
             }

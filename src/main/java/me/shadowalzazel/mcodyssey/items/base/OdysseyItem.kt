@@ -1,12 +1,18 @@
 package me.shadowalzazel.mcodyssey.items.base
 
 import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.constants.ItemTags
+import me.shadowalzazel.mcodyssey.constants.ItemTags.addIntTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
+import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.items.utility.WeaponMaterial
 import me.shadowalzazel.mcodyssey.items.utility.WeaponType
+import me.shadowalzazel.mcodyssey.listeners.EnchantingListeners.updateSlotLore
 import net.kyori.adventure.text.Component
 import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.persistence.PersistentDataType
@@ -22,19 +28,34 @@ data class OdysseyItem(
     internal val weaponMaterial: WeaponMaterial? = null,
     internal val weaponType: WeaponType? = null,
     internal val potionEffects: List<PotionEffect>? = null,
-    internal val potionColor: Color? = null) {
+    internal val potionColor: Color? = null,
+    internal val enchantments: MutableMap<Enchantment, Int>? = null
+) {
 
     fun createItemStack(amount: Int): ItemStack {
-        val newItemStack = ItemStack(material, amount)
+        val itemStack = ItemStack(material, amount)
         // On item meta; Add lore, display name, custom model, damage stats, effects, color if applicable
-        newItemStack.itemMeta = (newItemStack.itemMeta as ItemMeta).also {
+        var enchantSlots = 0
+        var gildedSlots = 0
+        itemStack.itemMeta = (itemStack.itemMeta as ItemMeta).also {
             if (displayName != null) { it.displayName(displayName) }
             if (lore != null) { it.lore(lore) }
             if (customModel != null) { it.setCustomModelData(customModel) }
-            //if (enchantments != null) { for (enchant in enchantments) { it.addEnchant(enchant.key, enchant.value, true) } }
+            if (enchantments != null) {
+                for (enchant in enchantments) {
+                    if (enchant.key is OdysseyEnchantment) { gildedSlots += 1 } else { enchantSlots += 1 }
+                    it.addEnchant(enchant.key, enchant.value, true)
+                }
+            }
             it.persistentDataContainer.set(NamespacedKey(Odyssey.instance, "item"), PersistentDataType.STRING, name)
         }
-        return newItemStack
+        if (enchantments != null) {
+            itemStack.addTag(ItemTags.IS_SLOTTED)
+            itemStack.addIntTag(ItemTags.ENCHANT_SLOTS, enchantSlots)
+            itemStack.addIntTag(ItemTags.GILDED_SLOTS, enchantSlots)
+            itemStack.updateSlotLore()
+        }
+        return itemStack
     }
 
 

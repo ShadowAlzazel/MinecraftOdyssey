@@ -5,6 +5,7 @@ import me.shadowalzazel.mcodyssey.bosses.base.OdysseyBoss
 import me.shadowalzazel.mcodyssey.constants.EffectTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.constants.Identifiers
+import me.shadowalzazel.mcodyssey.items.Exotics
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
 import me.shadowalzazel.mcodyssey.items.Weapons
 import me.shadowalzazel.mcodyssey.tasks.GravityWellTask
@@ -16,6 +17,7 @@ import org.bukkit.*
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.entity.*
+import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import java.util.*
@@ -115,13 +117,20 @@ class TheAmbassador(location: Location) : OdysseyBoss(
             isCanJoinRaid = false
             isAware = false
             canPickupItems = true
+            equipment.helmet = ItemStack(Material.DIAMOND_HELMET)
+            equipment.chestplate = ItemStack(Material.DIAMOND_CHESTPLATE)
+            equipment.leggings = ItemStack(Material.DIAMOND_LEGGINGS)
+            equipment.boots = ItemStack(Material.DIAMOND_BOOTS)
+            equipment.itemInMainHandDropChance = 100F
             // Health
-            val extraHealth = AttributeModifier(Identifiers.ODYSSEY_BOSS_HEALTH_UUID, "odyssey.mob_health", 930.0, AttributeModifier.Operation.ADD_NUMBER)
+            val extraHealth = AttributeModifier(Identifiers.ODYSSEY_BOSS_HEALTH_UUID, "odyssey.boss_health", 930.0, AttributeModifier.Operation.ADD_NUMBER)
             getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.addModifier(extraHealth)
+            val extraArmor = AttributeModifier(Identifiers.ODYSSEY_BOSS_ARMOR_UUID, "odyssey.boss_armor", 6.0, AttributeModifier.Operation.ADD_NUMBER)
+            getAttribute(Attribute.GENERIC_ARMOR)!!.addModifier(extraArmor)
             health = 950.0
             // Add Kinetic Blaster
             clearActiveItem()
-            equipment.setItemInMainHand(Weapons.KINETIC_BLASTER.createItemStack(1))
+            equipment.setItemInMainHand(Exotics.KINETIC_BLASTER.createItemStack(1))
         }
     }
 
@@ -163,7 +172,7 @@ class TheAmbassador(location: Location) : OdysseyBoss(
             it.playSound(it, Sound.ENTITY_WITHER_SPAWN, 1.0F, 1.0F)
         }
         (entity as Illusioner).isAware = true
-        AmbassadorAttackCycle().runTaskTimer(Odyssey.instance, 0, 20 * 10)
+        AmbassadorAttackCycle().runTaskTimer(Odyssey.instance, 0, 20 * 7)
     }
 
     // Spawn a dummy clone
@@ -183,7 +192,8 @@ class TheAmbassador(location: Location) : OdysseyBoss(
             )
             // Add Item
             clearActiveItem()
-            equipment.setItemInMainHand(Weapons.KINETIC_BLASTER.createItemStack(1))
+            equipment.setItemInMainHand(Exotics.KINETIC_BLASTER.createItemStack(1))
+            equipment.itemInMainHandDropChance = 0F
         }
     }
 
@@ -203,7 +213,7 @@ class TheAmbassador(location: Location) : OdysseyBoss(
                 )
             }
             fireworkMeta.power = 120
-            ticksToDetonate = 20 * 2
+            ticksToDetonate = 40
             velocity = targetLocation.clone().add(0.0, -1.918, 0.0).subtract(targetLocation).toVector()
             addScoreboardTag(EntityTags.SUPER_FIREWORK)
         }
@@ -212,8 +222,8 @@ class TheAmbassador(location: Location) : OdysseyBoss(
 
     // Calls fireworks from the sky
     private fun skyBombardAttack(targetLocation: Location) {
-        // Spawn 5 random fireworks
-        repeat(5) {
+        // Spawn 7 random fireworks
+        repeat(7) {
             createSuperFirework(targetLocation.clone().add((-5..5).random().toDouble(), (35..45).random().toDouble(), (-5..5).random().toDouble()))
         }
     }
@@ -230,19 +240,18 @@ class TheAmbassador(location: Location) : OdysseyBoss(
             addScoreboardTag(EntityTags.FALLING_SINGULARITY)
             addPotionEffect(PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 300, 0))
         }
-        GravityWellTask(fallingSingularity, illusioner, 4, 30).runTaskTimer(Odyssey.instance, 0, 10)
+        GravityWellTask(fallingSingularity, illusioner, 10, 30).runTaskTimer(Odyssey.instance, 0, 10)
         RemoveSingularityStand(fallingSingularity).runTaskLater(Odyssey.instance, 33 * 10)
     }
 
     // Spawn a vortex that launches players
     private fun gravityLaunchAttack(targetLocation: Location) {
         targetLocation.getNearbyPlayers(7.5).forEach {
-            it.damage(15.5, entity)
+            it.damage(18.0, entity)
             it.addPotionEffects(listOf(
                 PotionEffect(PotionEffectType.LEVITATION, 20 * 8, 0),
                 PotionEffect(PotionEffectType.WEAKNESS, 20 * 5, 0)
             ))
-
             // Sounds and Effects
             it.playSound(it, Sound.ENTITY_EVOKER_PREPARE_WOLOLO, 1.3F, 1.1F)
             it.playSound(it, Sound.ITEM_TRIDENT_THUNDER, 2.5F, 0.8F)
@@ -259,6 +268,7 @@ class TheAmbassador(location: Location) : OdysseyBoss(
         with(target) {
             teleport(entity.location)
             addPassenger(entity)
+            damage(2.0, entity)
             playSound(this, Sound.ENTITY_ENDERMAN_TELEPORT, 0.8F, 1.0F)
             playSound(this, Sound.ENTITY_EVOKER_PREPARE_WOLOLO, 1.0F, 1.1F)
             playSound(this, Sound.ENTITY_ELDER_GUARDIAN_CURSE, 0.8F, 0.9F)

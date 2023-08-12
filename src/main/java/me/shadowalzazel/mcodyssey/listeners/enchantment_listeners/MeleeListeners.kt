@@ -453,7 +453,7 @@ object MeleeListeners : Listener {
     private fun gravityWellEnchantment(
         attacker: LivingEntity,
         victim: LivingEntity,
-        enchantmentStrength: Int
+        level: Int
     ) {
         // Victim Effects
         with(victim) {
@@ -463,7 +463,7 @@ object MeleeListeners : Listener {
             // Task
             addScoreboardTag(EffectTags.GRAVITY_WELLED)
             val gravityWellTask =
-                GravityWellTask(victim, attacker, enchantmentStrength * 1, ((enchantmentStrength * 2) + 2) * 2)
+                GravityWellTask(victim, attacker, (level * 1) + 1, ((level * 2) + 2) * 2)
             gravityWellTask.runTaskTimer(Odyssey.instance, 0, 10)
         }
 

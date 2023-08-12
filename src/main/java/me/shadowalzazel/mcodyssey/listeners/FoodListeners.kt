@@ -2,6 +2,7 @@ package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.constants.ItemTags.getOdysseyTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.hasOdysseyTag
+import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerItemConsumeEvent
@@ -14,9 +15,14 @@ object FoodListeners : Listener {
     // Main Function for food related consumption events
     @EventHandler
     fun eatingOdysseyFood(event: PlayerItemConsumeEvent) {
+        // Buffed Golden Apples
+        if (event.item.type == Material.ENCHANTED_GOLDEN_APPLE) {
+            event.player.addPotionEffect(PotionEffect(PotionEffectType.REGENERATION, 20 * 20, 3))
+            event.player.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION, 120 * 20, 4))
+        }
+
         if (!event.item.hasOdysseyTag()) {
             return
-            //println(event.item.itemMeta.persistentDataContainer[NamespacedKey(Odyssey.instance, "item"), PersistentDataType.STRING])
         }
         if (!event.item.itemMeta.hasCustomModelData()) {
             return
