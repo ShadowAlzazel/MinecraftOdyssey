@@ -29,7 +29,4 @@ object BeastlyBrawler : OdysseyEnchantment("beastly_brawler", "Beastly Brawler",
             }
         }
     }
-
-
-    // TODO: If there are at least 5 enemies nearby when hit, gain damage
 }

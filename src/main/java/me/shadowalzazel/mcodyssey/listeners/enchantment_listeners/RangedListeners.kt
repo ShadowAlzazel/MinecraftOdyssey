@@ -11,9 +11,9 @@ import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.removeTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.setUUIDTag
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.listeners.tasks.BurstBarrageTask
-import me.shadowalzazel.mcodyssey.listeners.tasks.GaleWindTask
-import me.shadowalzazel.mcodyssey.listeners.tasks.OverchargeTask
+import me.shadowalzazel.mcodyssey.tasks.BurstBarrageTask
+import me.shadowalzazel.mcodyssey.tasks.GaleWindTask
+import me.shadowalzazel.mcodyssey.tasks.OverchargeTask
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Material
@@ -341,7 +341,7 @@ object RangedListeners : Listener {
                     it.velocity = chainVelocity
                 }
             }
-            // TODO: Maybe shoot back!? both directions
+            // TODO: Maybe shoot back!? both directions, Static Shiv
         }
     }
 

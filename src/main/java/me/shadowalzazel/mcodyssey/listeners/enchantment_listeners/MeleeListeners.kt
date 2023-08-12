@@ -5,10 +5,10 @@ import me.shadowalzazel.mcodyssey.constants.EffectTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.effects.OdysseyEffectsHandler
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.listeners.tasks.ArcaneCellTask
-import me.shadowalzazel.mcodyssey.listeners.tasks.FrogFrightTask
-import me.shadowalzazel.mcodyssey.listeners.tasks.FrostyFuseTask
-import me.shadowalzazel.mcodyssey.listeners.tasks.GravityWellTask
+import me.shadowalzazel.mcodyssey.tasks.ArcaneCellTask
+import me.shadowalzazel.mcodyssey.tasks.FrogFrightTask
+import me.shadowalzazel.mcodyssey.tasks.FrostyFuseTask
+import me.shadowalzazel.mcodyssey.tasks.GravityWellTask
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.*
@@ -30,7 +30,7 @@ object MeleeListeners : Listener {
     private var arcaneCellCooldown = mutableMapOf<UUID, Long>()
     private var backstabberCooldown = mutableMapOf<UUID, Long>()
     private var buzzyBeesCooldown = mutableMapOf<UUID, Long>()
-    private var decayingTouchCooldown = mutableMapOf<UUID, Long>()
+    //private var decayingTouchCooldown = mutableMapOf<UUID, Long>()
     private var explodingCooldown = mutableMapOf<UUID, Long>()
     private var frostyFuseCooldown = mutableMapOf<UUID, Long>()
     private var gravityWellCooldown = mutableMapOf<UUID, Long>()
@@ -59,6 +59,9 @@ object MeleeListeners : Listener {
                         arcaneCellEnchantment(victim, enchant.value)
                     }
                 }
+                OdysseyEnchantments.ASPHYXIATING_ASSAULT -> {
+                    event.damage += asphyxiatingAssaultEnchantment(victim, enchant.value)
+                }
                 OdysseyEnchantments.BACKSTABBER -> {
                     if (cooldownManager(attacker, "Backstabber", backstabberCooldown, 3.25)) {
                         event.damage += backstabberEnchantment(attacker, victim, enchant.value)
@@ -85,9 +88,7 @@ object MeleeListeners : Listener {
                     event.damage += cullTheWeakEnchantment(victim, enchant.value)
                 }
                 OdysseyEnchantments.DECAYING_TOUCH -> {
-                    if (cooldownManager(attacker, "Decaying Touch", decayingTouchCooldown, 3.0)) {
-                        decayingTouchEnchantment(victim, enchant.value)
-                    }
+                    decayingTouchEnchantment(victim, enchant.value)
                 }
                 OdysseyEnchantments.DOUSE -> {
                     douseEnchantment(victim, enchant.value)
@@ -118,7 +119,7 @@ object MeleeListeners : Listener {
                 }
                 OdysseyEnchantments.HEMORRHAGE -> {
                     if (cooldownManager(attacker, "Hemorrhage", hemorrhageCooldown, 3.0)) {
-                        hemorrhageEnchantment(victim, enchant.value)
+                        hemorrhageEnchantment(victim, enchant.value) // MORE STACKS -> MORE DAMAGE PER INSTANCE
                     }
                 }
                 OdysseyEnchantments.ILLUCIDATION -> {
@@ -126,6 +127,9 @@ object MeleeListeners : Listener {
                 }
                 OdysseyEnchantments.RUPTURING_STRIKE -> {
                     event.damage -= rupturingStrikeEnchantment(attacker, victim, event.damage, enchant.value)
+                }
+                OdysseyEnchantments.SPORING_ROT -> {
+                    sporingRotEnchantment(victim, enchant.value) // MORE STACKS -> MORE INSTANCES
                 }
                 OdysseyEnchantments.VOID_STRIKE -> {
                     if (cooldownManager(attacker, "Void Strike", voidStrikeCooldown, 0.45)) {
@@ -192,21 +196,31 @@ object MeleeListeners : Listener {
     /*-----------------------------------------------------------------------------------------------*/
     /*-----------------------------------------------------------------------------------------------*/
 
+    // -------------------------- ASPHYXIATING_ASSAULT -------------------------------
+    private fun asphyxiatingAssaultEnchantment(
+        victim: LivingEntity,
+        level: Int
+    ): Double {
+        victim.remainingAir -= 20 * ((level * 2) + 3)
+        if (victim.remainingAir < 20) return 3.0
+        return 0.0
+    }
+
     // ------------------------------- ARCANE_CELL ------------------------------------
-    private fun arcaneCellEnchantment(victim: LivingEntity, enchantmentStrength: Int) {
+    private fun arcaneCellEnchantment(victim: LivingEntity, level: Int) {
         with(victim) {
             if (!scoreboardTags.contains(EffectTags.ARCANE_JAILED)) {
                 addPotionEffects(
                     listOf(
-                        PotionEffect(PotionEffectType.SLOW, (20 * ((enchantmentStrength * 2) + 2)), 4),
-                        PotionEffect(PotionEffectType.SLOW_DIGGING, (20 * ((enchantmentStrength * 2) + 2)), 3)
+                        PotionEffect(PotionEffectType.SLOW, (20 * ((level * 2) + 2)), 4),
+                        PotionEffect(PotionEffectType.SLOW_DIGGING, (20 * ((level * 2) + 2)), 3)
                     )
                 )
                 addScoreboardTag(EffectTags.ARCANE_JAILED)
                 // TODO: Make circle Particles and Sound
                 world.spawnParticle(Particle.SPELL_WITCH, location, 35, 1.0, 0.5, 1.0)
                 world.playSound(location, Sound.ENTITY_VEX_CHARGE, 1.5F, 0.5F)
-                ArcaneCellTask(victim, location, (2 + (enchantmentStrength * 2)) * 4).runTaskTimer(Odyssey.instance, 5, 5)
+                ArcaneCellTask(victim, location, (2 + (level * 2)) * 4).runTaskTimer(Odyssey.instance, 5, 5)
             }
         }
 
@@ -313,27 +327,24 @@ object MeleeListeners : Listener {
         }
     }
     // ------------------------------- DECAYING_TOUCH ------------------------------------
-    private fun decayingTouchEnchantment(victim: LivingEntity, enchantmentStrength: Int) {
-        with(victim) {
-            OdysseyEffectsHandler.decayingEffect(mutableListOf(this@with), 10, enchantmentStrength * 1)
-            world.playSound(location, Sound.BLOCK_BIG_DRIPLEAF_TILT_UP, 2.5F, 0.9F)
-        }
+    private fun decayingTouchEnchantment(victim: LivingEntity, level: Int) {
+       victim.addPotionEffect(PotionEffect(PotionEffectType.WITHER, (20 * ((level * 2))), 0))
     }
     // ------------------------------- DOUSE ------------------------------------
-    private fun douseEnchantment(victim: LivingEntity, enchantmentStrength: Int) {
+    private fun douseEnchantment(victim: LivingEntity, level: Int) {
         with(victim) {
-            OdysseyEffectsHandler.dousedEffect(mutableListOf(this@with), 10, enchantmentStrength * 1)
+            OdysseyEffectsHandler.dousedEffect(mutableListOf(this@with), 10, level * 1)
             world.playSound(location, Sound.ENTITY_BLAZE_SHOOT, 2.5F, 1.5F)
         }
     }
     // ------------------------------- ECHO ------------------------------------
-    private fun echoEnchantment(attacker: LivingEntity, victim: LivingEntity, enchantmentStrength: Int) {
+    private fun echoEnchantment(attacker: LivingEntity, victim: LivingEntity, level: Int) {
         // Prevent recursive call
         if (victim.scoreboardTags.contains(EntityTags.ECHO_STRUCK)) {
             victim.scoreboardTags.remove(EntityTags.ECHO_STRUCK)
             return
         }
-        if ((0..100).random() < enchantmentStrength * 20) {
+        if ((0..100).random() < level * 20) {
             if (!victim.isDead) {
                 // Swing
                 attacker.swingOffHand()
@@ -382,8 +393,6 @@ object MeleeListeners : Listener {
     }
     // ------------------------------- FEARFUL_FINISHER ------------------------------------
     private fun fearfulFinisherEnchantment(victim: LivingEntity, level: Int) {
-
-        // TODO: For all mobs nearby, find get vector from eye location to target, normalize, then (flip), set mob goal.
         val vector = victim.killer!!.eyeLocation.direction.clone().normalize()
         vector.y = 0.0
         vector.normalize().multiply((2 * level) + 2)
@@ -528,6 +537,13 @@ object MeleeListeners : Listener {
             damage
         }
         return rupturingDamage
+    }
+    // ------------------------------- DECAYING_TOUCH ------------------------------------
+    private fun sporingRotEnchantment(victim: LivingEntity, level: Int) {
+        with(victim) {
+            OdysseyEffectsHandler.rottingEffect(mutableListOf(this@with), 12, level * 1)
+            world.playSound(location, Sound.BLOCK_BIG_DRIPLEAF_TILT_UP, 2.5F, 0.9F)
+        }
     }
     // ------------------------------- VOID_STRIKE ------------------------------------
     // TODO: REDO

@@ -4,3 +4,9 @@ main: me.shadowalzazel.mcodyssey.Odyssey
 api-version: '1.20'
 authors: [ShadowAlzazel]
 description: A server side expansion pack for a new minecraft adventure!
+
+commands:
+  summon_boss:
+    description: "Summons and Odyssey Boss"
+    usage: /<command>
+    permission: op

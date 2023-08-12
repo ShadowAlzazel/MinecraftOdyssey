@@ -20,50 +20,51 @@ class AmbassadorHijackTasks(private val entity: Illusioner) : BukkitRunnable() {
     }
 }
 
-
 class RemoveSingularityStand(private val stand: ArmorStand) : BukkitRunnable() {
     override fun run() {
         stand.remove()
     }
-
 }
-
 
 class AmbassadorDepartTask : BukkitRunnable() {
     override fun run() {
-        if (Odyssey.instance.worldBoss is AmbassadorBoss) {
-            val ambassadorBoss = Odyssey.instance.worldBoss as AmbassadorBoss
-            if (ambassadorBoss.bossActive && ambassadorBoss.bossEntity != null) {
-                ambassadorBoss.departBoss()
-                Odyssey.instance.also {
-                    it.isBossActive = false
-                    it.isAmbassadorDefeated = true
-                    it.worldBoss = null
-                }
-                this.cancel()
+        val manager = Odyssey.instance.bossManager
+        if (manager.currentBoss !is TheAmbassador) {
+            this.cancel()
+            return
+        }
+        val ambassador = manager.currentBoss as TheAmbassador
+        if (ambassador.isActive) {
+            ambassador.departBoss()
+            manager.run {
+                hasBossActive = false
+                isAmbassadorDefeated = true
+                currentBoss = null
             }
-            else if (ambassadorBoss.removeBoss) {
-                this.cancel()
-            }
+            this.cancel()
+            return
+        }
+        if (ambassador.hasRemove) {
+            this.cancel()
+            return
         }
     }
 }
 
-class AmbassadorAttackCycle(private val ambassadorEntity: Illusioner) : BukkitRunnable() {
+class AmbassadorAttackCycle : BukkitRunnable() {
 
     override fun run() {
-        if (Odyssey.instance.worldBoss is AmbassadorBoss) {
-            val ambassadorBoss = Odyssey.instance.worldBoss as AmbassadorBoss
-            if (!ambassadorEntity.isDead && ambassadorEntity == ambassadorBoss.bossEntity!! && ambassadorBoss.bossActive) {
-                ambassadorBoss.attackPatterns()
-            }
-            else {
-                this.cancel()
-            }
-        }
-        else {
+        val manager = Odyssey.instance.bossManager
+        if (manager.currentBoss !is TheAmbassador) {
             this.cancel()
+            return
         }
+        val ambassador = manager.currentBoss as TheAmbassador
+        if (ambassador.illusioner.isDead) {
+            this.cancel()
+            return
+        }
+        // Run Attack
+        ambassador.runAttackPatterns()
     }
-
 }

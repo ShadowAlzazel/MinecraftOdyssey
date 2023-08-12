@@ -136,7 +136,7 @@ interface AlchemyManager {
                 }
                 EntityTags.DECAYING_CLOUD, Potions.FLASK_OF_DECAY.name -> {
                     duration = 30 / durationModifier
-                    OdysseyEffectsHandler.decayingEffect(affectedEntities, duration, 1)
+                    OdysseyEffectsHandler.rottingEffect(affectedEntities, duration, 1)
                 }
                 EntityTags.DOUSE_CLOUD, Potions.FLASK_OF_DOUSE.name -> {
                     duration = 40 / durationModifier
@@ -156,7 +156,7 @@ interface AlchemyManager {
                 }
                 EntityTags.PUFFJUICE_CLOUD, Potions.FLASK_OF_PUFFJUICE.name -> {
                     duration = 30 / durationModifier
-                    OdysseyEffectsHandler.decayingEffect(affectedEntities, duration, 1)
+                    OdysseyEffectsHandler.rottingEffect(affectedEntities, duration, 1)
                 }
                 EntityTags.ACCURSED_CLOUD, Potions.POLTERGEIST_BREW.name -> {
                     duration = 90 / durationModifier

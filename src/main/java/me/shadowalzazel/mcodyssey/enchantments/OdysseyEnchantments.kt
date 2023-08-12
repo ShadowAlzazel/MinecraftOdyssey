@@ -26,11 +26,11 @@ object OdysseyEnchantments {
     val DEVASTATING_DROP: OdysseyEnchantment = DevastatingDrop
     val DREADFUL_SHRIEK: OdysseyEnchantment = DreadfulShriek
     val FRUITFUL_FARE: OdysseyEnchantment = FruitfulFare
-    val IGNORE_PAIN: OdysseyEnchantment = IgnorePain // TODO
-    val ILLUMINEYE: OdysseyEnchantment = Illumineye // TODO
+    val IGNORE_PAIN: OdysseyEnchantment = IgnorePain
+    val ILLUMINEYE: OdysseyEnchantment = Illumineye
     val LEAP_FROG: OdysseyEnchantment = LeapFrog
-    val MOLTEN_CORE: OdysseyEnchantment = MoltenCore // TODO
-    val OPTICALIZATION: OdysseyEnchantment = Opticalization
+    val MOLTEN_CORE: OdysseyEnchantment = MoltenCore
+    val OPTICALIZATION: OdysseyEnchantment = Opticalization // TODO
     val POTION_BARRIER: OdysseyEnchantment = PotionBarrier
     val RAGING_ROAR: OdysseyEnchantment = RagingRoar
     val RECKLESS: OdysseyEnchantment = Reckless
@@ -41,13 +41,14 @@ object OdysseyEnchantments {
     val SPOREFUL: OdysseyEnchantment = Sporeful
     val SQUIDIFY: OdysseyEnchantment = Squidify
     val SSLITHER_SSIGHT: OdysseyEnchantment = SslitherSsight
-    val STATIC_SOCKS: OdysseyEnchantment = StaticSocks
-    val UNTOUCHABLE: OdysseyEnchantment = Untouchable // TODO
+    val STATIC_SOCKS: OdysseyEnchantment = StaticSocks // TODO
+    val UNTOUCHABLE: OdysseyEnchantment = Untouchable
     val VENGEFUL: OdysseyEnchantment = Vengeful // TODO
     val VICIOUS_VIGOR: OdysseyEnchantment = ViciousVigor // TODO
-    val WAR_CRY: OdysseyEnchantment = WarCry // TODO
+    val WAR_CRY: OdysseyEnchantment = WarCry
 
     // Melee
+    val ASPHYXIATING_ASSAULT: OdysseyEnchantment = AsphyxiatingAssault
     val ARCANE_CELL: OdysseyEnchantment = ArcaneCell
     val BACKSTABBER: OdysseyEnchantment = Backstabber
     val BANE_OF_THE_ILLAGER: OdysseyEnchantment = BaneOfTheIllager
@@ -62,13 +63,14 @@ object OdysseyEnchantments {
     val EXPLODING: OdysseyEnchantment = Exploding
     val FEARFUL_FINISHER: OdysseyEnchantment = FearfulFinisher
     val FREEZING_ASPECT: OdysseyEnchantment = FreezingAspect
-    val FROG_FRIGHT: OdysseyEnchantment = FrogFright // FIX
+    val FROG_FRIGHT: OdysseyEnchantment = FrogFright
     val FROSTY_FUSE: OdysseyEnchantment = FrostyFuse
     val GRAVITY_WELL: OdysseyEnchantment = GravityWell
     val GUARDING_STRIKE: OdysseyEnchantment = GuardingStrike
     val HEMORRHAGE: OdysseyEnchantment = Hemorrhage
     val ILLUCIDATION: OdysseyEnchantment = Illucidation
     val RUPTURING_STRIKE: OdysseyEnchantment = RupturingStrike
+    val SPORING_ROT: OdysseyEnchantment = SporingRot
     val VOID_STRIKE: OdysseyEnchantment = VoidStrike
     val WHIRLWIND: OdysseyEnchantment = Whirlwind
 
@@ -89,10 +91,10 @@ object OdysseyEnchantments {
     val BURST_BARRAGE: OdysseyEnchantment = BurstBarrage
     val CHAIN_REACTION: OdysseyEnchantment = ChainReaction
     val CLUSTER_SHOT: OdysseyEnchantment = ClusterShot
-    val DEADEYE: OdysseyEnchantment = Deadeye
+    val DEADEYE: OdysseyEnchantment = Deadeye // TODO
     val ENTANGLEMENT: OdysseyEnchantment = Entanglement // TODO
     val GALE_WIND: OdysseyEnchantment = GaleWind
-    val HEAVY_BALLISTICS: OdysseyEnchantment = HeavyBallistics
+    val HEAVY_BALLISTICS: OdysseyEnchantment = HeavyBallistics // TODO
     val LUCKY_DRAW: OdysseyEnchantment = LuckyDraw
     val OVERCHARGE: OdysseyEnchantment = Overcharge
     val PERPETUAL_PROJECTILE: OdysseyEnchantment = PerpetualProjectile
@@ -104,9 +106,8 @@ object OdysseyEnchantments {
     val TEMPORAL_TORRENT: OdysseyEnchantment = TemporalTorrent // TODO
 
     // --------------------------------------------------------------
-
-    // Set that is available to table
     val MELEE_SET = setOf(
+        ASPHYXIATING_ASSAULT,
         ARCANE_CELL,
         BACKSTABBER,
         BANE_OF_THE_ILLAGER,
@@ -127,6 +128,7 @@ object OdysseyEnchantments {
         HEMORRHAGE,
         ILLUCIDATION,
         RUPTURING_STRIKE,
+        SPORING_ROT,
         VOID_STRIKE,
         WHIRLWIND
     )

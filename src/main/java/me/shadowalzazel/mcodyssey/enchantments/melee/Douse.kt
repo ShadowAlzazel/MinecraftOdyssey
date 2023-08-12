@@ -36,5 +36,4 @@ object Douse : OdysseyEnchantment("douse", "Douse", 3) {
     }
 
     // CHANGE
-
 }

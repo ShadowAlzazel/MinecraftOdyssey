@@ -5,7 +5,7 @@ import com.destroystokyo.paper.event.player.PlayerJumpEvent
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.listeners.tasks.SpeedySpursTask
+import me.shadowalzazel.mcodyssey.tasks.SpeedySpursTask
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound

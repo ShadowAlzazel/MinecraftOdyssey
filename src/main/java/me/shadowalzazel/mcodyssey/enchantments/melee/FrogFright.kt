@@ -35,5 +35,4 @@ object FrogFright : OdysseyEnchantment("frog_fright", "Frog Fright", 3) {
         }
     }
 
-
 }

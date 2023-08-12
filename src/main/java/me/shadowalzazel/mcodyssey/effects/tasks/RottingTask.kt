@@ -6,38 +6,36 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.scheduler.BukkitRunnable
 
 // DECAYING task
-class DecayingTask(private val decayingVictim: LivingEntity, private val decayingFactor: Int, private val decayingCount: Int) : BukkitRunnable() {
-    private var decayCooldown = System.currentTimeMillis()
+class RottingTask(private val victim: LivingEntity, private val factor: Int, private val maxCount: Int) : BukkitRunnable() {
+    private var timer = System.currentTimeMillis()
     private var counter = 0
 
     override fun run() {
-        decayingVictim.also {
+        victim.also {
             counter += 1
             // Check if no longer decaying
-            if (EffectTags.DECAYING !in decayingVictim.scoreboardTags) { this.cancel() }
+            if (EffectTags.ROTTING !in victim.scoreboardTags) { this.cancel() }
 
             with(it.world) {
                 val someLocation = it.location.clone().add(0.0, 0.5, 0.0)
                 // Static
-                spawnParticle(Particle.SPORE_BLOSSOM_AIR , someLocation, 45, 0.5, 0.75, 0.5)
+                spawnParticle(Particle.SPORE_BLOSSOM_AIR , someLocation, 85, 0.5, 0.75, 0.5)
                 spawnParticle(Particle.GLOW, someLocation, 15, 0.75, 0.8, 0.75)
                 spawnParticle(Particle.GLOW_SQUID_INK, someLocation, 15, 0.25, 0.25, 0.25)
-
                 // Directional Particles
-                for (x in 1..20) {
+                for (x in 1..15) {
                     val randomLocation = someLocation.add((0..10).random() * 0.1, 0.0, (0..10).random() * 0.1)
-                    spawnParticle(Particle.SNEEZE, randomLocation, 1, 0.25, 0.25, 0.25)
-                    spawnParticle(Particle.SCRAPE, randomLocation, 1, 0.25, 0.4, 0.25)
+                    spawnParticle(Particle.SNEEZE, randomLocation, 1, 0.05, 0.05, 0.05)
+                    spawnParticle(Particle.SCRAPE, randomLocation, 1, 0.05, 0.05, 0.05)
                 }
             }
-
             // Damage
-            it.damage(decayingFactor.toDouble() * 0.75)
+            it.damage(factor.toDouble() * 0.75)
 
             // Every 2 sec
-            val timeElapsed = System.currentTimeMillis() - decayCooldown
-            if ( counter > decayingCount || timeElapsed > (decayingCount * 2) * 1000) {
-                if (!it.isDead) it.scoreboardTags.remove(EffectTags.DECAYING)
+            val timeElapsed = System.currentTimeMillis() - timer
+            if (counter > maxCount || timeElapsed > (maxCount * 2) * 1000) {
+                if (!it.isDead) it.scoreboardTags.remove(EffectTags.ROTTING)
                 this.cancel()
             }
         }

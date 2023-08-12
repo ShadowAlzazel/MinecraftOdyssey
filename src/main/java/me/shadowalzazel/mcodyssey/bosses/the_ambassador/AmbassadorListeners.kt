@@ -16,16 +16,19 @@ import org.bukkit.event.player.PlayerDropItemEvent
 object AmbassadorListeners: Listener {
 
     // Function to check if current boss is ambassador
+    private var ambassador: TheAmbassador? = null
+
     private fun isActive(): Boolean {
-        with(Odyssey.instance) {
-            return (isBossActive && worldBoss is AmbassadorBoss) && ((worldBoss as AmbassadorBoss).bossActive)
+        with(Odyssey.instance.bossManager) {
+            val hasBoss = (hasBossActive && (currentBoss is TheAmbassador && currentBoss!!.isActive))
+            if (hasBoss) ambassador = currentBoss as TheAmbassador
+            return hasBoss
         }
     }
 
     private fun isAngered(): Boolean {
         if (!isActive()) return false
-        val boss = Odyssey.instance.worldBoss
-        if (boss is AmbassadorBoss && boss.isAngered) return true
+        if (ambassador!!.isAngered) return true
         return false
     }
 
@@ -56,44 +59,40 @@ object AmbassadorListeners: Listener {
     fun itemGiftHandler(event: PlayerDropItemEvent) {
         if (!isActive()) return
         if (isAngered()) return
-        val ambassador = Odyssey.instance.worldBoss as AmbassadorBoss
-        if (event.player !in ambassador.bossEntity!!.getNearbyEntities(1.5, 1.5, 1.5)) return
+        if (event.player !in ambassador!!.illusioner.getNearbyEntities(1.5, 1.5, 1.5)) return
         // Sentries Passed
-        ambassador.appeasementCheck(event.player, event.itemDrop)
+        ambassador!!.appeasementCheck(event.player, event.itemDrop)
     }
 
     @EventHandler
     fun playerElytraHandler(event: PlayerElytraBoostEvent) {
         if (!isActive()) return
         if (!isAngered()) return
-        val ambassador = Odyssey.instance.worldBoss as AmbassadorBoss
-        if (event.player !in ambassador.bossEntity!!.getNearbyEntities(15.0, 15.0, 15.0)) return
+        if (event.player !in ambassador!!.illusioner.getNearbyEntities(15.0, 15.0, 15.0)) return
         // Pull Back
-        ambassador.voidPullBackAttack(event.player)
+        ambassador!!.voidPullBackAttack(event.player)
     }
 
     @EventHandler
     fun ambassadorDamageHandler(event: EntityDamageByEntityEvent) {
         if (!isActive()) return
-        if (!isAngered()) return
-        val ambassador = Odyssey.instance.worldBoss as AmbassadorBoss
-        if (event.entity.uniqueId != ambassador.bossEntity!!.uniqueId) return
+        println(event.damager.name)
+        if (event.entity.uniqueId != ambassador!!.illusioner.uniqueId) return
         // Damage
-        ambassador.damageHandler(event.damager, event.damage)
+        ambassador!!.damageHandler(event.damager, event.damage)
     }
 
     @EventHandler
     fun ambassadorDeathHandler(event: EntityDeathEvent) {
         if (!isActive()) return
-        val ambassador = Odyssey.instance.worldBoss as AmbassadorBoss
-        if (event.entity.uniqueId != ambassador.bossEntity!!.uniqueId) return
+        if (event.entity.uniqueId != ambassador!!.illusioner.uniqueId) return
         // Defeat
-        ambassador.defeatedBoss(ambassador.bossEntity!!, event.entity.killer)
-        Odyssey.instance.also {
-            it.isBossActive = false
+        ambassador!!.defeatedBoss(ambassador!!.illusioner, event.entity.killer)
+        Odyssey.instance.bossManager.also {
+            it.hasBossActive = false
             it.isAmbassadorDefeated = true
-            it.worldBoss = null
-            it.bossDespawnTimer = System.currentTimeMillis()
+            it.currentBoss = null
+            it.timeUntilBossDespawn = System.currentTimeMillis()
         }
     }
 

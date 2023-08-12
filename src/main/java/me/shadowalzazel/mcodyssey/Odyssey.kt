@@ -1,8 +1,9 @@
 package me.shadowalzazel.mcodyssey
 
-import me.shadowalzazel.mcodyssey.bosses.base.OdysseyBoss
+import me.shadowalzazel.mcodyssey.bosses.BossManager
 import me.shadowalzazel.mcodyssey.bosses.hog_rider.HogRiderListeners
 import me.shadowalzazel.mcodyssey.bosses.the_ambassador.AmbassadorListeners
+import me.shadowalzazel.mcodyssey.commands.admin.SummonBoss
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.listeners.*
 import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.ArmorListeners
@@ -15,17 +16,17 @@ import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
+import java.io.File
+import java.io.FileNotFoundException
 
-class Odyssey : JavaPlugin(), AssetManager {
+class Odyssey : JavaPlugin() {
 
-    // Main World
-    var mainWorld: World? = null
+    // Managers
+    private val assetManager: AssetManager
+    val bossManager: BossManager
 
-    // Asset Variables for extra datapacks
-    //var hasTerralith: Boolean = false
-    //var hasIncendium: Boolean = false
-    //var hasContinents: Boolean = false
-
+    // Overworld
+    lateinit var overworld: World
 
     // Phenomenon Stuff
     var isSolarPhenomenonActive: Boolean = false
@@ -34,21 +35,6 @@ class Odyssey : JavaPlugin(), AssetManager {
     var currentSolarPhenomenon: OdysseyPhenomenon? = null
     var playersRequiredForLuck: Int = 99
 
-    // Config variables
-    var isBossProgressionEnabled: Boolean = true
-
-    // Boss Progression
-    // Change This LATER to read from storage
-    var isEnderDragonDefeated: Boolean = true
-    var isAmbassadorDefeated: Boolean = true
-
-    // Boss Mechanics
-    var worldBoss: OdysseyBoss? = null
-    var isBossActive: Boolean = false
-    var timeSinceBoss: Long = System.currentTimeMillis()
-    var bossDespawnTimer: Long = System.currentTimeMillis()
-
-
 
     companion object {
         lateinit var instance : Odyssey
@@ -56,10 +42,12 @@ class Odyssey : JavaPlugin(), AssetManager {
 
     init {
         instance = this
+        assetManager = AssetManager(this)
+        bossManager = BossManager(this)
     }
 
-    private fun eventRegister(eventListener : Listener) {
-        server.pluginManager.registerEvents(eventListener, this@Odyssey)
+    private fun eventRegister(listener: Listener) {
+        server.pluginManager.registerEvents(listener, this@Odyssey)
     }
 
     // Plugin startup logic
@@ -69,13 +57,24 @@ class Odyssey : JavaPlugin(), AssetManager {
         config.options().copyDefaults()
         saveConfig()
 
+        // Find Worlds
         // Need to find the main world to locate datapacks
         logger.info("Finding Datapack World...")
-        findMainWorld()
+        for (world in server.worlds) {
+            overworld = world
+            try {
+                val dataPackFolder = File("${world.worldFolder}/datapacks")
+                logger.info("Datapacks in $dataPackFolder")
+                break
+            }
+            catch (ex: FileNotFoundException) {
+                continue
+            }
+        }
 
         // Find the Odyssey Datapack as it is required
         logger.info("Finding Odyssey Datapack...")
-        val foundPack = findOdysseyDatapack()
+        val foundPack = assetManager.findOdysseyDatapack()
         if (!foundPack) {
             logger.info("Disabling Odyssey Plugin! Can Not Find Datapack!")
             server.pluginManager.disablePlugin(this)
@@ -115,8 +114,11 @@ class Odyssey : JavaPlugin(), AssetManager {
             DragonListeners
         ).forEach { eventRegister(it) }
 
+        // Set Commands
+        getCommand("summon_boss")?.setExecutor(SummonBoss)
+
         //server.pluginManager.registerEvents(OdysseyPhenomenaListeners, this)
-        playersRequiredForLuck = 4
+        //playersRequiredForLuck = 4
         // Getting main world for phenomenon timer
         //val cycleHandler = PhenomenonCycleHandler(mainWorld!!)
         //cycleHandler.runTaskTimer(this, 20 * 10L, 20 * 10)
@@ -131,13 +133,11 @@ class Odyssey : JavaPlugin(), AssetManager {
         val timeElapsed = (System.currentTimeMillis() - timerStart).div(1000.0)
         logger.info("Odyssey Start Up sequence in ($timeElapsed) seconds!")
         logger.info("The Odyssey has just begun!")
-
     }
 
     override fun onDisable() {
         // Plugin shutdown logic
         logger.info("The Odyssey will wait another day...")
     }
-
 
 }

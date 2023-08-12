@@ -29,7 +29,4 @@ object DevastatingDrop : OdysseyEnchantment("devastating_drop", "Devastating Dro
             }
         }
     }
-
-    // TODO: If takes fall damage, convert (0.3, 0.6, 0.9, 1.2,) into surrounding damage
-
 }

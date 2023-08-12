@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.listeners.tasks
+package me.shadowalzazel.mcodyssey.tasks
 
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import org.bukkit.HeightMap

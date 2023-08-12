@@ -18,7 +18,6 @@ import org.bukkit.inventory.meta.SkullMeta
 
 object OtherListeners : Listener {
 
-
     @EventHandler
     fun preventHelmetPlace(event: BlockPlaceEvent) {
         if (!event.itemInHand.hasItemMeta()) return
@@ -80,4 +79,62 @@ object OtherListeners : Listener {
         }
         return superFirework
     }
+
+
+    //IDEAS
+    //  Ornament, Socket,
+
+    // Get First space, then next space, if first set (quality) has then proceeded
+    //  get the gem.
+
+
+    // Percentages %
+    // -----------
+    // Diamond -> Increases durability (1 - 20)
+    // Amethyst -> Increases damages against elites and bosses (5 - 30)
+    // Emerald -> Increases Crit Damage (50 - 400)
+    // Quartz -> Increases Base Damage (10 - 200)
+
+    // Neptunian Diamond
+    // Iojovian Emerald
+    // Soul Quartz
+
+
+
+    // Tiers
+    // -----------
+    // Regular
+    // Flawless
+    // IDK
+
+    // Each item has ONE AND ONLY ONE socket MAX
+    //
+
+    // Maybe if kill with soul catalyst, takes Entity Type (if not custom) as name,
+    // Soul Gem -> Increases Damage to that Entity Type (Custom Name Tag) by (10 - 60)
+
+
+    // Add tags for gilded and blood moon "Elites"
+
+    // IF WEAPON HAS SOCKET GEM/RUNE/SOUL
+
+    // DO stuff
+
+
+    // OR ---
+
+    // If it has special Dungeon gem
+    // DO effects
+
+    // Diamond (Armor: 10% more resistance) (DeprecatedWeapon: )
+    // Emerald
+    // Amethyst
+    // Soul Quartz
+    // Ruby
+
+    // Make gem refiner table/merchant
+    // Smith weapons reset attack, hide attack, and speed, add custom Lore
+
+
+
 }
