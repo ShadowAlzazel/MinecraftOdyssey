@@ -2,6 +2,7 @@ package me.shadowalzazel.mcodyssey.bosses.the_ambassador
 
 import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent
 import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.constants.EntityTags
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
@@ -15,80 +16,84 @@ import org.bukkit.event.player.PlayerDropItemEvent
 object AmbassadorListeners: Listener {
 
     // Function to check if current boss is ambassador
-    private fun ambassadorActiveCheck(): Boolean {
+    private fun isActive(): Boolean {
         with(Odyssey.instance) {
-            return (isBossActive && currentBoss is AmbassadorBoss) && ((currentBoss as AmbassadorBoss).bossActive)
+            return (isBossActive && worldBoss is AmbassadorBoss) && ((worldBoss as AmbassadorBoss).bossActive)
         }
     }
 
+    private fun isAngered(): Boolean {
+        if (!isActive()) return false
+        val boss = Odyssey.instance.worldBoss
+        if (boss is AmbassadorBoss && boss.isAngered) return true
+        return false
+    }
+
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
+
     @EventHandler
-    fun superFireworkExplode(event: FireworkExplodeEvent) {
-        if (ambassadorActiveCheck() && event.entity.scoreboardTags.contains("super_firework")) {
-            with(event.entity.world) {
-                val boomLocation = event.entity.location
-                playSound(boomLocation, Sound.AMBIENT_BASALT_DELTAS_MOOD, 2.5F, 0.8F)
-                playSound(boomLocation, Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 2.5F, 0.8F)
-                playSound(boomLocation, Sound.ENTITY_IRON_GOLEM_DEATH, 2.0F, 0.8F)
-                spawnParticle(Particle.FLASH, boomLocation, 5, 1.0, 1.0, 1.0)
-                spawnParticle(Particle.LAVA, boomLocation, 35, 1.5, 1.0, 1.5)
-            }
-            event.entity.getNearbyEntities(2.5, 2.5, 2.5).forEach {
-                if (it is LivingEntity) {
-                    it.damage(18.5)
-                    it.world.spawnParticle(Particle.CRIT_MAGIC, it.location, 45, 1.5, 1.0, 1.5)
-                }
+    fun superFireworkHandler(event: FireworkExplodeEvent) {
+        if (!isActive()) return
+        if (!event.entity.scoreboardTags.contains(EntityTags.SUPER_FIREWORK)) return
+
+        with(event.entity.world) {
+            playSound(event.entity.location, Sound.AMBIENT_BASALT_DELTAS_MOOD, 2.5F, 0.8F)
+            playSound(event.entity.location, Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 2.5F, 0.8F)
+            playSound(event.entity.location, Sound.ENTITY_IRON_GOLEM_DEATH, 2.0F, 0.8F)
+            spawnParticle(Particle.FLASH, event.entity.location, 5, 1.0, 1.0, 1.0)
+            spawnParticle(Particle.LAVA, event.entity.location, 35, 1.5, 1.0, 1.5)
+        }
+        event.entity.getNearbyEntities(2.5, 2.5, 2.5).forEach {
+            if (it is LivingEntity) {
+                it.damage(18.5)
+                it.world.spawnParticle(Particle.CRIT_MAGIC, it.location, 95, 1.5, 1.0, 1.5)
             }
         }
     }
 
     @EventHandler
     fun itemGiftHandler(event: PlayerDropItemEvent) {
-        if (ambassadorActiveCheck()) {
-            val ambassadorBoss = Odyssey.instance.currentBoss as AmbassadorBoss
-            if (!ambassadorBoss.isAngered) {
-                if (event.player in ambassadorBoss.bossEntity!!.getNearbyEntities(1.5, 1.5, 1.5)) {
-                    ambassadorBoss.appeasementCheck(event.player, event.itemDrop)
-                }
-            }
-        }
+        if (!isActive()) return
+        if (isAngered()) return
+        val ambassador = Odyssey.instance.worldBoss as AmbassadorBoss
+        if (event.player !in ambassador.bossEntity!!.getNearbyEntities(1.5, 1.5, 1.5)) return
+        // Sentries Passed
+        ambassador.appeasementCheck(event.player, event.itemDrop)
     }
 
     @EventHandler
-    fun onElytraActivation(event: PlayerElytraBoostEvent) {
-        if (ambassadorActiveCheck()) {
-            val ambassadorBoss = Odyssey.instance.currentBoss as AmbassadorBoss
-            if (!ambassadorBoss.isAngered) {
-                if (event.player in ambassadorBoss.bossEntity!!.getNearbyEntities(1.5, 1.5, 1.5)) {
-                    event.isCancelled
-                    ambassadorBoss.voidPullBackAttack(event.player)
-                }
-            }
-        }
+    fun playerElytraHandler(event: PlayerElytraBoostEvent) {
+        if (!isActive()) return
+        if (!isAngered()) return
+        val ambassador = Odyssey.instance.worldBoss as AmbassadorBoss
+        if (event.player !in ambassador.bossEntity!!.getNearbyEntities(15.0, 15.0, 15.0)) return
+        // Pull Back
+        ambassador.voidPullBackAttack(event.player)
     }
 
     @EventHandler
-    fun onAmbassadorTakeDamage(event: EntityDamageByEntityEvent) {
-        if (ambassadorActiveCheck()) {
-            val ambassadorBoss = Odyssey.instance.currentBoss as AmbassadorBoss
-            if (event.entity.uniqueId == ambassadorBoss.bossEntity!!.uniqueId) {
-                ambassadorBoss.damageHandler(event.damager, event.damage)
-            }
-        }
+    fun ambassadorDamageHandler(event: EntityDamageByEntityEvent) {
+        if (!isActive()) return
+        if (!isAngered()) return
+        val ambassador = Odyssey.instance.worldBoss as AmbassadorBoss
+        if (event.entity.uniqueId != ambassador.bossEntity!!.uniqueId) return
+        // Damage
+        ambassador.damageHandler(event.damager, event.damage)
     }
 
     @EventHandler
-    fun onAmbassadorDeath(event: EntityDeathEvent) {
-        if (ambassadorActiveCheck()) {
-            val ambassadorBoss = Odyssey.instance.currentBoss as AmbassadorBoss
-            if (event.entity.uniqueId == ambassadorBoss.bossEntity!!.uniqueId) {
-                ambassadorBoss.defeatedBoss(ambassadorBoss.bossEntity!!, event.entity.killer)
-                Odyssey.instance.also {
-                    it.isBossActive = false
-                    it.isAmbassadorDefeated = true
-                    it.currentBoss = null
-                    it.bossDespawnTimer = System.currentTimeMillis()
-                }
-            }
+    fun ambassadorDeathHandler(event: EntityDeathEvent) {
+        if (!isActive()) return
+        val ambassador = Odyssey.instance.worldBoss as AmbassadorBoss
+        if (event.entity.uniqueId != ambassador.bossEntity!!.uniqueId) return
+        // Defeat
+        ambassador.defeatedBoss(ambassador.bossEntity!!, event.entity.killer)
+        Odyssey.instance.also {
+            it.isBossActive = false
+            it.isAmbassadorDefeated = true
+            it.worldBoss = null
+            it.bossDespawnTimer = System.currentTimeMillis()
         }
     }
 

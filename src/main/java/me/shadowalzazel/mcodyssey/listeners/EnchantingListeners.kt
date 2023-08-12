@@ -6,16 +6,20 @@ import me.shadowalzazel.mcodyssey.constants.ItemTags
 import me.shadowalzazel.mcodyssey.constants.ItemTags.addIntTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.getIntTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.getStringTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
-import me.shadowalzazel.mcodyssey.items.Runic
-import me.shadowalzazel.mcodyssey.items.Runic.createEnchantedBook
+import me.shadowalzazel.mcodyssey.items.Arcane
+import me.shadowalzazel.mcodyssey.items.Arcane.createEnchantedBook
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
+import me.shadowalzazel.mcodyssey.listeners.EnchantingListeners.isSlotted
+import me.shadowalzazel.mcodyssey.listeners.unused.OldEnchantingListeners
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
+import org.apache.commons.lang3.tuple.MutablePair
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.Particle
@@ -43,6 +47,9 @@ object EnchantingListeners : Listener {
     private val GRAY_COLOR = TextColor.color(170, 170, 170)
     private val ENCHANT_COLOR = TextColor.color(191, 255, 189)
     private val GILDED_COLOR = TextColor.color(255, 170, 0)
+    private val AMETHYST_COLOR = TextColor.color(141, 109, 209)
+    private val CURSED_COLOR = TextColor.color(255, 85, 85)
+    //TextColor.color(102, 255, 222)
 
     // Components
     private val SLOT_SEPERATOR = Component.text("----------------------", GRAY_COLOR).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
@@ -107,29 +114,33 @@ object EnchantingListeners : Listener {
         resetLore: Boolean = false
     ) {
         val newLore = itemMeta.lore() ?: mutableListOf()
-        // Check if had Seperator
-        val hadSeperator = newLore.contains(SLOT_SEPERATOR)
-        if (!hadSeperator) {
+        if (!newLore.contains(SLOT_SEPERATOR)) {
             newLore.add(Component.text("Header Holder"))
             newLore.add(SLOT_SEPERATOR)
         }
         val sepIndex = newLore.indexOf(SLOT_SEPERATOR)
         val slots = Pair(getEnchantSlots(), getGildedSlots())
+        /*
+        println("SEP INDEX: $sepIndex")
+        println("SIZE: ${newLore.size}")
+        println("SLOTS: $slots")
+        println("F: ${sepIndex + slots.second + slots.first}")
+         */
         // Loop add Empty Slots first
         for (e in 1..slots.first) {
-            if (!hadSeperator) {
-                newLore.add(sepIndex + e, EMPTY_ENCHANT_SLOT)
+            val i = e + sepIndex
+            if (!newLore.indices.contains(i)) {
+                newLore.add(i, EMPTY_ENCHANT_SLOT)
             } else {
-                newLore.add(sepIndex + e, Component.text("Slot Holder"))
-                newLore[sepIndex + e] = EMPTY_ENCHANT_SLOT
+                newLore[i] = EMPTY_ENCHANT_SLOT
             }
         }
         for (g in 1..slots.second) {
-            if (!hadSeperator) {
-                newLore.add(sepIndex + slots.first + g, EMPTY_GILDED_SLOT)
+            val i = sepIndex + slots.first + g
+            if (!newLore.indices.contains(i)) {
+                newLore.add(i, EMPTY_GILDED_SLOT)
             } else {
-                newLore.add(sepIndex + slots.first + g, Component.text("Slot Holder"))
-                newLore[sepIndex + slots.first + g] = EMPTY_GILDED_SLOT
+                newLore[i] = EMPTY_GILDED_SLOT
             }
         }
         // Get Enchantment Maps
@@ -138,10 +149,11 @@ object EnchantingListeners : Listener {
         // Add Enchants Over empty slots
         var enchantCount = 0
         enchants.forEach {
+            val color = if (it.key.isCursed) { CURSED_COLOR } else { ENCHANT_COLOR }
             enchantCount += 1
             newLore[sepIndex + enchantCount] = it.key
                 .displayName(it.value)
-                .color(ENCHANT_COLOR)
+                .color(color)
                 .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
         }
         var gildedCount = 0
@@ -151,13 +163,18 @@ object EnchantingListeners : Listener {
                 .displayLore(it.value)
                 .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
         }
+        // Move Engraving To Bottom
+        if (hasTag(ItemTags.IS_ENGRAVED)) {
+            val engraver = getStringTag(ItemTags.ENGRAVED_BY)!!
+            val engraving = Component.text("Created by $engraver", AMETHYST_COLOR, TextDecoration.ITALIC)
+            newLore.remove(engraving)
+            newLore.add(engraving)
+        }
         // Header
         newLore[sepIndex - 1] = enchantHeader(enchantCount + gildedCount, slots.first + slots.second)
         // New Lore
         lore(newLore)
     }
-
-    // FOR LEGACY USE ABOVE, FOR LOGIC USE COUNT OLD ENCHANT SLOTS AND ENCHANTMENTS
 
     private fun LivingEntity.sendFailMessage(reason: String) {
         this.sendActionBar(
@@ -178,7 +195,14 @@ object EnchantingListeners : Listener {
         if (inventory.result == null) return
         if (inventory.upperItem?.enchantments == null && inventory.lowerItem?.enchantments == null) return
         val result = inventory.result!!
-        if (!result.isSlotted()) return
+        val slotted = result.isSlotted()
+        val isLegacy = !slotted && result.itemMeta.hasLore() && result.lore()!!.contains(SLOT_SEPERATOR)
+        if (isLegacy) {
+            event.viewers.forEach { it.sendFailMessage("You need to reactivate this item. Combine with empty paper at the anvil!") }
+            event.result = ItemStack(Material.AIR)
+            return
+        }
+        if (!slotted) return
         // Sentries passed
         event.result = result.clone().also { it.updateSlotLore() }
     }
@@ -188,14 +212,15 @@ object EnchantingListeners : Listener {
 
     @EventHandler
     fun anvilHandler(event: PrepareAnvilEvent) {
+        // MAYBE ANVIL DOES NOT WORK SINCE BOOKS ARE NOT IN ENCHANTMENT STORAGE META
         if (event.inventory.firstItem == null) return
         val first = event.inventory.firstItem!!
         // Renaming
         if (event.inventory.secondItem == null) {
             if (event.result == null) return
-            if (event.result!!.itemMeta.hasEnchants()) {
-                event.result!!.apply {
-                    addUnsafeEnchantments(first.enchantments.filter { it.key is OdysseyEnchantment && it.key !in this.enchantments.keys })
+            if (first.itemMeta.hasEnchants()) {
+                event.result = event.result!!.apply {
+                    addUnsafeEnchantments(first.enchantments.filter { it.key is OdysseyEnchantment && it.key !in enchantments.keys })
                 }
             }
             return
@@ -214,56 +239,100 @@ object EnchantingListeners : Listener {
         }
         // Prevent Gilded Combining
         if (first.enchantments.any { it.key is OdysseyEnchantment } && second.enchantments.any { it.key is OdysseyEnchantment }) {
-            viewers.forEach { it.sendFailMessage("The anvil does not support combining Gilded Items.") }
+            viewers.forEach { it.sendFailMessage("The anvil does not support combining Gilded Enchants on items.") }
             event.result = ItemStack(Material.AIR)
             return
         }
-        if (event.result == null) return
-        // Repair
-        if (first.itemMeta.hasEnchants() && !second.itemMeta.hasEnchants() && second.type != Material.ENCHANTED_BOOK) {
-            event.result!!.apply {
-                addUnsafeEnchantments(first.enchantments.filter { it.key is OdysseyEnchantment && it.key !in this.enchantments.keys })
-            }
+        // Prevent Gilded Second
+        if (second.enchantments.any { it.key is OdysseyEnchantment }) {
+            viewers.forEach { it.sendFailMessage("The anvil does not support adding Gilded Enchants through the second item. Please flip the order.") }
+            event.result = ItemStack(Material.AIR)
             return
         }
-        // Adding Slots First Time non Legacy
-        if (!slotted && !hasOdysseyEnchants) {
-            var enchantSlots = 2
-            var gildedSlots = 1
-            for (enchant in event.result!!.enchantments) {
-                if (enchant.key in OdysseyEnchantments.REGISTERED_SET) {
-                    gildedSlots += 1
-                } else {
-                    enchantSlots += 1
-                }
-            }
-            // Lore
-            event.result = event.result!!.apply {
-                addItemFlags(ItemFlag.HIDE_ENCHANTS)
-                updateSlotLore(event.result!!.enchantments)
-            }
-        }
-        // TODO: Legacy
-
-        // Adding regular books via anvil
-        if (slotted && second.type == Material.ENCHANTED_BOOK) {
-            val bookMeta = (second.itemMeta as EnchantmentStorageMeta)
-            if (!bookMeta.hasStoredEnchants()) return
-            // Current gilded
+        // Legacy Check
+        val isLegacy = !slotted && first.itemMeta.hasLore() && first.lore()!!.contains(SLOT_SEPERATOR)
+        if (isLegacy && second.type == Material.PAPER) {
+            val oldSlot = Component.text("+ Empty Enchantment Slot", GRAY_COLOR).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
             val currentGildedEnchants: Map<Enchantment, Int> = first.enchantments.filter { it.key is OdysseyEnchantment }
-            val newEnchants = bookMeta.storedEnchants.filter { it.key !in first.enchantments.keys }
-            val enchantSize = first.enchantments.size - currentGildedEnchants.size
-            if (newEnchants.size + enchantSize > first.getEnchantSlots()) {
-                viewers.forEach { it.sendFailMessage("There are not enough enchant slots on the current item.") }
-                event.result = ItemStack(Material.AIR)
-                return
-            }
-            event.result = event.result!!.apply {
+            val currentEnchants = first.enchantments.filter { it.key !is OdysseyEnchantment }
+            event.inventory.firstItem = first.clone().apply {
+                val enchantSlots = lore()!!.count { it == oldSlot } + currentEnchants.size
+                val gildedSlots = minOf(currentGildedEnchants.size + lore()!!.count { it == EMPTY_GILDED_SLOT }, 3)
+                setSlots(Pair(enchantSlots, gildedSlots))
                 addUnsafeEnchantments(currentGildedEnchants)
                 updateSlotLore()
             }
         }
-
+        else if (isLegacy && second.type != Material.PAPER){
+            event.viewers.forEach { it.sendFailMessage("You need to reactivate this item. Combine with empty paper at the anvil!") }
+            event.result = ItemStack(Material.AIR)
+            return
+        }
+        // Null Check
+        if (event.result == null) return
+        // Repair
+        if (first.itemMeta.hasEnchants() && !second.itemMeta.hasEnchants() && second.type != Material.ENCHANTED_BOOK) {
+            event.result = event.result!!.apply {
+                addUnsafeEnchantments(first.enchantments.filter { it.key is OdysseyEnchantment && it.key !in enchantments.keys })
+            }
+            return
+        }
+        // Activating Slots First Time
+        if (!slotted && !hasOdysseyEnchants) {
+            val slots = MutablePair(2, 1)
+            for (enchant in event.result!!.enchantments) {
+                if (enchant.key !in OdysseyEnchantments.REGISTERED_SET) {
+                    slots.left += 1
+                } else {
+                    slots.right += 1
+                }
+            }
+            // Lore
+            event.result = event.result!!.apply {
+                setSlots(slots.toPair())
+                addItemFlags(ItemFlag.HIDE_ENCHANTS)
+                updateSlotLore(event.result!!.enchantments)
+            }
+            return
+        }
+        /*-----------------------------------------------------------------------------------------------*/
+        if (slotted) {
+            // Current gilded
+            val currentGildedEnchants: Map<Enchantment, Int> = first.enchantments.filter { it.key is OdysseyEnchantment }
+            // Book or Item
+            val newEnchants = if (second.type == Material.ENCHANTED_BOOK) {
+                val bookMeta = (second.itemMeta as EnchantmentStorageMeta)
+                if (!bookMeta.hasStoredEnchants()) return
+                bookMeta.storedEnchants.filter { it.key !in first.enchantments.keys }
+            } else {
+                if (!second.itemMeta.hasEnchants()) return
+                second.itemMeta.enchants
+            }
+            // Conflict Checker
+            for (enchant in newEnchants.keys) {
+                var conflictingEnchant: Enchantment? = null
+                val conflicts = currentGildedEnchants.keys.any {
+                    conflictingEnchant = it
+                    it.conflictsWith(enchant)
+                }
+                if (conflicts) {
+                    viewers.forEach { it.sendFailMessage("The enchantment ${enchant.key} conflicts with the enchantment ${conflictingEnchant!!.key}") }
+                    event.result = ItemStack(Material.AIR)
+                    return
+                }
+            }
+            // Slot Size Checker
+            val enchantSize = first.enchantments.size - currentGildedEnchants.size
+            if (newEnchants.size + enchantSize > first.getEnchantSlots()) {
+                viewers.forEach { it.sendFailMessage("There are not enough empty enchant slots on the first item.") }
+                event.result = ItemStack(Material.AIR)
+                return
+            }
+            event.result = event.result!!.apply {
+                addUnsafeEnchantments(first.enchantments.filter { it.key is OdysseyEnchantment && it.key !in enchantments.keys })
+                updateSlotLore()
+            }
+        }
     }
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -319,27 +388,27 @@ object EnchantingListeners : Listener {
         when ((0..40).random() + minOf(enchanterLevel, 100)) {
             in 0..10 -> {
                 tierCost = 0
-                randomTome = listOf(Runic.TOME_OF_BANISHMENT).random()
+                randomTome = listOf(Arcane.TOME_OF_BANISHMENT).random()
             }
             in 11..40 -> {
                 tierCost = 1
-                randomTome = listOf(Runic.TOME_OF_DISCHARGE, Runic.TOME_OF_EMBRACE).random()
+                randomTome = listOf(Arcane.TOME_OF_DISCHARGE, Arcane.TOME_OF_EMBRACE).random()
             }
             in 41..70 -> {
                 tierCost = 2
-                randomTome = listOf(Runic.TOME_OF_PROMOTION, Runic.TOME_OF_HARMONY).random()
+                randomTome = listOf(Arcane.TOME_OF_PROMOTION, Arcane.TOME_OF_HARMONY).random()
             }
             in 71..110 -> {
                 tierCost = 3
-                randomTome = listOf(Runic.TOME_OF_EXPENDITURE, Runic.TOME_OF_REPLICATION).random()
+                randomTome = listOf(Arcane.TOME_OF_EXPENDITURE, Arcane.TOME_OF_REPLICATION).random()
             }
             in 111..200 -> {
                 tierCost = 4
-                randomTome = listOf(Runic.TOME_OF_AVARICE).random()
+                randomTome = listOf(Arcane.TOME_OF_AVARICE).random()
             }
             else -> {
                 tierCost = 0
-                randomTome = listOf(Runic.TOME_OF_BANISHMENT).random()
+                randomTome = listOf(Arcane.TOME_OF_BANISHMENT).random()
             }
         }
 
@@ -428,7 +497,7 @@ object EnchantingListeners : Listener {
         if (event.inventory.inputEquipment == null) return
         if (event.inventory.inputTemplate == null) return
         val mineral = event.inventory.inputMineral!!
-        val equipment = event.inventory.inputEquipment!!
+        val equipment = event.inventory.inputEquipment!!.clone()
         val template = event.inventory.inputTemplate!!
         // Avoid Conflict with other smithing
         if (!template.itemMeta.hasCustomModelData()) return
@@ -444,7 +513,7 @@ object EnchantingListeners : Listener {
 
         // Legacy Check
         if (hasEquipment && !equipment.isSlotted()) {
-            event.viewers.forEach { it.sendFailMessage("You need to reactivate this item. Combine with empty paper and gold nugget!") }
+            event.viewers.forEach { it.sendFailMessage("You need to reactivate this item. Combine with empty paper or gold nugget at the anvil!") }
             return
         }
 
@@ -531,15 +600,18 @@ object EnchantingListeners : Listener {
             viewers.forEach { it.sendFailMessage("This item has the maximum of three gilded slots.") }
             return ItemStack(Material.AIR)
         }
-        val enchantSize = item.enchantments.size - item.enchantments.keys.count { it is OdysseyEnchantment }
+        val enchantList = item.enchantments.filter { it.key !is OdysseyEnchantment }
+        val enchantSize = enchantList.size - item.enchantments.keys.count { it is OdysseyEnchantment }
         if (enchantSize < 4) {
             viewers.forEach { it.sendFailMessage("This tome requires at least 4 enchants ont the item to use.") }
             return ItemStack(Material.AIR)
         }
-        // Add Slot
-        item.addGildedSlot()
-        item.updateSlotLore()
-        return item
+        // Add Slot remove enchants
+        return item.apply {
+            addGildedSlot()
+            for (enchant in enchantList) { removeEnchantment(enchant.key) }
+            updateSlotLore()
+        }
     }
 
     private fun tomeOfBanishmentToEquipment(item: ItemStack, viewers: List<HumanEntity>): ItemStack {
@@ -621,7 +693,7 @@ object EnchantingListeners : Listener {
         // Create Book
         val extractedEnchant = item.enchantments.toList().random()
         val book = if (extractedEnchant.first is OdysseyEnchantment) {
-            Runic.GILDED_BOOK.createEnchantedBook(extractedEnchant.first as OdysseyEnchantment, extractedEnchant.second)
+            Arcane.GILDED_BOOK.createEnchantedBook(extractedEnchant.first as OdysseyEnchantment, extractedEnchant.second)
         } else {
             ItemStack(Material.ENCHANTED_BOOK, 1).apply {
                 val newMeta = itemMeta.clone() as EnchantmentStorageMeta
@@ -676,6 +748,14 @@ object EnchantingListeners : Listener {
         // Check book meta and enchant meta
         var promotedEnchant: Pair<Enchantment, Int>? = null
         if (item.itemMeta.hasEnchants()) {
+            try {
+                val notMaxList = item.enchantments.toList().shuffled().filter { it.second < it.first.maxLevel }
+                promotedEnchant = notMaxList.random()
+            }
+            catch (except: NoSuchElementException) {
+                viewers.forEach { it.sendFailMessage("The item enchantments are at the max level.") }
+                return ItemStack(Material.AIR)
+            }
             promotedEnchant = item.enchantments.toList().random()
         } else if ((item.itemMeta as EnchantmentStorageMeta).hasStoredEnchants()) {
             promotedEnchant = (item.itemMeta as EnchantmentStorageMeta).storedEnchants.toList().random()
@@ -683,8 +763,7 @@ object EnchantingListeners : Listener {
         // More Sentries
         if (promotedEnchant == null) return ItemStack(Material.AIR)
         if (promotedEnchant.first.maxLevel <= promotedEnchant.second) {
-            val message = "${promotedEnchant.first.displayName(promotedEnchant.second)} is at the max level (Max: ${promotedEnchant.first.maxLevel})."
-            println(message)
+            val message = "${promotedEnchant.first.key} is at the max level (Max: ${promotedEnchant.first.maxLevel})."
             viewers.forEach { it.sendFailMessage(message) }
             return ItemStack(Material.AIR)
         }
@@ -701,13 +780,24 @@ object EnchantingListeners : Listener {
     private fun tomeOfPromotionToBook(item: ItemStack, viewers: List<HumanEntity>): ItemStack {
         // Checks book meta and enchant item meta
         val promotedEnchant: Pair<Enchantment, Int> = if (item.itemMeta.hasEnchants()) {
-            val notMaxList = item.enchantments.toList().shuffled().filter { it.second < it.first.maxLevel }
-            notMaxList.random()
-        } else if ((item.itemMeta as EnchantmentStorageMeta).hasStoredEnchants()) {
-            val notMaxList = (item.itemMeta as EnchantmentStorageMeta).storedEnchants.toList().shuffled().filter {
-                it.second < it.first.maxLevel
+            try {
+                val notMaxList = item.enchantments.toList().shuffled().filter { it.second < it.first.maxLevel }
+                notMaxList.random()
             }
-            notMaxList.random()
+            catch (except: NoSuchElementException) {
+                viewers.forEach { it.sendFailMessage("The enchantment is at the max level.") }
+                return ItemStack(Material.AIR)
+            }
+
+        } else if ((item.itemMeta as EnchantmentStorageMeta).hasStoredEnchants()) {
+            try {
+                val notMaxList = (item.itemMeta as EnchantmentStorageMeta).storedEnchants.toList().shuffled().filter { it.second < it.first.maxLevel }
+                notMaxList.random()
+            }
+            catch (except: NoSuchElementException) {
+                viewers.forEach { it.sendFailMessage("The enchantments are at the max level.") }
+                return ItemStack(Material.AIR)
+            }
         } else {
             return ItemStack(Material.AIR)
         }
@@ -718,7 +808,7 @@ object EnchantingListeners : Listener {
         }
         // Book
         val book = if (promotedEnchant.first is OdysseyEnchantment) {
-            Runic.GILDED_BOOK.createEnchantedBook(promotedEnchant.first as OdysseyEnchantment, promotedEnchant.second + 1)
+            Arcane.GILDED_BOOK.createEnchantedBook(promotedEnchant.first as OdysseyEnchantment, promotedEnchant.second + 1)
         } else {
             item.clone().apply {
                 val newMeta = itemMeta.clone() as EnchantmentStorageMeta
@@ -734,7 +824,7 @@ object EnchantingListeners : Listener {
         return if (item.itemMeta.hasEnchants() || (item.itemMeta as EnchantmentStorageMeta).hasStoredEnchants()) {
             item.clone()
         } else {
-            Runic.TOME_OF_REPLICATION.createItemStack(1)
+            Arcane.TOME_OF_REPLICATION.createItemStack(1)
         }
     }
 
@@ -753,18 +843,22 @@ object EnchantingListeners : Listener {
         val bookEnchant = book.enchantments.entries.first { it.key is OdysseyEnchantment }
         val canEnchantItem = bookEnchant.key.canEnchantItem(item)
         if (!canEnchantItem) {
-            viewers.forEach { it.sendFailMessage("The enchantment ${bookEnchant.key.displayName(bookEnchant.value)} can not be applied to the item") }
+            viewers.forEach { it.sendFailMessage("The enchantment ${bookEnchant.key.key} can not be applied to the item") }
             return ItemStack(Material.AIR)
         }
-        val conflictsWithItem = item.enchantments.any { bookEnchant.key.conflictsWith(it.key) }
+        var conflictingEnchant: Enchantment? = null
+        val conflictsWithItem = item.enchantments.any {
+            conflictingEnchant = it.key
+            bookEnchant.key.conflictsWith(it.key)
+        }
         if (conflictsWithItem)  {
-            viewers.forEach { it.sendFailMessage("The enchantment ${bookEnchant.key.displayName(bookEnchant.value)} conflicts with an enchantment on the item") }
+            viewers.forEach { it.sendFailMessage("The enchantment ${bookEnchant.key.key} conflicts with the enchant ${conflictingEnchant!!.key}") }
             return ItemStack(Material.AIR)
         }
         val itemHasEnchant = item.enchantments.containsKey(bookEnchant.key)
         val gildedCount = item.enchantments.keys.count { it is OdysseyEnchantment }
         if (gildedCount >= item.getGildedSlots() && !itemHasEnchant) {
-            viewers.forEach { it.sendFailMessage("There are no free gilded slots on this item") }
+            viewers.forEach { it.sendFailMessage("There are no empty gilded slots on this item") }
             return ItemStack(Material.AIR)
         }
         // New Enchant
@@ -816,7 +910,7 @@ object EnchantingListeners : Listener {
         // Checks
         val notMaxLevel = firstEnchant.value < firstEnchant.key.maxLevel && secondEnchant.value < secondEnchant.key.maxLevel
         if (!notMaxLevel) {
-            viewers.forEach { it.sendFailMessage("${firstEnchant.key.displayName(firstEnchant.value)} is at the max level (Max: ${firstEnchant.key.maxLevel}).") }
+            viewers.forEach { it.sendFailMessage("${firstEnchant.key.key} is at the max level (Max: ${firstEnchant.key.maxLevel}).") }
             return ItemStack(Material.AIR)
         }
         val oldMax = maxOf(firstEnchant.value, secondEnchant.value)
@@ -825,7 +919,7 @@ object EnchantingListeners : Listener {
             viewers.forEach { it.sendFailMessage("The gilded books do not create a higher level enchantment.") }
             return ItemStack(Material.AIR)
         }
-        return Runic.GILDED_BOOK.createEnchantedBook(firstEnchant.key, newLevel + 1)
+        return Arcane.GILDED_BOOK.createEnchantedBook(firstEnchant.key, newLevel + 1)
     }
 
     /*-----------------------------------------------------------------------------------------------*/

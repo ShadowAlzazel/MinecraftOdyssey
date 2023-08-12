@@ -1,19 +1,12 @@
 package me.shadowalzazel.mcodyssey.listeners.tasks
 
-import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import org.bukkit.HeightMap
 import org.bukkit.Particle
-import org.bukkit.entity.AreaEffectCloud
-import org.bukkit.entity.DragonFireball
-import org.bukkit.entity.EnderDragon
-import org.bukkit.entity.EntityType
-import org.bukkit.entity.ItemDisplay
-import org.bukkit.entity.Player
+import org.bukkit.entity.*
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
-import org.bukkit.util.Vector
 
 class DragonLightningStormTask (private val dragon: EnderDragon) : BukkitRunnable() {
 

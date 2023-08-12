@@ -11,6 +11,7 @@ object ItemTags {
 
     const val ALCHEMY_ARTILLERY_LOADED: String = "alchemy_artillery_loaded"
     const val IS_ENGRAVED: String = "odyssey.is_engraved"
+    const val ENGRAVED_BY: String = "engraved_by"
     const val SOUL_STEEL_TOOL: String = "soul_steel_tool"
     const val NETHERITE_TOOL: String = "netherite_tool"
 
@@ -61,9 +62,18 @@ object ItemTags {
         }
     }
 
-
     fun ItemStack.getIntTag(tag: String): Int? {
         return itemMeta.persistentDataContainer[NamespacedKey(Odyssey.instance, tag), PersistentDataType.INTEGER]
+    }
+
+    fun ItemStack.addStringTag(tag: String, text: String) {
+        itemMeta = itemMeta.also {
+            it.persistentDataContainer.set(NamespacedKey(Odyssey.instance, tag), PersistentDataType.STRING, text)
+        }
+    }
+
+    fun ItemStack.getStringTag(tag: String): String? {
+        return itemMeta.persistentDataContainer[NamespacedKey(Odyssey.instance, tag), PersistentDataType.STRING]
     }
 
     fun ItemStack.setUUIDTag(uuid: UUID) {

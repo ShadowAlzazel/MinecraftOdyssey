@@ -4,7 +4,6 @@ import me.shadowalzazel.mcodyssey.recipe_creators.crafting.Food
 import me.shadowalzazel.mcodyssey.recipe_creators.crafting.Helmets
 import me.shadowalzazel.mcodyssey.recipe_creators.crafting.Misc
 import me.shadowalzazel.mcodyssey.recipe_creators.crafting.Weapons
-import me.shadowalzazel.mcodyssey.recipe_creators.smithing.Templating
 import org.bukkit.inventory.Recipe
 
 class RecipeManager {

@@ -11,6 +11,9 @@ import org.bukkit.event.entity.PiglinBarterEvent
 
 object MobListeners : Listener{
 
+    // Scarecrow Mob pumpkin and stand
+    // weeping angels
+
     @EventHandler
     fun piglinTargetHandler(event: EntityTargetLivingEntityEvent) {
         // MAYBE STILL REQUIRES GOLD ARMOR, CULTURE THING

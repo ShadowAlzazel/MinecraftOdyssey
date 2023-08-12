@@ -1,11 +1,11 @@
-package me.shadowalzazel.mcodyssey.listeners
+package me.shadowalzazel.mcodyssey.listeners.unused
 
 import com.destroystokyo.paper.event.inventory.PrepareResultEvent
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
-import me.shadowalzazel.mcodyssey.items.Runic
-import me.shadowalzazel.mcodyssey.items.Runic.createEnchantedBook
+import me.shadowalzazel.mcodyssey.items.Arcane
+import me.shadowalzazel.mcodyssey.items.Arcane.createEnchantedBook
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -128,27 +128,27 @@ object OldEnchantingListeners : Listener {
         when ((0..40).random() + minOf(enchanterLevel, 100)) {
             in 0..10 -> {
                 tierCost = 0
-                randomTome = listOf(Runic.TOME_OF_BANISHMENT).random()
+                randomTome = listOf(Arcane.TOME_OF_BANISHMENT).random()
             }
             in 11..40 -> {
                 tierCost = 1
-                randomTome = listOf(Runic.TOME_OF_DISCHARGE, Runic.TOME_OF_EMBRACE).random()
+                randomTome = listOf(Arcane.TOME_OF_DISCHARGE, Arcane.TOME_OF_EMBRACE).random()
             }
             in 41..70 -> {
                 tierCost = 2
-                randomTome = listOf(Runic.TOME_OF_PROMOTION, Runic.TOME_OF_HARMONY).random()
+                randomTome = listOf(Arcane.TOME_OF_PROMOTION, Arcane.TOME_OF_HARMONY).random()
             }
             in 71..110 -> {
                 tierCost = 3
-                randomTome = listOf(Runic.TOME_OF_EXPENDITURE, Runic.TOME_OF_REPLICATION).random()
+                randomTome = listOf(Arcane.TOME_OF_EXPENDITURE, Arcane.TOME_OF_REPLICATION).random()
             }
             in 111..200 -> {
                 tierCost = 4
-                randomTome = listOf(Runic.TOME_OF_AVARICE).random()
+                randomTome = listOf(Arcane.TOME_OF_AVARICE).random()
             }
             else -> {
                 tierCost = 0
-                randomTome = listOf(Runic.TOME_OF_BANISHMENT).random()
+                randomTome = listOf(Arcane.TOME_OF_BANISHMENT).random()
             }
         }
 
@@ -577,7 +577,7 @@ object OldEnchantingListeners : Listener {
         val randomEnchant = eventItem.clone().enchantments.toList().random()
         // Book
         val newItem = if (randomEnchant.first is OdysseyEnchantment) {
-            Runic.GILDED_BOOK.createEnchantedBook(randomEnchant.first as OdysseyEnchantment, randomEnchant.second)
+            Arcane.GILDED_BOOK.createEnchantedBook(randomEnchant.first as OdysseyEnchantment, randomEnchant.second)
         } else {
             ItemStack(Material.ENCHANTED_BOOK, 1).apply {
                 val newMeta = itemMeta.clone() as EnchantmentStorageMeta
@@ -825,7 +825,7 @@ object OldEnchantingListeners : Listener {
             if (secondBookEnchants.containsKey(enchantKey) && enchantKey is OdysseyEnchantment) {
                 if (firstBookEnchants[enchantKey]!! < enchantKey.maximumLevel && secondBookEnchants[enchantKey]!! < enchantKey.maximumLevel) {
                     val maxLevel = max(firstBookEnchants[enchantKey]!!, secondBookEnchants[enchantKey]!!)
-                    return Runic.GILDED_BOOK.createEnchantedBook(enchantKey, maxLevel + 1)
+                    return Arcane.GILDED_BOOK.createEnchantedBook(enchantKey, maxLevel + 1)
                 }
             }
         }
@@ -880,7 +880,7 @@ object OldEnchantingListeners : Listener {
         return if (eventItem.itemMeta.hasEnchants() || (eventItem.itemMeta as EnchantmentStorageMeta).hasStoredEnchants()) {
             eventItem.clone()
         } else {
-            Runic.TOME_OF_REPLICATION.createItemStack(1)
+            Arcane.TOME_OF_REPLICATION.createItemStack(1)
         }
     }
 

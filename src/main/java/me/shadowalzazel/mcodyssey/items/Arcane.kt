@@ -10,7 +10,7 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object Runic {
+object Arcane {
 
     // Extension function to create enchanted books when this is called
     fun OdysseyItem.createEnchantedBook(someEnchant: Enchantment, level: Int): ItemStack {

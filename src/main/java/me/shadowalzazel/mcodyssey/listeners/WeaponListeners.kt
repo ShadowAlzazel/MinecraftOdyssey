@@ -5,12 +5,11 @@ import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.BLUDGEON_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.CLEAVE_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.LACERATE_MAP
+import me.shadowalzazel.mcodyssey.constants.WeaponMaps.MAX_RANGE_MAP
+import me.shadowalzazel.mcodyssey.constants.WeaponMaps.MIN_RANGE_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.PIERCE_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.REACH_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.SWEEP_MAP
-import me.shadowalzazel.mcodyssey.constants.WeaponMaps.MAX_RANGE_MAP
-import me.shadowalzazel.mcodyssey.constants.WeaponMaps.MIN_RANGE_MAP
-
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
@@ -23,10 +22,7 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
-import org.bukkit.event.player.PlayerInteractAtEntityEvent
-import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.event.player.PlayerInteractEvent
-import kotlin.math.min
 
 // --------------------------------- NOTES --------------------------------
 // TODO: Mounted Bonus i.e. Cavalry Charges

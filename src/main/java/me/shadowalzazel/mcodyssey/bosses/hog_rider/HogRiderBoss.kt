@@ -14,7 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-class HogRiderBoss : OdysseyBoss("Hog Rider", "Piglin") {
+class HogRiderBoss : OdysseyBoss("Hog Rider") {
 
     // Boss Spawning Logic
     var bossEntityRider: PiglinBrute? = null
