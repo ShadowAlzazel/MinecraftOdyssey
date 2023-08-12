@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.enchantments.melee
 
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
@@ -9,7 +10,7 @@ object FearfulFinisher : OdysseyEnchantment("fearful_finisher", "Fearful Finishe
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            ARROW_INFINITE -> {
+            OdysseyEnchantments.EXPLODING -> {
                 true
             }
             else -> {
@@ -34,6 +35,4 @@ object FearfulFinisher : OdysseyEnchantment("fearful_finisher", "Fearful Finishe
         }
     }
 
-
-    // TODO: If Kill enemy others run away
 }

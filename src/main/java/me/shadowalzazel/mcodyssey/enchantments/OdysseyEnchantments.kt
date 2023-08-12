@@ -48,6 +48,7 @@ object OdysseyEnchantments {
     val WAR_CRY: OdysseyEnchantment = WarCry
 
     // Melee
+    val ASPHYXIATING_ASSAULT: OdysseyEnchantment = AsphyxiatingAssault
     val ARCANE_CELL: OdysseyEnchantment = ArcaneCell
     val BACKSTABBER: OdysseyEnchantment = Backstabber
     val BANE_OF_THE_ILLAGER: OdysseyEnchantment = BaneOfTheIllager
@@ -69,6 +70,7 @@ object OdysseyEnchantments {
     val HEMORRHAGE: OdysseyEnchantment = Hemorrhage
     val ILLUCIDATION: OdysseyEnchantment = Illucidation
     val RUPTURING_STRIKE: OdysseyEnchantment = RupturingStrike
+    val SPORING_ROT: OdysseyEnchantment = SporingRot
     val VOID_STRIKE: OdysseyEnchantment = VoidStrike
     val WHIRLWIND: OdysseyEnchantment = Whirlwind
 
@@ -104,9 +106,8 @@ object OdysseyEnchantments {
     val TEMPORAL_TORRENT: OdysseyEnchantment = TemporalTorrent // TODO
 
     // --------------------------------------------------------------
-
-    // Set that is available to table
     val MELEE_SET = setOf(
+        ASPHYXIATING_ASSAULT,
         ARCANE_CELL,
         BACKSTABBER,
         BANE_OF_THE_ILLAGER,
@@ -127,6 +128,7 @@ object OdysseyEnchantments {
         HEMORRHAGE,
         ILLUCIDATION,
         RUPTURING_STRIKE,
+        SPORING_ROT,
         VOID_STRIKE,
         WHIRLWIND
     )

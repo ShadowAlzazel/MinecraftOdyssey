@@ -10,7 +10,7 @@ object RupturingStrike : OdysseyEnchantment("rupturing_strike", "Rupturing Strik
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.CULL_THE_WEAK -> {
+            OdysseyEnchantments.CULL_THE_WEAK, OdysseyEnchantments.ASPHYXIATING_ASSAULT -> {
                 true
             }
             else -> {

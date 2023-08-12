@@ -4,7 +4,7 @@ object EffectTags {
 
     // TYPES
     const val FREEZING: String = "odyssey.freezing" // Freeze Ticks + Slow
-    const val DECAYING: String = "odyssey.decaying" // give Hunger, do damage, stacking, spores,
+    const val ROTTING: String = "odyssey.rotting" // give Hunger, do damage, stacking, spores,
     const val DOUSED: String = "odyssey.doused" //
     const val ABLAZE: String = "odyssey.ablaze" // More damage Fire ticks
     const val ASPHYXIATE: String = "odyssey.asphyxiate" // TODO: Give negative breath -> IF not negative ticks then make timed effect that sets max to 0
@@ -12,6 +12,8 @@ object EffectTags {
     const val HONEYED: String = "odyssey.honeyed" // Slow, and bees attacks you
     const val HEMORRHAGING: String = "odyssey.hemorrhaging" // Stacking damage
 
+
+    // Irradiates enemies (Poison + Can not heal)
     const val IRRADIATED: String = "odyssey.irradiated" // TODO: Prevent Healing (use entityHealthEvent?)
     const val ROOTED: String = "odyssey.rooted" // TODO: Can not jump (use entityJumpEvent?)
     const val TETHERED: String = "odyssey.tethered" // TODO: Can not teleport away
@@ -38,9 +40,7 @@ object EffectTags {
 
 
     // TYPE MODIFIERS
-    const val DOUSE_MODIFIER: String = "odyssey.douse_factor."
-
-
-
+    const val HEMORRHAGE_MODIFIER: String = "odyssey.hemorrhage_modifier.0"
+    const val DOUSE_MODIFIER: String = "odyssey.douse_modifier.0"
 
 }

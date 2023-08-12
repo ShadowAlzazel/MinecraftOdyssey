@@ -35,5 +35,4 @@ object GravityWell : OdysseyEnchantment("gravity_well", "Gravity Well", 3) {
         }
     }
 
-
 }

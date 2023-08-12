@@ -33,8 +33,6 @@ object ArcaneCell : OdysseyEnchantment("arcane_cell", "Arcane Cell", 3) {
                 false
             }
         }
+
     }
-
-    // Irradiates enemies (Poison + Can not heal)
-
 }
