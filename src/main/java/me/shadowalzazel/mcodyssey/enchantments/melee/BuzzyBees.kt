@@ -10,7 +10,7 @@ object BuzzyBees : OdysseyEnchantment("buzzy_bees", "Buzzy Bees", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.DOUSE, FIRE_ASPECT -> {
+            FIRE_ASPECT, OdysseyEnchantments.TAR_N_DIP, OdysseyEnchantments.DECAYING_TOUCH -> {
                 true
             }
             else -> {

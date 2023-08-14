@@ -742,6 +742,7 @@ object ArmorListeners : Listener {
                     )
                 }
             }
+        // TODO: Use faerful Finisher mob goals for mobs t
         // Particles
         with(defender.world) {
             spawnParticle(Particle.ASH, defender.location, 95, 1.5, 0.5, 1.5)

@@ -10,7 +10,7 @@ object FreezingAspect : OdysseyEnchantment("frezzing_aspect", "Freezing Aspect",
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            FIRE_ASPECT, OdysseyEnchantments.DOUSE -> {
+            FIRE_ASPECT, OdysseyEnchantments.TAR_N_DIP -> {
                 true
             }
             else -> {

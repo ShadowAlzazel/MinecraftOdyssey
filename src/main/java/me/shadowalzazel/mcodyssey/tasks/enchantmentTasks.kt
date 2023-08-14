@@ -95,10 +95,10 @@ class GravityWellTask(
                 spawnParticle(Particle.SONIC_BOOM, someLocation, 2, 0.0, 0.0, 0.0)
             }
 
-            victim.location.getNearbyLivingEntities(3.0 ).forEach {
+            victim.location.getNearbyLivingEntities(3.25 ).forEach {
                 if (!it.scoreboardTags.contains(EntityTags.FALLING_SINGULARITY) && it != attacker) {
                     it.teleport(singularityLocation.clone().add((-3..3).random() * 0.08, 0.1, (-3..3).random() * 0.08))
-                    if (counter % 2 == 0) { it.damage(0.5 * factor, attacker) }
+                    it.damage(0.5 * factor, attacker)
                 }
             }
 

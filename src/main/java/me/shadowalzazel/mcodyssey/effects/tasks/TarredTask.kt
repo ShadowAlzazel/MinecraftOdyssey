@@ -8,7 +8,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.scheduler.BukkitRunnable
 
 // DOUSED task
-class DousedTask(private val dousedVictim: LivingEntity, private val douseCount: Int) : BukkitRunnable() {
+class TarredTask(private val dousedVictim: LivingEntity, private val douseCount: Int) : BukkitRunnable() {
     private var dousingCooldown = System.currentTimeMillis()
     private var counter = 0
 
@@ -16,7 +16,7 @@ class DousedTask(private val dousedVictim: LivingEntity, private val douseCount:
         dousedVictim.also {
             counter += 1
             // Check if no longer Doused
-            if (EffectTags.DOUSED !in it.scoreboardTags) { this.cancel() }
+            if (EffectTags.TARRED !in it.scoreboardTags) { this.cancel() }
 
             // Check if on fire
             if (it.fireTicks > 0) {
@@ -29,7 +29,7 @@ class DousedTask(private val dousedVictim: LivingEntity, private val douseCount:
                     }
                 }
                 // Do ablaze effects
-                it.scoreboardTags.remove(EffectTags.DOUSED)
+                it.scoreboardTags.remove(EffectTags.TARRED)
                 it.addScoreboardTag(EffectTags.ABLAZE)
                 it.fireTicks = 20 * ((dousePower * 4) + 4) + 1
                 // Run task

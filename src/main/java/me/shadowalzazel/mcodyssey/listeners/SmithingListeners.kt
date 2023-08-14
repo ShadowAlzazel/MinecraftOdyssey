@@ -1,5 +1,7 @@
 package me.shadowalzazel.mcodyssey.listeners
 
+import me.shadowalzazel.mcodyssey.arcane.EnchantSlotManager
+import me.shadowalzazel.mcodyssey.arcane.SlotColors
 import me.shadowalzazel.mcodyssey.constants.Identifiers
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.ItemTags
@@ -24,18 +26,7 @@ import org.bukkit.inventory.meta.ArmorMeta
 import org.bukkit.inventory.meta.trim.ArmorTrim
 import org.bukkit.inventory.meta.trim.TrimMaterial
 
-object SmithingListeners : Listener {
-
-    private val AMETHYST_COLOR = TextColor.color(141, 109, 209)
-
-    private fun LivingEntity.sendFailMessage(reason: String) {
-        this.sendActionBar(
-            Component.text(
-                reason,
-                AMETHYST_COLOR
-            )
-        )
-    }
+object SmithingListeners : Listener, EnchantSlotManager {
 
     /*-----------------------------------------------------------------------------------------------*/
     /*-----------------------------------------------------------------------------------------------*/
@@ -69,7 +60,7 @@ object SmithingListeners : Listener {
                 val newLore = it.itemMeta.lore() ?: mutableListOf()
                 for (engraver in event.viewers) {
                     it.addStringTag(ItemTags.ENGRAVED_BY, engraver.name)
-                    val engraving = Component.text("Created by ${engraver.name}", AMETHYST_COLOR, TextDecoration.ITALIC)
+                    val engraving = Component.text("Created by ${engraver.name}", SlotColors.AMETHYST.color, TextDecoration.ITALIC)
                     newLore.add(engraving)
                 }
                 it.lore(newLore)

@@ -5,7 +5,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.scheduler.BukkitRunnable
 
 // THORNS TASK
-class ThornyTask(private val thornEntity: LivingEntity, private val thornCount: Int) : BukkitRunnable() {
+class CorrodingTask(private val thornEntity: LivingEntity, private val thornCount: Int) : BukkitRunnable() {
     private var thornsCooldown = System.currentTimeMillis()
     private var counter = 0
 

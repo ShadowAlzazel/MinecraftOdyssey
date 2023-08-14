@@ -17,21 +17,21 @@ class RottingTask(private val victim: LivingEntity, private val factor: Int, pri
             if (EffectTags.ROTTING !in victim.scoreboardTags) { this.cancel() }
 
             with(it.world) {
-                val someLocation = it.location.clone().add(0.0, 0.5, 0.0)
+                val location = it.location.clone().add(0.0, 0.5, 0.0)
                 // Static
-                spawnParticle(Particle.SPORE_BLOSSOM_AIR , someLocation, 85, 0.5, 0.75, 0.5)
-                spawnParticle(Particle.GLOW, someLocation, 15, 0.75, 0.8, 0.75)
-                spawnParticle(Particle.GLOW_SQUID_INK, someLocation, 15, 0.25, 0.25, 0.25)
+                spawnParticle(Particle.SPORE_BLOSSOM_AIR , location, 70, 0.4, 0.75, 0.4)
+                spawnParticle(Particle.GLOW, location, 20, 00.4, 0.75, 0.4)
+                spawnParticle(Particle.SCRAPE, location, 20, 0.4, 0.75, 0.4)
                 // Directional Particles
                 for (x in 1..15) {
-                    val randomLocation = someLocation.add((0..10).random() * 0.1, 0.0, (0..10).random() * 0.1)
-                    spawnParticle(Particle.SNEEZE, randomLocation, 1, 0.05, 0.05, 0.05)
-                    spawnParticle(Particle.SCRAPE, randomLocation, 1, 0.05, 0.05, 0.05)
+                    val offset = location.clone().add((0..10).random() * 0.1, 0.3, (0..10).random() * 0.1)
+                    spawnParticle(Particle.GLOW_SQUID_INK, offset, 1, 0.03, 0.03, 0.03)
+                    spawnParticle(Particle.SNEEZE, offset, 1, 0.03, 0.03, 0.03)
+
                 }
             }
             // Damage
             it.damage(factor.toDouble() * 0.75)
-
             // Every 2 sec
             val timeElapsed = System.currentTimeMillis() - timer
             if (counter > maxCount || timeElapsed > (maxCount * 2) * 1000) {

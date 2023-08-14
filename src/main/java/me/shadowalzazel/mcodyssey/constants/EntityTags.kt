@@ -12,16 +12,21 @@ object EntityTags {
     // AREA_EFFECT_CLOUD
     const val FREEZING_CLOUD: String = "odyssey.freezing_cloud"
     const val DECAYING_CLOUD: String = "odyssey.decaying_cloud"
-    const val DOUSE_CLOUD: String = "odyssey.douse_cloud"
+    const val TARRED_CLOUD: String = "odyssey.douse_cloud"
     const val BLAZING_CLOUD: String = "odyssey.blazing_cloud"
-    const val ROSE_CLOUD: String = "odyssey.rose_cloud"
+    const val IRRADIATED_CLOUD: String = "odyssey.rose_cloud"
     const val MIASMA_CLOUD: String = "odyssey.miasma_cloud"
-    const val PUFFJUICE_CLOUD: String = "odyssey.puffjuice_cloud"
+    const val CORROSION_CLOUD: String = "odyssey.puffjuice_cloud"
     const val ACCURSED_CLOUD: String = "odyssey.accursed_cloud"
     const val SOUL_DAMAGE_CLOUD: String = "odyssey.soul_damage_cloud"
 
     // CLOUD UTILITY
     const val TIMED_CLOUD: String = "odyssey.timed_cloud"
+    const val CUSTOM_EFFECT_CLOUD: String = "Odyssey.custom_effect_cloud"
+    // PERSISTENT DATA CONTAINER
+    const val CUSTOM_EFFECT_TIME: String = "odyssey.custom_effect_time" // Stores Int for ticks [PDT]
+    const val CUSTOM_EFFECT_TAG: String = "odyssey.custom_effect_tag" // Stores String USE EffectTags [PDT]
+    const val CUSTOM_EFFECT_AMPLIFIER: String = "odyssey.custom_effect_amplifier" // Stores Int [PDT]
 
     // BOSS
     const val DRAGON_BOMB: String = "odyssey.dragon_bomb"

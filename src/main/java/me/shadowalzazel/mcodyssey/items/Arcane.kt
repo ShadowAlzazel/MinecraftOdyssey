@@ -13,19 +13,19 @@ import org.bukkit.inventory.ItemStack
 object Arcane {
 
     // Extension function to create enchanted books when this is called
-    fun OdysseyItem.createEnchantedBook(someEnchant: Enchantment, level: Int): ItemStack {
+    fun OdysseyItem.createEnchantedBook(enchantment: Enchantment, level: Int): ItemStack {
         val newBook = this.createItemStack(1)
         newBook.itemMeta = newBook.itemMeta.also {
-            if (someEnchant is OdysseyEnchantment) {
-                it.addEnchant(someEnchant, level, true)
-                val textLore = someEnchant.displayLore(level)
+            if (enchantment is OdysseyEnchantment) {
+                it.addEnchant(enchantment, level, true)
+                val textLore = enchantment.displayLore(level)
                 val nameComponent = it.displayName()
-                it.displayName(nameComponent?.append(Component.text(" - " + someEnchant.enchantName, someEnchant.subtype.displayColor)))
+                it.displayName(nameComponent?.append(Component.text(" - " + enchantment.enchantName, enchantment.subtype.displayColor)))
                 it.lore(listOf(textLore))
             }
             else {
-                it.addEnchant(someEnchant, level, true)
-                it.displayName(someEnchant.displayName(level))
+                it.addEnchant(enchantment, level, true)
+                it.displayName(enchantment.displayName(level))
             }
         }
         return newBook

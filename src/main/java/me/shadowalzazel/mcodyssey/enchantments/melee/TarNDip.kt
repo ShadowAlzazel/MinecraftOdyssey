@@ -6,11 +6,12 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object DecayingTouch : OdysseyEnchantment("decaying_touch", "Decaying Touch", 3) {
+object TarNDip : OdysseyEnchantment("tar_n_dip", "Tar n' Dip", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.HEMORRHAGE, OdysseyEnchantments.BUZZY_BEES -> {
+            OdysseyEnchantments.FREEZING_ASPECT, OdysseyEnchantments.FROSTY_FUSE, OdysseyEnchantments.BUZZY_BEES,
+            OdysseyEnchantments.SPORING_ROT, OdysseyEnchantments.DOUSE-> {
                 true
             }
             else -> {

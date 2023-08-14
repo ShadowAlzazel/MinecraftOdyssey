@@ -10,7 +10,7 @@ object Exploding : OdysseyEnchantment("exploding", "Exploding", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.FROSTY_FUSE -> {
+            OdysseyEnchantments.FROSTY_FUSE, OdysseyEnchantments.ILLUCIDATION -> {
                 true
             }
             else -> {
