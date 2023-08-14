@@ -13,13 +13,14 @@ import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffect
 
 
-data class OdysseyItem(
+open class OdysseyItem(
     val name: String,
     internal val material: Material,
     internal val displayName: Component? = null,
@@ -27,8 +28,6 @@ data class OdysseyItem(
     internal val customModel: Int? = null,
     internal val weaponMaterial: WeaponMaterial? = null,
     internal val weaponType: WeaponType? = null,
-    internal val potionEffects: List<PotionEffect>? = null,
-    internal val potionColor: Color? = null,
     internal val enchantments: MutableMap<Enchantment, Int>? = null
 ) {
 
@@ -52,8 +51,9 @@ data class OdysseyItem(
         if (enchantments != null) {
             itemStack.addTag(ItemTags.IS_SLOTTED)
             itemStack.addIntTag(ItemTags.ENCHANT_SLOTS, enchantSlots)
-            itemStack.addIntTag(ItemTags.GILDED_SLOTS, enchantSlots)
+            itemStack.addIntTag(ItemTags.GILDED_SLOTS, gildedSlots)
             itemStack.updateSlotLore()
+            itemStack.addItemFlags(ItemFlag.HIDE_ENCHANTS)
         }
         return itemStack
     }

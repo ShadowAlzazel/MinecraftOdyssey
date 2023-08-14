@@ -14,9 +14,11 @@ object ItemModels {
     const val JAR: Int = 6905314 //
     const val SQUARE_BOTTLE: Int = 6905315 // Higher Amplifier
     const val VOLUMETRIC_BOTTLE: Int = 6905316 // Higher Duration
-    const val PEARSHAPE_BOTTLE: Int = 6905317 // For Enhance potion
-    const val DAIRYSHAPE_BOTTLE: Int = 6905318 // Super
+    const val PEARSHAPE_BOTTLE: Int = 6905317 // For Enhanced potions (not obtainable through vanilla)
+    const val DAIRYSHAPE_BOTTLE: Int = 6905318 // Super or For Fun
     const val ROUND_BOTTLE: Int = 6905319 // For Odyssey Effect Potions Without Time
+    const val DECOCTION_BOTTLE: Int = 6905320 // For Potion Effect Combinations
+    // Decoction
 
     /* ---------------------------------------------------------------------------------------------- */
     /* ------------------------------------------SPIRIT----------------------------------------------- */
@@ -72,7 +74,7 @@ object ItemModels {
     const val MELON_COOKIE: Int = 6905046
     const val SUGAR_COOKIE: Int = 6905047
     const val GOLDEN_COOKIE: Int = 6905048
-    const val CHORUS_COOKIE: Int = 6905049
+    const val CHORUS_FRUIT_COOKIE: Int = 6905049
 
     const val CRYSTAL_CANDY: Int = 6905868
     const val BACON: Int = 6908047
@@ -218,13 +220,9 @@ object ItemModels {
     const val SOUL_STEEL_POLEAXE: Int = 6906686
     const val SOUL_STEEL_LABRYS: Int = 6906687
 
-
-
-
     // -----------------------------------------------
     const val ZWEIHANDER: Int = 6905777
 
-    // Drops
     const val ABZU_BLADE: Int = 6905002
     const val KINETIC_BLASTER: Int = 6905003
 

@@ -1,6 +1,8 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import com.destroystokyo.paper.event.inventory.PrepareResultEvent
+import me.shadowalzazel.mcodyssey.arcane.EnchantSlotManager
+import me.shadowalzazel.mcodyssey.arcane.SlotColors
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.ItemTags
 import me.shadowalzazel.mcodyssey.constants.ItemTags.addIntTag
@@ -41,149 +43,7 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.inventory.meta.Repairable
 import kotlin.math.max
 
-object EnchantingListeners : Listener {
-
-    // Colors
-    private val GRAY_COLOR = TextColor.color(170, 170, 170)
-    private val ENCHANT_COLOR = TextColor.color(191, 255, 189)
-    private val GILDED_COLOR = TextColor.color(255, 170, 0)
-    private val AMETHYST_COLOR = TextColor.color(141, 109, 209)
-    private val CURSED_COLOR = TextColor.color(255, 85, 85)
-    //TextColor.color(102, 255, 222)
-
-    // Components
-    private val SLOT_SEPERATOR = Component.text("----------------------", GRAY_COLOR).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-    private val EMPTY_GILDED_SLOT = Component.text("+ Empty Gilded Slot", GILDED_COLOR).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-    private val EMPTY_ENCHANT_SLOT = Component.text("+ Empty Enchant Slot", GRAY_COLOR).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-    private fun enchantHeader(used: Int = 0, total: Int = 0): TextComponent {
-        return Component.text("Enchantments: [$used/$total]", ENCHANT_COLOR).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-    }
-
-    /*-----------------------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------------------*/
-
-    private fun ItemStack.isSlotted(): Boolean {
-        return hasTag(ItemTags.IS_SLOTTED)
-    }
-
-    private fun ItemStack.getEnchantSlots(): Int {
-        return getIntTag(ItemTags.ENCHANT_SLOTS) ?: 0
-    }
-
-    private fun ItemStack.getGildedSlots(): Int {
-        return getIntTag(ItemTags.GILDED_SLOTS) ?: 0
-    }
-
-    private fun ItemStack.getSlots(): Pair<Int, Int> {
-        return Pair(getEnchantSlots(), getGildedSlots())
-    }
-
-    // Not Restricted
-    private fun ItemStack.setSlots(slots: Pair<Int, Int>) {
-        addTag(ItemTags.IS_SLOTTED)
-        addIntTag(ItemTags.ENCHANT_SLOTS, slots.first)
-        addIntTag(ItemTags.GILDED_SLOTS, slots.second)
-    }
-
-    private fun ItemStack.addEnchantSlot() {
-        val count = getEnchantSlots()
-        addIntTag(ItemTags.ENCHANT_SLOTS, count + 1)
-    }
-
-    private fun ItemStack.addGildedSlot() {
-        val count = getGildedSlots()
-        if (count >= 3) {
-            return
-        }
-        addIntTag(ItemTags.GILDED_SLOTS, count + 1)
-    }
-
-    private fun ItemStack.removeEnchantSlot() {
-        val count = getEnchantSlots()
-        addIntTag(ItemTags.ENCHANT_SLOTS, maxOf(1, count - 1))
-    }
-
-    private fun ItemStack.removeGildedSlot() {
-        val count = getGildedSlots()
-        addIntTag(ItemTags.GILDED_SLOTS, maxOf(0, count - 1))
-    }
-
-    // Usage for ONLY display not logic
-    fun ItemStack.updateSlotLore(
-        newEnchants: MutableMap<Enchantment, Int>? = null,
-        resetLore: Boolean = false
-    ) {
-        val newLore = itemMeta.lore() ?: mutableListOf()
-        if (!newLore.contains(SLOT_SEPERATOR)) {
-            newLore.add(Component.text("Header Holder"))
-            newLore.add(SLOT_SEPERATOR)
-        }
-        val sepIndex = newLore.indexOf(SLOT_SEPERATOR)
-        val slots = Pair(getEnchantSlots(), getGildedSlots())
-        /*
-        println("SEP INDEX: $sepIndex")
-        println("SIZE: ${newLore.size}")
-        println("SLOTS: $slots")
-        println("F: ${sepIndex + slots.second + slots.first}")
-         */
-        // Loop add Empty Slots first
-        for (e in 1..slots.first) {
-            val i = e + sepIndex
-            if (!newLore.indices.contains(i)) {
-                newLore.add(i, EMPTY_ENCHANT_SLOT)
-            } else {
-                newLore[i] = EMPTY_ENCHANT_SLOT
-            }
-        }
-        for (g in 1..slots.second) {
-            val i = sepIndex + slots.first + g
-            if (!newLore.indices.contains(i)) {
-                newLore.add(i, EMPTY_GILDED_SLOT)
-            } else {
-                newLore[i] = EMPTY_GILDED_SLOT
-            }
-        }
-        // Get Enchantment Maps
-        val enchants = newEnchants?.filter { it.key !is OdysseyEnchantment } ?: enchantments.filter { it.key !is OdysseyEnchantment }
-        val gildedEnchants = newEnchants?.filter { it.key is OdysseyEnchantment } ?: enchantments.filter { it.key is OdysseyEnchantment }
-        // Add Enchants Over empty slots
-        var enchantCount = 0
-        enchants.forEach {
-            val color = if (it.key.isCursed) { CURSED_COLOR } else { ENCHANT_COLOR }
-            enchantCount += 1
-            newLore[sepIndex + enchantCount] = it.key
-                .displayName(it.value)
-                .color(color)
-                .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-        }
-        var gildedCount = 0
-        gildedEnchants.forEach {
-            gildedCount += 1
-            newLore[sepIndex + slots.first + gildedCount] = (it.key as OdysseyEnchantment)
-                .displayLore(it.value)
-                .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-        }
-        // Move Engraving To Bottom
-        if (hasTag(ItemTags.IS_ENGRAVED)) {
-            val engraver = getStringTag(ItemTags.ENGRAVED_BY)!!
-            val engraving = Component.text("Created by $engraver", AMETHYST_COLOR, TextDecoration.ITALIC)
-            newLore.remove(engraving)
-            newLore.add(engraving)
-        }
-        // Header
-        newLore[sepIndex - 1] = enchantHeader(enchantCount + gildedCount, slots.first + slots.second)
-        // New Lore
-        lore(newLore)
-    }
-
-    private fun LivingEntity.sendFailMessage(reason: String) {
-        this.sendActionBar(
-            Component.text(
-                reason,
-                ENCHANT_COLOR
-            )
-        )
-    }
+object EnchantingListeners : Listener, EnchantSlotManager {
 
     /*-----------------------------------------------------------------------------------------------*/
     /*-----------------------------------------------------------------------------------------------*/
@@ -196,7 +56,7 @@ object EnchantingListeners : Listener {
         if (inventory.upperItem?.enchantments == null && inventory.lowerItem?.enchantments == null) return
         val result = inventory.result!!
         val slotted = result.isSlotted()
-        val isLegacy = !slotted && result.itemMeta.hasLore() && result.lore()!!.contains(SLOT_SEPERATOR)
+        val isLegacy = !slotted && result.itemMeta.hasLore() && result.lore()!!.contains(slotSeperator)
         if (isLegacy) {
             event.viewers.forEach { it.sendFailMessage("You need to reactivate this item. Combine with empty paper at the anvil!") }
             event.result = ItemStack(Material.AIR)
@@ -250,14 +110,14 @@ object EnchantingListeners : Listener {
             return
         }
         // Legacy Check
-        val isLegacy = !slotted && first.itemMeta.hasLore() && first.lore()!!.contains(SLOT_SEPERATOR)
+        val isLegacy = !slotted && first.itemMeta.hasLore() && first.lore()!!.contains(slotSeperator)
         if (isLegacy && second.type == Material.PAPER) {
-            val oldSlot = Component.text("+ Empty Enchantment Slot", GRAY_COLOR).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+            val oldSlot = Component.text("+ Empty Enchantment Slot", SlotColors.GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
             val currentGildedEnchants: Map<Enchantment, Int> = first.enchantments.filter { it.key is OdysseyEnchantment }
             val currentEnchants = first.enchantments.filter { it.key !is OdysseyEnchantment }
             event.inventory.firstItem = first.clone().apply {
                 val enchantSlots = lore()!!.count { it == oldSlot } + currentEnchants.size
-                val gildedSlots = minOf(currentGildedEnchants.size + lore()!!.count { it == EMPTY_GILDED_SLOT }, 3)
+                val gildedSlots = minOf(currentGildedEnchants.size + lore()!!.count { it == emptyGildedSlot }, 3)
                 setSlots(Pair(enchantSlots, gildedSlots))
                 addUnsafeEnchantments(currentGildedEnchants)
                 updateSlotLore()
@@ -601,9 +461,9 @@ object EnchantingListeners : Listener {
             return ItemStack(Material.AIR)
         }
         val enchantList = item.enchantments.filter { it.key !is OdysseyEnchantment }
-        val enchantSize = enchantList.size - item.enchantments.keys.count { it is OdysseyEnchantment }
+        val enchantSize = enchantList.size
         if (enchantSize < 4) {
-            viewers.forEach { it.sendFailMessage("This tome requires at least 4 enchants ont the item to use.") }
+            viewers.forEach { it.sendFailMessage("This tome requires at least 4 enchants on the item to use.") }
             return ItemStack(Material.AIR)
         }
         // Add Slot remove enchants

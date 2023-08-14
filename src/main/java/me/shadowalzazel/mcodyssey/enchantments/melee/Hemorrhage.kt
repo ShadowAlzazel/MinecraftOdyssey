@@ -10,7 +10,7 @@ object Hemorrhage : OdysseyEnchantment("hemorrhage", "Hemorrhage", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.BUZZY_BEES -> {
+            OdysseyEnchantments.DECAYING_TOUCH -> {
                 true
             }
             else -> {

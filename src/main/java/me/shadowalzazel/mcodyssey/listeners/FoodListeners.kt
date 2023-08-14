@@ -30,28 +30,28 @@ object FoodListeners : Listener {
 
         when (event.item.getOdysseyTag()!!) {
             "beetroot_cookie" -> {
-                event.player.addPotionEffect(PotionEffect(PotionEffectType.INCREASE_DAMAGE, 4 * 20, 0))
+                event.player.addPotionEffect(PotionEffect(PotionEffectType.INCREASE_DAMAGE, 6 * 20, 0))
             }
             "pumpkin_cookie" -> {
-                event.player.addPotionEffect(PotionEffect(PotionEffectType.FAST_DIGGING, 5 * 20, 0))
+                event.player.addPotionEffect(PotionEffect(PotionEffectType.FAST_DIGGING, 6 * 20, 0))
             }
             "honey_cookie" -> {
-                event.player.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION, 4 * 20, 0))
+                event.player.addPotionEffect(PotionEffect(PotionEffectType.REGENERATION, 6 * 20, 0))
             }
             "apple_cookie" -> {
-                event.player.addPotionEffect(PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 4 * 20, 0))
+                event.player.addPotionEffect(PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 6 * 20, 0))
             }
             "berry_cookie" -> {
-                event.player.addPotionEffect(PotionEffect(PotionEffectType.INCREASE_DAMAGE, 2 * 20, 0))
+                event.player.addPotionEffect(PotionEffect(PotionEffectType.INCREASE_DAMAGE, 6 * 20, 0))
             }
             "glow_berry_cookie" -> {
-                event.player.addPotionEffect(PotionEffect(PotionEffectType.GLOWING, 2 * 20, 0))
+                event.player.addPotionEffect(PotionEffect(PotionEffectType.GLOWING, 6 * 20, 0))
             }
             "melon_cookie" -> {
-                event.player.addPotionEffect(PotionEffect(PotionEffectType.REGENERATION, 3 * 20, 0))
+                event.player.addPotionEffect(PotionEffect(PotionEffectType.REGENERATION, 6 * 20, 0))
             }
             "sugar_cookie" -> {
-                event.player.addPotionEffect(PotionEffect(PotionEffectType.SPEED, 5 * 20, 0))
+                event.player.addPotionEffect(PotionEffect(PotionEffectType.SPEED, 6 * 20, 0))
             }
             "golden_cookie" -> {
                 event.player.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION, 15 * 20, 1))

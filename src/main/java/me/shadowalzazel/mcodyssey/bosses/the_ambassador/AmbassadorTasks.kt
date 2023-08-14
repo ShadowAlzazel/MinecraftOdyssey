@@ -65,6 +65,6 @@ class AmbassadorAttackCycle : BukkitRunnable() {
             return
         }
         // Run Attack
-        ambassador.runAttackPatterns()
+        ambassador.attackPatternHandler()
     }
 }

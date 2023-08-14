@@ -13,64 +13,75 @@ object Foods {
         name = "beetroot_cookie",
         material = Material.COOKIE,
         displayName = Component.text("Beetroot Cookie", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
-        lore = listOf(Component.text("A Beetroot Cookie!", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        lore = listOf(Component.text("Gives you a taste of strength", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.GOLDEN_COOKIE)
 
     val PUMPKIN_COOKIE = OdysseyItem(
         name = "pumpkin_cookie",
         material = Material.COOKIE,
         displayName = Component.text("Pumpkin Cookie", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
-        lore = listOf(Component.text("A Pumpkin Cookie!", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        lore = listOf(Component.text("Gives you a taste of haste", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.PUMPKIN_COOKIE)
 
     val HONEY_COOKIE = OdysseyItem(
         name = "honey_cookie",
         material = Material.COOKIE,
         displayName = Component.text("Honey Cookie", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
-        lore = listOf(Component.text("A Honey Cookie!", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.GOLDEN_COOKIE)
+        lore = listOf(Component.text("Gives you a taste of regeneration", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.HONEY_COOKIE)
 
     val APPLE_COOKIE = OdysseyItem(
         name = "apple_cookie",
         material = Material.COOKIE,
         displayName = Component.text("Apple Cookie", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
-        lore = listOf(Component.text("An Apple Cookie!", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        lore = listOf(Component.text("Gives you a taste of resistance", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.APPLE_COOKIE)
 
     val BERRY_COOKIE = OdysseyItem(
         name = "berry_cookie",
         material = Material.COOKIE,
         displayName = Component.text("Berry Cookie", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
-        lore = listOf(Component.text("A Berry Cookie!", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        lore = listOf(Component.text("Gives you a taste of strength", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.BERRY_COOKIE)
 
     val GLOW_BERRY_COOKIE = OdysseyItem(
         name = "glow_berry_cookie",
         material = Material.COOKIE,
         displayName = Component.text("Glow Berry Cookie", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
-        lore = listOf(Component.text("A Glow Berry Cookie!", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        lore = listOf(Component.text("Makes you glow for a bit", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.GLOW_BERRY_COOKIE)
 
     val MELON_COOKIE = OdysseyItem(
         name = "melon_cookie",
         material = Material.COOKIE,
         displayName = Component.text("Melon Cookie", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
-        lore = listOf(Component.text("A Melon Cookie!", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        lore = listOf(Component.text("Gives you a taste of regeneration", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.MELON_COOKIE)
 
     val SUGAR_COOKIE = OdysseyItem(
         name = "sugar_cookie",
         material = Material.COOKIE,
         displayName = Component.text("Sugar Cookie", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
-        lore = listOf(Component.text("A Sugar Cookie!", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        lore = listOf(Component.text("Gives you a taste of speed", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.SUGAR_COOKIE)
 
     val GOLDEN_COOKIE = OdysseyItem(
         name = "golden_cookie",
         material = Material.COOKIE,
         displayName = Component.text("Golden Cookie", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
-        lore = listOf(Component.text("A Golden Cookie!", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        lore = listOf(Component.text("A magical cookie", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.GOLDEN_COOKIE)
+
+    val CHORUS_FRUIT_COOKIE = OdysseyItem(
+        name = "chorus_fruit_cookie",
+        material = Material.COOKIE,
+        displayName = Component.text("Chorus Fruit Cookie", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
+        lore = listOf(Component.text("Anywhere but here", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.CHORUS_FRUIT_COOKIE)
+
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
+
 
     val FRENCH_TOAST = OdysseyItem(
         name = "french_toast",

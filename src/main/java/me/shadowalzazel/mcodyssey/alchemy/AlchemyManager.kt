@@ -1,21 +1,164 @@
 package me.shadowalzazel.mcodyssey.alchemy
 
+import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.constants.EffectTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags
-import me.shadowalzazel.mcodyssey.effects.OdysseyEffectsHandler
-import me.shadowalzazel.mcodyssey.items.Potions
+import me.shadowalzazel.mcodyssey.constants.ItemTags
+import me.shadowalzazel.mcodyssey.constants.ItemTags.addIntTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.addStringTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.getIntTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.getStringTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
+import me.shadowalzazel.mcodyssey.effects.EffectColors
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.TextComponent
+import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
+import org.bukkit.Color
 import org.bukkit.Material
+import org.bukkit.NamespacedKey
+import org.bukkit.Particle
 import org.bukkit.entity.AreaEffectCloud
-import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.ThrownPotion
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.PotionMeta
-import org.bukkit.potion.PotionEffect
-import org.bukkit.potion.PotionEffectType
+import org.bukkit.persistence.PersistentDataType
 
 interface AlchemyManager {
+
+    /*-----------------------------------------------------------------------------------------------*/
+    // Tags
+
+    fun ItemStack.isCustomEffect(): Boolean {
+        return hasTag(ItemTags.IS_CUSTOM_EFFECT)
+    }
+
+    // Get Effect
+    fun ItemStack.getCustomEffectTag(): String {
+        return getStringTag(ItemTags.ODYSSEY_EFFECT_TAG) ?: EffectTags.NO_EFFECT
+    }
+
+    fun ItemStack.setCustomEffectTag(effectTag: String) {
+        addStringTag(ItemTags.ODYSSEY_EFFECT_TAG, effectTag)
+    }
+
+    // Default is Ticks
+    fun ItemStack.getCustomEffectTimeInTicks(): Int {
+        return getIntTag(ItemTags.ODYSSEY_EFFECT_TIME) ?: 0
+    }
+
+    fun ItemStack.getCustomEffectTimeInSeconds(): Int {
+        return getIntTag(ItemTags.ODYSSEY_EFFECT_TIME)?.div(20) ?: 0
+    }
+
+    // Set Time in Ticks
+    fun ItemStack.setCustomEffectTime(timeInTicks: Int) {
+        addIntTag(ItemTags.ODYSSEY_EFFECT_TIME, timeInTicks)
+    }
+
+    // Get Amplifier
+        fun ItemStack.getCustomEffectAmplifier(): Int {
+        return getIntTag(ItemTags.ODYSSEY_EFFECT_AMPLIFIER) ?: 0
+    }
+
+    // Set Amplifier
+    fun ItemStack.setCustomEffectAmplifier(amplifier: Int) {
+        addIntTag(ItemTags.ODYSSEY_EFFECT_AMPLIFIER, amplifier)
+    }
+
+    // Get Cloud effect tag
+    fun AreaEffectCloud.getCloudEffectTag(): String {
+        return persistentDataContainer[NamespacedKey(Odyssey.instance, EntityTags.CUSTOM_EFFECT_TAG), PersistentDataType.STRING] ?: EffectTags.NO_EFFECT
+    }
+
+    // Set cloud effect tag
+    fun AreaEffectCloud.setCloudEffectTag(effectTag: String) {
+        persistentDataContainer.set(NamespacedKey(Odyssey.instance, EntityTags.CUSTOM_EFFECT_TAG), PersistentDataType.STRING, effectTag)
+    }
+
+    // Get Cloud time in ticks
+    fun AreaEffectCloud.getCloudEffectTimeInTicks(): Int {
+        return persistentDataContainer[NamespacedKey(Odyssey.instance, EntityTags.CUSTOM_EFFECT_TIME), PersistentDataType.INTEGER] ?: 1
+    }
+
+    // Set cloud time in ticks
+    fun AreaEffectCloud.setCloudEffectTimeInTicks(timeInTicks: Int) {
+        persistentDataContainer.set(NamespacedKey(Odyssey.instance, EntityTags.CUSTOM_EFFECT_TIME), PersistentDataType.INTEGER, timeInTicks)
+    }
+
+    // Get Cloud time in ticks
+    fun AreaEffectCloud.getCloudEffectAmplifier(): Int {
+        return persistentDataContainer[NamespacedKey(Odyssey.instance, EntityTags.CUSTOM_EFFECT_AMPLIFIER), PersistentDataType.INTEGER] ?: 0
+    }
+
+    // Set cloud time in ticks
+    fun AreaEffectCloud.setCloudEffectAmplifier(amplifier: Int) {
+        persistentDataContainer.set(NamespacedKey(Odyssey.instance, EntityTags.CUSTOM_EFFECT_AMPLIFIER), PersistentDataType.INTEGER, amplifier)
+    }
+
+    /*-----------------------------------------------------------------------------------------------*/
+    // TODO: TIPPED ARROWS
+
+
+
+    /*-----------------------------------------------------------------------------------------------*/
+    // Components
+
+    fun createTimeString(timeInSeconds: Int): CharSequence {
+        val seconds = timeInSeconds % 60
+        val minutes = timeInSeconds / 60
+        return if (seconds < 9) { "($minutes:0$seconds)" } else { "($minutes:$seconds)" }
+    }
+
+    fun getEffectComponent(tag: String, timeInTicks: Int): Component {
+        val color = getEffectColor(tag)
+        return when (tag) {
+            EffectTags.FREEZING -> {
+                Component.text("Freezing ${createTimeString(timeInTicks / 20)}", color)
+                    .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+            }
+            else -> {
+                Component.text("No Effect")
+            }
+        }
+    }
+
+    fun getEffectColor(tag: String): TextColor {
+        return when (tag) {
+            EffectTags.FREEZING -> {
+                EffectColors.FREEZING.color
+            }
+            EffectTags.ROTTING -> {
+                EffectColors.ROTTING.color
+            }
+            EffectTags.TARRED -> {
+                EffectColors.TARRED.color
+            }
+            EffectTags.ABLAZE -> {
+                EffectColors.ABLAZE.color
+            }
+            EffectTags.IRRADIATED -> {
+                EffectColors.IRRADIATED.color
+            }
+            EffectTags.CORRODING -> {
+                EffectColors.CORROSION.color
+            }
+            EffectTags.MIASMA -> {
+                EffectColors.MIASMA.color
+            }
+            EffectTags.ACCURSED -> {
+                EffectColors.ACCURSED.color
+            }
+            EffectTags.SOUL_DAMAGE -> {
+                EffectColors.SOUL.color
+            }
+            EffectTags.SHIMMER -> {
+                EffectColors.SHIMMER.color
+            }
+            else -> {
+                TextColor.color(255, 255, 255)
+            }
+        }
+    }
 
     // Helper function that converts a char sequence (M:SS) to time Int
     private fun loreToSeconds(timeSequence: CharSequence): Int {
@@ -25,149 +168,88 @@ interface AlchemyManager {
         return (minute * 60) + (tensSecond * 10) + (onesSecond)
     }
 
+    /*-----------------------------------------------------------------------------------------------*/
 
-    private fun timeToLore(time: Int): CharSequence {
-        val seconds = time % 60
-        val minutes = time / 60
-        return if (seconds < 9) { "($minutes:0$seconds)" } else { "($minutes:$seconds)" }
-    }
-
-    private fun getPotionDuration(potionLore: MutableList<Component>): Int {
-        val timerLoreContent = (potionLore.first() as TextComponent).content()
-        val i = timerLoreContent.lastIndex
-        val potionLoreTimer = timerLoreContent.subSequence((i - 5)..i)
-        return loreToSeconds(potionLoreTimer)
-    }
-
-
-    // Helper function to create lingering timed potions
-    fun createLingeringPotion(potionMaterial: Material, oldPotion: ItemStack): ItemStack {
-        val newPotion = ItemStack(potionMaterial, 1)
-        // Modify potion meta
-        newPotion.itemMeta = (oldPotion.itemMeta as PotionMeta).also {
-            val oldTextComponent = it.lore()!!.first() as TextComponent
-            val oldColor = oldTextComponent.color()
-            val timerLore = oldTextComponent.content()
-            val i = timerLore.lastIndex
-            // Get the time in seconds form String in "(M:SS)" format
-            val oldTime = loreToSeconds(timerLore.subSequence((i - 5)..i))
-            // Create lore by getting old effect and adding new time
-            val newTimerString = timerLore.subSequence(0..(i - 6)).toString() + timeToLore(oldTime / 4)
-            val newText = Component.text(newTimerString, oldColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-            it.lore(listOf(newText))
+    fun createModeledPotion(material: Material, item: ItemStack, model: Int? = null): ItemStack {
+        return ItemStack(material, 1).apply {
+            itemMeta = item.itemMeta as PotionMeta
+            if (model != null) { itemMeta.setCustomModelData(model) }
         }
-        return newPotion
     }
 
-    fun createCustomPotion(potionMaterial: Material, oldPotion: ItemStack, modelBottle: Int = 0): ItemStack {
-        val newPotion = ItemStack(potionMaterial, 1)
-        newPotion.itemMeta = (oldPotion.itemMeta as PotionMeta)
-        if (modelBottle != 0) { newPotion.itemMeta.setCustomModelData(modelBottle) }
-        return newPotion
+    fun createLingeringPotion(item: ItemStack): ItemStack {
+        val potion = ItemStack(Material.LINGERING_POTION, 1)
+        val isCustom = potion.isCustomEffect()
+        val oldTime = potion.getCustomEffectTimeInTicks()
+        // Logic
+        potion.itemMeta = (item.itemMeta as PotionMeta).also {
+            if (isCustom) {
+                potion.setCustomEffectTime(oldTime / 4)
+            }
+        }
+        // Lore
+        return potion.apply {
+            val newLore = lore() ?: mutableListOf()
+            val effectTag = getCustomEffectTag()
+            val index = newLore.indexOf(getEffectComponent(effectTag, oldTime))
+            if (index != -1) { newLore[index] = getEffectComponent(effectTag, oldTime / 4) }
+            lore(newLore)
+        }
     }
 
-
-    fun createEffectCloud(somePotion: ThrownPotion, someCloud: AreaEffectCloud, potionName: String) {
+    fun createCustomEffectCloud(potion: ThrownPotion, cloud: AreaEffectCloud) {
         // Potion Cloud modifiers
-        val tagToAdd: String
+        val cloudTag: String
         var applicationDelay = 20
-        val customEffectToAdd: PotionEffect
-        val potionDuration = getPotionDuration(somePotion.item.lore()!!) // -> Can Make When?
+        val effectTag = potion.item.getCustomEffectTag()
+        val effectDuration = potion.item.getCustomEffectTimeInTicks() / 4 // PDT
+        val effectAmplifier = potion.item.getCustomEffectAmplifier()
+        val cloudColor = getEffectColor(effectTag).value()
+
         // Match names
-        when (potionName) {
-            Potions.FLASK_OF_FROST.name -> {
-                customEffectToAdd = PotionEffect(PotionEffectType.HUNGER, potionDuration * 20, 0)
+        when (effectTag) {
+            EffectTags.FREEZING -> {
                 applicationDelay = 40
-                tagToAdd = EntityTags.FREEZING_CLOUD
+                cloudTag = EntityTags.FREEZING_CLOUD
             }
-            Potions.FLASK_OF_DECAY.name -> {
-                customEffectToAdd = PotionEffect(PotionEffectType.SLOW, potionDuration * 20, 0)
-                tagToAdd = EntityTags.DECAYING_CLOUD
+            EffectTags.ROTTING -> {
+                cloudTag = EntityTags.DECAYING_CLOUD
             }
-            Potions.FLASK_OF_DOUSE.name -> {
-                customEffectToAdd = PotionEffect(PotionEffectType.UNLUCK, potionDuration * 20, 0)
-                tagToAdd = EntityTags.DOUSE_CLOUD
+            EffectTags.TARRED -> {
+                cloudTag = EntityTags.TARRED_CLOUD
             }
-            Potions.FLASK_OF_ABLAZE.name -> {
-                customEffectToAdd = PotionEffect(PotionEffectType.WEAKNESS, potionDuration * 20, 0)
-                tagToAdd = EntityTags.BLAZING_CLOUD
+            EffectTags.ABLAZE -> {
+                cloudTag = EntityTags.BLAZING_CLOUD
+                cloud.particle = Particle.SMALL_FLAME
             }
-            Potions.FLASK_OF_ROSE.name -> {
-                customEffectToAdd = PotionEffect(PotionEffectType.UNLUCK, potionDuration * 20, 0)
-                tagToAdd = EntityTags.ROSE_CLOUD
+            EffectTags.IRRADIATED -> {
+                cloudTag = EntityTags.IRRADIATED_CLOUD
             }
-            Potions.FLASK_OF_MIASMA.name -> {
-                customEffectToAdd = PotionEffect(PotionEffectType.UNLUCK, potionDuration * 20, 0)
-                tagToAdd = EntityTags.MIASMA_CLOUD
+            EffectTags.MIASMA -> {
+                cloudTag = EntityTags.MIASMA_CLOUD
             }
-            Potions.FLASK_OF_PUFFJUICE.name -> {
-                customEffectToAdd = PotionEffect(PotionEffectType.UNLUCK, potionDuration * 20, 0)
-                tagToAdd = EntityTags.PUFFJUICE_CLOUD
+            EffectTags.CORRODING -> {
+                cloudTag = EntityTags.CORROSION_CLOUD
             }
-            Potions.POLTERGEIST_BREW.name -> {
-                customEffectToAdd = PotionEffect(PotionEffectType.UNLUCK, potionDuration * 20, 0)
-                tagToAdd = EntityTags.ACCURSED_CLOUD
+            EffectTags.ACCURSED -> {
+                cloudTag = EntityTags.ACCURSED_CLOUD
             }
-            else -> { // SHOULD NOT TRIGGER!
-                customEffectToAdd = PotionEffect(PotionEffectType.UNLUCK, potionDuration * 20, 0)
-                tagToAdd = EntityTags.TIMED_CLOUD
+            else -> {
+                cloudTag = EntityTags.TIMED_CLOUD
             }
         }
-        // Add Tags and Effects to potion cloud
-        someCloud.also {
-            (somePotion.item.itemMeta as PotionMeta).addCustomEffect(customEffectToAdd, true)
-            it.addCustomEffect(customEffectToAdd, true)
+        // Add Tags, PDT and Effects to potion cloud
+        cloud.also {
+            //(potion.item.itemMeta as PotionMeta).addCustomEffect(effectToAdd, true)
+            it.particle = Particle.SPELL
+            it.color = Color.fromRGB(cloudColor)
             it.duration = 20 * 20
             it.reapplicationDelay = applicationDelay
-            it.addScoreboardTag(tagToAdd)
-            it.addScoreboardTag(EntityTags.TIMED_CLOUD)
-        }
-    }
-
-    fun potionEffectAssigner(affectedEntities: MutableCollection<LivingEntity>, effectApplierNames: List<String>, isCloud: Boolean) {
-        var duration: Int
-        val durationModifier: Int = if (isCloud) 4 else 1
-
-        for (someName in effectApplierNames) {
-            when (someName) {
-                EntityTags.FREEZING_CLOUD, Potions.FLASK_OF_FROST.name -> {
-                    duration = 30 / durationModifier
-                    OdysseyEffectsHandler.freezingEffect(affectedEntities, duration, 1)
-                }
-                EntityTags.DECAYING_CLOUD, Potions.FLASK_OF_DECAY.name -> {
-                    duration = 30 / durationModifier
-                    OdysseyEffectsHandler.rottingEffect(affectedEntities, duration, 1)
-                }
-                EntityTags.DOUSE_CLOUD, Potions.FLASK_OF_DOUSE.name -> {
-                    duration = 40 / durationModifier
-                    OdysseyEffectsHandler.dousedEffect(affectedEntities, duration, 2)
-                }
-                EntityTags.BLAZING_CLOUD, Potions.FLASK_OF_ABLAZE.name -> {
-                    duration = 30 / durationModifier
-                    OdysseyEffectsHandler.ablazeEffect(affectedEntities, duration, 2)
-                }
-                EntityTags.ROSE_CLOUD, Potions.FLASK_OF_ROSE.name -> {
-                    duration = 30 / durationModifier
-                    OdysseyEffectsHandler.thornsEffect(affectedEntities, duration)
-                }
-                EntityTags.MIASMA_CLOUD, Potions.FLASK_OF_MIASMA.name -> {
-                    duration = 30 / durationModifier
-                    OdysseyEffectsHandler.miasmaEffect(affectedEntities, duration)
-                }
-                EntityTags.PUFFJUICE_CLOUD, Potions.FLASK_OF_PUFFJUICE.name -> {
-                    duration = 30 / durationModifier
-                    OdysseyEffectsHandler.rottingEffect(affectedEntities, duration, 1)
-                }
-                EntityTags.ACCURSED_CLOUD, Potions.POLTERGEIST_BREW.name -> {
-                    duration = 90 / durationModifier
-                    OdysseyEffectsHandler.accursedEffect(affectedEntities, duration)
-                }
-                EntityTags.SOUL_DAMAGE_CLOUD, Potions.BOTTLE_OF_SOULS.name -> {
-                    OdysseyEffectsHandler.soulDamageEffect(affectedEntities, 1)
-                }
-                else -> {
-                }
-            }
+            it.addScoreboardTag(cloudTag)
+            it.addScoreboardTag(EntityTags.CUSTOM_EFFECT_CLOUD)
+            it.setCloudEffectTag(effectTag)
+            it.setCloudEffectTimeInTicks(effectDuration)
+            it.setCloudEffectAmplifier(effectAmplifier)
         }
     }
 

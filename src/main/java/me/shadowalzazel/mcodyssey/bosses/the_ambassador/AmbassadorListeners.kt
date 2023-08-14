@@ -76,10 +76,10 @@ object AmbassadorListeners: Listener {
     @EventHandler
     fun ambassadorDamageHandler(event: EntityDamageByEntityEvent) {
         if (!isActive()) return
-        println(event.damager.name)
+        //println(event.damager.name)
         if (event.entity.uniqueId != ambassador!!.illusioner.uniqueId) return
         // Damage
-        ambassador!!.damageHandler(event.damager, event.damage)
+        ambassador!!.takeDamageHandler(event.damager, event.damage)
     }
 
     @EventHandler

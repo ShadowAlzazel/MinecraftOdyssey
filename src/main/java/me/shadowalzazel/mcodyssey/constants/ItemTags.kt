@@ -21,8 +21,12 @@ object ItemTags {
     const val IS_SLOTTED: String = "odyssey.is_slotted"
 
     // POTIONS
-    const val POTION_CHARGES_LEFT: String = "potion_uses_left" // NEEDS AN INT DATA TYPE
-    const val LARGE_POTION: String = "large_potion" // Many charges
+    const val POTION_CHARGES_LEFT: String = "odyssey.potion_charges_left" // NEEDS AN INT DATA TYPE
+    const val LARGE_POTION: String = "odyssey.large_potion" // Many charges
+    const val IS_CUSTOM_EFFECT: String = "odyssey.is_custom_effect" // Stores Boolean
+    const val ODYSSEY_EFFECT_TIME: String = "odyssey.custom_effect_time" // Stores Int for ticks
+    const val ODYSSEY_EFFECT_TAG: String = "odyssey.custom_effect_tag" // Stores String USE EffectTags
+    const val ODYSSEY_EFFECT_AMPLIFIER: String = "odyssey.custom_effect_amplifier" // Stores Int
 
     fun PersistentDataContainer.hasOdysseyTag(): Boolean {
         return has(NamespacedKey(Odyssey.instance, "item"))

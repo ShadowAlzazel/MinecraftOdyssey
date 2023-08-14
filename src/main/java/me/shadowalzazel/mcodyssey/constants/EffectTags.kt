@@ -2,9 +2,12 @@ package me.shadowalzazel.mcodyssey.constants
 
 object EffectTags {
 
+    const val NO_EFFECT: String = "odyssey.no_effect"
+
     // TYPES
     const val FREEZING: String = "odyssey.freezing" // Freeze Ticks + Slow
     const val ROTTING: String = "odyssey.rotting" // give Hunger, do damage, stacking, spores,
+    const val TARRED: String = "odyssey.tarred" //
     const val DOUSED: String = "odyssey.doused" //
     const val ABLAZE: String = "odyssey.ablaze" // More damage Fire ticks
     const val ASPHYXIATE: String = "odyssey.asphyxiate" // TODO: Give negative breath -> IF not negative ticks then make timed effect that sets max to 0
@@ -29,6 +32,8 @@ object EffectTags {
     const val INSPIRED: String = "odyssey.inspired" // Support Mechanic ???
 
     const val INFECTED: String = "odyssey.infected" // TODO: Upon death, turn into a zombie
+    const val SOUL_DAMAGE: String = "odyssey.soul_damage" // ? No effect
+    const val SHIMMER: String = "odyssey.shimmer" // TODO: ?
 
     // ENCHANT
     const val ARCANE_JAILED: String = "odyssey.arcane_jailed"
@@ -41,6 +46,10 @@ object EffectTags {
 
     // TYPE MODIFIERS
     const val HEMORRHAGE_MODIFIER: String = "odyssey.hemorrhage_modifier.0"
-    const val DOUSE_MODIFIER: String = "odyssey.douse_modifier.0"
+    const val TARRED_MODIFIER: String = "odyssey.douse_modifier.0"
+
+
+
+
 
 }

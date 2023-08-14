@@ -71,6 +71,7 @@ object OdysseyEnchantments {
     val ILLUCIDATION: OdysseyEnchantment = Illucidation
     val RUPTURING_STRIKE: OdysseyEnchantment = RupturingStrike
     val SPORING_ROT: OdysseyEnchantment = SporingRot
+    val TAR_N_DIP: OdysseyEnchantment = TarNDip
     val VOID_STRIKE: OdysseyEnchantment = VoidStrike
     val WHIRLWIND: OdysseyEnchantment = Whirlwind
 
@@ -79,7 +80,7 @@ object OdysseyEnchantments {
     val HOOK_SHOT: OdysseyEnchantment = HookShot
     val LENGTHY_LINE: OdysseyEnchantment = LengthyLine
     val MIRROR_FORCE: OdysseyEnchantment = MirrorForce // TODO
-    val REVERSED_RECOIL: OdysseyEnchantment = ReversedRecoil
+    val REVERSED_RECOIL: OdysseyEnchantment = ReversedRecoil // TODO
     val O_SHINY: OdysseyEnchantment = OShiny
     val VOID_JUMP: OdysseyEnchantment = VoidJump
     val WISE_BAIT: OdysseyEnchantment = WiseBait
@@ -124,11 +125,13 @@ object OdysseyEnchantments {
         FREEZING_ASPECT,
         FROG_FRIGHT,
         FROSTY_FUSE,
+        GRAVITY_WELL,
         GUARDING_STRIKE,
         HEMORRHAGE,
         ILLUCIDATION,
         RUPTURING_STRIKE,
         SPORING_ROT,
+        TAR_N_DIP,
         VOID_STRIKE,
         WHIRLWIND
     )

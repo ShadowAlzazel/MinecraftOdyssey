@@ -5,12 +5,15 @@ import me.shadowalzazel.mcodyssey.bosses.base.OdysseyBoss
 import me.shadowalzazel.mcodyssey.constants.EffectTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.constants.Identifiers
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
+import me.shadowalzazel.mcodyssey.items.Arcane
+import me.shadowalzazel.mcodyssey.items.Arcane.createEnchantedBook
 import me.shadowalzazel.mcodyssey.items.Exotics
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
 import me.shadowalzazel.mcodyssey.items.Weapons
+import me.shadowalzazel.mcodyssey.items.Weapons.createWeapon
 import me.shadowalzazel.mcodyssey.tasks.GravityWellTask
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.*
@@ -44,30 +47,23 @@ class TheAmbassador(location: Location) : OdysseyBoss(
     internal var isAngered: Boolean = false
 
     private val itemLootTable = listOf(
-        Material.GOLD_BLOCK,
+        Material.RAW_GOLD_BLOCK,
         Material.SLIME_BLOCK,
+        Material.WEATHERED_COPPER,
         Material.WAXED_COPPER_BLOCK,
-        Material.IRON_BLOCK,
-        Material.DIAMOND,
-        Material.EMERALD,
+        Material.RAW_IRON_BLOCK,
+        Material.GOLDEN_PICKAXE,
+        Material.DIAMOND_PICKAXE,
     )
 
-    // Combat Mechanic
-    private var hitCooldown: Long = 0L
+    /*-----------------------------------------------------------------------------------------------*/
+
+    val AMBASSADOR_COLOR = TextColor.color(255, 85, 255)
+    val WHITE_COLOR = TextColor.color(255, 255, 255)
 
     // Messages
     private val chatPrefix = Component.text("[The Ambassador] ", TextColor.color(255, 85, 255))
-    private val patienceMessages = listOf(
-        Component.text(" threatens your safety...", TextColor.color(255, 255, 255)),
-        Component.text(" is testing my patience!", TextColor.color(255, 255, 255)),
-        Component.text("... The lack of intelligence in this waste is appearance", TextColor.color(255, 255, 255)),
-        Component.text("... I expected more from you...", TextColor.color(255, 255, 255)),
-        Component.text("... Does your honor not amount to anything?!", TextColor.color(255, 255, 255)),
-        Component.text(", that is not an appropriate way to introduce yourself, though what is expected from such a lowlife...", TextColor.color(255, 255, 255)),
-        Component.text("'s insolence has prompted me to teach some basic fundamentals of respect.", TextColor.color(255, 255, 255)),
-        Component.text("... Time to teach these lowlifes basic manners...", TextColor.color(255, 255, 255)),
-        Component.text("Who is doing that?!", TextColor.color(255, 255, 255))
-    )
+    /*
     private val damagedMessages = listOf(
         Component.text("Such Folly... Such Weakness...", TextColor.color(255, 255, 255)),
         Component.text("Any attacks are futile...", TextColor.color(255, 255, 255)),
@@ -75,6 +71,12 @@ class TheAmbassador(location: Location) : OdysseyBoss(
         Component.text("I am just disappointed...", TextColor.color(255, 255, 255)),
         Component.text("Just stop... Your attacks are worthless.", TextColor.color(255, 255, 255))
     )
+
+     */
+
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
+    // Create
 
     // Create Ambassador Boss in plugin
     fun createEvent(world: World) {
@@ -95,12 +97,13 @@ class TheAmbassador(location: Location) : OdysseyBoss(
 
         isActive = true
         val departTimer = AmbassadorDepartTask()
-        departTimer.runTaskLater(Odyssey.instance, 20 * 60 * 60 * 1)
+        departTimer.runTaskLater(Odyssey.instance, 20 * 60 * 120 * 1) // 2hrs
     }
 
     // Spawn entity
     override fun spawnBossEntity(location: Location): Illusioner {
-        return (location.world.spawnEntity(location, EntityType.ILLUSIONER) as Illusioner).apply {
+        val spawnLocation = location.add(0.0, 64.0, 0.0)
+        return (location.world.spawnEntity(spawnLocation, EntityType.ILLUSIONER) as Illusioner).apply {
             addPotionEffects(
                 listOf(
                     PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 300, 1),
@@ -111,7 +114,7 @@ class TheAmbassador(location: Location) : OdysseyBoss(
                 )
             )
             // Change Default Behaviour
-            customName(Component.text("The Ambassador", TextColor.color(255, 85, 255)))
+            customName(Component.text(this@TheAmbassador.name, AMBASSADOR_COLOR))
             isCustomNameVisible = true
             removeWhenFarAway = false
             isCanJoinRaid = false
@@ -133,6 +136,8 @@ class TheAmbassador(location: Location) : OdysseyBoss(
             equipment.setItemInMainHand(Exotics.KINETIC_BLASTER.createItemStack(1))
         }
     }
+
+    /*-----------------------------------------------------------------------------------------------*/
 
     internal fun defeatedBoss(entity: Illusioner, vanquisher: Player?) {
         if (entity != this.illusioner) return
@@ -175,11 +180,13 @@ class TheAmbassador(location: Location) : OdysseyBoss(
         AmbassadorAttackCycle().runTaskTimer(Odyssey.instance, 0, 20 * 7)
     }
 
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
+
     // Spawn a dummy clone
-    private fun spawnHoloDummy() {
-        val randomLocation = entity.location.clone().add((-8..8).random().toDouble(), 3.0, (-8..8).random().toDouble())
-        (entity.world.spawnEntity(randomLocation, EntityType.ILLUSIONER) as Illusioner).apply {
-            customName(Component.text("The Ambassador", TextColor.color(255, 85, 255)))
+    private fun spawnHoloDummy(location: Location) {
+        (entity.world.spawnEntity(location, EntityType.ILLUSIONER) as Illusioner).apply {
+            customName(Component.text(this@TheAmbassador.name, AMBASSADOR_COLOR))
             isCustomNameVisible = true
             isCanJoinRaid = false
             isAware = true
@@ -223,8 +230,8 @@ class TheAmbassador(location: Location) : OdysseyBoss(
     // Calls fireworks from the sky
     private fun skyBombardAttack(targetLocation: Location) {
         // Spawn 7 random fireworks
-        repeat(7) {
-            createSuperFirework(targetLocation.clone().add((-5..5).random().toDouble(), (35..45).random().toDouble(), (-5..5).random().toDouble()))
+        repeat(13) {
+            createSuperFirework(targetLocation.clone().add((-7..7).random().toDouble(), (35..45).random().toDouble(), (-7..7).random().toDouble()))
         }
     }
 
@@ -250,7 +257,8 @@ class TheAmbassador(location: Location) : OdysseyBoss(
             it.damage(18.0, entity)
             it.addPotionEffects(listOf(
                 PotionEffect(PotionEffectType.LEVITATION, 20 * 8, 0),
-                PotionEffect(PotionEffectType.WEAKNESS, 20 * 5, 0)
+                PotionEffect(PotionEffectType.WEAKNESS, 20 * 5, 1),
+                PotionEffect(PotionEffectType.BLINDNESS, 20, 0)
             ))
             // Sounds and Effects
             it.playSound(it, Sound.ENTITY_EVOKER_PREPARE_WOLOLO, 1.3F, 1.1F)
@@ -289,7 +297,7 @@ class TheAmbassador(location: Location) : OdysseyBoss(
                 it.spawnParticle(Particle.END_ROD, it.location, 35, 2.0, 1.0, 2.0)
                 it.spawnParticle(Particle.SPELL_WITCH, it.location, 25, 1.0, 1.0, 1.0)
                 it.swingMainHand()
-                spawnHoloDummy()
+                spawnHoloDummy(it.location)
             }
         }
         // Hijack
@@ -304,7 +312,7 @@ class TheAmbassador(location: Location) : OdysseyBoss(
                 PotionEffect(PotionEffectType.LEVITATION, 20 * 10, 1),
                 PotionEffect(PotionEffectType.SLOW, 20 * 10, 2)
             ))
-            damage(7.5, entity)
+            damage(10.0, entity)
             // Sounds and Effects
             playSound(this, Sound.ENTITY_ENDERMAN_TELEPORT, 0.8F, 1.0F)
             playSound(this, Sound.ENTITY_EVOKER_PREPARE_WOLOLO, 1.0F, 1.1F)
@@ -313,374 +321,296 @@ class TheAmbassador(location: Location) : OdysseyBoss(
             spawnParticle(Particle.PORTAL, this.location, 42, 2.5, 0.5, 2.5)
             spawnParticle(Particle.END_ROD, this.location, 35, 2.0, 1.0, 2.0)
             spawnParticle(Particle.SPELL_WITCH, this.location, 25, 1.0, 1.0, 1.0)
+            sendAmbassadorChat(AmbassadorMessage.ELYTRA_PULL_BACK_ATTACK)
         }
     }
 
-    internal fun runAttackPatterns() {
+    internal fun attackPatternHandler() {
         val players = entity.location.getNearbyPlayers(28.0)
-        val isNear = players.isNotEmpty()
+        val playersNear = players.isNotEmpty()
+        val attackLocation = if (playersNear)
+        { players.random().location } else
+        { entity.location.clone().add((-9..9).random().toDouble(), 0.0, (-9..9).random().toDouble()) }
 
         when ((1..10).random()) {
             in 1..3 -> {
-                if (isNear) {
-                    skyBombardAttack(players.random().location)
-                } else {
-                    skyBombardAttack(entity.location.clone().add((-9..9).random().toDouble(), 0.0, (-9..9).random().toDouble()))
-                }
-                players.forEach { it.sendMessage(chatPrefix.append(Component.text("Take a gift from the heavens!", TextColor.color(255, 255, 255)))) }
+                skyBombardAttack(attackLocation)
+                players.forEach { it.sendAmbassadorChat(AmbassadorMessage.SKY_BOMBARD_ATTACK) }
             }
             in 4..5 -> {
-                if (isNear) {
-                    gravityLaunchAttack(players.random().location)
-                } else {
-                    gravityLaunchAttack(entity.location.clone().add((-9..9).random().toDouble(), 0.0, (-9..9).random().toDouble()))
-                }
-                players.forEach { it.sendMessage(chatPrefix.append(Component.text("You can not fathom this...", TextColor.color(255, 255, 255)))) }
+                gravityLaunchAttack(attackLocation)
+                players.forEach { it.sendAmbassadorChat(AmbassadorMessage.GRAVITY_LAUNCH_ATTACK) }
             }
             in 6..7 -> {
-                if (isNear) {
-                    hijackAttack(players.random())
-                }
-                players.forEach { it.sendMessage(chatPrefix.append(Component.text("It appears your friends are actually foes...", TextColor.color(255, 255, 255)))) }
+                if (playersNear) { hijackAttack(players.random()) }
+                players.forEach { it.sendAmbassadorChat(AmbassadorMessage.HIJACK_ATTACK) }
             }
             in 8..10 -> {
-                if (isNear) {
-                    players.forEach { fallingSingularityAttack(it.location.clone().add(0.0, 15.0, 0.0)) }
-                }
-                players.forEach { it.sendMessage(chatPrefix.append(Component.text("The points is that its super massive...", TextColor.color(255, 255, 255)))) }
+                if (playersNear) { players.forEach { fallingSingularityAttack(it.location.clone().add(0.0, 15.0, 0.0)) } }
+                players.forEach { it.sendAmbassadorChat(AmbassadorMessage.FALLING_SINGULARITY_ATTACK) }
             }
-        }
-    }
-
-    private fun defensiveAttack(damager: Entity) {
-        if (damager is LivingEntity) {
-            illusioner.target = damager
-        }
-        val timeElapsed: Long = System.currentTimeMillis() - hitCooldown
-        if (timeElapsed >= 1000 * 10) {
-            val nearbyPlayers = illusioner.getNearbyEntities(32.0, 32.0, 32.0).filterIsInstance<Player>()
-            nearbyPlayers.forEach { it.sendMessage(chatPrefix.append(damagedMessages[(0..4).random()])) }
         }
     }
 
     // Check damage source and current stats
-    internal fun damageHandler(damager: Entity, damage: Double) {
-        // Check if Patience
-        var messageQuote: TextComponent
-        val nearbyPlayers = illusioner.getNearbyEntities(32.0, 32.0, 32.0).filterIsInstance<Player>()
-        if (!isAngered) {
-            if (damager is Player) {
-                // Add likeness and bad first contact
-                if (!playerLikeness.containsKey(damager.uniqueId)) {
-                    playerLikeness[damager.uniqueId] = 0.0
-                    messageQuote = chatPrefix.append(damager.name().color(TextColor.color(255, 255, 255))).append(patienceMessages[5])
-                } else {
-                    // Check likability
-                    messageQuote = if (playerLikeness[damager.uniqueId]!! >= 65.0) {
-                        chatPrefix.append(damager.name().color(TextColor.color(255, 255, 255))).append(patienceMessages[4])
-                    } else if (playerLikeness[damager.uniqueId]!! >= 25.0) {
-                        chatPrefix.append(damager.name().color(TextColor.color(255, 255, 255))).append(patienceMessages[3])
-                    } else {
-                        chatPrefix.append(damager.name().color(TextColor.color(255, 255, 255))).append(patienceMessages[1])
-                    }
-                    playerLikeness[damager.uniqueId] = playerLikeness[damager.uniqueId]!! - damage
-                }
-                // Pre-activation messages
-                nearbyPlayers.forEach { it.sendMessage(messageQuote) }
+    internal fun takeDamageHandler(damager: Entity, damage: Double) {
+        // Announcement
+        val players = illusioner.getNearbyEntities(32.0, 32.0, 32.0).filterIsInstance<Player>()
 
-                // Change mood stats
-                appeasement -= (damage + 2.0)
-                patience -= damage
-                // Check if critical activation, or low patience
-                messageQuote = if (patience <= 0) {
-                    chatPrefix.append(damager.name().color(TextColor.color(255, 255, 255))).append(patienceMessages[6])
-                } else if (appeasement <= -5) {
-                    chatPrefix.append(damager.name().color(TextColor.color(255, 255, 255))).append(patienceMessages[2])
-                } else {
-                    chatPrefix.append(damager.name().color(TextColor.color(255, 255, 255))).append(patienceMessages[0])
-                }
-            } else {
-                // Change mood stats
-                appeasement -= (damage + 2.0)
-                patience -= damage
-                messageQuote = if (patience <= 0) {
-                    chatPrefix.append(damager.name().color(TextColor.color(255, 255, 255))).append(patienceMessages[7])
-                } else {
-                    chatPrefix.append(damager.name().color(TextColor.color(255, 255, 255))).append(patienceMessages[8])
-                }
+        // Check if Patience
+        if (isAngered) return
+        // Not Player
+        if (damager !is Player) {
+            appeasement -= (damage + 2.0)
+            patience -= damage
+            // Messages
+            if (patience <= 0) { players.forEach { it.sendAmbassadorChat(AmbassadorMessage.PATIENCE_MESSAGE_8) } }
+            else { players.forEach { it.sendAmbassadorChat(AmbassadorMessage.PATIENCE_MESSAGE_9) } }
+        }
+        // Player
+        else {
+            // If First Time
+            if (!playerLikeness.containsKey(damager.uniqueId)) {
+                playerLikeness[damager.uniqueId] = 0.0
+                players.forEach { it.sendAmbassadorChat(AmbassadorMessage.PATIENCE_MESSAGE_6) }
+                return
             }
-            // Damage Message
-            nearbyPlayers.forEach { it.sendMessage(messageQuote) }
-            if (patience <= 0) {
-                isAngered = true
-                activateBoss()
-            }
-        } else {
-            defensiveAttack(damager)
+            // Continuing
+            appeasement -= (damage + 2.0)
+            patience -= damage
+            val likenessValue = playerLikeness[damager.uniqueId]!!
+            if (likenessValue >= 65.0) { players.forEach { it.sendAmbassadorChat(AmbassadorMessage.PATIENCE_MESSAGE_5) } }
+            else if (likenessValue >= 25.0) { players.forEach { it.sendAmbassadorChat(AmbassadorMessage.PATIENCE_MESSAGE_4) } }
+            else { players.forEach { it.sendAmbassadorChat(AmbassadorMessage.PATIENCE_MESSAGE_2, true) } }
+            playerLikeness[damager.uniqueId] = likenessValue - damage
+        }
+
+        // Activate
+        if (patience <= 0) {
+            players.forEach { it.sendAmbassadorChat(AmbassadorMessage.PATIENCE_MESSAGE_7) }
+            isAngered = true
+            activateBoss()
+        }
+        else if (appeasement <= -5) {
+            players.forEach { it.sendAmbassadorChat(AmbassadorMessage.PATIENCE_MESSAGE_3) }
+        }
+        else {
+            players.forEach { it.sendAmbassadorChat(AmbassadorMessage.PATIENCE_MESSAGE_1, true) }
         }
     }
 
     // Appeasement Mechanic
-    internal fun appeasementCheck(somePlayer: Player, someItem: Item) {
+    internal fun appeasementCheck(player: Player, item: Item) {
         // Check if players in gift cooldown map
-        if (!playersGiftCooldown.containsKey(somePlayer.uniqueId)) {
-            playersGiftCooldown[somePlayer.uniqueId] = System.currentTimeMillis()
-            calculateGiftTable(somePlayer, someItem)
-        } else {
-            // Gift Cooldown
-            val timeElapsed: Long = System.currentTimeMillis() - playersGiftCooldown[somePlayer.uniqueId]!!
-            if (timeElapsed >= 1000 * 5) {
-                playersGiftCooldown[somePlayer.uniqueId] = System.currentTimeMillis()
-                calculateGiftTable(somePlayer, someItem)
-            }
+        if (!playersGiftCooldown.containsKey(player.uniqueId)) {
+            playersGiftCooldown[player.uniqueId] = System.currentTimeMillis()
+            calculateGiftTable(player, item)
+        }
+        // Time
+        val timeElapsed: Long = System.currentTimeMillis() - playersGiftCooldown[player.uniqueId]!!
+        if (timeElapsed >= 1000 * 5) {
+            playersGiftCooldown[player.uniqueId] = System.currentTimeMillis()
+            calculateGiftTable(player, item)
+        }
+        else {
+            player.sendAmbassadorChat(AmbassadorMessage.WAIT_FOR_GIFT_COOLDOWN, true)
         }
     }
 
     // random delay 2-5
-    private fun calculateGiftTable(givingPlayer: Player, giftedItem: Item) {
-        val giftedMaterial: Material = giftedItem.itemStack.type
+    private fun calculateGiftTable(player: Player, gift: Item) {
+        val material: Material = gift.itemStack.type
         // Check if item in table
         var giftAccepted = true
-
         // Check player likeness
-        if (!playerLikeness.containsKey(givingPlayer.uniqueId)) {
-            playerLikeness[givingPlayer.uniqueId] = 0.0
+        if (!playerLikeness.containsKey(player.uniqueId)) {
+            playerLikeness[player.uniqueId] = 0.0
         }
-
+        val likenessValue = playerLikeness[player.uniqueId]!!
         // Check if likeness maxed
-        if (playerLikeness[givingPlayer.uniqueId]!! >= 100) {
-            givingPlayer.sendMessage(
-                chatPrefix.append(givingPlayer.name()).append(Component.text(", I am sorry. I can not receive any more pleasantries from you.", TextColor.color(255, 255, 255)))
-            )
-            playerLikeness[givingPlayer.uniqueId]!! + 5
+        if (playerLikeness[player.uniqueId]!! >= 100) {
+            player.sendAmbassadorChat(AmbassadorMessage.MAX_LIKENESS, true)
+            playerLikeness[player.uniqueId]!! + 5
             return
         }
 
-
         // Check if special item make (MAKE SEPARATE FLAGS LATER)
-        if ((giftedItem.itemStack.itemMeta.hasEnchants() && giftedMaterial != Material.ENCHANTED_BOOK)) {
-            //givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}I can not accept this.")
-            appeasement -= 1
+        if ((gift.itemStack.itemMeta.hasEnchants() || material == Material.ENCHANTED_BOOK)) {
+            appeasement -= 2
+            patience -= 2
+            player.sendAmbassadorChat(AmbassadorMessage.REJECT_ENCHANTS)
             return
         }
 
         var giftLikeness = 0
-        val likenessReward = (playerLikeness[givingPlayer.uniqueId]!! / 25).toInt() + 1
+        val extraValue = ((likenessValue / 25).toInt() + 1)
         // Checks if gift in when, and deletes if accepted
-        val someGift = itemLootTable.random()
-        /*
-        when (giftedMaterial) {
+        val nonMatchingReward = ItemStack(itemLootTable.random(), 1)
+        val inventory = player.inventory
+
+        when (material) {
             Material.NETHER_STAR -> {
-                bossEntity?.world!!.spawnParticle(Particle.SPELL_WITCH, givingPlayer.location, 35, 1.0, 1.0, 1.0)
-                giftLikeness += 45
-                givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}An unborn Unit-${ChatColor.MAGIC}092412X.${ChatColor.RESET}. I shall start its sentience activation cycle for you...")
-                givingPlayer.inventory.addItem(Miscellaneous.DORMANT_SENTIENT_STAR.createItemStack(1))
-                val gravityBook = Arcane.GILDED_BOOK.createGildedBook(OdysseyEnchantments.GRAVITY_WELL, (1..3).random())
-                givingPlayer.inventory.addItem(gravityBook)
+                giftLikeness += 30
+                val gravityBook = Arcane.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.GRAVITY_WELL, 1)
+                inventory.addItem(gravityBook)
             }
             Material.NETHERITE_INGOT -> {
-                bossEntity?.world!!.spawnParticle(Particle.SPELL_WITCH, givingPlayer.location, 35, 1.0, 1.0, 1.0)
-                giftLikeness += 6
-                if (appeasement > 50) {
-                    givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Hmm casted Neutronium Bark... Here take this special Unit-${ChatColor.MAGIC}092412X.")
-                    givingPlayer.inventory.addItem(Miscellaneous.DORMANT_SENTIENT_STAR.createItemStack(1))
-                }
-                else {
-                    givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Hmm casted Neutronium Bark... Here are some quantum-entangled vacuums repurposed as storage " +
-                            "that might help you as well as some gifts")
-                    givingPlayer.inventory.addItem(Miscellaneous.HAWKING_ENTANGLED_UNIT.createItemStack(likenessReward + 2))
-                    givingPlayer.inventory.addItem(Miscellaneous.REFINED_NEPTUNIAN_DIAMONDS.createItemStack(likenessReward * 4))
-                    givingPlayer.inventory.addItem(Miscellaneous.REFINED_IOJOVIAN_EMERALDS.createItemStack(likenessReward * 4))
-                }
+                giftLikeness += 8
+                if (appeasement > 40) { inventory.addItem(ItemStack(Material.RIB_ARMOR_TRIM_SMITHING_TEMPLATE, 3)) }
+                else if (appeasement > 20) { inventory.addItem(Weapons.NETHERITE_SABER.createWeapon()) }
+                else { inventory.addItem(ItemStack(Material.NETHERITE_AXE, 1)) }
             }
-            Material.DIAMOND, Material.EMERALD, Material.AMETHYST_SHARD -> {
-                giftLikeness -= 1
-                givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}These gems are not that refined according to standards. But... here is something for such work.")
-                givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward + 1))
+            Material.DIAMOND -> {
+                giftLikeness += 5
+                val weapon = listOf(Weapons.DIAMOND_CLAYMORE, Weapons.DIAMOND_KATANA, Weapons.DIAMOND_HALBERD, Weapons.DIAMOND_SICKLE, Weapons.DIAMOND_WARHAMMER).random()
+                inventory.addItem(weapon.createWeapon())
             }
-            Material.COPPER_INGOT, Material.IRON_INGOT, Material.GOLD_INGOT -> {
+            Material.AMETHYST_SHARD -> {
                 giftLikeness += 2
-                givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}The tribute of raw materials express the loyalty and growth of this world...")
-                givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward))
+                inventory.addItem(Arcane.ARCANE_BOOK.createItemStack(maxOf(extraValue - 1, 1)))
             }
-            Material.IRON_BLOCK, Material.GOLD_BLOCK, Material.COPPER_BLOCK -> {
-                bossEntity?.world!!.spawnParticle(Particle.VILLAGER_HAPPY, givingPlayer.location, 15, 1.0, 1.0, 1.0)
+            Material.AMETHYST_BLOCK -> {
+                giftLikeness += 8
+                val tome = listOf(Arcane.TOME_OF_PROMOTION, Arcane.TOME_OF_EMBRACE, Arcane.TOME_OF_DISCHARGE).random()
+                inventory.addItem(tome.createItemStack(1))
+            }
+            Material.EMERALD -> {
                 giftLikeness += 4
-                givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}This much raw materials should garner good attention...")
-                givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
-                if (appeasement > 50) {
-                    givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}This will help you towards mechanization...")
-                    givingPlayer.inventory.addItem(Miscellaneous.KUGELBLITZ_CONTAINMENT_UNIT.createItemStack(1))
-                }
-            }
-            Material.ACACIA_LOG, Material.OAK_LOG, Material.SPRUCE_LOG, Material.DARK_OAK_LOG, Material.BIRCH_LOG, Material.JUNGLE_LOG, Material.MANGROVE_LOG,
-            Material.ACACIA_WOOD, Material.OAK_WOOD, Material.SPRUCE_WOOD, Material.DARK_OAK_WOOD, Material.BIRCH_WOOD, Material.JUNGLE_WOOD, Material.MANGROVE_WOOD -> {
-                giftLikeness += 2
-                givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Wood is always a commodity that should be accepted!")
-                givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward))
-                if (appeasement > 50) {
-                    givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}This will help you towards industrialization...")
-                    givingPlayer.inventory.addItem(Miscellaneous.POLYMORPHIC_GLUE.createItemStack(6))
-                }
-            }
-            Material.ROTTEN_FLESH -> {
-                giftLikeness -= 2
-                patience -= 2
-                givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}You think of me so low and stupid. I believe this world does not deserve anything close to respect...")
-            }
-            Material.DIRT, Material.COARSE_DIRT, Material.ROOTED_DIRT -> {
-                giftLikeness -= 2
-                givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}I can not accept something that crude...")
+                val randomBricks = listOf(Material.BRICKS, Material.RED_NETHER_BRICKS, Material.TERRACOTTA, Material.MUD_BRICKS, Material.QUARTZ_BRICKS)
+                inventory.addItem(ItemStack(randomBricks.random(), 3 + (2 * extraValue)))
+                inventory.addItem(ItemStack(randomBricks.random(), 7))
+                inventory.addItem(ItemStack(randomBricks.random(), 3 * extraValue))
             }
             Material.SCULK, Material.SCULK_CATALYST, Material.SCULK_SENSOR, Material.SCULK_SHRIEKER, Material.SCULK_VEIN -> {
                 giftLikeness -= 45
                 patience -= 45
-                givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}The Sculk has corrupted this forsaken place... Its eradication is inevitable")
+                player.sendAmbassadorChat(AmbassadorMessage.SCULK_GIFT)
             }
-            Material.ENCHANTED_BOOK ->  {
-                giftLikeness += 4
-                givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Enchanted Literature! Something quite interesting this test-site was made for...and a Good Read")
-                givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward + 1))
-                if (appeasement < 35) {
-                    givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}I am pleased so far.. here have some extra gifts...")
-                    givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward + 1))
-                }
-                else if (appeasement >= 35) {
-                    givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Tokens for your prosperity and of the upcoming ${ChatColor.MAGIC}World Integration Procedure")
-                    givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
-                }
+            Material.ROTTEN_FLESH, Material.SPIDER_EYE -> {
+                giftLikeness -= 2
+                patience -= 2
             }
-            Material.BOOK, Material.PAINTING -> {
-                giftLikeness += 4
-                if (appeasement < 55) {
-                    givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Hopefully this culture is not so dull as other test-s... Never mind...")
-                    givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward))
-                }
-                else {
-                    val randomEnchantments = listOf(OdysseyEnchantments.SPOREFUL, OdysseyEnchantments.SQUIDIFY, OdysseyEnchantments.BACKSTABBER, OdysseyEnchantments.BUZZY_BEES, OdysseyEnchantments.FRUITFUL_FARE, OdysseyEnchantments.POTION_BARRIER)
-                    val randomBook = Arcane.GILDED_BOOK.createGildedBook(randomEnchantments.random(), 1)
-                    givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}So far I can say I am enjoying this...")
-                    givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward + 1))
-                    givingPlayer.inventory.addItem(randomBook)
-                }
+            Material.IRON_BLOCK, Material.GOLD_BLOCK, Material.COPPER_BLOCK -> {
+                giftLikeness -= 3
+                val randomBlocks = listOf(Material.BARREL, Material.CHEST, Material.SMITHING_TABLE, Material.BLAST_FURNACE, Material.FURNACE)
+                if (appeasement > 40) { inventory.addItem(ItemStack(Material.ENCHANTING_TABLE, 1)) }
+                else { inventory.addItem(ItemStack(randomBlocks.random(), 4)) }
+                inventory.addItem(ItemStack(randomBlocks.random(), extraValue))
             }
-            Material.ELYTRA -> {
-                giftLikeness += 3
-                givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Sub-Dimensional Flying. A step towards industrialization I see...And excellent presents!")
-                givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward + 1))
+            Material.DIRT, Material.COARSE_DIRT, Material.ROOTED_DIRT -> {
+                giftLikeness += 1
+                if (appeasement > 40) { inventory.addItem(ItemStack(Material.GRASS_BLOCK, extraValue)) }
+                else { inventory.addItem(ItemStack(Material.GRASS, extraValue)) }
+            }
+            Material.WRITTEN_BOOK, Material.PAINTING -> {
+                val randomTrim = listOf(Material.HOST_ARMOR_TRIM_SMITHING_TEMPLATE, Material.RAISER_ARMOR_TRIM_SMITHING_TEMPLATE)
+                if (appeasement > 60) { inventory.addItem(ItemStack(randomTrim.random(), 1)) }
+                else { inventory.addItem(ItemStack(Material.RAW_GOLD, extraValue)) }
+            }
+            Material.BEETROOT_SEEDS, Material.PUMPKIN_SEEDS, Material.WHEAT_SEEDS, Material.MELON_SEEDS -> {
+                giftLikeness += 1
+                val randomFood = listOf(Material.PUMPKIN_PIE, Material.BREAD, Material.BEETROOT_SOUP)
+                inventory.addItem(ItemStack(randomFood.random(), extraValue))
             }
             Material.ENCHANTED_GOLDEN_APPLE -> {
-                giftLikeness += 50
-                givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}How did you get this?... I did not hear that Vail planted Aether roots from Lupercal...")
-                givingPlayer.sendMessage("${ChatColor.DARK_GRAY}${ChatColor.ITALIC}Do not alert the others... Here take this. Keep it safe, it will help you soon to come...")
-                givingPlayer.inventory.addItem(Miscellaneous.BABEL_ANNULUS_SCHEMATICS.createItemStack(1))
+                inventory.addItem(Arcane.TOME_OF_POLYMERIZATION.createItemStack(1))
+                giftLikeness += 15
+            }
+            Material.HEART_OF_THE_SEA -> {
+                giftLikeness += 15
+                if (appeasement > 50) { inventory.addItem(ItemStack(Material.TRIDENT, 1)) }
+                else { inventory.addItem(ItemStack(Material.RAW_GOLD, extraValue * 6)) }
+            }
+            Material.ACACIA_SAPLING -> {
+                giftLikeness += 5
+                inventory.addItem(ItemStack(Material.ACACIA_LOG, extraValue * 3))
+                inventory.addItem(ItemStack(Material.ACACIA_PLANKS, extraValue * 5))
+            }
+            Material.OAK_SAPLING -> {
+                giftLikeness += 5
+                inventory.addItem(ItemStack(Material.OAK_LOG, extraValue * 3))
+                inventory.addItem(ItemStack(Material.ACACIA_PLANKS, extraValue * 5))
+            }
+            Material.BIRCH_SAPLING -> {
+                giftLikeness += 5
+                inventory.addItem(ItemStack(Material.BIRCH_LOG, extraValue * 3))
+                inventory.addItem(ItemStack(Material.BIRCH_PLANKS, extraValue * 5))
+            }
+            Material.CHERRY_SAPLING -> {
+                giftLikeness += 5
+                inventory.addItem(ItemStack(Material.CHERRY_LOG, extraValue * 3))
+                inventory.addItem(ItemStack(Material.CHERRY_PLANKS, extraValue * 5))
+            }
+            Material.DARK_OAK_SAPLING -> {
+                giftLikeness += 5
+                inventory.addItem(ItemStack(Material.DARK_OAK_LOG, extraValue * 3))
+                inventory.addItem(ItemStack(Material.DARK_OAK_PLANKS, extraValue * 5))
+            }
+            Material.JUNGLE_SAPLING -> {
+                giftLikeness += 5
+                inventory.addItem(ItemStack(Material.JUNGLE_LOG, extraValue * 3))
+                inventory.addItem(ItemStack(Material.JUNGLE_PLANKS, extraValue * 5))
+            }
+            Material.SPRUCE_SAPLING -> {
+                giftLikeness += 5
+                inventory.addItem(ItemStack(Material.SPRUCE_LOG, extraValue * 3))
+                inventory.addItem(ItemStack(Material.SPRUCE_PLANKS, extraValue * 5))
+            }
+            Material.MANGROVE_PROPAGULE -> {
+                giftLikeness += 5
+                inventory.addItem(ItemStack(Material.MANGROVE_LOG, extraValue * 3))
+                inventory.addItem(ItemStack(Material.MANGROVE_PLANKS, extraValue * 5))
             }
             Material.DANDELION, Material.POPPY, Material.BLUE_ORCHID, Material.ALLIUM, Material.AZURE_BLUET, Material.ORANGE_TULIP,
             Material.RED_TULIP, Material.WHITE_TULIP, Material.PINK_TULIP, Material.CORNFLOWER, Material.LILY_OF_THE_VALLEY, Material.SUNFLOWER,
             Material.LILAC, Material.ROSE_BUSH, Material.PEONY -> {
-                bossEntity?.world!!.spawnParticle(Particle.VILLAGER_HAPPY, givingPlayer.location, 15, 1.0, 1.0, 1.0)
-                giftLikeness += 2
-                if (appeasement < 45) {
-                    givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}For an uncivilized world, flowers still bloom... Hopefully you do as well...")
-                    givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward))
-                }
-                else if (appeasement >= 45) {
-                    givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}This should grow your knowledge and strength in time...")
-                    givingPlayer.inventory.addItem(Miscellaneous.IDESCINE_SAPLING.createItemStack(1))
-                }
-            }
-            Material.GOAT_HORN -> {
-                giftLikeness += 3
-                bossEntity?.world!!.spawnParticle(Particle.VILLAGER_HAPPY, givingPlayer.location, 15, 1.0, 1.0, 1.0)
-                givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Musical anomalies... Interesting...")
-                givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
-                //Give sound based enchant if likeness high
+                giftLikeness += 7
+                if (appeasement > 40) { inventory.addItem(ItemStack(Material.WILD_ARMOR_TRIM_SMITHING_TEMPLATE, 1)) }
+                else { inventory.addItem(ItemStack(Material.SNIFFER_EGG, extraValue)) }
             }
             Material.MUSIC_DISC_WARD, Material.MUSIC_DISC_11, Material.MUSIC_DISC_5, Material.MUSIC_DISC_13, Material.MUSIC_DISC_CHIRP, Material.MUSIC_DISC_FAR, Material.MUSIC_DISC_MALL, Material.MUSIC_DISC_MELLOHI, Material.MUSIC_DISC_BLOCKS,
             Material.MUSIC_DISC_PIGSTEP, Material.MUSIC_DISC_STAL, Material.MUSIC_DISC_OTHERSIDE, Material.MUSIC_DISC_STRAD, Material.MUSIC_DISC_WAIT, Material.MUSIC_DISC_CAT -> {
-                bossEntity?.world!!.spawnParticle(Particle.SPELL_WITCH, givingPlayer.location, 35, 1.0, 1.0, 1.0)
-                giftLikeness += 45
-                bossEntity?.world!!.spawnParticle(Particle.VILLAGER_HAPPY, givingPlayer.location, 15, 1.0, 1.0, 1.0)
-                givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Primitive music... Something I find amusing...")
-                val randomEnchantments = listOf(OdysseyEnchantments.BANE_OF_THE_ILLAGER, OdysseyEnchantments.BANE_OF_THE_SWINE, OdysseyEnchantments.BACKSTABBER, OdysseyEnchantments.BUZZY_BEES,
-                    OdysseyEnchantments.GUARDING_STRIKE, OdysseyEnchantments.FRUITFUL_FARE, OdysseyEnchantments.DOUSE, OdysseyEnchantments.POTION_BARRIER)
-                givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 5))
-                if (appeasement >= 35) {
-                    givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}These are some relics I have collected from previous visits...")
-                    val randomBook = Arcane.GILDED_BOOK.createGildedBook(randomEnchantments.random(), 1)
-                    givingPlayer.inventory.addItem(randomBook)
-                }
-            }
-            // Later add books
-            Material.CONDUIT -> {
-                bossEntity?.world!!.spawnParticle(Particle.SPELL_WITCH, givingPlayer.location, 35, 1.0, 1.0, 1.0)
-                givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}The ocean is essential to this world's stability! Though, power does not give you an excuse to butcher.")
-                giftLikeness += 45
-                val seaBook = Arcane.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BANE_OF_THE_SEA, 4)
-                givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
-                givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
-                if (appeasement >= 45) {
-                    givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
-                    givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
-                }
-                givingPlayer.inventory.addItem(seaBook)
-            }
-            Material.TRIDENT -> {
-                bossEntity?.world!!.spawnParticle(Particle.SPELL_WITCH, givingPlayer.location, 35, 1.0, 1.0, 1.0)
-                givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Do no be afraid of the sea or its monsters...")
-                giftLikeness += 30
-                val seaBook = Arcane.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BANE_OF_THE_SEA, (1..3).random())
-                givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
-                givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
-                givingPlayer.inventory.addItem(seaBook)
-
-            }
-            Material.BEACON -> {
-                bossEntity?.world!!.spawnParticle(Particle.SPELL_WITCH, givingPlayer.location, 35, 1.0, 1.0, 1.0)
-                giftLikeness += 45
-                givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Follow the path of doubt...and not blinding light")
-                val randomEnchantments = listOf(OdysseyEnchantments.VOID_JUMP, OdysseyEnchantments.ECHO, OdysseyEnchantments.VOID_STRIKE, OdysseyEnchantments.SOUL_REND, OdysseyEnchantments.BACKSTABBER)
-                val randomBook = Arcane.GILDED_BOOK.createGildedBook(randomEnchantments.random(), 1)
-                givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
-                givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
-                if (appeasement >= 45) {
-                    givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
-                    givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward * 2))
-                }
-                givingPlayer.inventory.addItem(randomBook)
-            }
-            Material.CHEST, Material.BARREL -> {
-                giftLikeness += 1
-                givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Nice and quaint boxes...")
-                givingPlayer.inventory.addItem(someGift.createItemStack(likenessReward + 1))
-                if (appeasement >= 65) {
-                    givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}This is what a present look like however...")
-                    givingPlayer.inventory.addItem(Miscellaneous.KUGELBLITZ_CONTAINMENT_UNIT.createItemStack(1))
-                }
+                giftLikeness += 7
+                inventory.addItem(ItemStack(Material.COAST_ARMOR_TRIM_SMITHING_TEMPLATE, 1))
             }
             else -> {
-                givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Well...Let me appraise this for you...")
                 giftAccepted = false
-
             }
         }
 
-
-         */
-        // DO GILDED ENCHANTMENTS
-        /*
+        // Particles
+        if (giftLikeness >= 10) {
+            entity.world.spawnParticle(Particle.SPELL_WITCH, player.location, 35, 1.0, 1.0, 1.0)
+        }
+        else if (giftLikeness >= 5) {
+            entity.world.spawnParticle(Particle.VILLAGER_HAPPY, player.location, 35, 1.0, 1.0, 1.0)
+        }
+        else if (giftLikeness < -2) {
+            player.sendAmbassadorChat(AmbassadorMessage.BAD_GIFTS)
+        }
+        // Final
         if (giftAccepted) {
-            giftedItem.remove()
-            // Calculation for gift likeness
+            gift.remove()
             appeasement += giftLikeness
-            val newLikeness = playerLikeness[givingPlayer.uniqueId]!! + giftLikeness
-            playerLikeness[givingPlayer.uniqueId] = newLikeness
-            if (playerLikeness[givingPlayer.uniqueId]!! > 50.0) {
-                givingPlayer.sendMessage("${ChatColor.LIGHT_PURPLE}[The Ambassador] ${ChatColor.RESET}Your gifts are enjoyable")
-            }
+            val newLikeness = likenessValue + giftLikeness
+            playerLikeness[player.uniqueId] = newLikeness
+            if (newLikeness > 50.0) player.sendAmbassadorChat(AmbassadorMessage.NICE_GIFTS)
         }
-
-         */
     }
+
+
+    /*-----------------------------------------------------------------------------------------------*/
+    // Chat Message
+    private fun Player.sendAmbassadorChat(content: AmbassadorMessage, sayPlayer: Boolean = false) {
+        val message = Component.text("[The Ambassador] ", AMBASSADOR_COLOR)
+        if (sayPlayer) {
+            sendMessage(message.append(name().color(WHITE_COLOR)).append(Component.text(content.text, WHITE_COLOR)))
+        }
+        else {
+            sendMessage(message.append(Component.text(content.text, WHITE_COLOR)))
+        }
+        println(content.text)
+    }
+
 }
 
