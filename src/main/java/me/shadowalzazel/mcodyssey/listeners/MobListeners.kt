@@ -3,9 +3,12 @@ package me.shadowalzazel.mcodyssey.listeners
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.constants.ItemTags.isThisItem
 import org.bukkit.entity.Piglin
+import org.bukkit.entity.PiglinBrute
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent
 import org.bukkit.event.entity.PiglinBarterEvent
 
@@ -27,8 +30,6 @@ object MobListeners : Listener{
             //println("Cancelled Target")
         }
         (event.entity as Piglin)
-
-
     }
 
     @EventHandler
@@ -51,6 +52,19 @@ object MobListeners : Listener{
             event.entity.addScoreboardTag("${EntityTags.HIRED_BY}${first.uniqueId}")
             event.entity.addScoreboardTag(EntityTags.IS_HIRED)
             event.entity.pathfinder.moveTo(first as Player)
+        }
+    }
+
+    @EventHandler
+    fun piglinDifficulty(event: EntityDamageByEntityEvent) {
+        if (event.entity !is PiglinBrute) return
+        if (event.damager !is Player) return
+        if (event.cause != EntityDamageEvent.DamageCause.PROJECTILE) return
+        val brute = event.entity as PiglinBrute
+        brute.target = event.damager as Player
+        if (brute.scoreboardTags.contains("in.knight")) {
+            val top = event.damager.location.clone().add(0.0, 10.0, 0.0)
+            top.getNearbyLivingEntities(5.0).forEach { if (it is PiglinBrute) { it.target = brute.target } }
         }
     }
 
