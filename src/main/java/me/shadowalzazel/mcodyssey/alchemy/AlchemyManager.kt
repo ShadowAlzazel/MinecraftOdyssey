@@ -28,8 +28,8 @@ interface AlchemyManager {
     /*-----------------------------------------------------------------------------------------------*/
     // Tags
 
-    fun ItemStack.isCustomEffect(): Boolean {
-        return hasTag(ItemTags.IS_CUSTOM_EFFECT)
+    fun ItemStack.isOdysseyEffect(): Boolean {
+        return hasTag(ItemTags.IS_CUSTOM_EFFECT) || hasTag(ItemTags.ODYSSEY_EFFECT_TAG)
     }
 
     // Get Effect
@@ -103,17 +103,59 @@ interface AlchemyManager {
     /*-----------------------------------------------------------------------------------------------*/
     // Components
 
+    fun getRomanNumeral(number: Int): String {
+        val numeralList = mapOf(1 to "I", 2 to "II", 3 to "III", 4 to "IV", 5 to "V", 6 to "VI", 7 to "VII", 8 to "VIII", 9 to "IX", 10 to "X")
+        return numeralList[number] ?: number.toString()
+    }
+
     fun createTimeString(timeInSeconds: Int): CharSequence {
         val seconds = timeInSeconds % 60
         val minutes = timeInSeconds / 60
         return if (seconds < 9) { "($minutes:0$seconds)" } else { "($minutes:$seconds)" }
     }
 
-    fun getEffectComponent(tag: String, timeInTicks: Int): Component {
+    fun createEffectComponent(tag: String, timeInTicks: Int, amplifier: Int = 1): Component {
         val color = getEffectColor(tag)
+        val numeral = getRomanNumeral(amplifier)
         return when (tag) {
             EffectTags.FREEZING -> {
-                Component.text("Freezing ${createTimeString(timeInTicks / 20)}", color)
+                Component.text("Freezing $numeral ${createTimeString(timeInTicks / 20)}", color)
+                    .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+            }
+            EffectTags.ROTTING -> {
+                Component.text("Rotting $numeral ${createTimeString(timeInTicks / 20)}", color)
+                    .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+            }
+            EffectTags.TARRED -> {
+                Component.text("Tarred $numeral ${createTimeString(timeInTicks / 20)}", color)
+                    .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+            }
+            EffectTags.ABLAZE -> {
+                Component.text("Blazing $numeral ${createTimeString(timeInTicks / 20)}", color)
+                    .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+            }
+            EffectTags.IRRADIATED -> {
+                Component.text("Irradiated $numeral ${createTimeString(timeInTicks / 20)}", color)
+                    .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+            }
+            EffectTags.CORRODING -> {
+                Component.text("Corrosion $numeral ${createTimeString(timeInTicks / 20)}", color)
+                    .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+            }
+            EffectTags.MIASMA -> {
+                Component.text("Miasma $numeral ${createTimeString(timeInTicks / 20)}", color)
+                    .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+            }
+            EffectTags.ACCURSED -> {
+                Component.text("Accursed $numeral", color)
+                    .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+            }
+            EffectTags.SOUL_DAMAGE -> {
+                Component.text("Soul Damage $numeral", color)
+                    .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+            }
+            EffectTags.SHIMMER -> {
+                Component.text("Shimmer $numeral ${createTimeString(timeInTicks / 20)}", color)
                     .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
             }
             else -> {
@@ -177,30 +219,35 @@ interface AlchemyManager {
         }
     }
 
-    fun createLingeringPotion(item: ItemStack): ItemStack {
+    fun createOdysseyLingeringPotion(item: ItemStack): ItemStack {
         val potion = ItemStack(Material.LINGERING_POTION, 1)
-        val isCustom = potion.isCustomEffect()
-        val oldTime = potion.getCustomEffectTimeInTicks()
+        val oldTime = item.getCustomEffectTimeInTicks()
+        val newTime = oldTime / 4
         // Logic
-        potion.itemMeta = (item.itemMeta as PotionMeta).also {
-            if (isCustom) {
-                potion.setCustomEffectTime(oldTime / 4)
-            }
-        }
+        potion.itemMeta = (item.itemMeta as PotionMeta)
         // Lore
         return potion.apply {
+            setCustomEffectTime(newTime)
             val newLore = lore() ?: mutableListOf()
-            val effectTag = getCustomEffectTag()
-            val index = newLore.indexOf(getEffectComponent(effectTag, oldTime))
-            if (index != -1) { newLore[index] = getEffectComponent(effectTag, oldTime / 4) }
+            val effectTag = item.getCustomEffectTag()
+            val amplifier = item.getCustomEffectAmplifier()
+            val index = newLore.indexOf(createEffectComponent(effectTag, oldTime, amplifier))
+            val foundLore = newLore.find { it.color() == getEffectColor(effectTag) }
+            if (foundLore != null) {
+                val foundIndex = newLore.indexOf(foundLore)
+                newLore[foundIndex] = createEffectComponent(effectTag, newTime, amplifier)
+            } else if (index != -1) {
+                newLore[index] = createEffectComponent(effectTag, newTime, amplifier)
+            } else {
+                newLore[0] = createEffectComponent(effectTag, newTime, amplifier)
+            }
             lore(newLore)
         }
     }
 
-    fun createCustomEffectCloud(potion: ThrownPotion, cloud: AreaEffectCloud) {
+    fun createOdysseyEffectCloud(potion: ThrownPotion, cloud: AreaEffectCloud) {
         // Potion Cloud modifiers
         val cloudTag: String
-        var applicationDelay = 20
         val effectTag = potion.item.getCustomEffectTag()
         val effectDuration = potion.item.getCustomEffectTimeInTicks() / 4 // PDT
         val effectAmplifier = potion.item.getCustomEffectAmplifier()
@@ -209,7 +256,6 @@ interface AlchemyManager {
         // Match names
         when (effectTag) {
             EffectTags.FREEZING -> {
-                applicationDelay = 40
                 cloudTag = EntityTags.FREEZING_CLOUD
             }
             EffectTags.ROTTING -> {
@@ -239,17 +285,14 @@ interface AlchemyManager {
             }
         }
         // Add Tags, PDT and Effects to potion cloud
-        cloud.also {
+        cloud.apply {
+            color = Color.fromRGB(cloudColor)
             //(potion.item.itemMeta as PotionMeta).addCustomEffect(effectToAdd, true)
-            it.particle = Particle.SPELL
-            it.color = Color.fromRGB(cloudColor)
-            it.duration = 20 * 20
-            it.reapplicationDelay = applicationDelay
-            it.addScoreboardTag(cloudTag)
-            it.addScoreboardTag(EntityTags.CUSTOM_EFFECT_CLOUD)
-            it.setCloudEffectTag(effectTag)
-            it.setCloudEffectTimeInTicks(effectDuration)
-            it.setCloudEffectAmplifier(effectAmplifier)
+            addScoreboardTag(cloudTag)
+            addScoreboardTag(EntityTags.CUSTOM_EFFECT_CLOUD)
+            setCloudEffectTag(effectTag)
+            setCloudEffectTimeInTicks(effectDuration)
+            setCloudEffectAmplifier(effectAmplifier)
         }
     }
 
