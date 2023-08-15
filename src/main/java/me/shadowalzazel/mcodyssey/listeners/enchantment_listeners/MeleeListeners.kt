@@ -49,6 +49,7 @@ object MeleeListeners : Listener, EffectsManager {
         if (attacker.equipment?.itemInMainHand?.hasItemMeta() == false) { return }
         val victim = event.entity as LivingEntity
         val weapon = attacker.equipment!!.itemInMainHand
+        val power = if (attacker is Player) { attacker.attackCooldown.toDouble() } else { 1.0 }
 
         // Loop for all enchants
         for (enchant in weapon.enchantments) {
@@ -56,25 +57,25 @@ object MeleeListeners : Listener, EffectsManager {
             when (enchant.key) {
                 OdysseyEnchantments.ARCANE_CELL -> {
                     if (cooldownManager(attacker, "Arcane Cell", arcaneCellCooldown, 5.25)) {
-                        arcaneCellEnchantment(victim, enchant.value)
+                        arcaneCellEnchantment(victim, enchant.value) // TODO
                     }
                 }
                 OdysseyEnchantments.ASPHYXIATING_ASSAULT -> {
-                    event.damage += asphyxiatingAssaultEnchantment(victim, enchant.value)
+                    event.damage += asphyxiatingAssaultEnchantment(victim, enchant.value) * power
                 }
                 OdysseyEnchantments.BACKSTABBER -> {
                     if (cooldownManager(attacker, "Backstabber", backstabberCooldown, 3.25)) {
-                        event.damage += backstabberEnchantment(attacker, victim, enchant.value)
+                        event.damage += backstabberEnchantment(attacker, victim, enchant.value) * power
                     }
                 }
                 OdysseyEnchantments.BANE_OF_THE_ILLAGER -> {
-                    event.damage += baneOfTheIllagerEnchantment(victim, enchant.value)
+                    event.damage += baneOfTheIllagerEnchantment(victim, enchant.value) * power
                 }
                 OdysseyEnchantments.BANE_OF_THE_SEA -> {
-                    event.damage += baneOfTheSeaEnchantment(attacker, victim, enchant.value)
+                    event.damage += baneOfTheSeaEnchantment(attacker, victim, enchant.value)  * power
                 }
                 OdysseyEnchantments.BANE_OF_THE_SWINE -> {
-                    event.damage += baneOfTheSwineEnchantment(victim, enchant.value)
+                    event.damage += baneOfTheSwineEnchantment(victim, enchant.value) * power
                 }
                 OdysseyEnchantments.BUZZY_BEES -> {
                     if (cooldownManager(attacker, "Buzzy Bees", buzzyBeesCooldown, 4.25)) {
@@ -82,16 +83,16 @@ object MeleeListeners : Listener, EffectsManager {
                     }
                 }
                 OdysseyEnchantments.COMMITTED -> {
-                    event.damage += committedEnchantment(victim, enchant.value)
+                    event.damage += committedEnchantment(victim, enchant.value) * power
                 }
                 OdysseyEnchantments.CULL_THE_WEAK -> {
-                    event.damage += cullTheWeakEnchantment(victim, enchant.value)
+                    event.damage += cullTheWeakEnchantment(victim, enchant.value)  * power
                 }
                 OdysseyEnchantments.DECAYING_TOUCH -> {
                     decayingTouchEnchantment(victim, enchant.value)
                 }
                 OdysseyEnchantments.DOUSE -> {
-                    douseEnchantment(victim, enchant.value)
+                    event.damage += douseEnchantment(victim, enchant.value) * power
                 }
                 OdysseyEnchantments.ECHO -> {
                     echoEnchantment(attacker, victim, enchant.value)
@@ -123,7 +124,7 @@ object MeleeListeners : Listener, EffectsManager {
                     }
                 }
                 OdysseyEnchantments.ILLUCIDATION -> {
-                    event.damage += illucidationEnchantment(victim, enchant.value, event.isCritical)
+                    event.damage += illucidationEnchantment(victim, enchant.value, event.isCritical) * power
                 }
                 OdysseyEnchantments.RUPTURING_STRIKE -> {
                     event.damage -= rupturingStrikeEnchantment(attacker, victim, event.damage, enchant.value)
@@ -351,10 +352,12 @@ object MeleeListeners : Listener, EffectsManager {
             victim.scoreboardTags.remove(EntityTags.ECHO_STRUCK)
             return
         }
+        // Prevent Spam
+        if (attacker is Player && attacker.attackCooldown < 0.99) return
         if ((0..100).random() < level * 20) {
             if (!victim.isDead) {
                 // Swing
-                attacker.swingOffHand()
+                //attacker.swingOffHand()
                 victim.addScoreboardTag(EntityTags.ECHO_STRUCK)
                 attacker.attack(victim)
                 // Particles

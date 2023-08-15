@@ -249,7 +249,7 @@ interface AlchemyManager {
         // Potion Cloud modifiers
         val cloudTag: String
         val effectTag = potion.item.getCustomEffectTag()
-        val effectDuration = potion.item.getCustomEffectTimeInTicks() / 4 // PDT
+        val effectDuration = potion.item.getCustomEffectTimeInTicks() // PDT
         val effectAmplifier = potion.item.getCustomEffectAmplifier()
         val cloudColor = getEffectColor(effectTag).value()
 

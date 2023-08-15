@@ -38,7 +38,7 @@ object CauldronRecipes {
         specificList = listOf(
             ItemStack(Material.WITHER_ROSE, 1),
             Potions.CRYSTALLINE_POTION.createPotionStack()),
-        viableFuel = soulFireFuels)
+        viableFuel = fireFuels)
 
     private val POTION_OF_BIOLUMINESCENCE_RECIPE = AlchemyCauldronRecipe(
         potion = Potions.POTION_OF_BIOLUMINESCENCE,
@@ -47,7 +47,7 @@ object CauldronRecipes {
             ItemStack(Material.GLOW_BERRIES, 2),
             ItemStack(Material.GLOW_INK_SAC, 2),
             Potions.CRYSTALLINE_POTION.createPotionStack()),
-        viableFuel = soulFireFuels)
+        viableFuel = fireFuels)
 
     private val POTION_OF_LUCK_RECIPE = AlchemyCauldronRecipe(
         potion = Potions.POTION_OF_LUCK,
@@ -55,7 +55,7 @@ object CauldronRecipes {
         specificList = listOf(
             ItemStack(Material.NAUTILUS_SHELL, 1),
             Potions.CRYSTALLINE_POTION.createPotionStack()),
-        viableFuel = soulFireFuels)
+        viableFuel = fireFuels)
 
     private val POTION_OF_RESISTANCE_RECIPE = AlchemyCauldronRecipe(
         potion = Potions.POTION_OF_RESISTANCE,
@@ -63,7 +63,7 @@ object CauldronRecipes {
         specificList = listOf(
             ItemStack(Material.DIAMOND, 1),
             Potions.CRYSTALLINE_POTION.createPotionStack()),
-        viableFuel = soulFireFuels)
+        viableFuel = fireFuels)
 
     private val POTION_OF_HASTE_RECIPE = AlchemyCauldronRecipe(
         potion = Potions.POTION_OF_HASTE,
@@ -72,7 +72,7 @@ object CauldronRecipes {
             ItemStack(Material.PUMPKIN, 1),
             ItemStack(Material.SUGAR, 3),
             Potions.CRYSTALLINE_POTION.createPotionStack()),
-        viableFuel = soulFireFuels)
+        viableFuel = fireFuels)
 
     private val POTION_OF_CONSTITUTION_RECIPE = AlchemyCauldronRecipe(
         potion = Potions.POTION_OF_CONSTITUTION,
@@ -82,7 +82,7 @@ object CauldronRecipes {
             ItemStack(Material.GLISTERING_MELON_SLICE, 2),
             ItemStack(Material.SOUL_SOIL, 1),
             Potions.CRYSTALLINE_POTION.createPotionStack()),
-        viableFuel = soulFireFuels)
+        viableFuel = fireFuels)
 
     /*-----------------------------------------------------------------------------------------------*/
 
@@ -118,13 +118,16 @@ object CauldronRecipes {
 
     /*-----------------------------------------------------------------------------------------------*/
 
-    private val FLASK_OF_DECAY_RECIPE = AlchemyCauldronRecipe(
+    // TODO: POTION WITH ROOTS
+
+    private val FLASK_OF_ROT_RECIPE = AlchemyCauldronRecipe(
         potion = Potions.FLASK_OF_ROT,
         ingredientSize = 4,
         specificList = listOf(
             ItemStack(Material.ROTTEN_FLESH, 3),
             ItemStack(Material.BROWN_MUSHROOM, 1),
-            ItemStack(Material.FLOWERING_AZALEA, 1)),
+            ItemStack(Material.HANGING_ROOTS, 1),
+            Potions.CRYSTALLINE_POTION.createPotionStack()),
         viableFuel = soulFireFuels)
 
     private val FLASK_OF_FROST_RECIPE = AlchemyCauldronRecipe(
@@ -151,7 +154,7 @@ object CauldronRecipes {
         specificList = listOf(
             ItemStack(Material.BLAZE_POWDER, 2),
             ItemStack(Material.FIRE_CHARGE, 1),
-            ItemStack(Material.HONEYCOMB, 1),
+            ItemStack(Material.MAGMA_CREAM, 1),
             Potions.CRYSTALLINE_POTION.createPotionStack()),
         viableFuel = soulFireFuels)
 
@@ -161,7 +164,7 @@ object CauldronRecipes {
         specificList = listOf(
             Ingredients.IRRADIATED_SHARD.createItemStack(1),
             ItemStack(Material.PRISMARINE_CRYSTALS, 1),
-            ItemStack(Material.MAGMA_CREAM, 1),
+            ItemStack(Material.GHAST_TEAR, 1),
             Potions.CRYSTALLINE_POTION.createPotionStack()),
         viableFuel = soulFireFuels)
 
@@ -191,8 +194,8 @@ object CauldronRecipes {
         potion = Potions.BOTTLE_OF_SOULS,
         ingredientSize = 4,
         specificList = listOf(
-            Ingredients.ECTOPLASM.createItemStack(2),
-            Ingredients.SOUL_QUARTZ.createItemStack(2),
+            Ingredients.ECTOPLASM.createItemStack(1),
+            Ingredients.SOUL_QUARTZ.createItemStack(1),
             ItemStack(Material.CRYING_OBSIDIAN, 1),
             Potions.CRYSTALLINE_POTION.createPotionStack()),
         viableFuel = soulFireFuels)
@@ -218,7 +221,7 @@ object CauldronRecipes {
             ItemStack(Material.GLOW_BERRIES, 2),
             ItemStack(Material.AMETHYST_CLUSTER, 1),
             Potions.CRYSTALLINE_POTION.createPotionStack()),
-        viableFuel = soulFireFuels)
+        viableFuel = fireFuels)
 
     /*-----------------------------------------------------------------------------------------------*/
 
@@ -232,6 +235,30 @@ object CauldronRecipes {
         comboEffectTypeList = listOf(
             PotionEffectType.NIGHT_VISION,
             PotionEffectType.WATER_BREATHING),
+        viableFuel = fireFuels)
+
+    private val SPELUNKERS_CONCOCTION_RECIPE = AlchemyCauldronRecipe(
+        potion = Potions.SPELUNKERS_CONCOCTION,
+        ingredientSize = 4,
+        specificList = listOf(
+            ItemStack(Material.RAW_GOLD, 2),
+            ItemStack(Material.CHORUS_FLOWER, 1)),
+        isCombination = true,
+        comboEffectTypeList = listOf(
+            PotionEffectType.FAST_DIGGING,
+            PotionEffectType.GLOWING),
+        viableFuel = fireFuels)
+
+    private val NETHER_OWL_CONCOCTION_RECIPE = AlchemyCauldronRecipe(
+        potion = Potions.NETHER_OWL_CONCOCTION,
+        ingredientSize = 4,
+        specificList = listOf(
+            ItemStack(Material.WEEPING_VINES, 2),
+            ItemStack(Material.CHORUS_FLOWER, 1)),
+        isCombination = true,
+        comboEffectTypeList = listOf(
+            PotionEffectType.NIGHT_VISION,
+            PotionEffectType.FIRE_RESISTANCE),
         viableFuel = fireFuels)
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -285,7 +312,7 @@ object CauldronRecipes {
         POTION_OF_STONE_SKIN_RECIPE,
         POTION_OF_WRATH_RECIPE,
         POTION_OF_WHIZ_RECIPE,
-        FLASK_OF_DECAY_RECIPE,
+        FLASK_OF_ROT_RECIPE,
         FLASK_OF_FROST_RECIPE,
         FLASK_OF_TAR_RECIPE,
         FLASK_OF_ABLAZE_RECIPE,
@@ -296,6 +323,8 @@ object CauldronRecipes {
         ACCURSED_BREW_RECIPE,
         BOTTLE_OF_SHIMMER_RECIPE,
         ANGLERS_CONCOCTION_RECIPE,
+        SPELUNKERS_CONCOCTION_RECIPE,
+        NETHER_OWL_CONCOCTION_RECIPE,
         CUSTOM_CONCOCTION_2_RECIPE,
         CUSTOM_CONCOCTION_3_RECIPE,
         CUSTOM_CONCOCTION_4_RECIPE,

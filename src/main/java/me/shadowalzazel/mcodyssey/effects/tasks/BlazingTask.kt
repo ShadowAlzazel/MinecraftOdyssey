@@ -7,15 +7,19 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.scheduler.BukkitRunnable
 
 // ABLAZE task
-class BlazingTask(private val blazingVictim: LivingEntity, private val blazingFactor: Int, private val blazingCount: Int) : BukkitRunnable() {
-    private var dousingCooldown = System.currentTimeMillis()
+class BlazingTask(private val victim: LivingEntity, private val amplifier: Int, private val maxCount: Int) : BukkitRunnable() {
+    private var cooldown = System.currentTimeMillis()
     private var counter = 0
 
     override fun run() {
-        blazingVictim.also {
+        victim.also {
             counter += 1
             // Check if in water or not ablaze
-            if (it.isInWaterOrRainOrBubbleColumn || EffectTags.ABLAZE !in it.scoreboardTags) { this.cancel() }
+            if (EffectTags.ABLAZE !in it.scoreboardTags) { this.cancel() }
+            if (it.isInWaterOrRainOrBubbleColumn ) {
+                it.scoreboardTags.remove(EffectTags.ABLAZE)
+                this.cancel()
+            }
 
             // Spawn particles in world
             with(it.world) {
@@ -30,12 +34,12 @@ class BlazingTask(private val blazingVictim: LivingEntity, private val blazingFa
             }
 
             // Damage
-            it.damage(1.0 + (blazingFactor * 0.75))
+            it.damage(2.0 + (amplifier * 2))
 
             // Every 1 sec
-            val timeElapsed = System.currentTimeMillis() - dousingCooldown
-            if (blazingCount < counter || it.health <= 0.0 || timeElapsed > blazingCount * 1000) {
-                if (!it.isDead) { it.scoreboardTags.remove(EffectTags.ABLAZE) }
+            val timeElapsed = System.currentTimeMillis() - cooldown
+            if (maxCount < counter || it.health <= 0.0 || timeElapsed > maxCount * 1000) {
+                it.scoreboardTags.remove(EffectTags.ABLAZE)
                 this.cancel()
             }
         }
