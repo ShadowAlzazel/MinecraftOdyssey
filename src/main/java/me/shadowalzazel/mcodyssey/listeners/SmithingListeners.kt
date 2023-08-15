@@ -58,9 +58,17 @@ object SmithingListeners : Listener, EnchantSlotManager {
                 if (it.amount > 1) it.amount = 1
                 it.addTag(ItemTags.IS_ENGRAVED)
                 val newLore = it.itemMeta.lore() ?: mutableListOf()
+                val pretext = when (equipment.type) {
+                    Material.POTION -> {
+                        "Brewed"
+                    }
+                    else -> {
+                        "Created"
+                    }
+                }
                 for (engraver in event.viewers) {
                     it.addStringTag(ItemTags.ENGRAVED_BY, engraver.name)
-                    val engraving = Component.text("Created by ${engraver.name}", SlotColors.AMETHYST.color, TextDecoration.ITALIC)
+                    val engraving = Component.text("$pretext by ${engraver.name}", SlotColors.AMETHYST.color, TextDecoration.ITALIC)
                     newLore.add(engraving)
                 }
                 it.lore(newLore)

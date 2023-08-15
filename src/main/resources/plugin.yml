@@ -10,3 +10,7 @@ commands:
     description: "Summons and Odyssey Boss"
     usage: /<command>
     permission: op
+  enchant_gilded:
+    description: "Applies a gilded Enchant"
+    usage: /<command>
+    permission: op

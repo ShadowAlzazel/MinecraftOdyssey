@@ -33,10 +33,8 @@ object SpawningListeners : Listener {
     @EventHandler
     fun mobNaturalSpawningHandler(event: CreatureSpawnEvent) {
         if (event.spawnReason != CreatureSpawnEvent.SpawnReason.NATURAL) { return }
-
         when(event.entity.type) {
             EntityType.WANDERING_TRADER -> {
-                // TEMP
                 if (3 >= (1..10).random()) {
                     DubiousDealer.createMob(event.location.world, event.location)
                 }
@@ -47,11 +45,9 @@ object SpawningListeners : Listener {
                 }
             }
             else -> {
-
             }
         }
     }
-
 
     @EventHandler
     fun mobStructureSpawning(event: ChunkPopulateEvent) {

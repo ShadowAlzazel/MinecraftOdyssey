@@ -30,6 +30,10 @@ object Potions : AlchemyManager {
             if (potionEffects != null && potionEffects.isNotEmpty()) {
                 for (effect in potionEffects) { potionMeta.addCustomEffect(effect, true) }
                 potionMeta.basePotionData = PotionData(PotionType.THICK)
+                // FOr continuity
+                if (this@createPotionStack == CRYSTALLINE_POTION) {
+                    potionMeta.basePotionData = PotionData(PotionType.UNCRAFTABLE)
+                }
             }
             itemMeta = potionMeta
             if (isOdysseyEffect) {
@@ -286,7 +290,7 @@ object Potions : AlchemyManager {
     // Haste + Glowing + 1 Honeycomb
     // (7 minutes)
     val SPELUNKERS_CONCOCTION = OdysseyPotion(
-        name = "anglers_concoction",
+        name = "spelunkers_concoction",
         material = Material.POTION,
         displayName = Component.text("Spelunker's Concoction", TextColor.color(255, 255, 55)),
         customModel = ItemModels.CONCOCTION_BOTTLE,
@@ -295,10 +299,18 @@ object Potions : AlchemyManager {
             PotionEffect(PotionEffectType.GLOWING, 3 * 60 * 20, 0)),
         potionColor = Color.fromRGB(115, 215, 233))
 
-
     // Nether Owl Potion
     // Night Vision + Fire Resistance + 1 Weeping Vine
     // (10 minutes)
+    val NETHER_OWL_CONCOCTION = OdysseyPotion(
+        name = "nether_owl_concoction",
+        material = Material.POTION,
+        displayName = Component.text("Nether Owl Concoction", TextColor.color(255, 255, 55)),
+        customModel = ItemModels.CONCOCTION_BOTTLE,
+        potionEffects = listOf(
+            PotionEffect(PotionEffectType.NIGHT_VISION, 3 * 60 * 20 , 0),
+            PotionEffect(PotionEffectType.FIRE_RESISTANCE, 3 * 60 * 20, 0)),
+        potionColor = Color.fromRGB(255, 105, 78))
 
     /*-----------------------------------------------------------------------------------------------*/
 
