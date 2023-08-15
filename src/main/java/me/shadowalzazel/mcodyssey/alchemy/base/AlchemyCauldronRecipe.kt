@@ -2,15 +2,15 @@ package me.shadowalzazel.mcodyssey.alchemy.base
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.constants.ItemTags
-import me.shadowalzazel.mcodyssey.constants.ItemTags.addIntTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.addStringTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
+import me.shadowalzazel.mcodyssey.items.Potions.createPotionStack
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Item
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.PotionMeta
-import org.bukkit.potion.PotionData
+import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.potion.PotionType
 
@@ -19,9 +19,9 @@ class AlchemyCauldronRecipe(
     private val ingredientSize: Int,
     private val viableFuel: List<Material>,
     private val specificList: List<ItemStack>, // For Materials and Specific Items
-    private val combinationPotionDataList: List<PotionEffectType> = listOf(), // For Detecting Potion Combinations
-    private val combinationOdysseyEffectList: List<String> = listOf(), // For Detecting Odyssey Effect Tags
-    private val isCombination: Boolean = false
+    private val isCombination: Boolean = false,
+    private val comboEffectTypeList: List<PotionEffectType> = listOf(), // For Detecting Potion Combinations
+    private val comboOdysseyEffectList: List<String> = listOf() // For Detecting Odyssey Effect Tags
 ) {
 
     // Validate the Cauldron Recipe
@@ -30,14 +30,27 @@ class AlchemyCauldronRecipe(
         if (fuel !in viableFuel) return false
         // Specific Ingredients Are (Uncraftable Potions, OdysseyItems, or Specific Tagged)
         val specificIngredients = ingredients.filter { it.itemStack.specificIngredientFinder() }
-        val anyNotInList = specificIngredients.any { it.itemStack !in specificList }
-        if (anyNotInList) return false
-        // Get Potion With Effects
-        val potionList = ingredients.filter { it.itemStack.potionDataFinder() }
-        if (combinationPotionDataList.size != potionList.size) return false
+        if (specificIngredients.any { it.itemStack !in specificList }) return false
+        if (specificIngredients.size != specificList.size) return false
+        // Get Potion With Effects for preset concoctions
+        if (comboEffectTypeList.isNotEmpty()) {
+            val potionList = ingredients.filter { it.itemStack.potionDataFinder() }
+            if (comboEffectTypeList.size != potionList.size) return false
+        }
         // Get Odyssey Effect with tag
-        val odysseyList = ingredients.filter { it.itemStack.odysseyEffectFinder() }
-        if (odysseyList.size != combinationOdysseyEffectList.size) return false
+        if (comboOdysseyEffectList.isNotEmpty()) {
+            val odysseyList = ingredients.filter { it.itemStack.odysseyEffectFinder() }
+            if (odysseyList.size != comboOdysseyEffectList.size) return false
+        }
+        // For Alchemy Combinations
+        if (comboEffectTypeList.isEmpty() && isCombination) {
+            val ingredientPotions = ingredients.filter { it.itemStack.hasPotionEffectOrData() }
+            ingredientPotions.forEach { println(it.itemStack) }
+            // Can not combine concoctions -> MAYBE CHANGE THIS
+            if (ingredientPotions.any { it.itemStack.hasTag(ItemTags.IS_ALCHEMY_COMBINATION) }) return false
+            if (specificIngredients.size + ingredientPotions.size != ingredientSize) return false
+        }
+        // Passed All Sentries
         return true
     }
 
@@ -45,57 +58,63 @@ class AlchemyCauldronRecipe(
     fun synchroSuccessHandler(ingredients: MutableCollection<Item>) {
         val location = ingredients.elementAt(0).location.clone()
         location.world.playSound(location, Sound.ITEM_BOTTLE_FILL, 2.5F, 0.8F)
+        val result = potion.createPotionStack()
+        // Check if is Combination
+        if (isCombination) {
+            val potionList = ingredients.filter { it.itemStack.hasPotionEffectOrData() }
+            val resultMeta = result.itemMeta as PotionMeta
+            // Check if Preset Concoction
+            val isPreset = comboEffectTypeList.isNotEmpty()
+            val concentration = if (isPreset) { 1.25 } else { maxOf(1.4 - (potionList.size * 0.2), 0.2) }
+            // Apply potion effects
+            for (item in potionList) {
+                val potion = item.itemStack
+                val potionMeta = potion.itemMeta as PotionMeta
+                val oldEffectList = if (potionMeta.hasCustomEffects()) { potionMeta.customEffects }
+                else { listOf(potion.getEffectFromData()) }
+                oldEffectList.forEach {
+                    val newEffect = PotionEffect(it.type, (it.duration * concentration).toInt() + 10, it.amplifier)
+                    resultMeta.addCustomEffect(newEffect, true)
+                }
+            }
+            // ADD Tag to prevent combinations again // MAYBE CHANGE LATER
+            result.itemMeta = resultMeta
+            result.addTag(ItemTags.IS_ALCHEMY_COMBINATION)
+        }
+        // TODO: DO SOMETHING HERE FOR MUNDANE?
         // Remove Items
         for (item in ingredients) item.remove()
-
         val cauldron = location.block
-        val result = potion.createPotionStack() // TODO: DO SOMETHING HERE FOR MUNDANE?
         AlchemyCauldronTask(cauldron, result).runTaskTimer(Odyssey.instance, 0, 2)
     }
 
-    // WHEN CREATING TAKE AVERAGE OF RGB C  OLOR
+
     // Maybe add in recipe, is combination?
-
-    /*-----------------------------------------------------------------------------------------------*/
-
-    internal fun OdysseyPotion.createPotionStack(): ItemStack {
-        return createItemStack(1).apply {
-            val potionMeta = itemMeta as PotionMeta
-            if (potionColor != null) potionMeta.color = potionColor
-            if (potionEffects != null && potionEffects.isNotEmpty()) {
-                for (effect in potionEffects) { potionMeta.addCustomEffect(effect, true) }
-            }
-            if (isOdysseyEffect) {
-                potionMeta.basePotionData = PotionData(PotionType.UNCRAFTABLE)
-                addStringTag(ItemTags.ODYSSEY_EFFECT_TAG, odysseyEffectTag)
-                addIntTag(ItemTags.ODYSSEY_EFFECT_TIME, odysseyEffectTimeInTicks) // Int
-                addIntTag(ItemTags.ODYSSEY_EFFECT_AMPLIFIER, odysseyEffectAmplifier) // Int
-            }
-            else {
-
-            }
-            itemMeta = potionMeta
-        }
-    }
 
     /*-----------------------------------------------------------------------------------------------*/
 
     private fun ItemStack.specificIngredientFinder(): Boolean {
         if (itemMeta is PotionMeta) {
-            if ((itemMeta as PotionMeta).basePotionData.type == PotionType.UNCRAFTABLE) return true
+            if ((itemMeta as PotionMeta).basePotionData.type == PotionType.UNCRAFTABLE) return true // MORE ROBUST?
+            if ((itemMeta as PotionMeta).basePotionData.type == PotionType.AWKWARD) return true
+            return false
         }
+        // ADD ELSE IF FOR OTHER SPECIFICS
         else {
             return true
         }
-        // Add else if specific tag?
-        return false
     }
 
     private fun ItemStack.potionDataFinder(): Boolean {
+        if (type != Material.POTION) return false
         if (itemMeta !is PotionMeta) return false
-        val potionEffect = (itemMeta as PotionMeta).customEffects[0].type
-        if (potionEffect !in combinationPotionDataList) return false
-        return true
+        val isConcoction = hasTag(ItemTags.IS_ALCHEMY_COMBINATION)
+        if (isConcoction) return false
+        println("Is Not Concoction")
+        println("Custom Effects: ${(itemMeta as PotionMeta).customEffects}")
+        val foundCustomEffect = (itemMeta as PotionMeta).customEffects.any { it.type in comboEffectTypeList } // Find at least one match
+        val foundPotionData = (itemMeta as PotionMeta).basePotionData.type.effectType in comboEffectTypeList
+        return foundPotionData || foundCustomEffect
     }
 
     private fun ItemStack.odysseyEffectFinder(): Boolean {
@@ -103,6 +122,52 @@ class AlchemyCauldronRecipe(
         val isCustomEffect = hasTag(ItemTags.IS_CUSTOM_EFFECT)
         if (!isCustomEffect) return false
         return true
+    }
+
+    private fun ItemStack.hasPotionEffectOrData(): Boolean {
+        if (type != Material.POTION) return false
+        if (itemMeta !is PotionMeta) return false
+        val hasPotionDataEffect = (itemMeta as PotionMeta).basePotionData.type.effectType != null
+        val hasMetaEffect = (itemMeta as PotionMeta).customEffects.size > 0
+        return hasPotionDataEffect || hasMetaEffect
+    }
+
+    private fun ItemStack.getEffectFromData(): PotionEffect {
+        val potionData = (itemMeta as PotionMeta).basePotionData
+        val baseTime: Int
+        var extendedMultiplier: Double = 8.0 / 3.0
+        var upgradedMultiplier: Double = 2.0 / 1.0
+        var amplifier = if (potionData.isUpgraded) { 1 } else { 0 }
+        when (potionData.type) {
+            PotionType.TURTLE_MASTER -> {
+                baseTime = 20 * 20
+                upgradedMultiplier = 1.0
+                extendedMultiplier = 2.0
+            }
+            PotionType.POISON, PotionType.REGEN -> {
+                baseTime = 45 * 20
+                extendedMultiplier = 2.0
+            }
+            PotionType.WEAKNESS, PotionType.SLOW_FALLING -> {
+                baseTime = 90 * 20
+            }
+            PotionType.SLOWNESS -> {
+                baseTime = 90 * 20
+                upgradedMultiplier = 2.0 / 9.0
+                if (potionData.isUpgraded) { amplifier = 3 }
+            }
+            PotionType.INSTANT_HEAL, PotionType.INSTANT_DAMAGE -> {
+                baseTime = 0
+            }
+            else -> {
+                baseTime = 3 * 60 * 20
+            }
+        }
+
+        var time = baseTime.toDouble()
+        if (potionData.isUpgraded) { time *= upgradedMultiplier }
+        else if (potionData.isExtended) { time *= extendedMultiplier }
+        return PotionEffect(potionData.type.effectType!!, time.toInt(), amplifier)
     }
 
 

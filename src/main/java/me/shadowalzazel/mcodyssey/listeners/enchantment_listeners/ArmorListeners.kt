@@ -143,19 +143,17 @@ object ArmorListeners : Listener {
                 }
             }
         }
+        // DODGE AN ATTACK WITH UNTOUCHABLE
+        // If CAN SEE AND WITHIN 3 BLOCKS DODGE MELEE
+        // IF LINE OF SIGHT projectile
+        // DODGE
+        // COOLDOWN
+        // IF SOMETHING
+        // IDK
 
+        // LIGHTNING REFLEXES -> dodge attacks if within range?
+        // CLOSE COMBAT SPECIALIST -> less damage if close?
         if (event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK || event.cause == EntityDamageEvent.DamageCause.PROJECTILE) {
-            // DODGE AN ATTACK WITH UNTOUCHABLE
-            // If CAN SEE AND WITHIN 3 BLOCKS DODGE MELEE
-            // IF LINE OF SIGHT projectile
-            // DODGE
-            // COOLDOWN
-
-
-            // IF SOMETHING
-            // IDK
-
-
         }
 
     }
@@ -164,8 +162,6 @@ object ArmorListeners : Listener {
     @EventHandler
     fun mainArmorConsumingHandler(event: PlayerItemConsumeEvent) {
         val player = event.player
-        println(event.item)
-
         // --------------------------------------------------------------
         // Check if helmet item has lore
         if (player.equipment.helmet?.hasItemMeta() == true) {

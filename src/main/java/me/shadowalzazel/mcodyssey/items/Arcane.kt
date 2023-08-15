@@ -31,6 +31,8 @@ object Arcane {
         return newBook
     }
 
+    // IDEA: ITEM THAT RESETS ENCHANT SEED?
+
     val ARCANE_BOOK = OdysseyItem(
         name = "arcane_book",
         material = Material.BOOK,

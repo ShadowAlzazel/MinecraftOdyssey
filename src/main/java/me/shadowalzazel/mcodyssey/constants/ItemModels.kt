@@ -17,7 +17,7 @@ object ItemModels {
     const val PEARSHAPE_BOTTLE: Int = 6905317 // For Enhanced potions (not obtainable through vanilla)
     const val DAIRYSHAPE_BOTTLE: Int = 6905318 // Super or For Fun
     const val ROUND_BOTTLE: Int = 6905319 // For Odyssey Effect Potions Without Time
-    const val DECOCTION_BOTTLE: Int = 6905320 // For Potion Effect Combinations
+    const val CONCOCTION_BOTTLE: Int = 6905320 // For Potion Effect Combinations
     // Decoction
 
     /* ---------------------------------------------------------------------------------------------- */
