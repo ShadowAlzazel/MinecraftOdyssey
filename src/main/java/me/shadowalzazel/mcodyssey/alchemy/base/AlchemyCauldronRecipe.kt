@@ -5,6 +5,7 @@ import me.shadowalzazel.mcodyssey.constants.ItemTags
 import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
 import me.shadowalzazel.mcodyssey.items.Potions.createPotionStack
+import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Item
@@ -66,6 +67,7 @@ class AlchemyCauldronRecipe(
             // Check if Preset Concoction
             val isPreset = comboEffectTypeList.isNotEmpty()
             val concentration = if (isPreset) { 1.25 } else { maxOf(1.4 - (potionList.size * 0.2), 0.2) }
+            val colors: MutableList<Color> = mutableListOf()
             // Apply potion effects
             for (item in potionList) {
                 val potion = item.itemStack
@@ -76,8 +78,26 @@ class AlchemyCauldronRecipe(
                     val newEffect = PotionEffect(it.type, (it.duration * concentration).toInt() + 10, it.amplifier)
                     resultMeta.addCustomEffect(newEffect, true)
                 }
+                if (!isPreset) {
+                    if (potionMeta.color != null) { colors.add(potionMeta.color!!) }
+                }
             }
-            // ADD Tag to prevent combinations again // MAYBE CHANGE LATER
+            if (colors.isNotEmpty()) {
+                var red = 0
+                var green = 0
+                var blue = 0
+                colors.forEach {
+                    red += it.red
+                    green += it.green
+                    blue += it.blue
+                }
+                val size = colors.size
+                resultMeta.let {
+                    it.color!!.red = blue / size
+                    it.color!!.green = green / size
+                    it.color!!.blue = blue / size
+                }
+            }
             result.itemMeta = resultMeta
             result.addTag(ItemTags.IS_ALCHEMY_COMBINATION)
         }
@@ -87,21 +107,19 @@ class AlchemyCauldronRecipe(
         val cauldron = location.block
         AlchemyCauldronTask(cauldron, result).runTaskTimer(Odyssey.instance, 0, 2)
     }
-
-
     // Maybe add in recipe, is combination?
 
     /*-----------------------------------------------------------------------------------------------*/
 
     private fun ItemStack.specificIngredientFinder(): Boolean {
-        if (itemMeta is PotionMeta) {
-            if ((itemMeta as PotionMeta).basePotionData.type == PotionType.UNCRAFTABLE) return true // MORE ROBUST?
-            if ((itemMeta as PotionMeta).basePotionData.type == PotionType.AWKWARD) return true
-            return false
+        return if (itemMeta is PotionMeta) {
+            //if ((itemMeta as PotionMeta).basePotionData.type == PotionType.UNCRAFTABLE) return true // MORE ROBUST?
+            //if ((itemMeta as PotionMeta).basePotionData.type == PotionType.AWKWARD) return true
+            (this in specificList)
         }
         // ADD ELSE IF FOR OTHER SPECIFICS
         else {
-            return true
+            true
         }
     }
 
@@ -136,7 +154,7 @@ class AlchemyCauldronRecipe(
         val potionData = (itemMeta as PotionMeta).basePotionData
         val baseTime: Int
         var extendedMultiplier: Double = 8.0 / 3.0
-        var upgradedMultiplier: Double = 2.0 / 1.0
+        var upgradedMultiplier: Double = 1.0 / 2.0
         var amplifier = if (potionData.isUpgraded) { 1 } else { 0 }
         when (potionData.type) {
             PotionType.TURTLE_MASTER -> {

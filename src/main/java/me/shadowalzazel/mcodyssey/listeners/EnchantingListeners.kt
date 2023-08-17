@@ -4,22 +4,12 @@ import com.destroystokyo.paper.event.inventory.PrepareResultEvent
 import me.shadowalzazel.mcodyssey.arcane.EnchantSlotManager
 import me.shadowalzazel.mcodyssey.arcane.SlotColors
 import me.shadowalzazel.mcodyssey.constants.ItemModels
-import me.shadowalzazel.mcodyssey.constants.ItemTags
-import me.shadowalzazel.mcodyssey.constants.ItemTags.addIntTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.getIntTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.getStringTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.items.Arcane
 import me.shadowalzazel.mcodyssey.items.Arcane.createEnchantedBook
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
-import me.shadowalzazel.mcodyssey.listeners.EnchantingListeners.isSlotted
-import me.shadowalzazel.mcodyssey.listeners.unused.OldEnchantingListeners
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.TextComponent
-import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.apache.commons.lang3.tuple.MutablePair
 import org.bukkit.Material
@@ -28,7 +18,6 @@ import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.HumanEntity
-import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -361,6 +350,7 @@ object EnchantingListeners : Listener, EnchantSlotManager {
         val template = event.inventory.inputTemplate!!
         // Avoid Conflict with other smithing
         if (!template.itemMeta.hasCustomModelData()) return
+        if (!equipment.hasItemMeta()) return
         if (recipe.result.type != Material.ENCHANTED_BOOK) return
         if (event.result?.type == Material.ENCHANTED_BOOK) {
             event.result = ItemStack(Material.AIR)
@@ -372,7 +362,8 @@ object EnchantingListeners : Listener, EnchantSlotManager {
         val hasBook = equipment.type == Material.ENCHANTED_BOOK
 
         // Legacy Check
-        if (hasEquipment && !equipment.isSlotted()) {
+        val isLegacy = !equipment.isSlotted() && equipment.itemMeta.hasLore() && equipment.lore()!!.contains(slotSeperator)
+        if (isLegacy) {
             event.viewers.forEach { it.sendFailMessage("You need to reactivate this item. Combine with empty paper or gold nugget at the anvil!") }
             return
         }
@@ -479,9 +470,11 @@ object EnchantingListeners : Listener, EnchantSlotManager {
             viewers.forEach { it.sendFailMessage("This item needs to be slotted to use this tome.") }
             return ItemStack(Material.AIR)
         }
-        val totalSlots = item.getEnchantSlots() + item.getGildedSlots() - 1
+        val enchantSlotCount = item.getEnchantSlots()
+        val gildedSlotCount = item.getGildedSlots()
+        val newSlotCount = enchantSlotCount + gildedSlotCount - 1
         // Remove Excess Enchant
-        if (totalSlots < item.enchantments.size) {
+        if (newSlotCount < item.enchantments.size) {
             val enchantToRemove = item.enchantments.toList().random()
             item.apply {
                 if (enchantToRemove.first is OdysseyEnchantment) {
@@ -498,10 +491,15 @@ object EnchantingListeners : Listener, EnchantSlotManager {
                 updateSlotLore()
             }
         } else { // Remove Slot
-            if (item.getEnchantSlots() <= 1) {
-                item.removeGildedSlot()
-            } else {
+            if (enchantSlotCount > 1) {
                 item.removeEnchantSlot()
+            }
+            else if (gildedSlotCount > 1) {
+                item.removeGildedSlot()
+            }
+            else {
+                viewers.forEach { it.sendFailMessage("This item needs at least one slot to use this tome") }
+                return ItemStack(Material.AIR)
             }
         }
         item.updateSlotLore()
@@ -591,6 +589,7 @@ object EnchantingListeners : Listener, EnchantSlotManager {
         }
         // Apply new
         return item.apply {
+            // TODO: Make more robust
             addUnsafeEnchantments(book.enchantments)
             updateSlotLore()
         }
