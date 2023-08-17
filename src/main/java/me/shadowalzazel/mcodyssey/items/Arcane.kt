@@ -136,7 +136,7 @@ object Arcane {
                 .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE),
             Component.text("Applies the stored enchantments to an item with no cost", TextColor.color(150, 228, 148))
                 .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.TOME_OF_AVARICE)
+        customModel = ItemModels.TOME_OF_POLYMERIZATION)
 
 
 }
