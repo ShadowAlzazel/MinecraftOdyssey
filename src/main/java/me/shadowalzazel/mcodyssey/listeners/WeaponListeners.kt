@@ -77,14 +77,10 @@ object WeaponListeners : Listener {
         }
         if (!player.equipment.itemInMainHand.hasItemMeta()) return
         if (!player.equipment.itemInMainHand.itemMeta!!.hasCustomModelData()) return
-        //if (player.attackCooldown < 0.49) return
-
         val mainWeapon = player.equipment.itemInMainHand
         val offHandWeapon = player.equipment.itemInOffHand
         val model = mainWeapon.itemMeta.customModelData
-
-        //println("Cooldown Charge: " + player.attackCooldown)
-        //println("Cooldown Period: " + player.cooldownPeriod)
+        if (event.damage > 1.0) { event.damage -= 1.0 } // Reduce Weapon Damage by 1 to match attribute display
 
         // Range
         if (MAX_RANGE_MAP.containsKey(model)) {
@@ -94,7 +90,6 @@ object WeaponListeners : Listener {
                 return
             }
         }
-
         if (MIN_RANGE_MAP.containsKey(model)) {
             val r = MIN_RANGE_MAP[model]!!
             if (victim in player.getNearbyEntities(r, r, r)) {
@@ -186,18 +181,15 @@ object WeaponListeners : Listener {
             }
         }
         // -----------------------------------------------------------------------------
-        //if (!fullAttack) return
-        if (event.damage > 1.0) { event.damage -= 1 }
 
-        val attackCharge = player.attackCooldown
+        val attackPower = player.attackCooldown
         val extraDamages = weaponStatsHandler(model, victim, event.damage)
-        val physicalDamage = extraDamages.first * attackCharge
+        val physicalDamage = extraDamages.first * attackPower
         val trueDamage = if (fullAttack) {
             maxOf(minOf(extraDamages.second, event.damage), 0.0)
         } else {
             0.0
         }
-
         event.damage -= trueDamage
         event.damage += physicalDamage
 
@@ -206,9 +198,10 @@ object WeaponListeners : Listener {
         } else {
             victim.health -= trueDamage
         }
-
         event.damage = maxOf(0.0, event.damage)
-        // println("Final Damage: " + event.finalDamage)
+        //println("Cooldown Charge: " + player.attackCooldown)
+        //println("Cooldown Period: " + player.cooldownPeriod)
+        //println("Final Damage: " + event.finalDamage)
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -227,7 +220,6 @@ object WeaponListeners : Listener {
     fun mainInteractEntityHandler(event: PlayerInteractEntityEvent) {
         //println("Interact")
     }
-
     @EventHandler(priority = EventPriority.HIGH)
     fun mainInteractAtEntityHandler(event: PlayerInteractAtEntityEvent) {
         //println("Interact At Entity")
@@ -284,22 +276,6 @@ object WeaponListeners : Listener {
         return target
     }
 
-    // Helper function for reach
-    private fun getReachedTarget(somePlayer: Player, reachStat: Double?): Entity? {
-        val reachedEntity: Entity? = reachStat?.run {
-            val targetInfo = somePlayer.getTargetEntityInfo(reachStat.toInt() + 2, false)
-            var targetEntity = targetInfo?.entity
-            if (targetEntity != null) {
-                val rangeReach = somePlayer.eyeLocation.distance(targetEntity.location.clone())
-                if (reachStat < rangeReach) {
-                    targetEntity = null
-                }
-            }
-            targetEntity
-        }
-        return reachedEntity
-    }
-
     // TODO: If Crouching more damage
     // Function for critical hits that sweep
     private fun weaponSweep(victim: LivingEntity, attacker: LivingEntity, radius: Double, damage: Double) {
@@ -342,7 +318,6 @@ object WeaponListeners : Listener {
         }
         player.resetCooldown()
         player.swingOffHand()
-
     }
 
     // Stat handler
@@ -364,7 +339,6 @@ object WeaponListeners : Listener {
         }
 
        return Pair(bonusDamage, piercingDamage)
-
     }
 
 }

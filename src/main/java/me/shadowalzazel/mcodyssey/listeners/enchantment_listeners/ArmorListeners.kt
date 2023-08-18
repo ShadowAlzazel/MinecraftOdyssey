@@ -497,6 +497,7 @@ object ArmorListeners : Listener {
             Material.GOLDEN_APPLE,
             Material.GLOW_BERRIES,
             Material.SWEET_BERRIES,
+            Material.CHORUS_FRUIT,
             Material.ENCHANTED_GOLDEN_APPLE,
             Material.RABBIT_STEW // TEMP Make separate list for models
         )

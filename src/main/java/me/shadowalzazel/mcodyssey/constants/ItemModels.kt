@@ -179,8 +179,8 @@ object ItemModels {
     const val WARHAMMER: Int = 6905802
     const val MACE: Int = 6905803  // One-handed
     const val MAUL: Int = 6905804  // Two-Handed
-    const val GUANDAO: Int = 6905805
-    const val SCYTHE: Int = 6905806
+    const val GUANDAO: Int = 6905805 // Lacerate, AVg speed
+    const val SCYTHE: Int = 6905806 // AOE
 
     const val BATTLE_AXE: Int = 6905784
     const val LONG_AXE: Int = 6905785
