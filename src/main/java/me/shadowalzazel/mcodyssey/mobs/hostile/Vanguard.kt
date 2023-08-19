@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object Vanguard : OdysseyMob("Vanguard", EntityType.SKELETON, 30.0) {
+object Vanguard : OdysseyMob("Vanguard", "vanguard", EntityType.SKELETON, 30.0) {
 
     fun createKnight(odysseyWorld: World, spawningLocation: Location): Pair<Skeleton, SkeletonHorse> {
         // Modify Vanguard to Knight
@@ -57,7 +57,7 @@ object Vanguard : OdysseyMob("Vanguard", EntityType.SKELETON, 30.0) {
             health = 50.0
             canPickupItems = true
             clearActiveItem()
-            customName(Component.text(this@Vanguard.odysseyName, TextColor.color(220, 216, 75)))
+            customName(Component.text(this@Vanguard.displayName, TextColor.color(220, 216, 75)))
             // Spear
             val newSpear = Weapons.IRON_SPEAR.createItemStack(1).apply {
                 addUnsafeEnchantment(Enchantment.DURABILITY, 3)

@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.mobs.base
 
 import me.shadowalzazel.mcodyssey.constants.EntityTags
+import me.shadowalzazel.mcodyssey.constants.IdentifierTags
 import me.shadowalzazel.mcodyssey.constants.Identifiers
 import net.kyori.adventure.text.Component
 import org.bukkit.Location
@@ -13,22 +14,24 @@ import org.bukkit.entity.LivingEntity
 
 
 open class OdysseyMob(
-    internal val odysseyName: String,
-    private val entityType: EntityType,
-    private val mobHealth: Double) {
+    internal val displayName: String,
+    private val tagName: String,
+    private val type: EntityType,
+    private val health: Double) {
 
     // Custom Entity Type -> custom model
-    open fun createMob(someWorld: World, spawningLocation: Location): Entity {
-        val newMob = someWorld.spawnEntity(spawningLocation, entityType).apply {
-            customName(Component.text(odysseyName))
+    open fun createMob(world: World, location: Location): Entity {
+        val newMob = world.spawnEntity(location, type).apply {
+            customName(Component.text(displayName))
             addScoreboardTag(EntityTags.ODYSSEY_MOB)
+            addScoreboardTag(tagName)
             // Health
             if (this@apply is LivingEntity) {
                 // CUSTOM KEY HEALTH PAIRS
-                val mobHealth = AttributeModifier(Identifiers.ODYSSEY_MOB_HEALTH_UUID, "odyssey_mob_health", mobHealth, AttributeModifier.Operation.ADD_NUMBER)
+                val mobHealth = AttributeModifier(Identifiers.ODYSSEY_MOB_HEALTH_UUID, IdentifierTags.MOB_HEALTH, health, AttributeModifier.Operation.ADD_NUMBER)
                 val healthAttribute = getAttribute(Attribute.GENERIC_MAX_HEALTH)
                 healthAttribute!!.addModifier(mobHealth)
-                health += this@OdysseyMob.mobHealth
+                health += this@OdysseyMob.health
             }
         }
         return newMob

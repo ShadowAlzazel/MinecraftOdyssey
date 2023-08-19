@@ -95,7 +95,7 @@ object OldEnchantingListeners : Listener {
 
     private fun enchantingBookHandler(event: EnchantItemEvent) {
         when (event.item.itemMeta.customModelData) {
-            ItemModels.VOLUME_OF_TOOLS -> {
+            ItemModels.VOLUME_OF_FARM_TOOLS -> {
                 event.item.enchantments.filter { it.key.canEnchantItem(ItemStack(Material.WOODEN_SWORD, 1)) }
             }
             ItemModels.VOLUME_OF_AXES -> {

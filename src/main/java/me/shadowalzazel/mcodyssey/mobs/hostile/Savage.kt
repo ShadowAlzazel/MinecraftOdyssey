@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object Savage : OdysseyMob("Savage", EntityType.ZOMBIE, 30.0) {
+object Savage : OdysseyMob("Savage", "savage", EntityType.ZOMBIE, 30.0) {
 
     fun createKnight(odysseyWorld: World, spawningLocation: Location): Pair<Zombie, ZombieHorse> {
         // Modify Savage to Knight
@@ -58,7 +58,7 @@ object Savage : OdysseyMob("Savage", EntityType.ZOMBIE, 30.0) {
             health = 50.0
             canPickupItems = true
             clearActiveItem()
-            customName(Component.text(this@Savage.odysseyName, TextColor.color(220, 216, 75)))
+            customName(Component.text(this@Savage.displayName, TextColor.color(220, 216, 75)))
             // Dagger
             val newDagger = Weapons.IRON_DAGGER.createItemStack(1).apply {
                 addUnsafeEnchantment(Enchantment.DURABILITY, 3)

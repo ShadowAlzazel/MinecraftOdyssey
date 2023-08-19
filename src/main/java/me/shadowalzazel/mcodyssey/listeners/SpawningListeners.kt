@@ -5,7 +5,7 @@ import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.constants.Identifiers
 import me.shadowalzazel.mcodyssey.tasks.PiglinRallyTask
 import me.shadowalzazel.mcodyssey.mobs.neutral.DubiousDealer
-import me.shadowalzazel.mcodyssey.recipe_creators.merchant.Sales
+import me.shadowalzazel.mcodyssey.recipe_creators.merchant.ArcaneSales
 import org.bukkit.Material
 import org.bukkit.MusicInstrument
 import org.bukkit.Sound
@@ -40,7 +40,7 @@ object SpawningListeners : Listener {
                 }
                 else {
                     (event.entity as WanderingTrader).apply {
-                        setRecipe(recipeCount - 1, Sales.createArcaneBookTrade())
+                        setRecipe(recipeCount - 1, ArcaneSales.createArcaneBookTrade())
                     }
                 }
             }

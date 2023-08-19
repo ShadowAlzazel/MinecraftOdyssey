@@ -1,7 +1,8 @@
 package me.shadowalzazel.mcodyssey.mobs.neutral
 
+import me.shadowalzazel.mcodyssey.constants.MobTags
 import me.shadowalzazel.mcodyssey.mobs.base.OdysseyMob
-import me.shadowalzazel.mcodyssey.recipe_creators.merchant.Sales
+import me.shadowalzazel.mcodyssey.recipe_creators.merchant.ArcaneSales
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Location
@@ -13,11 +14,10 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object DubiousDealer : OdysseyMob("Dubious Dealer", EntityType.WANDERING_TRADER, 40.0) {
+object DubiousDealer : OdysseyMob("Dubious Dealer", MobTags.DUBIOUS_DEALER, EntityType.WANDERING_TRADER, 40.0) {
 
-    override fun createMob(someWorld: World, spawningLocation: Location): WanderingTrader {
-        val dubiousDealerEntity = (super.createMob(someWorld, spawningLocation) as WanderingTrader).apply {
-
+    override fun createMob(world: World, location: Location): WanderingTrader {
+        return (super.createMob(world, location) as WanderingTrader).apply {
             // Effects
             addPotionEffects(listOf(
                 PotionEffect(PotionEffectType.SPEED, 99999, 2),
@@ -27,7 +27,7 @@ object DubiousDealer : OdysseyMob("Dubious Dealer", EntityType.WANDERING_TRADER,
             health = 40.0
             canPickupItems = true
             clearActiveItem()
-            customName(Component.text(this@DubiousDealer.odysseyName, TextColor.color(220, 116, 175)))
+            customName(Component.text(this@DubiousDealer.displayName, TextColor.color(220, 116, 175)))
             // Add Items
             equipment.also {
                 // TODO: Custom Models
@@ -41,14 +41,13 @@ object DubiousDealer : OdysseyMob("Dubious Dealer", EntityType.WANDERING_TRADER,
                 it.bootsDropChance = 0F
             }
             // TODO!! Recipe
-            setRecipe(1, Sales.createArcaneBookTrade())
-            setRecipe(2, Sales.createLowTierTomeTrade())
-            setRecipe(3, Sales.createLowTierTomeTrade())
-            setRecipe(4, Sales.createLowTierTomeTrade())
-            setRecipe(5, Sales.createLowTierGildedEnchantTrade())
-            setRecipe(6, Sales.createLowTierGildedEnchantTrade())
+            setRecipe(1, ArcaneSales.createArcaneBookTrade())
+            setRecipe(2, ArcaneSales.createLowTierTomeTrade())
+            setRecipe(3, ArcaneSales.createLowTierTomeTrade())
+            setRecipe(4, ArcaneSales.createLowTierTomeTrade())
+            setRecipe(5, ArcaneSales.createLowTierGildedEnchantTrade())
+            setRecipe(6, ArcaneSales.createLowTierGildedEnchantTrade())
         }
-        return dubiousDealerEntity
     }
 
 }
