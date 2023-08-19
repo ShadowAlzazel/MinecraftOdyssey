@@ -430,10 +430,10 @@ object MeleeListeners : Listener, EffectsManager {
         }
     }
     // ------------------------------- FROG_FRIGHT ------------------------------------
-    private fun frogFrightEnchantment(attacker: LivingEntity, victim: LivingEntity, enchantmentStrength: Int) {
+    private fun frogFrightEnchantment(attacker: LivingEntity, victim: LivingEntity, level: Int) {
         victim.also {
             it.velocity.multiply(0.9)
-            val tongueLashVector = attacker.location.clone().subtract(it.location).toVector().normalize().multiply(1.1 + (enchantmentStrength * 0.1))
+            val tongueLashVector = attacker.location.clone().subtract(it.location).toVector().normalize().multiply(1.1 + (level * 0.1))
             val frogFrightTask = FrogFrightTask(victim, tongueLashVector.multiply(-1.0))
             frogFrightTask.runTaskLater(Odyssey.instance, 9)
             it.addPotionEffect(PotionEffect(PotionEffectType.SLOW, 3, 1))

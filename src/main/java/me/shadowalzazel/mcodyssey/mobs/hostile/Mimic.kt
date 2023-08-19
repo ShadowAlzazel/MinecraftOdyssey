@@ -5,7 +5,8 @@ import org.bukkit.entity.EntityType
 
 
 // Temp
-object Mimic : OdysseyMob("Mimic", EntityType.SLIME, 0.0) {
+
+object Mimic : OdysseyMob("Mimic", "mimic",EntityType.SLIME, 0.0) {
 
     // TODO
 

@@ -8,7 +8,7 @@ import org.bukkit.entity.Zombie
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object RottingSummon : OdysseyMob("Rotting Summon", EntityType.ZOMBIE, -15.0) {
+object RottingSummon : OdysseyMob("Rotting Summon", "rotting_summon",EntityType.ZOMBIE, -15.0) {
 
     override fun createMob(someWorld: World, spawningLocation: Location): Zombie {
         val newSummon = (super.createMob(someWorld, spawningLocation) as Zombie).apply {

@@ -34,7 +34,7 @@ object ItemModels {
 
     const val ARCANE_BOOK: Int = 6905501
 
-    const val VOLUME_OF_TOOLS: Int = 6905520
+    const val VOLUME_OF_FARM_TOOLS: Int = 6905520
     const val VOLUME_OF_POLE_ARMS: Int = 6905521
     const val VOLUME_OF_SWORDS: Int = 6905522
     const val VOLUME_OF_SPEARS: Int = 6905523
@@ -144,6 +144,9 @@ object ItemModels {
 
     const val SAYA: Int = 6903819
 
+    const val ARCANE_WAND: Int = 6903910
+    const val WARPING_WAND: Int = 6903911
+
     /* ---------------------------------------------------------------------------------------------- */
     /* -------------------------------------------HELMETS-------------------------------------------- */
     /* ---------------------------------------------------------------------------------------------- */
@@ -193,7 +196,7 @@ object ItemModels {
     const val BLAZE_ROD_STAFF: Int = 6905796
 
     /*-----------------------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------------------*/
+
     const val SOUL_STEEL_KATANA: Int = 6906644
     const val SOUL_STEEL_CLAYMORE: Int = 6906645
     const val SOUL_STEEL_DAGGER: Int = 6906646

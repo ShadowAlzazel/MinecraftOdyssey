@@ -95,6 +95,7 @@ class Odyssey : JavaPlugin() {
         // Register Events
         logger.info("Registering Events...")
         listOf(AssetListeners,
+            ArcaneListeners,
             SmithingListeners,
             AlchemyListener,
             SoulBraisingListener,

@@ -727,19 +727,22 @@ object ArmorListeners : Listener {
     }
 
     // ------------------------------- SQUIDIFY ------------------------------------
-    private fun squidifyEnchantment(defender: LivingEntity, enchantmentStrength: Int) {
-        defender.world.getNearbyLivingEntities(defender.location, enchantmentStrength.toDouble() * 0.75)
+    private fun squidifyEnchantment(defender: LivingEntity, level: Int) {
+        defender.world.getNearbyLivingEntities(defender.location, level.toDouble() * 0.75)
             .forEach {
                 if (it != defender) {
                     it.addPotionEffects(
                         listOf(
-                            PotionEffect(PotionEffectType.BLINDNESS, ((enchantmentStrength * 2) + 2) * 20, 1),
-                            PotionEffect(PotionEffectType.SLOW, (enchantmentStrength * 20) * 20, 2)
+                            PotionEffect(PotionEffectType.BLINDNESS, ((level * 2) + 2) * 20, 1),
+                            PotionEffect(PotionEffectType.SLOW, ((level * 2) + 2) * 20, 0)
                         )
                     )
+                    if (it is Creature) {
+                        it.pathfinder.stopPathfinding()
+                        it.target = null
+                    }
                 }
             }
-        // TODO: Use faerful Finisher mob goals for mobs t
         // Particles
         with(defender.world) {
             spawnParticle(Particle.ASH, defender.location, 95, 1.5, 0.5, 1.5)

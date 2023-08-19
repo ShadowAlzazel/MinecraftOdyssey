@@ -1,9 +1,6 @@
 package me.shadowalzazel.mcodyssey.recipe_creators
 
-import me.shadowalzazel.mcodyssey.recipe_creators.crafting.Food
-import me.shadowalzazel.mcodyssey.recipe_creators.crafting.Helmets
-import me.shadowalzazel.mcodyssey.recipe_creators.crafting.Misc
-import me.shadowalzazel.mcodyssey.recipe_creators.crafting.Weapons
+import me.shadowalzazel.mcodyssey.recipe_creators.crafting.*
 import org.bukkit.inventory.Recipe
 
 class RecipeManager {
@@ -17,6 +14,7 @@ class RecipeManager {
             addAll(Smithing().getRecipes())
             addAll(Weapons().getRecipes())
             addAll(Helmets().getRecipes())
+            addAll(Equipment().getRecipes())
         }
         return recipeList
     }

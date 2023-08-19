@@ -206,7 +206,6 @@ object WeaponListeners : Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     fun mainWeaponInteractionHandler(event: PlayerInteractEvent) {
-        //println("CLICK")
         if (event.action.isLeftClick) {
             leftClickHandler(event)
         }

@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.mobs.hostile
 
+import me.shadowalzazel.mcodyssey.constants.MobTags
 import me.shadowalzazel.mcodyssey.items.Weapons
 import me.shadowalzazel.mcodyssey.mobs.base.OdysseyMob
 import net.kyori.adventure.text.Component
@@ -12,10 +13,10 @@ import org.bukkit.entity.Zombie
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object Ruined : OdysseyMob("Ruined", EntityType.STRAY, 30.0) {
+object Ruined : OdysseyMob("Ruined", MobTags.RUINED, EntityType.STRAY, 30.0) {
 
-    override fun createMob(someWorld: World, spawningLocation: Location): Zombie {
-        val savageEntity = (super.createMob(someWorld, spawningLocation) as Zombie).apply {
+    override fun createMob(world: World, location: Location): Zombie {
+        val savageEntity = (super.createMob(world, location) as Zombie).apply {
             // Effects
             addPotionEffects(listOf(
                 PotionEffect(PotionEffectType.INCREASE_DAMAGE, 99999, 4),
@@ -26,7 +27,7 @@ object Ruined : OdysseyMob("Ruined", EntityType.STRAY, 30.0) {
             canPickupItems = true
 
             clearActiveItem()
-            customName(Component.text(odysseyName, TextColor.color(220, 216, 75)))
+            customName(Component.text(displayName, TextColor.color(220, 216, 75)))
             // Dagger
             val newClaymore = Weapons.DIAMOND_CLAYMORE.createItemStack(1).apply {
                 addUnsafeEnchantment(Enchantment.DURABILITY, 3)

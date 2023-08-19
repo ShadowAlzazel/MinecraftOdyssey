@@ -538,11 +538,11 @@ object RangedListeners : Listener {
     }
 
     // ------------------------------- SHARPSHOOTER ------------------------------------
-    private fun sharpshooterEnchantmentShoot(projectile: Entity, enchantmentStrength: Int) {
+    private fun sharpshooterEnchantmentShoot(projectile: Entity, level: Int) {
         with(projectile) {
-            if (velocity.length() >= 2.94) {
+            if (velocity.length() >= 2.5) {
                 addScoreboardTag(EntityTags.SHARPSHOOTER_ARROW)
-                addScoreboardTag(EntityTags.SHARPSHOOTER_MODIFIER + enchantmentStrength)
+                addScoreboardTag(EntityTags.SHARPSHOOTER_MODIFIER + level)
             }
         }
     }
