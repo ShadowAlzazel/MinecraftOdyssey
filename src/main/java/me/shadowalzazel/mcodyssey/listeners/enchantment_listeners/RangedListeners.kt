@@ -254,7 +254,7 @@ object RangedListeners : Listener {
         }
     }
 
-    private fun alchemyArtilleryEnchantmentShoot(projectile: Entity, crossbow: ItemStack, shooter: LivingEntity, enchantmentStrength: Int): ThrownPotion? {
+    private fun alchemyArtilleryEnchantmentShoot(projectile: Entity, crossbow: ItemStack, shooter: LivingEntity, level: Int): ThrownPotion? {
         var lastShot = false
         var potion: ThrownPotion? = null
         if (!crossbow.hasTag(ItemTags.ALCHEMY_ARTILLERY_LOADED)) {
@@ -266,7 +266,7 @@ object RangedListeners : Listener {
             // Spawn potion with item
             potion = (shooter.world.spawnEntity(projectile.location, EntityType.SPLASH_POTION) as ThrownPotion).also {
                 it.item = ALCHEMY_ARTILLERY_AMMO[bowUUID] ?: ItemStack(Material.SPLASH_POTION, 1)
-                it.velocity = projectile.velocity.clone().multiply((enchantmentStrength * 0.2) + 0.1)
+                it.velocity = projectile.velocity.clone().multiply((level * 0.2) + 0.1)
                 it.shooter = shooter
             }
             ALCHEMY_ARTILLERY_COUNTER[bowUUID] = count - 1
@@ -341,7 +341,7 @@ object RangedListeners : Listener {
                     it.velocity = chainVelocity
                 }
             }
-            // TODO: Maybe shoot back!? both directions, Static Shiv
+            // TODO: Static Shiv
         }
     }
 
