@@ -17,9 +17,6 @@ import org.bukkit.inventory.ItemStack
 
 interface EnchantSlotManager {
 
-    /*-----------------------------------------------------------------------------------------------*/
-    // Tags
-
     fun ItemStack.isSlotted(): Boolean {
         return hasTag(ItemTags.IS_SLOTTED)
     }

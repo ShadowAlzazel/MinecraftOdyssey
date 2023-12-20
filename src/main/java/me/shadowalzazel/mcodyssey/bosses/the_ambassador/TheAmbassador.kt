@@ -4,7 +4,7 @@ import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.bosses.base.OdysseyBoss
 import me.shadowalzazel.mcodyssey.constants.EffectTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags
-import me.shadowalzazel.mcodyssey.constants.Identifiers
+import me.shadowalzazel.mcodyssey.constants.AttributeIDs
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.items.Arcane
 import me.shadowalzazel.mcodyssey.items.Arcane.createEnchantedBook
@@ -126,9 +126,9 @@ class TheAmbassador(location: Location) : OdysseyBoss(
             equipment.boots = ItemStack(Material.DIAMOND_BOOTS)
             equipment.itemInMainHandDropChance = 100F
             // Health
-            val extraHealth = AttributeModifier(Identifiers.ODYSSEY_BOSS_HEALTH_UUID, "odyssey.boss_health", 930.0, AttributeModifier.Operation.ADD_NUMBER)
+            val extraHealth = AttributeModifier(AttributeIDs.ODYSSEY_BOSS_HEALTH_UUID, "odyssey.boss_health", 930.0, AttributeModifier.Operation.ADD_NUMBER)
             getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.addModifier(extraHealth)
-            val extraArmor = AttributeModifier(Identifiers.ODYSSEY_BOSS_ARMOR_UUID, "odyssey.boss_armor", 6.0, AttributeModifier.Operation.ADD_NUMBER)
+            val extraArmor = AttributeModifier(AttributeIDs.ODYSSEY_BOSS_ARMOR_UUID, "odyssey.boss_armor", 6.0, AttributeModifier.Operation.ADD_NUMBER)
             getAttribute(Attribute.GENERIC_ARMOR)!!.addModifier(extraArmor)
             health = 950.0
             // Add Kinetic Blaster
