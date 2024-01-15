@@ -10,6 +10,12 @@ import java.util.UUID
 
 interface AttributeManager {
 
+    fun ItemStack.addGenericAttribute(
+
+    ) {
+
+    }
+
     fun ItemStack.addAttackDamageAttribute(
         damage: Double, name: String,
         id: UUID=AttributeIDs.ITEM_ATTACK_DAMAGE_UUID,

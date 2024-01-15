@@ -54,28 +54,44 @@ object ArcaneListeners: Listener {
         val player = event.player
         val offHandEquipment = player.equipment.itemInOffHand
         val entity = getRayTraceTarget(player, offHandEquipment.itemMeta!!.customModelData)
-        if (entity is LivingEntity) {
-            player.attack(entity)
-            player.setCooldown(offHandEquipment.type, 3 * 20)
-            if (offHandEquipment.itemMeta is Damageable) {
-                (offHandEquipment.itemMeta as Damageable).damage -= 1
-            }
-            // Particles
-            var location = player.location.clone()
-            val unitVector = player.eyeLocation.direction.clone()
-            val distance = player.location.distance(entity.location)
-            for (x in 0..(distance.toInt())) {
-                location = location.add(unitVector)
-                player.world.spawnParticle(Particle.SPELL_WITCH, location, 3, 0.01, 0.01, 0.01)
-                //amethyst step/hit every %3
-                if (x % 3 == 0) {
-                    entity.world.playSound(entity.location, Sound.BLOCK_AMETHYST_CLUSTER_HIT, 2F, 2F)
-                    entity.world.playSound(entity.location, Sound.BLOCK_AMETHYST_CLUSTER_STEP, 2F, 2F)
-                }
-            }
-            player.world.playSound(player.location, Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, 2F, 2F)
-            entity.world.playSound(entity.location, Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, 2F, 2F)
+        if (entity !is LivingEntity) return
+        // Run Attack
+        player.attack(entity)
+        player.setCooldown(offHandEquipment.type, 3 * 20)
+        if (offHandEquipment.itemMeta is Damageable) {
+            (offHandEquipment.itemMeta as Damageable).damage -= 1
         }
+        // Particles
+        var location = player.location.clone()
+        val unitVector = player.eyeLocation.direction.clone()
+        val distance = player.location.distance(entity.location)
+        for (x in 0..(distance.toInt())) {
+            location = location.add(unitVector)
+            player.world.spawnParticle(Particle.SPELL_WITCH, location, 3, 0.01, 0.01, 0.01)
+            //amethyst step/hit every %3
+            if (x % 3 == 0) {
+                entity.world.playSound(entity.location, Sound.BLOCK_AMETHYST_CLUSTER_HIT, 2F, 2F)
+                entity.world.playSound(entity.location, Sound.BLOCK_AMETHYST_CLUSTER_STEP, 2F, 2F)
+            }
+        }
+        player.world.playSound(player.location, Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, 2F, 2F)
+        entity.world.playSound(entity.location, Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, 2F, 2F)
+    }
+
+    private fun warpingWandHandler(event: PlayerInteractEvent) {
+        val player = event.player
+        val offHandEquipment = player.equipment.itemInOffHand
+        val entity = getRayTraceTarget(player, offHandEquipment.itemMeta!!.customModelData)
+        if (entity !is LivingEntity) return
+        //
+        val centroid = event.interactionPoint?.clone() ?: return // CHANGE? if doesnt work
+        val distanceFromPoint = player.location.distance(centroid)
+        if (distanceFromPoint > 15.0) return
+        // Find intersection
+        val enemies = centroid.getNearbyLivingEntities(distanceFromPoint).filter {
+            it.location.distance(player.location) <= distanceFromPoint
+        }
+
     }
 
     private fun getRayTraceTarget(player: Player, model: Int): Entity? {

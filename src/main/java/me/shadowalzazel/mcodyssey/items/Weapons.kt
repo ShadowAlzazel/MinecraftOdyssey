@@ -33,11 +33,8 @@ object Weapons: AttributeManager {
             val content = weaponMaterial.namePrefix + " " + weaponType.baseName
             it.displayName(Component.text(content).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))
             // Set Appearances
-            if (customModel != null) {
-                it.setCustomModelData(customModel)
-            } else {
-                it.setCustomModelData(weaponType.model)
-            }
+            val model = customModel ?: weaponType.model
+            it.setCustomModelData(model)
             //it.addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
         }
         return newWeapon
