@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.items
 
-import me.shadowalzazel.mcodyssey.constants.Identifiers
+import me.shadowalzazel.mcodyssey.constants.AttributeIDs
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import net.kyori.adventure.text.Component
@@ -17,7 +17,7 @@ object Helmets {
     fun OdysseyItem.createArmor(armorOverride: Double = 1.0): ItemStack {
         val newArmor = this.createItemStack(1)
         newArmor.itemMeta = newArmor.itemMeta.also {
-            val armorModifier = AttributeModifier(Identifiers.ARMOR_HELMET_UUID, "odyssey.armor_helmet", armorOverride, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HEAD)
+            val armorModifier = AttributeModifier(AttributeIDs.ARMOR_HELMET_UUID, "odyssey.armor_helmet", armorOverride, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HEAD)
             it.addAttributeModifier(Attribute.GENERIC_ARMOR, armorModifier)
         }
         return newArmor

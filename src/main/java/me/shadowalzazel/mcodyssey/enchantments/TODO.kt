@@ -12,3 +12,5 @@ package me.shadowalzazel.mcodyssey.enchantments
 // LUNAR POTATOES
 
 // Shoot Bricks, Slimeballs, (CROSSBOW)
+
+// AUGMENTS !!!!!!!!!!!

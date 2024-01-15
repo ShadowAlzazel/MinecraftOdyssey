@@ -2,7 +2,7 @@ package me.shadowalzazel.mcodyssey.listeners.unused
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.constants.Identifiers
+import me.shadowalzazel.mcodyssey.constants.AttributeIDs
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
 import me.shadowalzazel.mcodyssey.tasks.TemporalStasisTask
 import me.shadowalzazel.mcodyssey.tasks.UnstableAntimatterTask
@@ -72,7 +72,7 @@ object OdysseyItemListeners : Listener {
 
                      */
                     Miscellaneous.IRRADIATED_FRUIT.createItemStack(someStackValue) -> {
-                        if (!extraHealthCalculator(somePlayer, Identifiers.EXTRA_HEALTH_IRRADIATED_FRUIT)) { event.isCancelled }
+                        if (!extraHealthCalculator(somePlayer, AttributeIDs.EXTRA_HEALTH_IRRADIATED_FRUIT)) { event.isCancelled }
                         else {
                             somePlayer.addPotionEffects(listOf(
                                 PotionEffect(PotionEffectType.HUNGER, 20 * 30, 1),
@@ -82,7 +82,7 @@ object OdysseyItemListeners : Listener {
                         }
                     }
                     Miscellaneous.SCULK_HEART.createItemStack(someStackValue) -> {
-                        if (!extraHealthCalculator(somePlayer, Identifiers.EXTRA_HEALTH_SCULK_HEART)) { event.isCancelled }
+                        if (!extraHealthCalculator(somePlayer, AttributeIDs.EXTRA_HEALTH_SCULK_HEART)) { event.isCancelled }
                         else {
                             somePlayer.addPotionEffect(PotionEffect(PotionEffectType.DARKNESS, 20 * 30, 1))
                             somePlayer.damage(2.0)
@@ -179,9 +179,9 @@ object OdysseyItemListeners : Listener {
 
     private fun extraHealthCalculator(eventPlayer: Player, healthUUID: UUID): Boolean {
         val healthMap = mapOf(
-            Identifiers.EXTRA_HEALTH_ERISHKIGAL_FRUIT to Pair("odyssey_extra_health_erishkigal", 4.0), // * 4
-            Identifiers.EXTRA_HEALTH_IRRADIATED_FRUIT to Pair("odyssey_extra_health_erishkigal", 2.0),
-            Identifiers.EXTRA_HEALTH_SCULK_HEART to Pair("odyssey_extra_health_sculk_heart", 2.0))
+            AttributeIDs.EXTRA_HEALTH_ERISHKIGAL_FRUIT to Pair("odyssey_extra_health_erishkigal", 4.0), // * 4
+            AttributeIDs.EXTRA_HEALTH_IRRADIATED_FRUIT to Pair("odyssey_extra_health_erishkigal", 2.0),
+            AttributeIDs.EXTRA_HEALTH_SCULK_HEART to Pair("odyssey_extra_health_sculk_heart", 2.0))
 
         // Get health
         val playerHealth = eventPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!

@@ -37,7 +37,8 @@ object OtherListeners : Listener {
         val creeper = event.damager as Creeper
         if (!creeper.isPowered) return
         if (event.finalDamage <= player.health) return
-        if (player.equipment.itemInOffHand.type == Material.TOTEM_OF_UNDYING || player.equipment.itemInMainHand.type == Material.TOTEM_OF_UNDYING) return
+        if (player.equipment.itemInOffHand.type == Material.TOTEM_OF_UNDYING
+            || player.equipment.itemInMainHand.type == Material.TOTEM_OF_UNDYING) return
 
         val skull = ItemStack(Material.PLAYER_HEAD, 1)
         val skullMeta = (skull.itemMeta as SkullMeta)
@@ -47,7 +48,6 @@ object OtherListeners : Listener {
             it.itemMeta = skullMeta
         }
 
-        println("DROPPED SKULL")
         player.world.dropItem(player.location, skull)
     }
 
@@ -57,7 +57,7 @@ object OtherListeners : Listener {
             val power = ((event.itemStack.itemMeta as FireworkMeta).power)
             val boostFailureChance = 0.05 + (power * 0.05)
             val boostFailureDamage = power * 1.0
-            val dudChance = 0.1
+            val dudChance = 0.05
 
             if ((boostFailureChance * 100) > (0..100).random()) {
                 if (dudChance * 10 > (0..10).random()) {

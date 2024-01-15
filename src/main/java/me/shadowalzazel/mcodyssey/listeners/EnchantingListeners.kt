@@ -300,9 +300,9 @@ object EnchantingListeners : Listener, EnchantSlotManager {
         // Keep Hint
         val hint = event.enchantmentHint
         var counter = 1
-        for (enchant in newEnchants.keys) {
+        newEnchants.keys.forEach { enchant ->
             if (enchant == hint) {
-                continue
+                return@forEach
             }
             if (counter >= slots.first && enchant != hint) {
                 enchantsToRemove.add(enchant)
@@ -348,7 +348,7 @@ object EnchantingListeners : Listener, EnchantSlotManager {
         val mineral = event.inventory.inputMineral!!
         val equipment = event.inventory.inputEquipment!!.clone()
         val template = event.inventory.inputTemplate!!
-        // Avoid Conflict with other smithing
+        // Avoid Conflict with other smithing, using (Enchanted Book)
         if (!template.itemMeta.hasCustomModelData()) return
         if (!equipment.hasItemMeta()) return
         if (recipe.result.type != Material.ENCHANTED_BOOK) return
@@ -356,7 +356,7 @@ object EnchantingListeners : Listener, EnchantSlotManager {
             event.result = ItemStack(Material.AIR)
         }
         // Variables
-        val hasCrystals = mineral.type == Material.PRISMARINE_CRYSTALS
+        val hasCrystals = (mineral.type == Material.PRISMARINE_CRYSTALS)
         val hasGold = mineral.type == Material.GOLD_NUGGET
         val hasEquipment = equipment.type != Material.ENCHANTED_BOOK && equipment.type != Material.BOOK
         val hasBook = equipment.type == Material.ENCHANTED_BOOK

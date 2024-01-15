@@ -1,45 +1,41 @@
 package me.shadowalzazel.mcodyssey.items
 
-import me.shadowalzazel.mcodyssey.constants.Identifiers
+import me.shadowalzazel.mcodyssey.attributes.AttributeManager
+import me.shadowalzazel.mcodyssey.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import me.shadowalzazel.mcodyssey.items.utility.WeaponMaterial
 import me.shadowalzazel.mcodyssey.items.utility.WeaponType
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
-import org.bukkit.attribute.Attribute
-import org.bukkit.attribute.AttributeModifier
-import org.bukkit.enchantments.Enchantment
-import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 
-object Weapons {
+object Weapons: AttributeManager {
 
     // DeprecatedWeapon (Odyssey Item) is a holder for enums
     // Add Recipe to show and hide attributes
 
     // Used to create multiple weapons of different materials from the same type
     fun OdysseyItem.createWeapon(damageOverride: Double = 0.0): ItemStack {
-        val newWeapon = this.createItemStack(1)
-        newWeapon.itemMeta = newWeapon.itemMeta.also {
-            if (weaponMaterial != null && weaponType != null) {
-                // For Damage
-                val newDamage = weaponType.baseDamage + weaponMaterial.damage + damageOverride
-                val newDamageModifier = AttributeModifier(Identifiers.ATTACK_DAMAGE_UUID, "odyssey.attack_damage", newDamage, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND)
-                it.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, newDamageModifier)
-                // For Attack Speed
-                val resetSpeedModifier = AttributeModifier(Identifiers.ATTACK_SPEED_RESET_UUID, "odyssey.attack_speed", -4.0, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND)
-                val newSpeedModifier = AttributeModifier(Identifiers.ATTACK_SPEED_UUID, "odyssey.attack_speed", weaponType.baseAttackSpeed, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND)
-                it.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, resetSpeedModifier)
-                it.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, newSpeedModifier)
-                // Set Appearances
-                it.displayName(Component.text(weaponMaterial.namePrefix + " " + weaponType.baseName).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))
-                if (customModel != null) { it.setCustomModelData(customModel) } else { it.setCustomModelData(weaponType.model) }
-                //it.addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
+        if (weaponMaterial == null) { return ItemStack(Material.AIR) }
+        if (weaponType == null) { return ItemStack(Material.AIR) }
 
-            }
+        val newWeapon = this.createItemStack(1).apply {
+            // Attributes
+            val damage = weaponType.baseDamage + weaponMaterial.damage + damageOverride
+            addAttackDamageAttribute(damage, AttributeTags.ITEM_BASE_ATTACK_DAMAGE)
+            val speed = weaponType.baseAttackSpeed
+            addAttackSpeedAttribute(speed, AttributeTags.ITEM_BASE_ATTACK_SPEED)
+        }
+        newWeapon.itemMeta = newWeapon.itemMeta.also {
+            // Set Name
+            val content = weaponMaterial.namePrefix + " " + weaponType.baseName
+            it.displayName(Component.text(content).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))
+            // Set Appearances
+            val model = customModel ?: weaponType.model
+            it.setCustomModelData(model)
+            //it.addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
         }
         return newWeapon
     }

@@ -28,10 +28,15 @@ object ItemTags {
     const val IS_ALCHEMY_COMBINATION: String = "odyssey.is_alchemy_combination" // For Alchemy Combinations/ Concoctions
     const val IS_CUSTOM_EFFECT: String = "odyssey.is_custom_effect" // Stores Boolean
 
+    // RUNEWRITING
+    const val IS_RUNESHERD: String = "odyssey.is_runesherd"
+
     // CUSTOM EFFECTS
     const val ODYSSEY_EFFECT_TIME: String = "odyssey.custom_effect_time" // Stores Int for ticks
     const val ODYSSEY_EFFECT_TAG: String = "odyssey.custom_effect_tag" // Stores String USE EffectTags
     const val ODYSSEY_EFFECT_AMPLIFIER: String = "odyssey.custom_effect_amplifier" // Stores Int
+
+    /* FUNCTIONS */
 
     fun PersistentDataContainer.hasOdysseyTag(): Boolean {
         return has(NamespacedKey(Odyssey.instance, "item"))

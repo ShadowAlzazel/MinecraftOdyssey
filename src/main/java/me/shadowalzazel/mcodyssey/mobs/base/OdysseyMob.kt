@@ -1,8 +1,8 @@
 package me.shadowalzazel.mcodyssey.mobs.base
 
 import me.shadowalzazel.mcodyssey.constants.EntityTags
-import me.shadowalzazel.mcodyssey.constants.IdentifierTags
-import me.shadowalzazel.mcodyssey.constants.Identifiers
+import me.shadowalzazel.mcodyssey.constants.AttributeTags
+import me.shadowalzazel.mcodyssey.constants.AttributeIDs
 import net.kyori.adventure.text.Component
 import org.bukkit.Location
 import org.bukkit.World
@@ -28,7 +28,7 @@ open class OdysseyMob(
             // Health
             if (this@apply is LivingEntity) {
                 // CUSTOM KEY HEALTH PAIRS
-                val mobHealth = AttributeModifier(Identifiers.ODYSSEY_MOB_HEALTH_UUID, IdentifierTags.MOB_HEALTH, health, AttributeModifier.Operation.ADD_NUMBER)
+                val mobHealth = AttributeModifier(AttributeIDs.ODYSSEY_MOB_HEALTH_UUID, AttributeTags.MOB_HEALTH, health, AttributeModifier.Operation.ADD_NUMBER)
                 val healthAttribute = getAttribute(Attribute.GENERIC_MAX_HEALTH)
                 healthAttribute!!.addModifier(mobHealth)
                 health += this@OdysseyMob.health

@@ -15,7 +15,7 @@ object EffectListeners : Listener {
         // Accursed
         if (!event.entity.isDead) {
             val entity = event.entity
-            if (entity.scoreboardTags.contains(EffectTags.ACCURSED)) event.damage *= 1.33
+            if (entity.scoreboardTags.contains(EffectTags.ACCURSED)) event.damage *= 1.30
         }
     }
 

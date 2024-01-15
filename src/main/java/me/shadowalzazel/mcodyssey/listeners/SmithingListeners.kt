@@ -2,7 +2,7 @@ package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.arcane.EnchantSlotManager
 import me.shadowalzazel.mcodyssey.arcane.SlotColors
-import me.shadowalzazel.mcodyssey.constants.Identifiers
+import me.shadowalzazel.mcodyssey.constants.AttributeIDs
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.ItemTags
 import me.shadowalzazel.mcodyssey.constants.ItemTags.addStringTag
@@ -16,7 +16,6 @@ import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
-import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.PrepareSmithingEvent
@@ -126,7 +125,7 @@ object SmithingListeners : Listener, EnchantSlotManager {
 
             val newItem = equipment.clone()
             val oldDamageModifier = newItem.itemMeta.getAttributeModifiers(Attribute.GENERIC_ATTACK_DAMAGE)?.first {
-                it.uniqueId == Identifiers.ATTACK_DAMAGE_UUID
+                it.uniqueId == AttributeIDs.ITEM_ATTACK_DAMAGE_UUID
             } ?: return
 
             newItem.addTag(ItemTags.SOUL_STEEL_TOOL)
@@ -135,7 +134,7 @@ object SmithingListeners : Listener, EnchantSlotManager {
                 meta.displayName(Component.text("Soul Steel ${soulSteelName[equipmentModel]!!}", TextColor.color(88, 95, 123), TextDecoration.ITALIC))
                 val oldDamage = oldDamageModifier.amount
                 val newDamageModifier = AttributeModifier(
-                    Identifiers.ATTACK_DAMAGE_UUID,
+                    AttributeIDs.ITEM_ATTACK_DAMAGE_UUID,
                     "odyssey.attack_damage",
                     oldDamage + 1.0,
                     AttributeModifier.Operation.ADD_NUMBER,
@@ -197,12 +196,12 @@ object SmithingListeners : Listener, EnchantSlotManager {
             val newItem = event.inventory.result!!.clone()
             if (newItem.hasTag(ItemTags.NETHERITE_TOOL)) return
             val oldDamageModifier = newItem.itemMeta.getAttributeModifiers(Attribute.GENERIC_ATTACK_DAMAGE)?.first {
-                it.uniqueId == Identifiers.ATTACK_DAMAGE_UUID
+                it.uniqueId == AttributeIDs.ITEM_ATTACK_DAMAGE_UUID
             } ?: return
             newItem.itemMeta = newItem.itemMeta.clone().also { meta ->
                 val oldDamage = oldDamageModifier.amount
                 val newDamageModifier = AttributeModifier(
-                    Identifiers.ATTACK_DAMAGE_UUID,
+                    AttributeIDs.ITEM_ATTACK_DAMAGE_UUID,
                     "odyssey.attack_damage",
                     oldDamage + 1.0,
                     AttributeModifier.Operation.ADD_NUMBER,

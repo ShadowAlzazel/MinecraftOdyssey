@@ -20,13 +20,9 @@ object FoodListeners : Listener {
             event.player.addPotionEffect(PotionEffect(PotionEffectType.REGENERATION, 20 * 20, 3))
             event.player.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION, 120 * 20, 4))
         }
-
-        if (!event.item.hasOdysseyTag()) {
-            return
-        }
-        if (!event.item.itemMeta.hasCustomModelData()) {
-            return
-        }
+        // Sentries
+        if (!event.item.hasOdysseyTag()) return
+        if (!event.item.itemMeta.hasCustomModelData()) return
 
         when (event.item.getOdysseyTag()!!) {
             "beetroot_cookie" -> {

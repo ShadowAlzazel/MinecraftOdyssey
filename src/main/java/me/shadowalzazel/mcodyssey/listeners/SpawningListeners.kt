@@ -2,7 +2,7 @@ package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.constants.EntityTags
-import me.shadowalzazel.mcodyssey.constants.Identifiers
+import me.shadowalzazel.mcodyssey.constants.AttributeIDs
 import me.shadowalzazel.mcodyssey.tasks.PiglinRallyTask
 import me.shadowalzazel.mcodyssey.mobs.neutral.DubiousDealer
 import me.shadowalzazel.mcodyssey.recipe_creators.merchant.ArcaneSales
@@ -206,14 +206,14 @@ object SpawningListeners : Listener {
             }
             // Attributes
             val healthModifier = AttributeModifier(
-                Identifiers.ODYSSEY_MOB_HEALTH_UUID,
+                AttributeIDs.ODYSSEY_MOB_HEALTH_UUID,
                 "odyssey.mob_health",
                 (rank * 3.0) + 4.0,
                 AttributeModifier.Operation.ADD_NUMBER)
             getAttribute(Attribute.GENERIC_MAX_HEALTH)?.addModifier(healthModifier)
             health = getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value ?: health
             val damageModifier = AttributeModifier(
-                Identifiers.ODYSSEY_MOB_DAMAGE_UUID,
+                AttributeIDs.ODYSSEY_MOB_DAMAGE_UUID,
                 "odyssey.mob_damage",
                 (rank * 2.0) + 1.0,
                 AttributeModifier.Operation.ADD_NUMBER)
