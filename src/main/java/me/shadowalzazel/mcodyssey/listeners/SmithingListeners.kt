@@ -36,13 +36,11 @@ object SmithingListeners : Listener, EnchantSlotManager {
 
         // Avoid Conflict with enchanting tomes
         if (recipe.result.type == Material.ENCHANTED_BOOK) return
-        // Check Equipment
-        if (event.inventory.inputEquipment == null) return
-        val equipment = event.inventory.inputEquipment!!
-        // Make Sure Recipe has result
-        if (event.result == null) return
-        val result = event.result!!
-        val addition = event.inventory.inputMineral!!
+
+        // Assign vars to non null values
+        val equipment = event.inventory.inputEquipment ?: return
+        val result = event.result ?: return
+        val addition = event.inventory.inputMineral ?: return
 
         /*-----------------------------------------------------------------------------------------------*/
         // Engraving

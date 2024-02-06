@@ -6,3 +6,5 @@ package me.shadowalzazel.mcodyssey.rune_writing
 // weapons -> damage and speed
 // etc
 
+// Have runesherd in sus gravel/sand
+// structures for runesherd sites

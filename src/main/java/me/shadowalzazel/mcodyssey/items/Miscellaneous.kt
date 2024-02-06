@@ -76,5 +76,13 @@ object Miscellaneous {
         customModel = ItemModels.BLAZING_ROCKET
     )
 
+    val SOUL_SPICE = OdysseyItem(
+        name = "soul_spice",
+        material = Material.GLOWSTONE_DUST,
+        displayName = Component.text("Soul Spice", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
+        lore = listOf(Component.text("Drop this to be able to see nearby enemies", TextColor.color(3, 170, 177)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.SOUL_SPICE
+    )
+
 }
 

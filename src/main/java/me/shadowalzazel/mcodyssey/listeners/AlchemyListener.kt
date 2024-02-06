@@ -12,7 +12,6 @@ import me.shadowalzazel.mcodyssey.constants.ItemTags.hasOdysseyTag
 import me.shadowalzazel.mcodyssey.effects.*
 import org.bukkit.Color
 import org.bukkit.Material
-import org.bukkit.Particle
 import org.bukkit.entity.Arrow
 import org.bukkit.entity.Item
 import org.bukkit.entity.LivingEntity

@@ -29,4 +29,5 @@ object Antibonk : OdysseyEnchantment("antibonk", "Antibonk", 3) {
             }
         }
     }
+
 }

@@ -1,13 +1,6 @@
 package me.shadowalzazel.mcodyssey.bosses.hog_rider
 
-import me.shadowalzazel.mcodyssey.Odyssey
-import org.bukkit.entity.Hoglin
-import org.bukkit.entity.PiglinBrute
-import org.bukkit.entity.Player
-import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.EntityDamageByEntityEvent
-import org.bukkit.event.entity.EntityDeathEvent
 
 object HogRiderListeners : Listener {
 

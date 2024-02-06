@@ -14,3 +14,6 @@ commands:
     description: "Applies a gilded Enchant"
     usage: /<command>
     permission: op
+  place_feature_archaic_seed:
+    description: "Places a custom feature"
+    permission: default

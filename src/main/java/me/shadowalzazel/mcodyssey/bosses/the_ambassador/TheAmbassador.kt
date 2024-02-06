@@ -2,9 +2,9 @@ package me.shadowalzazel.mcodyssey.bosses.the_ambassador
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.bosses.base.OdysseyBoss
+import me.shadowalzazel.mcodyssey.constants.AttributeIDs
 import me.shadowalzazel.mcodyssey.constants.EffectTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags
-import me.shadowalzazel.mcodyssey.constants.AttributeIDs
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.items.Arcane
 import me.shadowalzazel.mcodyssey.items.Arcane.createEnchantedBook
@@ -500,7 +500,7 @@ class TheAmbassador(location: Location) : OdysseyBoss(
             Material.DIRT, Material.COARSE_DIRT, Material.ROOTED_DIRT -> {
                 giftLikeness += 1
                 if (appeasement > 40) { inventory.addItem(ItemStack(Material.GRASS_BLOCK, extraValue)) }
-                else { inventory.addItem(ItemStack(Material.GRASS, extraValue)) }
+                else { inventory.addItem(ItemStack(Material.GRASS_BLOCK, extraValue)) }
             }
             Material.WRITTEN_BOOK, Material.PAINTING -> {
                 val randomTrim = listOf(Material.HOST_ARMOR_TRIM_SMITHING_TEMPLATE, Material.RAISER_ARMOR_TRIM_SMITHING_TEMPLATE)

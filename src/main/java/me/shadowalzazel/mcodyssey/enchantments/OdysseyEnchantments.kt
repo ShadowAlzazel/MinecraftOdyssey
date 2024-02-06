@@ -213,19 +213,55 @@ object OdysseyEnchantments {
     }
 
     private fun registerOdysseyEnchantment(enchantment: Enchantment?) {
-        var registered = true
+        var registered = false
         try {
-            val f = Enchantment::class.java.getDeclaredField("acceptingNew")
-            f.isAccessible = true
-            f[null] = true
-            Enchantment.registerEnchantment(enchantment!!)
+            /* ---------- PRE 1.20.4 ----------- */
+            if (enchantment != null) {
+                val f = Enchantment::class.java.getDeclaredField("acceptingNew")
+                f.isAccessible = true
+                f[null] = true
+                Enchantment.registerEnchantment(enchantment)
+            }
+
+            /* ---------- 1.20.4  ----------- */
+            /*
+            if (enchantment != null) {
+                Registry.ENCHANTMENT[enchantment.key] = enchantment
+            }
+             */
+
+            registered = true
         } catch (e: Exception) {
-            registered = false
             e.printStackTrace()
         }
         if (registered) {
             // Send to console
             Odyssey.instance.logger.info("Registered: $enchantment")
         }
+        else {
+            Odyssey.instance.logger.info("Failed to register: $enchantment")
+        }
     }
 }
+
+/*
+private operator fun <T : Keyed?> Registry<T>.set(key: NamespacedKey, value: T) {
+    mutableMapOf<NamespacedKey, T>()
+    //
+    // TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //
+    // TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //
+    // TODO!!!!!!
+    //
+    // TODO!!!!!!
+    //
+    // TODO!!!!!!
+    //
+    // TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //
+    // TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //
+}
+
+ */
