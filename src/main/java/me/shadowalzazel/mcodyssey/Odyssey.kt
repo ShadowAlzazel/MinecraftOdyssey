@@ -5,6 +5,7 @@ import me.shadowalzazel.mcodyssey.bosses.hog_rider.HogRiderListeners
 import me.shadowalzazel.mcodyssey.bosses.the_ambassador.AmbassadorListeners
 import me.shadowalzazel.mcodyssey.commands.admin.EnchantGilded
 import me.shadowalzazel.mcodyssey.commands.admin.SummonBoss
+import me.shadowalzazel.mcodyssey.commands.spells.PlaceFeatureArchaicSeed
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.listeners.*
 import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.ArmorListeners
@@ -111,14 +112,19 @@ class Odyssey : JavaPlugin() {
             FoodListeners,
             WeaponListeners,
             SpawningListeners,
+            ItemListeners,
             OtherListeners,
             MobListeners,
-            DragonListeners
+            DragonListeners,
+            SnifferListeners,
+            ArtisanListeners,
+            RunesherdListeners
         ).forEach { eventRegister(it) }
 
         // Set Commands
         getCommand("summon_boss")?.setExecutor(SummonBoss)
         getCommand("enchant_gilded")?.setExecutor(EnchantGilded)
+        getCommand("place_feature_archaic_seed")?.setExecutor(PlaceFeatureArchaicSeed)
 
         //server.pluginManager.registerEvents(OdysseyPhenomenaListeners, this)
         //playersRequiredForLuck = 4

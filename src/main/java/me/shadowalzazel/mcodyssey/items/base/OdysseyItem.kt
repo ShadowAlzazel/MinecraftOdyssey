@@ -9,7 +9,6 @@ import me.shadowalzazel.mcodyssey.items.utility.WeaponMaterial
 import me.shadowalzazel.mcodyssey.items.utility.WeaponType
 import me.shadowalzazel.mcodyssey.listeners.EnchantingListeners.updateSlotLore
 import net.kyori.adventure.text.Component
-import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
@@ -17,7 +16,6 @@ import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.persistence.PersistentDataType
-import org.bukkit.potion.PotionEffect
 
 
 open class OdysseyItem(
@@ -80,6 +78,6 @@ open class OdysseyItem(
     // Flashbang, Knock-Up, Freeze,
 
     // Necronomicon: Make Pages that can add to personal necronomicon using components
-    // Original from Vail is to powerful to use
+    // Original from Vail is to powerful
 
 }

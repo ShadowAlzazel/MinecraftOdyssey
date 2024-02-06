@@ -492,7 +492,7 @@ class Unused {
             Material.GRANITE_SLAB,
             Material.GRANITE_STAIRS,
             Material.GRANITE_WALL,
-            Material.GRASS,
+            Material.GRASS, // GRASS
             Material.GRASS_BLOCK,
             Material.GRAVEL,
             Material.GRAY_BANNER,

@@ -1,8 +1,8 @@
 package me.shadowalzazel.mcodyssey.mobs.base
 
-import me.shadowalzazel.mcodyssey.constants.EntityTags
-import me.shadowalzazel.mcodyssey.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.constants.AttributeIDs
+import me.shadowalzazel.mcodyssey.constants.AttributeTags
+import me.shadowalzazel.mcodyssey.constants.EntityTags
 import net.kyori.adventure.text.Component
 import org.bukkit.Location
 import org.bukkit.World

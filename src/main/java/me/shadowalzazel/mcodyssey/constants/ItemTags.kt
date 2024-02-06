@@ -9,6 +9,11 @@ import java.util.*
 
 object ItemTags {
 
+    // SEEDS
+    const val IS_ARCHAIC_SEED: String = "odyssey.is_archaic_seed"
+    const val ARCHAIC_NAMESPACE: String = "odyssey.archaic_namespace"
+
+
     const val ALCHEMY_ARTILLERY_LOADED: String = "alchemy_artillery_loaded"
     const val IS_ENGRAVED: String = "odyssey.is_engraved"
     const val ENGRAVED_BY: String = "engraved_by"
@@ -28,8 +33,12 @@ object ItemTags {
     const val IS_ALCHEMY_COMBINATION: String = "odyssey.is_alchemy_combination" // For Alchemy Combinations/ Concoctions
     const val IS_CUSTOM_EFFECT: String = "odyssey.is_custom_effect" // Stores Boolean
 
-    // RUNEWRITING
+    // RUNE
+    const val IS_RUNEWARE: String = "odyssey.is_runeware" // A finished runic vessel capable of holding multiple rune shards
+    const val RUNEWARE_AUGMENT_COUNT: String = "odyssey.runeware_augment_count"
     const val IS_RUNESHERD: String = "odyssey.is_runesherd"
+    const val HAS_RUNE_AUGMENT: String = "odyssey.has_rune_augment"
+
 
     // CUSTOM EFFECTS
     const val ODYSSEY_EFFECT_TIME: String = "odyssey.custom_effect_time" // Stores Int for ticks

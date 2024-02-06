@@ -6,7 +6,7 @@ import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
-import java.util.UUID
+import java.util.*
 
 interface AttributeManager {
 
@@ -17,37 +17,41 @@ interface AttributeManager {
     }
 
     fun ItemStack.addAttackDamageAttribute(
-        damage: Double, name: String,
-        id: UUID=AttributeIDs.ITEM_ATTACK_DAMAGE_UUID,
-        slot: EquipmentSlot=EquipmentSlot.HAND) {
-        val damageModifier = AttributeModifier(id, name, damage,
-            AttributeModifier.Operation.ADD_NUMBER, slot)
-        itemMeta.also {
+        damage: Double,
+        name: String,
+        id: UUID = AttributeIDs.ITEM_ATTACK_DAMAGE_UUID,
+        slot: EquipmentSlot = EquipmentSlot.HAND) { // TODO: FIX FOR ALL SLOTS
+        // Add Attack Damage Attribute Modifier
+        val damageModifier = AttributeModifier(id, name, damage, AttributeModifier.Operation.ADD_NUMBER, slot)
+        itemMeta = itemMeta.also {
             it.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, damageModifier)
         }
     }
 
     fun ItemStack.addAttackSpeedAttribute(
-        speed: Double, name: String,
-        id: UUID=AttributeIDs.ITEM_ATTACK_SPEED_UUID,
-        slot: EquipmentSlot=EquipmentSlot.HAND) {
+        speed: Double,
+        name: String,
+        id: UUID = AttributeIDs.ITEM_ATTACK_SPEED_UUID,
+        slot: EquipmentSlot = EquipmentSlot.HAND) {
+        // Add A Base Speed
         val resetModifier = AttributeModifier(AttributeIDs.ITEM_ATTACK_SPEED_RESET_UUID, AttributeTags.ITEM_BASE_ATTACK_SPEED, -4.0,
             AttributeModifier.Operation.ADD_NUMBER, slot)
         val speedModifier = AttributeModifier(id, AttributeTags.ITEM_BASE_ATTACK_SPEED, speed,
             AttributeModifier.Operation.ADD_NUMBER, slot)
-        itemMeta.also {
+        itemMeta = itemMeta.also {
             it.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, resetModifier)
             it.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, speedModifier)
         }
     }
 
     fun ItemStack.addArmorAttribute(
-        armor: Double, name: String,
-        id: UUID=AttributeIDs.ITEM_ARMOR_UUID,
-        slot: EquipmentSlot) {
+        armor: Double,
+        name: String,
+        id: UUID = AttributeIDs.ITEM_ARMOR_UUID,
+        slot: EquipmentSlot = EquipmentSlot.HEAD) {
         val armorModifier = AttributeModifier(id, name, armor,
             AttributeModifier.Operation.ADD_NUMBER, slot)
-        itemMeta.also {
+        itemMeta = itemMeta.also {
             it.addAttributeModifier(Attribute.GENERIC_ARMOR, armorModifier)
         }
     }

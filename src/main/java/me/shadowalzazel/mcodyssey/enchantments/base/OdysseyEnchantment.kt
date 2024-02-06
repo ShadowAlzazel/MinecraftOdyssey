@@ -26,6 +26,22 @@ open class OdysseyEnchantment(
         TODO("Not yet implemented")
     }
 
+    // 1.20.4
+    /*
+    override fun getKey(): NamespacedKey {
+        return NamespacedKey(Odyssey.instance, namespace!!)
+    }
+
+    override fun getMinModifiedCost(p0: Int): Int {
+        return 1
+    }
+
+    override fun getMaxModifiedCost(p0: Int): Int {
+        return 1
+    }
+
+     */
+
     @Deprecated("Deprecated in Java", ReplaceWith("enchantName"))
     override fun getName(): String {
         return enchantName

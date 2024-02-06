@@ -9,6 +9,9 @@ object EntityTags {
     const val RUNNING_PIG: String = "odyssey.running_pig"
     const val CLONED: String = "odyssey.cloned"
 
+    // SNIFFERS
+    const val CAN_DIG_BIOME_SEEDS: String = "odyssey.can_dig_biome_seeds"
+
     // AREA_EFFECT_CLOUD
     const val FREEZING_CLOUD: String = "odyssey.freezing_cloud"
     const val DECAYING_CLOUD: String = "odyssey.decaying_cloud"

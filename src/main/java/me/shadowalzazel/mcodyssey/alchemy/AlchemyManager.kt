@@ -56,7 +56,7 @@ interface AlchemyManager {
     }
 
     // Get Amplifier
-        fun ItemStack.getCustomEffectAmplifier(): Int {
+    fun ItemStack.getCustomEffectAmplifier(): Int {
         return getIntTag(ItemTags.ODYSSEY_EFFECT_AMPLIFIER) ?: 0
     }
 
