@@ -1,7 +1,12 @@
 package me.shadowalzazel.mcodyssey.listeners
 
+import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.ItemTags.hasOdysseyTag
+import me.shadowalzazel.mcodyssey.items.Runesherds
 import me.shadowalzazel.mcodyssey.items.Runesherds.addRuneAugmentTag
+import me.shadowalzazel.mcodyssey.items.Runesherds.createLootSherdStack
+import me.shadowalzazel.mcodyssey.items.Runesherds.createRuneware
+import me.shadowalzazel.mcodyssey.items.Runesherds.createSherdStack
 import me.shadowalzazel.mcodyssey.rune_writing.RunesherdManager
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
@@ -9,10 +14,13 @@ import org.bukkit.attribute.AttributeModifier
 import org.bukkit.block.BlastFurnace
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.block.BlockDropItemEvent
+import org.bukkit.event.entity.ItemSpawnEvent
 import org.bukkit.event.inventory.FurnaceBurnEvent
 import org.bukkit.event.inventory.FurnaceSmeltEvent
 import org.bukkit.event.inventory.FurnaceStartSmeltEvent
 import org.bukkit.event.inventory.PrepareSmithingEvent
+import org.bukkit.event.world.LootGenerateEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 
@@ -37,7 +45,10 @@ object RunesherdListeners : Listener, RunesherdManager {
         if (template.type != Material.BRICK) return
         if (recipe.result.type != Material.BRICK) return
         // Check meta
-        if (!runesherd.itemMeta.hasCustomModelData()) return
+        if (!runesherd.itemMeta.hasCustomModelData()) {
+            event.result = ItemStack(Material.AIR)
+            return
+        }
         // Avoid Conflict with other smithing using (Brick)
         if (result.type == Material.BRICK) {
             event.result = ItemStack(Material.AIR)
@@ -48,14 +59,14 @@ object RunesherdListeners : Listener, RunesherdManager {
 
         // Run
         val item = addRunesherdToSmithingItem(runesherd, equipment) ?: return
+        item.also {
+            it.amount = 1
+        }
         event.inventory.result = item
         event.result = item
-
         return
     }
 
-    // Orb in off hand that can hold up to 3 runesherds
-    // Converts any slot to offhand
 
     @EventHandler
     fun runewareKilnFiringHandler(event: FurnaceStartSmeltEvent) {
@@ -111,8 +122,23 @@ object RunesherdListeners : Listener, RunesherdManager {
         if (event.result.type != Material.BRICK) return
         // Tag Check
         if (!input.hasRunewareTag()) return
-        println("PASSED T1")
-        val runeware = event.result.clone()
+        // Cancel if more than 1
+        if (event.result.amount > 1) {
+            event.isCancelled = true
+            return
+        }
+
+        val runeware = when (input.itemMeta.customModelData) {
+            ItemModels.FRAGMENTED_ORB -> {
+                Runesherds.GLAZED_RUNE_ORB.createRuneware(1)
+            }
+            ItemModels.CLAY_TOTEM -> {
+                Runesherds.GLAZED_RUNE_TOTEM.createRuneware(1)
+            }
+            else -> {
+                Runesherds.GLAZED_RUNE_ORB.createRuneware(1)
+            }
+        }
         // Transfer to offhand
         val attributeMap = input.itemMeta.attributeModifiers ?: return
         val newList = mutableListOf<Pair<Attribute, AttributeModifier>>()
@@ -123,7 +149,7 @@ object RunesherdListeners : Listener, RunesherdManager {
                     AttributeModifier(
                         modifier.uniqueId,
                         modifier.name,
-                        modifier.amount,
+                        modifier.amount * 1.25, // Increase by 25%
                         modifier.operation,
                         EquipmentSlot.OFF_HAND)))
         }
@@ -136,5 +162,26 @@ object RunesherdListeners : Listener, RunesherdManager {
         event.result = runeware
     }
 
+    @EventHandler
+    fun changeRunicRuinLootTable(event: BlockDropItemEvent) {
+        if (event.block.type != Material.SUSPICIOUS_GRAVEL
+            && event.block.type != Material.SUSPICIOUS_SAND) return
+        if (event.items.size != 1) return
+        val item = event.items[0]
+        if (item.itemStack.type != Material.BRICK) return
+        if (!item.itemStack.itemMeta.hasCustomModelData()) return
+        if (item.itemStack.itemMeta.customModelData != ItemModels.UNKNOWN_RUNESHERD) return
+        // Change to runesherd
+        val runesherdList = listOf(Runesherds.FINESSE_RUNESHERD, Runesherds.FORCE_RUNESHERD, Runesherds.ASSAULT_RUNESHERD,
+            Runesherds.GUARD_RUNESHERD, Runesherds.SWIFT_RUNESHERD, Runesherds.VITALITY_RUNESHERD, Runesherds.STEADFAST_RUNESHERD)
+
+        // RNG
+        if ((0..100).random() > 70) {
+            item.itemStack = runesherdList.random().createSherdStack(1)
+        }
+        else {
+            item.itemStack = runesherdList.random().createLootSherdStack(1) // Do more random slots
+        }
+    }
 
 }

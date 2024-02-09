@@ -16,7 +16,10 @@ class Misc {
         return listOf(
             tempRunesherdRecipe(),
             tempRunesherd2Recipe(),
+            tempRunesherd3Recipe(),
+            tempRunesherd4Recipe(),
 
+            clayTotemRecipe(),
             arcaneBookRecipe(),
             bundleRecipe(),
             enigmaticOmamoriRecipe(),
@@ -38,7 +41,7 @@ class Misc {
     /*-----------------------------------------------------------------------------------------------*/
 
     private fun tempRunesherdRecipe(): ShapedRecipe {
-        val result = Runesherds.ASSAULT_RUNESHERD.createSherdStack()
+        val result = Runesherds.FORCE_RUNESHERD.createSherdStack()
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "temp_runesherd"), result).apply {
             shape(" B ", "BDB", " B ")
             setIngredient('B', Material.BRICK)
@@ -48,11 +51,31 @@ class Misc {
     }
 
     private fun tempRunesherd2Recipe(): ShapedRecipe {
-        val result = Runesherds.GUARD_RUNESHERD.createSherdStack()
+        val result = Runesherds.STEADFAST_RUNESHERD.createSherdStack()
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "temp_runesherd2"), result).apply {
             shape(" B ", "BEB", " B ")
             setIngredient('B', Material.BRICK)
             setIngredient('E', Material.EMERALD)
+        }
+        return recipe
+    }
+
+    private fun tempRunesherd3Recipe(): ShapedRecipe {
+        val result = Runesherds.VITALITY_RUNESHERD.createSherdStack()
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "temp_runesherd3"), result).apply {
+            shape(" B ", "BGB", " B ")
+            setIngredient('B', Material.BRICK)
+            setIngredient('G', Material.GOLD_INGOT)
+        }
+        return recipe
+    }
+
+    private fun tempRunesherd4Recipe(): ShapedRecipe {
+        val result = Runesherds.SWIFT_RUNESHERD.createSherdStack()
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "temp_runesherd4"), result).apply {
+            shape(" B ", "BIB", " B ")
+            setIngredient('B', Material.BRICK)
+            setIngredient('I', Material.IRON_INGOT)
         }
         return recipe
     }
@@ -95,6 +118,18 @@ class Misc {
         }
         return recipe
     }
+
+
+    private fun clayTotemRecipe(): ShapedRecipe {
+        val result = Runesherds.CLAY_TOTEM.createRuneware(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "clay_totem"), result).apply {
+            shape(" L ", "CCC", " C ")
+            setIngredient('C', Material.CLAY_BALL)
+            setIngredient('L', Material.LAPIS_LAZULI)
+        }
+        return recipe
+    }
+
 
     private fun fragmentedOrbRecipe(): ShapedRecipe {
         val result = Runesherds.FRAGMENTED_ORB.createRuneware(1)

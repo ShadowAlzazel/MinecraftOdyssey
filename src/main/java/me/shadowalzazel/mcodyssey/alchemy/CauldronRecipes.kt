@@ -300,7 +300,7 @@ object CauldronRecipes {
         viableFuel = fireFuels)
 
     /*-----------------------------------------------------------------------------------------------*/
-    val ALCHEMY_SET = setOf(
+    val CAULDRON_RECIPE_SET = setOf(
         CRYSTALLINE_POTION_RECIPE,
         POTION_OF_LEVITATION_RECIPE,
         POTION_OF_WITHERING_RECIPE,

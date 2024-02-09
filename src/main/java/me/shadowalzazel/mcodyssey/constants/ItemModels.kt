@@ -67,11 +67,21 @@ object ItemModels {
     /* ------------------------------------------RUNESHERD------------------------------------------- */
     /* ---------------------------------------------------------------------------------------------- */
 
-    const val ATTACK_RUNESHERD: Int = 6901453
-    const val GUARD_RUNESHERD: Int = 6901454
+    const val ASSAULT_RUNESHERD: Int = 6901453 // Main hand - Attack Damage
+    const val GUARD_RUNESHERD: Int = 6901454 // Armor - Armor
+    const val FINESSE_RUNESHERD: Int = 6901455 // Main Hand - Attack Speed
+    const val SWIFT_RUNESHERD: Int = 6901456 // Armor - Speed
+    const val VITALITY_RUNESHERD: Int = 6901457 // Armor - Health
+    const val STEADFAST_RUNESHERD: Int = 6901458 // Armor - Knockback Resistance
+    const val FORCE_RUNESHERD: Int = 6901459 // Main Hand - Attack Knockback
 
     const val FRAGMENTED_ORB: Int = 6901544
     const val GLAZED_RUNE_ORB: Int = 6901544
+    const val CLAY_TOTEM: Int = 6901545
+    const val GLAZED_RUNE_TOTEM: Int = 6901545
+
+
+    const val UNKNOWN_RUNESHERD: Int = 6905632
 
     /* ---------------------------------------------------------------------------------------------- */
     /* --------------------------------------------FOODS--------------------------------------------- */

@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.items.base
 
 import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.constants.DataKeys
 import me.shadowalzazel.mcodyssey.constants.ItemTags
 import me.shadowalzazel.mcodyssey.constants.ItemTags.addIntTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
@@ -44,7 +45,7 @@ open class OdysseyItem(
                     it.addEnchant(enchant.key, enchant.value, true)
                 }
             }
-            it.persistentDataContainer.set(NamespacedKey(Odyssey.instance, "item"), PersistentDataType.STRING, name)
+            it.persistentDataContainer.set(DataKeys.ITEM_KEY, PersistentDataType.STRING, name)
         }
         if (enchantments != null) {
             itemStack.addTag(ItemTags.IS_SLOTTED)

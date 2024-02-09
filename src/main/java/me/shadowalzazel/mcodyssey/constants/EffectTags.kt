@@ -34,6 +34,8 @@ object EffectTags {
     const val INSPIRED: String = "odyssey.inspired" // Support Mechanic ???
     const val INFECTED: String = "odyssey.infected" // TODO: Upon death, turn into a zombie
 
+    const val VULNERABLE: String = "odyssey.vulnerable" // TODO: Set I-frames to 0 ticks
+
     // ENCHANT
     const val ARCANE_JAILED: String = "odyssey.arcane_jailed"
     const val FROSTY_FUSED: String = "odyssey.frosty_fused"

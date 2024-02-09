@@ -26,7 +26,8 @@ object EntityTags {
     // CLOUD UTILITY
     const val TIMED_CLOUD: String = "odyssey.timed_cloud"
     const val CUSTOM_EFFECT_CLOUD: String = "Odyssey.custom_effect_cloud"
-    // PERSISTENT DATA CONTAINER
+
+    // ALCHEMY - PERSISTENT DATA CONTAINER
     const val CUSTOM_EFFECT_TIME: String = "odyssey.custom_effect_time" // Stores Int for ticks [PDT]
     const val CUSTOM_EFFECT_TAG: String = "odyssey.custom_effect_tag" // Stores String USE EffectTags [PDT]
     const val CUSTOM_EFFECT_AMPLIFIER: String = "odyssey.custom_effect_amplifier" // Stores Int [PDT]
