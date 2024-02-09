@@ -121,6 +121,8 @@ class Odyssey : JavaPlugin() {
             RunesherdListeners
         ).forEach { eventRegister(it) }
 
+
+
         // Set Commands
         getCommand("summon_boss")?.setExecutor(SummonBoss)
         getCommand("enchant_gilded")?.setExecutor(EnchantGilded)

@@ -20,7 +20,9 @@ interface AttributeManager {
         damage: Double,
         name: String,
         id: UUID = AttributeIDs.ITEM_ATTACK_DAMAGE_UUID,
-        slot: EquipmentSlot = EquipmentSlot.HAND) { // TODO: FIX FOR ALL SLOTS
+        slot: EquipmentSlot = EquipmentSlot.HAND)
+    {
+        // TODO: FIX FOR ALL SLOTS
         // Add Attack Damage Attribute Modifier
         val damageModifier = AttributeModifier(id, name, damage, AttributeModifier.Operation.ADD_NUMBER, slot)
         itemMeta = itemMeta.also {
@@ -28,11 +30,39 @@ interface AttributeManager {
         }
     }
 
+    fun ItemStack.addArmorAttribute(
+        armor: Double,
+        name: String,
+        id: UUID = AttributeIDs.ITEM_ARMOR_UUID,
+        slot: EquipmentSlot = EquipmentSlot.CHEST)
+    {
+        val armorModifier = AttributeModifier(id, name, armor, AttributeModifier.Operation.ADD_NUMBER, slot)
+        itemMeta = itemMeta.also {
+            it.addAttributeModifier(Attribute.GENERIC_ARMOR, armorModifier)
+        }
+    }
+
     fun ItemStack.addAttackSpeedAttribute(
         speed: Double,
         name: String,
         id: UUID = AttributeIDs.ITEM_ATTACK_SPEED_UUID,
-        slot: EquipmentSlot = EquipmentSlot.HAND) {
+        slot: EquipmentSlot = EquipmentSlot.HAND)
+    {
+        // TODO: FIX FOR ALL SLOTS
+        // Add Attack Damage Attribute Modifier
+        val damageModifier = AttributeModifier(id, name, speed, AttributeModifier.Operation.ADD_NUMBER, slot)
+        itemMeta = itemMeta.also {
+            it.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, damageModifier)
+        }
+    }
+
+    // Used when creating a custom weapon
+    fun ItemStack.setNewAttackSpeedAttribute(
+        speed: Double,
+        name: String,
+        id: UUID = AttributeIDs.ITEM_ATTACK_SPEED_UUID,
+        slot: EquipmentSlot = EquipmentSlot.HAND)
+    {
         // Add A Base Speed
         val resetModifier = AttributeModifier(AttributeIDs.ITEM_ATTACK_SPEED_RESET_UUID, AttributeTags.ITEM_BASE_ATTACK_SPEED, -4.0,
             AttributeModifier.Operation.ADD_NUMBER, slot)
@@ -44,16 +74,53 @@ interface AttributeManager {
         }
     }
 
-    fun ItemStack.addArmorAttribute(
-        armor: Double,
+    fun ItemStack.addMovementSpeedAttribute(
+        speed: Double,
         name: String,
-        id: UUID = AttributeIDs.ITEM_ARMOR_UUID,
-        slot: EquipmentSlot = EquipmentSlot.HEAD) {
-        val armorModifier = AttributeModifier(id, name, armor,
-            AttributeModifier.Operation.ADD_NUMBER, slot)
+        id: UUID = AttributeIDs.ITEM_SPRINTING_SPEED,
+        slot: EquipmentSlot = EquipmentSlot.FEET)
+    {
+        val armorModifier = AttributeModifier(id, name, speed, AttributeModifier.Operation.ADD_NUMBER, slot)
         itemMeta = itemMeta.also {
-            it.addAttributeModifier(Attribute.GENERIC_ARMOR, armorModifier)
+            it.addAttributeModifier(Attribute.GENERIC_MOVEMENT_SPEED, armorModifier)
         }
     }
+
+    fun ItemStack.addMaxHealthAttribute(
+        value: Double,
+        name: String,
+        id: UUID = AttributeIDs.HEALTH_BOOST,
+        slot: EquipmentSlot = EquipmentSlot.HEAD)
+    {
+        val newModifier = AttributeModifier(id, name, value, AttributeModifier.Operation.ADD_NUMBER, slot)
+        itemMeta = itemMeta.also {
+            it.addAttributeModifier(Attribute.GENERIC_MAX_HEALTH, newModifier)
+        }
+    }
+
+    fun ItemStack.addKnockbackResistanceAttribute(
+        value: Double,
+        name: String,
+        id: UUID = AttributeIDs.KNOCKBACK_RESISTANCE,
+        slot: EquipmentSlot = EquipmentSlot.LEGS)
+    {
+        val newModifier = AttributeModifier(id, name, value, AttributeModifier.Operation.ADD_NUMBER, slot)
+        itemMeta = itemMeta.also {
+            it.addAttributeModifier(Attribute.GENERIC_KNOCKBACK_RESISTANCE, newModifier)
+        }
+    }
+
+    fun ItemStack.addAttackKnockbackAttribute(
+        value: Double,
+        name: String,
+        id: UUID = AttributeIDs.ATTACK_KNOCKBACK,
+        slot: EquipmentSlot = EquipmentSlot.HAND)
+    {
+        val newModifier = AttributeModifier(id, name, value, AttributeModifier.Operation.ADD_NUMBER, slot)
+        itemMeta = itemMeta.also {
+            it.addAttributeModifier(Attribute.GENERIC_ATTACK_KNOCKBACK, newModifier)
+        }
+    }
+
 
 }

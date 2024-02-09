@@ -220,6 +220,7 @@ object OdysseyEnchantments {
                 val f = Enchantment::class.java.getDeclaredField("acceptingNew")
                 f.isAccessible = true
                 f[null] = true
+                //Odyssey.instance.server.getRegistry()
                 Enchantment.registerEnchantment(enchantment)
             }
 

@@ -26,7 +26,7 @@ object Weapons: AttributeManager {
             val damage = weaponType.baseDamage + weaponMaterial.damage + damageOverride
             addAttackDamageAttribute(damage, AttributeTags.ITEM_BASE_ATTACK_DAMAGE)
             val speed = weaponType.baseAttackSpeed
-            addAttackSpeedAttribute(speed, AttributeTags.ITEM_BASE_ATTACK_SPEED)
+            setNewAttackSpeedAttribute(speed, AttributeTags.ITEM_BASE_ATTACK_SPEED)
         }
         newWeapon.itemMeta = newWeapon.itemMeta.also {
             // Set Name
