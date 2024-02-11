@@ -136,11 +136,12 @@ interface RunesherdManager : AttributeManager {
     /*-----------------------------------------------------------------------------------------------*/
 
     // Add runesherd to item
-    fun addRunesherdToSmithingItem(runesherd: ItemStack, equipment: ItemStack): ItemStack? {
+    fun addRunesherdToSmithingItem(runesherd: ItemStack, item: ItemStack): ItemStack? {
         // Basic Checks
         if (!runesherd.hasRunesherdTag()) return null
         if (!runesherd.hasOdysseyTag()) return null
         // Runeware can have up to 3 runesherd augments
+        val equipment = item.clone()
         val equipIsRuneware = equipment.hasRunewareTag()
         if (equipment.hasRuneAugmentTag() && !equipIsRuneware) return null
         // More Checks
@@ -183,12 +184,38 @@ interface RunesherdManager : AttributeManager {
         val runesIsForArmor = runeSlot in armorList
         val equipSlot = getMaterialEquipmentSlot(equipment.type)
         val equipIsArmor = equipSlot in armorList
+
+        // Creating new base
+        // For base item stats FOR BASE VALUES
+        println(equipment.itemMeta.attributeModifiers)
+        if (equipment.itemMeta.attributeModifiers == null || !equipment.itemMeta.hasAttributeModifiers()) {
+            // Check if armor
+            if (equipIsArmor) {
+                val baseValues = getBaseDataArmor(equipment.type) // Pair(armor, toughness)
+                equipment.addArmorAttribute(baseValues.first, "generic.armor")
+                // Add toughness if can
+                if (baseValues.second > 0.0) {
+                    equipment.addArmorToughnessAttribute(baseValues.second, "generic.armor_toughness")
+                }
+                // CHeck if netherite to also add knockback resistance
+                if (baseValues.second >= 3.0) { // apparently 0.1 is 1
+                    equipment.addKnockbackResistanceAttribute(0.1, "generic.knockback_resistance", slot = equipSlot)
+                }
+            } else {
+                val baseValues = getBaseDataTools(equipment.type) // Pair(damage, speed)
+                if (baseValues.second != 0.0) {
+                    equipment.addAttackDamageAttribute(baseValues.first, "generic.attack_damage")
+                    equipment.setNewAttackSpeedAttribute(baseValues.second, "generic.attack_speed")
+                }
+            }
+        }
+
         // If not matches, 75% efficient
         var matchingSlotMultiplier = if (runeSlot == equipSlot) {
             1.0
         }
         else if (equipIsRuneware) {
-            0.825
+            1.0
         }
         else {
             0.75
@@ -233,9 +260,151 @@ interface RunesherdManager : AttributeManager {
                 EquipmentSlot.OFF_HAND
             }
         }
-
-
     }
+
+    // FOR ARMOR (Armor, Toughness)
+    // FOR TOOLS (Damage, Attack speed)
+    private fun getBaseDataArmor(material: Material): Pair<Double, Double> {
+        return when (material) {
+            Material.LEATHER_HELMET, Material.LEATHER_BOOTS, Material.GOLDEN_BOOTS, Material.CHAINMAIL_BOOTS -> {
+                Pair(1.0, 0.0)
+            }
+            Material.TURTLE_HELMET, Material.GOLDEN_HELMET, Material.CHAINMAIL_HELMET, Material.IRON_HELMET,
+            Material.LEATHER_LEGGINGS, Material.IRON_BOOTS -> { // 2 armor
+                Pair(2.0, 0.0)
+            }
+            Material.GOLDEN_LEGGINGS -> { // 3 Armor
+                Pair(3.0, 0.0)
+            }
+            Material.CHAINMAIL_LEGGINGS -> { // 4 Armor
+                Pair(4.0, 0.0)
+            }
+            Material.IRON_LEGGINGS, Material.CHAINMAIL_CHESTPLATE, Material.GOLDEN_CHESTPLATE -> { // 5 armor
+                Pair(5.0, 0.0)
+            }
+            Material.IRON_CHESTPLATE -> {
+                Pair(6.0, 0.0)
+            }
+            Material.DIAMOND_BOOTS, Material.DIAMOND_HELMET, -> {
+                Pair(3.0, 2.0)
+            }
+            Material.DIAMOND_LEGGINGS -> {
+                Pair(6.0, 2.0)
+            }
+            Material.DIAMOND_CHESTPLATE -> {
+                Pair(8.0, 2.0)
+            }
+            Material.NETHERITE_BOOTS, Material.NETHERITE_HELMET, -> {
+                Pair(3.0, 3.0)
+            }
+            Material.NETHERITE_LEGGINGS -> {
+                Pair(6.0, 3.0)
+            }
+            Material.NETHERITE_CHESTPLATE -> {
+                Pair(8.0, 3.0)
+            }
+            else -> {
+                Pair(0.0, 0.0)
+            }
+        }
+    }
+
+    private fun getBaseDataTools(material: Material): Pair<Double, Double> {
+        return when (material) {
+            // Swords
+            Material.GOLDEN_SWORD, Material.WOODEN_SWORD -> {
+                Pair(4.0, 1.6)
+            }
+            Material.STONE_SWORD -> {
+                Pair(5.0, 1.6)
+            }
+            Material.IRON_SWORD -> {
+                Pair(6.0, 1.6)
+            }
+            Material.DIAMOND_SWORD -> {
+                Pair(7.0, 1.6)
+            }
+            Material.NETHERITE_SWORD -> {
+                Pair(8.0, 1.6)
+            }
+            // Axes
+            Material.WOODEN_AXE -> {
+                Pair(7.0, 0.8)
+            }
+            Material.GOLDEN_AXE -> {
+                Pair(7.0, 1.0)
+            }
+            Material.STONE_AXE -> {
+                Pair(9.0, 0.8)
+            }
+            Material.IRON_AXE -> {
+                Pair(9.0, 0.9)
+            }
+            Material.DIAMOND_AXE -> {
+                Pair(9.0, 1.0)
+            }
+            Material.NETHERITE_AXE -> {
+                Pair(10.0, 1.0)
+            }
+            // Hoes
+            Material.GOLDEN_HOE, Material.WOODEN_HOE  -> {
+                Pair(1.0, 1.0)
+            }
+            Material.STONE_HOE -> {
+                Pair(1.0, 2.0)
+            }
+            Material.IRON_HOE -> {
+                Pair(1.0, 3.0)
+            }
+            Material.DIAMOND_HOE -> {
+                Pair(1.0, 4.0)
+            }
+            Material.NETHERITE_HOE -> {
+                Pair(1.0, 4.0)
+            }
+            // pick
+            Material.GOLDEN_PICKAXE, Material.WOODEN_PICKAXE  -> {
+                Pair(2.0, 1.2)
+            }
+            Material.STONE_PICKAXE -> {
+                Pair(3.0, 1.2)
+            }
+            Material.IRON_PICKAXE -> {
+                Pair(4.0, 1.2)
+            }
+            Material.DIAMOND_PICKAXE -> {
+                Pair(5.0, 1.2)
+            }
+            Material.NETHERITE_PICKAXE -> {
+                Pair(6.0, 1.2)
+            }
+            // Shovel
+            Material.GOLDEN_SHOVEL, Material.WOODEN_SHOVEL  -> {
+                Pair(2.5, 1.0)
+            }
+            Material.STONE_SHOVEL -> {
+                Pair(3.5, 1.0)
+            }
+            Material.IRON_SHOVEL -> {
+                Pair(4.5, 1.0)
+            }
+            Material.DIAMOND_SHOVEL -> {
+                Pair(5.5, 1.0)
+            }
+            Material.NETHERITE_SHOVEL -> {
+                Pair(6.5, 1.0)
+            }
+            // Misc
+            Material.TRIDENT -> {
+                Pair(9.0, 1.1)
+            }
+            else -> {
+                Pair(0.0, 0.0)
+            }
+        }
+    }
+
+
 
     // MAYBE FOR MAKING HIGHER QUALITY RUNES
     // use pots
