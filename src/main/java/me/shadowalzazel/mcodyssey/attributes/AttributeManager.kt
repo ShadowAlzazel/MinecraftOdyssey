@@ -17,42 +17,53 @@ interface AttributeManager {
     }
 
     fun ItemStack.addAttackDamageAttribute(
-        damage: Double,
+        value: Double,
         name: String,
         id: UUID = AttributeIDs.ITEM_ATTACK_DAMAGE_UUID,
         slot: EquipmentSlot = EquipmentSlot.HAND)
     {
-        // TODO: FIX FOR ALL SLOTS
         // Add Attack Damage Attribute Modifier
-        val damageModifier = AttributeModifier(id, name, damage, AttributeModifier.Operation.ADD_NUMBER, slot)
+        val modifier = AttributeModifier(id, name, value, AttributeModifier.Operation.ADD_NUMBER, slot)
         itemMeta = itemMeta.also {
-            it.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, damageModifier)
+            it.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, modifier)
         }
     }
 
     fun ItemStack.addArmorAttribute(
-        armor: Double,
+        value: Double,
         name: String,
         id: UUID = AttributeIDs.ITEM_ARMOR_UUID,
         slot: EquipmentSlot = EquipmentSlot.CHEST)
     {
-        val armorModifier = AttributeModifier(id, name, armor, AttributeModifier.Operation.ADD_NUMBER, slot)
+        val modifier = AttributeModifier(id, name, value, AttributeModifier.Operation.ADD_NUMBER, slot)
         itemMeta = itemMeta.also {
-            it.addAttributeModifier(Attribute.GENERIC_ARMOR, armorModifier)
+            it.addAttributeModifier(Attribute.GENERIC_ARMOR, modifier)
+        }
+    }
+
+    fun ItemStack.addArmorToughnessAttribute(
+        value: Double,
+        name: String,
+        id: UUID = AttributeIDs.ITEM_ARMOR_TOUGHNESS_UUID,
+        slot: EquipmentSlot = EquipmentSlot.CHEST)
+    {
+        val modifier = AttributeModifier(id, name, value, AttributeModifier.Operation.ADD_NUMBER, slot)
+        itemMeta = itemMeta.also {
+            it.addAttributeModifier(Attribute.GENERIC_ARMOR_TOUGHNESS, modifier)
         }
     }
 
     fun ItemStack.addAttackSpeedAttribute(
-        speed: Double,
+        value: Double,
         name: String,
         id: UUID = AttributeIDs.ITEM_ATTACK_SPEED_UUID,
         slot: EquipmentSlot = EquipmentSlot.HAND)
     {
         // TODO: FIX FOR ALL SLOTS
         // Add Attack Damage Attribute Modifier
-        val damageModifier = AttributeModifier(id, name, speed, AttributeModifier.Operation.ADD_NUMBER, slot)
+        val modifier = AttributeModifier(id, name, value, AttributeModifier.Operation.ADD_NUMBER, slot)
         itemMeta = itemMeta.also {
-            it.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, damageModifier)
+            it.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, modifier)
         }
     }
 
@@ -75,14 +86,14 @@ interface AttributeManager {
     }
 
     fun ItemStack.addMovementSpeedAttribute(
-        speed: Double,
+        value: Double,
         name: String,
         id: UUID = AttributeIDs.ITEM_SPRINTING_SPEED,
         slot: EquipmentSlot = EquipmentSlot.FEET)
     {
-        val armorModifier = AttributeModifier(id, name, speed, AttributeModifier.Operation.ADD_NUMBER, slot)
+        val modifier = AttributeModifier(id, name, value, AttributeModifier.Operation.ADD_NUMBER, slot)
         itemMeta = itemMeta.also {
-            it.addAttributeModifier(Attribute.GENERIC_MOVEMENT_SPEED, armorModifier)
+            it.addAttributeModifier(Attribute.GENERIC_MOVEMENT_SPEED, modifier)
         }
     }
 
@@ -92,9 +103,9 @@ interface AttributeManager {
         id: UUID = AttributeIDs.HEALTH_BOOST,
         slot: EquipmentSlot = EquipmentSlot.HEAD)
     {
-        val newModifier = AttributeModifier(id, name, value, AttributeModifier.Operation.ADD_NUMBER, slot)
+        val modifier = AttributeModifier(id, name, value, AttributeModifier.Operation.ADD_NUMBER, slot)
         itemMeta = itemMeta.also {
-            it.addAttributeModifier(Attribute.GENERIC_MAX_HEALTH, newModifier)
+            it.addAttributeModifier(Attribute.GENERIC_MAX_HEALTH, modifier)
         }
     }
 
@@ -104,9 +115,9 @@ interface AttributeManager {
         id: UUID = AttributeIDs.KNOCKBACK_RESISTANCE,
         slot: EquipmentSlot = EquipmentSlot.LEGS)
     {
-        val newModifier = AttributeModifier(id, name, value, AttributeModifier.Operation.ADD_NUMBER, slot)
+        val modifier = AttributeModifier(id, name, value, AttributeModifier.Operation.ADD_NUMBER, slot)
         itemMeta = itemMeta.also {
-            it.addAttributeModifier(Attribute.GENERIC_KNOCKBACK_RESISTANCE, newModifier)
+            it.addAttributeModifier(Attribute.GENERIC_KNOCKBACK_RESISTANCE, modifier)
         }
     }
 
@@ -116,9 +127,9 @@ interface AttributeManager {
         id: UUID = AttributeIDs.ATTACK_KNOCKBACK,
         slot: EquipmentSlot = EquipmentSlot.HAND)
     {
-        val newModifier = AttributeModifier(id, name, value, AttributeModifier.Operation.ADD_NUMBER, slot)
+        val modifier = AttributeModifier(id, name, value, AttributeModifier.Operation.ADD_NUMBER, slot)
         itemMeta = itemMeta.also {
-            it.addAttributeModifier(Attribute.GENERIC_ATTACK_KNOCKBACK, newModifier)
+            it.addAttributeModifier(Attribute.GENERIC_ATTACK_KNOCKBACK, modifier)
         }
     }
 
