@@ -125,7 +125,7 @@ object Runesherds : RunesherdManager {
         displayName = Component.text("Swift Runesherd", TextColor.color(85, 67 ,129)),
         customModel = ItemModels.SWIFT_RUNESHERD,
         attribute = Attribute.GENERIC_MOVEMENT_SPEED,
-        value = 0.05,
+        value = 0.03,
         affectedEquipment = listOf(EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD)
     )
 

@@ -24,6 +24,21 @@ object SoulBraiseRecipes {
         braiseMaterial = setOf(Material.SCULK),
         BraiseBase.PLUS)
 
+    private val SCULK_POINTER_RECIPE = SoulBraiseRecipe(
+        itemResult = Miscellaneous.SCULK_POINTER,
+        mobSummon = null,
+        braiseIngredients = listOf(ItemStack(Material.RECOVERY_COMPASS, 1)),
+        braiseMaterial = setOf(Material.CALIBRATED_SCULK_SENSOR),
+        BraiseBase.PLUS)
+
+    private val SCULK_POINTER_RECALIBRATE_RECIPE = SoulBraiseRecipe(
+        itemResult = Miscellaneous.SCULK_POINTER,
+        mobSummon = null,
+        braiseIngredients = listOf(ItemStack(Material.COMPASS, 1)),
+        braiseMaterial = setOf(Material.CALIBRATED_SCULK_SENSOR),
+        BraiseBase.PLUS)
+
+    // TODO: WIP
     private val SCULK_HEART_RECIPE = SoulBraiseRecipe(
         itemResult = Miscellaneous.SCULK_HEART,
         mobSummon = null,
@@ -31,6 +46,7 @@ object SoulBraiseRecipes {
         braiseMaterial = setOf(Material.SCULK_CATALYST),
         BraiseBase.PLUS)
 
+    // TODO: WIP
     private val CRYING_GOLD_RECIPE = SoulBraiseRecipe(
         itemResult = Miscellaneous.CRYING_GOLD,
         mobSummon = null,
@@ -50,6 +66,9 @@ object SoulBraiseRecipes {
     val BRAISE_SET = setOf(
         SOUL_CRYSTAL_RECIPE,
         SOUL_STEEL_RECIPE,
+        SCULK_POINTER_RECIPE,
+        SCULK_POINTER_RECALIBRATE_RECIPE,
+
         SCULK_HEART_RECIPE,
         CRYING_GOLD_RECIPE,
     )

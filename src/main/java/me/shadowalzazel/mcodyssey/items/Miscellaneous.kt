@@ -84,5 +84,13 @@ object Miscellaneous {
         customModel = ItemModels.SOUL_SPICE
     )
 
+    val SCULK_POINTER = OdysseyItem(
+        name = "sculk_pointer",
+        material = Material.COMPASS,
+        displayName = Component.text("Sculk Pointer", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
+        lore = listOf(Component.text("This points to the nearest Ancient City", TextColor.color(24, 90, 94)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.SCULK_POINTER
+    )
+
 }
 

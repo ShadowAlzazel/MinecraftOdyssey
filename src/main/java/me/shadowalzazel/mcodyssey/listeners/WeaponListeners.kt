@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.listeners
 
+import io.papermc.paper.event.entity.EntityLoadCrossbowEvent
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.BLUDGEON_MAP
@@ -23,6 +24,8 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.CrossbowMeta
 
 // --------------------------------- NOTES --------------------------------
 // TODO: Mounted Bonus i.e. Cavalry Charges
@@ -99,7 +102,7 @@ object WeaponListeners : Listener {
         }
 
         // Conditions
-        val emptyOff = offHandWeapon.type == Material.AIR
+        val twoHanded = offHandWeapon.type == Material.AIR
         val shieldInOff = offHandWeapon.type == Material.SHIELD
         val isMounted = (player.vehicle != null) && (player in player.vehicle!!.passengers)
         val isCrit = event.isCritical
@@ -113,19 +116,19 @@ object WeaponListeners : Listener {
             }
             ItemModels.KATANA, ItemModels.SOUL_STEEL_KATANA -> {
                 val sayaInOff = offHandWeapon.type == Material.RABBIT_HIDE
-                if (isCrit && (emptyOff || sayaInOff)) {
+                if (isCrit && (twoHanded || sayaInOff)) {
                     event.damage += 3
                     weaponSweep(victim, player, SWEEP_MAP[model]!!, event.damage)
-                } else if (!emptyOff && !sayaInOff) {
+                } else if (!twoHanded && !sayaInOff) {
                     val minimumDamage = minOf(event.damage, 3.0)
                     event.damage -= minimumDamage
                 }
             }
             ItemModels.CLAYMORE, ItemModels.SOUL_STEEL_CLAYMORE -> {
-                if (!emptyOff) {
+                if (!twoHanded) {
                     val minimumDamage = minOf(event.damage, 6.0)
                     event.damage -= minimumDamage
-                } else if (emptyOff) {
+                } else if (twoHanded) {
                     val sweepDamage = if (isCrit) {
                         event.damage
                     } else {
@@ -145,13 +148,13 @@ object WeaponListeners : Listener {
                 weaponSweep(victim, player, SWEEP_MAP[model]!!, sweepDamage)
             }
             ItemModels.HALBERD, ItemModels.SOUL_STEEL_HALBERD -> {
-                if (!emptyOff && !shieldInOff) {
+                if (!twoHanded && !shieldInOff) {
                     val minimumDamage = minOf(event.damage, 6.0)
                     event.damage -= minimumDamage
                 }
             }
             ItemModels.SCYTHE, ItemModels.SOUL_STEEL_SCYTHE -> {
-                if (fullAttack && emptyOff) {
+                if (fullAttack && twoHanded) {
                     weaponSweep(victim, player, SWEEP_MAP[model]!!, maxOf(0.0, event.damage - 4.0))
                 }
             }
@@ -161,18 +164,19 @@ object WeaponListeners : Listener {
                 }
             }
             ItemModels.WARHAMMER, ItemModels.SOUL_STEEL_WARHAMMER -> {
-                if (emptyOff) {
+                if (twoHanded) {
                     victim.shieldBlockingDelay = 60
                 }
             }
             ItemModels.LONG_AXE, ItemModels.SOUL_STEEL_LONG_AXE -> {
-                if (!emptyOff) {
-                    val minimumDamage = minOf(event.damage, 6.0)
-                    event.damage -= minimumDamage
+                if (twoHanded && isCrit) {
+                    event.damage += (event.damage / 1.5) * 0.75 // 50% -> 75% Crit
+                } else if (!twoHanded) {
+                    event.damage = maxOf(event.damage * 0.5, 0.0)
                 }
             }
             ItemModels.BAMBOO_STAFF, ItemModels.WOODEN_STAFF, ItemModels.BONE_STAFF, ItemModels.BLAZE_ROD_STAFF -> {
-                if (event.isCritical) {
+                if (isCrit) {
                     weaponSweep(victim, player, SWEEP_MAP[model]!!, event.damage + 2)
                 } else {
                     weaponSweep(victim, player, SWEEP_MAP[model]!!, maxOf(event.damage - 1, 1.0))
@@ -214,16 +218,6 @@ object WeaponListeners : Listener {
         }
     }
 
-    /*
-    @EventHandler(priority = EventPriority.HIGH)
-    fun mainInteractEntityHandler(event: PlayerInteractEntityEvent) {
-        //println("Interact")
-    }
-    @EventHandler(priority = EventPriority.HIGH)
-    fun mainInteractAtEntityHandler(event: PlayerInteractAtEntityEvent) {
-        //println("Interact At Entity")
-    }
-    */
 
     private fun leftClickHandler(event: PlayerInteractEvent) {
         val player = event.player
@@ -232,6 +226,30 @@ object WeaponListeners : Listener {
         if (!mainWeapon.hasItemMeta()) return
         if (!mainWeapon.itemMeta!!.hasCustomModelData()) return
         val model = mainWeapon.itemMeta!!.customModelData
+
+        // OFF hand crossbow
+        /*
+        if (player.equipment.itemInOffHand.type == Material.CROSSBOW) {
+            // Get Model
+            val offHand = player.equipment.itemInOffHand
+            if (!offHand.itemMeta.hasCustomModelData()) return
+            // Clone then use item
+            if (offHand.itemMeta.customModelData == ItemModels.COMPACT_CROSSBOW) {
+                val mainHandClone = mainWeapon.clone()
+                val offHandClone = offHand.clone()
+                player.equipment.setItemInOffHand(mainHandClone)
+                player.equipment.setItemInMainHand(offHandClone)
+                event.setUseItemInHand(Event.Result.ALLOW)
+                player.equipment.setItemInMainHand(mainHandClone)
+                player.equipment.setItemInOffHand(offHandClone)
+                println("USED")
+            }
+            return
+        }
+
+         */
+
+
         if (REACH_MAP[model] == null) return
         // Sentries Passed
 
@@ -265,7 +283,7 @@ object WeaponListeners : Listener {
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------------------*/
+
     private fun getRayTraceTarget(player: Player, model: Int): Entity? {
         val reach = REACH_MAP[model] ?: return null
         val result = player.rayTraceEntities(reach.toInt()) ?: return null
@@ -338,6 +356,47 @@ object WeaponListeners : Listener {
         }
 
        return Pair(bonusDamage, piercingDamage)
+    }
+
+    /*-----------------------------------------------------------------------------------------------*/
+
+    @EventHandler
+    fun crossbowHandler(event: EntityLoadCrossbowEvent) {
+        // Checks
+        val crossbow = event.crossbow ?: return
+        if (!crossbow.hasItemMeta()) return
+        if (!crossbow.itemMeta.hasCustomModelData()) return
+
+        // Compact
+        when(crossbow.itemMeta.customModelData) {
+            ItemModels.COMPACT_CROSSBOW -> {
+                compactCrossbowHandler(event)
+            }
+        }
+
+    }
+
+    private fun compactCrossbowHandler(event: EntityLoadCrossbowEvent) {
+        val player = event.entity
+        if (player !is Player) return
+
+        if (player.inventory.itemInMainHand.type != Material.CROSSBOW) return
+        val otherBow = if (player.inventory.itemInOffHand.type == Material.CROSSBOW) {
+            player.inventory.itemInOffHand
+        }
+        else {
+            return
+        }
+        if (!otherBow.hasItemMeta()) return
+        val otherBowMeta = otherBow.itemMeta as CrossbowMeta
+        if (!otherBowMeta.hasCustomModelData()) return
+        if (otherBowMeta.hasChargedProjectiles()) return
+        val bowMeta = event.crossbow!!.itemMeta as CrossbowMeta
+        if (bowMeta.hasChargedProjectiles()) return
+        // Load
+        val loadedItem = ItemStack(Material.ARROW, 1)
+        otherBowMeta.addChargedProjectile(loadedItem)
+        otherBow.itemMeta = otherBowMeta
     }
 
 }

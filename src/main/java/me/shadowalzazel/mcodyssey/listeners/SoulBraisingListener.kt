@@ -1,20 +1,26 @@
 package me.shadowalzazel.mcodyssey.listeners
 
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.alchemy.SoulBraiseRecipes
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.ItemTags
+import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
 import me.shadowalzazel.mcodyssey.items.Ingredients
+import me.shadowalzazel.mcodyssey.listeners.utility.SculkFinderSynchro
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.World
 import org.bukkit.block.Biome
+import org.bukkit.entity.Entity
+import org.bukkit.entity.EntityType
 import org.bukkit.entity.Item
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityCombustByBlockEvent
 import org.bukkit.event.entity.EntityDeathEvent
+import org.bukkit.inventory.ItemStack
 
 object SoulBraisingListener : Listener {
 
@@ -40,14 +46,40 @@ object SoulBraisingListener : Listener {
         if (event.combuster!!.type != Material.SOUL_FIRE) return
 
         val item = event.entity as Item
+        val stackClone = item.itemStack.clone()
         // CAN ASYNC?!
         for (recipe in SoulBraiseRecipes.BRAISE_SET) {
             if (recipe.validateRecipe(listOf(item).toSet(), event.combuster!!)) {
-                recipe.braiseSuccessHandler(item.itemStack.amount, event.combuster!!.location)
+                val resultEntity = recipe.braiseSuccessHandler(item.itemStack.amount, event.combuster!!.location)
+                // Check if compass
+                compassChecker(stackClone, resultEntity)
                 break
             }
         }
     }
+
+    private fun compassChecker(initial: ItemStack, itemResult: Entity?) {
+        if (itemResult == null) return
+        if (itemResult.type != EntityType.DROPPED_ITEM) return
+        if (itemResult !is Item) return
+        if ((itemResult.itemStack.type != Material.COMPASS) && (itemResult.itemStack.type != Material.RECOVERY_COMPASS)) return
+        if (!itemResult.itemStack.hasItemMeta()) return
+        println("Item: ${itemResult.itemStack}")
+        // For re-calibration
+        if (initial.hasTag(ItemTags.IS_SCULK_FINDER) && initial.type == Material.COMPASS) {
+            val finderTask = SculkFinderSynchro(itemResult.location.block, itemResult.itemStack.clone())
+            finderTask.runTaskLater(Odyssey.instance, 10)
+        }
+        // Create new compass and add tag
+        else if (initial.type == Material.RECOVERY_COMPASS) {
+            val newCompass = itemResult.itemStack.also { it.addTag(ItemTags.IS_SCULK_FINDER) }
+            val finderTask = SculkFinderSynchro(itemResult.location.block, newCompass.clone())
+            finderTask.runTaskLater(Odyssey.instance, 10)
+        }
+        // Kill item
+        itemResult.remove()
+    }
+
 
     private fun soulExpHandler(event: EntityDeathEvent) {
         var expDrop = 0.0

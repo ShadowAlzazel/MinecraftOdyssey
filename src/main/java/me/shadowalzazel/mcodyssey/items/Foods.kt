@@ -149,6 +149,21 @@ object Foods {
         lore = listOf(Component.text("With Monster Milk", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.SPIDER_EYE_BOBA)
 
+    val STRAWBERRY_TART = OdysseyItem(
+        name = "strawberry_tart",
+        material = Material.COOKIE,
+        displayName = Component.text("Strawberry Tart", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
+        lore = listOf(Component.text("A Delicious Sweet", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.STRAWBERRY_TART)
+
+    val CHOCOLATE_MOCHI = OdysseyItem(
+        name = "chocolate_mochi",
+        material = Material.COOKIE,
+        displayName = Component.text("Chocolate Mochi", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
+        lore = listOf(Component.text("A Chocolate Sweet", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.CHOCOLATE_MOCHI)
+
+
     // FROGSPAWN POTION
     // -> for more potions
     // frogspawn boba?

@@ -23,6 +23,8 @@ class Food {
             createBaconRecipe(),
             createFrenchToastRecipe(),
 
+            chocolateMochi(),
+
             salmonRollRecipe(),
             fishNChipsRecipe(),
             fruitBowlRecipe(),
@@ -123,6 +125,20 @@ class Food {
         someRecipe.setIngredient('Y', Material.BREAD)
         return someRecipe
     }
+
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
+
+    private fun chocolateMochi(): ShapedRecipe {
+        val result = Foods.CHOCOLATE_MOCHI.createItemStack(1)
+        return ShapedRecipe(NamespacedKey(Odyssey.instance, "chocolate_mochi"), result).apply {
+            shape(" C ", "CSC", " C ")
+            setIngredient('S', Material.SUGAR)
+            setIngredient('C', Material.COCOA_BEANS)
+        }
+    }
+
+
 
     /*-----------------------------------------------------------------------------------------------*/
     /*-----------------------------------------------------------------------------------------------*/
