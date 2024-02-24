@@ -179,7 +179,7 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
 
     // Simple finder function for async class
     private fun asyncCauldronRecipeFinder(items: MutableCollection<Item>, fuel: Material): AlchemyCauldronRecipe? {
-        return CauldronRecipes.CAULDRON_RECIPE_SET  .find {
+        return CauldronRecipes.CAULDRON_RECIPE_SET.find {
             it.ingredientValidateHandler(items, fuel)
         }
     }

@@ -45,6 +45,9 @@ object ItemTags {
     const val ODYSSEY_EFFECT_TAG: String = "odyssey.custom_effect_tag" // Stores String USE EffectTags
     const val ODYSSEY_EFFECT_AMPLIFIER: String = "odyssey.custom_effect_amplifier" // Stores Int
 
+    // FINDERS
+    const val IS_SCULK_FINDER: String = "odyssey.is_sculk_finder"
+
     /* FUNCTIONS */
 
     fun PersistentDataContainer.hasOdysseyTag(): Boolean {

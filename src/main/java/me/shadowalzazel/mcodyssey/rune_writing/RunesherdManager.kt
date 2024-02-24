@@ -187,25 +187,25 @@ interface RunesherdManager : AttributeManager {
 
         // Creating new base
         // For base item stats FOR BASE VALUES
-        println(equipment.itemMeta.attributeModifiers)
         if (equipment.itemMeta.attributeModifiers == null || !equipment.itemMeta.hasAttributeModifiers()) {
             // Check if armor
+            val randomUUID = UUID.randomUUID()
             if (equipIsArmor) {
                 val baseValues = getBaseDataArmor(equipment.type) // Pair(armor, toughness)
-                equipment.addArmorAttribute(baseValues.first, "generic.armor")
+                equipment.addArmorAttribute(baseValues.first, "generic.armor", randomUUID, equipSlot)
                 // Add toughness if can
                 if (baseValues.second > 0.0) {
-                    equipment.addArmorToughnessAttribute(baseValues.second, "generic.armor_toughness")
+                    equipment.addArmorToughnessAttribute(baseValues.second, "generic.armor_toughness", randomUUID, equipSlot)
                 }
                 // CHeck if netherite to also add knockback resistance
                 if (baseValues.second >= 3.0) { // apparently 0.1 is 1
-                    equipment.addKnockbackResistanceAttribute(0.1, "generic.knockback_resistance", slot = equipSlot)
+                    equipment.addKnockbackResistanceAttribute(0.1, "generic.knockback_resistance", randomUUID, equipSlot)
                 }
             } else {
                 val baseValues = getBaseDataTools(equipment.type) // Pair(damage, speed)
                 if (baseValues.second != 0.0) {
-                    equipment.addAttackDamageAttribute(baseValues.first, "generic.attack_damage")
-                    equipment.setNewAttackSpeedAttribute(baseValues.second, "generic.attack_speed")
+                    equipment.addAttackDamageAttribute(baseValues.first, "generic.attack_damage", randomUUID)
+                    equipment.setNewAttackSpeedAttribute(baseValues.second, "generic.attack_speed", randomUUID)
                 }
             }
         }

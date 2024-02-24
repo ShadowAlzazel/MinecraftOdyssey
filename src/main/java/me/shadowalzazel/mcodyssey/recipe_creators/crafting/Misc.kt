@@ -172,7 +172,7 @@ class Misc {
         // Recipe
         val recipe = ShapelessRecipe(NamespacedKey(Odyssey.instance, "soul_spice"), result).apply {
             addIngredient(1, Material.GLOWSTONE_DUST)
-            addIngredient(1, Material.REDSTONE)
+            addIngredient(1, Material.SUGAR)
             addIngredient(1, soulCrystal)
             category = CraftingBookCategory.MISC
         }

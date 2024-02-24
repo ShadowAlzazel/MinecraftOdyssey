@@ -112,6 +112,10 @@ object ItemModels {
     const val FRUIT_BOWL: Int = 6908051
     const val SPIDER_EYE_BOBA: Int = 6908052
 
+    //14
+    const val STRAWBERRY_TART: Int = 6908053
+    const val CHOCOLATE_MOCHI: Int = 6908054
+
     const val RAINBOW_TROUT: Int = 6908121
     const val BLUEGILL: Int = 6908122
 
@@ -167,6 +171,7 @@ object ItemModels {
     const val ENIGMATIC_OMAMORI: Int = 6906649
 
     const val SOUL_SPICE: Int = 6906649
+    const val SCULK_POINTER: Int = 6906677
 
     /* ---------------------------------------------------------------------------------------------- */
     /* ------------------------------------------EQUIPMENT------------------------------------------- */
@@ -224,6 +229,10 @@ object ItemModels {
     const val BONE_STAFF: Int = 6905794
     const val WOODEN_STAFF: Int = 6905795
     const val BLAZE_ROD_STAFF: Int = 6905796
+
+    /*-----------------------------------------------------------------------------------------------*/
+
+    const val COMPACT_CROSSBOW: Int = 6905535
 
     /*-----------------------------------------------------------------------------------------------*/
 
