@@ -116,6 +116,9 @@ object ItemModels {
     const val STRAWBERRY_TART: Int = 6908053
     const val CHOCOLATE_MOCHI: Int = 6908054
 
+    const val SHOYU_RAMEN: Int = 6908055
+
+
     const val RAINBOW_TROUT: Int = 6908121
     const val BLUEGILL: Int = 6908122
 

@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.enchantments.armor
 
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -9,14 +9,7 @@ import org.bukkit.inventory.ItemStack
 object Cowardice : OdysseyEnchantment("cowardice", "Cowardice", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            OdysseyEnchantments.IGNORE_PAIN -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {
@@ -29,6 +22,14 @@ object Cowardice : OdysseyEnchantment("cowardice", "Cowardice", 3) {
                 false
             }
         }
+    }
+
+    override fun getDescriptionToolTip(inputLevel: Int): List<Component> {
+        val amount = 1 * inputLevel
+        val text1 = "Get knock backed further and get speed $amount=[level] for 6 seconds."
+        return listOf(
+            getGrayComponentText(text1),
+        )
     }
 
 }

@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.enchantments.armor
 
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -9,14 +9,7 @@ import org.bukkit.inventory.ItemStack
 object Antibonk : OdysseyEnchantment("antibonk", "Antibonk", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            OdysseyEnchantments.SCULK_SENSITIVE -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {
@@ -28,6 +21,14 @@ object Antibonk : OdysseyEnchantment("antibonk", "Antibonk", 3) {
                 false
             }
         }
+    }
+
+    override fun getDescriptionToolTip(inputLevel: Int): List<Component> {
+        val amount = 2.5 * inputLevel
+        val text = "Reduce critical hit damage by $amount=[2.5 x level]."
+        return listOf(
+            getGrayComponentText(text)
+        )
     }
 
 }

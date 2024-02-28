@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.enchantments.armor
 
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -9,14 +9,7 @@ import org.bukkit.inventory.ItemStack
 object Illumineye : OdysseyEnchantment("illumineye", "Illumineye", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            OdysseyEnchantments.SCULK_SENSITIVE -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {
@@ -29,4 +22,19 @@ object Illumineye : OdysseyEnchantment("illumineye", "Illumineye", 3) {
             }
         }
     }
+
+    override fun getDescriptionToolTip(inputLevel: Int): List<Component> {
+        val amount1 = 3 + (inputLevel * 2)
+        val text1 = "Taking damage by an entity within line of sight applies"
+        val text2 = "glowing for $amount1=[3 + (level x 2)] seconds."
+        val text3 = "Using a spyglass on an entity applies glowing"
+        val text4 = "and adds a 2 second cooldown to the spyglass."
+        return listOf(
+            getGrayComponentText(text1),
+            getGrayComponentText(text2),
+            getGrayComponentText(text3),
+            getGrayComponentText(text4),
+        )
+    }
+
 }

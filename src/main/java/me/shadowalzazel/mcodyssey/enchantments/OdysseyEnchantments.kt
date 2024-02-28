@@ -29,8 +29,11 @@ object OdysseyEnchantments {
     val IGNORE_PAIN: OdysseyEnchantment = IgnorePain
     val ILLUMINEYE: OdysseyEnchantment = Illumineye
     val LEAP_FROG: OdysseyEnchantment = LeapFrog
+    val MANDIBLEMANIA: OdysseyEnchantment = Mandiblemania
     val MOLTEN_CORE: OdysseyEnchantment = MoltenCore
+    val MOONWARD: OdysseyEnchantment = Moonward
     val OPTICALIZATION: OdysseyEnchantment = Opticalization // TODO
+    val POLLEN_GUARD: OdysseyEnchantment = PollenGuard
     val POTION_BARRIER: OdysseyEnchantment = PotionBarrier
     val RAGING_ROAR: OdysseyEnchantment = RagingRoar
     val RECKLESS: OdysseyEnchantment = Reckless
@@ -41,7 +44,7 @@ object OdysseyEnchantments {
     val SPOREFUL: OdysseyEnchantment = Sporeful
     val SQUIDIFY: OdysseyEnchantment = Squidify
     val SSLITHER_SSIGHT: OdysseyEnchantment = SslitherSsight
-    val STATIC_SOCKS: OdysseyEnchantment = StaticSocks // TODO
+    val STATIC_SOCKS: OdysseyEnchantment = StaticSocks
     val UNTOUCHABLE: OdysseyEnchantment = Untouchable
     val VENGEFUL: OdysseyEnchantment = Vengeful // TODO
     val VICIOUS_VIGOR: OdysseyEnchantment = ViciousVigor // TODO
@@ -149,8 +152,11 @@ object OdysseyEnchantments {
         IGNORE_PAIN,
         ILLUMINEYE,
         LEAP_FROG,
+        MANDIBLEMANIA,
         MOLTEN_CORE,
+        MOONWARD,
         OPTICALIZATION,
+        //POLLEN_GUARD, TODO: RE ENABLE WHEN DONE
         POTION_BARRIER,
         RAGING_ROAR,
         RECKLESS,
@@ -163,6 +169,7 @@ object OdysseyEnchantments {
         SSLITHER_SSIGHT,
         STATIC_SOCKS,
         UNTOUCHABLE,
+        // VEILED_IN_SHADOW, all armor
         VENGEFUL,
         VICIOUS_VIGOR,
         WAR_CRY
@@ -244,6 +251,21 @@ object OdysseyEnchantments {
         }
     }
 }
+
+// Less durability more dmg
+// A cursed enchantment turns the slot into a cursed slot
+
+
+// Item if in hand, create aura?
+// Enchantment: Things around get chilling? flame?
+
+// Make thorns bug new enchant apply ranged effects !!!!!
+
+// LUNAR POTATOES
+
+// Shoot Bricks, Slimeballs, (CROSSBOW)
+
+// AUGMENTS !!!!!!!!!!!
 
 /*
 private operator fun <T : Keyed?> Registry<T>.set(key: NamespacedKey, value: T) {

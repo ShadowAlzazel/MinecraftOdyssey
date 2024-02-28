@@ -165,7 +165,8 @@ object EnchantingListeners : Listener, EnchantSlotManager {
                     it.conflictsWith(enchant)
                 }
                 if (conflicts) {
-                    viewers.forEach { it.sendFailMessage("The enchantment ${enchant.key} conflicts with the enchantment ${conflictingEnchant!!.key}") }
+                    val eName = enchant.displayName(newEnchants[enchant]!!)
+                    viewers.forEach { it.sendFailMessage("The enchantment $eName conflicts with the enchantment ${conflictingEnchant!!.key}") }
                     event.result = ItemStack(Material.AIR)
                     return
                 }

@@ -2,6 +2,7 @@ package me.shadowalzazel.mcodyssey.enchantments.armor
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -10,7 +11,7 @@ object IgnorePain : OdysseyEnchantment("ignore_pain", "Ignore Pain", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.POTION_BARRIER, OdysseyEnchantments.UNTOUCHABLE -> {
+            OdysseyEnchantments.UNTOUCHABLE -> {
                 true
             }
             else -> {
@@ -29,6 +30,17 @@ object IgnorePain : OdysseyEnchantment("ignore_pain", "Ignore Pain", 3) {
                 false
             }
         }
+    }
+
+    override fun getDescriptionToolTip(inputLevel: Int): List<Component> {
+        val amount1 = 11 - (inputLevel * 2)
+        val amount2 = 5 - inputLevel
+        val text1 = "Decrease Invulnerable time when hit to $amount1=[11 - (level x 2)] ticks, but"
+        val text2 = "gain absorption for $amount2=[5 - level] seconds."
+        return listOf(
+            getGrayComponentText(text1),
+            getGrayComponentText(text2),
+        )
     }
 
 }

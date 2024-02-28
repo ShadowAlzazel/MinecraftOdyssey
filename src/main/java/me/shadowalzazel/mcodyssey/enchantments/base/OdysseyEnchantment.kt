@@ -4,6 +4,7 @@ import io.papermc.paper.enchantments.EnchantmentRarity
 import me.shadowalzazel.mcodyssey.Odyssey
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
+import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
@@ -20,7 +21,7 @@ open class OdysseyEnchantment(
     val subtype: Subtype = Subtype.GILDED) :
     Enchantment(NamespacedKey(Odyssey.instance, namespace!!)) {
 
-    private val ROMAN_NUMERAL_LIST = mapOf(1 to "I", 2 to "II", 3 to "III", 4 to "IV", 5 to "V", 6 to "VI", 7 to "VII", 8 to "VIII", 9 to "IX", 10 to "X")
+    internal val romanNum = mapOf(1 to "I", 2 to "II", 3 to "III", 4 to "IV", 5 to "V", 6 to "VI", 7 to "VII", 8 to "VIII", 9 to "IX", 10 to "X")
 
     override fun translationKey(): String {
         TODO("Not yet implemented")
@@ -39,7 +40,6 @@ open class OdysseyEnchantment(
     override fun getMaxModifiedCost(p0: Int): Int {
         return 1
     }
-
      */
 
     @Deprecated("Deprecated in Java", ReplaceWith("enchantName"))
@@ -83,16 +83,25 @@ open class OdysseyEnchantment(
     }
 
     fun displayLore(level: Int): TextComponent {
-        return Component.text("$enchantName ${ROMAN_NUMERAL_LIST[level]}", subtype.displayColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+        return Component.text("$enchantName ${romanNum[level]}", subtype.displayColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
     }
 
     override fun displayName(level: Int): Component {
-        return Component.text("$enchantName ${ROMAN_NUMERAL_LIST[level]}", subtype.displayColor)
+        return Component.text("$enchantName ${romanNum[level]}", subtype.displayColor)
             .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
     }
 
-    fun titleName(): Component {
-        return Component.text(enchantName, subtype.displayColor)
+    fun getGrayComponentText(text: String): TextComponent {
+        return Component
+            .text(text)
+            .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+            .color(TextColor.color(170, 170, 170))
+    }
+
+    open fun getDescriptionToolTip(inputLevel: Int): List<Component> {
+        return listOf(
+            getGrayComponentText(enchantName)
+        )
     }
 
     override fun isTradeable(): Boolean {

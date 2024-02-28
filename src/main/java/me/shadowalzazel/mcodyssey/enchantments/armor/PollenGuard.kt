@@ -1,22 +1,14 @@
 package me.shadowalzazel.mcodyssey.enchantments.armor
 
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object Reckless : OdysseyEnchantment("reckless", "Reckless", 3) {
+object PollenGuard : OdysseyEnchantment("pollen_guard", "Pollen Guard", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            OdysseyEnchantments.RELENTLESS -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {
@@ -35,3 +27,4 @@ object Reckless : OdysseyEnchantment("reckless", "Reckless", 3) {
     }
 
 }
+

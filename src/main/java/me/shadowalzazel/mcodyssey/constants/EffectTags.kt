@@ -18,15 +18,18 @@ object EffectTags {
     const val CORRODING: String = "odyssey.corroding" // Armor Takes damage per 5 ticks
     const val ACCURSED: String = "odyssey.accursed" // The next source of damage you take will be increased by 33.3%
     const val SOUL_DAMAGE: String = "odyssey.soul_damage" // ? No effect
+    const val ASPHYXIATE: String = "odyssey.asphyxiate" // TODO: Give negative breath -> IF not negative ticks then make timed effect that sets max to 0
     const val SHIMMER: String = "odyssey.shimmer" // TODO: ?
 
-    // STATUS
+    const val BARRIER: String = "odyssey.barrier" // Reduce damage
+
+    // Crowd Control
     const val ROOTED: String = "odyssey.rooted" // TODO: Can not jump (use entityJumpEvent?)
-    const val ASPHYXIATE: String = "odyssey.asphyxiate" // TODO: Give negative breath -> IF not negative ticks then make timed effect that sets max to 0
     const val TETHERED: String = "odyssey.tethered" // TODO: Can not teleport away
     const val SHATTERED: String = "odyssey.shattered" // TODO: Have less armor (temp -2.0 armor value on player stats) flat
     const val HARDEN: String = "odyssey.harden" // Have more armor (temp 2.0) flat
     const val GROUNDED: String = "odyssey.grounded" // TODO: Can not fly away SHEAR ENCHANT
+    const val JAILED: String = "odyssey.jailed"
 
     const val CHARMED: String = "odyssey.charmed" // Attracted to a location
     const val FEARED: String = "odyssey.feared" // Set entity goal away
@@ -34,9 +37,10 @@ object EffectTags {
     const val INSPIRED: String = "odyssey.inspired" // Support Mechanic ???
     const val INFECTED: String = "odyssey.infected" // TODO: Upon death, turn into a zombie
 
+
     const val VULNERABLE: String = "odyssey.vulnerable" // TODO: Set I-frames to 0 ticks
 
-    // ENCHANT
+    // Special Effects
     const val ARCANE_JAILED: String = "odyssey.arcane_jailed"
     const val FROSTY_FUSED: String = "odyssey.frosty_fused"
     const val GRAVITY_WELLED: String = "odyssey.gravity_welled"

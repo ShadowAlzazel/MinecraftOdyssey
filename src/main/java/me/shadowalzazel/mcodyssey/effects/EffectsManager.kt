@@ -13,44 +13,55 @@ interface EffectsManager {
     fun LivingEntity.addOdysseyEffect(
         effect: String,
         durationInTicks: Int,
-        amplifier: Int,
+        amplifier: Int = 1,
         intensity: Double = 1.0 // 0.0 -> 1.0
     ) {
         val modifiedDuration = (durationInTicks * intensity).toInt()
+        val hasEffect = scoreboardTags.contains(effect)
+        var refreshDelay = 0 // ticks
+        if (hasEffect) {
+            scoreboardTags.remove(effect)
+            refreshDelay = 22
+        }
+
         // Matcher
         when (effect) {
             EffectTags.ABLAZE -> {
-                ablazeAssigner(modifiedDuration, amplifier)
+                ablazeAssigner(modifiedDuration, amplifier, refreshDelay)
             }
             EffectTags.ACCURSED -> {
-                accursedAssigner(modifiedDuration, amplifier)
+                accursedAssigner(modifiedDuration, amplifier, refreshDelay)
+            }
+            EffectTags.BARRIER -> {
+                if (hasEffect) refreshDelay = 12
+                barrierAssigner(modifiedDuration, refreshDelay)
             }
             EffectTags.CORRODING-> {
-                corrodingAssigner(modifiedDuration, amplifier)
+                corrodingAssigner(modifiedDuration, amplifier, refreshDelay)
             }
             EffectTags.FREEZING -> {
-                freezingAssigner(modifiedDuration, amplifier)
+                freezingAssigner(modifiedDuration, amplifier, refreshDelay)
             }
             EffectTags.HEMORRHAGING -> {
-                hemorrhageAssigner(modifiedDuration, amplifier)
+                hemorrhageAssigner(modifiedDuration, amplifier, refreshDelay)
             }
             EffectTags.HONEYED -> {
-                honeyedAssigner(modifiedDuration, amplifier)
+                honeyedAssigner(modifiedDuration, amplifier, refreshDelay)
             }
             EffectTags.IRRADIATED -> {
-                irradiatedAssigner(modifiedDuration, amplifier)
+                irradiatedAssigner(modifiedDuration, amplifier, refreshDelay)
             }
             EffectTags.MIASMA -> {
-                miasmaAssigner(modifiedDuration, amplifier)
+                miasmaAssigner(modifiedDuration, amplifier, refreshDelay)
             }
             EffectTags.ROTTING -> {
-                rottingAssigner(modifiedDuration, amplifier)
+                rottingAssigner(modifiedDuration, amplifier, refreshDelay)
             }
             EffectTags.SOUL_DAMAGE -> {
-                soulDamageAssigner(modifiedDuration, amplifier)
+                soulDamageAssigner(modifiedDuration, amplifier, refreshDelay)
             }
             EffectTags.TARRED -> {
-                tarredAssigner(modifiedDuration, amplifier)
+                tarredAssigner(modifiedDuration, amplifier, refreshDelay)
             }
             else -> {
             }
@@ -58,23 +69,12 @@ interface EffectsManager {
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-    // Assigners
-
-    // Accursed
-    private fun LivingEntity.accursedAssigner(
-        durationInTicks: Int,
-        amplifier: Int,
-    ) {
-        if (EffectTags.ACCURSED !in scoreboardTags) {
-            addScoreboardTag(EffectTags.ACCURSED)
-            AccursedTask(this, durationInTicks / 20).runTaskTimer(Odyssey.instance, 0, 20)
-        }
-    }
 
     // Ablaze
     private fun LivingEntity.ablazeAssigner(
         durationInTicks: Int,
         amplifier: Int,
+        delay: Int = 0
     ) {
         if (EffectTags.ABLAZE !in scoreboardTags) {
             fireTicks = durationInTicks
@@ -83,12 +83,37 @@ interface EffectsManager {
         }
     }
 
+    // Accursed
+    private fun LivingEntity.accursedAssigner(
+        durationInTicks: Int,
+        amplifier: Int,
+        delay: Int = 0
+    ) {
+        if (EffectTags.ACCURSED !in scoreboardTags) {
+            addScoreboardTag(EffectTags.ACCURSED)
+            AccursedTask(this, durationInTicks / 20).runTaskTimer(Odyssey.instance, 0, 20)
+        }
+    }
+
+    // Ablaze
+    private fun LivingEntity.barrierAssigner(
+        durationInTicks: Int,
+        delay: Int = 0
+    ) {
+        if (EffectTags.BARRIER !in scoreboardTags) {
+            fireTicks = durationInTicks
+            addScoreboardTag(EffectTags.BARRIER)
+            BarrierTask(this, durationInTicks / 10).runTaskTimer(Odyssey.instance, 0, 10)
+        }
+    }
+
     // Corroding
     private fun LivingEntity.corrodingAssigner(
         durationInTicks: Int,
         amplifier: Int,
+        delay: Int = 0
     ) {
-        if (EffectTags.ASPHYXIATE !in scoreboardTags) {
+        if (EffectTags.CORRODING !in scoreboardTags) {
             addScoreboardTag(EffectTags.CORRODING)
             CorrodingTask(this, durationInTicks / 20).runTaskTimer(Odyssey.instance, 0, 20)
         }
@@ -98,6 +123,7 @@ interface EffectsManager {
     private fun LivingEntity.freezingAssigner(
         durationInTicks: Int,
         amplifier: Int,
+        delay: Int = 0
     ) {
         val freezingPotionEffect = PotionEffect(PotionEffectType.SLOW, durationInTicks, 1)
         if (EffectTags.FREEZING !in scoreboardTags) {
@@ -111,6 +137,7 @@ interface EffectsManager {
     private fun LivingEntity.hemorrhageAssigner(
         durationInTicks: Int,
         amplifier: Int,
+        delay: Int = 0
     ) {
         if (EffectTags.HEMORRHAGING !in scoreboardTags) {
             addScoreboardTag(EffectTags.HEMORRHAGING)
@@ -132,9 +159,10 @@ interface EffectsManager {
     private fun LivingEntity.honeyedAssigner(
         durationInTicks: Int,
         amplifier: Int,
+        delay: Int = 0
     ) {
         if (EffectTags.HONEYED !in scoreboardTags) {
-            // ALSO REDUCE JUMP VELOCITY BY 80%
+            // ALSO REDUCE JUMP VELOCITY BY 80% !!!!!!!!!
             addScoreboardTag(EffectTags.HONEYED)
             HoneyedTask(this, (durationInTicks / 20) * 2).runTaskTimer(Odyssey.instance, 0, 20 / 2)
         }
@@ -144,6 +172,7 @@ interface EffectsManager {
     private fun LivingEntity.irradiatedAssigner(
         durationInTicks: Int,
         amplifier: Int,
+        delay: Int = 0
     ) {
         if (EffectTags.IRRADIATED !in scoreboardTags) {
             addScoreboardTag(EffectTags.IRRADIATED)
@@ -155,6 +184,7 @@ interface EffectsManager {
     private fun LivingEntity.miasmaAssigner(
         durationInTicks: Int,
         amplifier: Int,
+        delay: Int = 0
     ) {
         if (EffectTags.MIASMA !in scoreboardTags) {
             addScoreboardTag(EffectTags.MIASMA)
@@ -166,6 +196,7 @@ interface EffectsManager {
     private fun LivingEntity.rottingAssigner(
         durationInTicks: Int,
         amplifier: Int,
+        delay: Int = 0
     ) {
         val potionEffect = PotionEffect(PotionEffectType.HUNGER, durationInTicks, amplifier)
         addPotionEffect(potionEffect)
@@ -179,6 +210,7 @@ interface EffectsManager {
     private fun LivingEntity.soulDamageAssigner(
         durationInTicks: Int,
         amplifier: Int,
+        delay: Int = 0
     ) {
         if (health > 4.0) {
             health -= 4.0 * amplifier
@@ -191,6 +223,7 @@ interface EffectsManager {
     private fun LivingEntity.tarredAssigner(
         durationInTicks: Int,
         amplifier: Int,
+        delay: Int = 0
     ) {
         if (EffectTags.TARRED !in scoreboardTags) {
             addScoreboardTag(EffectTags.TARRED)

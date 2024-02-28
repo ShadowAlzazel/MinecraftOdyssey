@@ -1,6 +1,5 @@
 package me.shadowalzazel.mcodyssey.enchantments.armor
 
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
@@ -9,14 +8,7 @@ import org.bukkit.inventory.ItemStack
 object Squidify : OdysseyEnchantment("squidify", "Squidify", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            OdysseyEnchantments.SPOREFUL, OdysseyEnchantments.LEAP_FROG -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {

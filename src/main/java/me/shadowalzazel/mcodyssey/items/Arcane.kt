@@ -18,10 +18,10 @@ object Arcane {
         newBook.itemMeta = newBook.itemMeta.also {
             if (enchantment is OdysseyEnchantment) {
                 it.addEnchant(enchantment, level, true)
-                val textLore = enchantment.displayLore(level)
+                val textLore = mutableListOf(enchantment.displayLore(level)) + Component.text("") + enchantment.getDescriptionToolTip(level)
                 val nameComponent = it.displayName()
                 it.displayName(nameComponent?.append(Component.text(" - " + enchantment.enchantName, enchantment.subtype.displayColor)))
-                it.lore(listOf(textLore))
+                it.lore(textLore)
             }
             else {
                 it.addEnchant(enchantment, level, true)
