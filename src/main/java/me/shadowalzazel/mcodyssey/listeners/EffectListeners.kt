@@ -16,6 +16,12 @@ object EffectListeners : Listener {
             val entity = event.entity
             if (entity.scoreboardTags.contains(EffectTags.ACCURSED)) event.damage *= 1.30
         }
+
+        if (event.entity.scoreboardTags.contains(EffectTags.BARRIER)) {
+            // maybe make a PDC
+            event.damage = maxOf(event.damage - 3.0, 0.0)
+        }
+
     }
 
 

@@ -16,7 +16,7 @@ import org.bukkit.potion.PotionEffectType
 import org.bukkit.potion.PotionType
 
 class AlchemyCauldronRecipe(
-    private val potion: OdysseyPotion, // TODO: CHANGE TO NON ITEM STACK
+    private val potion: OdysseyPotion,
     private val ingredientSize: Int,
     private val viableFuel: List<Material>,
     private val specificList: List<ItemStack>, // For Materials and Specific Items

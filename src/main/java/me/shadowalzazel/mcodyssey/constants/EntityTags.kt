@@ -1,5 +1,11 @@
 package me.shadowalzazel.mcodyssey.constants
 
+import me.shadowalzazel.mcodyssey.Odyssey
+import org.bukkit.NamespacedKey
+import org.bukkit.entity.LivingEntity
+import org.bukkit.inventory.ItemStack
+import org.bukkit.persistence.PersistentDataType
+
 object EntityTags {
 
     // PIGLINS
@@ -84,12 +90,34 @@ object EntityTags {
     const val ECHO_STRUCK: String = "odyssey.echo_struck"
     const val BREATH_CLOUD: String = "odyssey.breath_cloud"
     const val BREATH_BY: String = "odyssey.breath_by."
-    const val IS_ROOTED: String = "odyssey.is_rooted"
-    const val IS_JAILED: String = "odyssey.is_jailed"
-    const val STATIC_SOCKS_CHARGE: String = "odyssey.static_socks_charge.0"
+    const val ROOT_BOOTS_ROOTED: String = "odyssey.root_boots_rooted"
+    const val STATIC_SOCKS_CHARGING: String = "odyssey.static_socks_charging"
+    const val STATIC_SOCKS_CHARGE: String = "odyssey.static_socks_charge"
+    const val POLLEN_GUARD_STACKS: String = "odyssey.pollen_guard_stacks"
+    const val LEAP_FROG_READY: String = "odyssey.leap_frog_ready"
 
     // WEAPONS
     const val COMBOED: String = "odyssey.comboed"
     const val MELEE_AOE_HIT: String = "odyssey.melee_aoe_hit"
+
+    /*-----------------------------------------------------------------------------------------------*/
+    /*--------------------------------------------FUNCTIONS------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
+
+    fun LivingEntity.setIntTag(tag: String, count: Int) {
+        val tagKey = NamespacedKey(Odyssey.instance, tag)
+        persistentDataContainer.set(tagKey, PersistentDataType.INTEGER, count)
+    }
+
+    fun LivingEntity.getIntTag(tag: String): Int? {
+        val tagKey = NamespacedKey(Odyssey.instance, tag)
+        return persistentDataContainer[tagKey, PersistentDataType.INTEGER]
+    }
+
+    fun LivingEntity.removeTag(tag: String) {
+        val tagKey = NamespacedKey(Odyssey.instance, tag)
+        persistentDataContainer.remove(tagKey)
+    }
+
 
 }

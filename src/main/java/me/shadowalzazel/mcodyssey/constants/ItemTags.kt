@@ -48,7 +48,9 @@ object ItemTags {
     // FINDERS
     const val IS_SCULK_FINDER: String = "odyssey.is_sculk_finder"
 
-    /* FUNCTIONS */
+    /*-----------------------------------------------------------------------------------------------*/
+    /*--------------------------------------------FUNCTIONS------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
 
     fun PersistentDataContainer.hasOdysseyTag(): Boolean {
         return has(DataKeys.ITEM_KEY)

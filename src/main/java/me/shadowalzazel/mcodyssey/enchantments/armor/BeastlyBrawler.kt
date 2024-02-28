@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.enchantments.armor
 
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -9,14 +9,7 @@ import org.bukkit.inventory.ItemStack
 object BeastlyBrawler : OdysseyEnchantment("beastly_brawler", "Beastly Brawler", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            OdysseyEnchantments.MOLTEN_CORE -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {
@@ -29,4 +22,15 @@ object BeastlyBrawler : OdysseyEnchantment("beastly_brawler", "Beastly Brawler",
             }
         }
     }
+
+    override fun getDescriptionToolTip(inputLevel: Int): List<Component> {
+        val amount = 2 * inputLevel
+        val text1 = "Deal $amount=[2 x level] extra damage when $amount=[2 x level]"
+        val text2 = "or more enemies are within a 4 block radius."
+        return listOf(
+            getGrayComponentText(text1),
+            getGrayComponentText(text2),
+        )
+    }
+
 }

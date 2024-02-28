@@ -60,7 +60,7 @@ object Runesherds : RunesherdManager {
         displayName = Component.text("Fragmented Orb", TextColor.color(85, 67 ,129), TextDecoration.ITALIC),
         lore = listOf(Component.text("An un matured runeware runesherds", TextColor.color(155, 155, 155)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.FRAGMENTED_ORB
-    ) // TURNS INTO RUNE_WARE IN KILN
+    )
 
     val GLAZED_RUNE_ORB = OdysseyItem(
         name = "glazed_rune_orb",
@@ -77,7 +77,7 @@ object Runesherds : RunesherdManager {
         displayName = Component.text("Clay Totem", TextColor.color(85, 67 ,129), TextDecoration.ITALIC),
         lore = listOf(Component.text("An un matured runeware runesherds", TextColor.color(155, 155, 155)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.CLAY_TOTEM
-    ) // TURNS INTO RUNE_WARE IN KILN
+    )
 
     val GLAZED_RUNE_TOTEM = OdysseyItem(
         name = "glazed_rune_totem",
@@ -86,6 +86,12 @@ object Runesherds : RunesherdManager {
         lore = listOf(Component.text("A matured runeware", TextColor.color(155, 155, 155)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.GLAZED_RUNE_TOTEM
     )
+
+    // FLOWER
+
+    // ROD
+
+    // SKULL
 
     /*-----------------------------------------------------------------------------------------------*/
 

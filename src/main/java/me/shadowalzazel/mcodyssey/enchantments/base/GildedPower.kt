@@ -10,7 +10,6 @@ object GildedPower : OdysseyEnchantment("gildedpower", "Gilded Power", 3) {
         return false
     }
 
-    // BOOKS CAN NOT HAVE GILDED POWER
     override fun canEnchantItem(item: ItemStack): Boolean {
         return when (item.type) {
             Material.NETHERITE_SWORD, Material.DIAMOND_SWORD, Material.IRON_SWORD, Material.GOLDEN_SWORD, Material.STONE_SWORD, Material.WOODEN_SWORD,

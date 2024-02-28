@@ -11,7 +11,7 @@ class AccursedTask(private val entity: LivingEntity, private val maxCount: Int) 
 
     override fun run() {
         counter += 1
-        if (EffectTags.ASPHYXIATE !in entity.scoreboardTags) { this.cancel() }
+        if (EffectTags.ACCURSED !in entity.scoreboardTags) { this.cancel() }
         val timeElapsed = System.currentTimeMillis() - timer
         if (maxCount < counter || timeElapsed > maxCount * 1000) {
             entity.scoreboardTags.remove(EffectTags.ACCURSED)

@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.enchantments.armor
 
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -9,14 +9,7 @@ import org.bukkit.inventory.ItemStack
 object FruitfulFare : OdysseyEnchantment("fruitful_fare", "Fruitful Fare", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            OdysseyEnchantments.MOLTEN_CORE, OdysseyEnchantments.BLACK_ROSE -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {
@@ -30,4 +23,13 @@ object FruitfulFare : OdysseyEnchantment("fruitful_fare", "Fruitful Fare", 3) {
             }
         }
     }
+
+    override fun getDescriptionToolTip(inputLevel: Int): List<Component> {
+        val amount = 1 * inputLevel
+        val text1 = "Eating a fruit recovers $amount=[level] Health. Adds a 3 second cooldown to the fruit."
+        return listOf(
+            getGrayComponentText(text1),
+        )
+    }
+
 }

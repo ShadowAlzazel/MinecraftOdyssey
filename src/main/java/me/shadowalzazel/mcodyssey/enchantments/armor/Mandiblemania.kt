@@ -6,7 +6,7 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object LeapFrog : OdysseyEnchantment("leapfrog", "Leap Frog", 3) {
+object Mandiblemania  : OdysseyEnchantment("mandiblemania", "Mandiblemania", 2) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return false
@@ -15,7 +15,7 @@ object LeapFrog : OdysseyEnchantment("leapfrog", "Leap Frog", 3) {
     override fun canEnchantItem(item: ItemStack): Boolean {
         return when (item.type) {
             Material.ENCHANTED_BOOK,
-            Material.NETHERITE_LEGGINGS, Material.DIAMOND_LEGGINGS, Material.IRON_LEGGINGS, Material.GOLDEN_LEGGINGS, Material.CHAINMAIL_LEGGINGS, Material.LEATHER_LEGGINGS -> {
+            Material.NETHERITE_HELMET, Material.DIAMOND_HELMET, Material.IRON_HELMET, Material.GOLDEN_HELMET, Material.CHAINMAIL_HELMET, Material.LEATHER_HELMET -> {
                 true
             }
             else -> {
@@ -25,16 +25,13 @@ object LeapFrog : OdysseyEnchantment("leapfrog", "Leap Frog", 3) {
     }
 
     override fun getDescriptionToolTip(inputLevel: Int): List<Component> {
-        val amount1 = 0.4 * inputLevel
-        val text1 = "Increases jump velocity by $amount1=[0.4 x level] when the player has sneaked"
-        val text2 = "or is on top of lily pad, drip leaf, mud, muddy mangrove root,"
-        val text3 = "or a waterlogged leaf. These effects can stack"
+        val amount1 = 0.1 * inputLevel
+        val text1 = "Getting damaged by an entity or attacking an entity with a lower eye"
+        val text2 = "location decreases their immunity time by $amount1=[0.1 x level] seconds."
         return listOf(
             getGrayComponentText(text1),
-            getGrayComponentText(text2),
-            getGrayComponentText(text3)
+            getGrayComponentText(text2)
         )
     }
-
 
 }

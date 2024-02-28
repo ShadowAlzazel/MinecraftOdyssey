@@ -118,7 +118,8 @@ class Odyssey : JavaPlugin() {
             DragonListeners,
             SnifferListeners,
             ArtisanListeners,
-            RunesherdListeners
+            RunesherdListeners,
+            EffectListeners
         ).forEach { eventRegister(it) }
 
 
