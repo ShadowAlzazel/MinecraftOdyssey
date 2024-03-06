@@ -1,12 +1,11 @@
 package me.shadowalzazel.mcodyssey.enchantments.melee
 
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object RupturingStrike : OdysseyEnchantment("rupturing_strike", "Rupturing Strike", 3) {
+object BlitzShift : OdysseyEnchantment("blitz_shift", "Blitz Shift", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return false

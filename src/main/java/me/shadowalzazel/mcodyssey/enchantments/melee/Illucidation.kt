@@ -9,14 +9,7 @@ import org.bukkit.inventory.ItemStack
 object Illucidation : OdysseyEnchantment("illucidation", "Illucidation", 4) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            OdysseyEnchantments.EXPLODING -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {

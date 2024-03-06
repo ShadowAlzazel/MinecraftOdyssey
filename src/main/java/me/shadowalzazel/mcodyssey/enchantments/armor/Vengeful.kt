@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.enchantments.armor
 
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -21,6 +22,14 @@ object Vengeful : OdysseyEnchantment("vengeful", "Vengeful", 3) {
                 false
             }
         }
+    }
+
+    override fun getDescriptionToolTip(inputLevel: Int): List<Component> {
+        val amount1 = inputLevel
+        val text1 = "Deal $amount1=[level] more damage to enemies that have damaged the wearer."
+        return listOf(
+            getGrayComponentText(text1)
+        )
     }
 
 }

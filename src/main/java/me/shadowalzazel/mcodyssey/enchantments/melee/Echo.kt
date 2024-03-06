@@ -9,14 +9,7 @@ import org.bukkit.inventory.ItemStack
 object Echo : OdysseyEnchantment("echo", "Echo", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            OdysseyEnchantments.GUARDING_STRIKE -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {

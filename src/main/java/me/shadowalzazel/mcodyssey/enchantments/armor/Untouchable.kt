@@ -2,6 +2,7 @@ package me.shadowalzazel.mcodyssey.enchantments.armor
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -29,6 +30,13 @@ object Untouchable : OdysseyEnchantment("untouchable", "Untouchable", 1) {
                 false
             }
         }
+    }
+
+    override fun getDescriptionToolTip(inputLevel: Int): List<Component> {
+        val text1 = "Increase invulnerable time to 1 second"
+        return listOf(
+            getGrayComponentText(text1)
+        )
     }
 
 }

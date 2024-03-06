@@ -9,14 +9,7 @@ import org.bukkit.inventory.ItemStack
 object SporingRot : OdysseyEnchantment("sporing_rot", "Sporing Rot", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            FIRE_ASPECT, OdysseyEnchantments.TAR_N_DIP -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {

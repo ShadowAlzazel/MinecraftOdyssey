@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.enchantments.armor
 
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -22,6 +23,18 @@ object PotionBarrier : OdysseyEnchantment("potion_barrier", "Potion Barrier", 2)
             }
         }
     }
+
+    override fun getDescriptionToolTip(inputLevel: Int): List<Component> {
+        val amount1 = inputLevel * 4
+        val amount2 = inputLevel * 4
+        val text1 = "Drinking a potion gives a Barrier for $amount1=[4 + (level x 4)] seconds that reduces"
+        val text2 = "damage by 3. Adds a $amount2=[2 + (level x 2)] second cooldown to potions."
+        return listOf(
+            getGrayComponentText(text1),
+            getGrayComponentText(text2),
+        )
+    }
+
 
 }
 

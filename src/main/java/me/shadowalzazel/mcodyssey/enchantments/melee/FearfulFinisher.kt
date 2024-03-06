@@ -9,14 +9,7 @@ import org.bukkit.inventory.ItemStack
 object FearfulFinisher : OdysseyEnchantment("fearful_finisher", "Fearful Finisher", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            OdysseyEnchantments.EXPLODING -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {

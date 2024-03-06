@@ -20,6 +20,7 @@ object OdysseyEnchantments {
     val ANTIBONK: OdysseyEnchantment = Antibonk
     val BEASTLY_BRAWLER: OdysseyEnchantment = BeastlyBrawler
     val BLACK_ROSE: OdysseyEnchantment = BlackRose
+    val BLURCISE: OdysseyEnchantment = Blurcise
     val BREWFUL_BREATH: OdysseyEnchantment = BrewfulBreath
     val COPPER_CHITIN: OdysseyEnchantment = CopperChitin
     val COWARDICE: OdysseyEnchantment = Cowardice
@@ -46,6 +47,7 @@ object OdysseyEnchantments {
     val SSLITHER_SSIGHT: OdysseyEnchantment = SslitherSsight
     val STATIC_SOCKS: OdysseyEnchantment = StaticSocks
     val UNTOUCHABLE: OdysseyEnchantment = Untouchable
+    val VEILED_IN_SHADOW: OdysseyEnchantment = VeiledInShadow
     val VENGEFUL: OdysseyEnchantment = Vengeful // TODO
     val VICIOUS_VIGOR: OdysseyEnchantment = ViciousVigor // TODO
     val WAR_CRY: OdysseyEnchantment = WarCry
@@ -57,6 +59,7 @@ object OdysseyEnchantments {
     val BANE_OF_THE_ILLAGER: OdysseyEnchantment = BaneOfTheIllager
     val BANE_OF_THE_SEA: OdysseyEnchantment = BaneOfTheSea
     val BANE_OF_THE_SWINE: OdysseyEnchantment = BaneOfTheSwine
+    val BLITZ_SHIFT: OdysseyEnchantment = BlitzShift
     val BUZZY_BEES: OdysseyEnchantment = BuzzyBees
     val COMMITTED: OdysseyEnchantment = Committed
     val CULL_THE_WEAK: OdysseyEnchantment = CullTheWeak
@@ -117,6 +120,7 @@ object OdysseyEnchantments {
         BANE_OF_THE_ILLAGER,
         BANE_OF_THE_SEA,
         BANE_OF_THE_SWINE,
+        BLITZ_SHIFT,
         BUZZY_BEES,
         COMMITTED,
         CULL_THE_WEAK,
@@ -143,6 +147,7 @@ object OdysseyEnchantments {
         ANTIBONK,
         BEASTLY_BRAWLER,
         BLACK_ROSE,
+        BLURCISE,
         BREWFUL_BREATH,
         COPPER_CHITIN,
         COWARDICE,
@@ -169,7 +174,7 @@ object OdysseyEnchantments {
         SSLITHER_SSIGHT,
         STATIC_SOCKS,
         UNTOUCHABLE,
-        // VEILED_IN_SHADOW, all armor
+        VEILED_IN_SHADOW,
         VENGEFUL,
         VICIOUS_VIGOR,
         WAR_CRY

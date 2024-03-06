@@ -188,5 +188,8 @@ class AlchemyCauldronRecipe(
         return PotionEffect(potionData.type.effectType!!, time.toInt(), amplifier)
     }
 
+    // TODO: Do minigame
+
+    // when hear ding, add chorus fruit for +10%
 
 }

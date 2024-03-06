@@ -10,8 +10,7 @@ object TarNDip : OdysseyEnchantment("tar_n_dip", "Tar n' Dip", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.FREEZING_ASPECT, OdysseyEnchantments.FROSTY_FUSE, OdysseyEnchantments.BUZZY_BEES,
-            OdysseyEnchantments.SPORING_ROT, OdysseyEnchantments.DOUSE-> {
+            OdysseyEnchantments.FREEZING_ASPECT, OdysseyEnchantments.FROSTY_FUSE, OdysseyEnchantments.DOUSE-> {
                 true
             }
             else -> {

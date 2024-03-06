@@ -9,14 +9,7 @@ import org.bukkit.inventory.ItemStack
 object Backstabber : OdysseyEnchantment("backstabber", "Backstabber", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            OdysseyEnchantments.COMMITTED, OdysseyEnchantments.VOID_STRIKE -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {

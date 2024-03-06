@@ -9,14 +9,7 @@ import org.bukkit.inventory.ItemStack
 object GuardingStrike : OdysseyEnchantment("guarding_strike", "Guarding Strike", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            OdysseyEnchantments.ECHO -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {

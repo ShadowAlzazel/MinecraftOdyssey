@@ -9,14 +9,7 @@ import org.bukkit.inventory.ItemStack
 object VoidStrike : OdysseyEnchantment("void_strike", "Void Strike", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            DAMAGE_ALL, DAMAGE_UNDEAD, DAMAGE_ARTHROPODS, OdysseyEnchantments.BANE_OF_THE_SEA, OdysseyEnchantments.BANE_OF_THE_SWINE, OdysseyEnchantments.BANE_OF_THE_ILLAGER -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {
