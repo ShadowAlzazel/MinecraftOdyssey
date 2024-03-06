@@ -9,14 +9,7 @@ import org.bukkit.inventory.ItemStack
 object Committed : OdysseyEnchantment("committed", "Committed", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            OdysseyEnchantments.BACKSTABBER -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {

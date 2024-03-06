@@ -10,7 +10,7 @@ object Whirlwind : OdysseyEnchantment("whirl_wind", "Whirlwind", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            SWEEPING_EDGE, OdysseyEnchantments.GRAVITY_WELL, KNOCKBACK -> {
+            SWEEPING_EDGE -> {
                 true
             }
             else -> {

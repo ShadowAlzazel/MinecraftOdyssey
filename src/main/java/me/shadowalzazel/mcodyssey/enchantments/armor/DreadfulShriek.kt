@@ -25,9 +25,9 @@ object DreadfulShriek : OdysseyEnchantment("dreadful_shriek", "Dreadful Shriek",
     }
 
     override fun getDescriptionToolTip(inputLevel: Int): List<Component> {
-        val amount = 40 * inputLevel
-        val text1 = "Using a goat horn applies weakness and slowness to enemies"
-        val text2 = "for $amount=[2 + (2 x level)] seconds within a 6 block radius."
+        val amount = 2 + (2 * inputLevel)
+        val text1 = "Using a goat horn applies weakness and slowness for $amount=[4 + (2 x level)] seconds"
+        val text2 = "to enemies within a 16 block radius."
         val text3 = "Changes goat horn cooldown to 6 seconds."
         return listOf(
             getGrayComponentText(text1),
@@ -35,6 +35,5 @@ object DreadfulShriek : OdysseyEnchantment("dreadful_shriek", "Dreadful Shriek",
             getGrayComponentText(text3)
         )
     }
-
 
 }

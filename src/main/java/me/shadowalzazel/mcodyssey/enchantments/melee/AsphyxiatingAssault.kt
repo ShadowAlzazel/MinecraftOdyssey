@@ -9,14 +9,7 @@ import org.bukkit.inventory.ItemStack
 object AsphyxiatingAssault : OdysseyEnchantment("asphyxiating_assault", "Asphyxiating Assault", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            OdysseyEnchantments.RUPTURING_STRIKE -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {

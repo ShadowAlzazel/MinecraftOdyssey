@@ -9,14 +9,7 @@ import org.bukkit.inventory.ItemStack
 object Hemorrhage : OdysseyEnchantment("hemorrhage", "Hemorrhage", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            OdysseyEnchantments.DECAYING_TOUCH -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {

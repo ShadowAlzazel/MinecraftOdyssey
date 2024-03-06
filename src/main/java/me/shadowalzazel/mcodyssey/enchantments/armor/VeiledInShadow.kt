@@ -1,23 +1,15 @@
 package me.shadowalzazel.mcodyssey.enchantments.armor
 
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object Relentless : OdysseyEnchantment("relentless", "Relentless", 3) {
+object VeiledInShadow : OdysseyEnchantment("veiled_in_shadow", "Veiled in Shadow", 5) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            OdysseyEnchantments.RECKLESS -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {
@@ -36,10 +28,12 @@ object Relentless : OdysseyEnchantment("relentless", "Relentless", 3) {
     }
 
     override fun getDescriptionToolTip(inputLevel: Int): List<Component> {
-        val amount1 = 0.25 + (inputLevel * 0.25)
-        val text1 = "When damaged, gain $amount1=[0.25 + (level x 0.25)] saturation"
+        val amount1 = inputLevel
+        val text1 = "Gain invulnerable time negatively proportional to light level."
+        val text2 = "Reduce required light level by $amount1=[level]."
         return listOf(
-            getGrayComponentText(text1)
+            getGrayComponentText(text1),
+            getGrayComponentText(text2)
         )
     }
 

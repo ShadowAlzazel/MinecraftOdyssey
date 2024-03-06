@@ -10,7 +10,7 @@ object BaneOfTheSea : OdysseyEnchantment("bane_of_the_sea", "Bane of the Sea", 5
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            DAMAGE_ARTHROPODS, IMPALING, DAMAGE_ALL, DAMAGE_UNDEAD, OdysseyEnchantments.BANE_OF_THE_SWINE, OdysseyEnchantments.BANE_OF_THE_ILLAGER, OdysseyEnchantments.VOID_STRIKE -> {
+            DAMAGE_ARTHROPODS, IMPALING, DAMAGE_ALL, DAMAGE_UNDEAD, OdysseyEnchantments.BANE_OF_THE_SWINE, OdysseyEnchantments.BANE_OF_THE_ILLAGER -> {
                 true
             }
             else -> {

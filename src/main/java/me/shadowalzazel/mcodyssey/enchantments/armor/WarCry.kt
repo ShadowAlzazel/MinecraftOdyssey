@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.enchantments.armor
 
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -23,5 +24,15 @@ object WarCry : OdysseyEnchantment("warcry", "War Cry", 3) {
         }
     }
 
-    // When you use a goat horn, your allies get strength
+    override fun getDescriptionToolTip(inputLevel: Int): List<Component> {
+        val amount = 2 + (2 * inputLevel)
+        val text1 = "Using a goat horn applies strength and speed for $amount=[4 + (2 x level)] seconds"
+        val text2 = "to players and pets within a 16 block radius."
+        val text3 = "Changes goat horn cooldown to 6 seconds."
+        return listOf(
+            getGrayComponentText(text1),
+            getGrayComponentText(text2),
+            getGrayComponentText(text3)
+        )
+    }
 }

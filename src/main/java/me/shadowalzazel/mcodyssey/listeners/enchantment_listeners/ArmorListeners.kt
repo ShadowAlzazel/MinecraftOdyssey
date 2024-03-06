@@ -2,6 +2,7 @@ package me.shadowalzazel.mcodyssey.listeners.enchantment_listeners
 
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent
 import com.destroystokyo.paper.event.player.PlayerJumpEvent
+import io.papermc.paper.entity.LookAnchor
 import io.papermc.paper.world.MoonPhase
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.constants.EffectTags
@@ -65,6 +66,9 @@ object ArmorListeners : Listener {
                     OdysseyEnchantments.MANDIBLEMANIA -> {
                         mandiblemaniaDefendEnchantment(defender, enemy, enchant.value)
                     }
+                    OdysseyEnchantments.OPTICALIZATION -> {
+                        opticalizationHitEnchantment(defender, enemy, enchant.value)
+                    }
                     OdysseyEnchantments.SSLITHER_SSIGHT -> {
                         sslitherSsightEnchantment(enemy, defender, enchant.value)
                     }
@@ -73,6 +77,9 @@ object ArmorListeners : Listener {
                     }
                     OdysseyEnchantments.RELENTLESS -> {
                         relentlessEnchantment(defender, enchant.value)
+                    }
+                    OdysseyEnchantments.VEILED_IN_SHADOW -> {
+                        veiledInShadowEnchantment(defender, enchant.value)
                     }
                 }
             }
@@ -99,6 +106,9 @@ object ArmorListeners : Listener {
                     OdysseyEnchantments.UNTOUCHABLE -> {
                         untouchableEnchantment(defender)
                     }
+                    OdysseyEnchantments.VEILED_IN_SHADOW -> {
+                        veiledInShadowEnchantment(defender, enchant.value)
+                    }
                     OdysseyEnchantments.VENGEFUL -> {
                         vengefulEnchantment(enemy, enchant.value)
                     }
@@ -112,6 +122,9 @@ object ArmorListeners : Listener {
                     OdysseyEnchantments.COWARDICE -> {
                         cowardiceEnchantment(enemy, defender, enchant.value)
                     }
+                    OdysseyEnchantments.BLURCISE -> {
+                        event.damage -= blurciseEnchantment(defender, enchant.value)
+                    }
                     OdysseyEnchantments.RECKLESS -> {
                         event.damage += recklessEnchantment(enchant.value)
                     }
@@ -123,6 +136,9 @@ object ArmorListeners : Listener {
                     }
                     OdysseyEnchantments.SQUIDIFY -> {
                         squidifyEnchantment(defender, enchant.value)
+                    }
+                    OdysseyEnchantments.VEILED_IN_SHADOW -> {
+                        veiledInShadowEnchantment(defender, enchant.value)
                     }
                 }
             }
@@ -136,6 +152,9 @@ object ArmorListeners : Listener {
                     }
                     OdysseyEnchantments.RELENTLESS -> {
                         relentlessEnchantment(defender, enchant.value)
+                    }
+                    OdysseyEnchantments.VEILED_IN_SHADOW -> {
+                        veiledInShadowEnchantment(defender, enchant.value)
                     }
                 }
             }
@@ -162,6 +181,9 @@ object ArmorListeners : Listener {
                 when (enchant.key) {
                     OdysseyEnchantments.MANDIBLEMANIA -> {
                         mandiblemaniaAttackEnchantment(attacker, enemy, enchant.value)
+                    }
+                    OdysseyEnchantments.OPTICALIZATION -> {
+                        opticalizationHitEnchantment(enemy, attacker, enchant.value)
                     }
                 }
             }
@@ -273,7 +295,7 @@ object ArmorListeners : Listener {
                         illumineyeSpyglassEnchantment(player, item, enchant.value)
                     }
                     OdysseyEnchantments.OPTICALIZATION -> {
-                        opticalizationEnchantment(player, item, enchant.value)
+                        opticalizationSpyglassEnchantment(player, item)
                     }
                     OdysseyEnchantments.RAGING_ROAR -> {
                         ragingRoarEnchantment(player, item, enchant.value)
@@ -520,6 +542,17 @@ object ArmorListeners : Listener {
         )
     }
 
+    private fun blurciseEnchantment(
+        defender: LivingEntity,
+        level: Int
+    ): Double {
+        if (defender.velocity.length() > 2.0) {
+            return level * 1.0
+        }
+        return 0.0
+    }
+
+
     // ------------------------------- BREWFUL_BREATH ------------------------------------
     private fun brewfulBreathEnchantment(
         player: Player,
@@ -614,23 +647,23 @@ object ArmorListeners : Listener {
     private fun dreadfulShriekEnchantment(
         player: Player,
         horn: ItemStack,
-        enchantmentStrength: Int
+        level: Int
     ) {
         if (horn.type != Material.GOAT_HORN) { return }
         if (player.getCooldown(horn.type) != 0) { return }
 
-        val enemies = player.getNearbyEntities(12.0, 6.0, 12.0).filter { it !is Player && it is LivingEntity }
+        val enemies = player.getNearbyEntities(16.0, 6.0, 16.0).filter { it !is Player && it is LivingEntity }
         enemies.forEach {
             (it as LivingEntity).addPotionEffects(
                 listOf(
                     PotionEffect(
                         PotionEffectType.WEAKNESS,
-                        ((enchantmentStrength * 2) + 2) * 20,
+                        (2 + (level * 2)) * 20,
                         0
                     ),
                     PotionEffect(
                         PotionEffectType.SLOW,
-                        ((enchantmentStrength * 2) + 2) * 20,
+                        (2 + (level * 2)) * 20,
                         0
                     )
                 )
@@ -819,9 +852,9 @@ object ArmorListeners : Listener {
         // Saturation
         if (defender !is Player) return
         val block = location.block
-        val blockValid = (block.type !in listOf(Material.LAVA, Material.MAGMA_BLOCK))
+        val blockValid = (block.type in listOf(Material.LAVA, Material.MAGMA_BLOCK))
         if (blockValid) {
-            defender.saturation = maxOf(defender.saturation + (0.5F * level)  , 20.0F)
+            defender.saturation = minOf(defender.saturation + (0.5F * level)  , 20.0F)
         }
     }
 
@@ -843,23 +876,50 @@ object ArmorListeners : Listener {
 
 
     // ------------------------------- OPTICALIZATION ------------------------------------
-    private fun opticalizationEnchantment(
+    @Suppress("UnstableApiUsage")
+    private fun opticalizationSpyglassEnchantment(
         player: Player,
-        spyglass: ItemStack,
-        level: Int) {
+        spyglass: ItemStack) {
 
         if (spyglass.type != Material.SPYGLASS) { return }
         if (player.getCooldown(spyglass.type) != 0) { return }
-        val target = getRayTraceTarget(player, 100) ?: return
 
-        val unitVector = target.location.subtract(player.location).toVector().normalize().multiply(-1)
-        if (target !is LivingEntity) {
-            target.velocity = unitVector.multiply(1.2)
-        } else {
-            target.eyeLocation.direction = unitVector
+        val target = getRayTraceTarget(player, 100) ?: return
+        if (target is Mob) {
+            target.lookAt(player)
+            player.lookAt(target, LookAnchor.EYES, LookAnchor.EYES)
+        } else if (target is Player) {
+            target.lookAt(player, LookAnchor.EYES, LookAnchor.EYES)
+            player.lookAt(target, LookAnchor.EYES, LookAnchor.EYES)
+        }
+        player.setCooldown(spyglass.type, 20 * 2)
+    }
+
+
+    @Suppress("UnstableApiUsage")
+    private fun opticalizationHitEnchantment(
+        defender: LivingEntity,
+        attacker: LivingEntity,
+        level: Int) {
+        if (defender.location.distance(attacker.location) > (level * 2.0)) return
+        // Used for both attack and defense
+        when (defender) {
+            is Mob -> {
+                defender.lookAt(attacker)
+            }
+            is Player -> {
+                defender.lookAt(attacker, LookAnchor.EYES, LookAnchor.EYES)
+            }
+        }
+        when (attacker) {
+            is Mob -> {
+                attacker.lookAt(defender)
+            }
+            is Player -> {
+                //attacker.lookAt(defender, LookAnchor.EYES, LookAnchor.EYES)
+            }
         }
 
-        player.setCooldown(spyglass.type, 20 * 1)
     }
 
     // ------------------------------- POLLEN_GUARD ------------------------------------
@@ -939,7 +999,7 @@ object ArmorListeners : Listener {
         if (horn.type != Material.GOAT_HORN) { return }
         if (player.getCooldown(horn.type) != 0) { return }
 
-        val enemies = player.getNearbyEntities(8.0 + (level * 4), 6.0, 8.0 + (level * 4)).filter { it !is Player && it is Creature }
+        val enemies = player.getNearbyEntities(10.0 + (level * 5), 6.0, 10.0 + (level * 5)).filter { it !is Player && it is Creature }
         enemies.forEach {
             (it as Creature).lookAt(player)
             it.pathfinder.moveTo(player)
@@ -1142,14 +1202,13 @@ object ArmorListeners : Listener {
 
     // ------------------------------ VEILED IN SHADOW ---------------------------------
     private fun veiledInShadowEnchantment(
-        defender: LivingEntity
-    ) {
-        val shadowLevelBlock = 15 - defender.location.block.lightFromBlocks
-        val shadowLevelSky = if (defender.world.isDayTime) { 0 }
-        else { 15 - defender.location.block.lightFromSky }
-        // add min shadow level
-        defender.noDamageTicks += minOf(shadowLevelBlock, shadowLevelSky)
-        // gain 15 ticks of immunity when in full darkness
+        defender: LivingEntity,
+        level: Int) {
+        val shadowLevelBlock = 10 - defender.location.block.lightFromBlocks + level
+        val shadowLevelSky = if (!defender.world.isDayTime) { 10 + level }
+        else { 10 - defender.location.block.lightFromSky + level }
+        defender.noDamageTicks += maxOf(minOf(shadowLevelBlock, shadowLevelSky), 0)
+        // gain 15 ticks of immunity when in full darkness with lvl 5
     }
 
     // ---------------------------------- VENGEFUL --------------------------------------
@@ -1181,13 +1240,13 @@ object ArmorListeners : Listener {
         if (player.getCooldown(horn.type) != 0) { return }
         val isPet = { entity: Entity -> entity is Tameable && entity.owner == player }
 
-        val allies = player.getNearbyEntities(8.0 + (level * 4), 6.0, 8.0 + (level * 4)).filter { it is Player || isPet(it) }
+        val allies = player.getNearbyEntities(16.0, 6.0, 16.0).filter { it is Player || isPet(it) }
         allies.forEach {
             it as LivingEntity
             it.addPotionEffects(
                 listOf(
-                    PotionEffect(PotionEffectType.INCREASE_DAMAGE, ((level * 2) + 2) * 20, 0),
-                    PotionEffect(PotionEffectType.SPEED, ((level * 2) + 2) * 20, 0)
+                    PotionEffect(PotionEffectType.INCREASE_DAMAGE, (4 + (level * 2)) * 20, 0),
+                    PotionEffect(PotionEffectType.SPEED, (4 + (level * 2)) * 20, 0)
                 )
             )
             it.world.spawnParticle(Particle.NOTE, it.location, 5, 0.3, 0.5, 0.3)

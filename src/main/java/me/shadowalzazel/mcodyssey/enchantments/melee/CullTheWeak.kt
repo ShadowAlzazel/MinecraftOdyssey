@@ -9,14 +9,7 @@ import org.bukkit.inventory.ItemStack
 object CullTheWeak : OdysseyEnchantment("cull_the_weak", "Cull the Weak", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            OdysseyEnchantments.RUPTURING_STRIKE -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {

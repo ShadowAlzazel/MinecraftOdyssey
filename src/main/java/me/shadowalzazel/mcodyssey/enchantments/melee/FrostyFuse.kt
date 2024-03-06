@@ -10,7 +10,7 @@ object FrostyFuse : OdysseyEnchantment("frosty_fuse", "Frosty Fuse", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.TAR_N_DIP, FIRE_ASPECT, OdysseyEnchantments.EXPLODING -> {
+            OdysseyEnchantments.TAR_N_DIP, FIRE_ASPECT -> {
                 true
             }
             else -> {

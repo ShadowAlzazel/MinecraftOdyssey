@@ -77,6 +77,9 @@ object MeleeListeners : Listener, EffectsManager {
                 OdysseyEnchantments.BANE_OF_THE_SWINE -> {
                     event.damage += baneOfTheSwineEnchantment(victim, enchant.value) * power
                 }
+                OdysseyEnchantments.BLITZ_SHIFT -> {
+                    blitzSwitchEnchantment(attacker, victim, enchant.value)
+                }
                 OdysseyEnchantments.BUZZY_BEES -> {
                     if (cooldownManager(attacker, "Buzzy Bees", buzzyBeesCooldown, 4.25)) {
                         buzzyBeesEnchantment(victim, enchant.value)
@@ -285,6 +288,20 @@ object MeleeListeners : Listener, EffectsManager {
         }
         return 0.0
     }
+    // ------------------------------- BLITZ_SWITCH -------------------------
+    private fun blitzSwitchEnchantment(
+        attacker: LivingEntity,
+        victim: LivingEntity,
+        level: Int
+    ) {
+        // MAYBE DO NEXT TIME YOU SNEAK???? OR TOGGLE WITH SNEAK
+        val attackerLocation = attacker.location.clone()
+        val victimLocation = victim.location.clone()
+        // or do dmg based on distance?
+        attacker.teleport(victimLocation)
+        victim.teleport(attackerLocation)
+    }
+
     // ------------------------------- BUZZY_BEES ------------------------------------
     private fun buzzyBeesEnchantment(
         victim: LivingEntity,
