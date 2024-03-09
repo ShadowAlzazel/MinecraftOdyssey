@@ -121,6 +121,9 @@ object ItemModels {
 
     const val RAINBOW_TROUT: Int = 6908121
     const val BLUEGILL: Int = 6908122
+    const val DOG_SPINACH: Int = 6908123
+    const val DOG_SIZZLE_CRISP: Int = 6908124
+    const val DOG_MILK_BONE: Int = 6908125
 
     /* ---------------------------------------------------------------------------------------------- */
     /* ------------------------------------------MATERIALS------------------------------------------- */

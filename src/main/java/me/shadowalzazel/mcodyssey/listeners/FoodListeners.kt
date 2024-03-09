@@ -14,7 +14,7 @@ object FoodListeners : Listener {
 
     // Main Function for food related consumption events
     @EventHandler
-    fun eatingOdysseyFood(event: PlayerItemConsumeEvent) {
+    fun eatingFood(event: PlayerItemConsumeEvent) {
         // Buffed Golden Apples
         if (event.item.type == Material.ENCHANTED_GOLDEN_APPLE) {
             event.player.addPotionEffect(PotionEffect(PotionEffectType.REGENERATION, 20 * 20, 3))

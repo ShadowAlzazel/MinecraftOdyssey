@@ -185,4 +185,24 @@ object Foods {
         lore = listOf(Component.text("A common river fish", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.RAINBOW_TROUT)
 
+    val DOG_SPINACH = OdysseyItem(
+        name = "dog_spinach",
+        material = Material.COOKED_BEEF,
+        displayName = Component.text("Dog Spinach", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
+        lore = listOf(Component.text("Clifford is going to pack a punch", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.DOG_SPINACH)
+
+    val DOG_SIZZLE_CRISP = OdysseyItem(
+        name = "dog_sizzle_crisp",
+        material = Material.COOKED_BEEF,
+        displayName = Component.text("Dog Sizzle Crisp", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
+        lore = listOf(Component.text("Keeps your furry companions safe from fire", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.DOG_SIZZLE_CRISP)
+
+    val DOG_MILK_BONE = OdysseyItem(
+        name = "dog_milk_bone",
+        material = Material.COOKED_BEEF,
+        displayName = Component.text("Dog Milk Bone", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
+        lore = listOf(Component.text("Makes your furry companion an absolute unit", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.DOG_MILK_BONE)
 }
