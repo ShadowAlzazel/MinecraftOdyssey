@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.commands.admin
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
+import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import org.bukkit.Material
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -16,10 +17,24 @@ object EnchantGilded : CommandExecutor {
         if (sender.equipment.itemInMainHand.type == Material.AIR) return false
         // Enchant
         val level = args[1].toInt()
-        if (args[0] == "gravity_well") {
-            sender.equipment.itemInMainHand.addUnsafeEnchantment(OdysseyEnchantments.GRAVITY_WELL, level)
-        } else if (args[0] == "sculk_sensitive") {
-            sender.equipment.itemInMainHand.addUnsafeEnchantment(OdysseyEnchantments.SCULK_SENSITIVE, level)
+        // Switch
+        val enchantToAdd: OdysseyEnchantment? = when (args[0])  {
+            "gravity_well" -> {
+                OdysseyEnchantments.GRAVITY_WELL
+            }
+            "sculk_sensitive" -> {
+                OdysseyEnchantments.SCULK_SENSITIVE
+            }
+            else -> {
+                null
+            }
+        }
+        // Check
+        if (enchantToAdd != null) {
+            sender.equipment.itemInMainHand.addUnsafeEnchantment(enchantToAdd, level)
+        }
+        else {
+            return false
         }
         return true
     }
