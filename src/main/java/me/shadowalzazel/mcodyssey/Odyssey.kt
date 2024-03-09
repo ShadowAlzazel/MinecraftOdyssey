@@ -120,7 +120,8 @@ class Odyssey : JavaPlugin() {
             SnifferListeners,
             ArtisanListeners,
             RunesherdListeners,
-            EffectListeners
+            EffectListeners,
+            PetListener
         ).forEach { eventRegister(it) }
 
 

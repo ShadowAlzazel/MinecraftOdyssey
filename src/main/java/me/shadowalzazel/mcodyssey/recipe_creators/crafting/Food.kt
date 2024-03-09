@@ -29,7 +29,10 @@ class Food {
             fishNChipsRecipe(),
             fruitBowlRecipe(),
             coffeeRecipe(),
-            spiderEyeBobaRecipe()
+            spiderEyeBobaRecipe(),
+            dogSpinach(),
+            dogSizzleCrisp(),
+            dogMilkBone()
         )
     }
 
@@ -126,9 +129,6 @@ class Food {
         return someRecipe
     }
 
-    /*-----------------------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------------------*/
-
     private fun chocolateMochi(): ShapedRecipe {
         val result = Foods.CHOCOLATE_MOCHI.createItemStack(1)
         return ShapedRecipe(NamespacedKey(Odyssey.instance, "chocolate_mochi"), result).apply {
@@ -137,11 +137,6 @@ class Food {
             setIngredient('C', Material.COCOA_BEANS)
         }
     }
-
-
-
-    /*-----------------------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------------------*/
 
     private fun fishNChipsRecipe(): ShapedRecipe {
         val result = Foods.FISH_N_CHIPS.createItemStack(1)
@@ -192,6 +187,40 @@ class Food {
             setIngredient('C', Material.CARROT)
             setIngredient('K', Material.DRIED_KELP)
             setIngredient('S', Material.SALMON)
+        }
+    }
+
+    private fun dogSpinach(): ShapedRecipe {
+        val result = Foods.DOG_SPINACH.createItemStack(2)
+        return ShapedRecipe(NamespacedKey(Odyssey.instance, "dog_spinach"), result).apply {
+            shape(" K ", "KBK", " K ")
+            setIngredient('K', Material.KELP)
+            setIngredient('B', Material.COOKED_BEEF)
+        }
+    }
+
+    private fun dogSizzleCrisp(): ShapedRecipe {
+        val result = Foods.DOG_SIZZLE_CRISP.createItemStack(2)
+        return ShapedRecipe(NamespacedKey(Odyssey.instance, "dog_sizzle_crisp"), result).apply {
+            shape("RMR", "MBM", "RMR")
+            setIngredient('R', Material.REDSTONE)
+            setIngredient('M', Material.MAGMA_CREAM)
+            setIngredient('B', Material.COOKED_BEEF)
+        }
+    }
+
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
+    // SHAPELESS
+
+    private fun dogMilkBone(): ShapelessRecipe {
+        val result = Foods.DOG_MILK_BONE.createItemStack(1)
+        return ShapelessRecipe(NamespacedKey(Odyssey.instance, "dog_milk_bone"), result).apply {
+            addIngredient(Material.MILK_BUCKET)
+            addIngredient(Material.BONE)
+            addIngredient(Material.COOKED_BEEF)
+            addIngredient(Material.EGG)
+            addIngredient(Material.HONEY_BOTTLE)
         }
     }
 
