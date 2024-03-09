@@ -7,11 +7,15 @@ description: A server side expansion pack for a new minecraft adventure!
 
 commands:
   summon_boss:
-    description: "Summons and Odyssey Boss"
+    description: "Summons an Odyssey boss."
     usage: /<command>
     permission: op
   enchant_gilded:
-    description: "Applies a gilded Enchant"
+    description: "Applies the gilded enchantment to the current item in the main hand."
+    usage: /<command>
+    permission: op
+  give_item:
+    description: "Gives an Odyssey custom item."
     usage: /<command>
     permission: op
   place_feature_archaic_seed:
