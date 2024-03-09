@@ -18,6 +18,8 @@ object EnchantGilded : CommandExecutor {
         val level = args[1].toInt()
         if (args[0] == "gravity_well") {
             sender.equipment.itemInMainHand.addUnsafeEnchantment(OdysseyEnchantments.GRAVITY_WELL, level)
+        } else if (args[0] == "sculk_sensitive") {
+            sender.equipment.itemInMainHand.addUnsafeEnchantment(OdysseyEnchantments.SCULK_SENSITIVE, level)
         }
         return true
     }
