@@ -4,17 +4,36 @@ import me.shadowalzazel.mcodyssey.constants.AttributeIDs
 import me.shadowalzazel.mcodyssey.constants.AttributeTags
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
+import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
 interface AttributeManager {
 
+
+    fun LivingEntity.addHealthAttribute(
+        value: Double,
+        name: String = "extra_health",
+        id: UUID = AttributeIDs.EXTRA_HEALTH_GENERIC)
+    {
+        val modifier = AttributeModifier(
+            id,
+            name,
+            value,
+            AttributeModifier.Operation.ADD_NUMBER
+        )
+        val entityHealth = getAttribute(Attribute.GENERIC_MAX_HEALTH)
+        entityHealth?.addModifier(modifier)
+    }
+
+
     fun ItemStack.addGenericAttribute(
 
     ) {
 
     }
+
 
     fun ItemStack.addAttackDamageAttribute(
         value: Double,

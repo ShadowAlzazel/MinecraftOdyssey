@@ -4,6 +4,7 @@ import me.shadowalzazel.mcodyssey.bosses.BossManager
 import me.shadowalzazel.mcodyssey.bosses.hog_rider.HogRiderListeners
 import me.shadowalzazel.mcodyssey.bosses.the_ambassador.AmbassadorListeners
 import me.shadowalzazel.mcodyssey.commands.admin.EnchantGilded
+import me.shadowalzazel.mcodyssey.commands.admin.GiveItem
 import me.shadowalzazel.mcodyssey.commands.admin.SummonBoss
 import me.shadowalzazel.mcodyssey.commands.spells.PlaceFeatureArchaicSeed
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
@@ -128,6 +129,7 @@ class Odyssey : JavaPlugin() {
         getCommand("summon_boss")?.setExecutor(SummonBoss)
         getCommand("enchant_gilded")?.setExecutor(EnchantGilded)
         getCommand("place_feature_archaic_seed")?.setExecutor(PlaceFeatureArchaicSeed)
+        getCommand("give_item")?.setExecutor(GiveItem)
 
         //server.pluginManager.registerEvents(OdysseyPhenomenaListeners, this)
         //playersRequiredForLuck = 4
