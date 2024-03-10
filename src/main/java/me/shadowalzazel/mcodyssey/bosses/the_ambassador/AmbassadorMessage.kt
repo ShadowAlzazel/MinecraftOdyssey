@@ -2,10 +2,10 @@ package me.shadowalzazel.mcodyssey.bosses.the_ambassador
 
 enum class AmbassadorMessage(val text: String) {
 
-    MAX_LIKENESS(", I am sorry. I can not receive any more pleasantries from you."),
+    MAX_LIKENESS(", I am sorry. I cannot receive any more pleasantries from you."),
     WAIT_FOR_GIFT_COOLDOWN(", please wait. Still... thinking..."),
     SKY_BOMBARD_ATTACK("I like fireworks, the heavens and gifts. But not you."),
-    GRAVITY_LAUNCH_ATTACK("The universe is unfathomable. Your are just mundane..."),
+    GRAVITY_LAUNCH_ATTACK("The universe is unfathomable. You are just mundane..."),
     HIJACK_ATTACK("It appears your friends are actually your foes..."),
     FALLING_SINGULARITY_ATTACK("The point is that it's super massive..."),
     ELYTRA_PULL_BACK_ATTACK("You dare use such puny voidflight apparatus."),
