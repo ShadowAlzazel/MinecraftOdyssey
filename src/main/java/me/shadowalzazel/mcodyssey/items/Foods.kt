@@ -79,10 +79,6 @@ object Foods {
         lore = listOf(Component.text("Anywhere but here", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.CHORUS_FRUIT_COOKIE)
 
-    /*-----------------------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------------------*/
-
-
     val FRENCH_TOAST = OdysseyItem(
         name = "french_toast",
         material = Material.BREAD,
@@ -96,9 +92,6 @@ object Foods {
         displayName = Component.text("Sugary Bread", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
         lore = listOf(Component.text("Sugary Bread!", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.SUGARY_BREAD)
-
-    /*-----------------------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------------------*/
 
     val CRYSTAL_CANDY = OdysseyItem(
         name = "crystal_candy",
@@ -163,14 +156,6 @@ object Foods {
         lore = listOf(Component.text("A Chocolate Sweet", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.CHOCOLATE_MOCHI)
 
-
-    // FROGSPAWN POTION
-    // -> for more potions
-    // frogspawn boba?
-
-    /*-----------------------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------------------*/
-
     val RAINBOW_TROUT = OdysseyItem(
         name = "rainbow_trout",
         material = Material.SALMON,
@@ -184,6 +169,8 @@ object Foods {
         displayName = Component.text("Bluegill", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
         lore = listOf(Component.text("A common river fish", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.RAINBOW_TROUT)
+
+    /*-----------------------------------------------------------------------------------------------*/
 
     val DOG_SPINACH = OdysseyItem(
         name = "dog_spinach",

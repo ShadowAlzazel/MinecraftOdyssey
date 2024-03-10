@@ -88,6 +88,22 @@ object Runesherds : RunesherdManager {
     )
 
     // FLOWER
+    val CLAY_FLOWER = OdysseyItem(
+        name = "clay_totem",
+        material = Material.CLAY_BALL,
+        displayName = Component.text("Clay Totem", TextColor.color(85, 67 ,129), TextDecoration.ITALIC),
+        lore = listOf(Component.text("An un matured runeware runesherds", TextColor.color(155, 155, 155)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.CLAY_TOTEM
+    )
+
+    val GLAZED_RUNE_FLOWER = OdysseyItem(
+        name = "glazed_rune_totem",
+        material = Material.BRICK,
+        displayName = Component.text("Glazed Rune Totem", TextColor.color(85, 67 ,129), TextDecoration.ITALIC),
+        lore = listOf(Component.text("A matured runeware", TextColor.color(155, 155, 155)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.GLAZED_RUNE_TOTEM
+    )
+
 
     // ROD
 

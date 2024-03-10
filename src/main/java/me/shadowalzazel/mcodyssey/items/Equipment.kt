@@ -16,14 +16,13 @@ object Equipment {
         lore = listOf(Component.text("A sublime sheath for a katana.", TextColor.color(191, 186, 139)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.SAYA)
 
-    // Basic ranged book
+    // Basic ranged wand to trigger on book
     val ARCANE_WAND = OdysseyItem(
         name = "arcane_wand",
         material = Material.WOODEN_SHOVEL,
         displayName = Component.text("Arcane Wand", TextColor.color(141, 109, 209), TextDecoration.ITALIC),
         lore = listOf(Component.text("An arcane tool for using gilded books.", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.ARCANE_WAND) // TODO: Work with tome of polymerization and Volumes
-
 
     val WARPING_WAND = OdysseyItem(
         name = "warping_wand",

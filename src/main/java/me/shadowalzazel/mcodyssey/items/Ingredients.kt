@@ -51,9 +51,6 @@ object Ingredients {
         lore = listOf(Component.text("Alexandrite", TextColor.color(39, 89, 111)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.ALEXANDRITE)
 
-    /*-----------------------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------------------*/
-
     val IRRADIATED_SHARD = OdysseyItem(
         name = "irradiated_shard",
         material = Material.PRISMARINE_SHARD,
