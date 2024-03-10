@@ -2,13 +2,13 @@ package me.shadowalzazel.mcodyssey.constants
 
 object AttributeTags {
 
-    // Mobs
+    // MOBS
     const val MOB_HEALTH = "odyssey.mob_health"
     const val MOB_ATTACK_DAMAGE = "odyssey.mob_attack_damage"
     const val MOB_SCALE = "odyssey.mob_scale"
     const val MOB_MOVEMENT_SPEED = "odyssey.mob_movement_speed"
 
-    // Players
+    // PLAYERS
     const val PLAYER_GENERIC_HEALTH = "odyssey.player_generic_health"
     const val PLAYER_ATTACK_DAMAGE = "odyssey.player_attack_damage"
     const val PLAYER_SCALE = "odyssey.player_scale"

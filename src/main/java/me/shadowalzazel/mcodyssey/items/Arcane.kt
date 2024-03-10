@@ -31,8 +31,6 @@ object Arcane {
         return newBook
     }
 
-    // IDEA: ITEM THAT RESETS ENCHANT SEED?
-
     val ARCANE_BOOK = OdysseyItem(
         name = "arcane_book",
         material = Material.BOOK,
@@ -137,6 +135,5 @@ object Arcane {
             Component.text("Applies the stored enchantments to an item with no cost", TextColor.color(150, 228, 148))
                 .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.TOME_OF_POLYMERIZATION)
-
 
 }

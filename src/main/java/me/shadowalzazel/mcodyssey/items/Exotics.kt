@@ -10,8 +10,6 @@ import org.bukkit.enchantments.Enchantment
 
 object Exotics {
 
-    // Boss Weapons
-
     // Ambassador
     val KINETIC_BLASTER = OdysseyItem(
         name = "kinetic_blaster",

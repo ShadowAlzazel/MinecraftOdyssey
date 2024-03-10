@@ -22,9 +22,7 @@ class Food {
             createSugaryBreadRecipe(),
             createBaconRecipe(),
             createFrenchToastRecipe(),
-
             chocolateMochi(),
-
             salmonRollRecipe(),
             fishNChipsRecipe(),
             fruitBowlRecipe(),
@@ -37,7 +35,7 @@ class Food {
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------------------*/
+    // Shaped
 
     private fun createBeetrootCookieRecipe(): ShapedRecipe {
         val someResult = Foods.BEETROOT_COOKIE.createItemStack(1)
@@ -210,8 +208,7 @@ class Food {
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------------------*/
-    // SHAPELESS
+    // Shapeless
 
     private fun dogMilkBone(): ShapelessRecipe {
         val result = Foods.DOG_MILK_BONE.createItemStack(1)
@@ -225,8 +222,7 @@ class Food {
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------------------*/
-    // CAMPFIRE
+    // Campfire
 
     private fun createBaconRecipe(): CampfireRecipe {
         val someResult = Foods.BACON.createItemStack(1)
@@ -237,8 +233,7 @@ class Food {
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------------------*/
-    // SMOKING
+    // Smoking
 
     private fun createFrenchToastRecipe(): SmokingRecipe {
         val someResult = Foods.FRENCH_TOAST.createItemStack(1)

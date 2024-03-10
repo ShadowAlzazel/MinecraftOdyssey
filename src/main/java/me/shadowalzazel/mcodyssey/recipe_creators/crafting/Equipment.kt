@@ -16,7 +16,7 @@ class Equipment {
         )
     }
 
-    /*----------------------------------------ARCANE-----------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
 
     private fun arcaneWandRecipe(): ShapedRecipe {
         val result = Equipment.ARCANE_WAND.createItemStack(1)

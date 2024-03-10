@@ -38,7 +38,6 @@ class Misc {
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------------------*/
 
     private fun tempRunesherdRecipe(): ShapedRecipe {
         val result = Runesherds.FORCE_RUNESHERD.createSherdStack()

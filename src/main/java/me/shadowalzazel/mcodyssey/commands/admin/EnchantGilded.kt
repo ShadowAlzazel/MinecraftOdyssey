@@ -2,6 +2,7 @@ package me.shadowalzazel.mcodyssey.commands.admin
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import me.shadowalzazel.mcodyssey.listeners.EnchantingListeners.updateSlotLore
 import org.bukkit.Material
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -289,7 +290,9 @@ object EnchantGilded : CommandExecutor {
         }
         // Check
         if (enchantToAdd != null) {
-            sender.equipment.itemInMainHand.addUnsafeEnchantment(enchantToAdd, level)
+            val item = sender.equipment.itemInMainHand
+            item.addUnsafeEnchantment(enchantToAdd, level)
+            item.updateSlotLore(item.enchantments)
         }
         else {
             return false

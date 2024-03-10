@@ -100,11 +100,11 @@ class Weapons {
             bambooStaffRecipe(),
             boneStaffRecipe(),
             createWoodenStaffRecipe(),
-            blazeRodStaffRecipe(),
-            )
+            blazeRodStaffRecipe()
+        )
     }
 
-    /*----------------------------------------KATANAS-----------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
 
     private fun woodenKatanaRecipe(): ShapedRecipe {
         val result = Weapons.WOODEN_KATANA.createWeapon()
@@ -171,8 +171,7 @@ class Weapons {
         return recipe
     }
 
-
-    /*----------------------------------------CLAYMORES-----------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
 
     private fun woodenClaymoreRecipe(): ShapedRecipe {
         val result = Weapons.WOODEN_CLAYMORE.createWeapon()
@@ -235,8 +234,7 @@ class Weapons {
         return someRecipe
     }
 
-
-    /*----------------------------------------SPEARS-----------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
 
     private fun woodenSpearRecipe(): ShapedRecipe {
         val someResult = Weapons.WOODEN_SPEAR.createWeapon()
@@ -298,7 +296,7 @@ class Weapons {
         return someRecipe
     }
 
-    /*----------------------------------------DAGGERS-----------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
 
     private fun woodenDaggerRecipe(): ShapedRecipe {
         val someResult = Weapons.WOODEN_DAGGER.createWeapon()
@@ -360,7 +358,8 @@ class Weapons {
         return someRecipe
     }
 
-    /*----------------------------------------SICKLES-----------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
+
     private fun woodenSickleRecipe(): ShapedRecipe {
         val someResult = Weapons.WOODEN_SICKLE.createWeapon()
         val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "wooden_sickle_crafting"), someResult).apply {
@@ -421,7 +420,8 @@ class Weapons {
         return someRecipe
     }
 
-    /*----------------------------------------CHAKRAMS-----------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
+
     private fun woodenChakramRecipe(): ShapedRecipe {
         val someResult = Weapons.WOODEN_CHAKRAM.createWeapon()
         val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "wooden_chakram_crafting"), someResult).apply {
@@ -487,7 +487,7 @@ class Weapons {
         return someRecipe
     }
 
-    /*----------------------------------------RAPIERS-----------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
 
     private fun woodenRapierRecipe(): ShapedRecipe {
         val someResult = Weapons.WOODEN_RAPIER.createWeapon()
@@ -550,7 +550,7 @@ class Weapons {
     }
 
 
-    /*----------------------------------------CUTLASSES-----------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
 
     private fun woodenCutlassRecipe(): ShapedRecipe {
         val someResult = Weapons.WOODEN_CUTLASS.createWeapon()
@@ -616,7 +616,7 @@ class Weapons {
         return someRecipe
     }
 
-    /*----------------------------------------SABERS-----------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
 
     private fun woodenSaberRecipe(): ShapedRecipe {
         val someResult = Weapons.WOODEN_SABER.createWeapon()
@@ -677,7 +677,7 @@ class Weapons {
         return someRecipe
     }
 
-    /*----------------------------------------HALBERDS-----------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
 
     private fun woodenHalberdRecipe(): ShapedRecipe {
         val someResult = Weapons.WOODEN_HALBERD.createWeapon()
@@ -744,7 +744,7 @@ class Weapons {
         return someRecipe
     }
 
-    /*----------------------------------------LANCES-----------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
 
     private fun woodenLanceRecipe(): ShapedRecipe {
         val someResult = Weapons.WOODEN_LANCE.createWeapon()
@@ -811,7 +811,7 @@ class Weapons {
         return someRecipe
     }
 
-    /*----------------------------------------WARHAMMERS-----------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
 
     private fun woodenWarhammerRecipe(): ShapedRecipe {
         val result = Weapons.WOODEN_WARHAMMER.createWeapon()
@@ -873,7 +873,7 @@ class Weapons {
         return recipe
     }
 
-    /*----------------------------------------WARHAMMERS-----------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
 
     private fun woodenScytheRecipe(): ShapedRecipe {
         val result = Weapons.WOODEN_SCYTHE.createWeapon()
@@ -940,7 +940,7 @@ class Weapons {
         return recipe
     }
 
-    /*----------------------------------------LONG AXE-----------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
 
     private fun woodenLongAxeRecipe(): ShapedRecipe {
         val someResult = Weapons.WOODEN_LONG_AXE.createWeapon()
@@ -1002,7 +1002,7 @@ class Weapons {
         return someRecipe
     }
 
-    /*----------------------------------------STAFFS-----------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
 
     private fun bambooStaffRecipe(): ShapedRecipe {
         val someResult = Weapons.BAMBOO_STAFF.createWeapon()
@@ -1052,8 +1052,7 @@ class Weapons {
         return someRecipe
     }
 
-    // ---------------------------------------------------------------------------------------
-    /*--------------------------------------ZWEIHANDER---------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
 
     private fun netheriteZweihanderRecipe(): ShapedRecipe {
         val someResult = Weapons.NETHERITE_ZWEIHANDER.createWeapon()
@@ -1064,6 +1063,5 @@ class Weapons {
         }
         return someRecipe
     }
-
 
 }
