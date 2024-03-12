@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.enchantments.armor
 
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -21,6 +22,16 @@ object Sporeful : OdysseyEnchantment("sporeful", "Sporeful", 3) {
                 false
             }
         }
+    }
+
+    override fun getDescriptionToolTip(inputLevel: Int): List<Component> {
+        val amount1 = 2 + (inputLevel * 2)
+        val text1 = "Getting hit applies Poison 1 for $amount1=[2 + (level x 2)] seconds"
+        val text2 = "and Nausea 2 for $amount1=[2 + (level x 2)] seconds."
+        return listOf(
+            getGrayComponentText(text1),
+            getGrayComponentText(text2)
+        )
     }
 
 }

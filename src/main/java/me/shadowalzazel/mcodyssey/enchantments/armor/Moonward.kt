@@ -25,7 +25,8 @@ object Moonward : OdysseyEnchantment("moonward", "Moonward", 1) {
             Material.NETHERITE_HELMET, Material.DIAMOND_HELMET, Material.IRON_HELMET, Material.GOLDEN_HELMET, Material.CHAINMAIL_HELMET, Material.LEATHER_HELMET,
             Material.NETHERITE_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.IRON_CHESTPLATE, Material.GOLDEN_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, Material.LEATHER_CHESTPLATE,
             Material.NETHERITE_LEGGINGS, Material.DIAMOND_LEGGINGS, Material.IRON_LEGGINGS, Material.GOLDEN_LEGGINGS, Material.CHAINMAIL_LEGGINGS, Material.LEATHER_LEGGINGS,
-            Material.NETHERITE_BOOTS, Material.DIAMOND_BOOTS, Material.IRON_BOOTS, Material.GOLDEN_BOOTS, Material.CHAINMAIL_BOOTS, Material.LEATHER_BOOTS -> {
+            Material.NETHERITE_BOOTS, Material.DIAMOND_BOOTS, Material.IRON_BOOTS, Material.GOLDEN_BOOTS, Material.CHAINMAIL_BOOTS, Material.LEATHER_BOOTS,
+            Material.ELYTRA -> {
                 true
             }
             else -> {
@@ -36,8 +37,8 @@ object Moonward : OdysseyEnchantment("moonward", "Moonward", 1) {
 
     override fun getDescriptionToolTip(inputLevel: Int): List<Component> {
         val amount = inputLevel
-        val text1 = "Applies Wither $amount=[level] for 5 seconds to enemies"
-        val text2 = "that attacked the wearer."
+        val text1 = "Regenerates $amount=[level] durability per second"
+        val text2 = "at night when the moon is visible."
         return listOf(
             getGrayComponentText(text1),
             getGrayComponentText(text2),

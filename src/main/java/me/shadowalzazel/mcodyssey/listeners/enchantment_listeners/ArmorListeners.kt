@@ -17,6 +17,8 @@ import me.shadowalzazel.mcodyssey.tasks.SpeedySpursTask
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
+import org.bukkit.Vibration
+import org.bukkit.Vibration.Destination.EntityDestination
 import org.bukkit.attribute.Attribute
 import org.bukkit.block.data.type.Leaves
 import org.bukkit.entity.*
@@ -40,6 +42,11 @@ import org.bukkit.inventory.meta.Damageable as Repairable
 object ArmorListeners : Listener {
 
     private val moonwardPhasePlayers = mutableListOf<UUID>()
+    // Pollen
+    private val pollenMaxHeadPlayers = mutableMapOf<UUID, Int>()
+    private val pollenMaxChestPlayers = mutableMapOf<UUID, Int>()
+    private val pollenMaxLegsPlayers = mutableMapOf<UUID, Int>()
+    private val pollenMaxBootsPlayers = mutableMapOf<UUID, Int>()
 
     // Main function for enchantments relating to entity damage for armor
     @EventHandler
@@ -152,6 +159,9 @@ object ArmorListeners : Listener {
                     }
                     OdysseyEnchantments.RELENTLESS -> {
                         relentlessEnchantment(defender, enchant.value)
+                    }
+                    OdysseyEnchantments.ROOT_BOOTS -> {
+                        event.damage -= rootBootsDefenseHandler(defender, enchant.value)
                     }
                     OdysseyEnchantments.VEILED_IN_SHADOW -> {
                         veiledInShadowEnchantment(defender, enchant.value)
@@ -422,7 +432,7 @@ object ArmorListeners : Listener {
             for (enchant in boots!!.enchantments) {
                 when (enchant.key) {
                     OdysseyEnchantments.ROOT_BOOTS -> {
-                        event.acceleration.multiply(rootBootsHitEnchantment(defender, enchant.value))
+                        event.acceleration.multiply(rootBootsKnockbackHandler(defender, enchant.value))
                     }
                 }
             }
@@ -433,12 +443,39 @@ object ArmorListeners : Listener {
     @EventHandler
     fun sneakHandler(event: PlayerToggleSneakEvent) {
         val sneaker = event.player
+        // Whens
+        if (sneaker.equipment.helmet?.hasItemMeta() == true) {
+            val helmet = sneaker.equipment.helmet
+            for (enchant in helmet!!.enchantments) {
+                when (enchant.key) {
+                    OdysseyEnchantments.POLLEN_GUARD -> {
+                        pollenGuardSneakEnchantment(sneaker, enchant.value, pollenMaxHeadPlayers, event.isSneaking)
+                    }
+                    OdysseyEnchantments.SCULK_SENSITIVE -> {
+                        sculkSensitiveSneakEnchantment(sneaker, enchant.value, event.isSneaking)
+                    }
+                }
+            }
+        }
+        if (sneaker.equipment.chestplate?.hasItemMeta() == true) {
+            val chestplate = sneaker.equipment.chestplate
+            for (enchant in chestplate!!.enchantments) {
+                when (enchant.key) {
+                    OdysseyEnchantments.POLLEN_GUARD -> {
+                        pollenGuardSneakEnchantment(sneaker, enchant.value, pollenMaxChestPlayers, event.isSneaking)
+                    }
+                }
+            }
+        }
         if (sneaker.equipment.leggings?.hasItemMeta() == true) {
             val leggings = sneaker.equipment.leggings
             for (enchant in leggings!!.enchantments) {
                 when (enchant.key) {
-                    OdysseyEnchantments.ROOT_BOOTS -> {
+                    OdysseyEnchantments.LEAP_FROG -> {
                         leapFrogSneakEnchantment(sneaker, event.isSneaking)
+                    }
+                    OdysseyEnchantments.POLLEN_GUARD -> {
+                        pollenGuardSneakEnchantment(sneaker, enchant.value, pollenMaxLegsPlayers, event.isSneaking)
                     }
                 }
             }
@@ -447,19 +484,20 @@ object ArmorListeners : Listener {
             val boots = sneaker.equipment.boots
             for (enchant in boots!!.enchantments) {
                 when (enchant.key) {
+                    OdysseyEnchantments.POLLEN_GUARD -> {
+                        pollenGuardSneakEnchantment(sneaker, enchant.value, pollenMaxBootsPlayers, event.isSneaking)
+                    }
                     OdysseyEnchantments.ROOT_BOOTS -> {
                         rootBootsSneakEnchantment(sneaker, enchant.value, event.isSneaking)
                     }
                     OdysseyEnchantments.STATIC_SOCKS -> {
-                        // Trigger on one toggle only
-                        staticSocksSneakEnchantment(sneaker, enchant.value)
+                        staticSocksSneakEnchantment(sneaker, enchant.value)  // Trigger on one toggle only
                     }
                 }
             }
         }
 
         // After many charges -> when hit -> do static discharge
-
         // Set timer -> if has not moved -> add is rooted
     }
 
@@ -542,6 +580,7 @@ object ArmorListeners : Listener {
         )
     }
 
+    // ------------------------------- BLURCISE ------------------------------------
     private fun blurciseEnchantment(
         defender: LivingEntity,
         level: Int
@@ -927,9 +966,11 @@ object ArmorListeners : Listener {
     private fun pollenGuardSneakEnchantment(
         defender: LivingEntity,
         level: Int,
+        dict: MutableMap<UUID, Int>,
         sneaking: Boolean
     ) {
         // Sentries
+        if (!sneaking) return
         if (defender.isSwimming) return
         if (defender.isRiptiding) return
 
@@ -938,34 +979,25 @@ object ArmorListeners : Listener {
             Material.ALLIUM, Material.AZURE_BLUET, Material.RED_TULIP, Material.CORNFLOWER, Material.LILY_OF_THE_VALLEY,
             Material.ORANGE_TULIP, Material.PINK_TULIP, Material.WHITE_TULIP, Material.OXEYE_DAISY,
             Material.LILAC, Material.SUNFLOWER, Material.ROSE_BUSH, Material.PEONY, Material.TORCHFLOWER, Material.WITHER_ROSE,
-            Material.PINK_PETALS
+            Material.PINK_PETALS, Material.PITCHER_POD
         )
 
-        /*
-        val blockUnder = defender.location.clone().add(0.0, -1.0, 0.0).block
-        if (blockUnder.type !in flowers) return
+        val block = defender.location.block
+        if (block.type !in flowers) return
 
-        if (sneaking) {
-            defender.scoreboardTags.add(EntityTags.ROOT_BOOTS_ROOTED)
-            defender.world.playSound(defender.location, Sound.BLOCK_MANGROVE_ROOTS_PLACE, 2.5F, 1.5F)
-            defender.noDamageTicks = 5
+        var pollenStacks = defender.getIntTag(EntityTags.POLLEN_GUARD_STACKS)
+        if (pollenStacks == null) {
+            defender.setIntTag(EntityTags.POLLEN_GUARD_STACKS, 0)
+            pollenStacks = 0
         }
-        else {
-            defender.scoreboardTags.remove(EntityTags.ROOT_BOOTS_ROOTED)
+        // Set item max
+        dict[defender.uniqueId] = level
+        val maxStacks = ((pollenMaxHeadPlayers[defender.uniqueId] ?: 0) + (pollenMaxChestPlayers[defender.uniqueId] ?: 0)
+                + (pollenMaxLegsPlayers[defender.uniqueId] ?: 0) + (pollenMaxBootsPlayers[defender.uniqueId] ?: 0))
+        if (pollenStacks < maxStacks) {
+            pollenStacks += 1
+            defender.setIntTag(EntityTags.POLLEN_GUARD_STACKS, pollenStacks)
         }
-
-        if (defender.scoreboardTags.contains(EntityTags.STATIC_SOCKS_CHARGING)) {
-            val pollen = defender.getIntTag(EntityTags.STATIC_SOCKS_CHARGE)!!
-            if (charge < 2 * level) {
-                defender.setIntTag(EntityTags.STATIC_SOCKS_CHARGE, charge + 1)
-            }
-            defender.world.spawnParticle(Particle.ELECTRIC_SPARK, defender.location, 5 + (charge * 1), 0.4, 0.3, 0.4)
-        } else {
-            defender.addScoreboardTag(EntityTags.STATIC_SOCKS_CHARGING)
-            defender.setIntTag(EntityTags.STATIC_SOCKS_CHARGE, 0)
-        }
-
-         */
     }
 
     // ------------------------------- POTION_BARRIER ------------------------------------
@@ -1030,7 +1062,7 @@ object ArmorListeners : Listener {
     }
 
     // ------------------------------- ROOT_BOOTS -------------------------------
-    private fun rootBootsHitEnchantment(defender: LivingEntity, level: Int): Double {
+    private fun rootBootsKnockbackHandler(defender: LivingEntity, level: Int): Double {
         // Sentries
         if (defender.isSwimming) return 1.0
         if (defender.isRiptiding) return 1.0
@@ -1051,6 +1083,23 @@ object ArmorListeners : Listener {
         return maxOf((1.0 - (rootValue * blockMultiplier)), 0.0)
     }
 
+    private fun rootBootsDefenseHandler(defender: LivingEntity, level: Int): Double {
+        // Sentries
+        if (defender.isSwimming) return 1.0
+        if (defender.isRiptiding) return 1.0
+
+        // blocks
+        val rootBlocks = listOf(Material.DIRT, Material.ROOTED_DIRT, Material.COARSE_DIRT,
+            Material.MANGROVE_ROOTS, Material.MUDDY_MANGROVE_ROOTS, Material.MUD,
+            Material.FARMLAND, Material.GRASS_BLOCK, Material.MYCELIUM)
+
+        val blockUnder = defender.location.clone().add(0.0, -1.0, 0.0).block
+        val blockValue = if (blockUnder.type in rootBlocks) { level.toDouble() } else { 0.0 }
+        val shiftValue = if (defender.scoreboardTags.contains(EntityTags.ROOT_BOOTS_ROOTED)) { level.toDouble() } else { 0.0 }
+
+        return blockValue + shiftValue
+    }
+
     private fun rootBootsSneakEnchantment(
         defender: LivingEntity,
         level: Int,
@@ -1063,13 +1112,27 @@ object ArmorListeners : Listener {
         if (sneaking) {
             defender.scoreboardTags.add(EntityTags.ROOT_BOOTS_ROOTED)
             defender.world.playSound(defender.location, Sound.BLOCK_MANGROVE_ROOTS_PLACE, 2.5F, 1.5F)
-            defender.noDamageTicks = 5
         }
         else {
             defender.scoreboardTags.remove(EntityTags.ROOT_BOOTS_ROOTED)
         }
     }
 
+    // ------------------------------- SCULK_SENSITIVE -------------------------------
+    private fun sculkSensitiveSneakEnchantment(
+        sneaker: LivingEntity,
+        level: Int,
+        sneaking: Boolean
+    ) {
+        if (!sneaking) return
+        val nearby = sneaker.world.getNearbyLivingEntities(sneaker.location, 5.0 + (level * 5)).filter { it != sneaker }
+        nearby.forEach {
+            val destination = EntityDestination(sneaker)
+            val distance = it.location.distance(sneaker.location)
+            val vibration = Vibration(destination, 7 + (0.3 * distance).toInt())
+            it.world.spawnParticle(Particle.VIBRATION, it.location, 2, vibration)
+        }
+    }
 
     // ------------------------------- SPEEDY_SPURS ------------------------------------
     private fun speedySpursEnchantment(rider: LivingEntity, mount: LivingEntity, enchantmentStrength: Int) {

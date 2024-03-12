@@ -112,7 +112,6 @@ object OdysseyEnchantments {
     val STELLAR_SHOWER: OdysseyEnchantment = StellarShower // TODO
     val TEMPORAL_TORRENT: OdysseyEnchantment = TemporalTorrent // TODO
 
-    // --------------------------------------------------------------
     val MELEE_SET = setOf(
         ASPHYXIATING_ASSAULT,
         ARCANE_CELL,

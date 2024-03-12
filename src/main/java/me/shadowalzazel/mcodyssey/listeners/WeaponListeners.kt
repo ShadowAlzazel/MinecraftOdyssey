@@ -1,8 +1,12 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import io.papermc.paper.event.entity.EntityLoadCrossbowEvent
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.constants.ItemModels
+import me.shadowalzazel.mcodyssey.constants.ItemTags
+import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.BLUDGEON_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.CLEAVE_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.LACERATE_MAP
@@ -11,6 +15,7 @@ import me.shadowalzazel.mcodyssey.constants.WeaponMaps.MIN_RANGE_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.PIERCE_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.REACH_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.SWEEP_MAP
+import me.shadowalzazel.mcodyssey.listeners.utility.LoadAutoCrossbow
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
@@ -23,9 +28,11 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
+import org.bukkit.event.entity.EntityShootBowEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.CrossbowMeta
+import org.bukkit.inventory.meta.PotionMeta
 
 // --------------------------------- NOTES --------------------------------
 // TODO: Mounted Bonus i.e. Cavalry Charges
@@ -359,22 +366,76 @@ object WeaponListeners : Listener {
     }
 
     /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------------------------*/
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    fun bowReadyArrowHandler(event: EntityShootBowEvent) {
+        // checks
+        val bow = event.bow ?: return
+        if (!bow.hasItemMeta()) return
+        if (!bow.itemMeta.hasCustomModelData()) return
+        //
+        when(bow.itemMeta.customModelData) {
+            ItemModels.AUTO_CROSSBOW -> {
+                autoCrossbowHandler(event)
+            }
+        }
+
+        /*
+        println("------------------------")
+        println("Crossbow: ${event.bow}.")
+        println("Arrow: ${event.projectile}.")
+        println("Consumes: ${event.shouldConsumeItem()}")
+         */
+    }
 
     @EventHandler
-    fun crossbowHandler(event: EntityLoadCrossbowEvent) {
+    fun crossbowLoadHandler(event: EntityLoadCrossbowEvent) {
         // Checks
         val crossbow = event.crossbow ?: return
         if (!crossbow.hasItemMeta()) return
         if (!crossbow.itemMeta.hasCustomModelData()) return
 
-        // Compact
+        // When
         when(crossbow.itemMeta.customModelData) {
             ItemModels.COMPACT_CROSSBOW -> {
                 compactCrossbowHandler(event)
             }
         }
-
     }
+
+    /*-----------------------------------------------------------------------------------------------*/
+
+    private fun autoCrossbowHandler(event: EntityShootBowEvent) {
+        val crossbow = event.bow ?: return
+        // Offhand
+        val offhand = event.entity.equipment?.itemInOffHand ?: return
+        //if (!offhand.hasItemMeta()) return
+        // Auto Crossbow
+        if (crossbow.itemMeta is CrossbowMeta) {
+            // Check if match
+            val crossbowMeta = crossbow.itemMeta as CrossbowMeta
+            if (crossbowMeta.chargedProjectiles.isEmpty()) return
+            val projectileMeta = crossbowMeta.chargedProjectiles[0].itemMeta
+            val loadedItems = mutableListOf<ItemStack>()
+            for (item in crossbowMeta.chargedProjectiles) {
+                loadedItems.add(item.clone())
+            }
+            // Matches
+            val isArrow = offhand.type == crossbowMeta.chargedProjectiles[0].type && projectileMeta !is PotionMeta && offhand.type != Material.FIREWORK_ROCKET
+            if (offhand.itemMeta == projectileMeta || isArrow) {
+                if (!crossbow.hasTag(ItemTags.AUTO_LOADER_LOADING)) {
+                    offhand.subtract(1)
+                    val task = LoadAutoCrossbow(event.entity, crossbow, loadedItems)
+                    task.runTaskLater(Odyssey.instance, 1)
+                }
+                crossbow.addTag(ItemTags.AUTO_LOADER_LOADING)
+            }
+        }
+    }
+
+
 
     private fun compactCrossbowHandler(event: EntityLoadCrossbowEvent) {
         val player = event.entity

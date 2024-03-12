@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.enchantments.armor
 
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -21,6 +22,17 @@ object Squidify : OdysseyEnchantment("squidify", "Squidify", 3) {
                 false
             }
         }
+    }
+
+    override fun getDescriptionToolTip(inputLevel: Int): List<Component> {
+        val amount1 = 2 + (inputLevel * 2)
+        val amount2 = inputLevel
+        val text1 = "Getting hit applies Blindness 1 for $amount1=[2 + (level x 2)] seconds"
+        val text2 = "and Slowness 2 for $amount2=[level] seconds."
+        return listOf(
+            getGrayComponentText(text1),
+            getGrayComponentText(text2)
+        )
     }
 
 }

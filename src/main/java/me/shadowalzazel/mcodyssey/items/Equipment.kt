@@ -21,14 +21,29 @@ object Equipment {
         name = "arcane_wand",
         material = Material.WOODEN_SHOVEL,
         displayName = Component.text("Arcane Wand", TextColor.color(141, 109, 209), TextDecoration.ITALIC),
-        lore = listOf(Component.text("An arcane tool for using gilded books.", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        lore = listOf(Component.text("The standard arcane tool for using gilded books at range.", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.ARCANE_WAND) // TODO: Work with tome of polymerization and Volumes
 
     val WARPING_WAND = OdysseyItem(
         name = "warping_wand",
-        material = Material.WOODEN_HOE,
-        displayName = Component.text("Warping Wand", TextColor.color(191, 186, 139), TextDecoration.ITALIC),
-        lore = listOf(Component.text("A warped arcane tool", TextColor.color(191, 186, 139)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        material = Material.WOODEN_SHOVEL,
+        displayName = Component.text("Warping Wand", TextColor.color(68, 160, 180), TextDecoration.ITALIC),
+        lore = listOf(Component.text("A warped arcane tool", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.WARPING_WAND)
+
+    // Crossbows
+    val COMPACT_CROSSBOW = OdysseyItem(
+        name = "compact_crossbow",
+        material = Material.CROSSBOW,
+        displayName = Component.text("Compact Crossbow", TextColor.color(214, 98, 153), TextDecoration.ITALIC),
+        lore = listOf(Component.text("A mini crossbow that can be loaded in the off hand.", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.COMPACT_CROSSBOW)
+
+    val AUTO_CROSSBOW = OdysseyItem(
+        name = "auto_crossbow",
+        material = Material.CROSSBOW,
+        displayName = Component.text("Full Auto Crossbow", TextColor.color(76, 51, 66), TextDecoration.ITALIC),
+        lore = listOf(Component.text("Reload ammo when shooting straight from the off hand!.", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.AUTO_CROSSBOW)
 
 }
