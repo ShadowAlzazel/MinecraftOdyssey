@@ -27,6 +27,7 @@ interface AttributeManager {
         entityHealth?.addModifier(modifier)
     }
 
+    /*-----------------------------------------------------------------------------------------------*/
 
     fun ItemStack.addGenericAttribute(
 

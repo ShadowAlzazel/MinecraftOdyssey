@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.enchantments.armor
 
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -23,5 +24,14 @@ object SculkSensitive : OdysseyEnchantment("sculk_sensitive", "Sculk Sensitive",
         }
     }
 
-    // TODO: Can see the movement of enemies???
+    override fun getDescriptionToolTip(inputLevel: Int): List<Component> {
+        val amount1 = 5 + (inputLevel * 5)
+        val text1 = "On sneak, sense moving entities within a"
+        val text2 = "$amount1=[5 + (level * 5)] block radius."
+        return listOf(
+            getGrayComponentText(text1),
+            getGrayComponentText(text2)
+        )
+    }
+
 }

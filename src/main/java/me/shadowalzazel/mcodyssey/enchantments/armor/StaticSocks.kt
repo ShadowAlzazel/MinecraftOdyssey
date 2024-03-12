@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.enchantments.armor
 
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -29,5 +30,17 @@ object StaticSocks : OdysseyEnchantment("static_socks", "Static Socks", 5) {
             }
         }
     }
+
+    override fun getDescriptionToolTip(inputLevel: Int): List<Component> {
+        val amount1 = inputLevel * 2
+        val amount2 = inputLevel
+        val text1 = "Gain a static charge every time you sneak maxed at $amount1=[level x 2]."
+        val text2 = "Attacking an entity discharges all stacks for $amount2=[level] damage."
+        return listOf(
+            getGrayComponentText(text1),
+            getGrayComponentText(text2)
+        )
+    }
+
 
 }

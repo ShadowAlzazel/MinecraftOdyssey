@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.enchantments.armor
 
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -24,6 +25,20 @@ object PollenGuard : OdysseyEnchantment("pollen_guard", "Pollen Guard", 3) {
                 false
             }
         }
+    }
+
+    override fun getDescriptionToolTip(inputLevel: Int): List<Component> {
+        val amount = inputLevel
+        val text1 = "Sneaking on a flower grants a stack of Pollen,"
+        val text2 = "up to $amount=[level] max stacks per item."
+        val text3 = "The next source of damage will be reduced by the"
+        val text4 = "stack amount and remove 1 Pollen. (This effect is shared)"
+        return listOf(
+            getGrayComponentText(text1),
+            getGrayComponentText(text2),
+            getGrayComponentText(text3),
+            getGrayComponentText(text4),
+        )
     }
 
 }

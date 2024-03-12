@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.enchantments.armor
 
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -28,6 +29,14 @@ object SpeedySpurs : OdysseyEnchantment("speedy_spurs", "Speedy Spurs", 3) {
                 false
             }
         }
+    }
+
+    override fun getDescriptionToolTip(inputLevel: Int): List<Component> {
+        val amount = inputLevel
+        val text1 = "Gives speed $amount=[level] to ridden entities."
+        return listOf(
+            getGrayComponentText(text1),
+        )
     }
 
 }

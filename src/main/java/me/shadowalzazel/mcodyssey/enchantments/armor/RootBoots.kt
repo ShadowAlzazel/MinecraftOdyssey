@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.enchantments.armor
 
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -28,6 +29,19 @@ object RootBoots : OdysseyEnchantment("root_boots", "Root Boots", 3) {
                 false
             }
         }
+    }
+
+    override fun getDescriptionToolTip(inputLevel: Int): List<Component> {
+        val amount1 = 0.2 + (inputLevel * 0.1)
+        val amount2 = inputLevel
+        val text1 = "Reduce Knockback by $amount1%=[0.2 + (level * 0.1) and"
+        val text2 = "reduce damage taken by $amount2=[level] when shifting OR"
+        val text3 = "on dirt/root related blocks. (These effects can stack)"
+        return listOf(
+            getGrayComponentText(text1),
+            getGrayComponentText(text2),
+            getGrayComponentText(text3)
+        )
     }
 
 }

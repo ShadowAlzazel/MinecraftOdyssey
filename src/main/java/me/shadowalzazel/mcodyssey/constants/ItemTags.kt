@@ -16,6 +16,7 @@ object ItemTags {
 
     // Utility
     const val ALCHEMY_ARTILLERY_LOADED: String = "alchemy_artillery_loaded"
+    const val AUTO_LOADER_LOADING: String = "odyssey.auto_loader_loading"
     const val IS_ENGRAVED: String = "odyssey.is_engraved"
     const val ENGRAVED_BY: String = "engraved_by"
     const val SOUL_STEEL_TOOL: String = "soul_steel_tool"

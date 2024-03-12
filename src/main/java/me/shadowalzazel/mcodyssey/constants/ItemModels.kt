@@ -143,12 +143,16 @@ object ItemModels {
     const val SOUL_SPICE: Int = 6906649
     const val SCULK_POINTER: Int = 6906677
 
-    //
+    // Off Hand
     const val SAYA: Int = 6903819
 
     // Wands
     const val ARCANE_WAND: Int = 6903910
     const val WARPING_WAND: Int = 6903911
+
+    // Crossbow
+    const val COMPACT_CROSSBOW: Int = 6905535
+    const val AUTO_CROSSBOW: Int = 6905536
 
     // Helmets
     const val HORNED_HELMET: Int = 6900773
@@ -192,9 +196,6 @@ object ItemModels {
     const val BONE_STAFF: Int = 6905794
     const val WOODEN_STAFF: Int = 6905795
     const val BLAZE_ROD_STAFF: Int = 6905796
-
-    // Crossbow
-    const val COMPACT_CROSSBOW: Int = 6905535
 
     // Soul Steel
     const val SOUL_STEEL_KATANA: Int = 6906644
