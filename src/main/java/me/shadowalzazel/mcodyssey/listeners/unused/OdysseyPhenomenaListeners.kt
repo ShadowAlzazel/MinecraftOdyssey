@@ -24,6 +24,8 @@ object OdysseyPhenomenaListeners : Listener {
         }
     }
 
+
+
     // Main function for creature related spawns regarding phenomena
     @EventHandler
     fun mainEntityPhenomenaSpawning(event: CreatureSpawnEvent) {

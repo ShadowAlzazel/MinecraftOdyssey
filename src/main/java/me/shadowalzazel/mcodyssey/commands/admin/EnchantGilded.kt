@@ -1,15 +1,15 @@
 package me.shadowalzazel.mcodyssey.commands.admin
 
+import me.shadowalzazel.mcodyssey.arcane.EnchantSlotManager
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
-import me.shadowalzazel.mcodyssey.listeners.EnchantingListeners.updateSlotLore
 import org.bukkit.Material
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-object EnchantGilded : CommandExecutor {
+object EnchantGilded : CommandExecutor, EnchantSlotManager {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
         if (sender !is Player) return false
@@ -292,7 +292,7 @@ object EnchantGilded : CommandExecutor {
         if (enchantToAdd != null) {
             val item = sender.equipment.itemInMainHand
             item.addUnsafeEnchantment(enchantToAdd, level)
-            item.updateSlotLore(item.enchantments)
+            item.createNewEnchantSlots()
         }
         else {
             return false

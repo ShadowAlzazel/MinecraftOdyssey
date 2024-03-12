@@ -9,13 +9,13 @@ import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
-interface AttributeManager {
+internal interface AttributeManager {
 
 
-    fun LivingEntity.addHealthAttribute(
+     fun LivingEntity.addHealthAttribute(
         value: Double,
-        name: String = "extra_health",
-        id: UUID = AttributeIDs.EXTRA_HEALTH_GENERIC)
+        name: String = AttributeTags.EXTRA_HEALTH_GENERIC,
+        id: UUID = AttributeIDs.EXTRA_HEALTH_GENERIC_UUID)
     {
         val modifier = AttributeModifier(
             id,
@@ -23,9 +23,64 @@ interface AttributeManager {
             value,
             AttributeModifier.Operation.ADD_NUMBER
         )
-        val entityHealth = getAttribute(Attribute.GENERIC_MAX_HEALTH)
-        entityHealth?.addModifier(modifier)
+        val attribute = getAttribute(Attribute.GENERIC_MAX_HEALTH) ?: return
+        if (!attribute.modifiers.contains(modifier)) {
+            attribute.addModifier(modifier)
+        }
+
     }
+
+    fun LivingEntity.addAttackAttribute(
+        value: Double,
+        name: String = AttributeTags.EXTRA_ATTACK_GENERIC,
+        id: UUID = AttributeIDs.EXTRA_ATTACK_GENERIC_UUID)
+    {
+        val modifier = AttributeModifier(
+            id,
+            name,
+            value,
+            AttributeModifier.Operation.ADD_NUMBER
+        )
+        val attribute = getAttribute(Attribute.GENERIC_ATTACK_DAMAGE) ?: return
+        if (!attribute.modifiers.contains(modifier)) {
+            attribute.addModifier(modifier)
+        }
+    }
+
+    fun LivingEntity.addArmorAttribute(
+        value: Double,
+        name: String = AttributeTags.EXTRA_ARMOR_GENERIC,
+        id: UUID = AttributeIDs.EXTRA_ARMOR_GENERIC_UUID)
+    {
+        val modifier = AttributeModifier(
+            id,
+            name,
+            value,
+            AttributeModifier.Operation.ADD_NUMBER
+        )
+        val attribute = getAttribute(Attribute.GENERIC_ARMOR) ?: return
+        if (!attribute.modifiers.contains(modifier)) {
+            attribute.addModifier(modifier)
+        }
+    }
+
+    fun LivingEntity.addSpeedAttribute(
+        value: Double,
+        name: String = AttributeTags.EXTRA_SPEED_GENERIC,
+        id: UUID = AttributeIDs.EXTRA_SPEED_GENERIC_UUID)
+    {
+        val modifier = AttributeModifier(
+            id,
+            name,
+            value,
+            AttributeModifier.Operation.ADD_NUMBER
+        )
+        val attribute = getAttribute(Attribute.GENERIC_MOVEMENT_SPEED) ?: return
+        if (!attribute.modifiers.contains(modifier)) {
+            attribute.addModifier(modifier)
+        }
+    }
+
 
     /*-----------------------------------------------------------------------------------------------*/
 

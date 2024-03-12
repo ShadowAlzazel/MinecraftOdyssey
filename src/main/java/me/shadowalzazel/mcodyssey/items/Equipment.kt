@@ -31,19 +31,5 @@ object Equipment {
         lore = listOf(Component.text("A warped arcane tool", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.WARPING_WAND)
 
-    // Crossbows
-    val COMPACT_CROSSBOW = OdysseyItem(
-        name = "compact_crossbow",
-        material = Material.CROSSBOW,
-        displayName = Component.text("Compact Crossbow", TextColor.color(214, 98, 153), TextDecoration.ITALIC),
-        lore = listOf(Component.text("A mini crossbow that can be loaded in the off hand.", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.COMPACT_CROSSBOW)
-
-    val AUTO_CROSSBOW = OdysseyItem(
-        name = "auto_crossbow",
-        material = Material.CROSSBOW,
-        displayName = Component.text("Full Auto Crossbow", TextColor.color(76, 51, 66), TextDecoration.ITALIC),
-        lore = listOf(Component.text("Reload ammo when shooting straight from the off hand!.", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.AUTO_CROSSBOW)
 
 }

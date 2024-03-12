@@ -12,9 +12,7 @@ class Equipment {
     fun getRecipes(): List<ShapedRecipe> {
         return listOf(
             arcaneWandRecipe(),
-            warpingWandRecipe(),
-            compactCrossbowRecipe(),
-            autoCrossbowRecipe()
+            warpingWandRecipe()
         )
     }
 
@@ -41,33 +39,6 @@ class Equipment {
             setIngredient('W', Material.WARPED_STEM)
             setIngredient('V', Material.TWISTING_VINES)
             group = "wands"//??
-            category = CraftingBookCategory.EQUIPMENT
-        }
-        return recipe
-    }
-
-    private fun compactCrossbowRecipe(): ShapedRecipe {
-        val result = Equipment.COMPACT_CROSSBOW.createItemStack(1)
-        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "compact_crossbow"), result).apply {
-            shape(" C ", "STS", " L ")
-            setIngredient('C', Material.CRIMSON_PLANKS)
-            setIngredient('S', Material.STRING)
-            setIngredient('T', Material.TRIPWIRE_HOOK)
-            setIngredient('L', Material.STICK)
-            category = CraftingBookCategory.EQUIPMENT
-        }
-        return recipe
-    }
-
-    private fun autoCrossbowRecipe(): ShapedRecipe {
-        val result = Equipment.AUTO_CROSSBOW.createItemStack(1)
-        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "auto_crossbow"), result).apply {
-            shape("NBN", "STS", "CBC")
-            setIngredient('N', Material.NETHERITE_INGOT)
-            setIngredient('B', Material.BLAZE_ROD)
-            setIngredient('T', Material.TRIPWIRE_HOOK)
-            setIngredient('S', Material.STRING)
-            setIngredient('C', Material.COPPER_INGOT)
             category = CraftingBookCategory.EQUIPMENT
         }
         return recipe
