@@ -9,14 +9,7 @@ import org.bukkit.inventory.ItemStack
 object Deadeye : OdysseyEnchantment("deadeye", "Deadeye", 4) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            OdysseyEnchantments.ENTANGLEMENT, OdysseyEnchantments.CHAIN_REACTION -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {
@@ -30,8 +23,5 @@ object Deadeye : OdysseyEnchantment("deadeye", "Deadeye", 4) {
         }
     }
 
-    // Shoot into air to fall down
-
 }
 
-// Hits Eye, do more damage,

@@ -9,14 +9,7 @@ import org.bukkit.inventory.ItemStack
 object SingularityShot : OdysseyEnchantment("singularity_shot", "Singularity Shot", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            OdysseyEnchantments.RICOCHET, OdysseyEnchantments.PERPETUAL_PROJECTILE, OdysseyEnchantments.STELLAR_SHOWER -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {
@@ -30,8 +23,4 @@ object SingularityShot : OdysseyEnchantment("singularity_shot", "Singularity Sho
         }
     }
 
-    //
-    fun todo() {
-        TODO("Shoots singularity, replace arrow")
-    }
 }

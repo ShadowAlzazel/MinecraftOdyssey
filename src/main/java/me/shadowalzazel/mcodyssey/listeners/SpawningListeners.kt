@@ -38,7 +38,6 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
         "Deadly",
         "Magnificent",
         "Terrorizing",
-        "Arcane",
         "Classic",
         "Potent",
         "Dominant",
@@ -156,7 +155,7 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
             }
             addHealthAttribute(35 + (20.0 * difficultyMod), id = AttributeIDs.ODYSSEY_GILDED_MOB_HEALTH_UUID)
             health += 35 + (20.0 * difficultyMod)
-            addAttackAttribute(5 + (3 * difficultyMod), id = AttributeIDs.ODYSSEY_GILDED_MOB_ATTACK_UUID)
+            addAttackAttribute(3 + (3 * difficultyMod), id = AttributeIDs.ODYSSEY_GILDED_MOB_ATTACK_UUID)
             addArmorAttribute(4 + (2 * difficultyMod), id = AttributeIDs.ODYSSEY_GILDED_MOB_ARMOR_UUID)
             addSpeedAttribute(0.012 + (0.012 * difficultyMod), id = AttributeIDs.ODYSSEY_GILDED_MOB_SPEED_UUID)
             addScoreboardTag(EntityTags.GILDED_MOB)

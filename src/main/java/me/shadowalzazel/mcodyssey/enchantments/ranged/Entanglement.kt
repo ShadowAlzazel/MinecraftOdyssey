@@ -30,7 +30,5 @@ object Entanglement : OdysseyEnchantment("entanglement", "Entanglement", 2) {
             }
         }
     }
-    // Zac Arms
 
-    // FIX!!
 }

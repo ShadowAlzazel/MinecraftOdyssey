@@ -98,7 +98,9 @@ object OdysseyEnchantments {
     val BURST_BARRAGE: OdysseyEnchantment = BurstBarrage
     val CHAIN_REACTION: OdysseyEnchantment = ChainReaction
     val CLUSTER_SHOT: OdysseyEnchantment = ClusterShot
-    val DEADEYE: OdysseyEnchantment = Deadeye // TODO
+    val DEADEYE: OdysseyEnchantment = Deadeye
+    val DEATH_FROM_ABOVE: OdysseyEnchantment = DeathFromAbove
+    val DOUBLE_TAP: OdysseyEnchantment = DoubleTap
     val ENTANGLEMENT: OdysseyEnchantment = Entanglement // TODO
     val GALE_WIND: OdysseyEnchantment = GaleWind
     val HEAVY_BALLISTICS: OdysseyEnchantment = HeavyBallistics // TODO
@@ -111,6 +113,7 @@ object OdysseyEnchantments {
     val SOUL_REND: OdysseyEnchantment = SoulRend
     val STELLAR_SHOWER: OdysseyEnchantment = StellarShower // TODO
     val TEMPORAL_TORRENT: OdysseyEnchantment = TemporalTorrent // TODO
+    val VULNEROCITY: OdysseyEnchantment = Vulnerocity
 
     val MELEE_SET = setOf(
         ASPHYXIATING_ASSAULT,
@@ -209,7 +212,8 @@ object OdysseyEnchantments {
         SINGULARITY_SHOT,
         SOUL_REND,
         STELLAR_SHOWER,
-        TEMPORAL_TORRENT
+        TEMPORAL_TORRENT,
+        VULNEROCITY
     )
 
     val REGISTERED_SET = setOf(GILDED_POWER) + ARMOR_SET + MELEE_SET + MISC_SET + RANGED_SET

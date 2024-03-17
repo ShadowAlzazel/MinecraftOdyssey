@@ -1,12 +1,11 @@
 package me.shadowalzazel.mcodyssey.enchantments.ranged
 
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object TemporalTorrent : OdysseyEnchantment("temporal_torrent", "Temporal Torrent", 5) {
+object SteadyAim : OdysseyEnchantment("steady_aim", "Steady Aim", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return false
@@ -22,5 +21,6 @@ object TemporalTorrent : OdysseyEnchantment("temporal_torrent", "Temporal Torren
             }
         }
     }
+
 
 }

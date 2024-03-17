@@ -9,14 +9,7 @@ import org.bukkit.inventory.ItemStack
 object GaleWind : OdysseyEnchantment("gale_wind", "Gale Wind", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            OdysseyEnchantments.OVERCHARGE -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {

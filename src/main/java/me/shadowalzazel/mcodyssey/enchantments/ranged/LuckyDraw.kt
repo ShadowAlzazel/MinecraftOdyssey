@@ -9,7 +9,7 @@ object LuckyDraw : OdysseyEnchantment("lucky_draw", "Lucky Draw", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            ARROW_INFINITE, MENDING -> {
+            ARROW_INFINITE -> {
                 true
             }
             else -> {

@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.listeners
 
+import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.items.Arcane
 import me.shadowalzazel.mcodyssey.items.Arcane.createEnchantedBook
@@ -18,18 +19,6 @@ import org.bukkit.event.entity.EntityDeathEvent
 
 object LootListeners : Listener {
 
-    private fun droppedItemSound(somePlayer: Player) {
-        with(somePlayer) {
-            playSound(location, Sound.BLOCK_AMETHYST_BLOCK_CHIME, 1.5F, 0.9F)
-            playSound(location, Sound.BLOCK_AMETHYST_CLUSTER_PLACE, 1.5F, 0.9F)
-            playSound(location, Sound.BLOCK_AMETHYST_BLOCK_PLACE, 1.5F, 0.9F)
-            playSound(location, Sound.BLOCK_ENCHANTMENT_TABLE_USE, 1.5F, 0.9F)
-            world.spawnParticle(Particle.TOTEM, location, 25, 2.0, 1.0, 2.0)
-            world.spawnParticle(Particle.END_ROD, location, 25, 2.0, 1.0, 2.0)
-            world.spawnParticle(Particle.GLOW, location, 35, 2.0, 1.0, 2.0)
-        }
-    }
-
     @EventHandler
     fun mobDeathDropHandler(event: EntityDeathEvent) {
         if (event.entity.killer !is Player) {
@@ -38,11 +27,12 @@ object LootListeners : Listener {
         if (!event.entity.hasLineOfSight(event.entity.killer!!)) {
             return
         }
-        mobLootManager(event.entity, event.entity.killer!!)
+        mobLootHandler(event.entity, event.entity.killer!!)
     }
 
-    // Create a calculation class that handles all the logic
-    private fun mobLootManager(mob: LivingEntity, player: Player) {
+
+    private fun mobLootHandler(mob: LivingEntity, player: Player) {
+        // Create a calculation class that handles all the logic
         val mobLootLogic = LootLogic(1.0, mob, player)
         // Loot check and entity check
         when (mob) {
@@ -172,6 +162,11 @@ object LootListeners : Listener {
             else -> {
             }
         }
+        // Check if gilded
+        if (mob.scoreboardTags.contains(EntityTags.GILDED_MOB)) {
+            droppedItemSound(player)
+        }
+
     }
 
     fun blockDrops(event: BlockDropItemEvent) {
@@ -186,6 +181,18 @@ object LootListeners : Listener {
             else -> {
 
             }
+        }
+    }
+
+    private fun droppedItemSound(player: Player) {
+        with(player) {
+            playSound(location, Sound.BLOCK_AMETHYST_BLOCK_CHIME, 1.5F, 0.9F)
+            playSound(location, Sound.BLOCK_AMETHYST_CLUSTER_PLACE, 1.5F, 0.9F)
+            playSound(location, Sound.BLOCK_AMETHYST_BLOCK_PLACE, 1.5F, 0.9F)
+            playSound(location, Sound.BLOCK_ENCHANTMENT_TABLE_USE, 1.5F, 0.9F)
+            world.spawnParticle(Particle.TOTEM, location, 25, 2.0, 1.0, 2.0)
+            world.spawnParticle(Particle.END_ROD, location, 25, 2.0, 1.0, 2.0)
+            world.spawnParticle(Particle.GLOW, location, 35, 2.0, 1.0, 2.0)
         }
     }
 

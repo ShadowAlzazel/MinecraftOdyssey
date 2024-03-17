@@ -9,14 +9,7 @@ import org.bukkit.inventory.ItemStack
 object PerpetualProjectile : OdysseyEnchantment("perpetual_projectile", "Perpetual Projectile", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            OdysseyEnchantments.SINGULARITY_SHOT -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {
