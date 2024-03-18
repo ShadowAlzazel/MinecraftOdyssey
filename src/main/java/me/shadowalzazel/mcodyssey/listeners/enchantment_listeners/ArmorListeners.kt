@@ -13,7 +13,7 @@ import me.shadowalzazel.mcodyssey.constants.EntityTags.setIntTag
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.listeners.AlchemyListener.addOdysseyEffect
 import me.shadowalzazel.mcodyssey.listeners.utility.MoonwardPhase
-import me.shadowalzazel.mcodyssey.tasks.SpeedySpursTask
+import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.SpeedySpursTask
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
@@ -1135,21 +1135,21 @@ object ArmorListeners : Listener {
     }
 
     // ------------------------------- SPEEDY_SPURS ------------------------------------
-    private fun speedySpursEnchantment(rider: LivingEntity, mount: LivingEntity, enchantmentStrength: Int) {
-        val someSpeedySpursTask = SpeedySpursTask(rider, mount, enchantmentStrength)
+    private fun speedySpursEnchantment(rider: LivingEntity, mount: LivingEntity, level: Int) {
+        val someSpeedySpursTask = SpeedySpursTask(rider, mount, level)
         someSpeedySpursTask.runTaskTimer(Odyssey.instance, 0, 10 * 20)
     }
 
     // ------------------------------- SPOREFUL ------------------------------------
-    private fun sporefulEnchantment(defender: LivingEntity, enchantmentStrength: Int) {
+    private fun sporefulEnchantment(defender: LivingEntity, level: Int) {
         // List effects
-        defender.world.getNearbyLivingEntities(defender.location, enchantmentStrength.toDouble() * 0.75)
+        defender.world.getNearbyLivingEntities(defender.location, level.toDouble() * 0.75)
             .forEach {
                 if (it != defender) {
                     it.addPotionEffects(
                         listOf(
-                            PotionEffect(PotionEffectType.POISON, ((enchantmentStrength * 2) + 2) * 20, 0),
-                            PotionEffect(PotionEffectType.CONFUSION, ((enchantmentStrength * 2) + 2) * 20, 0),
+                            PotionEffect(PotionEffectType.POISON, ((level * 2) + 2) * 20, 0),
+                            PotionEffect(PotionEffectType.CONFUSION, ((level * 2) + 2) * 20, 0),
                         )
                     )
                 }

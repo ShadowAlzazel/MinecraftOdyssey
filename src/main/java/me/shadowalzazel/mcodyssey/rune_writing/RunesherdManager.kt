@@ -16,7 +16,7 @@ import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
-interface RunesherdManager : AttributeManager {
+internal interface RunesherdManager : AttributeManager {
 
     /* ---------------------------------------- */
     // TAGS

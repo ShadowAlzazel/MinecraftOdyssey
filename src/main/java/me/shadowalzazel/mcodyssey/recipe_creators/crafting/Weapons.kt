@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.recipe_creators.crafting
 
 import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.items.Equipment
 import me.shadowalzazel.mcodyssey.items.Weapons
 import me.shadowalzazel.mcodyssey.items.Weapons.createWeapon
 import org.bukkit.Material
@@ -13,6 +14,9 @@ class Weapons {
 
     fun getRecipes(): List<ShapedRecipe> {
         return listOf(
+            compactCrossbowRecipe(),
+            autoCrossbowRecipe(),
+
             woodenKatanaRecipe(),
             goldenKatanaRecipe(),
             stoneKatanaRecipe(),
@@ -102,6 +106,35 @@ class Weapons {
             createWoodenStaffRecipe(),
             blazeRodStaffRecipe()
         )
+    }
+
+    /*-----------------------------------------------------------------------------------------------*/
+
+    private fun compactCrossbowRecipe(): ShapedRecipe {
+        val result = Weapons.COMPACT_CROSSBOW.createItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "compact_crossbow"), result).apply {
+            shape(" C ", "STS", " L ")
+            setIngredient('C', Material.CRIMSON_PLANKS)
+            setIngredient('S', Material.STRING)
+            setIngredient('T', Material.TRIPWIRE_HOOK)
+            setIngredient('L', Material.STICK)
+            category = CraftingBookCategory.EQUIPMENT
+        }
+        return recipe
+    }
+
+    private fun autoCrossbowRecipe(): ShapedRecipe {
+        val result = Weapons.AUTO_CROSSBOW.createItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "auto_crossbow"), result).apply {
+            shape("NBN", "STS", "CBC")
+            setIngredient('N', Material.NETHERITE_INGOT)
+            setIngredient('B', Material.BLAZE_ROD)
+            setIngredient('T', Material.TRIPWIRE_HOOK)
+            setIngredient('S', Material.STRING)
+            setIngredient('C', Material.COPPER_INGOT)
+            category = CraftingBookCategory.EQUIPMENT
+        }
+        return recipe
     }
 
     /*-----------------------------------------------------------------------------------------------*/

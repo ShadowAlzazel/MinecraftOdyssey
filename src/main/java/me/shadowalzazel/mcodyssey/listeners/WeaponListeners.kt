@@ -6,7 +6,10 @@ import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.ItemTags
 import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.getUUIDString
 import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.removeTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.setUUIDTag
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.BLUDGEON_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.CLEAVE_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.LACERATE_MAP
@@ -20,9 +23,8 @@ import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.attribute.Attribute
-import org.bukkit.entity.Entity
-import org.bukkit.entity.LivingEntity
-import org.bukkit.entity.Player
+import org.bukkit.enchantments.Enchantment
+import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -33,6 +35,7 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.CrossbowMeta
 import org.bukkit.inventory.meta.PotionMeta
+import java.util.*
 
 // --------------------------------- NOTES --------------------------------
 // TODO: Mounted Bonus i.e. Cavalry Charges
@@ -369,19 +372,22 @@ object WeaponListeners : Listener {
     /*-----------------------------------------------------------------------------------------------*/
     /*-----------------------------------------------------------------------------------------------*/
 
+    // Event for detecting when entity shoots bow
+
     @EventHandler(priority = EventPriority.HIGHEST)
-    fun bowReadyArrowHandler(event: EntityShootBowEvent) {
-        // checks
+    fun bowShootHandler(event: EntityShootBowEvent) {
         val bow = event.bow ?: return
         if (!bow.hasItemMeta()) return
         if (!bow.itemMeta.hasCustomModelData()) return
-        //
+        // Match
         when(bow.itemMeta.customModelData) {
             ItemModels.AUTO_CROSSBOW -> {
                 autoCrossbowHandler(event)
             }
+            ItemModels.ALCHEMICAL_BOLTER -> {
+                alchemicalBolterShootHandler(event)
+            }
         }
-
         /*
         println("------------------------")
         println("Crossbow: ${event.bow}.")
@@ -390,6 +396,7 @@ object WeaponListeners : Listener {
          */
     }
 
+    // Event for detecting when entity loads a crossbow
     @EventHandler
     fun crossbowLoadHandler(event: EntityLoadCrossbowEvent) {
         // Checks
@@ -402,10 +409,14 @@ object WeaponListeners : Listener {
             ItemModels.COMPACT_CROSSBOW -> {
                 compactCrossbowHandler(event)
             }
+            ItemModels.ALCHEMICAL_BOLTER -> {
+                event.isCancelled = alchemicalBolterLoadingHandler(event.entity, crossbow)
+            }
         }
     }
 
     /*-----------------------------------------------------------------------------------------------*/
+    // AUTO CROSSBOW
 
     private fun autoCrossbowHandler(event: EntityShootBowEvent) {
         val crossbow = event.bow ?: return
@@ -435,7 +446,69 @@ object WeaponListeners : Listener {
         }
     }
 
+    /*-----------------------------------------------------------------------------------------------*/
+    // ALCHEMICAL BOLTER
 
+    private var ALCHEMY_ARTILLERY_AMMO = mutableMapOf<UUID, ItemStack?>() // DOES NOT SAVE AFTER SERVER SHUTDOWN
+    private var ALCHEMY_ARTILLERY_COUNTER = mutableMapOf<UUID, Int>()
+
+    private fun alchemicalBolterLoadingHandler(loader: LivingEntity, crossbow: ItemStack): Boolean {
+        if (!(loader.equipment!!.itemInOffHand.type == Material.SPLASH_POTION || loader.equipment!!.itemInOffHand.type == Material.LINGERING_POTION)) {
+            return false
+        }
+        val potionOffHand = loader.equipment!!.itemInOffHand
+        return if (!crossbow.hasTag(ItemTags.ALCHEMY_ARTILLERY_LOADED)) {
+            val newUUID = UUID.randomUUID()
+            crossbow.addTag(ItemTags.ALCHEMY_ARTILLERY_LOADED)
+            crossbow.setUUIDTag(newUUID)
+            // Load Item to UUID
+            ALCHEMY_ARTILLERY_AMMO[newUUID] = potionOffHand // MAYBE STORE IN COMPONENTS FOR 1.20.5
+            val multiCounter = if (crossbow.itemMeta.hasEnchant(Enchantment.MULTISHOT)) 3 else 1
+            // Load Counter to UUID
+            ALCHEMY_ARTILLERY_COUNTER[newUUID] = multiCounter
+            loader.equipment!!.setItemInOffHand(ItemStack(Material.AIR, 1))
+            false
+        } else {
+            true
+        }
+    }
+
+    private fun alchemicalBolterShootHandler(event: EntityShootBowEvent) {
+        // Sentries
+        val crossbow = event.bow ?: return
+        if (crossbow.type != Material.CROSSBOW) return
+        if (!crossbow.hasTag(ItemTags.ALCHEMY_ARTILLERY_LOADED)) return
+        // Potions
+        val shooter = event.entity
+        val projectile = event.projectile
+        var lastShot = false
+        var potion: ThrownPotion? = null
+        val bowUUID = UUID.fromString(crossbow.getUUIDString())
+        val count = ALCHEMY_ARTILLERY_COUNTER[bowUUID] ?: 1
+        if (count >= 1) {
+            // Spawn potion with item
+            potion = (shooter.world.spawnEntity(projectile.location, EntityType.SPLASH_POTION) as ThrownPotion).also {
+                it.item = ALCHEMY_ARTILLERY_AMMO[bowUUID] ?: ItemStack(Material.SPLASH_POTION, 1)
+                it.velocity = projectile.velocity.clone().multiply(0.6)
+                it.shooter = shooter
+            }
+            ALCHEMY_ARTILLERY_COUNTER[bowUUID] = count - 1
+            if (ALCHEMY_ARTILLERY_COUNTER[bowUUID] == 0) {
+                lastShot = true
+            }
+        }
+        if (lastShot) {
+            crossbow.removeTag(ItemTags.ALCHEMY_ARTILLERY_LOADED)
+            ALCHEMY_ARTILLERY_AMMO[bowUUID] = null
+        }
+        // Shoot if potion made
+        if (potion != null) {
+            event.projectile = potion
+        }
+    }
+
+    /*-----------------------------------------------------------------------------------------------*/
+    // COMPACT CROSSBOW
 
     private fun compactCrossbowHandler(event: EntityLoadCrossbowEvent) {
         val player = event.entity

@@ -9,14 +9,7 @@ import org.bukkit.inventory.ItemStack
 object HeavyBallistics : OdysseyEnchantment("heavy_ballistics", "Heavy Ballistics", 4) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            OdysseyEnchantments.ALCHEMY_ARTILLERY, OdysseyEnchantments.BURST_BARRAGE -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {

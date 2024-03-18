@@ -150,9 +150,14 @@ object ItemModels {
     const val ARCANE_WAND: Int = 6903910
     const val WARPING_WAND: Int = 6903911
 
-    // Crossbow
+    // Crossbows
     const val COMPACT_CROSSBOW: Int = 6905535
     const val AUTO_CROSSBOW: Int = 6905536
+    const val ALCHEMICAL_BOLTER: Int = 6905537 // Alchemy Artillery
+    const val CROSSPIKE: Int = 6905538 // Has +6 ATK cuz twin bayonet
+
+    // Bows
+    const val WARPED_BOW: Int = 6905580 // +Dmg tho  less accurate
 
     // Helmets
     const val HORNED_HELMET: Int = 6900773

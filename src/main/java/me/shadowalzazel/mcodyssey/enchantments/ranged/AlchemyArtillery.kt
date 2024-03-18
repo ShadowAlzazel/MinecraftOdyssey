@@ -9,19 +9,12 @@ import org.bukkit.inventory.ItemStack
 object AlchemyArtillery : OdysseyEnchantment("alchemy_artillery", "Alchemy Artillery", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            OdysseyEnchantments.SOUL_REND, MENDING -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {
         return when (item.type) {
-            Material.ENCHANTED_BOOK, Material.CROSSBOW -> {
+            Material.ENCHANTED_BOOK, Material.CROSSBOW, Material.BOW -> {
                 true
             }
             else -> {

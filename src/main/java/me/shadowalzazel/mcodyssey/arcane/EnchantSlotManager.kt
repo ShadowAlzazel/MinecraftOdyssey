@@ -6,16 +6,19 @@ import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.getIntTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.getStringTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
+import org.apache.commons.lang3.tuple.MutablePair
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.LivingEntity
+import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 
-interface EnchantSlotManager {
+internal interface EnchantSlotManager {
 
     fun ItemStack.isSlotted(): Boolean {
         return hasTag(ItemTags.IS_SLOTTED)
@@ -133,6 +136,21 @@ interface EnchantSlotManager {
         newLore[sepIndex - 1] = enchantHeader(enchantCount + gildedCount, slots.first + slots.second)
         // New Lore
         lore(newLore)
+    }
+
+    //
+    fun ItemStack.createNewEnchantSlots() {
+        val slots = MutablePair(2, 1)
+        for (enchant in enchantments) {
+            if (enchant.key !in OdysseyEnchantments.REGISTERED_SET) {
+                slots.left += 1
+            } else {
+                slots.right += 1
+            }
+        }
+        setSlots(slots.toPair())
+        addItemFlags(ItemFlag.HIDE_ENCHANTS)
+        updateSlotLore(enchantments)
     }
 
     /*-----------------------------------------------------------------------------------------------*/

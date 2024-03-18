@@ -9,14 +9,7 @@ import org.bukkit.inventory.ItemStack
 object ClusterShot : OdysseyEnchantment("cluster_shot", "Cluster Shot", 5) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            OdysseyEnchantments.ENTANGLEMENT, OdysseyEnchantments.CHAIN_REACTION -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {
@@ -29,7 +22,5 @@ object ClusterShot : OdysseyEnchantment("cluster_shot", "Cluster Shot", 5) {
             }
         }
     }
-
-    // Shoot into air to fall down
 
 }

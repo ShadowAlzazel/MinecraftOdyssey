@@ -16,9 +16,9 @@ object AssetListeners : Listener {
     private fun resourcePackHandler(joiningPlayer: Player) {
 
         // PROD
-        //val resourcePackLink = "https://www.dropbox.com/s/2sdfqy76ym39h44/odyssey-resource-pack.zip?dl=1"
+        val resourcePackLink = "https://www.dropbox.com/s/2sdfqy76ym39h44/odyssey-resource-pack.zip?dl=1"
         // TEST
-        val resourcePackLink = "https://www.dropbox.com/s/6hob8iad499vz95/odyssey-resource-pack-test.zip?dl=1"
+        //val resourcePackLink = "https://www.dropbox.com/s/6hob8iad499vz95/odyssey-resource-pack-test.zip?dl=1"
 
         val resourcePackHash = "8a0de3e2e2045ff10010a9b3671cafa1dcd73bfa"
         joiningPlayer.setResourcePack(

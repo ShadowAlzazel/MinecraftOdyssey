@@ -9,14 +9,7 @@ import org.bukkit.inventory.ItemStack
 object Sharpshooter : OdysseyEnchantment("sharpshooter", "Sharpshooter", 5) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            OdysseyEnchantments.ALCHEMY_ARTILLERY -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {
@@ -30,5 +23,5 @@ object Sharpshooter : OdysseyEnchantment("sharpshooter", "Sharpshooter", 5) {
         }
     }
 
-    // When fully charged do more damage
+
 }

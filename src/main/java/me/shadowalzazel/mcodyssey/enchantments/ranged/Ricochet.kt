@@ -9,14 +9,7 @@ import org.bukkit.inventory.ItemStack
 object Ricochet : OdysseyEnchantment("ricochet", "Ricochet", 4) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            OdysseyEnchantments.SINGULARITY_SHOT -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {
@@ -30,7 +23,4 @@ object Ricochet : OdysseyEnchantment("ricochet", "Ricochet", 4) {
         }
     }
 
-    fun todo() {
-        TODO("If hit block bounce (invert vector multiply -1)? ")
-    }
 }

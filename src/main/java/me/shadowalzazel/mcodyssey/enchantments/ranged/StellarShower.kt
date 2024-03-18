@@ -9,14 +9,7 @@ import org.bukkit.inventory.ItemStack
 object StellarShower : OdysseyEnchantment("stellar_shower", "Stellar Shower", 4) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            OdysseyEnchantments.SINGULARITY_SHOT -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {
@@ -29,7 +22,5 @@ object StellarShower : OdysseyEnchantment("stellar_shower", "Stellar Shower", 4)
             }
         }
     }
-    fun todo() {
-        TODO("If hit spawn falling star damage")
-    }
+
 }

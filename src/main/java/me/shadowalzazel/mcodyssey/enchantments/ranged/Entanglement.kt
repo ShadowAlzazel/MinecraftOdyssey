@@ -21,8 +21,7 @@ object Entanglement : OdysseyEnchantment("entanglement", "Entanglement", 2) {
 
     override fun canEnchantItem(item: ItemStack): Boolean {
         return when (item.type) {
-            Material.ENCHANTED_BOOK,
-            Material.BOW, Material.CROSSBOW -> {
+            Material.ENCHANTED_BOOK, Material.BOW, Material.CROSSBOW -> {
                 true
             }
             else -> {
@@ -30,7 +29,5 @@ object Entanglement : OdysseyEnchantment("entanglement", "Entanglement", 2) {
             }
         }
     }
-    // Zac Arms
 
-    // FIX!!
 }

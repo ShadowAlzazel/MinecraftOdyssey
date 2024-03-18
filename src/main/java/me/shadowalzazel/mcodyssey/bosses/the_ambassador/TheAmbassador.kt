@@ -12,7 +12,7 @@ import me.shadowalzazel.mcodyssey.items.Exotics
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
 import me.shadowalzazel.mcodyssey.items.Weapons
 import me.shadowalzazel.mcodyssey.items.Weapons.createWeapon
-import me.shadowalzazel.mcodyssey.tasks.GravityWellTask
+import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.GravitySingularityTask
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
@@ -247,7 +247,7 @@ class TheAmbassador(location: Location) : OdysseyBoss(
             addScoreboardTag(EntityTags.FALLING_SINGULARITY)
             addPotionEffect(PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 300, 0))
         }
-        GravityWellTask(fallingSingularity, illusioner, 10, 30).runTaskTimer(Odyssey.instance, 0, 10)
+        GravitySingularityTask(fallingSingularity, illusioner, 10, 30).runTaskTimer(Odyssey.instance, 0, 10)
         RemoveSingularityStand(fallingSingularity).runTaskLater(Odyssey.instance, 33 * 10)
     }
 

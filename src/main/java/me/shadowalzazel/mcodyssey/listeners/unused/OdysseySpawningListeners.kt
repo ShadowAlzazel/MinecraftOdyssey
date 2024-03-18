@@ -71,10 +71,11 @@ object OdysseySpawningListeners : Listener {
         }
 
         // Formula
-        val enhancedHealthRaw = (0.00125 * distanceFromZero) + (0.000125 * distanceFromZero).pow(2)
+        val scaleDist = 1.0 / 800.0
+        val dif = (scaleDist * distanceFromZero) + (scaleDist * distanceFromZero).pow(2)
 
         // Get Modifier and Add
-        val enhancedHealthModifier = AttributeModifier(ODYSSEY_ENHANCED_MOB_HEALTH_UUID, "odyssey_enhanced_mob_health", enhancedHealthRaw, AttributeModifier.Operation.ADD_NUMBER)
+        val enhancedHealthModifier = AttributeModifier(ODYSSEY_ENHANCED_MOB_HEALTH_UUID, "odyssey_enhanced_mob_health", dif, AttributeModifier.Operation.ADD_NUMBER)
         val mobHealth = eventEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!
         mobHealth.addModifier(enhancedHealthModifier)
 

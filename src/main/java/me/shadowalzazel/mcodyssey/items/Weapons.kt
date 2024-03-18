@@ -7,6 +7,7 @@ import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import me.shadowalzazel.mcodyssey.items.utility.WeaponMaterial
 import me.shadowalzazel.mcodyssey.items.utility.WeaponType
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
@@ -39,6 +40,24 @@ object Weapons: AttributeManager {
         }
         return newWeapon
     }
+
+
+    /*-----------------------------------------------------------------------------------------------*/
+    // Crossbows
+
+    val COMPACT_CROSSBOW = OdysseyItem(
+        name = "compact_crossbow",
+        material = Material.CROSSBOW,
+        displayName = Component.text("Compact Crossbow", TextColor.color(214, 98, 153), TextDecoration.ITALIC),
+        lore = listOf(Component.text("A mini crossbow that can be loaded in the off hand.", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.COMPACT_CROSSBOW)
+
+    val AUTO_CROSSBOW = OdysseyItem(
+        name = "auto_crossbow",
+        material = Material.CROSSBOW,
+        displayName = Component.text("Full Auto Crossbow", TextColor.color(76, 51, 66), TextDecoration.ITALIC),
+        lore = listOf(Component.text("Reload ammo when shooting straight from the off hand!.", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.AUTO_CROSSBOW)
 
     /*-----------------------------------------------------------------------------------------------*/
 

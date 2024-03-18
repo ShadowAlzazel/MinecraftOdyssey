@@ -9,14 +9,7 @@ import org.bukkit.inventory.ItemStack
 object BolaShot : OdysseyEnchantment("bola_shot", "Bola Shot", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            OdysseyEnchantments.SOUL_REND, MENDING -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {
@@ -29,7 +22,5 @@ object BolaShot : OdysseyEnchantment("bola_shot", "Bola Shot", 3) {
             }
         }
     }
-
-    // On hit spawn web
 
 }
