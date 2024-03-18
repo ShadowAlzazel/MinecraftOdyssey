@@ -5,10 +5,10 @@ import me.shadowalzazel.mcodyssey.constants.EffectTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.effects.EffectsManager
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.tasks.ArcaneCellTask
-import me.shadowalzazel.mcodyssey.tasks.FrogFrightTask
-import me.shadowalzazel.mcodyssey.tasks.FrostyFuseTask
-import me.shadowalzazel.mcodyssey.tasks.GravityWellTask
+import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.ArcaneCellTask
+import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.FrogFrightTask
+import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.FrostyFuseTask
+import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.GravitySingularityTask
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.*
@@ -489,8 +489,9 @@ object MeleeListeners : Listener, EffectsManager {
             world.spawnParticle(Particle.WHITE_ASH, location, 55, 1.0, 0.5, 1.0)
             // Task
             addScoreboardTag(EffectTags.GRAVITY_WELLED)
-            val gravityWellTask =
-                GravityWellTask(victim, attacker, (level * 1) + 1, ((level * 2) + 2) * 2)
+            val modifier = (level * 1) + 1
+            val maxCount = ((level * 2) + 2) * 2
+            val gravityWellTask = GravitySingularityTask(victim, attacker, modifier, maxCount)
             gravityWellTask.runTaskTimer(Odyssey.instance, 0, 10)
         }
 

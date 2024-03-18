@@ -101,14 +101,17 @@ object OdysseyEnchantments {
     val DEADEYE: OdysseyEnchantment = Deadeye
     val DEATH_FROM_ABOVE: OdysseyEnchantment = DeathFromAbove
     val DOUBLE_TAP: OdysseyEnchantment = DoubleTap
+    val FAN_FIRE: OdysseyEnchantment = FanFire
     val ENTANGLEMENT: OdysseyEnchantment = Entanglement // TODO
     val GALE_WIND: OdysseyEnchantment = GaleWind
-    val HEAVY_BALLISTICS: OdysseyEnchantment = HeavyBallistics // TODO
+    val HEAVY_BALLISTICS: OdysseyEnchantment = HeavyBallistics
+    val LUXPOSE: OdysseyEnchantment = Luxpose
     val LUCKY_DRAW: OdysseyEnchantment = LuckyDraw
     val OVERCHARGE: OdysseyEnchantment = Overcharge
     val PERPETUAL_PROJECTILE: OdysseyEnchantment = PerpetualProjectile
     val RICOCHET: OdysseyEnchantment = Ricochet
     val SHARPSHOOTER: OdysseyEnchantment = Sharpshooter
+    val SINGLE_OUT: OdysseyEnchantment = SingleOut
     val SINGULARITY_SHOT: OdysseyEnchantment = SingularityShot // TODO
     val SOUL_REND: OdysseyEnchantment = SoulRend
     val STELLAR_SHOWER: OdysseyEnchantment = StellarShower // TODO
@@ -163,7 +166,7 @@ object OdysseyEnchantments {
         MOLTEN_CORE,
         MOONWARD,
         OPTICALIZATION,
-        //POLLEN_GUARD, TODO: RE ENABLE WHEN DONE
+        POLLEN_GUARD,
         POTION_BARRIER,
         RAGING_ROAR,
         RECKLESS,
@@ -201,14 +204,19 @@ object OdysseyEnchantments {
         CHAIN_REACTION,
         CLUSTER_SHOT,
         DEADEYE,
+        DEATH_FROM_ABOVE,
+        DOUBLE_TAP,
         ENTANGLEMENT,
+        FAN_FIRE,
         GALE_WIND,
         HEAVY_BALLISTICS,
         LUCKY_DRAW,
+        LUXPOSE,
         OVERCHARGE,
         PERPETUAL_PROJECTILE,
         RICOCHET,
         SHARPSHOOTER,
+        SINGLE_OUT,
         SINGULARITY_SHOT,
         SOUL_REND,
         STELLAR_SHOWER,
@@ -217,7 +225,8 @@ object OdysseyEnchantments {
     )
 
     val REGISTERED_SET = setOf(GILDED_POWER) + ARMOR_SET + MELEE_SET + MISC_SET + RANGED_SET
-    val EXOTIC_LIST = setOf(SINGULARITY_SHOT, GRAVITY_WELL, SCULK_SENSITIVE, BLACK_ROSE)
+    val EXOTIC_LIST = setOf(SINGULARITY_SHOT, GRAVITY_WELL,
+        STELLAR_SHOWER, SCULK_SENSITIVE, BLACK_ROSE) // To exclude for table
 
     // Register
     fun register() {
@@ -256,6 +265,296 @@ object OdysseyEnchantments {
         }
         else {
             Odyssey.instance.logger.info("Failed to register: $enchantment")
+        }
+    }
+
+    fun getEnchantmentFromNamespace(name: String): OdysseyEnchantment? {
+        return when(name) {
+            "antibonk" -> {
+                ANTIBONK
+            }
+            "beastly_brawler" -> {
+                BEASTLY_BRAWLER
+            }
+            "black_rose" -> {
+                BLACK_ROSE
+            }
+            "blurcise" -> {
+                BLURCISE
+            }
+            "brewful_breath" -> {
+                BREWFUL_BREATH
+            }
+            "copper_chitin" -> {
+                COPPER_CHITIN
+            }
+            "cowardice" -> {
+                COWARDICE
+            }
+            "devastating_drop" -> {
+                DEVASTATING_DROP
+            }
+            "dreadful_shriek" -> {
+                DREADFUL_SHRIEK
+            }
+            "fruitful_fare" -> {
+                FRUITFUL_FARE
+            }
+            "ignore_pain" -> {
+                IGNORE_PAIN
+            }
+            "illumineye" -> {
+                ILLUMINEYE
+            }
+            "leap_frog" -> {
+                LEAP_FROG
+            }
+            "mandiblemania" -> {
+                MANDIBLEMANIA
+            }
+            "molten_core" -> {
+                MOLTEN_CORE
+            }
+            "moonward" -> {
+                MOONWARD
+            }
+            "opticalization" -> {
+                OPTICALIZATION
+            }
+            "pollen_guard" -> {
+                POLLEN_GUARD
+            }
+            "potion_barrier" -> {
+                POTION_BARRIER
+            }
+            "raging_roar" -> {
+                RAGING_ROAR
+            }
+            "reckless" -> {
+                RECKLESS
+            }
+            "relentless" -> {
+                RELENTLESS
+            }
+            "root_boots" -> {
+                ROOT_BOOTS
+            }
+            "sculk_sensitive" -> {
+                SCULK_SENSITIVE
+            }
+            "speedy_spurs" -> {
+                SPEEDY_SPURS
+            }
+            "sporeful" -> {
+                SPOREFUL
+            }
+            "squidify" -> {
+                SQUIDIFY
+            }
+            "sslither_ssight" -> {
+                SSLITHER_SSIGHT
+            }
+            "static_socks" -> {
+                STATIC_SOCKS
+            }
+            "untouchable" -> {
+                UNTOUCHABLE
+            }
+            "veiled_in_shadow" -> {
+                VEILED_IN_SHADOW
+            }
+            "vengeful" -> {
+                VENGEFUL
+            }
+            "vicious_vigor" -> {
+                VICIOUS_VIGOR
+            }
+            "war_cry" -> {
+                WAR_CRY
+            }
+            "asphyxiating_assault" -> {
+                ASPHYXIATING_ASSAULT
+            }
+            "arcane_cell" -> {
+                ARCANE_CELL
+            }
+            "backstabber" -> {
+                BACKSTABBER
+            }
+            "bane_of_the_illager" -> {
+                BANE_OF_THE_ILLAGER
+            }
+            "bane_of_the_sea" -> {
+                BANE_OF_THE_SEA
+            }
+            "bane_of_the_swine" -> {
+                BANE_OF_THE_SWINE
+            }
+            "blitz_shift" -> {
+                BLITZ_SHIFT
+            }
+            "buzzy_bees" -> {
+                BUZZY_BEES
+            }
+            "committed" -> {
+                COMMITTED
+            }
+            "cull_the_weak" -> {
+                CULL_THE_WEAK
+            }
+            "decaying_touch" -> {
+                DECAYING_TOUCH
+            }
+            "douse" -> {
+                DOUSE
+            }
+            "echo" -> {
+                ECHO
+            }
+            "exploding" -> {
+                EXPLODING
+            }
+            "fearful_finisher" -> {
+                FEARFUL_FINISHER
+            }
+            "freezing_aspect" -> {
+                FREEZING_ASPECT
+            }
+            "frog_fright" -> {
+                FROG_FRIGHT
+            }
+            "frosty_fuse" -> {
+                FROSTY_FUSE
+            }
+            "gravity_well" -> {
+                GRAVITY_WELL
+            }
+            "guarding_strike" -> {
+                GUARDING_STRIKE
+            }
+            "hemorrhage" -> {
+                HEMORRHAGE
+            }
+            "illucidation" -> {
+                ILLUCIDATION
+            }
+            "rupturing_strike" -> {
+                RUPTURING_STRIKE
+            }
+            "sporing_rot" -> {
+                SPORING_ROT
+            }
+            "tar_n_dip" -> {
+                TAR_N_DIP
+            }
+            "void_strike" -> {
+                VOID_STRIKE
+            }
+            "whirlwind" -> {
+                WHIRLWIND
+            }
+            "bomb_ob" -> {
+                BOMB_OB
+            }
+            "hook_shot" -> {
+                HOOK_SHOT
+            }
+            "lengthy_line" -> {
+                LENGTHY_LINE
+            }
+            "mirror_force" -> {
+                MIRROR_FORCE
+            }
+            "reversed_recoil" -> {
+                REVERSED_RECOIL
+            }
+            "o_shiny" -> {
+                O_SHINY
+            }
+            "void_jump" -> {
+                VOID_JUMP
+            }
+            "wise_bait" -> {
+                WISE_BAIT
+            }
+            "yank" -> {
+                YANK
+            }
+            "alchemy_artillery" -> {
+                ALCHEMY_ARTILLERY
+            }
+            "bola_shot" -> {
+                BOLA_SHOT
+            }
+            "burst_barrage" -> {
+                BURST_BARRAGE
+            }
+            "chain_reaction" -> {
+                CHAIN_REACTION
+            }
+            "cluster_shot" -> {
+                CLUSTER_SHOT
+            }
+            "deadeye" -> {
+                DEADEYE
+            }
+            "death_from_above" -> {
+                DEATH_FROM_ABOVE
+            }
+            "double_tap" -> {
+                DOUBLE_TAP
+            }
+            "entanglement" -> {
+                ENTANGLEMENT
+            }
+            "fan_fire" -> {
+                FAN_FIRE
+            }
+            "gale_wind" -> {
+                GALE_WIND
+            }
+            "heavy_ballistics" -> {
+                HEAVY_BALLISTICS
+            }
+            "lucky_draw" -> {
+                LUCKY_DRAW
+            }
+            "luxpose" -> {
+                LUXPOSE
+            }
+            "overcharge" -> {
+                OVERCHARGE
+            }
+            "perpetual_projectile" -> {
+                PERPETUAL_PROJECTILE
+            }
+            "ricochet" -> {
+                RICOCHET
+            }
+            "sharpshooter" -> {
+                SHARPSHOOTER
+            }
+            "single_out" -> {
+                SINGLE_OUT
+            }
+            "singularity_shot" -> {
+                SINGULARITY_SHOT
+            }
+            "soul_rend" -> {
+                SOUL_REND
+            }
+            "stellar_shower" -> {
+                STELLAR_SHOWER
+            }
+            "temporal_torrent" -> {
+                TEMPORAL_TORRENT
+            }
+            "vulnerocity" -> {
+                VULNEROCITY
+            }
+            else -> {
+                null
+            }
         }
     }
 }

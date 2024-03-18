@@ -20,7 +20,7 @@ object Luxpose : OdysseyEnchantment("luxpose", "Luxpose", 3) {
 
     override fun canEnchantItem(item: ItemStack): Boolean {
         return when (item.type) {
-            Material.ENCHANTED_BOOK, Material.BOW -> {
+            Material.ENCHANTED_BOOK, Material.BOW, Material.CROSSBOW -> {
                 true
             }
             else -> {

@@ -3,16 +3,16 @@ package me.shadowalzazel.mcodyssey.listeners.enchantment_listeners
 import com.destroystokyo.paper.event.player.PlayerReadyArrowEvent
 import io.papermc.paper.event.entity.EntityLoadCrossbowEvent
 import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.constants.EffectTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags.getIntTag
 import me.shadowalzazel.mcodyssey.constants.EntityTags.removeTag
 import me.shadowalzazel.mcodyssey.constants.EntityTags.setIntTag
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.tasks.BurstBarrageTask
-import me.shadowalzazel.mcodyssey.tasks.GaleWindTask
-import me.shadowalzazel.mcodyssey.tasks.OverchargeTask
+import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.*
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
+import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
@@ -37,6 +37,7 @@ import kotlin.math.sin
 object RangedListeners : Listener {
 
     private val galewindCooldown = mutableMapOf<UUID, Long>()
+    private val currentOverchargeTasks = mutableMapOf<UUID, OverchargeTask>()
 
     // Main function for enchantments relating to shooting bows
     @EventHandler
@@ -76,8 +77,20 @@ object RangedListeners : Listener {
                 OdysseyEnchantments.DOUBLE_TAP -> {
                     doubleTapEnchantmentShoot(projectile, shooter)
                 }
+                OdysseyEnchantments.ENTANGLEMENT -> {
+                    entanglementEnchantmentShoot(projectile, enchant.value)
+                }
+                OdysseyEnchantments.FAN_FIRE -> {
+                    fanFireEnchantmentShoot(projectile, shooter, enchant.value)
+                }
+                OdysseyEnchantments.HEAVY_BALLISTICS -> {
+                    heavyBallisticsEnchantmentShoot(projectile, enchant.value)
+                }
                 OdysseyEnchantments.LUCKY_DRAW -> {
                     event.setConsumeItem(!luckyDrawEnchantmentShoot(enchant.value))
+                }
+                OdysseyEnchantments.LUXPOSE -> {
+                    luxposeEnchantmentShoot(projectile, enchant.value)
                 }
                 OdysseyEnchantments.GALE_WIND -> {
                     if (cooldownManager(shooter, "Gale Wind", galewindCooldown, 3.0)) {
@@ -85,7 +98,7 @@ object RangedListeners : Listener {
                     }
                 }
                 OdysseyEnchantments.OVERCHARGE -> {
-                    overchargeEnchantmentShoot(shooter, projectile)
+                    overchargeEnchantmentShoot(projectile, shooter, bow)
                 }
                 OdysseyEnchantments.PERPETUAL_PROJECTILE -> {
                     perpetualProjectileEnchantmentShoot(projectile, enchant.value)
@@ -96,8 +109,17 @@ object RangedListeners : Listener {
                 OdysseyEnchantments.SHARPSHOOTER -> {
                     sharpshooterEnchantmentShoot(projectile, enchant.value)
                 }
+                OdysseyEnchantments.SINGLE_OUT -> {
+                    singleOutEnchantmentShoot(projectile, enchant.value)
+                }
+                OdysseyEnchantments.SINGULARITY_SHOT -> {
+                    singularityShotEnchantmentShoot(projectile, enchant.value, shooter)
+                }
                 OdysseyEnchantments.SOUL_REND -> {
                     soulRendEnchantmentShoot(projectile, enchant.value)
+                }
+                OdysseyEnchantments.TEMPORAL_TORRENT -> {
+                    temporalTorrentEnchantmentShoot(projectile, enchant.value)
                 }
                 OdysseyEnchantments.VULNEROCITY -> {
                     vulnerocityEnchantmentShoot(projectile, enchant.value)
@@ -126,6 +148,15 @@ object RangedListeners : Listener {
                 EntityTags.DEATH_FROM_ABOVE_ARROW -> {
                     event.damage += deathFromAboveEnchantmentHit(projectile, victim, shooter)
                 }
+                EntityTags.ENTANGLEMENT_ARROW -> {
+                    event.damage += entanglementEnchantmentHit(projectile, victim, shooter)
+                }
+                EntityTags.HEAVY_BALLISTICS_ARROW -> {
+                    event.damage += heavyBallisticsEnchantmentHit(projectile)
+                }
+                EntityTags.LUXPOSE_ARROW -> {
+                    event.damage += luxposeEnchantmentHit(projectile, victim)
+                }
                 EntityTags.OVERCHARGE_ARROW -> {
                     event.damage += overchargeEnchantmentHit(projectile)
                 }
@@ -134,6 +165,9 @@ object RangedListeners : Listener {
                 }
                 EntityTags.SHARPSHOOTER_ARROW -> {
                     event.damage += sharpshooterEnchantmentHit(projectile)
+                }
+                EntityTags.SINGLE_OUT_ARROW -> {
+                    event.damage += singleOutEnchantmentHit(projectile, victim)
                 }
                 EntityTags.SOUL_REND_ARROW -> {
                     soulRendEnchantmentHit(shooter, projectile, victim)
@@ -149,10 +183,11 @@ object RangedListeners : Listener {
         //if (event.entity.shooter !is LivingEntity) { return }
         //val shooter: LivingEntity = event.entity.shooter as LivingEntity
         val projectile: Projectile = event.entity
-
         if (event.hitEntity is LivingEntity) {
             val victim: LivingEntity = event.hitEntity as LivingEntity
-            for (tag in projectile.scoreboardTags) {
+            if (projectile.scoreboardTags.isEmpty()) return
+            val tags = projectile.scoreboardTags.toSet() // Prevent async problems
+            for (tag in tags) {
                 when (tag) {
                     EntityTags.BOLA_SHOT_ARROW -> {
                         bolaShotEnchantmentHit(projectile, victim)
@@ -245,7 +280,8 @@ object RangedListeners : Listener {
     }
 
     // Helper function to clone projectiles and their tags and to omit provided ones
-    private fun Projectile.cloneAndTag(projectile: Projectile, omitList: List<String> = listOf()) {
+    internal fun Projectile.cloneAndTag(projectile: Projectile, omitList: List<String> = listOf()) {
+        // CAN HAVE SET SHOOT ON to launch event again but need to fix bugs
         if (this is AbstractArrow) {
             isPersistent = false
             fireTicks = projectile.fireTicks
@@ -256,17 +292,27 @@ object RangedListeners : Listener {
             if (hasCustomEffects()) {
                 basePotionData = (projectile as Arrow).basePotionData
             }
+            pierceLevel = maxOf((projectile as Arrow).pierceLevel - 1, 0)
         }
         if (this is ThrownPotion) {
             item = (projectile as ThrownPotion).item
+        }
+        if (this is Firework) {
+            fireworkMeta = (projectile as Firework).fireworkMeta
+            //setGravity(false)
         }
         // Tags
         for (tag in projectile.scoreboardTags) {
             if (tag in omitList) continue
             //if (tag == EntityTags.ORIGINAL_ARROW)
-            scoreboardTags.add(tag)
+            this.addScoreboardTag(tag)
         }
+        // Stats
+        fireTicks = projectile.fireTicks
+        setGravity(projectile.hasGravity()) // Perpetual
+        // Shooter
         shooter = projectile.shooter
+        setHasLeftShooter(false)
     }
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -344,7 +390,9 @@ object RangedListeners : Listener {
             }
             shooter.addScoreboardTag(EntityTags.IS_BURST_BARRAGING)
             val initialVelocity = projectile.velocity.clone()
-            BurstBarrageTask(shooter, level, initialVelocity, projectile).runTaskTimer(Odyssey.instance, 3, 3)
+            // Tasks
+            val task = BurstBarrageTask(shooter, level, initialVelocity, projectile)
+            task.runTaskTimer(Odyssey.instance, 3, 3)
         }
 
     }
@@ -361,7 +409,6 @@ object RangedListeners : Listener {
     private fun chainReactionEnchantmentHit(projectile: Projectile, victim: LivingEntity) {
         if (projectile.scoreboardTags.contains(EntityTags.CHAIN_REACTION_SPAWNED)) return
         val modifier = projectile.getIntTag(EntityTags.CHAIN_REACTION_MODIFIER) ?: return
-        if (victim.noDamageTicks > 0) return
         if (modifier <= 1) return
         // Get Entities
         val lastHitID = projectile.getIntTag(EntityTags.CHAIN_REACTION_LAST_HIT) ?: 0
@@ -384,6 +431,16 @@ object RangedListeners : Listener {
                 }
             }
         }
+        // If Piercing
+        /*
+        if (projectile is Arrow) {
+            if (projectile.pierceLevel > 1) {
+                projectile.setIntTag(EntityTags.CHAIN_REACTION_MODIFIER, modifier - 1)
+            }
+        }
+
+         */
+
         // Velocity
         val destination = closest.location.clone()
         val velocity = destination.clone().subtract(origin).toVector().normalize().multiply(speed)
@@ -427,10 +484,10 @@ object RangedListeners : Listener {
             // Math
             val angle = Math.PI * 2 * (x / (radiusAmount * 1.0))
             val angularCoordinates: Pair<Double, Double> = Pair(5 * cos(angle), 5 * sin(angle))
-            val origin = projectile.location
+            val origin = victim.eyeLocation.clone()
             val destination = origin.clone().add(angularCoordinates.first, 0.1, angularCoordinates.second)
             val newVelocity = destination.subtract(origin).toVector().normalize().multiply(1.77)
-            val spawnLocation = victim.location.clone().add(0.0, 0.5, 0.0)
+            val spawnLocation = origin.clone().add(0.0, 0.5, 0.0)
             (projectile.world.spawnEntity(spawnLocation, projectile.type) as Projectile).also {
                 // Projectile
                 it.velocity = newVelocity
@@ -449,9 +506,10 @@ object RangedListeners : Listener {
     }
 
     private fun deadeyeEnchantmentHit(projectile: Entity, victim: LivingEntity): Double {
-        val modifier = projectile.getIntTag(EntityTags.SHARPSHOOTER_MODIFIER) ?: return 0.0
-        if (projectile.location.distance(victim.eyeLocation) < 0.1) {
-            return 2.0 + (modifier * 2)
+        val modifier = projectile.getIntTag(EntityTags.DEADEYE_MODIFIER) ?: return 0.0
+        val distance = projectile.location.distance(victim.eyeLocation)
+        if (distance <= 1.15) {
+            return 3.0 + (modifier * 2)
         }
         return 0.0
     }
@@ -465,7 +523,7 @@ object RangedListeners : Listener {
     }
 
     private fun deathFromAboveEnchantmentHit(projectile: Projectile, victim: LivingEntity, shooter: LivingEntity): Double {
-        val modifier = projectile.getIntTag(EntityTags.SHARPSHOOTER_MODIFIER) ?: return 0.0
+        val modifier = projectile.getIntTag(EntityTags.DEATH_FROM_ABOVE_MODIFIER) ?: return 0.0
         if (victim.location.distance(shooter.location) > 16) {
             return 1.5 + (modifier * 1.5)
         }
@@ -475,78 +533,171 @@ object RangedListeners : Listener {
 
     // ------------------------------- DOUBLE_TAP ------------------------------------
     private fun doubleTapEnchantmentShoot(projectile: Entity, shooter: LivingEntity) {
-        if (shooter.scoreboardTags.contains(EntityTags.DOUBLE_TAP_SHOT)) {
-            shooter.scoreboardTags.remove(EntityTags.DOUBLE_TAP_SHOT)
-            return
-        } else {
-            if (projectile !is Projectile) return
-            shooter.addScoreboardTag(EntityTags.DOUBLE_TAP_SHOT)
-            shooter.launchProjectile(projectile.javaClass).also {
+        if (projectile !is Projectile) return
+        if (projectile.scoreboardTags.contains(EntityTags.DOUBLE_TAP_SHOT)) return
+        (shooter.world.spawnEntity(shooter.eyeLocation, projectile.type) as Projectile).also {
+            it.cloneAndTag(projectile)
+            it.addScoreboardTag(EntityTags.DOUBLE_TAP_SHOT)
+            //val speed = projectile.velocity.clone().length() * 0.95
+            //it.velocity = shooter.eyeLocation.direction.clone().normalize().multiply(speed)
+            it.velocity = projectile.velocity.clone().multiply(0.95)
+        }
+
+    }
+
+    // ------------------------------- ENTANGLEMENT ------------------------------------
+    // Quantum Entanglement does TP (legendary affix)
+    private fun entanglementEnchantmentShoot(projectile: Entity, level: Int) {
+        with(projectile) {
+            addScoreboardTag(EntityTags.ENTANGLEMENT_ARROW)
+            setIntTag(EntityTags.ENTANGLEMENT_MODIFIER, level)
+        }
+    }
+
+    private fun entanglementEnchantmentHit(projectile: Projectile, victim: LivingEntity, shooter: LivingEntity): Double {
+        val modifier = projectile.getIntTag(EntityTags.ENTANGLEMENT_MODIFIER) ?: return 0.0
+        victim.addScoreboardTag(EntityTags.ENTANGLED)
+        val nearby = victim.location.getNearbyLivingEntities(10.0).filter {
+            it.scoreboardTags.contains(EntityTags.ENTANGLED) && it != victim
+        }
+        if (nearby.isEmpty()) return 0.0
+        val other = nearby.first()
+        // Math
+        val origin1 = victim.eyeLocation.clone()
+        val destination1 = other.eyeLocation.clone()
+        val origin2 = other.eyeLocation.clone()
+        val destination2 = victim.eyeLocation.clone()
+        val distance = origin1.distance(origin2)
+        val velocity1 = destination1.subtract(origin1).toVector().normalize().multiply(0.5 + (0.125 * distance))
+        val velocity2 = destination2.subtract(origin2).toVector().normalize().multiply(0.5 + (0.125 * distance))
+        victim.velocity = velocity1
+        victim.scoreboardTags.remove(EntityTags.ENTANGLED)
+        other.velocity = velocity2
+        other.scoreboardTags.remove(EntityTags.ENTANGLED)
+        // Damage
+        other.damage(modifier * 1.0)
+        return modifier * 1.0
+    }
+
+
+    // ------------------------------- FAN_FIRE ------------------------------------
+
+    private fun fanFireEnchantmentShoot(projectile: Entity, shooter: LivingEntity, level: Int) {
+        if (projectile !is Projectile) return
+        if (projectile.scoreboardTags.contains(EntityTags.FAN_FIRE_SHOT)) return
+        // Math
+        val vector1 = shooter.eyeLocation.direction
+        val getVector2 = { dest: Location, orig: Location -> dest.clone().subtract(orig).toVector() }
+        val nearby = shooter.world.getNearbyLivingEntities(shooter.location, 8.0).filter {
+            it != shooter && vector1.angle(getVector2(it.eyeLocation, shooter.eyeLocation)) < 1.74533
+        }
+        if (nearby.isEmpty()) return
+        val counter = minOf(nearby.size, level)
+        val origin = shooter.eyeLocation.clone()
+        // Run shoot
+        for (x in 1..counter) {
+            val target = nearby[x - 1]
+            (shooter.world.spawnEntity(shooter.eyeLocation, projectile.type) as Projectile).also {
                 it.cloneAndTag(projectile)
-                it.velocity = projectile.velocity.clone().multiply(0.95)
+                it.scoreboardTags.add(EntityTags.FAN_FIRE_SHOT)
+                // Velocity
+                val speed = projectile.velocity.length() * 0.5
+                val destination = target.eyeLocation.clone()
+                val velocity = destination.subtract(origin).toVector().normalize().multiply(speed)
+                it.velocity = velocity
             }
         }
     }
 
-    // TODO: Same for fanfire the tag cancel
+
 
     // ------------------------------- GALE_WIND ------------------------------------
-    private fun galeWindEnchantmentShoot(shooter: LivingEntity, enchantmentStrength: Int) {
+    private fun galeWindEnchantmentShoot(shooter: LivingEntity, level: Int) {
         shooter.world.playSound(shooter.location, Sound.ENTITY_WARDEN_SONIC_CHARGE, 2.5F, 1.5F)
-        GaleWindTask(shooter, enchantmentStrength).runTaskLater(Odyssey.instance, 6)
+        val task = GaleWindTask(shooter, level)
+        task.runTaskLater(Odyssey.instance, 6)
     }
+
+    // ------------------------------- HEAVY_BALLISTICS ------------------------------------
+    private fun heavyBallisticsEnchantmentShoot(projectile: Entity, level: Int) {
+        with(projectile) {
+            addScoreboardTag(EntityTags.HEAVY_BALLISTICS_ARROW)
+            setIntTag(EntityTags.HEAVY_BALLISTICS_MODIFIER, level)
+        }
+    }
+
+    private fun heavyBallisticsEnchantmentHit(projectile: Projectile): Double {
+        val modifier = projectile.getIntTag(EntityTags.HEAVY_BALLISTICS_MODIFIER) ?: return 0.0
+        return modifier * 1.0
+    }
+
 
     // ------------------------------- LUCKY_DRAW ------------------------------------
     private fun luckyDrawEnchantmentShoot(enchantmentStrength: Int): Boolean {
         return (enchantmentStrength * 10) + 7 > (0..100).random()
     }
 
-    // ------------------------------- OVERCHARGE ------------------------------------
-    private fun overchargeEnchantmentLoad(player: Player, bow: ItemStack, level: Int) {
-        // TODO: Move Overcharge cooldown to bow
-        if (player.scoreboardTags.contains(EntityTags.OVERCHARGE_COOLDOWN)) {
-            player.scoreboardTags.remove(EntityTags.OVERCHARGE_COOLDOWN)
-            return
-        }
-
-        if (!player.scoreboardTags.contains(EntityTags.OVERCHARGING)) {
-            player.scoreboardTags.add(EntityTags.OVERCHARGING)
-            player.scoreboardTags.add(EntityTags.OVERCHARGE_MODIFIER + 0)
-            val overchargeTask = OverchargeTask(player, bow, level)
-            overchargeTask.runTaskTimer(Odyssey.instance, (20 * 2) + 10, 20 * 2)
+    // ------------------------------- LUXPOSE ------------------------------------
+    private fun luxposeEnchantmentShoot(projectile: Entity, level: Int) {
+        with(projectile) {
+            addScoreboardTag(EntityTags.LUXPOSE_ARROW)
+            setIntTag(EntityTags.LUXPOSE_MODIFIER, level)
         }
     }
 
-    private fun overchargeEnchantmentShoot(shooter: LivingEntity, projectile: Entity) {
-        with(shooter.scoreboardTags) {
-            for (x in 1..5) {
-                if (contains(EntityTags.OVERCHARGE_MODIFIER + x) && contains(EntityTags.OVERCHARGING)) {
-                    remove(EntityTags.OVERCHARGE_MODIFIER + x)
-                    remove(EntityTags.OVERCHARGING)
-                    //if (x != 0) { add(EntityTags.OVERCHARGE_COOLDOWN) }
-                    projectile.velocity.multiply(1 + (x * 0.2))
-                    projectile.scoreboardTags.add(EntityTags.OVERCHARGE_MODIFIER + x)
-                    break
-                }
-            }
+    private fun luxposeEnchantmentHit(projectile: Projectile, victim: LivingEntity): Double {
+        if (!victim.isGlowing) return 0.0
+        val modifier = projectile.getIntTag(EntityTags.LUXPOSE_MODIFIER) ?: return 0.0
+        return modifier * 1.0
+    }
+
+
+    // ------------------------------- OVERCHARGE ------------------------------------
+    private fun overchargeEnchantmentLoad(player: Player, bow: ItemStack, level: Int) {
+        if (player.scoreboardTags.contains(EntityTags.OVERCHARGING)) return
+        player.scoreboardTags.add(EntityTags.OVERCHARGING)
+        // Prevent Spam
+        player.setIntTag(EntityTags.OVERCHARGE_MODIFIER, 0)
+        // Task
+        val task = OverchargeTask(player, bow, level)
+        val delay = (20 * 2)
+        if (currentOverchargeTasks[player.uniqueId] != null) {
+            currentOverchargeTasks[player.uniqueId]?.cancel()
         }
-        projectile.scoreboardTags.add(EntityTags.OVERCHARGE_ARROW)
+        currentOverchargeTasks[player.uniqueId] = task
+        task.runTaskTimer(Odyssey.instance, delay.toLong(), 10) // Run Effects every other
+    }
+
+    private fun overchargeEnchantmentShoot(projectile: Entity, shooter: LivingEntity, bow: ItemStack) {
+        if (!shooter.scoreboardTags.contains(EntityTags.OVERCHARGING)) return
+        val modifier = shooter.getIntTag(EntityTags.OVERCHARGE_MODIFIER) ?: return
+        // Remove all responsible tags
+        shooter.removeScoreboardTag(EntityTags.OVERCHARGING)
+        shooter.removeTag(EntityTags.OVERCHARGE_MODIFIER)
+        if (modifier == 0) return
+        // Get task
+        val task = currentOverchargeTasks[shooter.uniqueId] ?: return
+        val taskBow = task.bow
+        task.cancel()
+        if (taskBow != bow) return
+
+        with(projectile) {
+            addScoreboardTag(EntityTags.OVERCHARGE_ARROW)
+            setIntTag(EntityTags.OVERCHARGE_MODIFIER, modifier)
+            velocity = projectile.velocity.multiply(1 + (modifier * 0.2))
+        }
     }
 
     private fun overchargeEnchantmentHit(projectile: Projectile): Double {
-        for (x in 1..5) {
-            if (projectile.scoreboardTags.contains(EntityTags.OVERCHARGE_MODIFIER + x)) {
-                return x * 3.0
-            }
-        }
-        return 0.0
+        val modifier = projectile.getIntTag(EntityTags.OVERCHARGE_MODIFIER) ?: return 0.0
+        return 3.0 * modifier
     }
 
     // ------------------------------- PERPETUAL_PROJECTILE ------------------------------------
-    private fun perpetualProjectileEnchantmentShoot(projectile: Entity, enchantmentStrength: Int) {
+    private fun perpetualProjectileEnchantmentShoot(projectile: Entity, level: Int) {
         projectile.run {
             addScoreboardTag(EntityTags.PERPETUAL_ARROW)
-            addScoreboardTag(EntityTags.PERPETUAL_MODIFIER + enchantmentStrength)
+            setIntTag(EntityTags.PERPETUAL_MODIFIER, level)
             setGravity(false)
             isPersistent = false
         }
@@ -579,6 +730,8 @@ object RangedListeners : Listener {
         // Spawn New Arrow
         (projectile.world.spawnEntity(projectile.location.clone(), projectile.type) as Projectile).also {
             it.cloneAndTag(projectile)
+            it.setIntTag(EntityTags.RICOCHET_BOUNCE, bounce + 1)
+            it.setIntTag(EntityTags.RICOCHET_MODIFIER, modifier)
             // Math
             val normal = normalVector.clone().normalize()
             val input = projectile.velocity.clone().normalize()
@@ -590,16 +743,44 @@ object RangedListeners : Listener {
     // ------------------------------- SHARPSHOOTER ------------------------------------
     private fun sharpshooterEnchantmentShoot(projectile: Entity, level: Int) {
         with(projectile) {
-            if (velocity.length() <= 2.8) return
+            if (velocity.length() <= 2.6) return
             addScoreboardTag(EntityTags.SHARPSHOOTER_ARROW)
             setIntTag(EntityTags.SHARPSHOOTER_MODIFIER, level)
-            velocity.multiply(1 + (0.1 * level))
+            velocity = velocity.multiply(1 + (0.1 * level))
         }
     }
 
     private fun sharpshooterEnchantmentHit(projectile: Entity): Double {
         val modifier = projectile.getIntTag(EntityTags.SHARPSHOOTER_MODIFIER) ?: return 0.0
         return modifier * 0.5
+    }
+
+    // ------------------------------- SINGLE_OUT ------------------------------------
+    private fun singleOutEnchantmentShoot(projectile: Entity, level: Int) {
+        with(projectile) {
+            addScoreboardTag(EntityTags.SINGLE_OUT_ARROW)
+            setIntTag(EntityTags.SINGLE_OUT_MODIFIER, level)
+        }
+    }
+
+    private fun singleOutEnchantmentHit(projectile: Entity, victim: LivingEntity): Double {
+        val modifier = projectile.getIntTag(EntityTags.SHARPSHOOTER_MODIFIER) ?: return 0.0
+        if (victim.location.world.getNearbyLivingEntities(victim.location, 16.0).isNotEmpty()) return 0.0
+        return (modifier * 2.0) + 1.0
+    }
+
+    // ------------------------------- SINGULARITY_SHOT ------------------------------------
+    private fun singularityShotEnchantmentShoot(projectile: Entity, level: Int, shooter: LivingEntity) {
+        with(projectile) {
+            // Task
+            addScoreboardTag(EffectTags.GRAVITY_WELLED)
+            addScoreboardTag(EntityTags.MOVING_SINGULARITY)
+            val modifier = (level * 1) + 1
+            val maxCount = (level * 2) * 2
+            val singularityShotTask = GravitySingularityTask(projectile, shooter, modifier, maxCount)
+            singularityShotTask.runTaskTimer(Odyssey.instance, 0, 10)
+            velocity.multiply(1.0 - (0.1 * modifier))
+        }
     }
 
     // ------------------------------- SOUL_REND ------------------------------------
@@ -623,7 +804,7 @@ object RangedListeners : Listener {
             if (isSoulRended) {
                 val modifier = it.getIntTag(EntityTags.SOUL_REND_MODIFIER)!!
                 // Damage
-                val soulRendDamage = it.arrowsInBody * ((modifier * 0.5) + 0.5)
+                val soulRendDamage = it.arrowsInBody * (modifier * 1.0)
                 it.damage(soulRendDamage, activator)
                 it.arrowsInBody = 0
                 it.removeTag(EntityTags.SOUL_RENDED_BY)
@@ -633,6 +814,20 @@ object RangedListeners : Listener {
             }
         }
     }
+
+    // ------------------------------- TEMPORAL_TORRENT ------------------------------------
+    private fun temporalTorrentEnchantmentShoot(projectile: Entity, level: Int) {
+        with(projectile) {
+            if (projectile !is Projectile) return
+            addScoreboardTag(EntityTags.TEMPORAL_TORRENT_ARROW)
+            setIntTag(EntityTags.TEMPORAL_TORRENT_MODIFIER, level)
+            // Task
+            val task = TemporalTorrentTask(level, projectile.velocity.clone(), projectile)
+            projectile.velocity = projectile.velocity.clone().multiply(1.0 - (0.1 * level))
+            task.runTaskTimer(Odyssey.instance, 0, 4) // Every 4 ticks / 0.2 secs
+        }
+    }
+
 
     // ------------------------------- VULNEROCITY ------------------------------------
 

@@ -14,7 +14,7 @@ object AlchemyArtillery : OdysseyEnchantment("alchemy_artillery", "Alchemy Artil
 
     override fun canEnchantItem(item: ItemStack): Boolean {
         return when (item.type) {
-            Material.ENCHANTED_BOOK, Material.CROSSBOW -> {
+            Material.ENCHANTED_BOOK, Material.CROSSBOW, Material.BOW -> {
                 true
             }
             else -> {
