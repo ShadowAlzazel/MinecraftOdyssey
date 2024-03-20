@@ -5,8 +5,9 @@ import me.shadowalzazel.mcodyssey.alchemy.base.OdysseyPotion
 import me.shadowalzazel.mcodyssey.constants.EffectTags
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.ItemTags
-import me.shadowalzazel.mcodyssey.constants.ItemTags.addIntTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.setIntTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.addStringTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
 import me.shadowalzazel.mcodyssey.effects.EffectColors
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -30,18 +31,19 @@ object Potions : AlchemyManager {
             if (potionEffects != null && potionEffects.isNotEmpty()) {
                 for (effect in potionEffects) { potionMeta.addCustomEffect(effect, true) }
                 potionMeta.basePotionData = PotionData(PotionType.THICK)
-                // FOr continuity
+                // For Cauldron usage
                 if (this@createPotionStack == CRYSTALLINE_POTION) {
                     potionMeta.basePotionData = PotionData(PotionType.UNCRAFTABLE)
                 }
             }
             itemMeta = potionMeta
             if (isOdysseyEffect) {
-                potionMeta.basePotionData = PotionData(PotionType.UNCRAFTABLE) // TODO: MAYBE CHANGE TO MUNDANE
+                potionMeta.basePotionData = PotionData(PotionType.UNCRAFTABLE)
                 itemMeta = potionMeta
+                addTag(ItemTags.IS_ODYSSEY_EFFECT)
                 addStringTag(ItemTags.ODYSSEY_EFFECT_TAG, odysseyEffectTag)
-                addIntTag(ItemTags.ODYSSEY_EFFECT_TIME, odysseyEffectTimeInTicks) // Int
-                addIntTag(ItemTags.ODYSSEY_EFFECT_AMPLIFIER, odysseyEffectAmplifier) // Int
+                setIntTag(ItemTags.ODYSSEY_EFFECT_TIME, odysseyEffectTimeInTicks) // Int
+                setIntTag(ItemTags.ODYSSEY_EFFECT_AMPLIFIER, odysseyEffectAmplifier) // Int
                 addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS)
                 val component = createEffectComponent(odysseyEffectTag, odysseyEffectTimeInTicks, odysseyEffectAmplifier)
                 val newLore = lore() ?: mutableListOf()

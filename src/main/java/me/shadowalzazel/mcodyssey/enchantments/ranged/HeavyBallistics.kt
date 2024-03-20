@@ -2,6 +2,7 @@ package me.shadowalzazel.mcodyssey.enchantments.ranged
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -21,5 +22,13 @@ object HeavyBallistics : OdysseyEnchantment("heavy_ballistics", "Heavy Ballistic
                 false
             }
         }
+    }
+
+    override fun getDescriptionToolTip(inputLevel: Int): List<Component> {
+        val amount1 = inputLevel
+        val text1 = "Crossbows do $amount1=[level] more damage."
+        return listOf(
+            getGrayComponentText(text1)
+        )
     }
 }

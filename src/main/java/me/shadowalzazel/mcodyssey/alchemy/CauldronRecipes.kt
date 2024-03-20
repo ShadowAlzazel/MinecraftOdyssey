@@ -267,7 +267,7 @@ object CauldronRecipes {
         potion = Potions.CUSTOM_CONCOCTION,
         ingredientSize = 3,
         specificList = listOf(
-            ItemStack(Material.CHORUS_FRUIT, 2)),
+            ItemStack(Material.POPPED_CHORUS_FRUIT, 2)),
         isCombination = true,
         comboEffectTypeList = listOf(),
         viableFuel = fireFuels)
@@ -276,7 +276,7 @@ object CauldronRecipes {
         potion = Potions.CUSTOM_CONCOCTION,
         ingredientSize = 4,
         specificList = listOf(
-            ItemStack(Material.CHORUS_FRUIT, 3)),
+            ItemStack(Material.POPPED_CHORUS_FRUIT, 3)),
         isCombination = true,
         comboEffectTypeList = listOf(),
         viableFuel = fireFuels)
@@ -285,7 +285,7 @@ object CauldronRecipes {
         potion = Potions.CUSTOM_CONCOCTION,
         ingredientSize = 5,
         specificList = listOf(
-            ItemStack(Material.CHORUS_FRUIT, 4)),
+            ItemStack(Material.POPPED_CHORUS_FRUIT, 4)),
         isCombination = true,
         comboEffectTypeList = listOf(),
         viableFuel = fireFuels)
@@ -294,7 +294,7 @@ object CauldronRecipes {
         potion = Potions.CUSTOM_CONCOCTION,
         ingredientSize = 6,
         specificList = listOf(
-            ItemStack(Material.CHORUS_FRUIT, 5)),
+            ItemStack(Material.POPPED_CHORUS_FRUIT, 5)),
         isCombination = true,
         comboEffectTypeList = listOf(),
         viableFuel = fireFuels)

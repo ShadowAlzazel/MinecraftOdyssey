@@ -14,37 +14,46 @@ object ItemTags {
     const val IS_ARCHAIC_SEED: String = "odyssey.is_archaic_seed"
     const val ARCHAIC_NAMESPACE: String = "odyssey.archaic_namespace"
 
-    // Utility
-    const val ALCHEMY_ARTILLERY_LOADED: String = "alchemy_artillery_loaded"
+    // Alchemy
+    const val ALCHEMY_ARTILLERY_LOADED: String = "odyssey.alchemy_artillery_loaded"
+    const val ALCHEMY_COPY_STORED: String = "odyssey.alchemy_copy_stored"
+    const val ALCHEMICAL_AMMO_COUNT: String ="odyssey.alchemical_ammo_count"
+    const val IS_ALCHEMY_COMBINATION: String = "odyssey.is_alchemy_combination" // For Alchemy Combinations/ Concoctions
+    const val IS_CUSTOM_EFFECT: String = "odyssey.is_custom_effect"
+    const val IS_ODYSSEY_EFFECT: String = "odyssey.is_odyssey_effect"
+
+    // Custom Effects
+    const val ODYSSEY_EFFECT_TIME: String = "odyssey.custom_effect_time" // Stores Int for ticks
+    const val ODYSSEY_EFFECT_TAG: String = "odyssey.custom_effect_tag" // Stores String USE for Odyssey Effects
+    const val ODYSSEY_EFFECT_AMPLIFIER: String = "odyssey.custom_effect_amplifier" // Stores Int
+
+    // Potions
+    const val POTION_CHARGES_LEFT: String = "odyssey.potion_charges_left" // NEEDS AN INT DATA TYPE
+    const val IS_LARGE_POTION: String = "odyssey.is_large_potion" // Many Charges of same potency
+    const val IS_POTION_VIAL: String = "odyssey.is_vial" // Multiple charges of lesser potency
+    const val IS_EXTENDED_PLUS: String = "odyssey.is_extended_plus"
+    const val IS_UPGRADED_PLUS: String = "odyssey.is_upgraded_plus"
+
+    // Weapons
     const val AUTO_LOADER_LOADING: String = "odyssey.auto_loader_loading"
+
+    // Engraving
     const val IS_ENGRAVED: String = "odyssey.is_engraved"
     const val ENGRAVED_BY: String = "engraved_by"
+
+    // Tool Types
     const val SOUL_STEEL_TOOL: String = "soul_steel_tool"
     const val NETHERITE_TOOL: String = "netherite_tool"
-
     // Enchanting
     const val GILDED_SLOTS: String = "gilded_slots"
     const val ENCHANT_SLOTS: String = "enchant_slots"
     const val IS_SLOTTED: String = "odyssey.is_slotted"
-
-    // Potions
-    const val POTION_CHARGES_LEFT: String = "odyssey.potion_charges_left" // NEEDS AN INT DATA TYPE
-    const val LARGE_POTION: String = "odyssey.large_potion" // Many charges
-
-    // Alchemy
-    const val IS_ALCHEMY_COMBINATION: String = "odyssey.is_alchemy_combination" // For Alchemy Combinations/ Concoctions
-    const val IS_CUSTOM_EFFECT: String = "odyssey.is_custom_effect" // Stores Boolean
 
     // Runes
     const val IS_RUNEWARE: String = "odyssey.is_runeware" // A finished runic vessel capable of holding multiple rune shards
     const val RUNEWARE_AUGMENT_COUNT: String = "odyssey.runeware_augment_count"
     const val IS_RUNESHERD: String = "odyssey.is_runesherd"
     const val HAS_RUNE_AUGMENT: String = "odyssey.has_rune_augment"
-
-    // Custom Effects
-    const val ODYSSEY_EFFECT_TIME: String = "odyssey.custom_effect_time" // Stores Int for ticks
-    const val ODYSSEY_EFFECT_TAG: String = "odyssey.custom_effect_tag" // Stores String USE EffectTags
-    const val ODYSSEY_EFFECT_AMPLIFIER: String = "odyssey.custom_effect_amplifier" // Stores Int
 
     // Compasses
     const val IS_SCULK_FINDER: String = "odyssey.is_sculk_finder"
@@ -55,7 +64,7 @@ object ItemTags {
         return has(DataKeys.ITEM_KEY)
     }
 
-    fun ItemStack.hasOdysseyTag(): Boolean {
+    fun ItemStack.hadOdysseyItemTag(): Boolean {
         return itemMeta.persistentDataContainer.hasOdysseyTag()
     }
 
@@ -86,7 +95,7 @@ object ItemTags {
         }
     }
 
-    fun ItemStack.addIntTag(tag: String, count: Int) {
+    fun ItemStack.setIntTag(tag: String, count: Int) {
         val tagKey = NamespacedKey(Odyssey.instance, tag)
         itemMeta = itemMeta.also {
             it.persistentDataContainer.set(tagKey, PersistentDataType.INTEGER, count)
@@ -116,7 +125,7 @@ object ItemTags {
         }
     }
 
-    fun ItemStack.getUUIDString(): String {
+    fun ItemStack.getUUIDTag(): String {
         return itemMeta.persistentDataContainer[DataKeys.UUID_KEY, PersistentDataType.STRING] ?: UUID.randomUUID().toString()
     }
 

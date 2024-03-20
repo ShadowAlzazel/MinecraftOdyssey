@@ -2,13 +2,16 @@ package me.shadowalzazel.mcodyssey.listeners
 
 import io.papermc.paper.event.entity.EntityLoadCrossbowEvent
 import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.alchemy.utility.ThickPotion
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.ItemTags
 import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.getUUIDString
+import me.shadowalzazel.mcodyssey.constants.ItemTags.getIntTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.getUUIDTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.removeTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.setIntTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.setUUIDTag
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.BLUDGEON_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.CLEAVE_MAP
@@ -374,7 +377,7 @@ object WeaponListeners : Listener {
 
     // Event for detecting when entity shoots bow
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     fun bowShootHandler(event: EntityShootBowEvent) {
         val bow = event.bow ?: return
         if (!bow.hasItemMeta()) return
@@ -449,24 +452,39 @@ object WeaponListeners : Listener {
     /*-----------------------------------------------------------------------------------------------*/
     // ALCHEMICAL BOLTER
 
-    private var ALCHEMY_ARTILLERY_AMMO = mutableMapOf<UUID, ItemStack?>() // DOES NOT SAVE AFTER SERVER SHUTDOWN
-    private var ALCHEMY_ARTILLERY_COUNTER = mutableMapOf<UUID, Int>()
+    private var LOADED_ALCHEMICAL_AMMO = mutableMapOf<UUID, ItemStack?>() // CURRENTLY DOES NOT SAVE AFTER SERVER SHUTDOWN
 
     private fun alchemicalBolterLoadingHandler(loader: LivingEntity, crossbow: ItemStack): Boolean {
-        if (!(loader.equipment!!.itemInOffHand.type == Material.SPLASH_POTION || loader.equipment!!.itemInOffHand.type == Material.LINGERING_POTION)) {
+        // CHANGE TO GET HAND
+        val offhandIsPotion = loader.equipment!!.itemInOffHand.type in listOf(
+            Material.SPLASH_POTION, Material.LINGERING_POTION)
+        val offhandIsAmmo = loader.equipment!!.itemInOffHand == ThickPotion.createThickPotion() // change to component comparison
+        if (!offhandIsPotion && !offhandIsAmmo) {
             return false
         }
+
         val potionOffHand = loader.equipment!!.itemInOffHand
         return if (!crossbow.hasTag(ItemTags.ALCHEMY_ARTILLERY_LOADED)) {
             val newUUID = UUID.randomUUID()
+            val oldUUID =  UUID.fromString(crossbow.getUUIDTag())
             crossbow.addTag(ItemTags.ALCHEMY_ARTILLERY_LOADED)
             crossbow.setUUIDTag(newUUID)
             // Load Item to UUID
-            ALCHEMY_ARTILLERY_AMMO[newUUID] = potionOffHand // MAYBE STORE IN COMPONENTS FOR 1.20.5
+            // STORE IN COMPONENTS FOR 1.20.5 !!
+            val oldPotion = LOADED_ALCHEMICAL_AMMO[oldUUID]
+            if (offhandIsAmmo && oldPotion != null) {
+                LOADED_ALCHEMICAL_AMMO[newUUID] = oldPotion.clone()
+                LOADED_ALCHEMICAL_AMMO[oldUUID] = null
+                crossbow.addTag(ItemTags.ALCHEMY_COPY_STORED)
+            } else {
+                LOADED_ALCHEMICAL_AMMO[newUUID] = potionOffHand.clone()
+            }
+
+            // Load counter into tag/component
             val multiCounter = if (crossbow.itemMeta.hasEnchant(Enchantment.MULTISHOT)) 3 else 1
-            // Load Counter to UUID
-            ALCHEMY_ARTILLERY_COUNTER[newUUID] = multiCounter
-            loader.equipment!!.setItemInOffHand(ItemStack(Material.AIR, 1))
+            crossbow.setIntTag(ItemTags.ALCHEMICAL_AMMO_COUNT, multiCounter)
+            loader.equipment!!.itemInOffHand.subtract()
+            // Maybe need to load twice?? 1 the potion, then the ammo?
             false
         } else {
             true
@@ -482,28 +500,37 @@ object WeaponListeners : Listener {
         val shooter = event.entity
         val projectile = event.projectile
         var lastShot = false
-        var potion: ThrownPotion? = null
-        val bowUUID = UUID.fromString(crossbow.getUUIDString())
-        val count = ALCHEMY_ARTILLERY_COUNTER[bowUUID] ?: 1
+        var thrownPotion: ThrownPotion? = null
+        val bowUUID = UUID.fromString(crossbow.getUUIDTag())
+        val count = crossbow.getIntTag(ItemTags.ALCHEMICAL_AMMO_COUNT) ?: 1
         if (count >= 1) {
+            // Change to store in component projectiles 1.20.5
             // Spawn potion with item
-            potion = (shooter.world.spawnEntity(projectile.location, EntityType.SPLASH_POTION) as ThrownPotion).also {
-                it.item = ALCHEMY_ARTILLERY_AMMO[bowUUID] ?: ItemStack(Material.SPLASH_POTION, 1)
+            thrownPotion = (shooter.world.spawnEntity(projectile.location, EntityType.SPLASH_POTION) as ThrownPotion).also {
+                it.item = LOADED_ALCHEMICAL_AMMO[bowUUID] ?: ItemStack(Material.SPLASH_POTION, 1)
                 it.velocity = projectile.velocity.clone().multiply(0.6)
                 it.shooter = shooter
             }
-            ALCHEMY_ARTILLERY_COUNTER[bowUUID] = count - 1
-            if (ALCHEMY_ARTILLERY_COUNTER[bowUUID] == 0) {
+            // Multishot compatibility
+            crossbow.setIntTag(ItemTags.ALCHEMICAL_AMMO_COUNT, count - 1)
+            if (count - 1 == 0) {
                 lastShot = true
             }
         }
         if (lastShot) {
             crossbow.removeTag(ItemTags.ALCHEMY_ARTILLERY_LOADED)
-            ALCHEMY_ARTILLERY_AMMO[bowUUID] = null
+            // Do not remove saved potion if ammo
+            if (crossbow.hasTag(ItemTags.ALCHEMY_COPY_STORED)) {
+                crossbow.removeTag(ItemTags.ALCHEMY_COPY_STORED)
+            } /*
+            else {
+                LOADED_ALCHEMICAL_AMMO[bowUUID] = null
+            }
+            */
         }
         // Shoot if potion made
-        if (potion != null) {
-            event.projectile = potion
+        if (thrownPotion != null) {
+            event.projectile = thrownPotion
         }
     }
 

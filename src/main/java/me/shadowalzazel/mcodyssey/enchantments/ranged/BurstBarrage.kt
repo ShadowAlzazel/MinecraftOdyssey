@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.enchantments.ranged
 
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -27,6 +28,16 @@ object BurstBarrage : OdysseyEnchantment("burst_barrage", "Burst Barrage", 5) {
                 false
             }
         }
+    }
+
+    override fun getDescriptionToolTip(inputLevel: Int): List<Component> {
+        val amount1 = 2 + inputLevel
+        val text1 = "Shoot $amount1=[2 + level] consecutive arrows."
+        val text2 = "(This does not bypass immunity)"
+        return listOf(
+            getGrayComponentText(text1),
+            getGrayComponentText(text2),
+        )
     }
 
 }

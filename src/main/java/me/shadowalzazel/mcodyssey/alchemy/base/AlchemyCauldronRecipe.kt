@@ -82,6 +82,7 @@ class AlchemyCauldronRecipe(
                     if (potionMeta.color != null) { colors.add(potionMeta.color!!) }
                 }
             }
+            // Colors
             if (colors.isNotEmpty()) {
                 var red = 0
                 var green = 0
@@ -98,6 +99,7 @@ class AlchemyCauldronRecipe(
                     it.color!!.blue = blue / size
                 }
             }
+            // Item Meta
             result.itemMeta = resultMeta
             result.addTag(ItemTags.IS_ALCHEMY_COMBINATION)
         }
@@ -128,8 +130,8 @@ class AlchemyCauldronRecipe(
         if (itemMeta !is PotionMeta) return false
         val isConcoction = hasTag(ItemTags.IS_ALCHEMY_COMBINATION)
         if (isConcoction) return false
-        println("Is Not Concoction")
-        println("Custom Effects: ${(itemMeta as PotionMeta).customEffects}")
+        //println("Is Not Concoction")
+        //println("Custom Effects: ${(itemMeta as PotionMeta).customEffects}")
         val foundCustomEffect = (itemMeta as PotionMeta).customEffects.any { it.type in comboEffectTypeList } // Find at least one match
         val foundPotionData = (itemMeta as PotionMeta).basePotionData.type.effectType in comboEffectTypeList
         return foundPotionData || foundCustomEffect
@@ -150,6 +152,7 @@ class AlchemyCauldronRecipe(
         return hasPotionDataEffect || hasMetaEffect
     }
 
+    // TODO: Deprecated in 1.20.4
     private fun ItemStack.getEffectFromData(): PotionEffect {
         val potionData = (itemMeta as PotionMeta).basePotionData
         val baseTime: Int
@@ -188,8 +191,8 @@ class AlchemyCauldronRecipe(
         return PotionEffect(potionData.type.effectType!!, time.toInt(), amplifier)
     }
 
-    // TODO: Do minigame
 
+    // TODO: Do minigame
     // when hear ding, add chorus fruit for +10%
 
 }
