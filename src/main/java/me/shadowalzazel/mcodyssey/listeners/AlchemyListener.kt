@@ -65,8 +65,13 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
             val charges = item.getIntTag(ItemTags.POTION_CHARGES_LEFT) ?: 0
             if (charges <= 1) return
             // Run charge
+            val meta = item.itemMeta
+            if (meta.hasCustomModelData()) {
+                meta.setCustomModelData(meta.customModelData - 1)
+            }
             event.replacement = item.also {
                 it.setIntTag(ItemTags.POTION_CHARGES_LEFT, charges - 1)
+                it.itemMeta = meta
             }
         }
         /*
@@ -243,7 +248,7 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
         val ingredient = event.contents.ingredient ?: return
         val ingredientMaterial = ingredient.type
         // Get Potion Model
-        val potionModel: Int? = when (ingredientMaterial) {
+        var potionModel: Int? = when (ingredientMaterial) {
             Material.REDSTONE -> {
                 ItemModels.VOLUMETRIC_BOTTLE
             }
@@ -292,6 +297,7 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
             // For Vials
             else if (ingredientMaterial == Material.PRISMARINE_CRYSTALS) {
                 event.results[x] = makeVialPotion(item)
+                potionModel = ItemModels.VIAL_CHARGE_5
             }
             // --------------------------------------------------
             // For Handling Converting Odyssey Effects into Splash or Lingering
@@ -310,7 +316,7 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
                     it.setCustomModelData(potionModel)
                 }
             }
-            // For Handling Changing Materials AND saving previous model
+            // For Handling Changing Materials AND saving previous model FIX as it chooses one for all 3 slots
             else if (item.itemMeta.hasCustomModelData()) {
                 event.results[x].itemMeta = event.results[x].itemMeta.also {
                     it.setCustomModelData(item.itemMeta.customModelData)

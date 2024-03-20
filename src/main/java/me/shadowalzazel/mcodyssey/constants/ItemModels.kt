@@ -20,7 +20,12 @@ object ItemModels {
     const val DAIRYSHAPE_BOTTLE: Int = 6905318 // Super or For Fun
     const val ROUND_BOTTLE: Int = 6905319 // For Odyssey Effect Potions Without Time
     const val CONCOCTION_BOTTLE: Int = 6905320 // For Potion Effect Combinations
-    // Decoction
+    // Vial
+    const val VIAL_CHARGE_1: Int = 6905431
+    const val VIAL_CHARGE_2: Int = 6905432
+    const val VIAL_CHARGE_3: Int = 6905433
+    const val VIAL_CHARGE_4: Int = 6905434
+    const val VIAL_CHARGE_5: Int = 6905435
 
     // Totems
     const val TOTEM_OF_INSIGHT: Int = 6905400 // Totem for pottery shards?
