@@ -1,11 +1,14 @@
 package me.shadowalzazel.mcodyssey.alchemy
 
 import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.arcane.SlotColors
 import me.shadowalzazel.mcodyssey.constants.EffectTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags
+import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.ItemTags
-import me.shadowalzazel.mcodyssey.constants.ItemTags.addIntTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.setIntTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.addStringTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.getIntTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.getStringTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
@@ -22,14 +25,21 @@ import org.bukkit.entity.ThrownPotion
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.persistence.PersistentDataType
+import org.bukkit.potion.PotionData
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionType
 
 interface AlchemyManager {
 
     /*-----------------------------------------------------------------------------------------------*/
     // Tags
 
-    fun ItemStack.isOdysseyEffect(): Boolean {
-        return hasTag(ItemTags.IS_CUSTOM_EFFECT) || hasTag(ItemTags.ODYSSEY_EFFECT_TAG)
+    fun ItemStack.hasOdysseyEffectTag(): Boolean {
+        return hasTag(ItemTags.ODYSSEY_EFFECT_TAG) || hasTag(ItemTags.IS_ODYSSEY_EFFECT)
+    }
+
+    fun ItemStack.hasCustomEffectTag(): Boolean {
+        return hasTag(ItemTags.IS_CUSTOM_EFFECT)
     }
 
     // Get Effect
@@ -52,7 +62,7 @@ interface AlchemyManager {
 
     // Set Time in Ticks
     fun ItemStack.setCustomEffectTime(timeInTicks: Int) {
-        addIntTag(ItemTags.ODYSSEY_EFFECT_TIME, timeInTicks)
+        setIntTag(ItemTags.ODYSSEY_EFFECT_TIME, timeInTicks)
     }
 
     // Get Amplifier
@@ -62,7 +72,7 @@ interface AlchemyManager {
 
     // Set Amplifier
     fun ItemStack.setCustomEffectAmplifier(amplifier: Int) {
-        addIntTag(ItemTags.ODYSSEY_EFFECT_AMPLIFIER, amplifier)
+        setIntTag(ItemTags.ODYSSEY_EFFECT_AMPLIFIER, amplifier)
     }
 
     // Get Cloud effect tag
@@ -211,6 +221,86 @@ interface AlchemyManager {
     }
 
     /*-----------------------------------------------------------------------------------------------*/
+    // TEMPORARY Data
+    fun ItemStack.getEffectFromData(): PotionEffect {
+        val potionData = (itemMeta as PotionMeta).basePotionData
+        val baseTime: Int
+        var extendedMultiplier: Double = 8.0 / 3.0
+        var upgradedMultiplier: Double = 1.0 / 2.0
+        var amplifier = if (potionData.isUpgraded) { 1 } else { 0 }
+        when (potionData.type) {
+            PotionType.TURTLE_MASTER -> {
+                baseTime = 20 * 20
+                upgradedMultiplier = 1.0
+                extendedMultiplier = 2.0
+            }
+            PotionType.POISON, PotionType.REGEN -> {
+                baseTime = 45 * 20
+                extendedMultiplier = 2.0
+            }
+            PotionType.WEAKNESS, PotionType.SLOW_FALLING -> {
+                baseTime = 90 * 20
+            }
+            PotionType.SLOWNESS -> {
+                baseTime = 90 * 20
+                upgradedMultiplier = 2.0 / 9.0
+                if (potionData.isUpgraded) { amplifier = 3 }
+            }
+            PotionType.INSTANT_HEAL, PotionType.INSTANT_DAMAGE -> {
+                baseTime = 0
+            }
+            else -> {
+                baseTime = 3 * 60 * 20
+            }
+        }
+
+        var time = baseTime.toDouble()
+        if (potionData.isUpgraded) { time *= upgradedMultiplier }
+        else if (potionData.isExtended) { time *= extendedMultiplier }
+        return PotionEffect(potionData.type.effectType!!, time.toInt(), amplifier)
+    }
+
+    /*-----------------------------------------------------------------------------------------------*/
+    // Potion Creators
+    fun createPotionVials(potion: ItemStack): ItemStack {
+        val meta = (potion.itemMeta as PotionMeta).clone()
+
+        // Do net Detect Water
+        if (meta.basePotionData.type != PotionType.WATER) {
+            // Base Effects
+            val baseEffect = potion.getEffectFromData() // BREAKS WITH WATER!!!
+            meta.addCustomEffect(baseEffect, true)
+            // Custom Effects
+            val newEffects = mutableListOf<PotionEffect>()
+            for (effect in meta.customEffects) {
+                val duration = (effect.duration * 0.4).toInt()
+                newEffects.add(PotionEffect(effect.type, duration, effect.amplifier))
+            }
+            for (effect in newEffects) {
+                meta.addCustomEffect(effect, true)
+            }
+        }
+        // Meta Apply
+        meta.setCustomModelData(ItemModels.VIAL)
+        meta.basePotionData = PotionData(PotionType.THICK)
+        return potion.clone().apply {
+            itemMeta = meta
+            setIntTag(ItemTags.POTION_CHARGES_LEFT, 5)
+            addTag(ItemTags.IS_POTION_VIAL)
+            createPotionVialLore()
+        }
+        // TODO: For Odyssey Effects
+    }
+
+    fun ItemStack.createPotionVialLore() {
+        val charges = getIntTag(ItemTags.POTION_CHARGES_LEFT) ?: return
+        if (!hasTag(ItemTags.IS_POTION_VIAL)) return
+        val meta = itemMeta as PotionMeta
+        val newLore = meta.lore() ?: mutableListOf()
+        val text = "Uses Left: [$charges/5]"
+        val component = Component.text(text, SlotColors.GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+        newLore.add(component)
+    }
 
     fun createModeledPotion(material: Material, item: ItemStack, model: Int? = null): ItemStack {
         return ItemStack(material, 1).apply {

@@ -16,6 +16,7 @@ class Weapons {
         return listOf(
             compactCrossbowRecipe(),
             autoCrossbowRecipe(),
+            alchemicalBolterRecipe(),
 
             woodenKatanaRecipe(),
             goldenKatanaRecipe(),
@@ -132,6 +133,22 @@ class Weapons {
             setIngredient('T', Material.TRIPWIRE_HOOK)
             setIngredient('S', Material.STRING)
             setIngredient('C', Material.COPPER_INGOT)
+            category = CraftingBookCategory.EQUIPMENT
+        }
+        return recipe
+    }
+
+    private fun alchemicalBolterRecipe(): ShapedRecipe {
+        val result = Weapons.ALCHEMICAL_BOLTER.createItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "alchemical_bolter"), result).apply {
+            shape("AGD", "GTQ", "BQS")
+            setIngredient('A', Material.DRAGON_BREATH)
+            setIngredient('G', Material.TINTED_GLASS)
+            setIngredient('D', Material.DIAMOND)
+            setIngredient('Q', Material.QUARTZ)
+            setIngredient('T', Material.TRIPWIRE_HOOK)
+            setIngredient('S', Material.STRING)
+            setIngredient('B', Material.BLAZE_POWDER)
             category = CraftingBookCategory.EQUIPMENT
         }
         return recipe

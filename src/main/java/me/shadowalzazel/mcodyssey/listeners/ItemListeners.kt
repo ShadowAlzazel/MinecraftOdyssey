@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.constants.ItemTags.getOdysseyTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.hasOdysseyTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.hadOdysseyItemTag
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
 import org.bukkit.Particle
 import org.bukkit.Sound
@@ -15,7 +15,7 @@ object ItemListeners : Listener {
 
     @EventHandler
     fun itemUseOnDropHandler(event: PlayerDropItemEvent) {
-        if (!event.itemDrop.itemStack.hasOdysseyTag()) return
+        if (!event.itemDrop.itemStack.hadOdysseyItemTag()) return
 
         // For all Item on Drop Uses
         when (event.itemDrop.itemStack.getOdysseyTag()) {

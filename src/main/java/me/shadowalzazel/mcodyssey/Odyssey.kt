@@ -4,6 +4,7 @@ import me.shadowalzazel.mcodyssey.bosses.BossManager
 import me.shadowalzazel.mcodyssey.bosses.hog_rider.HogRiderListeners
 import me.shadowalzazel.mcodyssey.bosses.the_ambassador.AmbassadorListeners
 import me.shadowalzazel.mcodyssey.commands.admin.EnchantGilded
+import me.shadowalzazel.mcodyssey.commands.admin.GiveGildedBook
 import me.shadowalzazel.mcodyssey.commands.admin.GiveItem
 import me.shadowalzazel.mcodyssey.commands.admin.SummonBoss
 import me.shadowalzazel.mcodyssey.commands.spells.PlaceFeatureArchaicSeed
@@ -15,6 +16,7 @@ import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.MiscListeners
 import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.RangedListeners
 import me.shadowalzazel.mcodyssey.phenomenon.base.OdysseyPhenomenon
 import me.shadowalzazel.mcodyssey.recipe_creators.RecipeManager
+import me.shadowalzazel.mcodyssey.recipe_creators.brewing.BrewerMixes
 import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.event.Listener
@@ -93,6 +95,11 @@ class Odyssey : JavaPlugin() {
         RecipeManager().createAllRecipes().forEach {
             Bukkit.addRecipe(it)
         }
+        // Register Potion Mixes
+        logger.info("Registering Brews...")
+        BrewerMixes.getMixes().forEach {
+            server.potionBrewer.addPotionMix(it)
+        }
 
         // Register Events
         logger.info("Registering Events...")
@@ -131,6 +138,7 @@ class Odyssey : JavaPlugin() {
         getCommand("enchant_gilded")?.setExecutor(EnchantGilded)
         getCommand("place_feature_archaic_seed")?.setExecutor(PlaceFeatureArchaicSeed)
         getCommand("give_item")?.setExecutor(GiveItem)
+        getCommand("give_gilded_book")?.setExecutor(GiveGildedBook)
 
         //server.pluginManager.registerEvents(OdysseyPhenomenaListeners, this)
         //playersRequiredForLuck = 4

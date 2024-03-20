@@ -2,21 +2,15 @@ package me.shadowalzazel.mcodyssey.enchantments.ranged
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object Entanglement : OdysseyEnchantment("entanglement", "Entanglement", 2) {
+object Entanglement : OdysseyEnchantment("entanglement", "Entanglement", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            OdysseyEnchantments.CHAIN_REACTION, OdysseyEnchantments.BURST_BARRAGE -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {
@@ -28,6 +22,16 @@ object Entanglement : OdysseyEnchantment("entanglement", "Entanglement", 2) {
                 false
             }
         }
+    }
+
+    override fun getDescriptionToolTip(inputLevel: Int): List<Component> {
+        val amount1 = inputLevel
+        val text1 = "On projectile hit, the target is tagged. If another target is tagged "
+        val text2 = "and within 10 blocks, they are pulled together and damaged for $amount1=[level]."
+        return listOf(
+            getGrayComponentText(text1),
+            getGrayComponentText(text2),
+        )
     }
 
 }

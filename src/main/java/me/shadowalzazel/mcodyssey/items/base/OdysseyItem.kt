@@ -1,9 +1,8 @@
 package me.shadowalzazel.mcodyssey.items.base
 
-import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.constants.DataKeys
 import me.shadowalzazel.mcodyssey.constants.ItemTags
-import me.shadowalzazel.mcodyssey.constants.ItemTags.addIntTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.setIntTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.items.utility.WeaponMaterial
@@ -11,7 +10,6 @@ import me.shadowalzazel.mcodyssey.items.utility.WeaponType
 import me.shadowalzazel.mcodyssey.listeners.EnchantingListeners.updateSlotLore
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
-import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
@@ -49,8 +47,8 @@ open class OdysseyItem(
         }
         if (enchantments != null) {
             itemStack.addTag(ItemTags.IS_SLOTTED)
-            itemStack.addIntTag(ItemTags.ENCHANT_SLOTS, enchantSlots)
-            itemStack.addIntTag(ItemTags.GILDED_SLOTS, gildedSlots)
+            itemStack.setIntTag(ItemTags.ENCHANT_SLOTS, enchantSlots)
+            itemStack.setIntTag(ItemTags.GILDED_SLOTS, gildedSlots)
             itemStack.updateSlotLore()
             itemStack.addItemFlags(ItemFlag.HIDE_ENCHANTS)
         }

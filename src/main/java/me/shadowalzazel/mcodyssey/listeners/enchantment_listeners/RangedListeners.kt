@@ -368,8 +368,8 @@ object RangedListeners : Listener {
         val modifier = projectile.getIntTag(EntityTags.BOLA_SHOT_MODIFIER) ?: return
         victim.location.block.type = Material.COBWEB
         victim.addPotionEffects(listOf(
-            PotionEffect(PotionEffectType.SLOW, 20 * (4 + modifier), 0),
-            PotionEffect(PotionEffectType.SLOW_DIGGING, 20 * (4 + modifier), 0)))
+            PotionEffect(PotionEffectType.SLOW, 20 * (3 + modifier), 0),
+            PotionEffect(PotionEffectType.SLOW_DIGGING, 20 * (3 + modifier), 0)))
         // MAYBE ADD DELAYED TASK TO REMOVE COB WEBS?
 
     }
@@ -524,7 +524,8 @@ object RangedListeners : Listener {
 
     private fun deathFromAboveEnchantmentHit(projectile: Projectile, victim: LivingEntity, shooter: LivingEntity): Double {
         val modifier = projectile.getIntTag(EntityTags.DEATH_FROM_ABOVE_MODIFIER) ?: return 0.0
-        if (victim.location.distance(shooter.location) > 16) {
+        val height = 4 + (modifier * 4)
+        if (victim.location.distance(shooter.location) > height) {
             return 1.5 + (modifier * 1.5)
         }
         return 0.0

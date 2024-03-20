@@ -1,9 +1,8 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.constants.ItemModels
-import me.shadowalzazel.mcodyssey.constants.ItemTags.hasOdysseyTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.hadOdysseyItemTag
 import me.shadowalzazel.mcodyssey.items.Runesherds
-import me.shadowalzazel.mcodyssey.items.Runesherds.addRuneAugmentTag
 import me.shadowalzazel.mcodyssey.items.Runesherds.createLootSherdStack
 import me.shadowalzazel.mcodyssey.items.Runesherds.createRuneware
 import me.shadowalzazel.mcodyssey.items.Runesherds.createSherdStack
@@ -11,16 +10,12 @@ import me.shadowalzazel.mcodyssey.rune_writing.RunesherdManager
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
-import org.bukkit.block.BlastFurnace
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockDropItemEvent
-import org.bukkit.event.entity.ItemSpawnEvent
-import org.bukkit.event.inventory.FurnaceBurnEvent
 import org.bukkit.event.inventory.FurnaceSmeltEvent
 import org.bukkit.event.inventory.FurnaceStartSmeltEvent
 import org.bukkit.event.inventory.PrepareSmithingEvent
-import org.bukkit.event.world.LootGenerateEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 
@@ -55,7 +50,7 @@ object RunesherdListeners : Listener, RunesherdManager {
         }
         // Checks
         if (!runesherd.hasRunesherdTag()) return
-        if (!runesherd.hasOdysseyTag()) return
+        if (!runesherd.hadOdysseyItemTag()) return
 
         // Run
         val item = addRunesherdToSmithingItem(runesherd, equipment) ?: return

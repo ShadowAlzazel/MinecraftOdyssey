@@ -2,6 +2,7 @@ package me.shadowalzazel.mcodyssey.enchantments.ranged
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -23,5 +24,11 @@ object PerpetualProjectile : OdysseyEnchantment("perpetual_projectile", "Perpetu
         }
     }
 
-    // not affected by gravity
+    override fun getDescriptionToolTip(inputLevel: Int): List<Component> {
+        val amount1 = 15 + (5 * inputLevel)
+        val text1 = "Projectiles defy gravity for $amount1=[15 + (level x 5)] seconds"
+        return listOf(
+            getGrayComponentText(text1)
+        )
+    }
 }

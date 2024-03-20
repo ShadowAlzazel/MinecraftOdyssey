@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.arcane
 
 import me.shadowalzazel.mcodyssey.constants.ItemTags
-import me.shadowalzazel.mcodyssey.constants.ItemTags.addIntTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.setIntTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.getIntTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.getStringTag
@@ -39,13 +39,13 @@ internal interface EnchantSlotManager {
     // Not Restricted
     fun ItemStack.setSlots(slots: Pair<Int, Int>) {
         addTag(ItemTags.IS_SLOTTED)
-        addIntTag(ItemTags.ENCHANT_SLOTS, slots.first)
-        addIntTag(ItemTags.GILDED_SLOTS, slots.second)
+        setIntTag(ItemTags.ENCHANT_SLOTS, slots.first)
+        setIntTag(ItemTags.GILDED_SLOTS, slots.second)
     }
 
     fun ItemStack.addEnchantSlot() {
         val count = getEnchantSlots()
-        addIntTag(ItemTags.ENCHANT_SLOTS, count + 1)
+        setIntTag(ItemTags.ENCHANT_SLOTS, count + 1)
     }
 
     fun ItemStack.addGildedSlot() {
@@ -53,17 +53,17 @@ internal interface EnchantSlotManager {
         if (count >= 3) {
             return
         }
-        addIntTag(ItemTags.GILDED_SLOTS, count + 1)
+        setIntTag(ItemTags.GILDED_SLOTS, count + 1)
     }
 
     fun ItemStack.removeEnchantSlot() {
         val count = getEnchantSlots()
-        addIntTag(ItemTags.ENCHANT_SLOTS, maxOf(1, count - 1))
+        setIntTag(ItemTags.ENCHANT_SLOTS, maxOf(1, count - 1))
     }
 
     fun ItemStack.removeGildedSlot() {
         val count = getGildedSlots()
-        addIntTag(ItemTags.GILDED_SLOTS, maxOf(0, count - 1))
+        setIntTag(ItemTags.GILDED_SLOTS, maxOf(0, count - 1))
     }
 
     // Usage for ONLY display not logic

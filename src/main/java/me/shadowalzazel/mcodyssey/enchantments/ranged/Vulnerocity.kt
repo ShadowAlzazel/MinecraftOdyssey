@@ -23,15 +23,13 @@ object Vulnerocity : OdysseyEnchantment("vulnerocity", "Vulnerocity", 3) {
         }
     }
 
+
     override fun getDescriptionToolTip(inputLevel: Int): List<Component> {
-        val amount = 0.1 * inputLevel
-        val text1 = "On projectile hit, reduce enemy invulnerability time"
-        val text2 = "by $amount=[0.1 x level] seconds"
+        val amount1 = inputLevel * 0.1
+        val text1 = "On projectile hit, reduce entity immunity time by $amount1=[level * 0.1] seconds."
         return listOf(
-            getGrayComponentText(text1),
-            getGrayComponentText(text2)
+            getGrayComponentText(text1)
         )
     }
-
 
 }

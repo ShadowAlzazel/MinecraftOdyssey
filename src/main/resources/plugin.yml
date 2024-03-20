@@ -18,6 +18,10 @@ commands:
     description: "Gives an Odyssey custom item."
     usage: /<command>
     permission: op
+  give_gilded_book:
+    description: "Gives a Gilded Book with the enchantment."
+    usage: /<command>
+    permission: op
   place_feature_archaic_seed:
     description: "Places a custom feature"
     permission: default

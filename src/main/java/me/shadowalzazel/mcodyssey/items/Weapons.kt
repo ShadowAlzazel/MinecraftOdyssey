@@ -59,6 +59,13 @@ object Weapons: AttributeManager {
         lore = listOf(Component.text("Reload ammo when shooting straight from the off hand!.", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.AUTO_CROSSBOW)
 
+    val ALCHEMICAL_BOLTER = OdysseyItem(
+        name = "alchemical_bolter",
+        material = Material.CROSSBOW,
+        displayName = Component.text("Alchemical Bolter", TextColor.color(156, 71, 156), TextDecoration.ITALIC),
+        lore = listOf(Component.text("Load in Throwable Potions and brew ammo with Thick Potions.", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.ALCHEMICAL_BOLTER)
+
     /*-----------------------------------------------------------------------------------------------*/
 
     val WOODEN_KATANA = OdysseyItem(

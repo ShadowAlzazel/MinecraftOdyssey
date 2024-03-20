@@ -3,11 +3,11 @@ package me.shadowalzazel.mcodyssey.rune_writing
 import me.shadowalzazel.mcodyssey.attributes.AttributeManager
 import me.shadowalzazel.mcodyssey.constants.AttributeIDs
 import me.shadowalzazel.mcodyssey.constants.ItemTags
-import me.shadowalzazel.mcodyssey.constants.ItemTags.addIntTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.setIntTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.getIntTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.getOdysseyTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.hasOdysseyTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.hadOdysseyItemTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
 import me.shadowalzazel.mcodyssey.items.Runesherds
 import org.bukkit.Material
@@ -46,7 +46,7 @@ internal interface RunesherdManager : AttributeManager {
     }
 
     fun ItemStack.setRuneAugmentCount(amount: Int) {
-        addIntTag(ItemTags.RUNEWARE_AUGMENT_COUNT, amount)
+        setIntTag(ItemTags.RUNEWARE_AUGMENT_COUNT, amount)
     }
 
     fun ItemStack.getRuneAugmentCount(): Int {
@@ -139,7 +139,7 @@ internal interface RunesherdManager : AttributeManager {
     fun addRunesherdToSmithingItem(runesherd: ItemStack, item: ItemStack): ItemStack? {
         // Basic Checks
         if (!runesherd.hasRunesherdTag()) return null
-        if (!runesherd.hasOdysseyTag()) return null
+        if (!runesherd.hadOdysseyItemTag()) return null
         // Runeware can have up to 3 runesherd augments
         val equipment = item.clone()
         val equipIsRuneware = equipment.hasRunewareTag()
