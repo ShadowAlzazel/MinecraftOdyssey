@@ -69,11 +69,49 @@ object Weapons: AttributeManager {
 
     /*-----------------------------------------------------------------------------------------------*/
 
+    val WOODEN_KUNAI = OdysseyItem(
+        name = "wooden_kunai",
+        material = Material.WOODEN_SWORD,
+        weaponMaterial = WeaponMaterial.WOOD,
+        weaponType = WeaponType.KUNAI)
+
+    val GOLDEN_KUNAI = OdysseyItem(
+        name = "golden_kunai",
+        material = Material.GOLDEN_SWORD,
+        weaponMaterial = WeaponMaterial.GOLD,
+        weaponType = WeaponType.KUNAI)
+
+    val STONE_KUNAI = OdysseyItem(
+        name = "stone_kunai",
+        material = Material.STONE_SWORD,
+        weaponMaterial = WeaponMaterial.STONE,
+        weaponType = WeaponType.KUNAI)
+
     val IRON_KUNAI = OdysseyItem(
         name = "iron_kunai",
         material = Material.IRON_SWORD,
         weaponMaterial = WeaponMaterial.IRON,
         weaponType = WeaponType.KUNAI)
+
+    val DIAMOND_KUNAI = OdysseyItem(
+        name = "diamond_kunai",
+        material = Material.DIAMOND_SWORD,
+        weaponMaterial = WeaponMaterial.DIAMOND,
+        weaponType = WeaponType.KUNAI)
+
+    val NETHERITE_KUNAI = OdysseyItem(
+        name = "diamond_kunai",
+        material = Material.NETHERITE_SWORD,
+        weaponMaterial = WeaponMaterial.NETHERITE,
+        weaponType = WeaponType.KUNAI)
+
+    val SOUL_STEEL_KUNAI = OdysseyItem(
+        name = "soul_steel_kunai",
+        material = Material.IRON_SWORD,
+        customModel = ItemModels.SOUL_STEEL_KATANA,
+        weaponMaterial = WeaponMaterial.SOUL_STEEL,
+        weaponType = WeaponType.KUNAI)
+
 
     val VOID_LINKED_KUNAI = OdysseyItem(
         name = "void_linked_kunai",

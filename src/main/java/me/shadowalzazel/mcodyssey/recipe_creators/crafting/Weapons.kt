@@ -18,6 +18,8 @@ class Weapons {
             autoCrossbowRecipe(),
             alchemicalBolterRecipe(),
 
+            voidLinkedKunaiRecipe(),
+
             woodenKatanaRecipe(),
             goldenKatanaRecipe(),
             stoneKatanaRecipe(),
@@ -54,8 +56,11 @@ class Weapons {
             ironChakramRecipe(),
             diamondChakramRecipe(),
 
+            woodenKunaiRecipe(),
+            goldenKunaiRecipe(),
+            stoneKunaiRecipe(),
             ironKunaiRecipe(),
-            voidLinkedKunaiRecipe(),
+            diamondKunaiRecipe(),
 
             woodenRapierRecipe(),
             goldenRapierRecipe(),
@@ -732,12 +737,63 @@ class Weapons {
 
     /*-----------------------------------------------------------------------------------------------*/
 
+    private fun woodenKunaiRecipe(): ShapedRecipe {
+        val someResult = Weapons.WOODEN_KUNAI.createWeapon()
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "wooden_kunai"), someResult).apply {
+            shape("W", "B", "N")
+            setIngredient('W', RecipeChoice.MaterialChoice(Material.ACACIA_PLANKS, Material.BIRCH_PLANKS, Material.DARK_OAK_PLANKS, Material.OAK_PLANKS, Material.SPRUCE_PLANKS, Material.JUNGLE_PLANKS))
+            setIngredient('B', Material.STICK)
+            setIngredient('N', Material.IRON_NUGGET)
+            group = "kunais"
+            category = CraftingBookCategory.EQUIPMENT
+        }
+        return someRecipe
+    }
+
+    private fun goldenKunaiRecipe(): ShapedRecipe {
+        val someResult = Weapons.GOLDEN_KUNAI.createWeapon()
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "golden_kunai"), someResult).apply {
+            shape("G", "B", "N")
+            setIngredient('G', Material.GOLD_INGOT)
+            setIngredient('B', Material.STICK)
+            setIngredient('N', Material.IRON_NUGGET)
+            group = "kunais"
+            category = CraftingBookCategory.EQUIPMENT
+        }
+        return someRecipe
+    }
+
+    private fun stoneKunaiRecipe(): ShapedRecipe {
+        val someResult = Weapons.STONE_KUNAI.createWeapon()
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "stone_kunai"), someResult).apply {
+            shape("S", "B", "N")
+            setIngredient('S', Material.COBBLESTONE)
+            setIngredient('B', Material.STICK)
+            setIngredient('N', Material.IRON_NUGGET)
+            group = "kunais"
+            category = CraftingBookCategory.EQUIPMENT
+        }
+        return someRecipe
+    }
     private fun ironKunaiRecipe(): ShapedRecipe {
         val someResult = Weapons.IRON_KUNAI.createWeapon()
         val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "iron_kunai"), someResult).apply {
             shape("I", "B", "N")
             setIngredient('I', Material.IRON_INGOT)
-            setIngredient('B', Material.STICK)  // TODO :Change to breeze rod
+            setIngredient('B', Material.STICK)
+            setIngredient('N', Material.IRON_NUGGET)
+            group = "kunais"
+            category = CraftingBookCategory.EQUIPMENT
+        }
+        return someRecipe
+    }
+
+    private fun diamondKunaiRecipe(): ShapedRecipe {
+        val someResult = Weapons.DIAMOND_KUNAI.createWeapon()
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "diamond_kunai"), someResult).apply {
+            shape("D", "B", "N")
+            setIngredient('D', Material.DIAMOND)
+            setIngredient('B', Material.STICK)
             setIngredient('N', Material.IRON_NUGGET)
             group = "kunais"
             category = CraftingBookCategory.EQUIPMENT
@@ -751,7 +807,7 @@ class Weapons {
         val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "void_linked_kunai"), someResult).apply {
             shape("N", "B", "E")
             setIngredient('N', Material.NETHERITE_INGOT)
-            setIngredient('B', Material.BLAZE_ROD) // Change to breeze rod
+            setIngredient('B', Material.BLAZE_ROD)  // TODO :Change to breeze rod
             setIngredient('E', Material.ENDER_EYE)
             group = "kunais"
             category = CraftingBookCategory.EQUIPMENT
