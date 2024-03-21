@@ -281,7 +281,7 @@ interface AlchemyManager {
             }
         }
         // Meta Apply
-        meta.setCustomModelData(ItemModels.VIAL)
+        meta.setCustomModelData(ItemModels.VIAL_CHARGE_5)
         meta.basePotionData = PotionData(PotionType.THICK)
         return potion.clone().apply {
             itemMeta = meta

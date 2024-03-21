@@ -54,6 +54,9 @@ class Weapons {
             ironChakramRecipe(),
             diamondChakramRecipe(),
 
+            ironKunaiRecipe(),
+            voidLinkedKunaiRecipe(),
+
             woodenRapierRecipe(),
             goldenRapierRecipe(),
             stoneRapierRecipe(),
@@ -726,6 +729,37 @@ class Weapons {
         }
         return someRecipe
     }
+
+    /*-----------------------------------------------------------------------------------------------*/
+
+    private fun ironKunaiRecipe(): ShapedRecipe {
+        val someResult = Weapons.IRON_KUNAI.createWeapon()
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "iron_kunai"), someResult).apply {
+            shape("I", "B", "N")
+            setIngredient('I', Material.IRON_INGOT)
+            setIngredient('B', Material.STICK)  // TODO :Change to breeze rod
+            setIngredient('N', Material.IRON_NUGGET)
+            group = "kunais"
+            category = CraftingBookCategory.EQUIPMENT
+        }
+        return someRecipe
+    }
+
+    // EXOTIC
+    private fun voidLinkedKunaiRecipe(): ShapedRecipe {
+        val someResult = Weapons.VOID_LINKED_KUNAI.createItemStack(1)
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "void_linked_kunai"), someResult).apply {
+            shape("N", "B", "E")
+            setIngredient('N', Material.NETHERITE_INGOT)
+            setIngredient('B', Material.BLAZE_ROD) // Change to breeze rod
+            setIngredient('E', Material.ENDER_EYE)
+            group = "kunais"
+            category = CraftingBookCategory.EQUIPMENT
+        }
+        return someRecipe
+    }
+
+
 
     /*-----------------------------------------------------------------------------------------------*/
 

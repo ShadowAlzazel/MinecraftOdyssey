@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.constants.ItemModels
-import me.shadowalzazel.mcodyssey.constants.ItemTags.hadOdysseyItemTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.hasOdysseyItemTag
 import me.shadowalzazel.mcodyssey.items.Runesherds
 import me.shadowalzazel.mcodyssey.items.Runesherds.createLootSherdStack
 import me.shadowalzazel.mcodyssey.items.Runesherds.createRuneware
@@ -50,7 +50,7 @@ object RunesherdListeners : Listener, RunesherdManager {
         }
         // Checks
         if (!runesherd.hasRunesherdTag()) return
-        if (!runesherd.hadOdysseyItemTag()) return
+        if (!runesherd.hasOdysseyItemTag()) return
 
         // Run
         val item = addRunesherdToSmithingItem(runesherd, equipment) ?: return

@@ -438,9 +438,7 @@ object RangedListeners : Listener {
                 projectile.setIntTag(EntityTags.CHAIN_REACTION_MODIFIER, modifier - 1)
             }
         }
-
          */
-
         // Velocity
         val destination = closest.location.clone()
         val velocity = destination.clone().subtract(origin).toVector().normalize().multiply(speed)

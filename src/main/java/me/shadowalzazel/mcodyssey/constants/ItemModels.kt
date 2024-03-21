@@ -20,7 +20,12 @@ object ItemModels {
     const val DAIRYSHAPE_BOTTLE: Int = 6905318 // Super or For Fun
     const val ROUND_BOTTLE: Int = 6905319 // For Odyssey Effect Potions Without Time
     const val CONCOCTION_BOTTLE: Int = 6905320 // For Potion Effect Combinations
-    // Decoction
+    // Vial
+    const val VIAL_CHARGE_1: Int = 6905431
+    const val VIAL_CHARGE_2: Int = 6905432
+    const val VIAL_CHARGE_3: Int = 6905433
+    const val VIAL_CHARGE_4: Int = 6905434
+    const val VIAL_CHARGE_5: Int = 6905435
 
     // Totems
     const val TOTEM_OF_INSIGHT: Int = 6905400 // Totem for pottery shards?
@@ -175,6 +180,7 @@ object ItemModels {
     const val SABER: Int = 6905749
     const val SICKLE: Int = 6905750
     const val CHAKRAM: Int = 6905751
+    const val KUNAI: Int = 6905752
 
     // Shovels
     const val SPEAR: Int = 6905774
@@ -229,8 +235,11 @@ object ItemModels {
     const val SOUL_STEEL_POLEAXE: Int = 6906686
     const val SOUL_STEEL_LABRYS: Int = 6906687
 
-    // Exotics
+    // Unused Weapons
     const val ZWEIHANDER: Int = 6905777
+
+    // Exotics
+    const val VOID_LINKED_KUNAI: Int = 6905001
     const val ABZU_BLADE: Int = 6905002
     const val KINETIC_BLASTER: Int = 6905003
 

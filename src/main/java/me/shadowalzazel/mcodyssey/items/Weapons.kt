@@ -41,6 +41,7 @@ object Weapons: AttributeManager {
         return newWeapon
     }
 
+    // TODO: Create Converter from NBT to Component and add respective block tag
 
     /*-----------------------------------------------------------------------------------------------*/
     // Crossbows
@@ -65,6 +66,22 @@ object Weapons: AttributeManager {
         displayName = Component.text("Alchemical Bolter", TextColor.color(156, 71, 156), TextDecoration.ITALIC),
         lore = listOf(Component.text("Load in Throwable Potions and brew ammo with Thick Potions.", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.ALCHEMICAL_BOLTER)
+
+    /*-----------------------------------------------------------------------------------------------*/
+
+    val IRON_KUNAI = OdysseyItem(
+        name = "iron_kunai",
+        material = Material.IRON_SWORD,
+        weaponMaterial = WeaponMaterial.IRON,
+        weaponType = WeaponType.KUNAI)
+
+    val VOID_LINKED_KUNAI = OdysseyItem(
+        name = "void_linked_kunai",
+        material = Material.NETHERITE_SWORD,
+        displayName = Component.text("Void Linked Kunai", TextColor.color(75, 75, 75), TextDecoration.ITALIC),
+        customModel = ItemModels.VOID_LINKED_KUNAI)
+
+    // TODO: Chakrams behave similar to kunais THROWABLE
 
     /*-----------------------------------------------------------------------------------------------*/
 

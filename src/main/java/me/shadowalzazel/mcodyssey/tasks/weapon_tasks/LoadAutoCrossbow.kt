@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.listeners.utility
+package me.shadowalzazel.mcodyssey.tasks.weapon_tasks
 
 import me.shadowalzazel.mcodyssey.constants.ItemTags
 import me.shadowalzazel.mcodyssey.constants.ItemTags.removeTag
@@ -22,6 +22,7 @@ class LoadAutoCrossbow(
             crossbow.itemMeta = meta
             crossbow.removeTag(ItemTags.AUTO_LOADER_LOADING)
             crossbow.damage(2, entity)
+            this.cancel()
         }
     }
 

@@ -23,6 +23,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
 import java.util.*
+import kotlin.math.log2
 
 object MeleeListeners : Listener, EffectsManager {
 
@@ -294,13 +295,20 @@ object MeleeListeners : Listener, EffectsManager {
         victim: LivingEntity,
         level: Int
     ) {
-        // MAYBE DO NEXT TIME YOU SNEAK???? OR TOGGLE WITH SNEAK
         val attackerLocation = attacker.location.clone()
         val victimLocation = victim.location.clone()
-        // or do dmg based on distance?
+        val distance = attackerLocation.distance(victimLocation)
+
         attacker.teleport(victimLocation)
+        if (attacker is HumanEntity) {
+            val log2Amount = maxOf(log2(distance).toInt() - 1, 0)
+            attacker.foodLevel = maxOf(attacker.foodLevel - log2Amount, 0)
+        }
         victim.teleport(attackerLocation)
     }
+    // Other enchant ideas
+    // MAYBE DO NEXT TIME YOU SNEAK???? OR TOGGLE WITH
+    // or do dmg based on distance?
 
     // ------------------------------- BUZZY_BEES ------------------------------------
     private fun buzzyBeesEnchantment(

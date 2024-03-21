@@ -4,11 +4,14 @@ import io.papermc.paper.event.entity.EntityLoadCrossbowEvent
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.alchemy.utility.ThickPotion
 import me.shadowalzazel.mcodyssey.constants.EntityTags
+import me.shadowalzazel.mcodyssey.constants.EntityTags.getIntTag
+import me.shadowalzazel.mcodyssey.constants.EntityTags.setIntTag
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.ItemTags
 import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.getIntTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.getUUIDTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.hasOdysseyItemTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.removeTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.setIntTag
@@ -21,7 +24,9 @@ import me.shadowalzazel.mcodyssey.constants.WeaponMaps.MIN_RANGE_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.PIERCE_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.REACH_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.SWEEP_MAP
-import me.shadowalzazel.mcodyssey.listeners.utility.LoadAutoCrossbow
+import me.shadowalzazel.mcodyssey.tasks.weapon_tasks.ChakramReturn
+import me.shadowalzazel.mcodyssey.tasks.weapon_tasks.LoadAutoCrossbow
+import me.shadowalzazel.mcodyssey.tasks.weapon_tasks.VoidLinkedKunaiAttack
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
@@ -34,7 +39,9 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityShootBowEvent
+import org.bukkit.event.entity.ProjectileHitEvent
 import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.event.player.PlayerSwapHandItemsEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.CrossbowMeta
 import org.bukkit.inventory.meta.PotionMeta
@@ -77,7 +84,9 @@ import java.util.*
 
 object WeaponListeners : Listener {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    private val markedVoidTargets = mutableMapOf<UUID, Entity>()
+
+    @EventHandler(priority = EventPriority.LOWEST)
     fun mainWeaponDamageHandler(event: EntityDamageByEntityEvent) {
         // Check if event damager and damaged is living entity
         if (event.damager !is Player) return
@@ -98,19 +107,25 @@ object WeaponListeners : Listener {
         val model = mainWeapon.itemMeta.customModelData
         if (event.damage > 1.0) { event.damage -= 1.0 } // Reduce Weapon Damage by 1 to match attribute display
 
-        // Range
-        if (MAX_RANGE_MAP.containsKey(model)) {
-            val r = MAX_RANGE_MAP[model]!!
-            if (victim !in player.getNearbyEntities(r, r, r)) {
-                event.isCancelled = true
-                return
-            }
+        // Min and Max Range
+        val wasThrowable = victim.scoreboardTags.contains(EntityTags.THROWABLE_ATTACK_HIT)
+        if (wasThrowable) {
+            victim.removeScoreboardTag(EntityTags.THROWABLE_ATTACK_HIT)
         }
-        if (MIN_RANGE_MAP.containsKey(model)) {
-            val r = MIN_RANGE_MAP[model]!!
-            if (victim in player.getNearbyEntities(r, r, r)) {
-                event.isCancelled = true
-                return
+        else { // If not throwable check range
+            if (MAX_RANGE_MAP.containsKey(model)) {
+                val r = MAX_RANGE_MAP[model]!!
+                if (victim !in player.getNearbyEntities(r, r, r)) {
+                    event.isCancelled = true
+                    return
+                }
+            }
+            if (MIN_RANGE_MAP.containsKey(model)) {
+                val r = MIN_RANGE_MAP[model]!!
+                if (victim in player.getNearbyEntities(r, r, r)) {
+                    event.isCancelled = true
+                    return
+                }
             }
         }
 
@@ -196,6 +211,10 @@ object WeaponListeners : Listener {
                 }
 
             }
+            ItemModels.VOID_LINKED_KUNAI -> {
+                markedVoidTargets[player.uniqueId] = victim // Right now saves to player, change to save per item
+                println("Player ${player.uniqueId} Marked ${victim.uniqueId} ")
+            }
         }
         // -----------------------------------------------------------------------------
 
@@ -231,40 +250,150 @@ object WeaponListeners : Listener {
         }
     }
 
+    /*-----------------------------------------------------------------------------------------------*/
+    // Handler for projectile based throwable weapons
+    @EventHandler(priority = EventPriority.LOWEST)
+    fun mainWeaponProjectileHitHandler(event: ProjectileHitEvent) {
+        if (event.hitEntity is LivingEntity) {
+            val projectile: Projectile = event.entity
+            //val victim: LivingEntity = event.hitEntity as LivingEntity
+            if (projectile.scoreboardTags.isEmpty()) return
+            val tags = projectile.scoreboardTags.toSet() // Prevent async problems
+            for (tag in tags) {
+                when (tag) {
+                    // MOVE TO FUN LATER
+                    EntityTags.THROWN_KUNAI -> {
+                        kunaiHitHandler(event)
+                    }
+                    EntityTags.THROWN_CHAKRAM -> {
+                        chakramHitEntityHandler(event)
+                    }
+                }
+            }
+        }
+        else if (event.hitBlock != null) {
+            val projectile: Projectile = event.entity
+            if (!projectile.scoreboardTags.contains(EntityTags.THROWN_CHAKRAM)) return
+            chakramHitBlockProjectile(event)
+        }
+    }
+
+    // For thrown kunai hitting target
+    private fun kunaiHitHandler(event: ProjectileHitEvent) {
+        val projectile: Projectile = event.entity
+        if (projectile !is ThrowableProjectile) return
+        val damage = projectile.getIntTag(EntityTags.THROWABLE_DAMAGE) ?: return
+        val victim = event.hitEntity ?: return
+        if (victim !is LivingEntity) return
+        // Damage hit entity
+        victim.addScoreboardTag(EntityTags.THROWABLE_ATTACK_HIT)
+        if (projectile.shooter != null) {
+            val thrower = projectile.shooter ?: return
+            victim.damage(damage * 1.0, thrower as LivingEntity)
+        } else {
+            victim.damage(damage * 1.0)
+        }
+    }
+
+    // For thrown chakram hitting target
+    private fun chakramHitEntityHandler(event: ProjectileHitEvent) {
+        val projectile: Projectile = event.entity
+        if (projectile !is ThrowableProjectile) return
+        val damage = projectile.getIntTag(EntityTags.THROWABLE_DAMAGE) ?: return
+        val target = event.hitEntity ?: return
+        if (target !is LivingEntity) return
+        val targetIsThrower = target == projectile.shooter
+        var returnChakram = false
+        // Damage if not owner
+        if (projectile.shooter != null && !targetIsThrower) {
+            val thrower = projectile.shooter ?: return
+            if (thrower !is LivingEntity) return
+            target.addScoreboardTag(EntityTags.THROWABLE_ATTACK_HIT)
+            target.damage(damage * 1.0, thrower)
+            returnChakram = true
+        }
+        // If hit owner, reset Cooldown
+        else if (targetIsThrower) {
+            if (target is HumanEntity) {
+                target.setCooldown(projectile.item.type, 0)
+            }
+        }
+        else {
+            target.addScoreboardTag(EntityTags.THROWABLE_ATTACK_HIT)
+            target.damage(damage * 1.0)
+        }
+        // Respawn Chakram
+        if (returnChakram) {
+            respawnChakramProjectile(projectile, damage)
+            /*
+            event.isCancelled = true // EITHER DO THIS OR SPAWN NEW ONE???
+            projectile.velocity = projectile.velocity.multiply(-1)
+            projectile.setHasLeftShooter(false)
+             */
+        }
+    }
+
+    private fun chakramHitBlockProjectile(event: ProjectileHitEvent) {
+        val projectile: Projectile = event.entity
+        if (projectile !is ThrowableProjectile) return
+        if (projectile.shooter !is LivingEntity) return
+        // Prevent multi bounce
+        if (projectile.scoreboardTags.contains(EntityTags.CHAKRAM_HAS_BOUNCED)) return
+        val block = event.hitBlock ?: return
+        // Check Damage
+        val damage = projectile.getIntTag(EntityTags.THROWABLE_DAMAGE) ?: return
+        // Respawn
+        respawnChakramProjectile(projectile, damage)
+    }
+
+    private fun respawnChakramProjectile(projectile: ThrowableProjectile, damage: Int) {
+        val thrower = projectile.shooter as LivingEntity
+        val weapon = projectile.item
+        (thrower.world.spawnEntity(projectile.location, EntityType.SNOWBALL) as Snowball).also {
+            // Set Item
+            it.item = weapon
+            // Tags
+            it.setIntTag(EntityTags.THROWABLE_DAMAGE, damage)
+            it.addScoreboardTag(EntityTags.THROWN_CHAKRAM)
+            it.addScoreboardTag(EntityTags.CHAKRAM_HAS_BOUNCED)
+            // Velocity (MAYBE SPEED IS STORED IN COMPONENT??)
+            it.velocity = projectile.velocity.multiply(-0.7)
+            it.setGravity(false)
+            it.shooter = thrower
+            it.setHasLeftShooter(false)
+        }
+    }
+
+
+    /*-----------------------------------------------------------------------------------------------*/
+    @EventHandler(priority = EventPriority.LOWEST)
+    fun weaponHandSwapHandler(event: PlayerSwapHandItemsEvent) {
+        if (event.mainHandItem == null) return
+        if (!event.mainHandItem!!.hasItemMeta()) return
+        val mainHand = event.mainHandItem!! // ITEM TO BE IN MAINHAND AFTER SWAP
+        val player = event.player
+
+        // Kunai MOVE TO FUN LATER
+        if (mainHand.itemMeta.customModelData == ItemModels.VOID_LINKED_KUNAI) {
+            println("Void Swap Target: ${markedVoidTargets[player.uniqueId]?.uniqueId}")
+            val target = markedVoidTargets[player.uniqueId] ?: return
+            // Create task to run AFTER event
+            val voidLinkedChunk = target.chunk // First fire load
+            voidLinkedChunk.load() // VERY TEMP!!!!!!!!
+            val task = VoidLinkedKunaiAttack(player, mainHand, target)
+            task.runTask(Odyssey.instance)
+        }
+
+    }
 
     private fun leftClickHandler(event: PlayerInteractEvent) {
         val player = event.player
         val mainWeapon = player.equipment.itemInMainHand
-
+        // Sentries
         if (!mainWeapon.hasItemMeta()) return
         if (!mainWeapon.itemMeta!!.hasCustomModelData()) return
         val model = mainWeapon.itemMeta!!.customModelData
-
-        // OFF hand crossbow
-        /*
-        if (player.equipment.itemInOffHand.type == Material.CROSSBOW) {
-            // Get Model
-            val offHand = player.equipment.itemInOffHand
-            if (!offHand.itemMeta.hasCustomModelData()) return
-            // Clone then use item
-            if (offHand.itemMeta.customModelData == ItemModels.COMPACT_CROSSBOW) {
-                val mainHandClone = mainWeapon.clone()
-                val offHandClone = offHand.clone()
-                player.equipment.setItemInOffHand(mainHandClone)
-                player.equipment.setItemInMainHand(offHandClone)
-                event.setUseItemInHand(Event.Result.ALLOW)
-                player.equipment.setItemInMainHand(mainHandClone)
-                player.equipment.setItemInOffHand(offHandClone)
-                println("USED")
-            }
-            return
-        }
-
-         */
-
-
         if (REACH_MAP[model] == null) return
-        // Sentries Passed
 
         //val entity = getReachedTarget(player, REACH_MAP[model])
         val entity = getRayTraceTarget(player, model)
@@ -273,16 +402,17 @@ object WeaponListeners : Listener {
         }
     }
 
+
     private fun rightClickHandler(event: PlayerInteractEvent) {
         val player = event.player
         val mainWeapon = player.equipment.itemInMainHand
         val offHandWeapon = player.equipment.itemInOffHand
 
-        // ----------- Off Hand ------------
+        // Off Hand Dual Weldable
         val fullAttack = player.attackCooldown > 0.5
         if (offHandWeapon.itemMeta?.hasCustomModelData() == true && fullAttack) {
             when(val model = offHandWeapon.itemMeta!!.customModelData) {
-                ItemModels.DAGGER, ItemModels.SICKLE, ItemModels.CHAKRAM -> {
+                ItemModels.DAGGER, ItemModels.SICKLE, ItemModels.CHAKRAM, ItemModels.CUTLASS -> {
                     val entity = getRayTraceTarget(player, model)
                     if (entity is LivingEntity) {
                         dualWieldHandler(player, entity)
@@ -293,6 +423,84 @@ object WeaponListeners : Listener {
                 }
             }
         }
+        // Throwable
+        if (mainWeapon.itemMeta?.hasCustomModelData() == true) {
+            if (!mainWeapon.hasOdysseyItemTag()) return
+            val model = mainWeapon.itemMeta.customModelData
+            // Get from components or Model
+            val isKunai = (model == ItemModels.KUNAI || model == ItemModels.VOID_LINKED_KUNAI) || (mainWeapon.hasTag(ItemTags.IS_KUNAI))
+            if (isKunai) {
+                kunaiThrowableHandler(event)
+                return
+            }
+            val isChakram = (model == ItemModels.CHAKRAM) || (mainWeapon.hasTag(ItemTags.IS_CHAKRAM))
+            if (isChakram) {
+                chakramThrowableHandler(event)
+                return
+            }
+        }
+    }
+
+    /*-----------------------------------------------------------------------------------------------*/
+    // Right Click Throwables
+
+    private fun kunaiThrowableHandler(event: PlayerInteractEvent) {
+        val player = event.player
+        val mainWeapon = player.equipment.itemInMainHand
+        // Get CD
+        if (player.getCooldown(mainWeapon.type) > 0) return
+        // Spawn Kunai
+        (player.world.spawnEntity(player.eyeLocation, EntityType.SNOWBALL) as Snowball).also {
+            // Set Item
+            it.item = mainWeapon
+            // Tags
+            var damage = 1.0
+            val attackModifiers = mainWeapon.itemMeta.attributeModifiers?.get(Attribute.GENERIC_ATTACK_DAMAGE)
+            if (attackModifiers != null) {
+                for (modifier in attackModifiers) { // FIX LATER
+                    damage += modifier.amount
+                }
+            }
+            it.setIntTag(EntityTags.THROWABLE_DAMAGE, damage.toInt())
+            it.addScoreboardTag(EntityTags.THROWN_KUNAI)
+            // Velocity
+            it.velocity = player.eyeLocation.direction.clone().normalize().multiply(1.6)
+            it.shooter = player
+            it.setHasLeftShooter(false)
+        }
+        player.setCooldown(mainWeapon.type, 1 * 20)
+        mainWeapon.damage(1, player)
+    }
+
+    private fun chakramThrowableHandler(event: PlayerInteractEvent) {
+        val player = event.player
+        val mainWeapon = player.equipment.itemInMainHand
+        // Get CD
+        if (player.getCooldown(mainWeapon.type) > 0) return
+        // Spawn Chakram
+        val throwable = (player.world.spawnEntity(player.eyeLocation, EntityType.SNOWBALL) as Snowball).also {
+            // Set Item
+            it.item = mainWeapon
+            // Tags
+            var damage = 1.0
+            val attackModifiers = mainWeapon.itemMeta.attributeModifiers?.get(Attribute.GENERIC_ATTACK_DAMAGE)
+            if (attackModifiers != null) {
+                for (modifier in attackModifiers) { // FIX LATER
+                    damage += modifier.amount
+                }
+            }
+            it.setIntTag(EntityTags.THROWABLE_DAMAGE, damage.toInt())
+            it.addScoreboardTag(EntityTags.THROWN_CHAKRAM)
+            // Velocity (MAYBE SPEED IS STORED IN COMPONENT??)
+            it.velocity = player.eyeLocation.direction.clone().normalize().multiply(2.1)
+            it.setGravity(false)
+            it.shooter = player
+            it.setHasLeftShooter(false)
+        }
+        player.setCooldown(mainWeapon.type, 6 * 20)
+        // Return Task
+        val task = ChakramReturn(player, throwable, mainWeapon)
+        task.runTaskLater(Odyssey.instance, 15)
     }
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -372,9 +580,6 @@ object WeaponListeners : Listener {
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------------------*/
-
     // Event for detecting when entity shoots bow
 
     @EventHandler(priority = EventPriority.LOWEST)
