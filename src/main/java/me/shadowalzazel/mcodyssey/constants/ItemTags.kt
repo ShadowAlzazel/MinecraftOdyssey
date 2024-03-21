@@ -41,9 +41,14 @@ object ItemTags {
     const val IS_ENGRAVED: String = "odyssey.is_engraved"
     const val ENGRAVED_BY: String = "engraved_by"
 
-    // Tool Types
+    // Tool Materials
     const val SOUL_STEEL_TOOL: String = "soul_steel_tool"
     const val NETHERITE_TOOL: String = "netherite_tool"
+
+    // Equipment Classifications
+    const val IS_KUNAI: String = "odyssey.is_kunai"
+    const val IS_CHAKRAM: String = "odyssey.is_chakram"
+
     // Enchanting
     const val GILDED_SLOTS: String = "gilded_slots"
     const val ENCHANT_SLOTS: String = "enchant_slots"
@@ -64,7 +69,7 @@ object ItemTags {
         return has(DataKeys.ITEM_KEY)
     }
 
-    fun ItemStack.hadOdysseyItemTag(): Boolean {
+    fun ItemStack.hasOdysseyItemTag(): Boolean {
         return itemMeta.persistentDataContainer.hasOdysseyTag()
     }
 

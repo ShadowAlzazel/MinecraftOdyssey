@@ -2,7 +2,7 @@ package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.ItemTags.getOdysseyTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.hadOdysseyItemTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.hasOdysseyItemTag
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.Entity
@@ -33,7 +33,7 @@ object ArcaneListeners: Listener {
         val offHandEquipment = player.equipment.itemInOffHand
         if (!offHandEquipment.hasItemMeta()) return
         if (!offHandEquipment.itemMeta!!.hasCustomModelData()) return
-        if (!offHandEquipment.hadOdysseyItemTag()) return
+        if (!offHandEquipment.hasOdysseyItemTag()) return
         if (player.hasCooldown(offHandEquipment.type)) return
         val model = offHandEquipment.itemMeta!!.customModelData
         if (ARCANE_REACH_MAP[model] == null) return

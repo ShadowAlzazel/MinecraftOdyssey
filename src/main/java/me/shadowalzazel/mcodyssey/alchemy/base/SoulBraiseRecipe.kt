@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.alchemy.base
 
 import me.shadowalzazel.mcodyssey.alchemy.utility.BraiseBase
-import me.shadowalzazel.mcodyssey.constants.ItemTags.hadOdysseyItemTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.hasOdysseyItemTag
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import me.shadowalzazel.mcodyssey.mobs.base.OdysseyMob
 import org.bukkit.Location
@@ -26,7 +26,7 @@ open class SoulBraiseRecipe(
             if (it.itemStack !in braiseIngredients) {
                 // Check for type
                 for (ingredient in braiseIngredients) {
-                    if (ingredient.type == it.itemStack.type && !ingredient.hadOdysseyItemTag()) {
+                    if (ingredient.type == it.itemStack.type && !ingredient.hasOdysseyItemTag()) {
                         return true
                     }
                 }

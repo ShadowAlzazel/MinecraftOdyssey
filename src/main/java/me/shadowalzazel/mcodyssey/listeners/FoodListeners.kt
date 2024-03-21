@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.constants.ItemTags.getOdysseyTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.hadOdysseyItemTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.hasOdysseyItemTag
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -21,7 +21,7 @@ object FoodListeners : Listener {
             event.player.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION, 120 * 20, 4))
         }
         // Sentries
-        if (!event.item.hadOdysseyItemTag()) return
+        if (!event.item.hasOdysseyItemTag()) return
         if (!event.item.itemMeta.hasCustomModelData()) return
 
         when (event.item.getOdysseyTag()!!) {

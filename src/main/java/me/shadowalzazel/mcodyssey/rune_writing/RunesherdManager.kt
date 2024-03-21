@@ -7,7 +7,7 @@ import me.shadowalzazel.mcodyssey.constants.ItemTags.setIntTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.getIntTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.getOdysseyTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.hadOdysseyItemTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.hasOdysseyItemTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
 import me.shadowalzazel.mcodyssey.items.Runesherds
 import org.bukkit.Material
@@ -139,7 +139,7 @@ internal interface RunesherdManager : AttributeManager {
     fun addRunesherdToSmithingItem(runesherd: ItemStack, item: ItemStack): ItemStack? {
         // Basic Checks
         if (!runesherd.hasRunesherdTag()) return null
-        if (!runesherd.hadOdysseyItemTag()) return null
+        if (!runesherd.hasOdysseyItemTag()) return null
         // Runeware can have up to 3 runesherd augments
         val equipment = item.clone()
         val equipIsRuneware = equipment.hasRunewareTag()

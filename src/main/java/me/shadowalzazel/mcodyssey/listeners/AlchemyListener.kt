@@ -11,7 +11,7 @@ import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.ItemTags
 import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.getIntTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.hadOdysseyItemTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.hasOdysseyItemTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.setIntTag
 import me.shadowalzazel.mcodyssey.effects.*
@@ -52,7 +52,7 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
         if (event.item.type != Material.POTION) return
         // Potion Item Tag Getters
         val item = event.item
-        val isOdysseyEffect = item.hasOdysseyEffectTag() && item.hadOdysseyItemTag()
+        val isOdysseyEffect = item.hasOdysseyEffectTag() && item.hasOdysseyItemTag()
         if (isOdysseyEffect) {
             val effect = item.getCustomEffectTag()
             val duration = item.getCustomEffectTimeInTicks()
@@ -65,13 +65,13 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
             val charges = item.getIntTag(ItemTags.POTION_CHARGES_LEFT) ?: 0
             if (charges <= 1) return
             // Run charge
-            val meta = item.itemMeta
+            val meta = item.itemMeta.clone()
             if (meta.hasCustomModelData()) {
                 meta.setCustomModelData(meta.customModelData - 1)
             }
             event.replacement = item.also {
-                it.setIntTag(ItemTags.POTION_CHARGES_LEFT, charges - 1)
                 it.itemMeta = meta
+                it.setIntTag(ItemTags.POTION_CHARGES_LEFT, charges - 1)
             }
         }
         /*
@@ -91,7 +91,7 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
         // Potion Item Tag Getters
         if (!event.potion.item.hasItemMeta()) return
         if (!event.potion.item.hasOdysseyEffectTag()) return
-        if (!event.potion.item.hadOdysseyItemTag()) return
+        if (!event.potion.item.hasOdysseyItemTag()) return
         val effect = event.potion.item.getCustomEffectTag()
         val duration = event.potion.item.getCustomEffectTimeInTicks()
         val amplifier = event.potion.item.getCustomEffectAmplifier()
@@ -116,7 +116,7 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
                 event.areaEffectCloud.addCustomEffect(newEffect, true)
             }
         }
-        if (!event.entity.item.hadOdysseyItemTag()) return
+        if (!event.entity.item.hasOdysseyItemTag()) return
         if (!event.entity.item.hasOdysseyEffectTag()) return
         // Create Cloud
         event.areaEffectCloud.also {
@@ -301,7 +301,7 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
             }
             // --------------------------------------------------
             // For Handling Converting Odyssey Effects into Splash or Lingering
-            if (item.hadOdysseyItemTag() && item.hasOdysseyEffectTag()) {
+            if (item.hasOdysseyItemTag() && item.hasOdysseyEffectTag()) {
                 if (resultMaterial == Material.LINGERING_POTION) { event.results[x] = createOdysseyLingeringPotion(item) }
                 else { event.results[x] = createCustomBrewedPotion(resultMaterial, item) }
             }

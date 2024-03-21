@@ -13,10 +13,10 @@ enum class WeaponType(
     RAPIER(1.5, 3.4, "Rapier", ItemModels.RAPIER),
     CUTLASS(2.5, 2.1, "Cutlass", ItemModels.CUTLASS),
     SABER(3.0, 1.8, "Saber", ItemModels.SABER),
-
     DAGGER(1.0, 3.0, "Dagger", ItemModels.DAGGER),
     SICKLE(1.5, 2.3, "Sickle", ItemModels.SICKLE),
     CHAKRAM(1.5, 2.6, "Chakram", ItemModels.CHAKRAM),
+    KUNAI(2.0, 2.0, "Kunai", ItemModels.KUNAI),
 
     SPEAR(3.0, 1.6, "Spear", ItemModels.SPEAR),
     HALBERD(4.5, 0.8, "Halberd", ItemModels.HALBERD),
