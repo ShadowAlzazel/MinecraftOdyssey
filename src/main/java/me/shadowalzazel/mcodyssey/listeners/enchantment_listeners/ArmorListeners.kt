@@ -63,7 +63,10 @@ object ArmorListeners : Listener {
         if (defender.equipment?.helmet?.hasItemMeta() == true) {
             val helmet = defender.equipment?.helmet
             for (enchant in helmet!!.enchantments) {
-                when (enchant.key) {
+                // Continue if not OdysseyEnchant
+                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                // When match
+                when (gildedEnchant) {
                     OdysseyEnchantments.ANTIBONK -> {
                         event.damage = antibonkEnchantment(event.isCritical, event.damage, enchant.value)
                     }
@@ -94,7 +97,10 @@ object ArmorListeners : Listener {
         if (defender.equipment?.chestplate?.hasItemMeta() == true) {
             val chestplate = defender.equipment?.chestplate
             for (enchant in chestplate!!.enchantments) {
-                when (enchant.key) {
+                // Continue if not OdysseyEnchant
+                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                // When match
+                when (gildedEnchant) {
                     OdysseyEnchantments.BLACK_ROSE -> {
                         blackRoseEnchantment(enemy, enchant.value)
                     }
@@ -125,7 +131,10 @@ object ArmorListeners : Listener {
         if (defender.equipment?.leggings?.hasItemMeta() == true) {
             val leggings = defender.equipment?.leggings
             for (enchant in leggings!!.enchantments) {
-                when (enchant.key) {
+                // Continue if not OdysseyEnchant
+                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                // When match
+                when (gildedEnchant) {
                     OdysseyEnchantments.COWARDICE -> {
                         cowardiceEnchantment(enemy, defender, enchant.value)
                     }
@@ -153,7 +162,10 @@ object ArmorListeners : Listener {
         if (defender.equipment?.boots?.hasItemMeta() == true) {
             val boots = defender.equipment?.boots
             for (enchant in boots!!.enchantments) {
-                when (enchant.key) {
+                // Continue if not OdysseyEnchant
+                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                // When match
+                when (gildedEnchant) {
                     OdysseyEnchantments.RECKLESS -> {
                         event.damage += recklessEnchantment(enchant.value)
                     }
@@ -188,7 +200,10 @@ object ArmorListeners : Listener {
         if (attacker.equipment?.helmet?.hasItemMeta() == true) {
             val helmet = attacker.equipment?.helmet
             for (enchant in helmet!!.enchantments) {
-                when (enchant.key) {
+                // Continue if not OdysseyEnchant
+                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                // When match
+                when (gildedEnchant) {
                     OdysseyEnchantments.MANDIBLEMANIA -> {
                         mandiblemaniaAttackEnchantment(attacker, enemy, enchant.value)
                     }
@@ -201,7 +216,10 @@ object ArmorListeners : Listener {
         if (attacker.equipment?.chestplate?.hasItemMeta() == true) {
             val chestplate = attacker.equipment?.chestplate
             for (enchant in chestplate!!.enchantments) {
-                when (enchant.key) {
+                // Continue if not OdysseyEnchant
+                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                // When match
+                when (gildedEnchant) {
                     OdysseyEnchantments.BEASTLY_BRAWLER -> {
                         event.damage += beastlyBrawlerEnchantment(attacker, enchant.value)
                     }
@@ -214,7 +232,10 @@ object ArmorListeners : Listener {
         if (attacker.equipment?.boots?.hasItemMeta() == true) {
             val boots = attacker.equipment?.boots
             for (enchant in boots!!.enchantments) {
-                when (enchant.key) {
+                // Continue if not OdysseyEnchant
+                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                // When match
+                when (gildedEnchant) {
                     OdysseyEnchantments.STATIC_SOCKS -> {
                         event.damage += staticSocksAttackEnchantment(attacker, enchant.value)
                     }
@@ -231,7 +252,10 @@ object ArmorListeners : Listener {
             if (defender.equipment?.boots?.hasItemMeta() == true) {
                 val boots = defender.equipment?.boots
                 for (enchant in boots!!.enchantments) {
-                    when (enchant.key) {
+                    // Continue if not OdysseyEnchant
+                    val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                    // When match
+                    when (gildedEnchant) {
                         OdysseyEnchantments.DEVASTATING_DROP -> {
                             devastatingDrop(defender, event.damage, enchant.value)
                         }
@@ -262,7 +286,10 @@ object ArmorListeners : Listener {
         if (player.equipment.helmet?.hasItemMeta() == true) {
             val helmet = player.equipment.helmet
             for (enchant in helmet!!.enchantments) {
-                when (enchant.key) {
+                // Continue if not OdysseyEnchant
+                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                // When match
+                when (gildedEnchant) {
                     OdysseyEnchantments.BREWFUL_BREATH -> {
                         brewfulBreathEnchantment(player, event.item, enchant.value)
                     }
@@ -273,7 +300,10 @@ object ArmorListeners : Listener {
         if (player.equipment.chestplate?.hasItemMeta() == true) {
             val chestplate = player.equipment.chestplate
             for (enchant in chestplate!!.enchantments) {
-                when (enchant.key) {
+                // Continue if not OdysseyEnchant
+                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                // When match
+                when (gildedEnchant) {
                     OdysseyEnchantments.FRUITFUL_FARE -> {
                         fruitfulFareEnchantment(player, event.item, enchant.value)
                     }
@@ -297,7 +327,10 @@ object ArmorListeners : Listener {
         if (player.equipment.helmet?.hasItemMeta() == true) {
             val helmet = player.equipment.helmet
             for (enchant in helmet!!.enchantments) {
-                when (enchant.key) {
+                // Continue if not OdysseyEnchant
+                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                // When match
+                when (gildedEnchant) {
                     OdysseyEnchantments.DREADFUL_SHRIEK -> {
                         dreadfulShriekEnchantment(player, item, enchant.value)
                     }
@@ -339,7 +372,10 @@ object ArmorListeners : Listener {
         if (defender.equipment?.helmet?.hasItemMeta() == true) {
             val helmet = defender.equipment?.helmet
             for (enchant in helmet!!.enchantments) {
-                when (enchant.key) {
+                // Continue if not OdysseyEnchant
+                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                // When match
+                when (gildedEnchant) {
                     OdysseyEnchantments.COPPER_CHITIN -> {
                         copperChitinEnchantment(defender, helmet)
                     }
@@ -352,7 +388,10 @@ object ArmorListeners : Listener {
         if (defender.equipment?.chestplate?.hasItemMeta() == true) {
             val chestplate = defender.equipment?.chestplate
             for (enchant in chestplate!!.enchantments) {
-                when (enchant.key) {
+                // Continue if not OdysseyEnchant
+                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                // When match
+                when (gildedEnchant) {
                     OdysseyEnchantments.COPPER_CHITIN -> {
                         copperChitinEnchantment(defender, chestplate)
                     }
@@ -365,7 +404,10 @@ object ArmorListeners : Listener {
         if (defender.equipment?.leggings?.hasItemMeta() == true) {
             val leggings = defender.equipment?.leggings
             for (enchant in leggings!!.enchantments) {
-                when (enchant.key) {
+                // Continue if not OdysseyEnchant
+                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                // When match
+                when (gildedEnchant) {
                     OdysseyEnchantments.COPPER_CHITIN -> {
                         copperChitinEnchantment(defender, leggings)
                     }
@@ -378,7 +420,10 @@ object ArmorListeners : Listener {
         if (defender.equipment?.boots?.hasItemMeta() == true) {
             val boots = defender.equipment?.boots
             for (enchant in boots!!.enchantments) {
-                when (enchant.key) {
+                // Continue if not OdysseyEnchant
+                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                // When match
+                when (gildedEnchant) {
                     OdysseyEnchantments.COPPER_CHITIN -> {
                         copperChitinEnchantment(defender, boots)
                     }
@@ -395,7 +440,7 @@ object ArmorListeners : Listener {
         if (!event.item.hasItemMeta()) return
         // Copper Chitin
 
-        if (event.item.enchantments.containsKey(OdysseyEnchantments.MOONWARD)) {
+        if (event.item.enchantments.containsKey(OdysseyEnchantments.MOONWARD.toBukkit())) {
             moonwardEnchantment(event)
         }
 
@@ -430,7 +475,10 @@ object ArmorListeners : Listener {
         if (defender.equipment?.boots?.hasItemMeta() == true) {
             val boots = defender.equipment?.boots
             for (enchant in boots!!.enchantments) {
-                when (enchant.key) {
+                // Continue if not OdysseyEnchant
+                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                // When match
+                when (gildedEnchant) {
                     OdysseyEnchantments.ROOT_BOOTS -> {
                         event.acceleration.multiply(rootBootsKnockbackHandler(defender, enchant.value))
                     }
@@ -447,7 +495,10 @@ object ArmorListeners : Listener {
         if (sneaker.equipment.helmet?.hasItemMeta() == true) {
             val helmet = sneaker.equipment.helmet
             for (enchant in helmet!!.enchantments) {
-                when (enchant.key) {
+                // Continue if not OdysseyEnchant
+                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                // When match
+                when (gildedEnchant) {
                     OdysseyEnchantments.POLLEN_GUARD -> {
                         pollenGuardSneakEnchantment(sneaker, enchant.value, pollenMaxHeadPlayers, event.isSneaking)
                     }
@@ -460,7 +511,10 @@ object ArmorListeners : Listener {
         if (sneaker.equipment.chestplate?.hasItemMeta() == true) {
             val chestplate = sneaker.equipment.chestplate
             for (enchant in chestplate!!.enchantments) {
-                when (enchant.key) {
+                // Continue if not OdysseyEnchant
+                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                // When match
+                when (gildedEnchant) {
                     OdysseyEnchantments.POLLEN_GUARD -> {
                         pollenGuardSneakEnchantment(sneaker, enchant.value, pollenMaxChestPlayers, event.isSneaking)
                     }
@@ -470,7 +524,10 @@ object ArmorListeners : Listener {
         if (sneaker.equipment.leggings?.hasItemMeta() == true) {
             val leggings = sneaker.equipment.leggings
             for (enchant in leggings!!.enchantments) {
-                when (enchant.key) {
+                // Continue if not OdysseyEnchant
+                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                // When match
+                when (gildedEnchant) {
                     OdysseyEnchantments.LEAP_FROG -> {
                         leapFrogSneakEnchantment(sneaker, event.isSneaking)
                     }
@@ -483,7 +540,10 @@ object ArmorListeners : Listener {
         if (sneaker.equipment.boots?.hasItemMeta() == true) {
             val boots = sneaker.equipment.boots
             for (enchant in boots!!.enchantments) {
-                when (enchant.key) {
+                // Continue if not OdysseyEnchant
+                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                // When match
+                when (gildedEnchant) {
                     OdysseyEnchantments.POLLEN_GUARD -> {
                         pollenGuardSneakEnchantment(sneaker, enchant.value, pollenMaxBootsPlayers, event.isSneaking)
                     }
@@ -508,7 +568,10 @@ object ArmorListeners : Listener {
         if (jumper.equipment.leggings?.hasItemMeta() == true) {
             val leggings = jumper.equipment.leggings
             for (enchant in leggings!!.enchantments) {
-                when (enchant.key) {
+                // Continue if not OdysseyEnchant
+                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                // When match
+                when (gildedEnchant) {
                     OdysseyEnchantments.LEAP_FROG -> {
                         leapFrogEnchantment(jumper, enchant.value)
                     }
@@ -518,7 +581,10 @@ object ArmorListeners : Listener {
         if (jumper.equipment.boots?.hasItemMeta() == true) {
             val boots = jumper.equipment.boots
             for (enchant in boots!!.enchantments) {
-                when (enchant.key) {
+                // Continue if not OdysseyEnchant
+                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                // When match
+                when (gildedEnchant) {
                     OdysseyEnchantments.LEAP_FROG -> {
 
                     }

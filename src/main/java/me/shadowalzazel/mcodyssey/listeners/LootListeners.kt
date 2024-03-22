@@ -3,7 +3,7 @@ package me.shadowalzazel.mcodyssey.listeners
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.items.Arcane
-import me.shadowalzazel.mcodyssey.items.Arcane.createEnchantedBook
+import me.shadowalzazel.mcodyssey.items.Arcane.createGildedBook
 import me.shadowalzazel.mcodyssey.items.Foods
 import me.shadowalzazel.mcodyssey.items.Ingredients
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
@@ -39,32 +39,32 @@ object LootListeners : Listener {
             is Skeleton -> {
                 if (mobLootLogic.roll(2.5)) {
                     val rangedSet = OdysseyEnchantments.RANGED_SET.filter { enchant -> enchant !in OdysseyEnchantments.EXOTIC_LIST }
-                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createEnchantedBook(rangedSet.random(), 1)))
+                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createGildedBook(rangedSet.random(), 1)))
                     droppedItemSound(player)
                 }
             }
             is Husk -> {
                 if (mobLootLogic.roll(1.5)) {
-                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.DECAYING_TOUCH, 1)))
+                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createGildedBook(OdysseyEnchantments.DECAYING_TOUCH, 1)))
                     droppedItemSound(player)
                 }
             }
             is Drowned -> {
                 if (mobLootLogic.roll(1.5)) {
-                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.BANE_OF_THE_SEA, 1)))
+                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BANE_OF_THE_SEA, 1)))
                     droppedItemSound(player)
                 }
             }
             is PigZombie -> {
                 if (mobLootLogic.roll(1.5)) {
-                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.BANE_OF_THE_SWINE, 1)))
+                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BANE_OF_THE_SWINE, 1)))
                     droppedItemSound(player)
                 }
             }
             is Zombie -> {
                 if (mobLootLogic.roll(2.5)) {
                     val meleeSet = OdysseyEnchantments.MELEE_SET.filter { enchant -> enchant !in OdysseyEnchantments.EXOTIC_LIST }
-                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createEnchantedBook(meleeSet.random(), 1)))
+                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createGildedBook(meleeSet.random(), 1)))
                     droppedItemSound(player)
                 }
                 // TODO: Is Blood Moon
@@ -74,68 +74,68 @@ object LootListeners : Listener {
             }
             is Witch -> {
                 if (mobLootLogic.roll(2.5)) {
-                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.ALCHEMY_ARTILLERY, 1)))
+                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createGildedBook(OdysseyEnchantments.ALCHEMY_ARTILLERY, 1)))
                     droppedItemSound(player)
                 }
             }
             is Stray -> {
                 if (mobLootLogic.roll(1.5)) {
-                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.FREEZING_ASPECT, 1)))
+                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createGildedBook(OdysseyEnchantments.FREEZING_ASPECT, 1)))
                     droppedItemSound(player)
                 }
             }
             is Creeper -> {
                 // If charged creeper kills catalyst, drop echo shard
                 if (mobLootLogic.roll(1.5)) {
-                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.EXPLODING, 1)))
+                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createGildedBook(OdysseyEnchantments.EXPLODING, 1)))
                     droppedItemSound(player)
                 }
             }
             is Hoglin -> {
                 if (mobLootLogic.roll(1.5)) {
-                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.HEMORRHAGE, 1)))
+                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createGildedBook(OdysseyEnchantments.HEMORRHAGE, 1)))
                     droppedItemSound(player)
                 }
             }
             is Vindicator -> {
                 if (mobLootLogic.roll(3.5)) {
-                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.BANE_OF_THE_ILLAGER, 1)))
+                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BANE_OF_THE_ILLAGER, 1)))
                     droppedItemSound(player)
                 }
             }
             is Pillager -> {
                 if (mobLootLogic.roll(2.5)) {
-                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.BURST_BARRAGE, 1)))
+                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BURST_BARRAGE, 1)))
                     droppedItemSound(player)
                 }
             }
             is Ravager -> {
                 if (mobLootLogic.roll(5.5)) {
-                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.WHIRLWIND, 1)))
+                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createGildedBook(OdysseyEnchantments.WHIRLWIND, 1)))
                     droppedItemSound(player)
                 }
             }
             is Squid -> {
                 if (mobLootLogic.roll(3.5)) {
-                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.SQUIDIFY, 1)))
+                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createGildedBook(OdysseyEnchantments.SQUIDIFY, 1)))
                     droppedItemSound(player)
                 }
             }
             is Shulker -> {
                 if (mobLootLogic.roll(2.5)) {
-                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.VOID_STRIKE, 1))) // change
+                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createGildedBook(OdysseyEnchantments.VOID_STRIKE, 1))) // change
                     droppedItemSound(player)
                 }
             }
             is Endermite -> {
                 if (mobLootLogic.roll(3.5)) {
-                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.VOID_STRIKE, 1)))
+                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createGildedBook(OdysseyEnchantments.VOID_STRIKE, 1)))
                     droppedItemSound(player)
                 }
             }
             is Enderman -> {
                 if (mobLootLogic.roll(2.5)) {
-                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.VOID_JUMP, 1)))
+                    mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createGildedBook(OdysseyEnchantments.VOID_JUMP, 1)))
                     droppedItemSound(player)
                 }
             }
@@ -150,11 +150,11 @@ object LootListeners : Listener {
             }
             is Warden -> {
                 mob.world.dropItem(mob.location, (Ingredients.WARDEN_ENTRAILS.createItemStack(1)))
-                mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.SCULK_SENSITIVE, 1)))
+                mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createGildedBook(OdysseyEnchantments.SCULK_SENSITIVE, 1)))
                 droppedItemSound(player)
             }
             is Wither -> {
-                mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.BLACK_ROSE, 1)))
+                mob.world.dropItem(mob.location, (Arcane.GILDED_BOOK.createGildedBook(OdysseyEnchantments.BLACK_ROSE, 1)))
                 droppedItemSound(player)
             }
             is EnderDragon -> {

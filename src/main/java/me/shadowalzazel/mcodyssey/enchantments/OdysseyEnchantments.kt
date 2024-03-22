@@ -7,9 +7,8 @@ import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.enchantments.melee.*
 import me.shadowalzazel.mcodyssey.enchantments.misc.*
 import me.shadowalzazel.mcodyssey.enchantments.ranged.*
+import net.minecraft.core.registries.BuiltInRegistries
 import org.bukkit.enchantments.Enchantment
-import java.util.*
-import java.util.stream.Collectors
 
 object OdysseyEnchantments {
 
@@ -224,17 +223,41 @@ object OdysseyEnchantments {
         VULNEROCITY
     )
 
-    val REGISTERED_SET = setOf(GILDED_POWER) + ARMOR_SET + MELEE_SET + MISC_SET + RANGED_SET
+    val REGISTERED_SET = ARMOR_SET + MELEE_SET + MISC_SET + RANGED_SET + setOf(GILDED_POWER)
     val EXOTIC_LIST = setOf(SINGULARITY_SHOT, GRAVITY_WELL,
         STELLAR_SHOWER, SCULK_SENSITIVE, BLACK_ROSE) // To exclude for table
 
     // Register
     fun register() {
+        /* ---------- PRE 1.20.4 ----------- */
+        /*
         for (odysseyEnchant in REGISTERED_SET) {
             val registered = Arrays.stream(Enchantment.values()).collect(Collectors.toList()).contains(odysseyEnchant)
             if (!registered) registerOdysseyEnchantment(odysseyEnchant as Enchantment)
         }
+         */
+        for (odysseyEnchant in REGISTERED_SET) {
+            var registered = false
+            try {
+                net.minecraft.core.Registry.register(
+                    BuiltInRegistries.ENCHANTMENT,
+                    odysseyEnchant.name,
+                    odysseyEnchant
+                )
+                registered = true
+            }
+            catch (exception: Exception) {
+                exception.printStackTrace()
+            }
+            // SUCCESS!!
+            if (registered) {
+                Odyssey.instance.logger.info("Registered: $odysseyEnchant")
+            }
+        }
+
     }
+
+
 
     private fun registerOdysseyEnchantment(enchantment: Enchantment?) {
         var registered = false
@@ -561,37 +584,9 @@ object OdysseyEnchantments {
 
 // Less durability more dmg
 // A cursed enchantment turns the slot into a cursed slot
-
-
 // Item if in hand, create aura?
 // Enchantment: Things around get chilling? flame?
-
 // Make thorns bug new enchant apply ranged effects !!!!!
-
 // LUNAR POTATOES
-
 // Shoot Bricks, Slimeballs, (CROSSBOW)
-
 // AUGMENTS !!!!!!!!!!!
-
-/*
-private operator fun <T : Keyed?> Registry<T>.set(key: NamespacedKey, value: T) {
-    mutableMapOf<NamespacedKey, T>()
-    //
-    // TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //
-    // TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //
-    // TODO!!!!!!
-    //
-    // TODO!!!!!!
-    //
-    // TODO!!!!!!
-    //
-    // TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //
-    // TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //
-}
-
- */

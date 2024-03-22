@@ -4,6 +4,7 @@ import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.enchantments.Enchantment.DEPTH_STRIDER
 import org.bukkit.inventory.ItemStack
 
 object StaticSocks : OdysseyEnchantment("static_socks", "Static Socks", 5) {

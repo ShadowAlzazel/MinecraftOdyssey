@@ -11,7 +11,7 @@ object OShiny : OdysseyEnchantment("o_shiny", "O' Shiny", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.WISE_BAIT-> {
+            OdysseyEnchantments.WISE_BAIT.toBukkit() -> {
                 true
             }
             else -> {

@@ -1,15 +1,14 @@
 package me.shadowalzazel.mcodyssey.commands.admin
 
 import me.shadowalzazel.mcodyssey.arcane.EnchantSlotManager
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import me.shadowalzazel.mcodyssey.enchantments.EnchantRegistryManager
 import org.bukkit.Material
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-object EnchantGilded : CommandExecutor, EnchantSlotManager {
+object EnchantGilded : CommandExecutor, EnchantSlotManager, EnchantRegistryManager {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
         if (sender !is Player) return false
@@ -19,16 +18,15 @@ object EnchantGilded : CommandExecutor, EnchantSlotManager {
         // Enchant
         val level = args[1].toInt()
         // Switch
-        val enchantToAdd: OdysseyEnchantment? = OdysseyEnchantments.getEnchantmentFromNamespace(args[0])
-        // Check
-        if (enchantToAdd != null) {
-            val item = sender.equipment.itemInMainHand
-            item.addUnsafeEnchantment(enchantToAdd, level)
-            item.createNewEnchantSlots()
-        }
-        else {
-            return false
-        }
+        println(args[0])
+        val odysseyEnchantment = getEnchantmentFromString(args[0]) ?: return false
+        println(odysseyEnchantment)
+        val registeredEnchantment = getEnchantmentFromRegistry(odysseyEnchantment) ?: return false
+        println(registeredEnchantment)
+        // Passed Checks
+        val item = sender.equipment.itemInMainHand
+        item.addUnsafeEnchantment(registeredEnchantment, level)
+        item.createNewEnchantSlots()
         return true
     }
 }

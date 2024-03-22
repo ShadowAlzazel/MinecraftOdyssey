@@ -7,6 +7,7 @@ import me.shadowalzazel.mcodyssey.constants.EntityTags.getIntTag
 import me.shadowalzazel.mcodyssey.constants.EntityTags.removeTag
 import me.shadowalzazel.mcodyssey.constants.EntityTags.setIntTag
 import me.shadowalzazel.mcodyssey.effects.EffectsManager
+import me.shadowalzazel.mcodyssey.enchantments.EnchantRegistryManager
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.ArcaneCellTask
 import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.FrogFrightTask
@@ -28,7 +29,7 @@ import org.bukkit.util.Vector
 import java.util.*
 import kotlin.math.log2
 
-object MeleeListeners : Listener, EffectsManager {
+object MeleeListeners : Listener, EffectsManager, EnchantRegistryManager {
 
     // Internal cool downs for enchantments
     private var arcaneCellCooldown = mutableMapOf<UUID, Long>()
@@ -56,9 +57,12 @@ object MeleeListeners : Listener, EffectsManager {
         val power = if (attacker is Player) { attacker.attackCooldown.toDouble() } else { 1.0 }
 
         // Loop for all enchants
+        println(weapon.enchantments)
         for (enchant in weapon.enchantments) {
+            // Continue if not OdysseyEnchant
+            val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
             // When match
-            when (enchant.key) {
+            when (gildedEnchant) {
                 OdysseyEnchantments.ARCANE_CELL -> {
                     if (cooldownManager(attacker, "Arcane Cell", arcaneCellCooldown, 5.25)) {
                         arcaneCellEnchantment(victim, enchant.value)
@@ -167,7 +171,10 @@ object MeleeListeners : Listener, EffectsManager {
 
         // Loop for all enchants
         for (enchant in weapon!!.enchantments) {
-            when (enchant.key) {
+            // Continue if not OdysseyEnchant
+            val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
+            // When match
+            when (gildedEnchant) {
                 OdysseyEnchantments.EXPLODING -> {
                     if (cooldownManager(killer, "Exploding", explodingCooldown, 1.25)) {
                         explodingEnchantment(victim, enchant.value)

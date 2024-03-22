@@ -4,6 +4,7 @@ import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.enchantments.Enchantment.THORNS
 import org.bukkit.inventory.ItemStack
 
 object SpeedySpurs : OdysseyEnchantment("speedy_spurs", "Speedy Spurs", 3) {

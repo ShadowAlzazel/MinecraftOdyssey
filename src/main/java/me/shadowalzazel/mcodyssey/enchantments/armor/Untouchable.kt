@@ -11,7 +11,7 @@ object Untouchable : OdysseyEnchantment("untouchable", "Untouchable", 1) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.IGNORE_PAIN-> {
+            OdysseyEnchantments.IGNORE_PAIN.toBukkit() -> {
                 true
             }
             else -> {

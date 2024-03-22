@@ -6,7 +6,7 @@ import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.getIntTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.getStringTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
+import me.shadowalzazel.mcodyssey.enchantments.EnchantRegistryManager
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
@@ -18,7 +18,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 
-internal interface EnchantSlotManager {
+internal interface EnchantSlotManager : EnchantRegistryManager {
 
     fun ItemStack.isSlotted(): Boolean {
         return hasTag(ItemTags.IS_SLOTTED)
@@ -102,8 +102,8 @@ internal interface EnchantSlotManager {
             }
         }
         // Get Enchantment Maps
-        val enchants = newEnchants?.filter { it.key !is OdysseyEnchantment } ?: enchantments.filter { it.key !is OdysseyEnchantment }
-        val gildedEnchants = newEnchants?.filter { it.key is OdysseyEnchantment } ?: enchantments.filter { it.key is OdysseyEnchantment }
+        val enchants = newEnchants?.filter { !it.key.isOdysseyEnchant() } ?: enchantments.filter { !it.key.isOdysseyEnchant() }
+        val gildedEnchants = newEnchants?.filter { it.key.isOdysseyEnchant() } ?: enchantments.filter { it.key.isOdysseyEnchant() }
         // Add Enchants Over empty slots
         var enchantCount = 0
         enchants.forEach {
@@ -121,7 +121,7 @@ internal interface EnchantSlotManager {
         var gildedCount = 0
         gildedEnchants.forEach {
             gildedCount += 1
-            newLore[sepIndex + slots.first + gildedCount] = (it.key as OdysseyEnchantment)
+            newLore[sepIndex + slots.first + gildedCount] = (it.key.getOdysseyEnchant())
                 .displayLore(it.value)
                 .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
         }
@@ -142,7 +142,7 @@ internal interface EnchantSlotManager {
     fun ItemStack.createNewEnchantSlots() {
         val slots = MutablePair(2, 1)
         for (enchant in enchantments) {
-            if (enchant.key !in OdysseyEnchantments.REGISTERED_SET) {
+            if (enchant.key.isOdysseyEnchant()) {
                 slots.left += 1
             } else {
                 slots.right += 1

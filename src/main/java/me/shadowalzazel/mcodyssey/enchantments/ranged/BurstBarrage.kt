@@ -4,6 +4,8 @@ import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.enchantments.Enchantment.ARROW_INFINITE
+import org.bukkit.enchantments.Enchantment.MULTISHOT
 import org.bukkit.inventory.ItemStack
 
 object BurstBarrage : OdysseyEnchantment("burst_barrage", "Burst Barrage", 5) {

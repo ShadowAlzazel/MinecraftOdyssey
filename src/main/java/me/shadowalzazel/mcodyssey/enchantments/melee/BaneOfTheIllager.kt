@@ -4,13 +4,16 @@ import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.enchantments.Enchantment.*
 import org.bukkit.inventory.ItemStack
 
 object BaneOfTheIllager : OdysseyEnchantment("bane_of_the_illager", "Bane of the Illager", 5) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            DAMAGE_ARTHROPODS, DAMAGE_ALL, DAMAGE_UNDEAD, OdysseyEnchantments.BANE_OF_THE_SWINE, OdysseyEnchantments.BANE_OF_THE_SEA -> {
+            DAMAGE_ARTHROPODS, DAMAGE_ALL, DAMAGE_UNDEAD,
+            OdysseyEnchantments.BANE_OF_THE_SWINE.toBukkit(),
+            OdysseyEnchantments.BANE_OF_THE_SEA.toBukkit() -> {
                 true
             }
             else -> {

@@ -104,7 +104,7 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
                 canEnchant = gildedEnchant.canEnchantItem(mainHand)
             }
             mainHand.itemMeta = mainHand.itemMeta.also {
-                it.addEnchant(gildedEnchant, gildedEnchant.maximumLevel, true)
+                it.addEnchant(gildedEnchant.toBukkit(), gildedEnchant.maximumLevel, true)
             }
         }
 
@@ -197,7 +197,7 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
                 Enchantment.PROTECTION_EXPLOSIONS, Enchantment.PROTECTION_FIRE).random()
             it.addEnchant(prot, (1..prot.maxLevel).random(), false)
             if (gildedEnchant.canEnchantItem(armor)) {
-                it.addEnchant(gildedEnchant, gildedEnchant.maxLevel, false)
+                it.addEnchant(gildedEnchant.toBukkit(), gildedEnchant.maxLevel, false)
             }
         }
         armor.createNewEnchantSlots()

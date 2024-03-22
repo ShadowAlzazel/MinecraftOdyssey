@@ -4,6 +4,7 @@ import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.enchantments.Enchantment.SWEEPING_EDGE
 import org.bukkit.inventory.ItemStack
 
 object Whirlwind : OdysseyEnchantment("whirl_wind", "Whirlwind", 3) {

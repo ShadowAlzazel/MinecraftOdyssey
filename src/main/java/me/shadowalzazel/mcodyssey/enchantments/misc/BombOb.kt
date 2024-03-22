@@ -10,7 +10,7 @@ object BombOb : OdysseyEnchantment("bomb_ob", "Bomb Ob", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.HOOK_SHOT-> {
+            OdysseyEnchantments.HOOK_SHOT.toBukkit() -> {
                 true
             }
             else -> {
