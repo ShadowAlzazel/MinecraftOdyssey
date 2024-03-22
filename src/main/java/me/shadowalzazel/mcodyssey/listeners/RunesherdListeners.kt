@@ -153,7 +153,7 @@ object RunesherdListeners : Listener, RunesherdManager {
         }
         runeware.addRuneAugmentTag()
         runeware.setRuneAugmentCount(3)
-        //
+        // Set Result
         event.result = runeware
     }
 

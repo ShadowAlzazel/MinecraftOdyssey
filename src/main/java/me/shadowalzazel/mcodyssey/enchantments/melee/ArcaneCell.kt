@@ -2,6 +2,7 @@ package me.shadowalzazel.mcodyssey.enchantments.melee
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -33,6 +34,16 @@ object ArcaneCell : OdysseyEnchantment("arcane_cell", "Arcane Cell", 3) {
                 false
             }
         }
-
     }
+
+    override fun getDescriptionToolTip(inputLevel: Int): List<Component> {
+        val amount = 2 + (inputLevel * 2)
+        val text1 = "Create a circular zone with a radius of 5 for $amount=[2 + (level x 2)] seconds."
+        val text2 = "The target can not leave, and are teleported inside if they try."
+        return listOf(
+            getGrayComponentText(text1),
+            getGrayComponentText(text2),
+        )
+    }
+
 }

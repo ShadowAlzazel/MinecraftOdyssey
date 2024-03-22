@@ -289,7 +289,12 @@ object WeaponListeners : Listener {
         victim.addScoreboardTag(EntityTags.THROWABLE_ATTACK_HIT)
         if (projectile.shooter != null) {
             val thrower = projectile.shooter ?: return
-            victim.damage(damage * 1.0, thrower as LivingEntity)
+            victim.addScoreboardTag(EntityTags.THROWABLE_ATTACK_HIT)
+            if (thrower is HumanEntity) {
+                thrower.attack(victim)
+            } else {
+                victim.damage(damage * 1.0, thrower as LivingEntity)
+            }
         } else {
             victim.damage(damage * 1.0)
         }
@@ -309,7 +314,7 @@ object WeaponListeners : Listener {
             val thrower = projectile.shooter ?: return
             if (thrower !is LivingEntity) return
             target.addScoreboardTag(EntityTags.THROWABLE_ATTACK_HIT)
-            target.damage(damage * 1.0, thrower)
+            thrower.attack(target)
             returnChakram = true
         }
         // If hit owner, reset Cooldown
