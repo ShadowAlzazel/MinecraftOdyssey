@@ -245,7 +245,7 @@ object OdysseyEnchantments {
                 f.isAccessible = true
                 f[null] = true
                 //Odyssey.instance.server.getRegistry()
-                Enchantment.registerEnchantment(enchantment)
+                //Enchantment.registerEnchantment(enchantment)
             }
 
             /* ---------- 1.20.4  ----------- */

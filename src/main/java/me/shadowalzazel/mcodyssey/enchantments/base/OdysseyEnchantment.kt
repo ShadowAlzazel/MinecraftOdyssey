@@ -15,11 +15,11 @@ import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 
 open class OdysseyEnchantment(
-    namespace: String?,
+    val namespace: String?,
     val enchantName: String,
     val maximumLevel: Int,
     val subtype: Subtype = Subtype.GILDED) :
-    Enchantment(NamespacedKey(Odyssey.instance, namespace!!)) {
+    Enchantment() {
 
     internal val romanNum = mapOf(1 to "I", 2 to "II", 3 to "III", 4 to "IV", 5 to "V", 6 to "VI", 7 to "VII", 8 to "VIII", 9 to "IX", 10 to "X")
 
@@ -27,8 +27,6 @@ open class OdysseyEnchantment(
         TODO("Not yet implemented")
     }
 
-    // 1.20.4
-    /*
     override fun getKey(): NamespacedKey {
         return NamespacedKey(Odyssey.instance, namespace!!)
     }
@@ -40,7 +38,6 @@ open class OdysseyEnchantment(
     override fun getMaxModifiedCost(p0: Int): Int {
         return 1
     }
-     */
 
     @Deprecated("Deprecated in Java", ReplaceWith("enchantName"))
     override fun getName(): String {
