@@ -7,6 +7,9 @@
 
 # IntelliJ
 out/
+gradle/
+.gradle/
+build/
 
 # Compiled class file
 *.class
