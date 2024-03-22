@@ -4,7 +4,7 @@ import me.shadowalzazel.mcodyssey.arcane.EnchantSlotManager
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.items.Arcane
-import me.shadowalzazel.mcodyssey.items.Arcane.createEnchantedBook
+import me.shadowalzazel.mcodyssey.items.Arcane.createGildedBook
 import org.bukkit.Material
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -24,7 +24,7 @@ object GiveGildedBook : CommandExecutor, EnchantSlotManager {
         val enchantToAdd: OdysseyEnchantment? = OdysseyEnchantments.getEnchantmentFromNamespace(args[0])
         // Check
         if (enchantToAdd != null) {
-            val item = Arcane.GILDED_BOOK.createEnchantedBook(enchantToAdd, level)
+            val item = Arcane.GILDED_BOOK.createGildedBook(enchantToAdd, level)
             sender.inventory.addItem(item)
         }
         else {

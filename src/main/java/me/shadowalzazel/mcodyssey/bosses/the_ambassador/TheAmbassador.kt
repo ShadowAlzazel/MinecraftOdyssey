@@ -7,7 +7,7 @@ import me.shadowalzazel.mcodyssey.constants.EffectTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.items.Arcane
-import me.shadowalzazel.mcodyssey.items.Arcane.createEnchantedBook
+import me.shadowalzazel.mcodyssey.items.Arcane.createGildedBook
 import me.shadowalzazel.mcodyssey.items.Exotics
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
 import me.shadowalzazel.mcodyssey.items.Weapons
@@ -451,7 +451,7 @@ class TheAmbassador(location: Location) : OdysseyBoss(
         when (material) {
             Material.NETHER_STAR -> {
                 giftLikeness += 30
-                val gravityBook = Arcane.GILDED_BOOK.createEnchantedBook(OdysseyEnchantments.GRAVITY_WELL, 1)
+                val gravityBook = Arcane.GILDED_BOOK.createGildedBook(OdysseyEnchantments.GRAVITY_WELL, 1)
                 inventory.addItem(gravityBook)
             }
             Material.NETHERITE_INGOT -> {

@@ -10,7 +10,7 @@ object ReversedRecoil : OdysseyEnchantment("reversed_recoil", "Reversed Recoil",
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.MIRROR_FORCE -> {
+            OdysseyEnchantments.MIRROR_FORCE.toBukkit() -> {
                 true
             }
             else -> {

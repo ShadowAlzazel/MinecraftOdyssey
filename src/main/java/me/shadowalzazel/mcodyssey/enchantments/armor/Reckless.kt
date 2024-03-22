@@ -11,7 +11,7 @@ object Reckless : OdysseyEnchantment("reckless", "Reckless", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.RELENTLESS -> {
+            OdysseyEnchantments.RELENTLESS.toBukkit() -> {
                 true
             }
             else -> {

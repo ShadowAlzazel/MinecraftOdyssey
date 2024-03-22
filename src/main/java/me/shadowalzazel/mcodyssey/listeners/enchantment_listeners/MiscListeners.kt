@@ -49,7 +49,10 @@ object MiscListeners : Listener {
             event.player.inventory.itemInOffHand
         }
         for (enchant in rod.enchantments) {
-            when (enchant.key) {
+            // Continue if not OdysseyEnchant
+            val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+            // When match
+            when (gildedEnchant) {
                 OdysseyEnchantments.BOMB_OB -> {
                     if (event.caught!! is LivingEntity) {
                         bombObEnchantment(event.caught!! as LivingEntity, enchant.value)
@@ -76,7 +79,10 @@ object MiscListeners : Listener {
         }
         //
         for (enchant in rod.enchantments) {
-            when (enchant.key) {
+            // Continue if not OdysseyEnchant
+            val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+            // When match
+            when (gildedEnchant) {
                 OdysseyEnchantments.O_SHINY -> {
                     val item = event.caught as Item
 
@@ -114,7 +120,10 @@ object MiscListeners : Listener {
             event.player.inventory.itemInOffHand
         }
         for (enchant in rod.enchantments) {
-            when (enchant.key) {
+            // Continue if not OdysseyEnchant
+            val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+            // When match
+            when (gildedEnchant) {
                 OdysseyEnchantments.LENGTHY_LINE -> {
                     println(event.hook.velocity)
                     event.hook.velocity = event.hook.velocity.multiply(1 + (0.5 * enchant.value))
@@ -171,7 +180,7 @@ object MiscListeners : Listener {
                 if (blockingEntity.equipment != null ) {
                     if (blockingEntity.equipment!!.itemInOffHand.hasItemMeta() ) {
                         val someShield = blockingEntity.equipment!!.itemInOffHand
-                        if (someShield.itemMeta.hasEnchant(OdysseyEnchantments.MIRROR_FORCE)) {
+                        if (someShield.itemMeta.hasEnchant(OdysseyEnchantments.MIRROR_FORCE.toBukkit())) {
                             if (blockingEntity.isHandRaised) {
                                 if (blockingEntity.handRaised == EquipmentSlot.OFF_HAND) {
                                     println("Blocked!")
@@ -198,7 +207,7 @@ object MiscListeners : Listener {
         if (player.equipment.chestplate != null && player.equipment.chestplate.hasItemMeta() && player.gameMode != GameMode.SPECTATOR) {
             val elytra = player.equipment.chestplate
             // Check if player has enchantment
-            if (elytra.itemMeta.hasEnchant(OdysseyEnchantments.VOID_JUMP)) {
+            if (elytra.itemMeta.hasEnchant(OdysseyEnchantments.VOID_JUMP.toBukkit())) {
                 // Check Speed
                 val speed = player.velocity.clone().length()
                 if (speed > 0.125) {
@@ -242,7 +251,7 @@ object MiscListeners : Listener {
                 voidJumpCooldown[uniqueId] = System.currentTimeMillis()
 
                 // Get vector
-                val enchantmentLevel = equipment.chestplate.getEnchantmentLevel(OdysseyEnchantments.VOID_JUMP)
+                val enchantmentLevel = equipment.chestplate.getEnchantmentLevel(OdysseyEnchantments.VOID_JUMP.toBukkit())
                 val unitVector = velocity.clone().normalize()
                 val jumpLocation = location.clone().add(
                     unitVector.clone().multiply((enchantmentLevel * 5.0) + 5)
@@ -290,8 +299,8 @@ object MiscListeners : Listener {
                 if (someThrower.equipment != null) {
                     if (someThrower.equipment!!.itemInMainHand.hasItemMeta()) {
                         val someFishingRod = someThrower.equipment!!.itemInMainHand
-                        if (someFishingRod.itemMeta.hasEnchant(OdysseyEnchantments.HOOK_SHOT)) {
-                            val hookFactor = someFishingRod.itemMeta.getEnchantLevel(OdysseyEnchantments.HOOK_SHOT)
+                        if (someFishingRod.itemMeta.hasEnchant(OdysseyEnchantments.HOOK_SHOT.toBukkit())) {
+                            val hookFactor = someFishingRod.itemMeta.getEnchantLevel(OdysseyEnchantments.HOOK_SHOT.toBukkit())
                             if (event.hitBlock != null) {
                                 val someBlock = event.hitBlock
                                 val someInvisibleStand: ArmorStand = someThrower.world.spawnEntity(someHook.location, EntityType.ARMOR_STAND) as ArmorStand

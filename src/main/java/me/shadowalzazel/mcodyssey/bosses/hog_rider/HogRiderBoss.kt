@@ -43,9 +43,9 @@ class HogRiderBoss : OdysseyBoss(
         smokyWarHammerMeta.addEnchant(Enchantment.KNOCKBACK, 3, true)
         smokyWarHammerMeta.addEnchant(Enchantment.FIRE_ASPECT, 2, true)
         smokyWarHammerMeta.addEnchant(Enchantment.DURABILITY, 3, true)
-        smokyWarHammerMeta.addEnchant(OdysseyEnchantments.BANE_OF_THE_SWINE, 5, true)
-        smokyWarHammerMeta.addEnchant(OdysseyEnchantments.FREEZING_ASPECT, 2, true)
-        smokyWarHammerMeta.addEnchant(OdysseyEnchantments.GUARDING_STRIKE, 2, true)
+        //smokyWarHammerMeta.addEnchant(OdysseyEnchantments.BANE_OF_THE_SWINE, 5, true)
+        //smokyWarHammerMeta.addEnchant(OdysseyEnchantments.FREEZING_ASPECT, 2, true)
+        //smokyWarHammerMeta.addEnchant(OdysseyEnchantments.GUARDING_STRIKE, 2, true)
 
         // Create weapon
         smokyWarHammer.itemMeta = smokyWarHammerMeta

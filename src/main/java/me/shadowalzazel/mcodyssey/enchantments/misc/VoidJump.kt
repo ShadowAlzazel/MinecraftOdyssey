@@ -3,6 +3,7 @@ package me.shadowalzazel.mcodyssey.enchantments.misc
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.enchantments.Enchantment.*
 import org.bukkit.inventory.ItemStack
 
 object VoidJump : OdysseyEnchantment("void_jump", "Void Jump", 3) {

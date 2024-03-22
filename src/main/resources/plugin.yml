@@ -1,9 +1,9 @@
-name: Odyssey
-version: '${project.version}'
+name: $name
 main: me.shadowalzazel.mcodyssey.Odyssey
-api-version: '1.20'
+version: $version
+api-version: $apiVersion
 authors: [ShadowAlzazel]
-description: A server side expansion pack for a new minecraft adventure!
+description: $description
 
 commands:
   summon_boss:

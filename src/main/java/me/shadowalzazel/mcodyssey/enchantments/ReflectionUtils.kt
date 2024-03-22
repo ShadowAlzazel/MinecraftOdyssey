@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.enchantments
 
-/*
+// Code Provided by Pluggg
+
 // ReflectionUtils
 import net.minecraft.core.Holder
 import net.minecraft.core.MappedRegistry
@@ -33,4 +34,3 @@ object ReflectionUtils {
     }
 }
 
- */

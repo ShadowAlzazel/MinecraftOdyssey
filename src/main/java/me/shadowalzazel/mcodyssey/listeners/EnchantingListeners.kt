@@ -4,10 +4,11 @@ import com.destroystokyo.paper.event.inventory.PrepareResultEvent
 import me.shadowalzazel.mcodyssey.arcane.EnchantSlotManager
 import me.shadowalzazel.mcodyssey.arcane.SlotColors
 import me.shadowalzazel.mcodyssey.constants.ItemModels
+import me.shadowalzazel.mcodyssey.enchantments.EnchantRegistryManager
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.items.Arcane
-import me.shadowalzazel.mcodyssey.items.Arcane.createEnchantedBook
+import me.shadowalzazel.mcodyssey.items.Arcane.createGildedBook
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextDecoration
@@ -32,7 +33,7 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.inventory.meta.Repairable
 import kotlin.math.max
 
-object EnchantingListeners : Listener, EnchantSlotManager {
+object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManager {
 
     /*-----------------------------------------------------------------------------------------------*/
     /*-----------------------------------------------------------------------------------------------*/
@@ -130,7 +131,7 @@ object EnchantingListeners : Listener, EnchantSlotManager {
         if (!slotted && !hasOdysseyEnchants) {
             val slots = MutablePair(2, 1)
             for (enchant in event.result!!.enchantments) {
-                if (enchant.key !in OdysseyEnchantments.REGISTERED_SET) {
+                if (!enchant.key.isOdysseyEnchant()) {
                     slots.left += 1
                 } else {
                     slots.right += 1
@@ -326,12 +327,12 @@ object EnchantingListeners : Listener, EnchantSlotManager {
             if (!hasRolled) continue
             val randomGilded = getMaterialEnchantSet(type).random()
             if (!randomGilded.canEnchantItem(this)) continue
-            if (randomGilded in newEnchants.keys) continue
+            if (randomGilded.toBukkit() in newEnchants.keys) continue
             val hasConflict = newEnchants.keys.any { randomGilded.conflictsWith(it) }
             if (hasConflict) continue
             // Passed All conditions
             newEnchants.also {
-                it[randomGilded] = maxOf(1, minOf(randomGilded.maximumLevel, (levels / 10)))
+                it[randomGilded.toBukkit() ] = maxOf(1, minOf(randomGilded.maximumLevel, (levels / 10)))
             }
         }
     }
@@ -478,8 +479,8 @@ object EnchantingListeners : Listener, EnchantSlotManager {
         if (newSlotCount < item.enchantments.size) {
             val enchantToRemove = item.enchantments.toList().random()
             item.apply {
-                if (enchantToRemove.first is OdysseyEnchantment) {
-                    removeEnchantment(enchantToRemove.first as OdysseyEnchantment)
+                if (enchantToRemove.first.isOdysseyEnchant()) {
+                    removeEnchantment(enchantToRemove.first)
                     removeGildedSlot()
                 }
                 else {
@@ -519,8 +520,8 @@ object EnchantingListeners : Listener, EnchantSlotManager {
         // Remove Enchantment
         val enchantToRemove = item.enchantments.toList().random()
         return item.apply {
-            if (enchantToRemove.first is OdysseyEnchantment) {
-                removeEnchantment(enchantToRemove.first as OdysseyEnchantment)
+            if (enchantToRemove.first.isOdysseyEnchant()) {
+                removeEnchantment(enchantToRemove.first)
             }
             else {
                 removeEnchantment(enchantToRemove.first)
@@ -552,7 +553,7 @@ object EnchantingListeners : Listener, EnchantSlotManager {
         // Create Book
         val extractedEnchant = item.enchantments.toList().random()
         val book = if (extractedEnchant.first is OdysseyEnchantment) {
-            Arcane.GILDED_BOOK.createEnchantedBook(extractedEnchant.first as OdysseyEnchantment, extractedEnchant.second)
+            Arcane.GILDED_BOOK.createGildedBook(extractedEnchant.first as OdysseyEnchantment, extractedEnchant.second)
         } else {
             ItemStack(Material.ENCHANTED_BOOK, 1).apply {
                 val newMeta = itemMeta.clone() as EnchantmentStorageMeta
@@ -668,7 +669,7 @@ object EnchantingListeners : Listener, EnchantSlotManager {
         }
         // Book
         val book = if (promotedEnchant.first is OdysseyEnchantment) {
-            Arcane.GILDED_BOOK.createEnchantedBook(promotedEnchant.first as OdysseyEnchantment, promotedEnchant.second + 1)
+            Arcane.GILDED_BOOK.createGildedBook(promotedEnchant.first as OdysseyEnchantment, promotedEnchant.second + 1)
         } else {
             item.clone().apply {
                 val newMeta = itemMeta.clone() as EnchantmentStorageMeta
@@ -779,7 +780,7 @@ object EnchantingListeners : Listener, EnchantSlotManager {
             viewers.forEach { it.sendFailMessage("The gilded books do not create a higher level enchantment.") }
             return ItemStack(Material.AIR)
         }
-        return Arcane.GILDED_BOOK.createEnchantedBook(firstEnchant.key, newLevel + 1)
+        return Arcane.GILDED_BOOK.createGildedBook(firstEnchant.key.getOdysseyEnchant(), newLevel + 1)
     }
 
     /*-----------------------------------------------------------------------------------------------*/

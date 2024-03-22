@@ -11,7 +11,7 @@ object IgnorePain : OdysseyEnchantment("ignore_pain", "Ignore Pain", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.UNTOUCHABLE -> {
+            OdysseyEnchantments.UNTOUCHABLE.toBukkit() -> {
                 true
             }
             else -> {

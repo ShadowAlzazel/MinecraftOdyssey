@@ -5,13 +5,16 @@ import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.enchantments.Enchantment.*
 import org.bukkit.inventory.ItemStack
 
 object BaneOfTheSwine : OdysseyEnchantment("bane_of_the_swine", "Bane of the Swine", 5) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            DAMAGE_ARTHROPODS, DAMAGE_ALL, DAMAGE_UNDEAD, OdysseyEnchantments.BANE_OF_THE_SEA, OdysseyEnchantments.BANE_OF_THE_ILLAGER -> {
+            DAMAGE_ARTHROPODS, DAMAGE_ALL, DAMAGE_UNDEAD,
+            OdysseyEnchantments.BANE_OF_THE_SEA.toBukkit(),
+            OdysseyEnchantments.BANE_OF_THE_ILLAGER.toBukkit() -> {
                 true
             }
             else -> {
