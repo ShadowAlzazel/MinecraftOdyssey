@@ -118,6 +118,9 @@ object EntityTags {
     const val STATIC_SOCKS_CHARGE: String = "odyssey.static_socks_charge"
     const val POLLEN_GUARD_STACKS: String = "odyssey.pollen_guard_stacks"
     const val LEAP_FROG_READY: String = "odyssey.leap_frog_ready"
+    const val VOID_TOUCHED: String = "odyssey.void_touched"
+    const val VOID_STRUCK_BY: String = "odyssey.void_struck_by"
+    const val VOID_STRIKE_MODIFIER: String = "odyssey.void_strike_modifier"
 
     // WEAPONS
     const val COMBOED: String = "odyssey.comboed"

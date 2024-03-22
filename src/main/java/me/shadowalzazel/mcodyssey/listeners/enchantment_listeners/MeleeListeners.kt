@@ -3,6 +3,9 @@ package me.shadowalzazel.mcodyssey.listeners.enchantment_listeners
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.constants.EffectTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags
+import me.shadowalzazel.mcodyssey.constants.EntityTags.getIntTag
+import me.shadowalzazel.mcodyssey.constants.EntityTags.removeTag
+import me.shadowalzazel.mcodyssey.constants.EntityTags.setIntTag
 import me.shadowalzazel.mcodyssey.effects.EffectsManager
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.ArcaneCellTask
@@ -58,7 +61,7 @@ object MeleeListeners : Listener, EffectsManager {
             when (enchant.key) {
                 OdysseyEnchantments.ARCANE_CELL -> {
                     if (cooldownManager(attacker, "Arcane Cell", arcaneCellCooldown, 5.25)) {
-                        arcaneCellEnchantment(victim, enchant.value) // TODO
+                        arcaneCellEnchantment(victim, enchant.value)
                     }
                 }
                 OdysseyEnchantments.ASPHYXIATING_ASSAULT -> {
@@ -215,29 +218,20 @@ object MeleeListeners : Listener, EffectsManager {
 
     // ------------------------------- ARCANE_CELL ------------------------------------
     private fun arcaneCellEnchantment(victim: LivingEntity, level: Int) {
-        // TODO: CHANGE
+        if (victim.scoreboardTags.contains(EffectTags.ARCANE_JAILED)) return
+        // Run
         with(victim) {
-            if (!scoreboardTags.contains(EffectTags.ARCANE_JAILED)) {
-                addPotionEffects(
-                    listOf(
-                        PotionEffect(PotionEffectType.SLOW, (20 * ((level * 2) + 2)), 4),
-                        PotionEffect(PotionEffectType.SLOW_DIGGING, (20 * ((level * 2) + 2)), 3)
-                    )
-                )
-                addScoreboardTag(EffectTags.ARCANE_JAILED)
-                // Make circle Particles and Sound
-                world.spawnParticle(Particle.SPELL_WITCH, location, 35, 1.0, 0.5, 1.0)
-                world.playSound(location, Sound.ENTITY_VEX_CHARGE, 1.5F, 0.5F)
-                ArcaneCellTask(victim, location, (2 + (level * 2)) * 4).runTaskTimer(Odyssey.instance, 5, 5)
-            }
+            addScoreboardTag(EffectTags.ARCANE_JAILED)
+            world.spawnParticle(Particle.SPELL_WITCH, location, 5, 0.2, 0.2, 0.2)
+            val task = ArcaneCellTask(victim, location, level, (2 + (2 * level)) * 20)
+            task.runTaskTimer(Odyssey.instance, 5, 5)
         }
-
     }
     // ------------------------------- BACKSTABBER ------------------------------------
     private fun backstabberEnchantment(
         attacker: LivingEntity,
         victim: LivingEntity,
-        enchantmentStrength: Int
+        level: Int
     ): Int {
         val victimTarget = victim.getTargetEntity(4)
         val isInvisible = attacker.isInvisible || attacker.hasPotionEffect(PotionEffectType.INVISIBILITY)
@@ -254,17 +248,17 @@ object MeleeListeners : Listener, EffectsManager {
                 playSound(victim.location, Sound.BLOCK_HONEY_BLOCK_FALL, 2.5F, 0.9F)
             }
             // Damage
-            return (3 + (enchantmentStrength * 3))
+            return (3 + (level * 3))
         }
         return 0
     }
     // ------------------------------- BANE_OF_THE_ILLAGER ------------------------------------
     private fun baneOfTheIllagerEnchantment(
         victim: LivingEntity,
-        enchantmentStrength: Int
+        level: Int
     ): Double {
         if (victim is Raider) {
-            return enchantmentStrength.toDouble() * 2.5
+            return level.toDouble() * 2.5
         }
         return 0.0
     }
@@ -272,20 +266,20 @@ object MeleeListeners : Listener, EffectsManager {
     private fun baneOfTheSeaEnchantment(
         attacker: LivingEntity,
         victim: LivingEntity,
-        enchantmentStrength: Int
+        level: Int
     ): Double {
         if (victim.isInWaterOrRainOrBubbleColumn || victim is WaterMob || victim.isSwimming || attacker.isInWaterOrRainOrBubbleColumn) {
-            return enchantmentStrength.toDouble() * 2.0
+            return level.toDouble() * 2.0
         }
         return 0.0
     }
     // ------------------------------- BANE_OF_THE_SWINE ------------------------------------
     private fun baneOfTheSwineEnchantment(
         victim: LivingEntity,
-        enchantmentStrength: Int
+        level: Int
     ): Double {
         if (victim is PiglinAbstract || victim is Pig || victim is Hoglin) {
-            return enchantmentStrength.toDouble() * 2.5
+            return level.toDouble() * 2.5
         }
         return 0.0
     }
@@ -335,15 +329,16 @@ object MeleeListeners : Listener, EffectsManager {
         }
     }
     // ------------------------------- COMMITTED ------------------------------------
-    private fun committedEnchantment(victim: LivingEntity, enchantmentStrength: Int): Int {
-        return if (victim.health < victim.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value * 0.4) {
-            enchantmentStrength + 1
+    private fun committedEnchantment(victim: LivingEntity, level: Int): Int {
+        val maxHealth = victim.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value ?: 20.0
+        return if (victim.health < maxHealth * 0.4) {
+            level + 1
         } else {
             0
         }
     }
     // ------------------------------- CULL_THE_WEAK ------------------------------------
-    private fun cullTheWeakEnchantment(victim: LivingEntity, enchantmentStrength: Int): Double {
+    private fun cullTheWeakEnchantment(victim: LivingEntity, level: Int): Double {
         val hasSlowness = victim.hasPotionEffect(PotionEffectType.SLOW)
         val hasWeakness = victim.hasPotionEffect(PotionEffectType.WEAKNESS)
         val hasFatigue = victim.hasPotionEffect(PotionEffectType.SLOW_DIGGING)
@@ -353,14 +348,14 @@ object MeleeListeners : Listener, EffectsManager {
             if (hasSlowness) { damage += 1.0 }
             if (hasWeakness) { damage += 1.0 }
             if (hasFatigue) { damage += 1.0 }
-            enchantmentStrength * (1.0 + damage)
+            level * (1.0 + damage)
         } else {
             0.0
         }
     }
     // ------------------------------- DECAYING_TOUCH ------------------------------------
     private fun decayingTouchEnchantment(victim: LivingEntity, level: Int) {
-       victim.addPotionEffect(PotionEffect(PotionEffectType.WITHER, (20 * ((level * 2))), 0))
+       victim.addPotionEffect(PotionEffect(PotionEffectType.WITHER, (20 * (2 + (level * 2))), 0))
     }
     // ------------------------------- DOUSE ------------------------------------
     private fun douseEnchantment(victim: LivingEntity, level: Int): Double {
@@ -382,7 +377,6 @@ object MeleeListeners : Listener, EffectsManager {
         if ((0..100).random() < level * 20) {
             if (!victim.isDead) {
                 // Swing
-                //attacker.swingOffHand()
                 victim.addScoreboardTag(EntityTags.ECHO_STRUCK)
                 attacker.attack(victim)
                 // Particles
@@ -428,7 +422,8 @@ object MeleeListeners : Listener, EffectsManager {
     }
     // ------------------------------- FEARFUL_FINISHER ------------------------------------
     private fun fearfulFinisherEnchantment(victim: LivingEntity, level: Int) {
-        val vector = victim.killer!!.eyeLocation.direction.clone().normalize()
+        val killer = victim.killer ?: return
+        val vector = killer.eyeLocation.direction.clone().normalize()
         vector.y = 0.0
         vector.normalize().multiply((2 * level) + 2)
         val newLocation = victim.location.clone().add(vector).toHighestLocation(HeightMap.MOTION_BLOCKING_NO_LEAVES)
@@ -450,7 +445,7 @@ object MeleeListeners : Listener, EffectsManager {
         with(victim) {
             if (freezeTicks <= 50) {
                 addOdysseyEffect(EffectTags.FREEZING, 8 * 20, level * 1)
-                world.spawnParticle(Particle.SNOWFLAKE, this@with.location, 30, 0.75, 0.5, 0.75)
+                world.spawnParticle(Particle.SNOWFLAKE, this@with.location, 30, 0.25, 0.5, 0.25)
             }
         }
     }
@@ -478,8 +473,8 @@ object MeleeListeners : Listener, EffectsManager {
         with(victim) {
             if (!scoreboardTags.contains(EffectTags.FROSTY_FUSED)) {
                 addScoreboardTag(EffectTags.FROSTY_FUSED)
-                val frostedFuseTask = FrostyFuseTask(victim, enchantmentStrength * 1, 5 * 4)
-                frostedFuseTask.runTaskTimer(Odyssey.instance, 5, 5)
+                val task = FrostyFuseTask(victim, enchantmentStrength * 1, 5 * 4)
+                task.runTaskTimer(Odyssey.instance, 5, 5)
             }
         }
 
@@ -499,8 +494,8 @@ object MeleeListeners : Listener, EffectsManager {
             addScoreboardTag(EffectTags.GRAVITY_WELLED)
             val modifier = (level * 1) + 1
             val maxCount = ((level * 2) + 2) * 2
-            val gravityWellTask = GravitySingularityTask(victim, attacker, modifier, maxCount)
-            gravityWellTask.runTaskTimer(Odyssey.instance, 0, 10)
+            val task = GravitySingularityTask(victim, attacker, modifier, maxCount)
+            task.runTaskTimer(Odyssey.instance, 0, 10)
         }
 
     }
@@ -533,10 +528,10 @@ object MeleeListeners : Listener, EffectsManager {
         }
     }
     // ------------------------------- ILLUCIDATION ------------------------------------
-    private fun illucidationEnchantment(victim: LivingEntity, enchantmentStrength: Int, isCrit: Boolean): Int {
+    private fun illucidationEnchantment(victim: LivingEntity, level: Int, isCrit: Boolean): Int {
         var illucidationDamage = 0
         if (victim.isGlowing) {
-            illucidationDamage += (enchantmentStrength + 1)
+            illucidationDamage += (level + 1)
             if (isCrit) {
                 illucidationDamage * 2
                 victim.isGlowing = false
@@ -552,7 +547,8 @@ object MeleeListeners : Listener, EffectsManager {
         return illucidationDamage
     }
     // ------------------------------- RUPTURING_STRIKE ------------------------------------
-    private fun rupturingStrikeEnchantment(attacker: LivingEntity, victim: LivingEntity, damage: Double, enchantmentStrength: Int): Double {
+    private fun rupturingStrikeEnchantment(attacker: LivingEntity, victim: LivingEntity, damage: Double, level: Int): Double {
+        if (victim.isDead) return 0.0
         val fullCharge = if ((attacker is Player) && attacker.attackCooldown > 0.99) { true } else attacker !is Player
         // Prevent Spam
         if (!fullCharge) return 0.0
@@ -560,22 +556,23 @@ object MeleeListeners : Listener, EffectsManager {
         var rupturingDamage = 0.0
         with(victim) {
             if (scoreboardTags.contains(EffectTags.FULLY_RUPTURED)) {
-                scoreboardTags.remove(EffectTags.FULLY_RUPTURED)
-                if (damage + 2 > enchantmentStrength) {
-                    rupturingDamage += enchantmentStrength
+                removeScoreboardTag(EffectTags.FULLY_RUPTURED)
+                if (damage + 2 > level) {
+                    rupturingDamage += level
                     health -= minOf(health, rupturingDamage)
                 }
                 world.playSound(victim.location, Sound.ITEM_CROSSBOW_QUICK_CHARGE_2, 2.5F, 1.7F)
                 world.spawnParticle(Particle.CRIT, victim.location, 25, 1.0, 0.5, 1.0)
-                world.spawnParticle(Particle.BLOCK_CRACK, victim.location, 25, 0.95, 0.8, 0.95, Material.QUARTZ_BRICKS.createBlockData())
+                val blockData = Material.QUARTZ_BRICKS.createBlockData()
+                world.spawnParticle(Particle.BLOCK_CRACK, victim.location, 25, 0.95, 0.8, 0.95, blockData)
             }
             else if (scoreboardTags.contains(EffectTags.PARTLY_RUPTURED)) {
-                scoreboardTags.remove(EffectTags.PARTLY_RUPTURED)
-                scoreboardTags.add(EffectTags.FULLY_RUPTURED)
-            } else {
-                scoreboardTags.add(EffectTags.PARTLY_RUPTURED)
+                removeScoreboardTag(EffectTags.PARTLY_RUPTURED)
+                addScoreboardTag(EffectTags.FULLY_RUPTURED)
             }
-            damage
+            else {
+                addScoreboardTag(EffectTags.PARTLY_RUPTURED)
+            }
         }
         return rupturingDamage
     }
@@ -600,124 +597,66 @@ object MeleeListeners : Listener, EffectsManager {
         }
     }
     // ------------------------------- VOID_STRIKE ------------------------------------
-    // TODO: REDO
     private fun voidStrikeEnchantment(
         attacker: LivingEntity,
         victim: LivingEntity,
-        enchantmentStrength: Int
-    ): Int {
-        // Variables
-        var voidDamage = 0
-        var voidTouched = false
-        var voidConflict = false
-        // Values
-        val victimScoreboardTags = victim.scoreboardTags
-        val voidStrikeIDs = voidStrikeCooldown.keys.toList()
-        val voidDamagerID: UUID = attacker.uniqueId
-
-        // Initial Conflict Check
-        if ("Void_Touched" in victimScoreboardTags) {
-            voidTouched = true
-            for (tag in victimScoreboardTags) {
-                for (someID in voidStrikeIDs) {
-                    if (tag == "Void_Touched_By_${someID}" && tag != "Void_Touched_By_${voidDamagerID}") {
-                        voidConflict = true
-                        break
-                    }
-                }
-                if (voidConflict) {
-                    break
-                }
-            }
+        level: Int
+    ): Double {
+        // Skip if not matching
+        val voidStruckBy = victim.getIntTag(EntityTags.VOID_STRUCK_BY)
+        if (voidStruckBy == null) {
+            victim.setIntTag(EntityTags.VOID_STRUCK_BY, attacker.entityId)
         }
-        // Remove all void related tags if conflict
-        if (voidConflict) {
-            val tagsToRemove = mutableListOf<String>()
-            for (tag in victimScoreboardTags) {
-                val voidTouchedTagPrefix = tag.subSequence(0..11).toString()
-                val voidStruckTagPrefix = tag.subSequence(0..10).toString()
-                if ((voidTouchedTagPrefix == "Void_Touched") || (voidStruckTagPrefix == "Void_Struck")) {
-                    tagsToRemove.add(tag)
-                }
-            }
-            for (tag in tagsToRemove) {
-                victim.scoreboardTags.remove(tag)
-            }
+        else if (voidStruckBy != attacker.entityId) {
+            return 0.0
+        }
+        // Get modifier and set voidDamage
+        val modifier = victim.getIntTag(EntityTags.VOID_STRIKE_MODIFIER) ?: 0
+        victim.setIntTag(EntityTags.VOID_STRIKE_MODIFIER, modifier + 1)
+        val voidDamage = modifier * level
+        // Reset void strike modifier
+        if (modifier > 13) {
+            victim.setIntTag(EntityTags.VOID_STRIKE_MODIFIER, 0)
+            victim.removeTag(EntityTags.VOID_STRUCK_BY)
+        }
+        // Particles and Sounds
+        with(victim.world) {
+            val location = victim.location
+            spawnParticle(Particle.PORTAL, location, (modifier + 1) * 8, 1.15, 0.85, 1.15)
+            spawnParticle(Particle.WAX_OFF, location, (modifier + 1) * 2, 1.0, 0.75, 1.0)
+            spawnParticle(Particle.SPELL_WITCH, location, (modifier + 1) * 5, 1.0, 0.75, 1.0)
+            playSound(location, Sound.BLOCK_BEACON_DEACTIVATE, 1.5F, 0.5F)
+            playSound(location, Sound.BLOCK_AMETHYST_BLOCK_BREAK, 1.7F, 0.2F)
+            playSound(location, Sound.ENTITY_ENDER_EYE_DEATH, 3.5F, 0.4F)
         }
 
-        if (!voidConflict) {
-            // Check if already voided
-            if (voidTouched) {
-                var voidStruckValue: Int? = null
-                for (tag in victimScoreboardTags) {
-                    if (tag.length > 10) {
-                        // Change Void Struck tag
-                        val voidStruckTagPrefix = tag.subSequence(0..10).toString()
-                        if (voidStruckTagPrefix == "Void_Struck") {
-                            val tagLastIndex = tag.lastIndex
-                            voidStruckValue = tag[tagLastIndex].toString().toInt()
-                            break
-                        }
-                    }
-                }
-                // Void Struck value to damage and update tag
-                if (voidStruckValue != null) {
-                    if (voidStruckValue == 9) {
-                        victim.scoreboardTags.remove("Void_Struck_${voidStruckValue}")
-                        victim.scoreboardTags.add("Void_Struck_0")
-                    } else {
-                        victim.scoreboardTags.remove("Void_Struck_${voidStruckValue}")
-                        victim.scoreboardTags.add("Void_Struck_${voidStruckValue + 1}")
-                    }
-                    voidDamage = (enchantmentStrength * (voidStruckValue + 1))
-                }
-            }
-            // Add tags if not voided
-            else {
-                (victim.scoreboardTags).also {
-                    it.add("Void_Touched")
-                    it.add("Void_Touched_By_${voidDamagerID}")
-                    it.add("Void_Struck_0")
-                }
-            }
-            // Particles and Sounds
-            with(victim.world) {
-                val someLocation = victim.location
-                spawnParticle(Particle.PORTAL, someLocation, 85, 1.15, 0.85, 1.15)
-                spawnParticle(Particle.WAX_OFF, someLocation, 45, 1.0, 0.75, 1.0)
-                spawnParticle(Particle.SPELL_WITCH, someLocation, 50, 1.0, 0.75, 1.0)
-                playSound(someLocation, Sound.BLOCK_BEACON_DEACTIVATE, 1.5F, 0.5F)
-                playSound(someLocation, Sound.BLOCK_AMETHYST_BLOCK_BREAK, 1.7F, 0.2F)
-                playSound(someLocation, Sound.ENTITY_ENDER_EYE_DEATH, 3.5F, 0.4F)
-            }
-        }
         // Damage
-        return voidDamage
+        return voidDamage * 1.0
     }
     // ------------------------------- WHIRLWIND ------------------------------------
     private fun whirlwindEnchantment(
         attacker: LivingEntity,
         victim: LivingEntity,
         damage: Double,
-        enchantmentStrength: Int
+        level: Int
     ) {
         // Entity list
-        val nearbyEntities =
-            attacker.world.getNearbyLivingEntities(attacker.location, 1.5).filter { it != attacker && it != victim }
+        val nearbyEntities = attacker.world.getNearbyLivingEntities(attacker.location, 1.5).filter {
+            it != attacker && it != victim
+        }
         // Particles
         with(attacker.world) {
             spawnParticle(Particle.EXPLOSION_LARGE, attacker.location, 10, 1.25, 0.75, 1.25)
             playSound(attacker.location, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1.2F, 0.7F)
             playSound(attacker.location, Sound.ITEM_SHIELD_BLOCK, 1.2F, 0.6F)
             playSound(attacker.location, Sound.ITEM_TRIDENT_RIPTIDE_3, 1.2F, 0.6F)
-            playSound(attacker.location, Sound.ITEM_TRIDENT_RIPTIDE_2, 1.2F, 1.2F)
         }
         // Damage Calculation
-        val whirlDamage = damage * ((enchantmentStrength * 3) * 0.1)
+        val whirlDamage = damage * ((level * 3) * 0.1)
         nearbyEntities.forEach {
             it.damage(whirlDamage, attacker)
             it.velocity = it.location.clone().subtract(attacker.location).toVector().normalize()
-                .multiply(0.8 + (0.15 * enchantmentStrength))
+                .multiply(0.8 + (0.15 * level))
         }
     }
 

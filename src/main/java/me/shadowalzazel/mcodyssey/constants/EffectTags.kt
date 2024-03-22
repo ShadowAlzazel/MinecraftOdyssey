@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.constants
 
 object EffectTags {
+    // For Custom Status Effects and Potion Effects
 
     const val NO_EFFECT: String = "odyssey.no_effect"
 
