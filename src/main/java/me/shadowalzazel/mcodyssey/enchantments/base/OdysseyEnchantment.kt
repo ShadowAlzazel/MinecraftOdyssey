@@ -1,6 +1,5 @@
 package me.shadowalzazel.mcodyssey.enchantments.base
 
-import me.shadowalzazel.mcodyssey.Odyssey
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.TextColor
@@ -59,6 +58,7 @@ open class OdysseyEnchantment(
         if (descriptionId == null) {
             descriptionId = Util.makeDescriptionId("enchantment", BuiltInRegistries.ENCHANTMENT.getKey(this))
         }
+        println("CALLED")
         return descriptionId ?: translatableName
     }
     override fun getDescriptionId(): String = this.getOrCreateDescriptionId()
@@ -103,24 +103,21 @@ open class OdysseyEnchantment(
     }
 
     /* Odyssey Methods */
-    fun displayLore(level: Int): TextComponent {
-        return Component.text("$translatableName ${romanNum[level]}", subtype.displayColor).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-    }
-
-    fun displayName(level: Int): Component {
+    fun getTextForLore(level: Int): TextComponent {
         return Component.text("$translatableName ${romanNum[level]}", subtype.displayColor)
             .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
     }
 
-    fun getGrayComponentText(text: String): TextComponent {
+    fun getTextComponent(level: Int): Component {
+        return Component.text("$translatableName ${romanNum[level]}", subtype.displayColor)
+            .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+    }
+
+    internal fun getGrayComponentText(text: String): TextComponent {
         return Component
             .text(text)
             .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
             .color(TextColor.color(170, 170, 170))
-    }
-
-    fun getKey(): NamespacedKey {
-        return NamespacedKey(Odyssey.instance, name)
     }
 
     // Get tool tip

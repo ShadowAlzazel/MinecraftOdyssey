@@ -47,9 +47,9 @@ internal interface EnchantSlotManager : EnchantRegistryManager {
         setIntTag(ItemTags.ENCHANT_SLOTS, count + 1)
     }
 
-    fun ItemStack.addGildedSlot() {
+    fun ItemStack.addGildedSlot(override: Boolean = false) {
         val count = getGildedSlots()
-        if (count >= 3) {
+        if (count >= 3 && !override) {
             return
         }
         setIntTag(ItemTags.GILDED_SLOTS, count + 1)
@@ -101,11 +101,11 @@ internal interface EnchantSlotManager : EnchantRegistryManager {
             }
         }
         // Get Enchantment Maps
-        val enchants = newEnchants?.filter { !it.key.isOdysseyEnchant() } ?: enchantments.filter { !it.key.isOdysseyEnchant() }
+        val nonOdysseyEnchants = newEnchants?.filter { !it.key.isOdysseyEnchant() } ?: enchantments.filter { !it.key.isOdysseyEnchant() }
         val gildedEnchants = newEnchants?.filter { it.key.isOdysseyEnchant() } ?: enchantments.filter { it.key.isOdysseyEnchant() }
         // Add Enchants Over empty slots
         var enchantCount = 0
-        enchants.forEach {
+        nonOdysseyEnchants.forEach {
             val color = if (it.key.isCursed) {
                 SlotColors.CURSED.color
             } else {
@@ -121,7 +121,7 @@ internal interface EnchantSlotManager : EnchantRegistryManager {
         gildedEnchants.forEach {
             gildedCount += 1
             newLore[sepIndex + slots.first + gildedCount] = (it.key.convertToOdysseyEnchant())
-                .displayLore(it.value)
+                .getTextForLore(it.value)
                 .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
         }
         // Move Engraving To Bottom
@@ -137,11 +137,11 @@ internal interface EnchantSlotManager : EnchantRegistryManager {
         lore(newLore)
     }
 
-    //
+    // Create Base New Slots
     fun ItemStack.createNewEnchantSlots() {
         val slots = MutablePair(2, 1)
         for (enchant in enchantments) {
-            if (enchant.key.isOdysseyEnchant()) {
+            if (enchant.key.isNotOdysseyEnchant()) {
                 slots.left += 1
             } else {
                 slots.right += 1

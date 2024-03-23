@@ -9,16 +9,19 @@ import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.EnchantmentStorageMeta
 
 object Arcane : EnchantRegistryManager {
 
     // Extension function to create enchanted books when this is called
     fun OdysseyItem.createGildedBook(enchantment: OdysseyEnchantment, level: Int): ItemStack {
+
         val registeredEnchant = convertToBukkitEnchant(enchantment) ?: return ItemStack(Material.AIR)
         val newBook = this.createItemStack(1)
-        newBook.itemMeta = newBook.itemMeta.also {
-            it.addEnchant(registeredEnchant, level, true)
-            val textLore = mutableListOf(enchantment.displayLore(level)) + Component.text("") + enchantment.getDescriptionToolTip(level)
+        newBook.itemMeta = (newBook.itemMeta as EnchantmentStorageMeta).also {
+            it.addEnchant(registeredEnchant, level, true) // KEEP HERE OR MOVE DETECTION IN LISTENERS
+            it.addStoredEnchant(registeredEnchant, level, false)
+            val textLore = mutableListOf(enchantment.getTextForLore(level)) + Component.text("") + enchantment.getDescriptionToolTip(level)
             val nameComponent = it.displayName()
             it.displayName(nameComponent?.append(Component.text(" - " + enchantment.translatableName, enchantment.subtype.displayColor)))
             it.lore(textLore)

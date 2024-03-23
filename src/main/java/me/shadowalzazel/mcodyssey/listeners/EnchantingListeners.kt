@@ -2,7 +2,6 @@ package me.shadowalzazel.mcodyssey.listeners
 
 import com.destroystokyo.paper.event.inventory.PrepareResultEvent
 import me.shadowalzazel.mcodyssey.arcane.EnchantSlotManager
-import me.shadowalzazel.mcodyssey.arcane.SlotColors
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.enchantments.EnchantRegistryManager
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
@@ -11,7 +10,6 @@ import me.shadowalzazel.mcodyssey.items.Arcane
 import me.shadowalzazel.mcodyssey.items.Arcane.createGildedBook
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.TextDecoration
 import org.apache.commons.lang3.tuple.MutablePair
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
@@ -46,6 +44,7 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
         if (inventory.upperItem?.enchantments == null && inventory.lowerItem?.enchantments == null) return
         val result = inventory.result!!
         val slotted = result.isSlotted()
+        // For older odyssey versions
         val isLegacy = !slotted && result.itemMeta.hasLore() && result.lore()!!.contains(slotSeperator)
         if (isLegacy) {
             event.viewers.forEach { it.sendFailMessage("You need to reactivate this item. Combine with empty paper at the anvil!") }
@@ -62,10 +61,18 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
 
     @EventHandler
     fun anvilHandler(event: PrepareAnvilEvent) {
-        // MAYBE ANVIL DOES NOT WORK SINCE BOOKS ARE NOT IN ENCHANTMENT STORAGE META
+        // Handled natively by class
+        // - Conflicts
+        // - Adding E-Book to slotted
+        // - Renaming
+
         if (event.inventory.firstItem == null) return
-        val first = event.inventory.firstItem!!
+        val first = event.inventory.firstItem ?: return
+        val firstIsSlotted = first.isSlotted()
+        val viewers = event.viewers
+        val second = event.inventory.secondItem
         // Renaming
+        /*
         if (event.inventory.secondItem == null) {
             if (event.result == null) return
             if (first.itemMeta.hasEnchants()) {
@@ -78,9 +85,6 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
         // Books
         if (first.type == Material.ENCHANTED_BOOK) return
         val hasOdysseyEnchants = first.enchantments.any { it.key is OdysseyEnchantment }
-        val slotted = first.isSlotted()
-        val viewers = event.viewers
-        val second = event.inventory.secondItem!!
         // Prevent Gilded Books
         if (second.itemMeta.hasCustomModelData() && second.itemMeta.customModelData == ItemModels.GILDED_BOOK) {
             viewers.forEach { it.sendFailMessage("The anvil does not support gilded books. Please use the smithing table and one gold nugget.") }
@@ -99,12 +103,84 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
             event.result = ItemStack(Material.AIR)
             return
         }
+        */
+        val firstHasGildedEnchants = if (first.itemMeta is EnchantmentStorageMeta) {
+            (first.itemMeta as EnchantmentStorageMeta).enchants.any { it.key.isOdysseyEnchant() }
+        } else {
+            first.itemMeta.enchants.any { it.key.isOdysseyEnchant() }
+        }
+        val secondHasGildedEnchants = if (second?.itemMeta is EnchantmentStorageMeta) {
+            (second.itemMeta as EnchantmentStorageMeta).enchants.any { it.key.isOdysseyEnchant() }
+        } else {
+            second?.itemMeta?.enchants?.any { it.key.isOdysseyEnchant() }
+        }
+        val firstIsBook = first.type == Material.ENCHANTED_BOOK
+        val firstIsGildedBook = firstHasGildedEnchants && firstIsBook
+        val secondIsBook = second?.type == Material.ENCHANTED_BOOK
+        val secondIsGildedBook = secondHasGildedEnchants == true && secondIsBook
+        // Prevent Gilded Book + Enchanted Book [MAYBE make VOLUME tomes]
+        if ((firstIsGildedBook && !secondIsGildedBook && secondIsBook) || (secondIsGildedBook && !firstIsGildedBook && firstIsBook)) {
+            viewers.forEach { it.sendFailMessage("Can not combine Gilded Books and Enchanted Books!") }
+            event.result = ItemStack(Material.AIR)
+            return
+        }
+        // Skip Event if just two Enchanted Books
+        if (!firstIsGildedBook && !secondIsGildedBook && (firstIsBook && secondIsBook)) {
+            return
+        }
+        // Check Gilded Books
+        if (firstIsGildedBook && secondIsGildedBook) {
+            val firstStoredMeta = first.itemMeta as EnchantmentStorageMeta
+            val secondStoredMeta = second!!.itemMeta as EnchantmentStorageMeta
+            // Somehow the gilded book got more than 1 enchant
+            if (firstStoredMeta.storedEnchants.size > 1) {
+                viewers.forEach { it.sendFailMessage("The first Gilded Book has more than 1 enchantment!") }
+                event.result = ItemStack(Material.AIR)
+                return
+            }
+            // Somehow the gilded book got more than 1 enchant
+            if (secondStoredMeta.storedEnchants.size > 1) {
+                viewers.forEach { it.sendFailMessage("The second Gilded Book has more than 1 enchantment!") }
+                event.result = ItemStack(Material.AIR)
+                return
+            }
+            val matching = firstStoredMeta.storedEnchants.keys.first() == secondStoredMeta.storedEnchants.keys.first()
+            // If not matching set to air
+            if (!matching) {
+                viewers.forEach { it.sendFailMessage("Can not combine Gilded Books with different enchantments!") }
+                event.result = ItemStack(Material.AIR)
+                return
+            }
+            // IF matching update lore,
+            else {
+                val enchant = firstStoredMeta.storedEnchants.keys.first()
+                event.result = event.result?.apply {
+                    val meta = itemMeta as EnchantmentStorageMeta
+                    val newLevel = meta.storedEnchants[enchant]!!
+                    val changedLore = mutableListOf(
+                        enchant.convertToOdysseyEnchant().getTextForLore(newLevel)) + Component.text("") +
+                            enchant.convertToOdysseyEnchant().getDescriptionToolTip(newLevel)
+                    /*
+                     val changedLore = lore() ?: mutableListOf()
+                    val oldLevel = minOf(firstStoredMeta.storedEnchants[enchant]!!, secondStoredMeta.storedEnchants[enchant]!!)
+                    val index = changedLore.indexOf(enchant.convertToOdysseyEnchant().getTextForLore(oldLevel))
+                    val newLevel = meta.storedEnchants[enchant]!!
+                    changedLore[index] = enchant.convertToOdysseyEnchant().getTextForLore(newLevel)
+                    changedLore[index + 1]
+                     */
+                    meta.lore(changedLore)
+                    itemMeta = meta
+                }
+                return
+            }
+        }
         // Legacy Check
-        val isLegacy = !slotted && first.itemMeta.hasLore() && first.lore()!!.contains(slotSeperator)
+        /*
+        val isLegacy = !firstIsSlotted && first.itemMeta.hasLore() && first.lore()!!.contains(slotSeperator)
         if (isLegacy && second.type == Material.PAPER) {
             val oldSlot = Component.text("+ Empty Enchantment Slot", SlotColors.GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-            val currentGildedEnchants: Map<Enchantment, Int> = first.enchantments.filter { it.key is OdysseyEnchantment }
-            val currentEnchants = first.enchantments.filter { it.key !is OdysseyEnchantment }
+            val currentGildedEnchants: Map<Enchantment, Int> = first.enchantments.filter { it.key.isOdysseyEnchant()}
+            val currentEnchants = first.enchantments.filter { it.key.isNotOdysseyEnchant()}
             event.inventory.firstItem = first.clone().apply {
                 val enchantSlots = lore()!!.count { it == oldSlot } + currentEnchants.size
                 val gildedSlots = minOf(currentGildedEnchants.size + lore()!!.count { it == emptyGildedSlot }, 3)
@@ -118,17 +194,25 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
             event.result = ItemStack(Material.AIR)
             return
         }
-        // Null Check
+
+         */
+        // EventResult Null Check
         if (event.result == null) return
+        if (second == null) return
+        // Assumes that NMS is present and transfer enchantments
+        val result = event.result ?: return
+
         // Repair
+        /*
         if (first.itemMeta.hasEnchants() && !second.itemMeta.hasEnchants() && second.type != Material.ENCHANTED_BOOK) {
             event.result = event.result!!.apply {
                 addUnsafeEnchantments(first.enchantments.filter { it.key is OdysseyEnchantment && it.key !in enchantments.keys })
             }
             return
         }
+         */
         // Activating Slots First Time
-        if (!slotted && !hasOdysseyEnchants) {
+        if (!firstIsSlotted) {
             val slots = MutablePair(2, 1)
             for (enchant in event.result!!.enchantments) {
                 if (!enchant.key.isOdysseyEnchant()) {
@@ -145,11 +229,42 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
             }
             return
         }
-        /*-----------------------------------------------------------------------------------------------*/
-        if (slotted) {
+        // If slotted
+        if (firstIsSlotted) {
             // Current gilded
             val currentGildedEnchants: Map<Enchantment, Int> = first.enchantments.filter { it.key.isOdysseyEnchant()}
-            // Book or Item
+            val resultEnchants = result.enchantments
+            // Conflict Checker
+            for (enchant in resultEnchants.keys) { // FIX!!!!!!!!!!
+                var conflictingEnchant: Enchantment? = null
+                val foundConflict = currentGildedEnchants.keys.any {
+                    conflictingEnchant = it
+                    enchant.conflictsWith(it) && it != enchant
+                }
+                // If found conflict set to air
+                if (foundConflict) {
+                    val enchantName = enchant.key.key
+                    viewers.forEach { it.sendFailMessage("The enchantment [$enchantName] conflicts with the enchantment [${conflictingEnchant!!.key.key}]") }
+                    event.result = ItemStack(Material.AIR)
+                    return
+                }
+            }
+            // Check slot sizes
+            val gildedSlots = result.getGildedSlots()
+            val gildedEnchants = result.enchantments.filter { it.key.isOdysseyEnchant() }
+            if (gildedSlots < gildedEnchants.size) {
+                viewers.forEach { it.sendFailMessage("There are not enough empty 'Gilded Slots' on the first item!") }
+                event.result = ItemStack(Material.AIR)
+                return
+            }
+            val enchantSlots = result.getEnchantSlots()
+            val nonGildedEnchants = result.enchantments.filter { it.key.isNotOdysseyEnchant() }
+            if (enchantSlots < nonGildedEnchants.size) {
+                viewers.forEach { it.sendFailMessage("There are not enough empty 'Enchant Slots' on the first item!") }
+                event.result = ItemStack(Material.AIR)
+                return
+            }
+            /*
             val newEnchants = if (second.type == Material.ENCHANTED_BOOK) {
                 val bookMeta = (second.itemMeta as EnchantmentStorageMeta)
                 if (!bookMeta.hasStoredEnchants()) return
@@ -158,29 +273,17 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
                 if (!second.itemMeta.hasEnchants()) return
                 second.itemMeta.enchants
             }
-            // Conflict Checker
-            for (enchant in newEnchants.keys) {
-                var conflictingEnchant: Enchantment? = null
-                val conflicts = currentGildedEnchants.keys.any {
-                    conflictingEnchant = it
-                    it.conflictsWith(enchant)
-                }
-                if (conflicts) {
-                    val eName = enchant.displayName(newEnchants[enchant]!!)
-                    viewers.forEach { it.sendFailMessage("The enchantment $eName conflicts with the enchantment ${conflictingEnchant!!.key}") }
-                    event.result = ItemStack(Material.AIR)
-                    return
-                }
-            }
             // Slot Size Checker
             val enchantSize = first.enchantments.size - currentGildedEnchants.size
-            if (newEnchants.size + enchantSize > first.getEnchantSlots()) {
+            if (resultNewEnchants.size + enchantSize > first.getEnchantSlots()) {
                 viewers.forEach { it.sendFailMessage("There are not enough empty enchant slots on the first item.") }
                 event.result = ItemStack(Material.AIR)
                 return
             }
+             */
             event.result = event.result!!.apply {
-                addUnsafeEnchantments(first.enchantments.filter { it.key.isOdysseyEnchant() && it.key !in enchantments.keys })
+                //val enchantsToAdd = first.enchantments.filter { it.key.isOdysseyEnchant() && it.key !in enchantments.keys }
+                //addUnsafeEnchantments(enchantsToAdd)
                 updateSlotLore()
             }
         }
