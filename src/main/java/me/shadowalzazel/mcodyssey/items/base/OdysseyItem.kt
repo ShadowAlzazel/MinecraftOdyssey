@@ -8,6 +8,7 @@ import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.items.utility.WeaponMaterial
 import me.shadowalzazel.mcodyssey.items.utility.WeaponType
 import me.shadowalzazel.mcodyssey.listeners.EnchantingListeners.updateSlotLore
+import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.MeleeListeners.isOdysseyEnchant
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
@@ -39,7 +40,7 @@ open class OdysseyItem(
             if (customModel != null) { it.setCustomModelData(customModel) }
             if (enchantments != null) {
                 for (enchant in enchantments) {
-                    if (enchant.key is OdysseyEnchantment) { gildedSlots += 1 } else { enchantSlots += 1 }
+                    if (enchant.key.isOdysseyEnchant()) { gildedSlots += 1 } else { enchantSlots += 1 }
                     it.addEnchant(enchant.key, enchant.value, true)
                 }
             }

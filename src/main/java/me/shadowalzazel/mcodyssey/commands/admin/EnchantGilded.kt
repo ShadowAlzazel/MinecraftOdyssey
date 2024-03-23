@@ -15,17 +15,15 @@ object EnchantGilded : CommandExecutor, EnchantSlotManager, EnchantRegistryManag
         if (!sender.isOp) return false
         if (args?.size != 2) return false
         if (sender.equipment.itemInMainHand.type == Material.AIR) return false
-        // Enchant
+        // Get args
         val level = args[1].toInt()
-        // Switch
-        println(args[0])
-        val odysseyEnchantment = getEnchantmentFromString(args[0]) ?: return false
-        println(odysseyEnchantment)
+        val string = args[0]
+        val odysseyEnchantment = getEnchantmentFromString(string) ?: return false
         val registeredEnchantment = convertToBukkitEnchant(odysseyEnchantment) ?: return false
-        println(registeredEnchantment)
         // Passed Checks
         val item = sender.equipment.itemInMainHand
         item.addUnsafeEnchantment(registeredEnchantment, level)
+        // CHANGE
         item.createNewEnchantSlots()
         return true
     }

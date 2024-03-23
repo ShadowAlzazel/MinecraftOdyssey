@@ -59,10 +59,12 @@ class Odyssey : JavaPlugin() {
 
     // Plugin startup logic
     override fun onEnable() {
+        // Start Timer
+        val timerStart: Long = System.currentTimeMillis()
+
         // Enchantment NMS (Allow new registries)
         ReflectionUtils.unfreezeRegistry(BuiltInRegistries.ENCHANTMENT)
 
-        val timerStart: Long = System.currentTimeMillis()
         // Config start up
         config.options().copyDefaults()
         saveConfig()

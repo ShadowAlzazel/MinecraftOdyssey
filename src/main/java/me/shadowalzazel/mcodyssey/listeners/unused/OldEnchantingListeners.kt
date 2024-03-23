@@ -409,11 +409,11 @@ object OldEnchantingListeners : Listener {
             newLore[startIndex] = Component.text("Enchantment Slots: [${newItem.enchantments.size}/${totalSlots}]", ENCHANT_COLOR)
                 .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
             val gildedLore = (bookEnchant.key as OdysseyEnchantment)
-                .displayLore(equipmentLevel)
+                .getTextForLore(equipmentLevel)
                 .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
             val gildedIndex = newLore.indexOf(gildedLore)
             newLore[gildedIndex] = (bookEnchant.key as OdysseyEnchantment)
-                .displayLore(newMax)
+                .getTextForLore(newMax)
                 .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
             // New
             newItem.apply {
@@ -431,7 +431,7 @@ object OldEnchantingListeners : Listener {
                 .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
             val slotIndex = newLore.indexOf(emptyGildedSlot)
             newLore[slotIndex] = (bookEnchant.key as OdysseyEnchantment)
-                .displayLore(bookEnchant.value)
+                .getTextForLore(bookEnchant.value)
                 .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
             // New
             newItem.apply {
@@ -689,7 +689,7 @@ object OldEnchantingListeners : Listener {
             // Find
             val foundLore = if (isOdysseyEnchant) {
                 (enchantToRemove.first as OdysseyEnchantment)
-                    .displayLore(enchantToRemove.second)
+                    .getTextForLore(enchantToRemove.second)
                     .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
             } else {
                 enchantToRemove.first
@@ -739,7 +739,7 @@ object OldEnchantingListeners : Listener {
                 // Checks book meta and enchant
                 val foundLore = if (isOdysseyEnchant) {
                     (randomEnchant.first as OdysseyEnchantment)
-                        .displayLore(randomEnchant.second)
+                        .getTextForLore(randomEnchant.second)
                         .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 } else {
                     randomEnchant.first
@@ -998,7 +998,7 @@ object OldEnchantingListeners : Listener {
                 changedLore[(startIndex + 2) + slotsUsed.left] = it.key.displayName(it.value).color(ENCHANT_COLOR).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 slotsUsed.left += 1
             } else if (it.key is OdysseyEnchantment) {
-                changedLore[(startIndex + 2) + slots.first + slotsUsed.right] = (it.key as OdysseyEnchantment).displayLore(it.value)
+                changedLore[(startIndex + 2) + slots.first + slotsUsed.right] = (it.key as OdysseyEnchantment).getTextForLore(it.value)
                 slotsUsed.right += 1
             }
         }
@@ -1033,7 +1033,7 @@ object OldEnchantingListeners : Listener {
                 enchantSlotsUsed += 1
             } else if (it.key is OdysseyEnchantment) {
                 createdLore[(startIndex + 2) + slots.first + gildedSlotsUsed] = (it.key as OdysseyEnchantment)
-                    .displayLore(it.value).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                    .getTextForLore(it.value).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 gildedSlotsUsed += 1
             }
         }
