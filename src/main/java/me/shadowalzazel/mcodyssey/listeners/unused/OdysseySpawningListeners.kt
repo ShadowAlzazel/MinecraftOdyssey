@@ -50,7 +50,7 @@ object OdysseySpawningListeners : Listener {
 
             // TODO: Add prefixes and affixes to enchantments
             @Suppress("DEPRECATION")
-            customName((Component.text("${dangerPrefixes.random()} ")).append(name()).append(Component.text(" of ${gildedEnchant.enchantName}")).color(TextColor.color(255, 170, 0)))
+            customName((Component.text("${dangerPrefixes.random()} ")).append(name()).append(Component.text(" of ${gildedEnchant.translatableName}")).color(TextColor.color(255, 170, 0)))
             isCustomNameVisible = true
 
             // Gilded Health Modifier

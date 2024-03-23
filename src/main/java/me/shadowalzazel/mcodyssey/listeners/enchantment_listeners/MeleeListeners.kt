@@ -55,9 +55,7 @@ object MeleeListeners : Listener, EffectsManager, EnchantRegistryManager {
         val victim = event.entity as LivingEntity
         val weapon = attacker.equipment!!.itemInMainHand
         val power = if (attacker is Player) { attacker.attackCooldown.toDouble() } else { 1.0 }
-
         // Loop for all enchants
-        println(weapon.enchantments)
         for (enchant in weapon.enchantments) {
             // Continue if not OdysseyEnchant
             val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue

@@ -148,7 +148,7 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
         /*-----------------------------------------------------------------------------------------------*/
         if (slotted) {
             // Current gilded
-            val currentGildedEnchants: Map<Enchantment, Int> = first.enchantments.filter { it.key is OdysseyEnchantment }
+            val currentGildedEnchants: Map<Enchantment, Int> = first.enchantments.filter { it.key.isOdysseyEnchant()}
             // Book or Item
             val newEnchants = if (second.type == Material.ENCHANTED_BOOK) {
                 val bookMeta = (second.itemMeta as EnchantmentStorageMeta)
@@ -180,7 +180,7 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
                 return
             }
             event.result = event.result!!.apply {
-                addUnsafeEnchantments(first.enchantments.filter { it.key is OdysseyEnchantment && it.key !in enchantments.keys })
+                addUnsafeEnchantments(first.enchantments.filter { it.key.isOdysseyEnchant() && it.key !in enchantments.keys })
                 updateSlotLore()
             }
         }
@@ -668,7 +668,7 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
             return ItemStack(Material.AIR)
         }
         // Book
-        val book = if (promotedEnchant.first is OdysseyEnchantment) {
+        val book = if (promotedEnchant.first.isOdysseyEnchant()) {
             Arcane.GILDED_BOOK.createGildedBook(promotedEnchant.first as OdysseyEnchantment, promotedEnchant.second + 1)
         } else {
             item.clone().apply {
@@ -780,7 +780,7 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
             viewers.forEach { it.sendFailMessage("The gilded books do not create a higher level enchantment.") }
             return ItemStack(Material.AIR)
         }
-        return Arcane.GILDED_BOOK.createGildedBook(firstEnchant.key.getOdysseyEnchant(), newLevel + 1)
+        return Arcane.GILDED_BOOK.createGildedBook(firstEnchant.key.convertToOdysseyEnchant(), newLevel + 1)
     }
 
     /*-----------------------------------------------------------------------------------------------*/

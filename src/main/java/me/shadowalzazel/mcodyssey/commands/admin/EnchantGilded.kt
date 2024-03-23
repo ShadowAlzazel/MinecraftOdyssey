@@ -21,7 +21,7 @@ object EnchantGilded : CommandExecutor, EnchantSlotManager, EnchantRegistryManag
         println(args[0])
         val odysseyEnchantment = getEnchantmentFromString(args[0]) ?: return false
         println(odysseyEnchantment)
-        val registeredEnchantment = getEnchantmentFromRegistry(odysseyEnchantment) ?: return false
+        val registeredEnchantment = convertToBukkitEnchant(odysseyEnchantment) ?: return false
         println(registeredEnchantment)
         // Passed Checks
         val item = sender.equipment.itemInMainHand
