@@ -93,7 +93,7 @@ class Odyssey : JavaPlugin() {
 
         // Register Enchantments
         logger.info("Registering Enchantments...")
-        OdysseyEnchantments.register()
+        OdysseyEnchantments.registerAll()
 
 
         // Register Recipes

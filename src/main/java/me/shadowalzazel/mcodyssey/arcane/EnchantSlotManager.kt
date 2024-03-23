@@ -7,7 +7,6 @@ import me.shadowalzazel.mcodyssey.constants.ItemTags.getIntTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.getStringTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
 import me.shadowalzazel.mcodyssey.enchantments.EnchantRegistryManager
-import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.TextColor
@@ -121,7 +120,7 @@ internal interface EnchantSlotManager : EnchantRegistryManager {
         var gildedCount = 0
         gildedEnchants.forEach {
             gildedCount += 1
-            newLore[sepIndex + slots.first + gildedCount] = (it.key.getOdysseyEnchant())
+            newLore[sepIndex + slots.first + gildedCount] = (it.key.convertToOdysseyEnchant())
                 .displayLore(it.value)
                 .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
         }

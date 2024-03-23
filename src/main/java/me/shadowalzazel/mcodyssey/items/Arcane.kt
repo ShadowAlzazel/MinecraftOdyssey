@@ -14,13 +14,13 @@ object Arcane : EnchantRegistryManager {
 
     // Extension function to create enchanted books when this is called
     fun OdysseyItem.createGildedBook(enchantment: OdysseyEnchantment, level: Int): ItemStack {
-        val registeredEnchant = getEnchantmentFromRegistry(enchantment) ?: return ItemStack(Material.AIR)
+        val registeredEnchant = convertToBukkitEnchant(enchantment) ?: return ItemStack(Material.AIR)
         val newBook = this.createItemStack(1)
         newBook.itemMeta = newBook.itemMeta.also {
             it.addEnchant(registeredEnchant, level, true)
             val textLore = mutableListOf(enchantment.displayLore(level)) + Component.text("") + enchantment.getDescriptionToolTip(level)
             val nameComponent = it.displayName()
-            it.displayName(nameComponent?.append(Component.text(" - " + enchantment.enchantName, enchantment.subtype.displayColor)))
+            it.displayName(nameComponent?.append(Component.text(" - " + enchantment.translatableName, enchantment.subtype.displayColor)))
             it.lore(textLore)
         }
         return newBook

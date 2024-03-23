@@ -83,7 +83,7 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
 
     private fun gildedMobCreator(mob: LivingEntity) {
         val gildedEnchant = listOf(OdysseyEnchantments.MELEE_SET, OdysseyEnchantments.ARMOR_SET).random().random()
-        val enchantContext = gildedEnchant.enchantName
+        val enchantContext = gildedEnchant.translatableName
         val conjunctions = listOf("no", "of", "de", "con", "imbued by", "keeper of", "the")
         val nameText = "${dangerPrefixes.random()} ${mob.name} ${conjunctions.random()} $enchantContext"
         val newName = Component.text(nameText).color(TextColor.color(255, 170, 0))

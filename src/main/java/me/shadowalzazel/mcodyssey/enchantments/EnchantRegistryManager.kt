@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.enchantments
 
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import org.bukkit.NamespacedKey
 import org.bukkit.Registry
@@ -7,41 +8,49 @@ import org.bukkit.enchantments.Enchantment
 
 interface EnchantRegistryManager  {
 
-    fun getEnchantmentFromRegistry(enchantment: OdysseyEnchantment): Enchantment? {
-        val key = enchantment.getKey()
-        val foundEnchant = Registry.ENCHANTMENT.get(NamespacedKey.minecraft(key.key))
-        return foundEnchant
-    }
-
+    // Call to check enchant is Odyssey
     fun enchantIsOdyssey(enchantment: Enchantment): Boolean {
         val enchant = findOdysseyEnchant(enchantment)
         return enchant != null // IF finds -> Is odyssey enchantment
     }
 
+    // Extension to easily check if odyssey/not
     fun Enchantment.isOdysseyEnchant(): Boolean {
         val enchant = findOdysseyEnchant(this)
         return enchant != null // IF not Null -> Is odyssey enchantment
     }
 
+    // Extension to easily check if odyssey/not
     fun Enchantment.isNotOdysseyEnchant(): Boolean {
         val enchant = findOdysseyEnchant(this)
         return enchant == null // IF Null -> Is NOT odyssey enchantment
     }
 
+    // Get bukkit
+    fun convertToBukkitEnchant(enchantment: OdysseyEnchantment): Enchantment? {
+        //val key = enchantment.getKey()
+        //val foundEnchant = Registry.ENCHANTMENT.get(NamespacedKey.minecraft(key.key))
+        val enchant = Registry.ENCHANTMENT.get(NamespacedKey(Odyssey.instance, enchantment.name))
+        return enchant
+    }
+
     // Called When enchant needs to be OdysseyEnchantment Class
-    fun Enchantment.getOdysseyEnchant(): OdysseyEnchantment {
+    fun Enchantment.convertToOdysseyEnchant(): OdysseyEnchantment {
         return getEnchantmentFromString(this.key.key)!!
     }
 
+    // Tries to find OdysseyEnchantment from a bukkit enchantment
     fun findOdysseyEnchant(enchantment: Enchantment): OdysseyEnchantment? {
-        println(enchantment)
-        println(enchantment.key)
-        println(enchantment.key.key)
         val key = enchantment.key.key
         return getEnchantmentFromString(key)
     }
 
+    /*
+    fun findEnchantFromString(string: String): OdysseyEnchantment? {
+        val enchant = Registry.ENCHANTMENT.get(NamespacedKey(Odyssey.instance, string))
+    }
 
+     */
 
     // MAYBE CHANGE TO DICT??
     fun getEnchantmentFromString(name: String): OdysseyEnchantment? {

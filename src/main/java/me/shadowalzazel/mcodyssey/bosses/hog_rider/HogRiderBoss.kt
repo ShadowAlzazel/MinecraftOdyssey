@@ -32,9 +32,9 @@ class HogRiderBoss : OdysseyBoss(
         // Add lore and name
         val smokyWarHammerMeta: ItemMeta = smokyWarHammer.itemMeta
         smokyWarHammerMeta.setDisplayName("${ChatColor.GOLD}Puny Smoky War-hammer")
-        val smokyWarHammerLore = listOf("${ChatColor.GOLD}${OdysseyEnchantments.BANE_OF_THE_SWINE.enchantName} V",
-            "${ChatColor.GOLD}${OdysseyEnchantments.FREEZING_ASPECT.enchantName} II",
-            "${ChatColor.GOLD}${OdysseyEnchantments.GUARDING_STRIKE.enchantName} II",
+        val smokyWarHammerLore = listOf("${ChatColor.GOLD}${OdysseyEnchantments.BANE_OF_THE_SWINE.translatableName} V",
+            "${ChatColor.GOLD}${OdysseyEnchantments.FREEZING_ASPECT.translatableName} II",
+            "${ChatColor.GOLD}${OdysseyEnchantments.GUARDING_STRIKE.translatableName} II",
             "A weapon ironic in name", "That has slaughtered many")
         smokyWarHammerMeta.lore = smokyWarHammerLore
 
