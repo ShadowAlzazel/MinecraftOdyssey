@@ -33,14 +33,14 @@ object OdysseyEnchantments : EnchantRegistryManager {
     val MANDIBLEMANIA: OdysseyEnchantment = Mandiblemania
     val MOLTEN_CORE: OdysseyEnchantment = MoltenCore
     val MOONWARD: OdysseyEnchantment = Moonward
-    val OPTICALIZATION: OdysseyEnchantment = Opticalization // TODO
+    val OPTICALIZATION: OdysseyEnchantment = Opticalization
     val POLLEN_GUARD: OdysseyEnchantment = PollenGuard
     val POTION_BARRIER: OdysseyEnchantment = PotionBarrier
     val RAGING_ROAR: OdysseyEnchantment = RagingRoar
     val RECKLESS: OdysseyEnchantment = Reckless
     val RELENTLESS: OdysseyEnchantment = Relentless
     val ROOT_BOOTS: OdysseyEnchantment = RootBoots
-    val SCULK_SENSITIVE: OdysseyEnchantment = SculkSensitive // TODO
+    val SCULK_SENSITIVE: OdysseyEnchantment = SculkSensitive
     val SPEEDY_SPURS: OdysseyEnchantment = SpeedySpurs
     val SPOREFUL: OdysseyEnchantment = Sporeful
     val SQUIDIFY: OdysseyEnchantment = Squidify
@@ -48,8 +48,8 @@ object OdysseyEnchantments : EnchantRegistryManager {
     val STATIC_SOCKS: OdysseyEnchantment = StaticSocks
     val UNTOUCHABLE: OdysseyEnchantment = Untouchable
     val VEILED_IN_SHADOW: OdysseyEnchantment = VeiledInShadow
-    val VENGEFUL: OdysseyEnchantment = Vengeful // TODO
-    val VICIOUS_VIGOR: OdysseyEnchantment = ViciousVigor // TODO
+    val VENGEFUL: OdysseyEnchantment = Vengeful
+    val VICIOUS_VIGOR: OdysseyEnchantment = ViciousVigor
     val WAR_CRY: OdysseyEnchantment = WarCry
 
     // Melee
@@ -102,7 +102,7 @@ object OdysseyEnchantments : EnchantRegistryManager {
     val DEATH_FROM_ABOVE: OdysseyEnchantment = DeathFromAbove
     val DOUBLE_TAP: OdysseyEnchantment = DoubleTap
     val FAN_FIRE: OdysseyEnchantment = FanFire
-    val ENTANGLEMENT: OdysseyEnchantment = Entanglement // TODO
+    val ENTANGLEMENT: OdysseyEnchantment = Entanglement
     val GALE_WIND: OdysseyEnchantment = GaleWind
     val HEAVY_BALLISTICS: OdysseyEnchantment = HeavyBallistics
     val LUXPOSE: OdysseyEnchantment = Luxpose
@@ -112,10 +112,10 @@ object OdysseyEnchantments : EnchantRegistryManager {
     val RICOCHET: OdysseyEnchantment = Ricochet
     val SHARPSHOOTER: OdysseyEnchantment = Sharpshooter
     val SINGLE_OUT: OdysseyEnchantment = SingleOut
-    val SINGULARITY_SHOT: OdysseyEnchantment = SingularityShot // TODO
+    val SINGULARITY_SHOT: OdysseyEnchantment = SingularityShot
     val SOUL_REND: OdysseyEnchantment = SoulRend
     val STELLAR_SHOWER: OdysseyEnchantment = StellarShower // TODO
-    val TEMPORAL_TORRENT: OdysseyEnchantment = TemporalTorrent // TODO
+    val TEMPORAL_TORRENT: OdysseyEnchantment = TemporalTorrent
     val VULNEROCITY: OdysseyEnchantment = Vulnerocity
 
     val MELEE_SET = setOf(
@@ -247,13 +247,6 @@ object OdysseyEnchantments : EnchantRegistryManager {
                     ResourceLocation(ODYSSEY_NAMESPACE, odysseyEnchant.name),
                     odysseyEnchant
                 )
-                /*
-                net.minecraft.core.Registry.register( // Can change from TO resource key FROM string
-                    BuiltInRegistries.ENCHANTMENT,
-                    odysseyEnchant.name,
-                    odysseyEnchant
-                )
-                 */
                 registered = true
             }
             catch (exception: Exception) {

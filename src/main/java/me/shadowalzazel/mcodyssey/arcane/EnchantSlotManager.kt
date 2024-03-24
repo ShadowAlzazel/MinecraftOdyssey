@@ -31,6 +31,7 @@ internal interface EnchantSlotManager : EnchantRegistryManager {
         return getIntTag(ItemTags.GILDED_SLOTS) ?: 0
     }
 
+    // Returns A Pair of (ENCHANT, GILDED) slots
     fun ItemStack.getSlots(): Pair<Int, Int> {
         return Pair(getEnchantSlots(), getGildedSlots())
     }

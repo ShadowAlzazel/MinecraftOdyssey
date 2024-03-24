@@ -49,7 +49,6 @@ interface EnchantRegistryManager  {
     fun findEnchantFromString(string: String): OdysseyEnchantment? {
         val enchant = Registry.ENCHANTMENT.get(NamespacedKey(Odyssey.instance, string))
     }
-
      */
 
     // MAYBE CHANGE TO DICT??

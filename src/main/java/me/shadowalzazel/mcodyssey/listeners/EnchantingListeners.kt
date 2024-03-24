@@ -44,66 +44,23 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
         if (inventory.upperItem?.enchantments == null && inventory.lowerItem?.enchantments == null) return
         val result = inventory.result!!
         val slotted = result.isSlotted()
-        // For older odyssey versions
-        val isLegacy = !slotted && result.itemMeta.hasLore() && result.lore()!!.contains(slotSeperator)
-        if (isLegacy) {
-            event.viewers.forEach { it.sendFailMessage("You need to reactivate this item. Combine with empty paper at the anvil!") }
-            event.result = ItemStack(Material.AIR)
-            return
-        }
         if (!slotted) return
         // Sentries passed
         event.result = result.clone().also { it.updateSlotLore() }
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------------------*/
 
     @EventHandler
     fun anvilHandler(event: PrepareAnvilEvent) {
         // Handled natively by class
-        // - Conflicts
-        // - Adding E-Book to slotted
-        // - Renaming
-
+        // - Conflicts / Adding E-Book to slotted / Renaming
         if (event.inventory.firstItem == null) return
         val first = event.inventory.firstItem ?: return
         val firstIsSlotted = first.isSlotted()
         val viewers = event.viewers
         val second = event.inventory.secondItem
-        // Renaming
-        /*
-        if (event.inventory.secondItem == null) {
-            if (event.result == null) return
-            if (first.itemMeta.hasEnchants()) {
-                event.result = event.result!!.apply {
-                    addUnsafeEnchantments(first.enchantments.filter { it.key is OdysseyEnchantment && it.key !in enchantments.keys })
-                }
-            }
-            return
-        }
-        // Books
-        if (first.type == Material.ENCHANTED_BOOK) return
-        val hasOdysseyEnchants = first.enchantments.any { it.key is OdysseyEnchantment }
-        // Prevent Gilded Books
-        if (second.itemMeta.hasCustomModelData() && second.itemMeta.customModelData == ItemModels.GILDED_BOOK) {
-            viewers.forEach { it.sendFailMessage("The anvil does not support gilded books. Please use the smithing table and one gold nugget.") }
-            event.result = ItemStack(Material.AIR)
-            return
-        }
-        // Prevent Gilded Combining
-        if (first.enchantments.any { it.key is OdysseyEnchantment } && second.enchantments.any { it.key is OdysseyEnchantment }) {
-            viewers.forEach { it.sendFailMessage("The anvil does not support combining Gilded Enchants on items.") }
-            event.result = ItemStack(Material.AIR)
-            return
-        }
-        // Prevent Gilded Second
-        if (second.enchantments.any { it.key is OdysseyEnchantment }) {
-            viewers.forEach { it.sendFailMessage("The anvil does not support adding Gilded Enchants through the second item. Please flip the order.") }
-            event.result = ItemStack(Material.AIR)
-            return
-        }
-        */
+        // Create Variables to detect conditions
         val firstHasGildedEnchants = if (first.itemMeta is EnchantmentStorageMeta) {
             (first.itemMeta as EnchantmentStorageMeta).enchants.any { it.key.isOdysseyEnchant() }
         } else {
@@ -174,44 +131,12 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
                 return
             }
         }
-        // Legacy Check
-        /*
-        val isLegacy = !firstIsSlotted && first.itemMeta.hasLore() && first.lore()!!.contains(slotSeperator)
-        if (isLegacy && second.type == Material.PAPER) {
-            val oldSlot = Component.text("+ Empty Enchantment Slot", SlotColors.GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-            val currentGildedEnchants: Map<Enchantment, Int> = first.enchantments.filter { it.key.isOdysseyEnchant()}
-            val currentEnchants = first.enchantments.filter { it.key.isNotOdysseyEnchant()}
-            event.inventory.firstItem = first.clone().apply {
-                val enchantSlots = lore()!!.count { it == oldSlot } + currentEnchants.size
-                val gildedSlots = minOf(currentGildedEnchants.size + lore()!!.count { it == emptyGildedSlot }, 3)
-                setSlots(Pair(enchantSlots, gildedSlots))
-                addUnsafeEnchantments(currentGildedEnchants)
-                updateSlotLore()
-            }
-        }
-        else if (isLegacy && second.type != Material.PAPER){
-            event.viewers.forEach { it.sendFailMessage("You need to reactivate this item. Combine with empty paper at the anvil!") }
-            event.result = ItemStack(Material.AIR)
-            return
-        }
-
-         */
         // EventResult Null Check
         if (event.result == null) return
         if (second == null) return
         // Assumes that NMS is present and transfer enchantments
         val result = event.result ?: return
-
-        // Repair
-        /*
-        if (first.itemMeta.hasEnchants() && !second.itemMeta.hasEnchants() && second.type != Material.ENCHANTED_BOOK) {
-            event.result = event.result!!.apply {
-                addUnsafeEnchantments(first.enchantments.filter { it.key is OdysseyEnchantment && it.key !in enchantments.keys })
-            }
-            return
-        }
-         */
-        // Activating Slots First Time
+        // Activating Slots First Time {WIP fix exploit of adding 3 gilded to a non slotted to get 4]
         if (!firstIsSlotted) {
             val slots = MutablePair(2, 1)
             for (enchant in event.result!!.enchantments) {
@@ -264,23 +189,6 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
                 event.result = ItemStack(Material.AIR)
                 return
             }
-            /*
-            val newEnchants = if (second.type == Material.ENCHANTED_BOOK) {
-                val bookMeta = (second.itemMeta as EnchantmentStorageMeta)
-                if (!bookMeta.hasStoredEnchants()) return
-                bookMeta.storedEnchants.filter { it.key !in first.enchantments.keys }
-            } else {
-                if (!second.itemMeta.hasEnchants()) return
-                second.itemMeta.enchants
-            }
-            // Slot Size Checker
-            val enchantSize = first.enchantments.size - currentGildedEnchants.size
-            if (resultNewEnchants.size + enchantSize > first.getEnchantSlots()) {
-                viewers.forEach { it.sendFailMessage("There are not enough empty enchant slots on the first item.") }
-                event.result = ItemStack(Material.AIR)
-                return
-            }
-             */
             event.result = event.result!!.apply {
                 //val enchantsToAdd = first.enchantments.filter { it.key.isOdysseyEnchant() && it.key !in enchantments.keys }
                 //addUnsafeEnchantments(enchantsToAdd)
@@ -290,18 +198,15 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------------------*/
 
     @EventHandler
     fun enchantingTableHandler(event: EnchantItemEvent) {
         when (event.item.type) {
-            // BOOKS
             Material.BOOK -> {
                 if (event.item.itemMeta.hasCustomModelData()) {
                     enchantingBookHandler(event)
                 }
             }
-            // ITEMS
             else -> {
                 enchantingItemHandler(event)
             }
@@ -390,35 +295,40 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
     private fun enchantingItemHandler(event: EnchantItemEvent) {
         val item = event.item
         val newEnchants = event.enchantsToAdd
-        // Get slots
-        val slots = if (item.isSlotted()) {
-            item.getSlots()
-        } else {
-            getMaterialSlotCount(item.type)
-        }
+        // Get slots or create new slots
+        val maxSlots = if (item.isSlotted()) { item.getSlots() } else { getMaterialSlotCount(item.type) }
         // New Enchant Slots
         if (!item.isSlotted()) {
-            item.setSlots(slots)
+            item.setSlots(maxSlots)
         }
-        // Remove excess enchants
-        val enchantsToRemove = mutableListOf<Enchantment>()
-        // Keep Hint
+        var usedEnchantSlots = 0
+        var usedGildedSlots = 0
+        // Get Hint
         val hint = event.enchantmentHint
-        var counter = 1
-        newEnchants.keys.forEach { enchant ->
-            if (enchant == hint) {
-                return@forEach
+        if (hint.isOdysseyEnchant()) { usedGildedSlots += 1 } else { usedEnchantSlots += 1 }
+        // Remove excess enchants over slot limit
+        val enchantsToRemove = mutableListOf<Enchantment>()
+        for (newEnchant in newEnchants.keys) {
+            if (newEnchant == hint) {
+                continue
             }
-            if (counter >= slots.first && enchant != hint) {
-                enchantsToRemove.add(enchant)
+            // Append to removal list
+            if (newEnchant.isNotOdysseyEnchant()) {
+                usedEnchantSlots += 1
+                if (usedEnchantSlots > maxSlots.first) {
+                    enchantsToRemove.add(newEnchant)
+                }
             }
-            if (enchant != hint) {
-                counter += 1
+            else if (newEnchant.isOdysseyEnchant()) {
+                usedGildedSlots += 1
+                if (usedGildedSlots > maxSlots.second) {
+                    enchantsToRemove.add(newEnchant)
+                }
             }
         }
         enchantsToRemove.forEach { newEnchants.remove(it) }
-        // Add Gilded
-        item.rollGildedEnchants(slots.second, newEnchants, event.expLevelCost, event.enchanter.level)
+        // Add Bonus Gilded
+        //item.rollGildedEnchants(maxSlots.second, newEnchants, event.expLevelCost, event.enchanter.level)
         // Lore
         item.addItemFlags(ItemFlag.HIDE_ENCHANTS)
         item.updateSlotLore(newEnchants)

@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.enchantments.base
 
+import me.shadowalzazel.mcodyssey.Odyssey
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.TextColor
@@ -21,6 +22,7 @@ import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.Registry.ENCHANTMENT as EnchantRegistry
 import org.bukkit.inventory.ItemStack
+import org.bukkit.enchantments.Enchantment as BukkitEnchant
 
 open class OdysseyEnchantment(
     val name: String,
@@ -33,16 +35,12 @@ open class OdysseyEnchantment(
         EquipmentSlot.entries.toTypedArray()
     ) {
 
-    internal val romanNum = mapOf(1 to "I", 2 to "II", 3 to "III", 4 to "IV", 5 to "V", 6 to "VI", 7 to "VII", 8 to "VIII", 9 to "IX", 10 to "X")
+    private val romanNum = mapOf(1 to "I", 2 to "II", 3 to "III", 4 to "IV", 5 to "V", 6 to "VI", 7 to "VII", 8 to "VIII", 9 to "IX", 10 to "X")
 
     // Important Method to convert OdysseyEnchant To Enchantment[Bukkit]
     fun toBukkit(): org.bukkit.enchantments.Enchantment {
-        val foundEnchant = EnchantRegistry.get(NamespacedKey.minecraft(name))
+        val foundEnchant = EnchantRegistry.get(NamespacedKey(Odyssey.instance, name))
         return foundEnchant!!
-    }
-
-    init {
-        descriptionId = translatableName
     }
 
     /* Minecraft NMS Methods */
@@ -57,13 +55,14 @@ open class OdysseyEnchantment(
     override fun getOrCreateDescriptionId(): String {
         if (descriptionId == null) {
             descriptionId = Util.makeDescriptionId("enchantment", BuiltInRegistries.ENCHANTMENT.getKey(this))
+            //descriptionId = "enchantment.minecraft.$name"
         }
-        println("CALLED")
-        return descriptionId ?: translatableName
+        return descriptionId!!
     }
     override fun getDescriptionId(): String = this.getOrCreateDescriptionId()
     override fun getFullname(level: Int): McComponent {
-        val mutableComponent: MutableComponent = McComponent.literal(translatableName)
+        //val mutableComponent: MutableComponent = McComponent.literal(translatableName)
+        val mutableComponent: MutableComponent = McComponent.translatable(getDescriptionId())
         if (this.isCurse) {
             mutableComponent.withStyle(ChatFormatting.RED)
         } else {
@@ -128,7 +127,8 @@ open class OdysseyEnchantment(
     }
 
     // Get Conflicts
-    open fun conflictsWith(other: org.bukkit.enchantments.Enchantment): Boolean {
+    open fun conflictsWith(other: BukkitEnchant): Boolean {
         return false
     }
+
 }
