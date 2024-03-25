@@ -101,6 +101,9 @@ object EntityTags {
     const val TEMPORAL_TORRENT_MODIFIER: String = "odyssey.temporal_torrent_modifier"
     const val VULNEROCITY_MODIFIER: String = "odyssey.vulnerocity_modifier"
 
+    // CONSUMABLE ARROWS
+    const val EXPLOSIVE_ARROW: String = "odyssey.explosive_arrow"
+
     // ARROW TASKS
     const val IS_BURST_BARRAGING: String = "odyssey.is_burst_barraging"
 

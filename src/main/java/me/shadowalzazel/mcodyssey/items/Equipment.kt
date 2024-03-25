@@ -31,5 +31,12 @@ object Equipment {
         lore = listOf(Component.text("A warped arcane tool", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         customModel = ItemModels.WARPING_WAND)
 
+    val EXPLOSIVE_ARROW = OdysseyItem(
+        name = "explosive_arrow",
+        material = Material.ARROW,
+        displayName = Component.text("Explosive Arrow").decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE),
+        lore = listOf(Component.text("An arrow that explodes on impact!", TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        customModel = ItemModels.EXPLOSIVE_ARROW)
+
 
 }

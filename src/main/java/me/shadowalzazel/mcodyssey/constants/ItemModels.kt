@@ -148,8 +148,9 @@ object ItemModels {
     const val SOUL_SPICE: Int = 6906649
     const val SCULK_POINTER: Int = 6906677
 
-    // Off Hand
+    // Equipment
     const val SAYA: Int = 6903819
+    const val EXPLOSIVE_ARROW: Int = 6903820
 
     // Wands
     const val ARCANE_WAND: Int = 6903910
@@ -181,6 +182,7 @@ object ItemModels {
     const val SICKLE: Int = 6905750
     const val CHAKRAM: Int = 6905751
     const val KUNAI: Int = 6905752
+    const val LONGSWORD: Int = 6905753
 
     // Shovels
     const val SPEAR: Int = 6905774
