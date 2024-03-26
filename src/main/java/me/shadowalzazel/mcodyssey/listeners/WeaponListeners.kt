@@ -24,12 +24,8 @@ import me.shadowalzazel.mcodyssey.constants.WeaponMaps.MIN_RANGE_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.PIERCE_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.REACH_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.SWEEP_MAP
-import me.shadowalzazel.mcodyssey.tasks.weapon_tasks.ChakramReturn
-import me.shadowalzazel.mcodyssey.tasks.weapon_tasks.LoadAutoCrossbow
-import me.shadowalzazel.mcodyssey.tasks.weapon_tasks.VoidLinkedKunaiAttack
-import org.bukkit.Material
-import org.bukkit.Particle
-import org.bukkit.Sound
+import me.shadowalzazel.mcodyssey.tasks.weapon_tasks.*
+import org.bukkit.*
 import org.bukkit.attribute.Attribute
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.*
@@ -46,6 +42,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.CrossbowMeta
 import org.bukkit.inventory.meta.PotionMeta
 import java.util.*
+import kotlin.math.pow
 
 // --------------------------------- NOTES --------------------------------
 // TODO: Mounted Bonus i.e. Cavalry Charges
@@ -85,6 +82,8 @@ import java.util.*
 object WeaponListeners : Listener {
 
     private val markedVoidTargets = mutableMapOf<UUID, Entity>()
+    private val currentGrappleShotTasks = mutableMapOf<UUID, GrapplingHookShot>()
+    private val currentGrapplePullTasks = mutableMapOf<UUID, GrapplingHookPull>()
 
     @EventHandler(priority = EventPriority.LOWEST)
     fun mainWeaponDamageHandler(event: EntityDamageByEntityEvent) {
@@ -254,32 +253,45 @@ object WeaponListeners : Listener {
     // Handler for projectile based throwable weapons
     @EventHandler(priority = EventPriority.LOWEST)
     fun mainWeaponProjectileHitHandler(event: ProjectileHitEvent) {
+        val projectile: Projectile = event.entity
         if (event.hitEntity is LivingEntity) {
-            val projectile: Projectile = event.entity
-            //val victim: LivingEntity = event.hitEntity as LivingEntity
             if (projectile.scoreboardTags.isEmpty()) return
             val tags = projectile.scoreboardTags.toSet() // Prevent async problems
             for (tag in tags) {
                 when (tag) {
-                    // MOVE TO FUN LATER
                     EntityTags.THROWN_KUNAI -> {
-                        kunaiHitHandler(event)
+                        kunaiHitEntityHandler(event)
                     }
                     EntityTags.THROWN_CHAKRAM -> {
                         chakramHitEntityHandler(event)
+                    }
+                    EntityTags.EXPLOSIVE_ARROW -> {
+                        explosiveArrowHitHandler(event)
                     }
                 }
             }
         }
         else if (event.hitBlock != null) {
-            val projectile: Projectile = event.entity
-            if (!projectile.scoreboardTags.contains(EntityTags.THROWN_CHAKRAM)) return
-            chakramHitBlockProjectile(event)
+            if (projectile.scoreboardTags.isEmpty()) return
+            val tags = projectile.scoreboardTags.toSet() // Prevent async problems
+            for (tag in tags) {
+                when (tag) {
+                    EntityTags.THROWN_CHAKRAM -> {
+                        chakramHitBlockHandler(event)
+                    }
+                    EntityTags.EXPLOSIVE_ARROW -> {
+                        explosiveArrowHitHandler(event)
+                    }
+                    EntityTags.GRAPPLE_HOOK -> {
+                        grapplingHookHitHandler(event)
+                    }
+                }
+            }
         }
     }
 
     // For thrown kunai hitting target
-    private fun kunaiHitHandler(event: ProjectileHitEvent) {
+    private fun kunaiHitEntityHandler(event: ProjectileHitEvent) {
         val projectile: Projectile = event.entity
         if (projectile !is ThrowableProjectile) return
         val damage = projectile.getIntTag(EntityTags.THROWABLE_DAMAGE) ?: return
@@ -338,7 +350,7 @@ object WeaponListeners : Listener {
         }
     }
 
-    private fun chakramHitBlockProjectile(event: ProjectileHitEvent) {
+    private fun chakramHitBlockHandler(event: ProjectileHitEvent) {
         val projectile: Projectile = event.entity
         if (projectile !is ThrowableProjectile) return
         if (projectile.shooter !is LivingEntity) return
@@ -590,15 +602,29 @@ object WeaponListeners : Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     fun bowShootHandler(event: EntityShootBowEvent) {
         val bow = event.bow ?: return
-        if (!bow.hasItemMeta()) return
-        if (!bow.itemMeta.hasCustomModelData()) return
-        // Match
-        when(bow.itemMeta.customModelData) {
-            ItemModels.AUTO_CROSSBOW -> {
-                autoCrossbowHandler(event)
+        // Projectile takes priority
+        if (event.consumable != null) {
+            val consumable = event.consumable!!
+            // CHANE TO COMPONENT TAG SEARCH
+            if (consumable.hasItemMeta() && consumable.itemMeta.hasCustomModelData()) {
+                if (consumable.itemMeta.customModelData == ItemModels.EXPLOSIVE_ARROW) {
+                    explosiveArrowShootHandler(event)
+                }
             }
-            ItemModels.ALCHEMICAL_BOLTER -> {
-                alchemicalBolterShootHandler(event)
+        }
+
+        // Match
+        if (bow.hasItemMeta() && bow.itemMeta.hasCustomModelData()) {
+            when(bow.itemMeta.customModelData) {
+                ItemModels.AUTO_CROSSBOW -> {
+                    autoCrossbowHandler(event)
+                }
+                ItemModels.ALCHEMICAL_BOLTER -> {
+                    alchemicalBolterShootHandler(event)
+                }
+                ItemModels.GRAPPLING_HOOK -> {
+                    grapplingHookShootHandler(event)
+                }
             }
         }
         /*
@@ -617,7 +643,6 @@ object WeaponListeners : Listener {
         if (!crossbow.hasItemMeta()) return
         if (!crossbow.itemMeta.hasCustomModelData()) return
 
-        // When
         when(crossbow.itemMeta.customModelData) {
             ItemModels.COMPACT_CROSSBOW -> {
                 compactCrossbowHandler(event)
@@ -626,6 +651,78 @@ object WeaponListeners : Listener {
                 event.isCancelled = alchemicalBolterLoadingHandler(event.entity, crossbow)
             }
         }
+    }
+
+    /*-----------------------------------------------------------------------------------------------*/
+    // EXPLOSIVE ARROW
+    private fun explosiveArrowShootHandler(event: EntityShootBowEvent) {
+        event.projectile.also {
+            it.addScoreboardTag(EntityTags.EXPLOSIVE_ARROW)
+        }
+    }
+
+    private fun explosiveArrowHitHandler(event: ProjectileHitEvent) {
+        val projectile = event.entity
+        val location = projectile.location
+        location.world.spawnParticle(Particle.EXPLOSION_LARGE, location, 1, 0.0, 0.04, 0.0)
+        location.world.playSound(location, Sound.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 0.8F, 1.2F)
+        for (entity in location.getNearbyLivingEntities(2.5)) {
+            // indirect distance square
+            val distance = entity.location.distance(location)
+            val power = (maxOf(2.5 - distance, 0.0)).pow(2.0) + (maxOf(2.5 - distance, 0.0)).times(1) + 1.25
+            entity.damage(power) // Create Damage Source
+        }
+    }
+
+    /*-----------------------------------------------------------------------------------------------*/
+    // GRAPPLING HOOK (cross hook)
+    private fun grapplingHookShootHandler(event: EntityShootBowEvent) {
+        println("CALLED SHOOT")
+        if (event.entity.scoreboardTags.contains(EntityTags.HAS_SHOT_GRAPPLE)) {
+            event.entity.removeScoreboardTag(EntityTags.HAS_SHOT_GRAPPLE)
+            event.entity.removeScoreboardTag(EntityTags.IS_GRAPPLING)
+            return
+        }
+        val grapplingHook = event.bow ?: return
+        val projectile = event.projectile
+        if (projectile !is Projectile) return
+        // Maybe use same technique as Overcharge
+        val hookerId = event.entity.uniqueId
+        val task = GrapplingHookShot(event.entity, projectile, grapplingHook)
+        if (currentGrappleShotTasks[hookerId] != null) {
+            currentGrappleShotTasks[hookerId]?.cancel()
+        }
+        event.entity.addScoreboardTag(EntityTags.HAS_SHOT_GRAPPLE)
+        projectile.addScoreboardTag(EntityTags.GRAPPLE_HOOK)
+        projectile.velocity = projectile.velocity.multiply(2.0)
+        currentGrappleShotTasks[hookerId] = task
+        task.runTaskTimer(Odyssey.instance, 1, 1)
+        println("FINISHED SHOOT")
+    }
+
+    private fun grapplingHookHitHandler(event: ProjectileHitEvent) {
+        println("CALLED PULL")
+        val projectile = event.entity
+        val hooker = projectile.shooter
+        if (hooker !is LivingEntity) return
+        if (!hooker.scoreboardTags.contains(EntityTags.HAS_SHOT_GRAPPLE)) return
+        // Remove Has Shot Grapple via TASK (WIP)
+        val hookerId = hooker.uniqueId
+        if (currentGrappleShotTasks[hookerId] == null) {
+            return
+        }
+        val mainHand = hooker.equipment?.itemInMainHand ?: return
+        if (currentGrappleShotTasks[hookerId]?.grapplingHook != mainHand) {
+            return
+        }
+        val task = GrapplingHookPull(hooker, projectile, mainHand)
+        if (currentGrapplePullTasks[hookerId] != null) {
+            currentGrapplePullTasks[hookerId]?.cancel()
+        }
+        hooker.addScoreboardTag(EntityTags.IS_GRAPPLING)
+        currentGrapplePullTasks[hookerId] = task
+        task.runTaskTimer(Odyssey.instance, 1, 1)
+        println("FINISHED PULL")
     }
 
     /*-----------------------------------------------------------------------------------------------*/

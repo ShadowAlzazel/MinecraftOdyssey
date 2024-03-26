@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.listeners
 
+import com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent
 import kotlinx.coroutines.*
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.alchemy.AlchemyManager
@@ -21,6 +22,7 @@ import org.bukkit.entity.Arrow
 import org.bukkit.entity.Item
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
+import org.bukkit.entity.ThrownPotion
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.CauldronLevelChangeEvent
@@ -49,6 +51,55 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
     @EventHandler
     fun potionConsumeHandler(event: PlayerItemConsumeEvent) {
         if (!event.item.hasItemMeta()) return
+        if (event.item.itemMeta !is PotionMeta) return
+        when(event.item.type) {
+            Material.POTION -> {
+                potionDrinkHandler(event)
+            }
+            Material.SPLASH_POTION, Material.LINGERING_POTION -> {
+                potionConsumeSplashHandler(event)
+            }
+            else -> {
+                return
+            }
+        }
+        return
+    }
+
+    // Detect when potion is thrown
+    @EventHandler
+    fun potionThrowHandler(event: PlayerLaunchProjectileEvent) {
+        if (event.itemStack.type != Material.SPLASH_POTION  && event.itemStack.type != Material.LINGERING_POTION ) return
+        val thrownPotion = event.projectile
+        if (thrownPotion !is ThrownPotion) return
+        val potion = event.itemStack
+        if (potion.hasTag(ItemTags.IS_POTION_VIAL)) {
+            val replacement = consumePotionVial(potion) ?: return
+            // Cancel consume if gets replacement
+            event.setShouldConsume(false)
+            thrownPotion.item = replacement.clone().also {
+                it.setIntTag(ItemTags.POTION_CHARGES_LEFT, 1)
+                val meta = it.itemMeta
+                meta.setCustomModelData(ItemModels.VIAL_CHARGE_1)
+                it.itemMeta = meta
+            }
+        }
+
+    }
+
+    // USELESS DOES NOT RUN
+    private fun potionConsumeSplashHandler(event: PlayerItemConsumeEvent) {
+        val item = event.item
+        // Check charges fpr vial
+        if (item.hasTag(ItemTags.IS_POTION_VIAL)) {
+            val replacement = consumePotionVial(item)
+            if (replacement != null) {
+                event.replacement = replacement
+            }
+        }
+    }
+
+    private fun potionDrinkHandler(event: PlayerItemConsumeEvent) {
         if (event.item.type != Material.POTION) return
         // Potion Item Tag Getters
         val item = event.item
@@ -60,29 +111,28 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
             // Apply to Player
             event.player.addOdysseyEffect(effect, duration, amplifier)
         }
-        // Potion Vials (also have charges when thrown)
+        // Check charges fpr vial
         if (item.hasTag(ItemTags.IS_POTION_VIAL)) {
-            val charges = item.getIntTag(ItemTags.POTION_CHARGES_LEFT) ?: 0
-            if (charges <= 1) return
-            // Run charge
-            val meta = item.itemMeta.clone()
-            if (meta.hasCustomModelData()) {
-                meta.setCustomModelData(meta.customModelData - 1)
-            }
-            event.replacement = item.also {
-                it.itemMeta = meta
-                it.setIntTag(ItemTags.POTION_CHARGES_LEFT, charges - 1)
+            val replacement = consumePotionVial(item)
+            if (replacement != null) {
+                event.replacement = replacement
             }
         }
-        /*
-         // Check if custom bottle
-         if (potionMeta.hasCustomModelData()) {
-             if (event.replacement == null) { return }
-             event.replacement!!.itemMeta = event.replacement!!.itemMeta.also {
-                 it.setCustomModelData(potionMeta.customModelData)
-             }
-         }
-          */
+    }
+
+    private fun consumePotionVial(item: ItemStack): ItemStack? {
+        // Potion Vials (also have charges when thrown)
+        val charges = item.getIntTag(ItemTags.POTION_CHARGES_LEFT) ?: 0
+        if (charges <= 1) return null
+        // Run charge
+        val meta = item.itemMeta.clone()
+        if (meta.hasCustomModelData()) {
+            meta.setCustomModelData(meta.customModelData - 1)
+        }
+        return item.also {
+            it.itemMeta = meta
+            it.setIntTag(ItemTags.POTION_CHARGES_LEFT, charges - 1)
+        }
     }
 
     // Main Splash Handler
