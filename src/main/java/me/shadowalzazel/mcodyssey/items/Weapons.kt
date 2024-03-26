@@ -19,9 +19,8 @@ object Weapons: AttributeManager {
 
     // Used to create multiple weapons of different materials from the same type
     fun OdysseyItem.createWeapon(damageOverride: Double = 0.0): ItemStack {
-        if (weaponMaterial == null) { return ItemStack(Material.AIR) }
-        if (weaponType == null) { return ItemStack(Material.AIR) }
-
+        if (weaponMaterial == null) return ItemStack(Material.AIR)
+        if (weaponType == null) return ItemStack(Material.AIR)
         val newWeapon = this.createItemStack(1).apply {
             // Attributes
             val damage = weaponType.baseDamage + weaponMaterial.damage + damageOverride
@@ -317,6 +316,38 @@ object Weapons: AttributeManager {
         material = Material.NETHERITE_SWORD,
         weaponMaterial = WeaponMaterial.NETHERITE,
         weaponType = WeaponType.SABER)
+
+    /*-----------------------------------------------------------------------------------------------*/
+
+    val WOODEN_LONGSWORD = OdysseyItem(
+        name = "wooden_longsword",
+        material = Material.WOODEN_SWORD,
+        weaponMaterial = WeaponMaterial.WOOD,
+        weaponType = WeaponType.LONGSWORD)
+
+    val GOLDEN_LONGSWORD = OdysseyItem(
+        name = "golden_longsword",
+        material = Material.GOLDEN_SWORD,
+        weaponMaterial = WeaponMaterial.GOLD,
+        weaponType = WeaponType.LONGSWORD)
+
+    val STONE_LONGSWORD = OdysseyItem(
+        name = "stone_longsword",
+        material = Material.STONE_SWORD,
+        weaponMaterial = WeaponMaterial.STONE,
+        weaponType = WeaponType.LONGSWORD)
+
+    val IRON_LONGSWORD = OdysseyItem(
+        name = "iron_longsword",
+        material = Material.IRON_SWORD,
+        weaponMaterial = WeaponMaterial.IRON,
+        weaponType = WeaponType.LONGSWORD)
+
+    val DIAMOND_LONGSWORD = OdysseyItem(
+        name = "diamond_longsword",
+        material = Material.DIAMOND_SWORD,
+        weaponMaterial = WeaponMaterial.DIAMOND,
+        weaponType = WeaponType.LONGSWORD)
 
     /*-----------------------------------------------------------------------------------------------*/
 

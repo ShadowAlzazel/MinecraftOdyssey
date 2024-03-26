@@ -148,14 +148,17 @@ object ItemModels {
     const val SOUL_SPICE: Int = 6906649
     const val SCULK_POINTER: Int = 6906677
 
-    // Off Hand
+    // Equipment
     const val SAYA: Int = 6903819
+    const val EXPLOSIVE_ARROW: Int = 6903820
 
     // Wands
     const val ARCANE_WAND: Int = 6903910
     const val WARPING_WAND: Int = 6903911
 
     // Crossbows
+    const val GRAPPLING_HOOK: Int = 6905530
+
     const val COMPACT_CROSSBOW: Int = 6905535
     const val AUTO_CROSSBOW: Int = 6905536
     const val ALCHEMICAL_BOLTER: Int = 6905537 // Alchemy Artillery
@@ -181,6 +184,7 @@ object ItemModels {
     const val SICKLE: Int = 6905750
     const val CHAKRAM: Int = 6905751
     const val KUNAI: Int = 6905752
+    const val LONGSWORD: Int = 6905753
 
     // Shovels
     const val SPEAR: Int = 6905774

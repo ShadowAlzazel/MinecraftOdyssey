@@ -3,10 +3,7 @@ package me.shadowalzazel.mcodyssey
 import me.shadowalzazel.mcodyssey.bosses.BossManager
 import me.shadowalzazel.mcodyssey.bosses.hog_rider.HogRiderListeners
 import me.shadowalzazel.mcodyssey.bosses.the_ambassador.AmbassadorListeners
-import me.shadowalzazel.mcodyssey.commands.admin.EnchantGilded
-import me.shadowalzazel.mcodyssey.commands.admin.GiveGildedBook
-import me.shadowalzazel.mcodyssey.commands.admin.GiveItem
-import me.shadowalzazel.mcodyssey.commands.admin.SummonBoss
+import me.shadowalzazel.mcodyssey.commands.admin.*
 import me.shadowalzazel.mcodyssey.commands.spells.PlaceFeatureArchaicSeed
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.listeners.*
@@ -139,6 +136,7 @@ class Odyssey : JavaPlugin() {
         getCommand("place_feature_archaic_seed")?.setExecutor(PlaceFeatureArchaicSeed)
         getCommand("give_item")?.setExecutor(GiveItem)
         getCommand("give_gilded_book")?.setExecutor(GiveGildedBook)
+        getCommand("summon_doppelganger")?.setExecutor(SummonDoppelganger)
 
         //server.pluginManager.registerEvents(OdysseyPhenomenaListeners, this)
         //playersRequiredForLuck = 4
