@@ -104,6 +104,12 @@ object EntityTags {
     // CONSUMABLE ARROWS
     const val EXPLOSIVE_ARROW: String = "odyssey.explosive_arrow"
 
+    // Grappling
+    const val GRAPPLE_HOOK: String = "odyssey.grapple_hook" // For the projectile
+    const val HAS_SHOT_GRAPPLE: String = "odyssey.has_shot_grapple" // for when shooter started the shot
+    const val IS_GRAPPLING: String = "odyssey.is_grappling" // WHen entity is grappling
+    const val CANCEL_GRAPPLE: String = "odyssey.cancel_grapple" // For canceling grapple midway pull
+
     // ARROW TASKS
     const val IS_BURST_BARRAGING: String = "odyssey.is_burst_barraging"
 

@@ -157,6 +157,8 @@ object ItemModels {
     const val WARPING_WAND: Int = 6903911
 
     // Crossbows
+    const val GRAPPLING_HOOK: Int = 6905530
+
     const val COMPACT_CROSSBOW: Int = 6905535
     const val AUTO_CROSSBOW: Int = 6905536
     const val ALCHEMICAL_BOLTER: Int = 6905537 // Alchemy Artillery

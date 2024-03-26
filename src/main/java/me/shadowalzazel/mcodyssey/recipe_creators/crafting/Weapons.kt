@@ -80,6 +80,12 @@ class Weapons {
             ironSaberRecipe(),
             diamondSaberRecipe(),
 
+            woodenLongswordRecipe(),
+            goldenLongswordRecipe(),
+            stoneLongswordRecipe(),
+            ironLongswordRecipe(),
+            diamondLongswordRecipe(),
+
             woodenHalberdRecipe(),
             goldenHalberdRecipe(),
             stoneHalberdRecipe(),
@@ -162,6 +168,11 @@ class Weapons {
     }
 
     /*-----------------------------------------------------------------------------------------------*/
+    // Create function to create all weapon
+    private fun katanaRecipeCreator() {
+
+    }
+
 
     private fun woodenKatanaRecipe(): ShapedRecipe {
         val result = Weapons.WOODEN_KATANA.createWeapon()
@@ -814,6 +825,70 @@ class Weapons {
         return someRecipe
     }
 
+    /*-----------------------------------------------------------------------------------------------*/
+    private fun woodenLongswordRecipe(): ShapedRecipe {
+        val someResult = Weapons.WOODEN_LONGSWORD.createWeapon()
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "wooden_longsword"), someResult).apply {
+            shape("X ", "X ", "YR")
+            setIngredient('X', RecipeChoice.MaterialChoice(Material.ACACIA_PLANKS, Material.BIRCH_PLANKS, Material.DARK_OAK_PLANKS, Material.OAK_PLANKS, Material.SPRUCE_PLANKS, Material.JUNGLE_PLANKS))
+            setIngredient('Y', Material.STICK)
+            setIngredient('R', Material.RABBIT_HIDE)
+            group = "longswords"
+            category = CraftingBookCategory.EQUIPMENT
+        }
+        return someRecipe
+    }
+
+    private fun goldenLongswordRecipe(): ShapedRecipe {
+        val someResult = Weapons.GOLDEN_LONGSWORD.createWeapon()
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "golden_longsword"), someResult).apply {
+            shape("X ", "X ", "YR")
+            setIngredient('X', Material.GOLD_INGOT)
+            setIngredient('Y', Material.STICK)
+            setIngredient('R', Material.RABBIT_HIDE)
+            group = "longswords"
+            category = CraftingBookCategory.EQUIPMENT
+        }
+        return someRecipe
+    }
+
+    private fun stoneLongswordRecipe(): ShapedRecipe {
+        val someResult = Weapons.STONE_LONGSWORD.createWeapon()
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "stone_longsword"), someResult).apply {
+            shape("X ", "X ", "YR")
+            setIngredient('X', Material.COBBLESTONE)
+            setIngredient('Y', Material.STICK)
+            setIngredient('R', Material.RABBIT_HIDE)
+            group = "longswords"
+            category = CraftingBookCategory.EQUIPMENT
+        }
+        return someRecipe
+    }
+    private fun ironLongswordRecipe(): ShapedRecipe {
+        val someResult = Weapons.IRON_LONGSWORD.createWeapon()
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "iron_longsword"), someResult).apply {
+            shape("X ", "X ", "YR")
+            setIngredient('X', Material.IRON_INGOT)
+            setIngredient('Y', Material.STICK)
+            setIngredient('R', Material.RABBIT_HIDE)
+            group = "longswords"
+            category = CraftingBookCategory.EQUIPMENT
+        }
+        return someRecipe
+    }
+
+    private fun diamondLongswordRecipe(): ShapedRecipe {
+        val someResult = Weapons.DIAMOND_LONGSWORD.createWeapon()
+        val someRecipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "diamond_longsword"), someResult).apply {
+            shape("X ", "X ", "YR")
+            setIngredient('X', Material.DIAMOND)
+            setIngredient('Y', Material.STICK)
+            setIngredient('R', Material.RABBIT_HIDE)
+            group = "longswords"
+            category = CraftingBookCategory.EQUIPMENT
+        }
+        return someRecipe
+    }
 
 
     /*-----------------------------------------------------------------------------------------------*/

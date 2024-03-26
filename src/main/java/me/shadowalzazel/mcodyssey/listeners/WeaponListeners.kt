@@ -24,9 +24,7 @@ import me.shadowalzazel.mcodyssey.constants.WeaponMaps.MIN_RANGE_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.PIERCE_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.REACH_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.SWEEP_MAP
-import me.shadowalzazel.mcodyssey.tasks.weapon_tasks.ChakramReturn
-import me.shadowalzazel.mcodyssey.tasks.weapon_tasks.LoadAutoCrossbow
-import me.shadowalzazel.mcodyssey.tasks.weapon_tasks.VoidLinkedKunaiAttack
+import me.shadowalzazel.mcodyssey.tasks.weapon_tasks.*
 import org.bukkit.*
 import org.bukkit.attribute.Attribute
 import org.bukkit.enchantments.Enchantment
@@ -84,6 +82,8 @@ import kotlin.math.pow
 object WeaponListeners : Listener {
 
     private val markedVoidTargets = mutableMapOf<UUID, Entity>()
+    private val currentGrappleShotTasks = mutableMapOf<UUID, GrapplingHookShot>()
+    private val currentGrapplePullTasks = mutableMapOf<UUID, GrapplingHookPull>()
 
     @EventHandler(priority = EventPriority.LOWEST)
     fun mainWeaponDamageHandler(event: EntityDamageByEntityEvent) {
@@ -281,6 +281,9 @@ object WeaponListeners : Listener {
                     }
                     EntityTags.EXPLOSIVE_ARROW -> {
                         explosiveArrowHitHandler(event)
+                    }
+                    EntityTags.GRAPPLE_HOOK -> {
+                        grapplingHookHitHandler(event)
                     }
                 }
             }
@@ -619,6 +622,9 @@ object WeaponListeners : Listener {
                 ItemModels.ALCHEMICAL_BOLTER -> {
                     alchemicalBolterShootHandler(event)
                 }
+                ItemModels.GRAPPLING_HOOK -> {
+                    grapplingHookShootHandler(event)
+                }
             }
         }
         /*
@@ -666,6 +672,57 @@ object WeaponListeners : Listener {
             val power = (maxOf(2.5 - distance, 0.0)).pow(2.0) + (maxOf(2.5 - distance, 0.0)).times(1) + 1.25
             entity.damage(power) // Create Damage Source
         }
+    }
+
+    /*-----------------------------------------------------------------------------------------------*/
+    // GRAPPLING HOOK (cross hook)
+    private fun grapplingHookShootHandler(event: EntityShootBowEvent) {
+        println("CALLED SHOOT")
+        if (event.entity.scoreboardTags.contains(EntityTags.HAS_SHOT_GRAPPLE)) {
+            event.entity.removeScoreboardTag(EntityTags.HAS_SHOT_GRAPPLE)
+            event.entity.removeScoreboardTag(EntityTags.IS_GRAPPLING)
+            return
+        }
+        val grapplingHook = event.bow ?: return
+        val projectile = event.projectile
+        if (projectile !is Projectile) return
+        // Maybe use same technique as Overcharge
+        val hookerId = event.entity.uniqueId
+        val task = GrapplingHookShot(event.entity, projectile, grapplingHook)
+        if (currentGrappleShotTasks[hookerId] != null) {
+            currentGrappleShotTasks[hookerId]?.cancel()
+        }
+        event.entity.addScoreboardTag(EntityTags.HAS_SHOT_GRAPPLE)
+        projectile.addScoreboardTag(EntityTags.GRAPPLE_HOOK)
+        projectile.velocity = projectile.velocity.multiply(2.0)
+        currentGrappleShotTasks[hookerId] = task
+        task.runTaskTimer(Odyssey.instance, 1, 1)
+        println("FINISHED SHOOT")
+    }
+
+    private fun grapplingHookHitHandler(event: ProjectileHitEvent) {
+        println("CALLED PULL")
+        val projectile = event.entity
+        val hooker = projectile.shooter
+        if (hooker !is LivingEntity) return
+        if (!hooker.scoreboardTags.contains(EntityTags.HAS_SHOT_GRAPPLE)) return
+        // Remove Has Shot Grapple via TASK (WIP)
+        val hookerId = hooker.uniqueId
+        if (currentGrappleShotTasks[hookerId] == null) {
+            return
+        }
+        val mainHand = hooker.equipment?.itemInMainHand ?: return
+        if (currentGrappleShotTasks[hookerId]?.grapplingHook != mainHand) {
+            return
+        }
+        val task = GrapplingHookPull(hooker, projectile, mainHand)
+        if (currentGrapplePullTasks[hookerId] != null) {
+            currentGrapplePullTasks[hookerId]?.cancel()
+        }
+        hooker.addScoreboardTag(EntityTags.IS_GRAPPLING)
+        currentGrapplePullTasks[hookerId] = task
+        task.runTaskTimer(Odyssey.instance, 1, 1)
+        println("FINISHED PULL")
     }
 
     /*-----------------------------------------------------------------------------------------------*/
