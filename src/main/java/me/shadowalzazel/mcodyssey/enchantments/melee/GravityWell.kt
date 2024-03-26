@@ -10,7 +10,7 @@ object GravityWell : OdysseyEnchantment("gravity_well", "Gravity Well", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.FROG_FRIGHT, OdysseyEnchantments.ARCANE_CELL -> {
+            OdysseyEnchantments.FROG_FRIGHT.toBukkit(), OdysseyEnchantments.ARCANE_CELL.toBukkit() -> {
                 true
             }
             else -> {

@@ -247,10 +247,10 @@ object RangedListeners : Listener {
     @EventHandler
     fun bowSwapHandsHandler(event: PlayerSwapHandItemsEvent) {
         if (event.offHandItem == null) return
-        if (event.offHandItem!!.type != Material.BOW && event.offHandItem!!.type != Material.CROSSBOW) return
+        if (event.offHandItem.type != Material.BOW && event.offHandItem!!.type != Material.CROSSBOW) return
         val offHand = event.offHandItem!!
         if (!offHand.hasItemMeta()) return
-        if (offHand.itemMeta.hasEnchant(OdysseyEnchantments.SOUL_REND)) {
+        if (offHand.itemMeta.hasEnchant(OdysseyEnchantments.SOUL_REND.toBukkit())) {
             soulRendEnchantmentActivate(event.player)
         }
     }

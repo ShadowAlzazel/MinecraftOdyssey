@@ -4,13 +4,22 @@ import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.enchantments.Enchantment.FIRE_ASPECT
 import org.bukkit.inventory.ItemStack
 
-object FreezingAspect : OdysseyEnchantment("frezzing_aspect", "Freezing Aspect", 2) {
+object FreezingAspect : OdysseyEnchantment("freezing_aspect", "Freezing Aspect", 2) {
 
+
+    /* Minecraft NMS Methods */
+    override fun getRarity(): Rarity = Rarity.UNCOMMON
+    override fun getMinCost(level: Int) = 5 + (level * 10)
+    override fun getMaxCost(level: Int) = getMinCost(level) + 10
+
+
+    // Methods for Bukkit
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            FIRE_ASPECT, OdysseyEnchantments.TAR_N_DIP -> {
+            FIRE_ASPECT, OdysseyEnchantments.TAR_N_DIP.toBukkit() -> {
                 true
             }
             else -> {

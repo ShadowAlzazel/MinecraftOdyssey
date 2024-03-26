@@ -7,11 +7,11 @@ import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.enchantments.melee.*
 import me.shadowalzazel.mcodyssey.enchantments.misc.*
 import me.shadowalzazel.mcodyssey.enchantments.ranged.*
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.resources.ResourceLocation
 import org.bukkit.enchantments.Enchantment
-import java.util.*
-import java.util.stream.Collectors
 
-object OdysseyEnchantments {
+object OdysseyEnchantments : EnchantRegistryManager {
 
     // Utility
     val GILDED_POWER: OdysseyEnchantment = GildedPower
@@ -33,14 +33,14 @@ object OdysseyEnchantments {
     val MANDIBLEMANIA: OdysseyEnchantment = Mandiblemania
     val MOLTEN_CORE: OdysseyEnchantment = MoltenCore
     val MOONWARD: OdysseyEnchantment = Moonward
-    val OPTICALIZATION: OdysseyEnchantment = Opticalization // TODO
+    val OPTICALIZATION: OdysseyEnchantment = Opticalization
     val POLLEN_GUARD: OdysseyEnchantment = PollenGuard
     val POTION_BARRIER: OdysseyEnchantment = PotionBarrier
     val RAGING_ROAR: OdysseyEnchantment = RagingRoar
     val RECKLESS: OdysseyEnchantment = Reckless
     val RELENTLESS: OdysseyEnchantment = Relentless
     val ROOT_BOOTS: OdysseyEnchantment = RootBoots
-    val SCULK_SENSITIVE: OdysseyEnchantment = SculkSensitive // TODO
+    val SCULK_SENSITIVE: OdysseyEnchantment = SculkSensitive
     val SPEEDY_SPURS: OdysseyEnchantment = SpeedySpurs
     val SPOREFUL: OdysseyEnchantment = Sporeful
     val SQUIDIFY: OdysseyEnchantment = Squidify
@@ -48,8 +48,8 @@ object OdysseyEnchantments {
     val STATIC_SOCKS: OdysseyEnchantment = StaticSocks
     val UNTOUCHABLE: OdysseyEnchantment = Untouchable
     val VEILED_IN_SHADOW: OdysseyEnchantment = VeiledInShadow
-    val VENGEFUL: OdysseyEnchantment = Vengeful // TODO
-    val VICIOUS_VIGOR: OdysseyEnchantment = ViciousVigor // TODO
+    val VENGEFUL: OdysseyEnchantment = Vengeful
+    val VICIOUS_VIGOR: OdysseyEnchantment = ViciousVigor
     val WAR_CRY: OdysseyEnchantment = WarCry
 
     // Melee
@@ -102,7 +102,7 @@ object OdysseyEnchantments {
     val DEATH_FROM_ABOVE: OdysseyEnchantment = DeathFromAbove
     val DOUBLE_TAP: OdysseyEnchantment = DoubleTap
     val FAN_FIRE: OdysseyEnchantment = FanFire
-    val ENTANGLEMENT: OdysseyEnchantment = Entanglement // TODO
+    val ENTANGLEMENT: OdysseyEnchantment = Entanglement
     val GALE_WIND: OdysseyEnchantment = GaleWind
     val HEAVY_BALLISTICS: OdysseyEnchantment = HeavyBallistics
     val LUXPOSE: OdysseyEnchantment = Luxpose
@@ -112,10 +112,10 @@ object OdysseyEnchantments {
     val RICOCHET: OdysseyEnchantment = Ricochet
     val SHARPSHOOTER: OdysseyEnchantment = Sharpshooter
     val SINGLE_OUT: OdysseyEnchantment = SingleOut
-    val SINGULARITY_SHOT: OdysseyEnchantment = SingularityShot // TODO
+    val SINGULARITY_SHOT: OdysseyEnchantment = SingularityShot
     val SOUL_REND: OdysseyEnchantment = SoulRend
     val STELLAR_SHOWER: OdysseyEnchantment = StellarShower // TODO
-    val TEMPORAL_TORRENT: OdysseyEnchantment = TemporalTorrent // TODO
+    val TEMPORAL_TORRENT: OdysseyEnchantment = TemporalTorrent
     val VULNEROCITY: OdysseyEnchantment = Vulnerocity
 
     val MELEE_SET = setOf(
@@ -224,374 +224,62 @@ object OdysseyEnchantments {
         VULNEROCITY
     )
 
-    val REGISTERED_SET = setOf(GILDED_POWER) + ARMOR_SET + MELEE_SET + MISC_SET + RANGED_SET
+    private const val ODYSSEY_NAMESPACE: String = "odyssey"
+
+    val REGISTERED_SET = ARMOR_SET + MELEE_SET + MISC_SET + RANGED_SET + setOf(GILDED_POWER)
     val EXOTIC_LIST = setOf(SINGULARITY_SHOT, GRAVITY_WELL,
         STELLAR_SHOWER, SCULK_SENSITIVE, BLACK_ROSE) // To exclude for table
 
     // Register
-    fun register() {
+    fun registerAll() {
+        /* ---------- PRE 1.20.4 ----------- */
+        /*
         for (odysseyEnchant in REGISTERED_SET) {
             val registered = Arrays.stream(Enchantment.values()).collect(Collectors.toList()).contains(odysseyEnchant)
             if (!registered) registerOdysseyEnchantment(odysseyEnchant as Enchantment)
         }
+         */
+        for (odysseyEnchant in REGISTERED_SET) {
+            var registered = false
+            try {
+                net.minecraft.core.Registry.register( // Using own namespace for safety and support
+                    BuiltInRegistries.ENCHANTMENT,
+                    ResourceLocation(ODYSSEY_NAMESPACE, odysseyEnchant.name),
+                    odysseyEnchant
+                )
+                registered = true
+            }
+            catch (exception: Exception) {
+                exception.printStackTrace()
+            }
+            // SUCCESS!!
+            if (registered) {
+                Odyssey.instance.logger.info("Registered: $odysseyEnchant")
+            }
+        }
     }
 
+
+    /* ---------- PRE 1.20.4 ----------- */
     private fun registerOdysseyEnchantment(enchantment: Enchantment?) {
         var registered = false
         try {
-            /* ---------- PRE 1.20.4 ----------- */
             if (enchantment != null) {
-                val f = Enchantment::class.java.getDeclaredField("acceptingNew")
-                f.isAccessible = true
-                f[null] = true
+                val field = Enchantment::class.java.getDeclaredField("acceptingNew")
+                field.isAccessible = true
+                field[null] = true
                 //Odyssey.instance.server.getRegistry()
-                Enchantment.registerEnchantment(enchantment)
+                //Enchantment.registerEnchantment(enchantment)
             }
-
-            /* ---------- 1.20.4  ----------- */
-            /*
-            if (enchantment != null) {
-                Registry.ENCHANTMENT[enchantment.key] = enchantment
-            }
-             */
-
             registered = true
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        if (registered) {
-            // Send to console
+        if (registered) {  // Send to console
             Odyssey.instance.logger.info("Registered: $enchantment")
-        }
-        else {
+        } else {
             Odyssey.instance.logger.info("Failed to register: $enchantment")
         }
     }
 
-    fun getEnchantmentFromNamespace(name: String): OdysseyEnchantment? {
-        return when(name) {
-            "antibonk" -> {
-                ANTIBONK
-            }
-            "beastly_brawler" -> {
-                BEASTLY_BRAWLER
-            }
-            "black_rose" -> {
-                BLACK_ROSE
-            }
-            "blurcise" -> {
-                BLURCISE
-            }
-            "brewful_breath" -> {
-                BREWFUL_BREATH
-            }
-            "copper_chitin" -> {
-                COPPER_CHITIN
-            }
-            "cowardice" -> {
-                COWARDICE
-            }
-            "devastating_drop" -> {
-                DEVASTATING_DROP
-            }
-            "dreadful_shriek" -> {
-                DREADFUL_SHRIEK
-            }
-            "fruitful_fare" -> {
-                FRUITFUL_FARE
-            }
-            "ignore_pain" -> {
-                IGNORE_PAIN
-            }
-            "illumineye" -> {
-                ILLUMINEYE
-            }
-            "leap_frog" -> {
-                LEAP_FROG
-            }
-            "mandiblemania" -> {
-                MANDIBLEMANIA
-            }
-            "molten_core" -> {
-                MOLTEN_CORE
-            }
-            "moonward" -> {
-                MOONWARD
-            }
-            "opticalization" -> {
-                OPTICALIZATION
-            }
-            "pollen_guard" -> {
-                POLLEN_GUARD
-            }
-            "potion_barrier" -> {
-                POTION_BARRIER
-            }
-            "raging_roar" -> {
-                RAGING_ROAR
-            }
-            "reckless" -> {
-                RECKLESS
-            }
-            "relentless" -> {
-                RELENTLESS
-            }
-            "root_boots" -> {
-                ROOT_BOOTS
-            }
-            "sculk_sensitive" -> {
-                SCULK_SENSITIVE
-            }
-            "speedy_spurs" -> {
-                SPEEDY_SPURS
-            }
-            "sporeful" -> {
-                SPOREFUL
-            }
-            "squidify" -> {
-                SQUIDIFY
-            }
-            "sslither_ssight" -> {
-                SSLITHER_SSIGHT
-            }
-            "static_socks" -> {
-                STATIC_SOCKS
-            }
-            "untouchable" -> {
-                UNTOUCHABLE
-            }
-            "veiled_in_shadow" -> {
-                VEILED_IN_SHADOW
-            }
-            "vengeful" -> {
-                VENGEFUL
-            }
-            "vicious_vigor" -> {
-                VICIOUS_VIGOR
-            }
-            "war_cry" -> {
-                WAR_CRY
-            }
-            "asphyxiating_assault" -> {
-                ASPHYXIATING_ASSAULT
-            }
-            "arcane_cell" -> {
-                ARCANE_CELL
-            }
-            "backstabber" -> {
-                BACKSTABBER
-            }
-            "bane_of_the_illager" -> {
-                BANE_OF_THE_ILLAGER
-            }
-            "bane_of_the_sea" -> {
-                BANE_OF_THE_SEA
-            }
-            "bane_of_the_swine" -> {
-                BANE_OF_THE_SWINE
-            }
-            "blitz_shift" -> {
-                BLITZ_SHIFT
-            }
-            "buzzy_bees" -> {
-                BUZZY_BEES
-            }
-            "committed" -> {
-                COMMITTED
-            }
-            "cull_the_weak" -> {
-                CULL_THE_WEAK
-            }
-            "decaying_touch" -> {
-                DECAYING_TOUCH
-            }
-            "douse" -> {
-                DOUSE
-            }
-            "echo" -> {
-                ECHO
-            }
-            "exploding" -> {
-                EXPLODING
-            }
-            "fearful_finisher" -> {
-                FEARFUL_FINISHER
-            }
-            "freezing_aspect" -> {
-                FREEZING_ASPECT
-            }
-            "frog_fright" -> {
-                FROG_FRIGHT
-            }
-            "frosty_fuse" -> {
-                FROSTY_FUSE
-            }
-            "gravity_well" -> {
-                GRAVITY_WELL
-            }
-            "guarding_strike" -> {
-                GUARDING_STRIKE
-            }
-            "hemorrhage" -> {
-                HEMORRHAGE
-            }
-            "illucidation" -> {
-                ILLUCIDATION
-            }
-            "rupturing_strike" -> {
-                RUPTURING_STRIKE
-            }
-            "sporing_rot" -> {
-                SPORING_ROT
-            }
-            "tar_n_dip" -> {
-                TAR_N_DIP
-            }
-            "void_strike" -> {
-                VOID_STRIKE
-            }
-            "whirlwind" -> {
-                WHIRLWIND
-            }
-            "bomb_ob" -> {
-                BOMB_OB
-            }
-            "hook_shot" -> {
-                HOOK_SHOT
-            }
-            "lengthy_line" -> {
-                LENGTHY_LINE
-            }
-            "mirror_force" -> {
-                MIRROR_FORCE
-            }
-            "reversed_recoil" -> {
-                REVERSED_RECOIL
-            }
-            "o_shiny" -> {
-                O_SHINY
-            }
-            "void_jump" -> {
-                VOID_JUMP
-            }
-            "wise_bait" -> {
-                WISE_BAIT
-            }
-            "yank" -> {
-                YANK
-            }
-            "alchemy_artillery" -> {
-                ALCHEMY_ARTILLERY
-            }
-            "bola_shot" -> {
-                BOLA_SHOT
-            }
-            "burst_barrage" -> {
-                BURST_BARRAGE
-            }
-            "chain_reaction" -> {
-                CHAIN_REACTION
-            }
-            "cluster_shot" -> {
-                CLUSTER_SHOT
-            }
-            "deadeye" -> {
-                DEADEYE
-            }
-            "death_from_above" -> {
-                DEATH_FROM_ABOVE
-            }
-            "double_tap" -> {
-                DOUBLE_TAP
-            }
-            "entanglement" -> {
-                ENTANGLEMENT
-            }
-            "fan_fire" -> {
-                FAN_FIRE
-            }
-            "gale_wind" -> {
-                GALE_WIND
-            }
-            "heavy_ballistics" -> {
-                HEAVY_BALLISTICS
-            }
-            "lucky_draw" -> {
-                LUCKY_DRAW
-            }
-            "luxpose" -> {
-                LUXPOSE
-            }
-            "overcharge" -> {
-                OVERCHARGE
-            }
-            "perpetual_projectile" -> {
-                PERPETUAL_PROJECTILE
-            }
-            "ricochet" -> {
-                RICOCHET
-            }
-            "sharpshooter" -> {
-                SHARPSHOOTER
-            }
-            "single_out" -> {
-                SINGLE_OUT
-            }
-            "singularity_shot" -> {
-                SINGULARITY_SHOT
-            }
-            "soul_rend" -> {
-                SOUL_REND
-            }
-            "stellar_shower" -> {
-                STELLAR_SHOWER
-            }
-            "temporal_torrent" -> {
-                TEMPORAL_TORRENT
-            }
-            "vulnerocity" -> {
-                VULNEROCITY
-            }
-            else -> {
-                null
-            }
-        }
-    }
 }
-
-// Less durability more dmg
-// A cursed enchantment turns the slot into a cursed slot
-
-
-// Item if in hand, create aura?
-// Enchantment: Things around get chilling? flame?
-
-// Make thorns bug new enchant apply ranged effects !!!!!
-
-// LUNAR POTATOES
-
-// Shoot Bricks, Slimeballs, (CROSSBOW)
-
-// AUGMENTS !!!!!!!!!!!
-
-/*
-private operator fun <T : Keyed?> Registry<T>.set(key: NamespacedKey, value: T) {
-    mutableMapOf<NamespacedKey, T>()
-    //
-    // TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //
-    // TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //
-    // TODO!!!!!!
-    //
-    // TODO!!!!!!
-    //
-    // TODO!!!!!!
-    //
-    // TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //
-    // TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //
-}
-
- */

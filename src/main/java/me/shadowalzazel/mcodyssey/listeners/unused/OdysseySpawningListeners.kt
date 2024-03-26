@@ -4,7 +4,7 @@ import me.shadowalzazel.mcodyssey.constants.AttributeIDs.ODYSSEY_ENHANCED_MOB_HE
 import me.shadowalzazel.mcodyssey.constants.AttributeIDs.ODYSSEY_GILDED_MOB_HEALTH_UUID
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.items.Arcane
-import me.shadowalzazel.mcodyssey.items.Arcane.createEnchantedBook
+import me.shadowalzazel.mcodyssey.items.Arcane.createGildedBook
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Material
@@ -39,18 +39,18 @@ object OdysseySpawningListeners : Listener {
     private fun gildedMobHandler(eventEntity: LivingEntity) {
 
         eventEntity.apply {
-            val gildedAffix = OdysseyEnchantments.MELEE_SET.random()
+            val gildedEnchant = OdysseyEnchantments.MELEE_SET.random()
 
             // Add Item or enchant
             equipment!!.also {
-                if (it.itemInMainHand.type != Material.AIR) { it.itemInMainHand.addUnsafeEnchantment(gildedAffix, gildedAffix.maximumLevel) }
-                else { it.setItemInMainHand(Arcane.GILDED_BOOK.createEnchantedBook(gildedAffix, gildedAffix.startLevel)) }
+                if (it.itemInMainHand.type != Material.AIR) { it.itemInMainHand.addUnsafeEnchantment(gildedEnchant.toBukkit(), gildedEnchant.maximumLevel) }
+                else { it.setItemInMainHand(Arcane.GILDED_BOOK.createGildedBook(gildedEnchant, gildedEnchant.toBukkit().startLevel)) }
                 it.itemInMainHandDropChance = 0.35F
             }
 
             // TODO: Add prefixes and affixes to enchantments
             @Suppress("DEPRECATION")
-            customName((Component.text("${dangerPrefixes.random()} ")).append(name()).append(Component.text(" of ${gildedAffix.enchantName}")).color(TextColor.color(255, 170, 0)))
+            customName((Component.text("${dangerPrefixes.random()} ")).append(name()).append(Component.text(" of ${gildedEnchant.translatableName}")).color(TextColor.color(255, 170, 0)))
             isCustomNameVisible = true
 
             // Gilded Health Modifier

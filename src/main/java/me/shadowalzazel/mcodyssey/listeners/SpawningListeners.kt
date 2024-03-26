@@ -83,7 +83,7 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
 
     private fun gildedMobCreator(mob: LivingEntity) {
         val gildedEnchant = listOf(OdysseyEnchantments.MELEE_SET, OdysseyEnchantments.ARMOR_SET).random().random()
-        val enchantContext = gildedEnchant.enchantName
+        val enchantContext = gildedEnchant.translatableName
         val conjunctions = listOf("no", "of", "de", "con", "imbued by", "keeper of", "the")
         val nameText = "${dangerPrefixes.random()} ${mob.name} ${conjunctions.random()} $enchantContext"
         val newName = Component.text(nameText).color(TextColor.color(255, 170, 0))
@@ -104,7 +104,7 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
                 canEnchant = gildedEnchant.canEnchantItem(mainHand)
             }
             mainHand.itemMeta = mainHand.itemMeta.also {
-                it.addEnchant(gildedEnchant, gildedEnchant.maximumLevel, true)
+                it.addEnchant(gildedEnchant.toBukkit(), gildedEnchant.maximumLevel, true)
             }
         }
 
@@ -197,7 +197,7 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
                 Enchantment.PROTECTION_EXPLOSIONS, Enchantment.PROTECTION_FIRE).random()
             it.addEnchant(prot, (1..prot.maxLevel).random(), false)
             if (gildedEnchant.canEnchantItem(armor)) {
-                it.addEnchant(gildedEnchant, gildedEnchant.maxLevel, false)
+                it.addEnchant(gildedEnchant.toBukkit(), gildedEnchant.maxLevel, false)
             }
         }
         armor.createNewEnchantSlots()

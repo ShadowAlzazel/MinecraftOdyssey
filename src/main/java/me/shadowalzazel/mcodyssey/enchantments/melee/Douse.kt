@@ -4,13 +4,14 @@ import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.enchantments.Enchantment.FIRE_ASPECT
 import org.bukkit.inventory.ItemStack
 
 object Douse : OdysseyEnchantment("douse", "Douse", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            FIRE_ASPECT, OdysseyEnchantments.TAR_N_DIP -> {
+            FIRE_ASPECT, OdysseyEnchantments.TAR_N_DIP.toBukkit() -> {
                 true
             }
             else -> {

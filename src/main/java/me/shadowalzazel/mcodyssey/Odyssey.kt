@@ -6,6 +6,7 @@ import me.shadowalzazel.mcodyssey.bosses.the_ambassador.AmbassadorListeners
 import me.shadowalzazel.mcodyssey.commands.admin.*
 import me.shadowalzazel.mcodyssey.commands.spells.PlaceFeatureArchaicSeed
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
+import me.shadowalzazel.mcodyssey.enchantments.ReflectionUtils
 import me.shadowalzazel.mcodyssey.listeners.*
 import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.ArmorListeners
 import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.MeleeListeners
@@ -14,6 +15,7 @@ import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.RangedListener
 import me.shadowalzazel.mcodyssey.phenomenon.base.OdysseyPhenomenon
 import me.shadowalzazel.mcodyssey.recipe_creators.RecipeManager
 import me.shadowalzazel.mcodyssey.recipe_creators.brewing.BrewerMixes
+import net.minecraft.core.registries.BuiltInRegistries
 import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.event.Listener
@@ -54,7 +56,12 @@ class Odyssey : JavaPlugin() {
 
     // Plugin startup logic
     override fun onEnable() {
+        // Start Timer
         val timerStart: Long = System.currentTimeMillis()
+
+        // Enchantment NMS (Allow new registries)
+        ReflectionUtils.unfreezeRegistry(BuiltInRegistries.ENCHANTMENT)
+
         // Config start up
         config.options().copyDefaults()
         saveConfig()
@@ -85,7 +92,8 @@ class Odyssey : JavaPlugin() {
 
         // Register Enchantments
         logger.info("Registering Enchantments...")
-        OdysseyEnchantments.register()
+        OdysseyEnchantments.registerAll()
+
 
         // Register Recipes
         logger.info("Registering Recipes...")

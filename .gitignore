@@ -7,7 +7,6 @@
 
 # IntelliJ
 out/
-gradle/
 .gradle/
 build/
 
