@@ -27,6 +27,8 @@ import me.shadowalzazel.mcodyssey.constants.WeaponMaps.SWEEP_MAP
 import me.shadowalzazel.mcodyssey.tasks.weapon_tasks.*
 import org.bukkit.*
 import org.bukkit.attribute.Attribute
+import org.bukkit.damage.DamageSource
+import org.bukkit.damage.DamageType
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
@@ -661,6 +663,7 @@ object WeaponListeners : Listener {
         }
     }
 
+    @Suppress("UnstableApiUsage")
     private fun explosiveArrowHitHandler(event: ProjectileHitEvent) {
         val projectile = event.entity
         val location = projectile.location
@@ -670,7 +673,8 @@ object WeaponListeners : Listener {
             // indirect distance square
             val distance = entity.location.distance(location)
             val power = (maxOf(2.5 - distance, 0.0)).pow(2.0) + (maxOf(2.5 - distance, 0.0)).times(1) + 1.25
-            entity.damage(power) // Create Damage Source
+            val damageSource = DamageSource.builder(DamageType.EXPLOSION).build()
+            entity.damage(power, damageSource) // Create Damage Source
         }
     }
 

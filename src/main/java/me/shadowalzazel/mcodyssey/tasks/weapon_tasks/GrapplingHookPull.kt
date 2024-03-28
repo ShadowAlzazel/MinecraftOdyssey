@@ -1,7 +1,6 @@
 package me.shadowalzazel.mcodyssey.tasks.weapon_tasks
 
 import me.shadowalzazel.mcodyssey.constants.EntityTags
-import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.entity.Projectile

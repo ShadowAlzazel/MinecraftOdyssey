@@ -9,7 +9,7 @@ enum class WeaponType(
     val model: Int) {
 
     KATANA(4.0, 1.5, "Katana", ItemModels.KATANA),
-    CLAYMORE(7.5, 0.7, "Claymore", ItemModels.CLAYMORE),
+    CLAYMORE(7.0, 0.85, "Claymore", ItemModels.CLAYMORE),
     RAPIER(1.5, 3.4, "Rapier", ItemModels.RAPIER),
     CUTLASS(2.5, 2.1, "Cutlass", ItemModels.CUTLASS),
     SABER(3.0, 1.8, "Saber", ItemModels.SABER),

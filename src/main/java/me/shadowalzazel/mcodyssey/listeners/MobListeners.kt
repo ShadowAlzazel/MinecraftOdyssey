@@ -3,7 +3,7 @@ package me.shadowalzazel.mcodyssey.listeners
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.constants.ItemTags.isThisItem
-import me.shadowalzazel.mcodyssey.tasks.PiglinRallyTask
+import me.shadowalzazel.mcodyssey.tasks.mob_tasks.PiglinRallyTask
 import org.bukkit.Material
 import org.bukkit.MusicInstrument
 import org.bukkit.Sound
