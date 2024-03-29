@@ -10,8 +10,8 @@ import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.ItemTags
 import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.getIntTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.getStringTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.getUUIDTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.hasOdysseyItemTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.removeTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.setIntTag
@@ -48,7 +48,7 @@ import kotlin.math.pow
 
 // --------------------------------- NOTES --------------------------------
 // TODO: Mounted Bonus i.e. Cavalry Charges
-// TODO: Add Armor Stats through Lore
+// Add Armor Stats through Lore
 // TODO: Scepter -> checks if offhand is a tome of _enchantment_, does spell.
 // Can craft weapons without recipe, but with recipe, it is greater quality
 // DeprecatedWeapon that can ignore I-frames
@@ -87,159 +87,170 @@ object WeaponListeners : Listener {
     private val currentGrappleShotTasks = mutableMapOf<UUID, GrapplingHookShot>()
     private val currentGrapplePullTasks = mutableMapOf<UUID, GrapplingHookPull>()
 
+    @Suppress("UnstableApiUsage")
     @EventHandler(priority = EventPriority.LOWEST)
     fun mainWeaponDamageHandler(event: EntityDamageByEntityEvent) {
         // Check if event damager and damaged is living entity
         if (event.damager !is Player) return
         if (event.entity !is LivingEntity) return
-        if (event.cause != EntityDamageEvent.DamageCause.ENTITY_ATTACK) return
+        if (event.cause != EntityDamageEvent.DamageCause.ENTITY_ATTACK &&
+            event.cause != EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) return
         val player = event.damager as Player
         val victim = event.entity as LivingEntity
-
-        // Prevent Recursive
-        if (victim.scoreboardTags.contains(EntityTags.MELEE_AOE_HIT)) {
-            victim.scoreboardTags.remove(EntityTags.MELEE_AOE_HIT)
-            return
-        }
+        // Further checks
         if (!player.equipment.itemInMainHand.hasItemMeta()) return
         if (!player.equipment.itemInMainHand.itemMeta!!.hasCustomModelData()) return
         val mainWeapon = player.equipment.itemInMainHand
         val offHandWeapon = player.equipment.itemInOffHand
         val model = mainWeapon.itemMeta.customModelData
-        if (event.damage > 1.0) { event.damage -= 1.0 } // Reduce Weapon Damage by 1 to match attribute display
-
-        // Min and Max Range
+        // Get weapon type
+        val mainWeaponType = mainWeapon.getStringTag(ItemTags.WEAPON_TYPE)
+        // Sweep damage should not? call other bonuses?
+        if (event.cause == EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) {
+            val bonusSweepDamage = SWEEP_MAP[mainWeaponType] ?: 0.0
+            event.damage += bonusSweepDamage
+        }
+        // Prevent Recursive AOE calls
+        if (victim.scoreboardTags.contains(EntityTags.MELEE_AOE_HIT)) {
+            victim.scoreboardTags.remove(EntityTags.MELEE_AOE_HIT)
+            return
+        }
+        // For throwable weapon damage
         val wasThrowable = victim.scoreboardTags.contains(EntityTags.THROWABLE_ATTACK_HIT)
         if (wasThrowable) {
             victim.removeScoreboardTag(EntityTags.THROWABLE_ATTACK_HIT)
-        }
-        else { // If not throwable check range
-            if (MAX_RANGE_MAP.containsKey(model)) {
-                val r = MAX_RANGE_MAP[model]!!
-                if (victim !in player.getNearbyEntities(r, r, r)) {
-                    event.isCancelled = true
-                    return
-                }
-            }
-            if (MIN_RANGE_MAP.containsKey(model)) {
-                val r = MIN_RANGE_MAP[model]!!
-                if (victim in player.getNearbyEntities(r, r, r)) {
+        } else { // Cancel if above max range
+            val maxRange = MAX_RANGE_MAP[mainWeaponType]
+            if (maxRange != null) {
+                val closestDistance = minOf(player.eyeLocation.distance(victim.location), player.eyeLocation.distance(victim.eyeLocation))
+                if (closestDistance > maxRange) {
                     event.isCancelled = true
                     return
                 }
             }
         }
-
+        if (event.damage > 1.0 && !wasThrowable) { event.damage -= 1.0 } // Reduce Weapon Damage by 1 to match attribute display
         // Conditions
         val twoHanded = offHandWeapon.type == Material.AIR
         val shieldInOff = offHandWeapon.type == Material.SHIELD
         val isMounted = (player.vehicle != null) && (player in player.vehicle!!.passengers)
         val isCrit = event.isCritical
         val fullAttack = player.attackCooldown > 0.99
-
-        when (model) {
-            ItemModels.SICKLE, ItemModels.SOUL_STEEL_SICKLE -> {
-                if (offHandWeapon.itemMeta?.hasCustomModelData() == true && offHandWeapon.itemMeta.customModelData == ItemModels.SICKLE) {
-                    victim.shieldBlockingDelay = 20
-                }
+        // For bonus damage maps
+        weaponBonusStatsHandler(event, mainWeaponType)
+        // Get bonus/special effects
+        when(mainWeaponType) {
+            null -> {
+                // Nothing
             }
-            ItemModels.KATANA, ItemModels.SOUL_STEEL_KATANA -> {
-                val sayaInOff = offHandWeapon.type == Material.RABBIT_HIDE
-                if (isCrit && (twoHanded || sayaInOff)) {
+            "sickle" -> {
+                victim.shieldBlockingDelay = 20
+                // SWEEP
+            }
+            "katana" -> {
+                val sayaInOff = offHandWeapon.hasTag("saya") // TEMP
+                if (isCrit && twoHanded) {
                     event.damage += 3
-                    weaponSweep(victim, player, SWEEP_MAP[model]!!, event.damage)
-                } else if (!twoHanded && !sayaInOff) {
-                    val minimumDamage = minOf(event.damage, 3.0)
-                    event.damage -= minimumDamage
                 }
+                // SWEEP
             }
-            ItemModels.CLAYMORE, ItemModels.SOUL_STEEL_CLAYMORE -> {
-                if (!twoHanded) {
-                    val minimumDamage = minOf(event.damage, 6.0)
-                    event.damage -= minimumDamage
-                } else if (twoHanded) {
-                    val sweepDamage = if (isCrit) {
-                        event.damage
-                    } else {
-                        event.damage - 3.0
-                    }
-                    weaponSweep(victim, player, SWEEP_MAP[model]!!, sweepDamage)
-                }
-
+            "claymore" -> {
+                // SWEEP
             }
-            ItemModels.SABER, ItemModels.SOUL_STEEL_SABER -> {
-                if (isMounted && isCrit) {
+            "saber" -> {
+                if (isMounted) {
                     event.damage += 3
                 }
             }
-            ItemModels.CHAKRAM, ItemModels.SOUL_STEEL_CHAKRAM -> {
-                val sweepDamage = if (isCrit) { event.damage + 1.0 } else { maxOf(event.damage, 2.0) }
-                weaponSweep(victim, player, SWEEP_MAP[model]!!, sweepDamage)
+            "scythe" -> {
+                // SWEEP
             }
-            ItemModels.HALBERD, ItemModels.SOUL_STEEL_HALBERD -> {
-                if (!twoHanded && !shieldInOff) {
-                    val minimumDamage = minOf(event.damage, 6.0)
-                    event.damage -= minimumDamage
-                }
+            "chakram" -> {
+                // SWEEP
             }
-            ItemModels.SCYTHE, ItemModels.SOUL_STEEL_SCYTHE -> {
-                if (fullAttack && twoHanded) {
-                    weaponSweep(victim, player, SWEEP_MAP[model]!!, maxOf(0.0, event.damage - 4.0))
-                }
-            }
-            ItemModels.LANCE, ItemModels.SOUL_STEEL_LANCE -> {
-                if (isMounted && fullAttack) {
-                    event.damage += 14.0
-                }
-            }
-            ItemModels.WARHAMMER, ItemModels.SOUL_STEEL_WARHAMMER -> {
+            "warhammer" -> {
                 if (twoHanded) {
                     victim.shieldBlockingDelay = 60
                 }
             }
-            ItemModels.LONG_AXE, ItemModels.SOUL_STEEL_LONG_AXE -> {
+            "halberd" -> {
+                if (twoHanded || shieldInOff) {
+                    // WIP
+                }
+            }
+            "lance" -> {
+                if (isMounted && fullAttack) {
+                    event.damage *= 2.50
+                }
+            }
+            "longaxe" -> {
                 if (twoHanded && isCrit) {
                     event.damage += (event.damage / 1.5) * 0.75 // 50% -> 75% Crit
-                } else if (!twoHanded) {
-                    event.damage = maxOf(event.damage * 0.5, 0.0)
                 }
             }
-            ItemModels.BAMBOO_STAFF, ItemModels.WOODEN_STAFF, ItemModels.BONE_STAFF, ItemModels.BLAZE_ROD_STAFF -> {
-                if (isCrit) {
-                    weaponSweep(victim, player, SWEEP_MAP[model]!!, event.damage + 2)
-                } else {
-                    weaponSweep(victim, player, SWEEP_MAP[model]!!, maxOf(event.damage - 1, 1.0))
-                }
 
-            }
+        }
+        // Change [WIP]
+        when (model) {
             ItemModels.VOID_LINKED_KUNAI -> {
                 markedVoidTargets[player.uniqueId] = victim // Right now saves to player, change to save per item
                 println("Player ${player.uniqueId} Marked ${victim.uniqueId} ")
             }
         }
-        // -----------------------------------------------------------------------------
-
-        val attackPower = player.attackCooldown
-        val extraDamages = weaponStatsHandler(model, victim, event.damage)
-        val physicalDamage = extraDamages.first * attackPower
-        val trueDamage = if (fullAttack) {
-            maxOf(minOf(extraDamages.second, event.damage), 0.0)
-        } else {
-            0.0
+        // Reduce damage for min range / cancel for max range
+        if (!wasThrowable) {
+            val minRange = MIN_RANGE_MAP[mainWeaponType]
+            if (minRange != null) {
+                //println("Victim loc: ${victim.location}")
+                //println("Source loc: ${event.damageSource.sourceLocation}")
+                //println("Eye loc: ${player.eyeLocation}")
+                val closestDistance = minOf(player.eyeLocation.distance(victim.location), player.eyeLocation.distance(victim.eyeLocation))
+                println("Distance: $closestDistance")
+                if (closestDistance < minRange) {
+                    val rangePower = 1 - ((minRange - closestDistance) / minRange)
+                    event.damage *= rangePower
+                }
+            }
         }
-        event.damage -= trueDamage
-        event.damage += physicalDamage
 
-        if (victim.health < trueDamage) {
+        // Make sure not to get negative event damage
+        event.damage = maxOf(0.0, event.damage)
+        //println("Cooldown Charge: " + player.attackCooldown)
+        //println("Cooldown Period: " + player.cooldownPeriod)
+        println("Event Damage: ${event.damage}")
+        println("Final Damage: ${event.finalDamage}")
+    }
+
+    // Bonus stats handler
+    private fun weaponBonusStatsHandler(event: EntityDamageByEntityEvent, weapon: String?) {
+        if (weapon == null) return
+        val attackPower = (event.damager as Player).attackCooldown
+        val victim = event.entity
+        if (victim.isDead) return
+        if (victim !is LivingEntity) return
+        // Get victim attributes
+        val armor = victim.getAttribute(Attribute.GENERIC_ARMOR)?.value ?: 0.0
+        val health = victim.health
+        // Get bonuses from maps
+        val bludgeoningDamage = BLUDGEON_MAP[weapon]?.let { minOf(it, armor.div(2))} ?: 0.0 // Dmg = x < armor / 2
+        val laceratingDamage = LACERATE_MAP[weapon]?.let { minOf(it - armor, 0.0) } ?: 0.0 // Dmg = x - armor
+        val piercingDamage = PIERCE_MAP[weapon]?.let { minOf(armor, it) } ?: 0.0
+        val cleavingDamage = CLEAVE_MAP[weapon] ?: 0.0
+        // Piercing
+        val trueDamage = piercingDamage * attackPower
+        if (health < trueDamage) {
             victim.health = 0.0
         } else {
             victim.health -= trueDamage
         }
-        event.damage = maxOf(0.0, event.damage)
-        //println("Cooldown Charge: " + player.attackCooldown)
-        //println("Cooldown Period: " + player.cooldownPeriod)
-        //println("Final Damage: " + event.finalDamage)
+        event.damage -= trueDamage
+        // Lacerate + Bludgeon
+        val bonusDamage = attackPower * (laceratingDamage + bludgeoningDamage)
+        println("Bonus Damage: $bonusDamage")
+        event.damage += bonusDamage
     }
+
+    /*-----------------------------------------------------------------------------------------------*/
 
     @EventHandler(priority = EventPriority.HIGHEST)
     fun mainWeaponInteractionHandler(event: PlayerInteractEvent) {
@@ -250,6 +261,193 @@ object WeaponListeners : Listener {
             rightClickHandler(event)
         }
     }
+
+    private fun leftClickHandler(event: PlayerInteractEvent) {
+        val player = event.player
+        val mainWeapon = player.equipment.itemInMainHand
+        // Sentries
+        if (!mainWeapon.hasItemMeta()) return
+        if (!mainWeapon.itemMeta!!.hasCustomModelData()) return
+        val weaponType = mainWeapon.getStringTag(ItemTags.WEAPON_TYPE) ?: return
+        val reach = REACH_MAP[weaponType] ?: return
+        if (reach < 4.0) return // Get reach for weapons exceeding range
+        // Get Entity
+        val entity = getRayTraceTarget(player, weaponType)
+        if (entity is LivingEntity) {
+            player.attack(entity)
+        }
+    }
+
+    // For dual wielding weapons or special attacks
+    private fun rightClickHandler(event: PlayerInteractEvent) {
+        val player = event.player
+        val mainWeapon = player.equipment.itemInMainHand
+        val offHandWeapon = player.equipment.itemInOffHand
+        val fullAttack = player.attackCooldown > 0.9
+        // Offhand Dual Weldable
+        when(val offWeaponType = offHandWeapon.getStringTag(ItemTags.WEAPON_TYPE)) {
+            "dagger", "sickle", "chakram", "cutlass" -> {
+                val entity = getRayTraceTarget(player, offWeaponType)
+                if (entity is LivingEntity) { // Attack with offhand
+                    dualWieldHandler(player, entity)
+                } else {
+                    player.swingOffHand()
+                }
+            }
+        }
+        // Throwable
+        when(val mainWeaponType = mainWeapon.getStringTag(ItemTags.WEAPON_TYPE)) {
+            "kunai" -> { //model == ItemModels.VOID_LINKED_KUNAI
+                kunaiThrowableHandler(event)
+            }
+            "chakram" -> {
+                chakramThrowableHandler(event)
+            }
+        }
+    }
+
+    /*-----------------------------------------------------------------------------------------------*/
+
+    private fun getRayTraceTarget(player: Player, weapon: String): Entity? {
+        val reach = REACH_MAP[weapon] ?: return null
+        val result = player.rayTraceEntities(reach.toInt() + 1) ?: return null
+        val target = result.hitEntity ?: return null
+        val closestDistance = if (target is LivingEntity) {
+            minOf(player.eyeLocation.distance(target.location), player.eyeLocation.distance(target.eyeLocation)) }
+        else {
+            player.eyeLocation.distance(target.location)
+        }
+        println("Trace Distance: $closestDistance")
+        if (reach < closestDistance) { return null }
+        return target
+    }
+
+    // TODO: If Crouching more damage
+    // Function for critical hits that sweep
+    private fun weaponSweep(victim: LivingEntity, attacker: LivingEntity, radius: Double, damage: Double) {
+        val midpoint = attacker.location.clone().set(
+            ((victim.location.x + attacker.location.x) / 2),
+            ((victim.location.y + attacker.location.y) / 2),
+            ((victim.location.z + attacker.location.z) / 2)
+        )
+
+        victim.scoreboardTags.add(EntityTags.MELEE_AOE_HIT)
+        val enemyList = midpoint.getNearbyEntities(radius, radius, radius).filter {
+            it != victim && it != attacker
+        }
+        for (entity in enemyList) {
+            if (entity is LivingEntity && !entity.scoreboardTags.contains(EntityTags.MELEE_AOE_HIT)) {
+                entity.scoreboardTags.add(EntityTags.MELEE_AOE_HIT)
+                entity.damage(damage, attacker)
+                entity.world.spawnParticle(
+                    Particle.SWEEP_ATTACK,
+                    entity.location.clone().add(0.0, 1.75, 0.0),
+                    1,
+                    0.05,
+                    0.03,
+                    0.05
+                )
+            }
+        }
+        attacker.world.playSound(victim.location, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 2.75F, 0.5F)
+    }
+
+    private fun dualWieldHandler(player: Player, enemy: LivingEntity) {
+        with(player.equipment) {
+            val mainHand = itemInMainHand.clone()
+            val offHand = itemInOffHand.clone()
+            setItemInOffHand(mainHand)
+            setItemInMainHand(offHand)
+            player.attack(enemy)
+            setItemInMainHand(mainHand)
+            setItemInOffHand(offHand)
+        }
+        player.resetCooldown()
+        player.swingOffHand()
+    }
+
+
+    /*-----------------------------------------------------------------------------------------------*/
+    // Right Click Throwable
+
+    private fun kunaiThrowableHandler(event: PlayerInteractEvent) {
+        val player = event.player
+        val mainWeapon = player.equipment.itemInMainHand
+        // Get CD
+        if (player.getCooldown(mainWeapon.type) > 0) return
+        // Spawn Kunai
+        (player.world.spawnEntity(player.eyeLocation, EntityType.SNOWBALL) as Snowball).also {
+            // Set Item
+            it.item = mainWeapon
+            // Tags
+            var damage = 1.0
+            val attackModifiers = mainWeapon.itemMeta.attributeModifiers?.get(Attribute.GENERIC_ATTACK_DAMAGE)
+            if (attackModifiers != null) {
+                for (modifier in attackModifiers) { // FIX LATER
+                    damage += modifier.amount
+                }
+            }
+            it.setIntTag(EntityTags.THROWABLE_DAMAGE, damage.toInt())
+            it.addScoreboardTag(EntityTags.THROWN_KUNAI)
+            // Velocity
+            it.velocity = player.eyeLocation.direction.clone().normalize().multiply(1.6)
+            it.shooter = player
+            it.setHasLeftShooter(false)
+        }
+        player.setCooldown(mainWeapon.type, 1 * 20)
+        mainWeapon.damage(1, player)
+    }
+
+    private fun chakramThrowableHandler(event: PlayerInteractEvent) {
+        val player = event.player
+        val mainWeapon = player.equipment.itemInMainHand
+        // Get CD
+        if (player.getCooldown(mainWeapon.type) > 0) return
+        // Spawn Chakram
+        val throwable = (player.world.spawnEntity(player.eyeLocation, EntityType.SNOWBALL) as Snowball).also {
+            // Set Item
+            it.item = mainWeapon
+            // Tags
+            var damage = 1.0
+            val attackModifiers = mainWeapon.itemMeta.attributeModifiers?.get(Attribute.GENERIC_ATTACK_DAMAGE)
+            if (attackModifiers != null) {
+                for (modifier in attackModifiers) { // FIX LATER
+                    damage += modifier.amount
+                }
+            }
+            it.setIntTag(EntityTags.THROWABLE_DAMAGE, damage.toInt())
+            it.addScoreboardTag(EntityTags.THROWN_CHAKRAM)
+            // Velocity (MAYBE SPEED IS STORED IN COMPONENT??)
+            it.velocity = player.eyeLocation.direction.clone().normalize().multiply(2.1)
+            it.setGravity(false)
+            it.shooter = player
+            it.setHasLeftShooter(false)
+        }
+        player.setCooldown(mainWeapon.type, 6 * 20)
+        // Return Task
+        val task = ChakramReturn(player, throwable, mainWeapon)
+        task.runTaskLater(Odyssey.instance, 15)
+    }
+
+    /*-----------------------------------------------------------------------------------------------*/
+    @EventHandler(priority = EventPriority.LOWEST)
+    fun weaponHandSwapHandler(event: PlayerSwapHandItemsEvent) {
+        if (!event.mainHandItem.hasItemMeta()) return
+        val mainHand = event.mainHandItem
+        val player = event.player
+        // Kunai MOVE TO FUN LATER
+        if (mainHand.itemMeta.customModelData == ItemModels.VOID_LINKED_KUNAI) {
+            println("Void Swap Target: ${markedVoidTargets[player.uniqueId]?.uniqueId}")
+            val target = markedVoidTargets[player.uniqueId] ?: return
+            // Create task to run AFTER event
+            val voidLinkedChunk = target.chunk // First fire load
+            voidLinkedChunk.load() // VERY TEMP!!!!!!!!
+            val task = VoidLinkedKunaiAttack(player, mainHand, target)
+            task.runTask(Odyssey.instance)
+        }
+
+    }
+
 
     /*-----------------------------------------------------------------------------------------------*/
     // Handler for projectile based throwable weapons
@@ -384,219 +582,6 @@ object WeaponListeners : Listener {
     }
 
 
-    /*-----------------------------------------------------------------------------------------------*/
-    @EventHandler(priority = EventPriority.LOWEST)
-    fun weaponHandSwapHandler(event: PlayerSwapHandItemsEvent) {
-        if (event.mainHandItem == null) return
-        if (!event.mainHandItem!!.hasItemMeta()) return
-        val mainHand = event.mainHandItem!! // ITEM TO BE IN MAINHAND AFTER SWAP
-        val player = event.player
-
-        // Kunai MOVE TO FUN LATER
-        if (mainHand.itemMeta.customModelData == ItemModels.VOID_LINKED_KUNAI) {
-            println("Void Swap Target: ${markedVoidTargets[player.uniqueId]?.uniqueId}")
-            val target = markedVoidTargets[player.uniqueId] ?: return
-            // Create task to run AFTER event
-            val voidLinkedChunk = target.chunk // First fire load
-            voidLinkedChunk.load() // VERY TEMP!!!!!!!!
-            val task = VoidLinkedKunaiAttack(player, mainHand, target)
-            task.runTask(Odyssey.instance)
-        }
-
-    }
-
-    private fun leftClickHandler(event: PlayerInteractEvent) {
-        val player = event.player
-        val mainWeapon = player.equipment.itemInMainHand
-        // Sentries
-        if (!mainWeapon.hasItemMeta()) return
-        if (!mainWeapon.itemMeta!!.hasCustomModelData()) return
-        val model = mainWeapon.itemMeta!!.customModelData
-        if (REACH_MAP[model] == null) return
-
-        //val entity = getReachedTarget(player, REACH_MAP[model])
-        val entity = getRayTraceTarget(player, model)
-        if (entity is LivingEntity) {
-            player.attack(entity)
-        }
-    }
-
-
-    private fun rightClickHandler(event: PlayerInteractEvent) {
-        val player = event.player
-        val mainWeapon = player.equipment.itemInMainHand
-        val offHandWeapon = player.equipment.itemInOffHand
-
-        // Off Hand Dual Weldable
-        val fullAttack = player.attackCooldown > 0.5
-        if (offHandWeapon.itemMeta?.hasCustomModelData() == true && fullAttack) {
-            when(val model = offHandWeapon.itemMeta!!.customModelData) {
-                ItemModels.DAGGER, ItemModels.SICKLE, ItemModels.CHAKRAM, ItemModels.CUTLASS -> {
-                    val entity = getRayTraceTarget(player, model)
-                    if (entity is LivingEntity) {
-                        dualWieldHandler(player, entity)
-                    }
-                    else {
-                        player.swingOffHand()
-                    }
-                }
-            }
-        }
-        // Throwable
-        if (mainWeapon.itemMeta?.hasCustomModelData() == true) {
-            if (!mainWeapon.hasOdysseyItemTag()) return
-            val model = mainWeapon.itemMeta.customModelData
-            // Get from components or Model
-            val isKunai = (model == ItemModels.KUNAI || model == ItemModels.VOID_LINKED_KUNAI) || (mainWeapon.hasTag(ItemTags.IS_KUNAI))
-            if (isKunai) {
-                kunaiThrowableHandler(event)
-                return
-            }
-            val isChakram = (model == ItemModels.CHAKRAM) || (mainWeapon.hasTag(ItemTags.IS_CHAKRAM))
-            if (isChakram) {
-                chakramThrowableHandler(event)
-                return
-            }
-        }
-    }
-
-    /*-----------------------------------------------------------------------------------------------*/
-    // Right Click Throwables
-
-    private fun kunaiThrowableHandler(event: PlayerInteractEvent) {
-        val player = event.player
-        val mainWeapon = player.equipment.itemInMainHand
-        // Get CD
-        if (player.getCooldown(mainWeapon.type) > 0) return
-        // Spawn Kunai
-        (player.world.spawnEntity(player.eyeLocation, EntityType.SNOWBALL) as Snowball).also {
-            // Set Item
-            it.item = mainWeapon
-            // Tags
-            var damage = 1.0
-            val attackModifiers = mainWeapon.itemMeta.attributeModifiers?.get(Attribute.GENERIC_ATTACK_DAMAGE)
-            if (attackModifiers != null) {
-                for (modifier in attackModifiers) { // FIX LATER
-                    damage += modifier.amount
-                }
-            }
-            it.setIntTag(EntityTags.THROWABLE_DAMAGE, damage.toInt())
-            it.addScoreboardTag(EntityTags.THROWN_KUNAI)
-            // Velocity
-            it.velocity = player.eyeLocation.direction.clone().normalize().multiply(1.6)
-            it.shooter = player
-            it.setHasLeftShooter(false)
-        }
-        player.setCooldown(mainWeapon.type, 1 * 20)
-        mainWeapon.damage(1, player)
-    }
-
-    private fun chakramThrowableHandler(event: PlayerInteractEvent) {
-        val player = event.player
-        val mainWeapon = player.equipment.itemInMainHand
-        // Get CD
-        if (player.getCooldown(mainWeapon.type) > 0) return
-        // Spawn Chakram
-        val throwable = (player.world.spawnEntity(player.eyeLocation, EntityType.SNOWBALL) as Snowball).also {
-            // Set Item
-            it.item = mainWeapon
-            // Tags
-            var damage = 1.0
-            val attackModifiers = mainWeapon.itemMeta.attributeModifiers?.get(Attribute.GENERIC_ATTACK_DAMAGE)
-            if (attackModifiers != null) {
-                for (modifier in attackModifiers) { // FIX LATER
-                    damage += modifier.amount
-                }
-            }
-            it.setIntTag(EntityTags.THROWABLE_DAMAGE, damage.toInt())
-            it.addScoreboardTag(EntityTags.THROWN_CHAKRAM)
-            // Velocity (MAYBE SPEED IS STORED IN COMPONENT??)
-            it.velocity = player.eyeLocation.direction.clone().normalize().multiply(2.1)
-            it.setGravity(false)
-            it.shooter = player
-            it.setHasLeftShooter(false)
-        }
-        player.setCooldown(mainWeapon.type, 6 * 20)
-        // Return Task
-        val task = ChakramReturn(player, throwable, mainWeapon)
-        task.runTaskLater(Odyssey.instance, 15)
-    }
-
-    /*-----------------------------------------------------------------------------------------------*/
-
-    private fun getRayTraceTarget(player: Player, model: Int): Entity? {
-        val reach = REACH_MAP[model] ?: return null
-        val result = player.rayTraceEntities(reach.toInt()) ?: return null
-        val target = result.hitEntity ?: return null
-        val distance = player.eyeLocation.distance(target.location)
-        if (reach < distance) { return null }
-        return target
-    }
-
-    // TODO: If Crouching more damage
-    // Function for critical hits that sweep
-    private fun weaponSweep(victim: LivingEntity, attacker: LivingEntity, radius: Double, damage: Double) {
-        val midpoint = attacker.location.clone().set(
-            ((victim.location.x + attacker.location.x) / 2),
-            ((victim.location.y + attacker.location.y) / 2),
-            ((victim.location.z + attacker.location.z) / 2)
-        )
-
-        victim.scoreboardTags.add(EntityTags.MELEE_AOE_HIT)
-        val enemyList = midpoint.getNearbyEntities(radius, radius, radius).filter {
-            it != victim && it != attacker
-        }
-        for (entity in enemyList) {
-            if (entity is LivingEntity && !entity.scoreboardTags.contains(EntityTags.MELEE_AOE_HIT)) {
-                entity.scoreboardTags.add(EntityTags.MELEE_AOE_HIT)
-                entity.damage(damage, attacker)
-                entity.world.spawnParticle(
-                    Particle.SWEEP_ATTACK,
-                    entity.location.clone().add(0.0, 1.75, 0.0),
-                    1,
-                    0.05,
-                    0.03,
-                    0.05
-                )
-            }
-        }
-        attacker.world.playSound(victim.location, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 2.75F, 0.5F)
-    }
-
-    private fun dualWieldHandler(player: Player, enemy: LivingEntity) {
-        with(player.equipment) {
-            val mainHand = itemInMainHand.clone()
-            val offHand = itemInOffHand.clone()
-            setItemInOffHand(mainHand)
-            setItemInMainHand(offHand)
-            player.attack(enemy)
-            setItemInMainHand(mainHand)
-            setItemInOffHand(offHand)
-        }
-        player.resetCooldown()
-        player.swingOffHand()
-    }
-
-    // Stat handler
-    private fun weaponStatsHandler(model: Int, victim: LivingEntity, damage: Double): Pair<Double, Double> {
-        if (victim.isDead) { return Pair(0.0, 0.0) }
-        if (victim.getAttribute(Attribute.GENERIC_ARMOR)?.value == null) { return Pair(0.0, 0.0) }
-
-        val armor = victim.getAttribute(Attribute.GENERIC_ARMOR)!!.value
-        val cleavingDamage = CLEAVE_MAP[model] ?: 0.0
-        val bludgeoningDamage = BLUDGEON_MAP[model]?.let { minOf(it, armor)} ?: 0.0
-        val laceratingDamage = LACERATE_MAP[model]?.let { if (armor <= 1.5) { it } else { 0.0 } } ?: 0.0
-        //val laceratingDamage = if (armor <= 1.5) { LACERATE_MAP[model] } else { 0.0 } ?: 0.0
-        val piercingDamage = PIERCE_MAP[model]?.let { minOf(armor, it) } ?: 0.0
-
-        val bonusDamage = if (damage >= bludgeoningDamage + laceratingDamage) {
-            bludgeoningDamage + laceratingDamage
-        } else {
-            0.0
-        }
-
-       return Pair(bonusDamage, piercingDamage)
-    }
 
     /*-----------------------------------------------------------------------------------------------*/
     // Event for detecting when entity shoots bow

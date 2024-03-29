@@ -14,7 +14,7 @@ enum class Materials(
 ) {
 
     SOUL_STEEL_INGOT("soul_steel_ingot", "Soul Steel Ingot", 6906618, Material.IRON_INGOT),
-    SILVER_INGOT("silver_ingot", "Mithril Ingot", 6906619, Material.IRON_INGOT),
+    SILVER_INGOT("silver_ingot", "Silver Ingot", 6906619, Material.IRON_INGOT),
     MITHRIL_INGOT("mithril_ingot", "Mithril Ingot", 6906777, Material.IRON_INGOT),
     IRIDIUM_INGOT("iridium_ingot", "Iridium Ingot", 6906878, Material.IRON_INGOT),
     TITANIUM_INGOT("titanium_ingot", "Titanium Ingot", 6906879, Material.IRON_INGOT),

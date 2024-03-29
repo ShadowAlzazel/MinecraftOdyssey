@@ -18,7 +18,7 @@ enum class ToolMaterial(
     NETHERITE("netherite", "Netherite", 5.0, 69057, "netherite"),
     // Odyssey
     COPPER("copper", "Copper", 2.5, 69055, "golden", 198), // OVERWORLD
-    SILVER("silver", "Silver", 2.5, 69063, "iron", 231), // OVERWORLD
+    SILVER("silver", "Silver", 3.0, 69063, "iron", 231), // OVERWORLD
     SOUL_STEEL("soul_steel", "Soul Steel", 4.0, 69066, "iron", 666), // NETHER
     TITANIUM("titanium", "Titanium", 4.0, 69068, "iron", 1002), // OVERWORLD
     ANDONIZED_TITANIUM("andonized_titanium", "Andonized Titanium", 4.0, 69070, "iron", 1002), // OVERWORLD

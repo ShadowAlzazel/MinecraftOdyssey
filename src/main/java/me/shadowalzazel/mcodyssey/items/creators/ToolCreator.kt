@@ -3,6 +3,8 @@ package me.shadowalzazel.mcodyssey.items.creators
 import me.shadowalzazel.mcodyssey.attributes.AttributeManager
 import me.shadowalzazel.mcodyssey.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.constants.DataKeys
+import me.shadowalzazel.mcodyssey.constants.ItemTags
+import me.shadowalzazel.mcodyssey.constants.ItemTags.addStringTag
 import me.shadowalzazel.mcodyssey.items.utility.ToolMaterial
 import me.shadowalzazel.mcodyssey.items.utility.ToolType
 import net.kyori.adventure.text.Component
@@ -29,6 +31,8 @@ class ToolCreator : AttributeManager {
             meta.persistentDataContainer.set(DataKeys.ITEM_KEY, PersistentDataType.STRING, itemName) // Change for 1.20.5 to itemName component
             meta.displayName(Component.text(customName).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))
             it.itemMeta = meta
+            it.addStringTag(ItemTags.WEAPON_TYPE, type.itemName)
+            it.addStringTag(ItemTags.MATERIAL_TYPE, material.itemName)
             // Assign attributes
             it.addAttackDamageAttribute(damage, AttributeTags.ITEM_BASE_ATTACK_DAMAGE)
             it.setNewAttackSpeedAttribute(speed, AttributeTags.ITEM_BASE_ATTACK_SPEED)
