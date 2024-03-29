@@ -2,7 +2,7 @@ package me.shadowalzazel.mcodyssey.mobs.neutral
 
 import me.shadowalzazel.mcodyssey.constants.MobTags
 import me.shadowalzazel.mcodyssey.mobs.base.OdysseyMob
-import me.shadowalzazel.mcodyssey.recipe_creators.merchant.ArcaneSales
+import me.shadowalzazel.mcodyssey.recipes.merchant.ArcaneSales
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Location

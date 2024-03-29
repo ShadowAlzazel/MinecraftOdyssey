@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.recipe_creators.crafting
+package me.shadowalzazel.mcodyssey.recipes.crafting
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.items.Helmets

@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.recipe_creators.merchant
+package me.shadowalzazel.mcodyssey.recipes.merchant
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.items.Arcane

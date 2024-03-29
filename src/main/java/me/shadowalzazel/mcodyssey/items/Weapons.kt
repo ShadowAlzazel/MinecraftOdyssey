@@ -118,8 +118,6 @@ object Weapons: AttributeManager {
         displayName = Component.text("Void Linked Kunai", TextColor.color(75, 75, 75), TextDecoration.ITALIC),
         customModel = ItemModels.VOID_LINKED_KUNAI)
 
-    // TODO: Chakrams behave similar to kunais THROWABLE
-
     /*-----------------------------------------------------------------------------------------------*/
 
     val WOODEN_KATANA = OdysseyItem(

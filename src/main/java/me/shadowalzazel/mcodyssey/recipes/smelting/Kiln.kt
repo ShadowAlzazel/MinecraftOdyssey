@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.recipe_creators.smelting
+package me.shadowalzazel.mcodyssey.recipes.smelting
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.items.Runesherds

@@ -2,7 +2,7 @@ package me.shadowalzazel.mcodyssey.items.utility
 
 enum class ToolMaterial(
     val itemName: String, // 'item_name' component
-    val materialName: String, // 'custom_name' component
+    val customName: String, // 'custom_name' component
     val materialDamage: Double,
     val itemModelPre: Int, // 'custom_model_data' component [12345--]
     val itemOverridePre: String, // for finding the item id
@@ -17,11 +17,12 @@ enum class ToolMaterial(
     DIAMOND("diamond", "Diamond", 4.0, 69057, "diamond"),
     NETHERITE("netherite", "Netherite", 5.0, 69057, "netherite"),
     // Odyssey
-    COPPER("copper", "Copper", 2.5, 69055, "golden", 198),
-    SILVER("silver", "Silver", 2.5, 69063, "iron", 231),
-    TITANIUM("titanium", "Titanium", 4.0, 69068, "iron", 1002),
-    ANDONIZED_TITANIUM("andonized_titanium", "Andonized Titanium", 4.0, 69070, "iron", 1002),
-    IRIDIUM("iridium", "Iridium", 5.0, 69071, "iron", 3108),
-    MITHRIL("mithril", "Mithril", 6.0, 69076, "iron", 1789),
+    COPPER("copper", "Copper", 2.5, 69055, "golden", 198), // OVERWORLD
+    SILVER("silver", "Silver", 2.5, 69063, "iron", 231), // OVERWORLD
+    SOUL_STEEL("soul_steel", "Soul Steel", 4.0, 69066, "iron", 666), // NETHER
+    TITANIUM("titanium", "Titanium", 4.0, 69068, "iron", 1002), // OVERWORLD
+    ANDONIZED_TITANIUM("andonized_titanium", "Andonized Titanium", 4.0, 69070, "iron", 1002), // OVERWORLD
+    IRIDIUM("iridium", "Iridium", 5.0, 69071, "iron", 3108), // OVERWORLD
+    MITHRIL("mithril", "Mithril", 6.0, 69076, "iron", 1789), // EDGE
 
 }

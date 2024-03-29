@@ -45,6 +45,11 @@ WITHERGLINT(4.0, "Wither Glint"),
 RUNE_STONE(4.0, "Rune Stone"),
 // TITANIUM = +5% speed [-diamond durability]
 
+// MISC
+BAMBOO(1.5, "Bamboo"),
+BONE(2.0, "Bone"),
+BLAZE_ROD(2.5, "Blaze Rod")
+
 
 // END-END GAME = NEUTRONIUM
 

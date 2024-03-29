@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.recipe_creators.crafting
+package me.shadowalzazel.mcodyssey.recipes.crafting
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.items.*
@@ -14,11 +14,6 @@ class Misc {
 
     fun getRecipes(): List<Recipe> {
         return listOf(
-            tempRunesherdRecipe(),
-            tempRunesherd2Recipe(),
-            tempRunesherd3Recipe(),
-            tempRunesherd4Recipe(),
-
             clayTotemRecipe(),
             arcaneBookRecipe(),
             bundleRecipe(),
@@ -35,48 +30,6 @@ class Misc {
             blazingRocketsRecipe(4, "four"),
             blazingRocketsRecipe(5, "five")
         )
-    }
-
-    /*-----------------------------------------------------------------------------------------------*/
-
-    private fun tempRunesherdRecipe(): ShapedRecipe {
-        val result = Runesherds.FORCE_RUNESHERD.createSherdStack()
-        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "temp_runesherd"), result).apply {
-            shape(" B ", "BDB", " B ")
-            setIngredient('B', Material.BRICK)
-            setIngredient('D', Material.DIAMOND)
-        }
-        return recipe
-    }
-
-    private fun tempRunesherd2Recipe(): ShapedRecipe {
-        val result = Runesherds.STEADFAST_RUNESHERD.createSherdStack()
-        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "temp_runesherd2"), result).apply {
-            shape(" B ", "BEB", " B ")
-            setIngredient('B', Material.BRICK)
-            setIngredient('E', Material.EMERALD)
-        }
-        return recipe
-    }
-
-    private fun tempRunesherd3Recipe(): ShapedRecipe {
-        val result = Runesherds.VITALITY_RUNESHERD.createSherdStack()
-        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "temp_runesherd3"), result).apply {
-            shape(" B ", "BGB", " B ")
-            setIngredient('B', Material.BRICK)
-            setIngredient('G', Material.GOLD_INGOT)
-        }
-        return recipe
-    }
-
-    private fun tempRunesherd4Recipe(): ShapedRecipe {
-        val result = Runesherds.SWIFT_RUNESHERD.createSherdStack()
-        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "temp_runesherd4"), result).apply {
-            shape(" B ", "BIB", " B ")
-            setIngredient('B', Material.BRICK)
-            setIngredient('I', Material.IRON_INGOT)
-        }
-        return recipe
     }
 
     /*-----------------------------------------------------------------------------------------------*/

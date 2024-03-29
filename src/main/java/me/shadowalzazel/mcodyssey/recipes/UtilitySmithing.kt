@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.recipe_creators
+package me.shadowalzazel.mcodyssey.recipes
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.items.Ingredients
@@ -7,7 +7,7 @@ import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.*
 
-class Smithing {
+class UtilitySmithing {
 
     /*
     USE THIS CLASS TO CREATE RECIPE WHICH ARE AVAILABLE TO BE MODIFIED
