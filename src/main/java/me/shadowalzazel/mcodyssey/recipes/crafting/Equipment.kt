@@ -1,13 +1,11 @@
-package me.shadowalzazel.mcodyssey.recipe_creators.crafting
+package me.shadowalzazel.mcodyssey.recipes.crafting
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.items.Equipment
-import me.shadowalzazel.mcodyssey.items.Foods
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.Recipe
 import org.bukkit.inventory.ShapedRecipe
-import org.bukkit.inventory.ShapelessRecipe
 import org.bukkit.inventory.recipe.CraftingBookCategory
 
 class Equipment {
@@ -57,5 +55,6 @@ class Equipment {
         }
         return recipe
     }
+
 
 }

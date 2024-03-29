@@ -13,8 +13,8 @@ import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.MeleeListeners
 import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.MiscListeners
 import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.RangedListeners
 import me.shadowalzazel.mcodyssey.phenomenon.base.OdysseyPhenomenon
-import me.shadowalzazel.mcodyssey.recipe_creators.RecipeManager
-import me.shadowalzazel.mcodyssey.recipe_creators.brewing.BrewerMixes
+import me.shadowalzazel.mcodyssey.recipes.RecipeManager
+import me.shadowalzazel.mcodyssey.recipes.brewing.BrewerMixes
 import net.minecraft.core.registries.BuiltInRegistries
 import org.bukkit.Bukkit
 import org.bukkit.World

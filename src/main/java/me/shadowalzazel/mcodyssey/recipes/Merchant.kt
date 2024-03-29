@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.recipe_creators
+package me.shadowalzazel.mcodyssey.recipes
 
 
 import me.shadowalzazel.mcodyssey.items.Miscellaneous

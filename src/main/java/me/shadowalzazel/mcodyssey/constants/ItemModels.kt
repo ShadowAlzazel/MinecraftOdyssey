@@ -174,7 +174,7 @@ object ItemModels {
     const val KATANA_TEMPLATE: Int = 6905819
     const val KATANA_MOLD: Int = 6905819
 
-    // Swords
+    // Swords [69057XX]
     const val KATANA: Int = 6905744
     const val CLAYMORE: Int = 6905745
     const val DAGGER: Int = 6905746
@@ -212,7 +212,11 @@ object ItemModels {
     const val WOODEN_STAFF: Int = 6905795
     const val BLAZE_ROD_STAFF: Int = 6905796
 
-    // Soul Steel
+    // Copper [69055XX]
+
+    // Soul Steel [69063XX]
+
+    // Soul Steel [69066XX]
     const val SOUL_STEEL_KATANA: Int = 6906644
     const val SOUL_STEEL_CLAYMORE: Int = 6906645
     const val SOUL_STEEL_DAGGER: Int = 6906646
@@ -238,6 +242,10 @@ object ItemModels {
     const val SOUL_STEEL_LONG_AXE: Int = 6906685
     const val SOUL_STEEL_POLEAXE: Int = 6906686
     const val SOUL_STEEL_LABRYS: Int = 6906687
+
+    // Iridium [69071XX]
+
+    // Mithril [69076XX]
 
     // Unused Weapons
     const val ZWEIHANDER: Int = 6905777

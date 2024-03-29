@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.recipe_creators.brewing
+package me.shadowalzazel.mcodyssey.recipes.brewing
 
 import io.papermc.paper.potion.PotionMix
 import me.shadowalzazel.mcodyssey.Odyssey

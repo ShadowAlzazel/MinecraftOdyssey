@@ -1,4 +1,4 @@
- package me.shadowalzazel.mcodyssey.tasks
+ package me.shadowalzazel.mcodyssey.tasks.mob_tasks
 
  import me.shadowalzazel.mcodyssey.constants.EntityTags
  import me.shadowalzazel.mcodyssey.listeners.SpawningListeners

@@ -4,9 +4,9 @@ import com.destroystokyo.paper.event.entity.EnderDragonFireballHitEvent
 import com.destroystokyo.paper.event.entity.EnderDragonShootFireballEvent
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.constants.EntityTags
-import me.shadowalzazel.mcodyssey.tasks.DragonLightningStormTask
-import me.shadowalzazel.mcodyssey.tasks.LightningCloudTask
-import me.shadowalzazel.mcodyssey.tasks.LightningEyeTask
+import me.shadowalzazel.mcodyssey.tasks.dragon_tasks.DragonLightningStormTask
+import me.shadowalzazel.mcodyssey.tasks.dragon_tasks.LightningCloudTask
+import me.shadowalzazel.mcodyssey.tasks.dragon_tasks.LightningEyeTask
 import org.bukkit.*
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler

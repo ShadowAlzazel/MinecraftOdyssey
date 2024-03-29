@@ -9,7 +9,7 @@ import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.items.Weapons
 import me.shadowalzazel.mcodyssey.items.Weapons.createWeapon
 import me.shadowalzazel.mcodyssey.mobs.neutral.DubiousDealer
-import me.shadowalzazel.mcodyssey.recipe_creators.merchant.ArcaneSales
+import me.shadowalzazel.mcodyssey.recipes.merchant.ArcaneSales
 import me.shadowalzazel.mcodyssey.trims.Trims
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -87,7 +87,7 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
         val conjunctions = listOf("no", "of", "de", "con", "imbued by", "keeper of", "the")
         val nameText = "${dangerPrefixes.random()} ${mob.name} ${conjunctions.random()} $enchantContext"
         val newName = Component.text(nameText).color(TextColor.color(255, 170, 0))
-        // Equipment
+        // Weapon
         val weaponList = listOf(Weapons.DIAMOND_CLAYMORE, Weapons.DIAMOND_WARHAMMER, Weapons.DIAMOND_HALBERD,
             Weapons.DIAMOND_KATANA, Weapons.DIAMOND_LONG_AXE, Weapons.DIAMOND_SABER,
             Weapons.DIAMOND_SCYTHE, Weapons.DIAMOND_SPEAR, Weapons.DIAMOND_RAPIER)
