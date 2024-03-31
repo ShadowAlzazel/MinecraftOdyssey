@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.listeners.enchantment_listeners
 
+import me.shadowalzazel.mcodyssey.enchantments.EnchantRegistryManager
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.items.Ingredients
 import org.bukkit.*
@@ -14,7 +15,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.util.Vector
 import java.util.*
 
-object MiscListeners : Listener {
+object MiscListeners : Listener, EnchantRegistryManager {
 
     private var voidJumpCooldown = mutableMapOf<UUID, Long>()
 
@@ -50,7 +51,7 @@ object MiscListeners : Listener {
         }
         for (enchant in rod.enchantments) {
             // Continue if not OdysseyEnchant
-            val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+            val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
             // When match
             when (gildedEnchant) {
                 OdysseyEnchantments.BOMB_OB -> {
@@ -80,7 +81,7 @@ object MiscListeners : Listener {
         //
         for (enchant in rod.enchantments) {
             // Continue if not OdysseyEnchant
-            val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+            val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
             // When match
             when (gildedEnchant) {
                 OdysseyEnchantments.O_SHINY -> {
@@ -121,7 +122,7 @@ object MiscListeners : Listener {
         }
         for (enchant in rod.enchantments) {
             // Continue if not OdysseyEnchant
-            val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+            val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
             // When match
             when (gildedEnchant) {
                 OdysseyEnchantments.LENGTHY_LINE -> {

@@ -8,7 +8,7 @@ import org.bukkit.scheduler.BukkitRunnable
 
 class MoonwardPhase (val player: Player) : BukkitRunnable() {
 
-    // Maybe get access to moonphaseplayer list?
+    // Maybe get access to moon phase player list?
 
     override fun run() {
         if (!player.isOnline) {

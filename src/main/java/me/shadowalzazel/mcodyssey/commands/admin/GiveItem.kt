@@ -1,9 +1,6 @@
 package me.shadowalzazel.mcodyssey.commands.admin
 
 
-import me.shadowalzazel.mcodyssey.items.Arcane
-import me.shadowalzazel.mcodyssey.items.Materials
-import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import me.shadowalzazel.mcodyssey.items.creators.ItemCreator
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -20,8 +17,8 @@ object GiveItem : CommandExecutor, ItemCreator {
         val itemName = args[0]
         val amount = minOf(64, maxOf(1, args[1].toInt()))
         // Change to Base
-        val mat = getByItemKey(itemName) ?: return false
-        sender.inventory.addItem(mat.createItemStack(amount))
+        //val mat = getByItemKey(itemName) ?: return false
+        //sender.inventory.addItem(mat.createItemStack(amount))
 
         return true
     }

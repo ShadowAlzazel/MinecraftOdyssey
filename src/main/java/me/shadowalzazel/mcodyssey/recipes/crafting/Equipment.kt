@@ -2,20 +2,37 @@ package me.shadowalzazel.mcodyssey.recipes.crafting
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.items.Equipment
+import me.shadowalzazel.mcodyssey.items.creators.ItemCreator
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.Recipe
 import org.bukkit.inventory.ShapedRecipe
 import org.bukkit.inventory.recipe.CraftingBookCategory
 
-class Equipment {
+class Equipment : ItemCreator {
 
     fun getRecipes(): List<Recipe> {
         return listOf(
             arcaneWandRecipe(),
             warpingWandRecipe(),
-            explosiveArrowRecipe()
+            explosiveArrowRecipe(),
+            hornedHelmetRecipe()
         )
+    }
+
+    /*-----------------------------------------------------------------------------------------------*/
+
+    private fun hornedHelmetRecipe(): ShapedRecipe {
+        val result = Equipment.HORNED_HELMET.createArmor(2.0)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "horned_helmet"), result).apply {
+            shape("HCH", "ICI")
+            setIngredient('I', Material.IRON_INGOT)
+            setIngredient('H', Material.GOAT_HORN)
+            setIngredient('C', Material.COPPER_INGOT)
+            group = "helmets"
+            category = CraftingBookCategory.EQUIPMENT
+        }
+        return recipe
     }
 
     /*-----------------------------------------------------------------------------------------------*/

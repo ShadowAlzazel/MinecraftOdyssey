@@ -7,11 +7,11 @@ import org.bukkit.entity.Player
 import org.bukkit.potion.PotionEffectType
 
 class LootLogic(
-    val raw: Double,
+    private val raw: Double,
     mob: LivingEntity,
     player: Player) {
 
-    var lootLuck: Double = 0.0 // Rename
+    private var lootLuck: Double = 0.0 // Rename
 
     init {
         if (player.equipment.itemInMainHand.itemMeta != null) {
@@ -20,7 +20,6 @@ class LootLogic(
             }
         }
         if (player.hasPotionEffect(PotionEffectType.LUCK)) {
-            // somePlayer.activePotionEffects - no detect for level?
             lootLuck += 1.25
         }
         if (player.hasPotionEffect(PotionEffectType.UNLUCK)) {

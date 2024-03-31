@@ -1,6 +1,9 @@
 package me.shadowalzazel.mcodyssey.mobs.hostile
 
-import me.shadowalzazel.mcodyssey.items.Weapons
+import me.shadowalzazel.mcodyssey.items.Equipment
+import me.shadowalzazel.mcodyssey.items.creators.WeaponCreator
+import me.shadowalzazel.mcodyssey.items.utility.ToolMaterial
+import me.shadowalzazel.mcodyssey.items.utility.ToolType
 import me.shadowalzazel.mcodyssey.mobs.base.OdysseyMob
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -17,39 +20,45 @@ import org.bukkit.potion.PotionEffectType
 
 object Savage : OdysseyMob("Savage", "savage", EntityType.ZOMBIE, 30.0) {
 
-    fun createKnight(odysseyWorld: World, spawningLocation: Location): Pair<Zombie, ZombieHorse> {
+    fun createKnight(world: World, location: Location): Pair<Zombie, ZombieHorse> {
+        // Longaxe Weapon
+        val weapon = WeaponCreator.toolCreator.createToolStack(ToolMaterial.COPPER, ToolType.LONGAXE).apply {
+            addUnsafeEnchantment(Enchantment.DURABILITY, 3)
+            addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5)
+            addUnsafeEnchantment(Enchantment.KNOCKBACK, 3)
+            itemMeta.displayName(Component.text("Norinthian Longaxe"))
+        }
         // Modify Savage to Knight
-        val someKnight = createMob(odysseyWorld, spawningLocation).apply {
-            // Name
+        val knight = createMob(world, location).apply {
             customName(Component.text("Savage Knight"))
-            // Claymore
-            val newClaymore = Weapons.IRON_LONG_AXE.createItemStack(1).apply {
-                addUnsafeEnchantment(Enchantment.DURABILITY, 3)
-                addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5)
-                addUnsafeEnchantment(Enchantment.KNOCKBACK, 3)
-                itemMeta.displayName(Component.text("Norinthian Longaxe"))
-            }
             clearActiveItem()
             equipment.setItemInOffHand(ItemStack(Material.AIR, 1))
-            equipment.setItemInMainHand(newClaymore)
+            equipment.setItemInMainHand(weapon)
         }
-
-        // Knight Steed
-        val zombieSteed = (odysseyWorld.spawnEntity(spawningLocation, EntityType.ZOMBIE_HORSE) as ZombieHorse).apply {
+        // Zombie Steed
+        val zombieSteed = (world.spawnEntity(location, EntityType.ZOMBIE_HORSE) as ZombieHorse).apply {
             isTamed = false
-            addPassenger(someKnight)
+            addPassenger(knight)
             addPotionEffects(listOf(
                 PotionEffect(PotionEffectType.HEALTH_BOOST, 20 * 300, 25),
                 PotionEffect(PotionEffectType.SPEED, 20 * 300, 2)
             ))
             health = 100.0
         }
-        return Pair(someKnight, zombieSteed)
+        return Pair(knight, zombieSteed)
     }
 
 
-    override fun createMob(someWorld: World, spawningLocation: Location): Zombie {
-        val savageEntity = (super.createMob(someWorld, spawningLocation) as Zombie).apply {
+    override fun createMob(world: World, location: Location): Zombie {
+        // Dagger
+        val weapon = WeaponCreator.toolCreator.createToolStack(ToolMaterial.COPPER, ToolType.DAGGER).apply {
+            addUnsafeEnchantment(Enchantment.DURABILITY, 3)
+            addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5)
+            addUnsafeEnchantment(Enchantment.KNOCKBACK, 3)
+            itemMeta.displayName(Component.text("Norinthian Dagger"))
+        }
+        // Create new mob
+        val entity = (super.createMob(world, location) as Zombie).apply {
             // Effects
             addPotionEffects(listOf(
                 PotionEffect(PotionEffectType.INCREASE_DAMAGE, 99999, 4),
@@ -59,20 +68,12 @@ object Savage : OdysseyMob("Savage", "savage", EntityType.ZOMBIE, 30.0) {
             canPickupItems = true
             clearActiveItem()
             customName(Component.text(this@Savage.displayName, TextColor.color(220, 216, 75)))
-            // Dagger
-            val newDagger = Weapons.IRON_DAGGER.createItemStack(1).apply {
-                addUnsafeEnchantment(Enchantment.DURABILITY, 3)
-                addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5)
-                addUnsafeEnchantment(Enchantment.KNOCKBACK, 3)
-                itemMeta.displayName(Component.text("Norinthian Dagger"))
-            }
             // Add Items
             equipment.also {
-                // TODO: Custom Models
-                it.setItemInMainHand(newDagger)
-                it.setItemInOffHand(newDagger)
-                it.helmet = ItemStack(Material.CHAINMAIL_HELMET, 1)
-                it.chestplate = ItemStack(Material.CHAINMAIL_CHESTPLATE, 1)
+                it.setItemInMainHand(weapon)
+                it.setItemInOffHand(weapon.clone())
+                it.helmet = Equipment.HORNED_HELMET.createItemStack(1)
+                it.chestplate = ItemStack(Material.IRON_CHESTPLATE, 1)
                 it.leggings = ItemStack(Material.CHAINMAIL_LEGGINGS, 1)
                 it.boots = ItemStack(Material.CHAINMAIL_BOOTS, 1)
                 it.itemInMainHandDropChance = 0F
@@ -83,7 +84,7 @@ object Savage : OdysseyMob("Savage", "savage", EntityType.ZOMBIE, 30.0) {
                 it.bootsDropChance = 0F
             }
         }
-        return savageEntity
+        return entity
     }
 
 }

@@ -18,6 +18,12 @@ import java.util.*
 
 internal interface RunesherdManager : AttributeManager {
 
+    // MAYBE FOR MAKING HIGHER QUALITY RUNES
+    // use pots
+    // since sherds are in pottery
+    // have a pot and the rune sherd
+    // USE NETHER BRICK FOR RARER TYPES
+    // WHEN ADDING NEW SHERDS MAKE SURE TO include ATTRIBUTES IN WHEN
     /* ---------------------------------------- */
     // TAGS
 
@@ -54,29 +60,28 @@ internal interface RunesherdManager : AttributeManager {
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-
     // Find Attribute
     private fun findRunesherdAttribute(name: String): Attribute? {
         return when (name) {
-            Runesherds.ASSAULT_RUNESHERD.name -> {
+            Runesherds.ASSAULT_RUNESHERD.itemName -> {
                 Attribute.GENERIC_ATTACK_DAMAGE
             }
-            Runesherds.GUARD_RUNESHERD.name -> {
+            Runesherds.GUARD_RUNESHERD.itemName -> {
                 Attribute.GENERIC_ARMOR
             }
-            Runesherds.FINESSE_RUNESHERD.name -> {
+            Runesherds.FINESSE_RUNESHERD.itemName -> {
                 Attribute.GENERIC_ATTACK_SPEED
             }
-            Runesherds.SWIFT_RUNESHERD.name -> {
+            Runesherds.SWIFT_RUNESHERD.itemName -> {
                 Attribute.GENERIC_MOVEMENT_SPEED
             }
-            Runesherds.VITALITY_RUNESHERD.name -> {
+            Runesherds.VITALITY_RUNESHERD.itemName -> {
                 Attribute.GENERIC_MAX_HEALTH
             }
-            Runesherds.STEADFAST_RUNESHERD.name -> {
+            Runesherds.STEADFAST_RUNESHERD.itemName -> {
                 Attribute.GENERIC_KNOCKBACK_RESISTANCE
             }
-            Runesherds.FORCE_RUNESHERD.name -> {
+            Runesherds.FORCE_RUNESHERD.itemName -> {
                 Attribute.GENERIC_ATTACK_KNOCKBACK
             }
             else -> {
@@ -134,7 +139,6 @@ internal interface RunesherdManager : AttributeManager {
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-
     // Add runesherd to item
     fun addRunesherdToSmithingItem(runesherd: ItemStack, item: ItemStack): ItemStack? {
         // Basic Checks
@@ -158,7 +162,7 @@ internal interface RunesherdManager : AttributeManager {
             if (itemAttributes.contains(runesherdModifier)) return null
         }
         // Get values for new modifier
-        var runesherdValue = runesherdModifier.amount
+        val runesherdValue = runesherdModifier.amount
         var previousValue = 0.0
         //val attributeID = runesherdModifier.uniqueId
         val attributeID = UUID.randomUUID()
@@ -181,7 +185,7 @@ internal interface RunesherdManager : AttributeManager {
         // Check sherd slot type
         val armorList = listOf(EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD)
         val runeSlot = runesherdModifier.slot ?: EquipmentSlot.OFF_HAND
-        val runesIsForArmor = runeSlot in armorList
+        //val runesIsForArmor = runeSlot in armorList
         val equipSlot = getMaterialEquipmentSlot(equipment.type)
         val equipIsArmor = equipSlot in armorList
 
@@ -211,7 +215,7 @@ internal interface RunesherdManager : AttributeManager {
         }
 
         // If not matches, 75% efficient
-        var matchingSlotMultiplier = if (runeSlot == equipSlot) {
+        val matchingSlotMultiplier = if (runeSlot == equipSlot) {
             1.0
         }
         else if (equipIsRuneware) {
@@ -285,7 +289,7 @@ internal interface RunesherdManager : AttributeManager {
             Material.IRON_CHESTPLATE -> {
                 Pair(6.0, 0.0)
             }
-            Material.DIAMOND_BOOTS, Material.DIAMOND_HELMET, -> {
+            Material.DIAMOND_BOOTS, Material.DIAMOND_HELMET -> {
                 Pair(3.0, 2.0)
             }
             Material.DIAMOND_LEGGINGS -> {
@@ -294,7 +298,7 @@ internal interface RunesherdManager : AttributeManager {
             Material.DIAMOND_CHESTPLATE -> {
                 Pair(8.0, 2.0)
             }
-            Material.NETHERITE_BOOTS, Material.NETHERITE_HELMET, -> {
+            Material.NETHERITE_BOOTS, Material.NETHERITE_HELMET -> {
                 Pair(3.0, 3.0)
             }
             Material.NETHERITE_LEGGINGS -> {
@@ -403,17 +407,6 @@ internal interface RunesherdManager : AttributeManager {
             }
         }
     }
-
-
-
-    // MAYBE FOR MAKING HIGHER QUALITY RUNES
-    // use pots
-    // since sherds are in pottery
-    // have a pot and the rune sherd
-
-    // USE NETHER BRICK FOR RARER TYPES
-
-    // WHEN ADDING NEW SHERDS MAKE SURE TO INCULDE ATTRIBUTES IN WHEN
 
 }
 

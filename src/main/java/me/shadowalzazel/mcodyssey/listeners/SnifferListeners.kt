@@ -6,7 +6,7 @@ import me.shadowalzazel.mcodyssey.constants.ItemTags.ARCHAIC_NAMESPACE
 import me.shadowalzazel.mcodyssey.constants.ItemTags.addStringTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
-import me.shadowalzazel.mcodyssey.items.Other
+import me.shadowalzazel.mcodyssey.items.Miscellaneous
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
@@ -19,7 +19,6 @@ import org.bukkit.event.entity.EntityDropItemEvent
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
 
 object SnifferListeners : Listener {
-
 
     // Drops based on humid, veg, weird
     // Rain
@@ -39,7 +38,6 @@ object SnifferListeners : Listener {
         println("State:" + sniffer.state)
         if (sniffer.canDig() && sniffer.state != Sniffer.State.FEELING_HAPPY) {
             sniffer.state = Sniffer.State.FEELING_HAPPY
-            //
             // remove item
             // Particle
             with(sniffer.world) {
@@ -50,9 +48,7 @@ object SnifferListeners : Listener {
             sniffer.addScoreboardTag(EntityTags.CAN_DIG_BIOME_SEEDS)
 
         }
-
         // TEMP ON SNIFFER DIG SET NAMESPACE ON ITEM
-
     }
 
     @EventHandler
@@ -60,32 +56,22 @@ object SnifferListeners : Listener {
         if (event.entity.type != EntityType.SNIFFER) return
         val sniffer = event.entity as Sniffer
         if (!sniffer.scoreboardTags.contains(EntityTags.CAN_DIG_BIOME_SEEDS)) return // TODO: Change IDl TEMP DETECTION
-        // create seed TEMP
-        /*
-        event.itemDrop.itemStack = ItemStack(Material.WHEAT_SEEDS, 1).apply {
-            addTag(ItemTags.IS_ARCHAIC)
-            itemMeta.displayName(Component.text("Archaic Seed"))
-        }
-
-         */
-
-        val viableSeeds = listOf(Other.ASPEN_SEED, Other.MAPLE_SEED, Other.SAKURA_SEED, Other.REDWOOD_SEED)
-        val seed = viableSeeds.random()
-
-        event.itemDrop.itemStack = seed.createItemStack(1).apply {
+        // Get Archaic Biome Seeds
+        val archaicSeeds = listOf(Miscellaneous.ASPEN_SEED, Miscellaneous.MAPLE_SEED, Miscellaneous.SAKURA_SEED, Miscellaneous.REDWOOD_SEED)
+        val seed = archaicSeeds.random()
+        val drop = seed.createItemStack(1).apply {
             addTag(ItemTags.IS_ARCHAIC_SEED)
-            // TODO: Temp when maybe move to constructor
-            val namespaceSeed =  when(seed) {
-                Other.ASPEN_SEED -> {
+            val namespaceSeed =  when(seed.itemName) {
+                "aspen_seed" -> {
                     "odyssey:aspen_forest/tree_aspen"
                 }
-                Other.MAPLE_SEED -> {
+                "maple_seed" -> {
                     "terralith:highlands/forest/trees_maple"
                 }
-                Other.SAKURA_SEED -> {
+                "sakura_seed" -> {
                     "odyssey:inazuma/tree_fancy_sakura"
                 }
-                Other.REDWOOD_SEED -> {
+                "redwood_seed" -> {
                     "odyssey:redwood/tree_redwood_big"
                 }
                 else -> {
@@ -94,15 +80,15 @@ object SnifferListeners : Listener {
             }
             addStringTag(ARCHAIC_NAMESPACE, namespaceSeed)
         }
-
+        event.itemDrop.itemStack = drop
         println(event.entity.type.toString() + " Drops " + event.itemDrop)
 
     }
 
     @EventHandler
     fun placeSeed(event: BlockPlaceEvent) {
-        if (event.player.equipment?.itemInMainHand?.type != Material.WHEAT_SEEDS) return
-        val archaicSeed = event.player.equipment!!.itemInMainHand
+        if (event.player.equipment.itemInMainHand.type != Material.WHEAT_SEEDS) return
+        val archaicSeed = event.player.equipment.itemInMainHand
         if (!archaicSeed.hasItemMeta()) return
         if (!archaicSeed.hasTag(ItemTags.IS_ARCHAIC_SEED)) return
         if (event.blockAgainst.type != Material.FARMLAND) return

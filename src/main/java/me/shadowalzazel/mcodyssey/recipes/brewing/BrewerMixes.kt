@@ -8,7 +8,6 @@ import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.RecipeChoice
 import org.bukkit.inventory.meta.PotionMeta
-import org.bukkit.potion.PotionData
 import org.bukkit.potion.PotionType
 
 object BrewerMixes : AlchemyManager {
@@ -25,7 +24,7 @@ object BrewerMixes : AlchemyManager {
         // Water
         val potionItem = ItemStack(Material.POTION, 1)
         val somePotionMeta = potionItem.itemMeta as PotionMeta
-        somePotionMeta.basePotionData = PotionData(PotionType.WATER)
+        somePotionMeta.basePotionType = PotionType.WATER
         potionItem.itemMeta = somePotionMeta
 
         val result: ItemStack = createPotionVials(potionItem)
@@ -49,7 +48,7 @@ object BrewerMixes : AlchemyManager {
         // Water
         val potionItem = ItemStack(Material.POTION, 1)
         val somePotionMeta = potionItem.itemMeta as PotionMeta
-        somePotionMeta.basePotionData = PotionData(PotionType.WATER)
+        somePotionMeta.basePotionType = PotionType.WATER
         potionItem.itemMeta = somePotionMeta
 
         val result: ItemStack = createPotionVials(potionItem)
@@ -72,7 +71,7 @@ object BrewerMixes : AlchemyManager {
         // Water
         val potionItem = ItemStack(Material.POTION, 1)
         val somePotionMeta = potionItem.itemMeta as PotionMeta
-        somePotionMeta.basePotionData = PotionData(PotionType.WATER)
+        somePotionMeta.basePotionType = PotionType.WATER
         potionItem.itemMeta = somePotionMeta
 
         val result: ItemStack = createPotionVials(potionItem)

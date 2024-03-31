@@ -11,7 +11,7 @@ enum class ToolType(
 
     // Sword overrides
     KATANA("katana", "Katana", 3.0, 1.7, 44, "sword"),
-    CLAYMORE("claymore", "Claymore", 7.0, 0.85, 45, "sword"),
+    CLAYMORE("claymore", "Claymore", 6.0, 0.85, 45, "sword"),
     DAGGER("dagger", "Dagger", 1.0, 3.0, 46, "sword"),
     RAPIER("rapier", "Rapier", 1.5, 3.5, 47, "sword"),
     CUTLASS("cutlass", "Cutlass", 2.5, 2.1, 48, "sword"),
@@ -21,15 +21,19 @@ enum class ToolType(
     KUNAI("kunai", "Kunai", 1.0, 2.5, 52, "sword"),
     LONGSWORD("longsword", "Longsword", 4.0, 1.5, 53, "sword"),
     // Shovel Overrides
-    SPEAR("spear", "Spear", 3.0, 1.6, 74, "shovel"),
+    SPEAR("spear", "Spear", 3.0, 1.2, 74, "shovel"),
     HALBERD("halberd", "Halberd", 5.0, 0.9, 75, "shovel"),
     LANCE("lance", "Lance", 3.0, 0.8, 76, "shovel"),
     // Axe Overrides
-    LONGAXE("longaxe", "Longaxe", 8.0, 0.8, 85, "axe"),
+    LONGAXE("longaxe", "Longaxe", 6.0, 0.8, 85, "axe"),
+    POLEAXE("poleaxe", "Poleaxe", 4.0, 1.2, 86, "axe"),
     // Pickaxe Overrides
     WARHAMMER("warhammer", "Warhammer", 4.0, 1.4, 11, "pickaxe"),
     // Hoe Overrides
     SCYTHE("scythe", "Scythe", 3.0, 1.1, 92, "hoe"),
+    // Others
+    SHURIKEN("shuriken", "Shuriken", 0.5, 1.0, 1, "iron_nugget")
+
 
     // Old
     //CLUB(3.0, 1.6, "Club", 6900),

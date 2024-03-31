@@ -136,6 +136,7 @@ object EntityTags {
     const val MELEE_AOE_HIT: String = "odyssey.melee_aoe_hit"
     const val THROWN_KUNAI: String = "odyssey.thrown_kunai"
     const val THROWN_CHAKRAM: String = "odyssey.thrown_chakram"
+    const val THROWN_SHURIKEN: String = "odyssey.thrown_shuriken"
     const val CHAKRAM_HAS_BOUNCED: String = "odyssey.chakram_has_bounced"
     const val THROWABLE_DAMAGE: String = "odyssey.throwable_damage"
     const val THROWABLE_ATTACK_HIT: String = "odyssey.throwable_attack_hit"

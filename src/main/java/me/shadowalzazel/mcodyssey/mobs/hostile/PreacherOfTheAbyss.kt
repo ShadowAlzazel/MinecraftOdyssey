@@ -1,7 +1,9 @@
 package me.shadowalzazel.mcodyssey.mobs.hostile
 
 import me.shadowalzazel.mcodyssey.constants.MobTags
-import me.shadowalzazel.mcodyssey.items.Weapons
+import me.shadowalzazel.mcodyssey.items.creators.WeaponCreator
+import me.shadowalzazel.mcodyssey.items.utility.ToolMaterial
+import me.shadowalzazel.mcodyssey.items.utility.ToolType
 import me.shadowalzazel.mcodyssey.mobs.base.OdysseyMob
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -29,8 +31,8 @@ object PreacherOfTheAbyss : OdysseyMob("Preacher of the Abyss", MobTags.PREACHER
             canPickupItems = true
             clearActiveItem()
             customName(Component.text(this@PreacherOfTheAbyss.displayName, TextColor.color(40, 6, 25)))
-            // Add Items
-            val weapon = Weapons.NETHERITE_CLAYMORE.createItemStack(1) // ADD SLOTS AND ENCHANTS
+            // Add Items /
+            val weapon = WeaponCreator.toolCreator.createToolStack(ToolMaterial.NETHERITE, ToolType.CLAYMORE) // ADD SLOTS AND ENCHANTS
             equipment.also {
                 it.setItemInMainHand(weapon) // ADD TRIMS
                 it.helmet = ItemStack(Material.NETHERITE_HELMET, 1)

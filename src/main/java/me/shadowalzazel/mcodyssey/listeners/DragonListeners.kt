@@ -117,7 +117,7 @@ object DragonListeners : Listener {
 
     @EventHandler
     fun dragonFireballHandler(event: EnderDragonFireballHitEvent) {
-        if (event.targets?.contains(event.entity.shooter) == true) {
+        if (event.targets.contains(event.entity.shooter)) {
             event.isCancelled
             return
         }

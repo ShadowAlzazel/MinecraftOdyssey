@@ -41,9 +41,13 @@ object ItemTags {
     const val IS_ENGRAVED: String = "odyssey.is_engraved"
     const val ENGRAVED_BY: String = "engraved_by"
 
+    // Weapon Types
+    const val WEAPON_TYPE: String = "odyssey.weapon_type" // Key for string type
+    const val MATERIAL_TYPE: String = "odyssey.material_type"  // Key for string type
+
     // Tool Materials
-    const val SOUL_STEEL_TOOL: String = "soul_steel_tool"
-    const val NETHERITE_TOOL: String = "netherite_tool"
+    const val SOUL_STEEL_TOOL: String = "odyssey.soul_steel_tool"
+    const val NETHERITE_TOOL: String = "odyssey.netherite_tool"
 
     // Equipment Classifications
     const val IS_KUNAI: String = "odyssey.is_kunai"
@@ -89,6 +93,7 @@ object ItemTags {
     }
 
     fun ItemStack.hasTag(tag: String): Boolean {
+        if (!hasItemMeta()) return false
         val tagKey = NamespacedKey(Odyssey.instance, tag)
         return itemMeta.persistentDataContainer.has(tagKey)
     }
@@ -108,6 +113,7 @@ object ItemTags {
     }
 
     fun ItemStack.getIntTag(tag: String): Int? {
+        if (!hasItemMeta()) return null
         val tagKey = NamespacedKey(Odyssey.instance, tag)
         return itemMeta.persistentDataContainer[tagKey, PersistentDataType.INTEGER]
     }
@@ -120,6 +126,7 @@ object ItemTags {
     }
 
     fun ItemStack.getStringTag(tag: String): String? {
+        if (!hasItemMeta()) return null
         val tagKey = NamespacedKey(Odyssey.instance, tag)
         return itemMeta.persistentDataContainer[tagKey, PersistentDataType.STRING]
     }

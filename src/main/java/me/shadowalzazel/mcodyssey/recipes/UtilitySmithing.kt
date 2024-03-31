@@ -1,17 +1,13 @@
 package me.shadowalzazel.mcodyssey.recipes
 
 import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.items.Equipment
 import me.shadowalzazel.mcodyssey.items.Ingredients
-import me.shadowalzazel.mcodyssey.items.Templates
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.*
 
-class UtilitySmithing {
-
-    /*
-    USE THIS CLASS TO CREATE RECIPE WHICH ARE AVAILABLE TO BE MODIFIED
-     */
+class UtilitySmithing { // USE THIS CLASS TO CREATE RECIPE WHICH ARE AVAILABLE TO BE MODIFIED
 
     fun getRecipes(): List<Recipe> {
         return listOf(
@@ -25,8 +21,6 @@ class UtilitySmithing {
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------------------*/
-
     // Book/Tome + Book/Tome
     private fun bookCombining(): SmithingTransformRecipe {
         val result = ItemStack(Material.ENCHANTED_BOOK)
@@ -68,12 +62,10 @@ class UtilitySmithing {
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------------------*/
-
     // Soul Steel Template + Item + Soul Steel Ingot
     private fun soulSteelUpgrading(): SmithingTransformRecipe {
         val result = Ingredients.SOUL_STEEL_INGOT.createItemStack(1)
-        val template = RecipeChoice.ExactChoice(Templates.SOUL_STEEL_UPGRADE_TEMPLATE.createItemStack(1))
+        val template = RecipeChoice.ExactChoice(Equipment.SOUL_STEEL_UPGRADE_TEMPLATE.createItemStack(1))
         val ingot = RecipeChoice.ExactChoice(Ingredients.SOUL_STEEL_INGOT.createItemStack(1))
 
         return SmithingTransformRecipe(
@@ -96,9 +88,7 @@ class UtilitySmithing {
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------------------*/
-
-
+    // Amethyst Engraving
     private fun engraving(): SmithingTransformRecipe {
         val result = ItemStack(Material.AMETHYST_SHARD)
         val template = RecipeChoice.MaterialChoice(Material.PAPER)
@@ -157,7 +147,6 @@ class UtilitySmithing {
         )
     }
 
-    /*-----------------------------------------------------------------------------------------------*/
     /*-----------------------------------------------------------------------------------------------*/
 
     private fun customTrimming(): SmithingTrimRecipe {
