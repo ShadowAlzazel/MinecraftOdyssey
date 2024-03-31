@@ -10,6 +10,7 @@ import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags.getIntTag
 import me.shadowalzazel.mcodyssey.constants.EntityTags.removeTag
 import me.shadowalzazel.mcodyssey.constants.EntityTags.setIntTag
+import me.shadowalzazel.mcodyssey.enchantments.EnchantRegistryManager
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.listeners.AlchemyListener.addOdysseyEffect
 import me.shadowalzazel.mcodyssey.listeners.utility.MoonwardPhase
@@ -39,7 +40,8 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import java.util.UUID
 import org.bukkit.inventory.meta.Damageable as Repairable
-object ArmorListeners : Listener {
+
+object ArmorListeners : Listener, EnchantRegistryManager {
 
     private val moonwardPhasePlayers = mutableListOf<UUID>()
     // Pollen
@@ -64,7 +66,7 @@ object ArmorListeners : Listener {
             val helmet = defender.equipment?.helmet
             for (enchant in helmet!!.enchantments) {
                 // Continue if not OdysseyEnchant
-                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (gildedEnchant) {
                     OdysseyEnchantments.ANTIBONK -> {
@@ -98,7 +100,7 @@ object ArmorListeners : Listener {
             val chestplate = defender.equipment?.chestplate
             for (enchant in chestplate!!.enchantments) {
                 // Continue if not OdysseyEnchant
-                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (gildedEnchant) {
                     OdysseyEnchantments.BLACK_ROSE -> {
@@ -132,7 +134,7 @@ object ArmorListeners : Listener {
             val leggings = defender.equipment?.leggings
             for (enchant in leggings!!.enchantments) {
                 // Continue if not OdysseyEnchant
-                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (gildedEnchant) {
                     OdysseyEnchantments.COWARDICE -> {
@@ -163,7 +165,7 @@ object ArmorListeners : Listener {
             val boots = defender.equipment?.boots
             for (enchant in boots!!.enchantments) {
                 // Continue if not OdysseyEnchant
-                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (gildedEnchant) {
                     OdysseyEnchantments.RECKLESS -> {
@@ -201,7 +203,7 @@ object ArmorListeners : Listener {
             val helmet = attacker.equipment?.helmet
             for (enchant in helmet!!.enchantments) {
                 // Continue if not OdysseyEnchant
-                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (gildedEnchant) {
                     OdysseyEnchantments.MANDIBLEMANIA -> {
@@ -217,7 +219,7 @@ object ArmorListeners : Listener {
             val chestplate = attacker.equipment?.chestplate
             for (enchant in chestplate!!.enchantments) {
                 // Continue if not OdysseyEnchant
-                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (gildedEnchant) {
                     OdysseyEnchantments.BEASTLY_BRAWLER -> {
@@ -233,7 +235,7 @@ object ArmorListeners : Listener {
             val boots = attacker.equipment?.boots
             for (enchant in boots!!.enchantments) {
                 // Continue if not OdysseyEnchant
-                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (gildedEnchant) {
                     OdysseyEnchantments.STATIC_SOCKS -> {
@@ -253,7 +255,7 @@ object ArmorListeners : Listener {
                 val boots = defender.equipment?.boots
                 for (enchant in boots!!.enchantments) {
                     // Continue if not OdysseyEnchant
-                    val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                    val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                     // When match
                     when (gildedEnchant) {
                         OdysseyEnchantments.DEVASTATING_DROP -> {
@@ -274,6 +276,7 @@ object ArmorListeners : Listener {
         // LIGHTNING REFLEXES -> dodge attacks if within range?
         // CLOSE COMBAT SPECIALIST -> less damage if close?
         if (event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK || event.cause == EntityDamageEvent.DamageCause.PROJECTILE) {
+            //
         }
 
     }
@@ -287,7 +290,7 @@ object ArmorListeners : Listener {
             val helmet = player.equipment.helmet
             for (enchant in helmet!!.enchantments) {
                 // Continue if not OdysseyEnchant
-                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (gildedEnchant) {
                     OdysseyEnchantments.BREWFUL_BREATH -> {
@@ -301,7 +304,7 @@ object ArmorListeners : Listener {
             val chestplate = player.equipment.chestplate
             for (enchant in chestplate!!.enchantments) {
                 // Continue if not OdysseyEnchant
-                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (gildedEnchant) {
                     OdysseyEnchantments.FRUITFUL_FARE -> {
@@ -328,7 +331,7 @@ object ArmorListeners : Listener {
             val helmet = player.equipment.helmet
             for (enchant in helmet!!.enchantments) {
                 // Continue if not OdysseyEnchant
-                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (gildedEnchant) {
                     OdysseyEnchantments.DREADFUL_SHRIEK -> {
@@ -373,7 +376,7 @@ object ArmorListeners : Listener {
             val helmet = defender.equipment?.helmet
             for (enchant in helmet!!.enchantments) {
                 // Continue if not OdysseyEnchant
-                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (gildedEnchant) {
                     OdysseyEnchantments.COPPER_CHITIN -> {
@@ -389,7 +392,7 @@ object ArmorListeners : Listener {
             val chestplate = defender.equipment?.chestplate
             for (enchant in chestplate!!.enchantments) {
                 // Continue if not OdysseyEnchant
-                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (gildedEnchant) {
                     OdysseyEnchantments.COPPER_CHITIN -> {
@@ -405,7 +408,7 @@ object ArmorListeners : Listener {
             val leggings = defender.equipment?.leggings
             for (enchant in leggings!!.enchantments) {
                 // Continue if not OdysseyEnchant
-                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (gildedEnchant) {
                     OdysseyEnchantments.COPPER_CHITIN -> {
@@ -421,7 +424,7 @@ object ArmorListeners : Listener {
             val boots = defender.equipment?.boots
             for (enchant in boots!!.enchantments) {
                 // Continue if not OdysseyEnchant
-                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (gildedEnchant) {
                     OdysseyEnchantments.COPPER_CHITIN -> {
@@ -457,8 +460,10 @@ object ArmorListeners : Listener {
                 val boots = rider.equipment?.boots
                 // Loop for all enchants
                 for (enchant in boots!!.enchantments) {
+                    // Continue if not OdysseyEnchant
+                    val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                     // Check when
-                    when (enchant.key) {
+                    when (gildedEnchant) {
                         OdysseyEnchantments.SPEEDY_SPURS -> {
                             speedySpursEnchantment(rider, mount, enchant.value)
                         }
@@ -476,7 +481,7 @@ object ArmorListeners : Listener {
             val boots = defender.equipment?.boots
             for (enchant in boots!!.enchantments) {
                 // Continue if not OdysseyEnchant
-                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (gildedEnchant) {
                     OdysseyEnchantments.ROOT_BOOTS -> {
@@ -496,7 +501,7 @@ object ArmorListeners : Listener {
             val helmet = sneaker.equipment.helmet
             for (enchant in helmet!!.enchantments) {
                 // Continue if not OdysseyEnchant
-                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (gildedEnchant) {
                     OdysseyEnchantments.POLLEN_GUARD -> {
@@ -512,7 +517,7 @@ object ArmorListeners : Listener {
             val chestplate = sneaker.equipment.chestplate
             for (enchant in chestplate!!.enchantments) {
                 // Continue if not OdysseyEnchant
-                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (gildedEnchant) {
                     OdysseyEnchantments.POLLEN_GUARD -> {
@@ -525,7 +530,7 @@ object ArmorListeners : Listener {
             val leggings = sneaker.equipment.leggings
             for (enchant in leggings!!.enchantments) {
                 // Continue if not OdysseyEnchant
-                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (gildedEnchant) {
                     OdysseyEnchantments.LEAP_FROG -> {
@@ -541,7 +546,7 @@ object ArmorListeners : Listener {
             val boots = sneaker.equipment.boots
             for (enchant in boots!!.enchantments) {
                 // Continue if not OdysseyEnchant
-                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (gildedEnchant) {
                     OdysseyEnchantments.POLLEN_GUARD -> {
@@ -569,7 +574,7 @@ object ArmorListeners : Listener {
             val leggings = jumper.equipment.leggings
             for (enchant in leggings!!.enchantments) {
                 // Continue if not OdysseyEnchant
-                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (gildedEnchant) {
                     OdysseyEnchantments.LEAP_FROG -> {
@@ -582,7 +587,7 @@ object ArmorListeners : Listener {
             val boots = jumper.equipment.boots
             for (enchant in boots!!.enchantments) {
                 // Continue if not OdysseyEnchant
-                val gildedEnchant = MeleeListeners.findOdysseyEnchant(enchant.key) ?: continue
+                val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (gildedEnchant) {
                     OdysseyEnchantments.LEAP_FROG -> {
@@ -685,7 +690,7 @@ object ArmorListeners : Listener {
             CreatureSpawnEvent.SpawnReason.CUSTOM
         ) as AreaEffectCloud
         cloud.apply {
-            basePotionData = potionMeta.basePotionData
+            basePotionType = potionMeta.basePotionType
             duration = 5 * 20 // 5 seconds
             durationOnUse = 5 //
             radiusOnUse = 0.05F
@@ -981,7 +986,6 @@ object ArmorListeners : Listener {
 
 
     // ------------------------------- OPTICALIZATION ------------------------------------
-    @Suppress("UnstableApiUsage")
     private fun opticalizationSpyglassEnchantment(
         player: Player,
         spyglass: ItemStack) {
@@ -1000,8 +1004,6 @@ object ArmorListeners : Listener {
         player.setCooldown(spyglass.type, 20 * 2)
     }
 
-
-    @Suppress("UnstableApiUsage")
     private fun opticalizationHitEnchantment(
         defender: LivingEntity,
         attacker: LivingEntity,

@@ -13,26 +13,29 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import org.bukkit.potion.PotionType
 
 class AlchemyCauldronRecipe(
     private val potion: OdysseyPotion,
     private val ingredientSize: Int,
     private val viableFuel: List<Material>,
-    private val specificList: List<ItemStack>, // For Materials and Specific Items
+    private val ingredientList: List<ItemStack>, // For Materials and Specific Items
     private val isCombination: Boolean = false,
     private val comboEffectTypeList: List<PotionEffectType> = listOf(), // For Detecting Potion Combinations
     private val comboOdysseyEffectList: List<String> = listOf() // For Detecting Odyssey Effect Tags
 ) {
+
+    // TODO: Do mini game
+    // when hear ding, add chorus fruit for +10%
+
 
     // Validate the Cauldron Recipe
     fun ingredientValidateHandler(ingredients: MutableCollection<Item>, fuel: Material): Boolean {
         if (ingredients.size != ingredientSize) return false
         if (fuel !in viableFuel) return false
         // Specific Ingredients Are (Uncraftable Potions, OdysseyItems, or Specific Tagged)
-        val specificIngredients = ingredients.filter { it.itemStack.specificIngredientFinder() }
-        if (specificIngredients.any { it.itemStack !in specificList }) return false
-        if (specificIngredients.size != specificList.size) return false
+        val filteredIngredients = ingredients.filter { it.itemStack.specificIngredientFinder() }
+        if (filteredIngredients.size != ingredientList.size) return false
+        if (filteredIngredients.any { it.itemStack !in ingredientList }) return false
         // Get Potion With Effects for preset concoctions
         if (comboEffectTypeList.isNotEmpty()) {
             val potionList = ingredients.filter { it.itemStack.potionDataFinder() }
@@ -47,9 +50,9 @@ class AlchemyCauldronRecipe(
         if (comboEffectTypeList.isEmpty() && isCombination) {
             val ingredientPotions = ingredients.filter { it.itemStack.hasPotionEffectOrData() }
             ingredientPotions.forEach { println(it.itemStack) }
-            // Can not combine concoctions -> MAYBE CHANGE THIS
+            // Can not combine concoctions
             if (ingredientPotions.any { it.itemStack.hasTag(ItemTags.IS_ALCHEMY_COMBINATION) }) return false
-            if (specificIngredients.size + ingredientPotions.size != ingredientSize) return false
+            if (filteredIngredients.size + ingredientPotions.size != ingredientSize) return false
         }
         // Passed All Sentries
         return true
@@ -103,21 +106,19 @@ class AlchemyCauldronRecipe(
             result.itemMeta = resultMeta
             result.addTag(ItemTags.IS_ALCHEMY_COMBINATION)
         }
-        // TODO: DO SOMETHING HERE FOR MUNDANE?
         // Remove Items
         for (item in ingredients) item.remove()
         val cauldron = location.block
         AlchemyCauldronTask(cauldron, result).runTaskTimer(Odyssey.instance, 0, 2)
     }
-    // Maybe add in recipe, is combination?
-
     /*-----------------------------------------------------------------------------------------------*/
 
     private fun ItemStack.specificIngredientFinder(): Boolean {
+        //val choice = IngredientChoice.MaterialChoice(Material.POTION, 1)
         return if (itemMeta is PotionMeta) {
             //if ((itemMeta as PotionMeta).basePotionData.type == PotionType.UNCRAFTABLE) return true // MORE ROBUST?
             //if ((itemMeta as PotionMeta).basePotionData.type == PotionType.AWKWARD) return true
-            (this in specificList)
+            (this in ingredientList)
         }
         // ADD ELSE IF FOR OTHER SPECIFICS
         else {
@@ -130,30 +131,31 @@ class AlchemyCauldronRecipe(
         if (itemMeta !is PotionMeta) return false
         val isConcoction = hasTag(ItemTags.IS_ALCHEMY_COMBINATION)
         if (isConcoction) return false
-        //println("Is Not Concoction")
-        //println("Custom Effects: ${(itemMeta as PotionMeta).customEffects}")
         val foundCustomEffect = (itemMeta as PotionMeta).customEffects.any { it.type in comboEffectTypeList } // Find at least one match
-        val foundPotionData = (itemMeta as PotionMeta).basePotionData.type.effectType in comboEffectTypeList
+        val foundPotionData = (itemMeta as PotionMeta).basePotionType.potionEffects.any { it.type in comboEffectTypeList }
         return foundPotionData || foundCustomEffect
     }
 
     private fun ItemStack.odysseyEffectFinder(): Boolean {
         if (itemMeta !is PotionMeta) return false
-        val isCustomEffect = hasTag(ItemTags.IS_CUSTOM_EFFECT)
-        if (!isCustomEffect) return false
-        return true
+        val isOdysseyEffect = hasTag(ItemTags.IS_CUSTOM_EFFECT)
+        return isOdysseyEffect
     }
 
     private fun ItemStack.hasPotionEffectOrData(): Boolean {
         if (type != Material.POTION) return false
         if (itemMeta !is PotionMeta) return false
-        val hasPotionDataEffect = (itemMeta as PotionMeta).basePotionData.type.effectType != null
+        val hasPotionDataEffect = (itemMeta as PotionMeta).basePotionType.potionEffects.size > 0
         val hasMetaEffect = (itemMeta as PotionMeta).customEffects.size > 0
         return hasPotionDataEffect || hasMetaEffect
     }
 
     // TODO: Deprecated in 1.20.4
     private fun ItemStack.getEffectFromData(): PotionEffect {
+        val potionMeta = itemMeta as PotionMeta
+        val basePotionEffect = potionMeta.basePotionType.potionEffects.first()
+        return basePotionEffect
+        /*
         val potionData = (itemMeta as PotionMeta).basePotionData
         val baseTime: Int
         var extendedMultiplier: Double = 8.0 / 3.0
@@ -189,10 +191,7 @@ class AlchemyCauldronRecipe(
         if (potionData.isUpgraded) { time *= upgradedMultiplier }
         else if (potionData.isExtended) { time *= extendedMultiplier }
         return PotionEffect(potionData.type.effectType!!, time.toInt(), amplifier)
+         */
     }
-
-
-    // TODO: Do minigame
-    // when hear ding, add chorus fruit for +10%
 
 }

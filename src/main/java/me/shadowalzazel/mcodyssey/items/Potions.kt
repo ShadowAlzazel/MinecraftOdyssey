@@ -17,7 +17,6 @@ import org.bukkit.Material
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.PotionMeta
-import org.bukkit.potion.PotionData
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.potion.PotionType
@@ -28,17 +27,17 @@ object Potions : AlchemyManager {
         return createItemStack(1).apply {
             val potionMeta = itemMeta as PotionMeta
             if (potionColor != null) potionMeta.color = potionColor
-            if (potionEffects != null && potionEffects.isNotEmpty()) {
+            if (!potionEffects.isNullOrEmpty()) {
                 for (effect in potionEffects) { potionMeta.addCustomEffect(effect, true) }
-                potionMeta.basePotionData = PotionData(PotionType.THICK)
+                potionMeta.basePotionType = PotionType.THICK
                 // For Cauldron usage
                 if (this@createPotionStack == CRYSTALLINE_POTION) {
-                    potionMeta.basePotionData = PotionData(PotionType.UNCRAFTABLE)
+                    potionMeta.basePotionType = PotionType.UNCRAFTABLE
                 }
             }
             itemMeta = potionMeta
             if (isOdysseyEffect) {
-                potionMeta.basePotionData = PotionData(PotionType.UNCRAFTABLE)
+                potionMeta.basePotionType = PotionType.UNCRAFTABLE
                 itemMeta = potionMeta
                 addTag(ItemTags.IS_ODYSSEY_EFFECT)
                 addStringTag(ItemTags.ODYSSEY_EFFECT_TAG, odysseyEffectTag)
@@ -53,14 +52,14 @@ object Potions : AlchemyManager {
         }
     }
 
-    fun EffectColors.itemColor(): Color {
+    private fun EffectColors.itemColor(): Color {
         return Color.fromRGB(color.value())
     }
 
     val CRYSTALLINE_POTION = OdysseyPotion(
         name = "crystalline_potion",
         material = Material.POTION,
-        displayName =  Component.text("Crystalline Potion", TextColor.color(170, 0, 255)),
+        customName =  "Crystalline Potion",
         customModel = ItemModels.PEARSHAPE_BOTTLE,
         lore = listOf(Component.text("A crystalline liquid...", TextColor.color(170, 0, 255)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         potionEffects = listOf(PotionEffect(PotionEffectType.LUCK, 0 , 0)),
@@ -69,7 +68,7 @@ object Potions : AlchemyManager {
     val POTION_OF_LEVITATION = OdysseyPotion(
         name = "potion_of_levitation",
         material = Material.POTION,
-        displayName = Component.text("Potion of Levitation", TextColor.color(85, 255, 255)),
+        customName = "Potion of Levitation",
         customModel = ItemModels.PEARSHAPE_BOTTLE,
         potionEffects = listOf(PotionEffect(PotionEffectType.LEVITATION, 30 * 20 , 0)),
         potionColor = Color.fromRGB(85, 255, 255))
@@ -77,7 +76,7 @@ object Potions : AlchemyManager {
     val POTION_OF_WITHERING = OdysseyPotion(
         name = "potion_of_withering",
         material = Material.POTION,
-        displayName = Component.text("Potion of Decay", TextColor.color(85, 255, 255)),
+        customName = "Potion of Decay",
         customModel = ItemModels.PEARSHAPE_BOTTLE,
         potionEffects = listOf(PotionEffect(PotionEffectType.WITHER, 30 * 20 , 0)),
         potionColor = Color.fromRGB(55, 55, 55))
@@ -85,7 +84,7 @@ object Potions : AlchemyManager {
     val POTION_OF_LUCK = OdysseyPotion(
         name = "potion_of_luck",
         material = Material.POTION,
-        displayName = Component.text("Potion of Luck", TextColor.color(85, 255, 255)),
+        customName = "Potion of Luck",
         customModel = ItemModels.PEARSHAPE_BOTTLE,
         potionEffects = listOf(PotionEffect(PotionEffectType.LUCK, 5 * 60 * 20 , 0)),
         potionColor = Color.fromRGB(255, 157, 0))
@@ -93,7 +92,7 @@ object Potions : AlchemyManager {
     val POTION_OF_RESISTANCE = OdysseyPotion(
         name = "potion_of_resistance",
         material = Material.POTION,
-        displayName = Component.text("Potion of Resistance", TextColor.color(85, 255, 255)),
+        customName = "Potion of Resistance",
         customModel = ItemModels.PEARSHAPE_BOTTLE,
         potionEffects = listOf(PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 3 * 60 * 20 , 0)),
         potionColor = Color.fromRGB(65, 97, 122))
@@ -101,7 +100,7 @@ object Potions : AlchemyManager {
     val POTION_OF_HASTE = OdysseyPotion(
         name = "potion_of_resistance",
         material = Material.POTION,
-        displayName = Component.text("Potion of Haste", TextColor.color(85, 255, 255)),
+        customName = "Potion of Haste",
         customModel = ItemModels.PEARSHAPE_BOTTLE,
         potionEffects = listOf(PotionEffect(PotionEffectType.FAST_DIGGING, 3 * 60 * 20 , 0)),
         potionColor = Color.fromRGB(255, 233, 133))
@@ -109,7 +108,7 @@ object Potions : AlchemyManager {
     val POTION_OF_BIOLUMINESCENCE = OdysseyPotion(
         name = "potion_of_bioluminescence",
         material = Material.POTION,
-        displayName = Component.text("Potion of Bioluminescence", TextColor.color(85, 255, 255)),
+        customName = "Potion of Bioluminescence",
         customModel = ItemModels.PEARSHAPE_BOTTLE,
         potionEffects = listOf(PotionEffect(PotionEffectType.GLOWING, 3 * 60 * 20 , 0)),
         potionColor = Color.fromRGB(0, 255, 179))
@@ -117,7 +116,7 @@ object Potions : AlchemyManager {
     val POTION_OF_CONSTITUTION = OdysseyPotion(
         name = "potion_of_constitution",
         material = Material.POTION,
-        displayName = Component.text("Potion of Constitution", TextColor.color(85, 255, 255)),
+        customName = "Potion of Constitution",
         customModel = ItemModels.PEARSHAPE_BOTTLE,
         potionEffects = listOf(PotionEffect(PotionEffectType.HEALTH_BOOST, 3 * 60 * 20 , 0)),
         potionColor = Color.fromRGB(209, 0, 49))
@@ -127,7 +126,7 @@ object Potions : AlchemyManager {
     val POTION_OF_STONE_SKIN = OdysseyPotion(
         name = "potion_of_stone_skin",
         material = Material.POTION,
-        displayName = Component.text("Potion of Stone Skin", TextColor.color(55, 55, 255)),
+        customName = "Potion of Stone Skin",
         customModel = ItemModels.PEARSHAPE_BOTTLE,
         potionEffects = listOf(
             PotionEffect(PotionEffectType.ABSORPTION, 2 * 60 * 20 , 2),
@@ -137,7 +136,7 @@ object Potions : AlchemyManager {
     val POTION_OF_WRATH = OdysseyPotion(
         name = "potion_of_wrath",
         material = Material.POTION,
-        displayName = Component.text("Potion of Wrath", TextColor.color(55, 55, 255)),
+        customName = "Potion of Wrath",
         customModel = ItemModels.PEARSHAPE_BOTTLE,
         potionEffects = listOf(
             PotionEffect(PotionEffectType.INCREASE_DAMAGE, 2 * 60 * 20 , 2),
@@ -147,7 +146,7 @@ object Potions : AlchemyManager {
     val POTION_OF_WHIZ = OdysseyPotion(
         name = "potion_of_whiz",
         material = Material.POTION,
-        displayName = Component.text("Whiz Potion", TextColor.color(55, 55, 255)),
+        customName = "Whiz Potion",
         customModel = ItemModels.PEARSHAPE_BOTTLE,
         potionEffects = listOf(
             PotionEffect(PotionEffectType.SPEED, 2 * 60 * 20 , 2),
@@ -161,7 +160,7 @@ object Potions : AlchemyManager {
     val FLASK_OF_ROT = OdysseyPotion( // 1:00
         name = "flask_of_rot",
         material = Material.POTION,
-        displayName = Component.text("Flask o' Rot", EffectColors.FREEZING.color),
+        customName = "Flask o' Rot",
         customModel = ItemModels.CONICAL_BOTTLE,
         isOdysseyEffect = true,
         odysseyEffectTag = EffectTags.ROTTING,
@@ -172,7 +171,7 @@ object Potions : AlchemyManager {
     val FLASK_OF_FROST = OdysseyPotion( // 0:30
         name = "flask_of_frost",
         material = Material.POTION,
-        displayName = Component.text("Flask o' Frost", EffectColors.FREEZING.color),
+        customName = "Flask o' Frost",
         customModel = ItemModels.CONICAL_BOTTLE,
         isOdysseyEffect = true,
         odysseyEffectTag = EffectTags.FREEZING,
@@ -183,7 +182,7 @@ object Potions : AlchemyManager {
     val FLASK_OF_TAR = OdysseyPotion( // 3:00
         name = "flask_of_tar",
         material = Material.POTION,
-        displayName = Component.text("Flask o' Tar", EffectColors.TARRED.color),
+        customName = "Flask o' Tar",
         customModel = ItemModels.CONICAL_BOTTLE,
         isOdysseyEffect = true,
         odysseyEffectTag = EffectTags.TARRED,
@@ -194,7 +193,7 @@ object Potions : AlchemyManager {
     val FLASK_OF_ABLAZE = OdysseyPotion( // 0:30
         name = "flask_of_ablaze",
         material = Material.POTION,
-        displayName = Component.text("Flask o' Ablaze", EffectColors.ABLAZE.color),
+        customName = "Flask o' Ablaze",
         customModel = ItemModels.CONICAL_BOTTLE,
         isOdysseyEffect = true,
         odysseyEffectTag = EffectTags.ABLAZE,
@@ -205,7 +204,7 @@ object Potions : AlchemyManager {
     val FLASK_OF_IRRADIATION = OdysseyPotion( // 3:00
         name = "flask_of_irradiation",
         material = Material.POTION,
-        displayName = Component.text("Flask o' Irradiation", EffectColors.IRRADIATED.color),
+        customName = "Flask o' Irradiation",
         customModel = ItemModels.CONICAL_BOTTLE,
         isOdysseyEffect = true,
         odysseyEffectTag = EffectTags.IRRADIATED,
@@ -216,7 +215,7 @@ object Potions : AlchemyManager {
     val FLASK_OF_CORROSION = OdysseyPotion( // 0:30
         name = "flask_of_corrosion",
         material = Material.POTION,
-        displayName = Component.text("Flask o' Corrosion", EffectColors.CORROSION.color),
+        customName = "Flask o' Corrosion",
         customModel = ItemModels.CONICAL_BOTTLE,
         isOdysseyEffect = true,
         odysseyEffectTag = EffectTags.CORRODING,
@@ -227,7 +226,7 @@ object Potions : AlchemyManager {
     val FLASK_OF_MIASMA = OdysseyPotion( // 3:00
         name = "flask_of_miasma",
         material = Material.POTION,
-        displayName = Component.text("Flask o' Miasma", EffectColors.MIASMA.color),
+        customName = "Flask o' Miasma",
         customModel = ItemModels.CONICAL_BOTTLE,
         isOdysseyEffect = true,
         odysseyEffectTag = EffectTags.MIASMA,
@@ -243,7 +242,7 @@ object Potions : AlchemyManager {
     val ACCURSED_BREW = OdysseyPotion(
         name = "accursed_brew",
         material = Material.POTION,
-        displayName = Component.text("Accursed Brew", EffectColors.ACCURSED.color),
+        customName = "Accursed Brew",
         customModel = ItemModels.ROUND_BOTTLE,
         isOdysseyEffect = true,
         odysseyEffectTag = EffectTags.ACCURSED,
@@ -253,7 +252,7 @@ object Potions : AlchemyManager {
     val BOTTLE_OF_SOULS = OdysseyPotion(
         name = "bottle_of_souls",
         material = Material.POTION,
-        displayName = Component.text("Bottled Souls", EffectColors.SOUL.color),
+        customName = "Bottled Souls",
         customModel = ItemModels.ROUND_BOTTLE,
         isOdysseyEffect = true,
         odysseyEffectTag = EffectTags.ABLAZE,
@@ -263,7 +262,7 @@ object Potions : AlchemyManager {
     val BOTTLE_OF_SHIMMER = OdysseyPotion(
         name = "bottle_of_shimmer",
         material = Material.POTION,
-        displayName = Component.text("Bottle o' Shimmer", TextColor.color(78, 0, 161)),
+        customName = "Bottle o' Shimmer",
         customModel = ItemModels.DAIRYSHAPE_BOTTLE,
         potionEffects = listOf(
             PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 120 * 20, 1),
@@ -281,7 +280,7 @@ object Potions : AlchemyManager {
     val ANGLERS_CONCOCTION = OdysseyPotion(
         name = "anglers_concoction",
         material = Material.POTION,
-        displayName = Component.text("Angler's Concoction", TextColor.color(255, 255, 55)),
+        customName = "Angler's Concoction",
         customModel = ItemModels.CONCOCTION_BOTTLE,
         potionEffects = listOf(
             PotionEffect(PotionEffectType.NIGHT_VISION, 3 * 60 * 20 , 0),
@@ -294,7 +293,7 @@ object Potions : AlchemyManager {
     val SPELUNKERS_CONCOCTION = OdysseyPotion(
         name = "spelunkers_concoction",
         material = Material.POTION,
-        displayName = Component.text("Spelunker's Concoction", TextColor.color(255, 255, 55)),
+        customName = "Spelunker's Concoction",
         customModel = ItemModels.CONCOCTION_BOTTLE,
         potionEffects = listOf(
             PotionEffect(PotionEffectType.FAST_DIGGING, 3 * 60 * 20 , 0),
@@ -307,7 +306,7 @@ object Potions : AlchemyManager {
     val NETHER_OWL_CONCOCTION = OdysseyPotion(
         name = "nether_owl_concoction",
         material = Material.POTION,
-        displayName = Component.text("Nether Owl Concoction", TextColor.color(255, 255, 55)),
+        customName = "Nether Owl Concoction",
         customModel = ItemModels.CONCOCTION_BOTTLE,
         potionEffects = listOf(
             PotionEffect(PotionEffectType.NIGHT_VISION, 3 * 60 * 20 , 0),
@@ -318,21 +317,22 @@ object Potions : AlchemyManager {
 
     // CUSTOM DECOCTION
     // Potion + Potion + Thick Potion + Popped Chorus Fruit
-    // Adds both potion effects at 40%
-
     val CUSTOM_CONCOCTION = OdysseyPotion(
         name = "custom_concoction",
         material = Material.POTION,
-        displayName = Component.text("Concoction", TextColor.color(255, 255, 55)),
+        customName = "Concoction",
         customModel = ItemModels.CONCOCTION_BOTTLE,
         potionEffects = emptyList(),
         potionColor = Color.fromRGB(185, 255, 155))
 
+    /*
     val LARGE_POTION = OdysseyPotion( // TODO: Thick Potion
         name = "large_potion",
         material = Material.POTION,
-        displayName = Component.text("Large Potion of TODO", TextColor.color(255, 255, 55)),
+        customName = "Large Potion of TODO",
         customModel = ItemModels.LARGE_BOTTLE,
         potionEffects = emptyList(),
         potionColor = Color.fromRGB(185, 255, 155))
+     */
+
 }

@@ -1,26 +1,9 @@
 package me.shadowalzazel.mcodyssey.listeners.unused
 
-import me.shadowalzazel.mcodyssey.constants.AttributeIDs.ODYSSEY_ENHANCED_MOB_HEALTH_UUID
-import me.shadowalzazel.mcodyssey.constants.AttributeIDs.ODYSSEY_GILDED_MOB_HEALTH_UUID
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.items.Arcane
-import me.shadowalzazel.mcodyssey.items.Arcane.createGildedBook
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.TextColor
-import org.bukkit.Material
-import org.bukkit.attribute.Attribute
-import org.bukkit.attribute.AttributeModifier
-import org.bukkit.entity.LivingEntity
-import org.bukkit.entity.WanderingTrader
-import org.bukkit.event.EventHandler
-import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.CreatureSpawnEvent
-import kotlin.math.absoluteValue
-import kotlin.math.pow
 
 object OdysseySpawningListeners : Listener {
-
+    /*
     private val dangerPrefixes = setOf(
         "Deadly",
         "Magnificent",
@@ -48,7 +31,6 @@ object OdysseySpawningListeners : Listener {
                 it.itemInMainHandDropChance = 0.35F
             }
 
-            // TODO: Add prefixes and affixes to enchantments
             @Suppress("DEPRECATION")
             customName((Component.text("${dangerPrefixes.random()} ")).append(name()).append(Component.text(" of ${gildedEnchant.translatableName}")).color(TextColor.color(255, 170, 0)))
             isCustomNameVisible = true
@@ -112,6 +94,7 @@ object OdysseySpawningListeners : Listener {
         }
     }
 
+     */
 
 
 }

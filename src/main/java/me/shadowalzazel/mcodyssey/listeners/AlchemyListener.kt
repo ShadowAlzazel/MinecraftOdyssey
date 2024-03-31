@@ -35,7 +35,6 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerItemConsumeEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.PotionMeta
-import org.bukkit.potion.PotionData
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.potion.PotionType
@@ -335,30 +334,38 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
             val item = contents[x] ?: continue
             if (item.type == Material.AIR) continue
             if (item.itemMeta !is PotionMeta) continue
-            // --------------------------------------------------
-            // For Upgraded Plus
-            if (ingredientMaterial == Material.GLOW_BERRIES) {
-                event.results[x] = makeUpgradedPlusPotion(item)
-            }
-            // For Upgraded Plus
-            else if (ingredientMaterial == Material.HONEY_BOTTLE) {
-                event.results[x] = makeExtendedPlusPotion(item)
-            }
-            // For Vials
-            else if (ingredientMaterial == Material.PRISMARINE_CRYSTALS) {
-                event.results[x] = makeVialPotion(item)
-                potionModel = ItemModels.VIAL_CHARGE_5
+            var customIngredient = true
+            // -------------------------------------------------
+            when(ingredientMaterial) {
+                // For Upgraded Plus
+                Material.GLOW_BERRIES -> {
+                    event.results[x] = makeUpgradedPlusPotion(item)
+                }
+                // For Extended Plus
+                Material.HONEY_BOTTLE -> {
+                    event.results[x] = makeExtendedPlusPotion(item)
+                }
+                // For Vials
+                Material.PRISMARINE_CRYSTALS -> {
+                    event.results[x] = makeVialPotion(item)
+                    potionModel = ItemModels.VIAL_CHARGE_5
+                }
+                // For Lingering
+                // For Splash
+                else -> {
+                    customIngredient = false
+                }
             }
             // --------------------------------------------------
             // For Handling Converting Odyssey Effects into Splash or Lingering
             if (item.hasOdysseyItemTag() && item.hasOdysseyEffectTag()) {
                 if (resultMaterial == Material.LINGERING_POTION) { event.results[x] = createOdysseyLingeringPotion(item) }
-                else { event.results[x] = createCustomBrewedPotion(resultMaterial, item) }
+                else { event.results[x] = createCustomModeledPotion(resultMaterial, item) }
             }
             // For Custom Minecraft Potion Effects
-            else if ((item.itemMeta as PotionMeta).hasCustomEffects() || item.hasCustomEffectTag()) {
+            else if (((item.itemMeta as PotionMeta).hasCustomEffects() || item.hasCustomEffectTag()) && !customIngredient) {
                 if (resultMaterial == Material.LINGERING_POTION) { event.results[x] = createCustomLingeringPotion(item) }
-                else { event.results[x] = createCustomBrewedPotion(resultMaterial, item) }
+                else { event.results[x] = createCustomModeledPotion(resultMaterial, item) }
             }
             // For Handling Changing Item Models
             else if (!item.hasOdysseyEffectTag() && potionModel != null) {
@@ -375,7 +382,7 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
         }
     }
 
-    private fun createCustomBrewedPotion(material: Material, oldPotion: ItemStack, model: Int? = null): ItemStack {
+    private fun createCustomModeledPotion(material: Material, oldPotion: ItemStack, model: Int? = null): ItemStack {
         return ItemStack(material, 1).apply {
             itemMeta = (oldPotion.itemMeta as PotionMeta).clone().also {
                 if (model != null) it.setCustomModelData(model)
@@ -402,13 +409,18 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
         if (potion.hasTag(ItemTags.IS_EXTENDED_PLUS)) return potion
         if (potion.hasTag(ItemTags.IS_UPGRADED_PLUS)) return potion
         val meta = (potion.itemMeta as PotionMeta)
+        val potionType = meta.basePotionType
         // (WIX)
-        if (meta.basePotionData.isUpgraded) return potion
-        if (!meta.basePotionData.isExtended) return potion
-        val effect = potion.getEffectFromData()
-        val newEffect = PotionEffect(effect.type, (effect.duration * 1.5).toInt(), effect.amplifier)
-        meta.addCustomEffect(newEffect, true)
-        meta.basePotionData = PotionData(PotionType.THICK)
+        //if (potionType.isExtendable) return potion // Is Tier 1 Duration -> No
+        //if (!potionType.isUpgradeable) return potion // Is Tier 2 Power -> No
+        // Get Old effects from custom effects or base type effects
+        val oldEffects = mutableListOf<PotionEffect>()
+        potionType.potionEffects.forEach { oldEffects.add(it) }
+        for (effect in oldEffects) {
+            val newEffect = PotionEffect(effect.type, (effect.duration * 1.5).toInt(), effect.amplifier)
+            meta.addCustomEffect(newEffect, true)
+        }
+        meta.basePotionType = PotionType.THICK
         return potion.clone().also {
             it.itemMeta = meta
             it.addTag(ItemTags.IS_EXTENDED_PLUS)
@@ -420,13 +432,18 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
         if (potion.hasTag(ItemTags.IS_EXTENDED_PLUS)) return potion
         if (potion.hasTag(ItemTags.IS_UPGRADED_PLUS)) return potion
         val meta = (potion.itemMeta as PotionMeta)
+        val potionType = meta.basePotionType
         // (WIX)
-        if (meta.basePotionData.isExtended) return potion
-        if (!meta.basePotionData.isUpgraded) return potion
-        val effect = potion.getEffectFromData()
-        val newEffect = PotionEffect(effect.type, effect.duration, effect.amplifier + 1)
-        meta.addCustomEffect(newEffect, true)
-        meta.basePotionData = PotionData(PotionType.THICK)
+        //if (!potionType.isExtendable) return potion // Is Tier 2 Duration -> No
+        //if (potionType.isUpgradeable) return potion // Is Tier 1 Power -> No
+        // Get Old effects from custom effects or base type effects
+        val oldEffects = mutableListOf<PotionEffect>()
+        potionType.potionEffects.forEach { oldEffects.add(it) }
+        for (effect in oldEffects) {
+            val newEffect = PotionEffect(effect.type, (effect.duration * 0.6).toInt(), effect.amplifier + 1)
+            meta.addCustomEffect(newEffect, true)
+        }
+        meta.basePotionType = PotionType.THICK
         return potion.clone().also {
             it.itemMeta = meta
             it.addTag(ItemTags.IS_UPGRADED_PLUS)

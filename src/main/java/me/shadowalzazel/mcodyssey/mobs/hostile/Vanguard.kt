@@ -1,6 +1,8 @@
 package me.shadowalzazel.mcodyssey.mobs.hostile
 
-import me.shadowalzazel.mcodyssey.items.Weapons
+import me.shadowalzazel.mcodyssey.items.creators.WeaponCreator
+import me.shadowalzazel.mcodyssey.items.utility.ToolMaterial
+import me.shadowalzazel.mcodyssey.items.utility.ToolType
 import me.shadowalzazel.mcodyssey.mobs.base.OdysseyMob
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -17,24 +19,22 @@ import org.bukkit.potion.PotionEffectType
 
 object Vanguard : OdysseyMob("Vanguard", "vanguard", EntityType.SKELETON, 30.0) {
 
-    fun createKnight(odysseyWorld: World, spawningLocation: Location): Pair<Skeleton, SkeletonHorse> {
-        // Modify Vanguard to Knight
-        val someKnight = createMob(odysseyWorld, spawningLocation).apply {
-            // Name
-            customName(Component.text("Vanguard Knight"))
-            // Claymore
-            val newClaymore = Weapons.IRON_CLAYMORE.createItemStack(1).apply {
-                addUnsafeEnchantment(Enchantment.DURABILITY, 3)
-                addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5)
-                addUnsafeEnchantment(Enchantment.KNOCKBACK, 3)
-                itemMeta.displayName(Component.text("Norinthian Claymore"))
-            }
-            clearActiveItem()
-            equipment.setItemInMainHand(newClaymore)
+    fun createKnight(world: World, location: Location): Pair<Skeleton, SkeletonHorse> {
+        // Poleaxe Weapon
+        val weapon = WeaponCreator.toolCreator.createToolStack(ToolMaterial.COPPER, ToolType.POLEAXE).apply {
+            addUnsafeEnchantment(Enchantment.DURABILITY, 3)
+            addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5)
+            addUnsafeEnchantment(Enchantment.KNOCKBACK, 3)
+            itemMeta.displayName(Component.text("Norinthian Poleaxe"))
         }
-
+        // Modify Vanguard to Knight
+        val someKnight = createMob(world, location).apply {
+            customName(Component.text("Vanguard Knight"))
+            clearActiveItem()
+            equipment.setItemInMainHand(weapon)
+        }
         // Knight Steed
-        val skeletonSteed = (odysseyWorld.spawnEntity(spawningLocation, EntityType.SKELETON_HORSE) as SkeletonHorse).apply {
+        val skeletonSteed = (world.spawnEntity(location, EntityType.SKELETON_HORSE) as SkeletonHorse).apply {
             isTamed = false
             addPassenger(someKnight)
             addPotionEffects(listOf(
@@ -47,8 +47,22 @@ object Vanguard : OdysseyMob("Vanguard", "vanguard", EntityType.SKELETON, 30.0) 
     }
 
 
-    override fun createMob(someWorld: World, spawningLocation: Location): Skeleton {
-        val vanguardEntity = (super.createMob(someWorld, spawningLocation) as Skeleton).apply {
+    override fun createMob(world: World, location: Location): Skeleton {
+        // Spear
+        val weapon = WeaponCreator.toolCreator.createToolStack(ToolMaterial.COPPER, ToolType.SPEAR).apply {
+            addUnsafeEnchantment(Enchantment.DURABILITY, 3)
+            addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5)
+            addUnsafeEnchantment(Enchantment.KNOCKBACK, 3)
+            itemMeta.displayName(Component.text("Norinthian Spear"))
+        }
+        val shield = ItemStack(Material.SHIELD, 1).apply {
+            addUnsafeEnchantment(Enchantment.DURABILITY, 3)
+            addUnsafeEnchantment(Enchantment.PROTECTION_PROJECTILE, 5)
+            addUnsafeEnchantment(Enchantment.KNOCKBACK, 5)
+            itemMeta.displayName(Component.text("Norinthian Shield"))
+        }
+        // Create new mob
+        val entity = (super.createMob(world, location) as Skeleton).apply {
             // Effects
             addPotionEffects(listOf(
                 PotionEffect(PotionEffectType.INCREASE_DAMAGE, 99999, 4),
@@ -58,25 +72,10 @@ object Vanguard : OdysseyMob("Vanguard", "vanguard", EntityType.SKELETON, 30.0) 
             canPickupItems = true
             clearActiveItem()
             customName(Component.text(this@Vanguard.displayName, TextColor.color(220, 216, 75)))
-            // Spear
-            val newSpear = Weapons.IRON_SPEAR.createItemStack(1).apply {
-                addUnsafeEnchantment(Enchantment.DURABILITY, 3)
-                addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5)
-                addUnsafeEnchantment(Enchantment.KNOCKBACK, 3)
-                itemMeta.displayName(Component.text("Norinthian Spear"))
-            }
-            // Shield
-            val newShield = ItemStack(Material.SHIELD, 1).apply {
-                addUnsafeEnchantment(Enchantment.DURABILITY, 3)
-                addUnsafeEnchantment(Enchantment.PROTECTION_PROJECTILE, 5)
-                addUnsafeEnchantment(Enchantment.KNOCKBACK, 5)
-                itemMeta.displayName(Component.text("Norinthian Shield"))
-            }
             // Add Items
             equipment.also {
-                // TODO: Custom Models
-                it.setItemInMainHand(newSpear)
-                it.setItemInOffHand(newShield)
+                it.setItemInMainHand(weapon)
+                it.setItemInOffHand(shield)
                 it.helmet = ItemStack(Material.IRON_HELMET, 1)
                 it.chestplate = ItemStack(Material.IRON_CHESTPLATE, 1)
                 it.leggings = ItemStack(Material.IRON_LEGGINGS, 1)
@@ -89,7 +88,7 @@ object Vanguard : OdysseyMob("Vanguard", "vanguard", EntityType.SKELETON, 30.0) 
                 it.bootsDropChance = 0F
             }
         }
-        return vanguardEntity
+        return entity
     }
 
 

@@ -63,6 +63,7 @@ object RunesherdListeners : Listener, RunesherdManager {
     }
 
 
+    @Suppress("UnstableApiUsage")
     @EventHandler
     fun runewareKilnFiringHandler(event: FurnaceStartSmeltEvent) {
         // Get matching
@@ -80,7 +81,7 @@ object RunesherdListeners : Listener, RunesherdManager {
         var missingBlocks = -1
         val kilnStructureBlocks = listOf(Material.MUD_BRICKS, Material.PACKED_MUD)
         if (location.clone().add(0.0, 1.0, 0.0).block.type !in kilnStructureBlocks) {
-            missingBlocks += 1
+            missingBlocks = 0
         }
         if (location.clone().add(1.0, 0.0, 0.0).block.type !in kilnStructureBlocks) {
             missingBlocks += 1

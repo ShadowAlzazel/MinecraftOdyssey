@@ -6,12 +6,9 @@ import me.shadowalzazel.mcodyssey.constants.AttributeIDs
 import me.shadowalzazel.mcodyssey.constants.EffectTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.items.Arcane
-import me.shadowalzazel.mcodyssey.items.Arcane.createGildedBook
 import me.shadowalzazel.mcodyssey.items.Exotics
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
-import me.shadowalzazel.mcodyssey.items.Weapons
-import me.shadowalzazel.mcodyssey.items.Weapons.createWeapon
+import me.shadowalzazel.mcodyssey.items.Miscellaneous.createGildedBook
 import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.GravitySingularityTask
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -36,14 +33,16 @@ class TheAmbassador(location: Location) : OdysseyBoss(
         illusioner = entity as Illusioner
     }
 
+    internal val giftManager = GiftManager(this)
+
     // Boss Spawning Logic
     private var despawnTimer: Long = 1
 
     // Trading Mechanic
-    private var patience: Double = 55.0
-    private var appeasement: Double = 0.0
-    private var playersGiftCooldown = mutableMapOf<UUID, Long>()
-    private var playerLikeness = mutableMapOf<UUID, Double>()
+    internal var patience: Double = 55.0
+    internal var appeasement: Double = 0.0
+    internal var playersGiftCooldown = mutableMapOf<UUID, Long>()
+    internal var playerLikeness = mutableMapOf<UUID, Double>()
     internal var isAngered: Boolean = false
 
     private val itemLootTable = listOf(
@@ -451,27 +450,29 @@ class TheAmbassador(location: Location) : OdysseyBoss(
         when (material) {
             Material.NETHER_STAR -> {
                 giftLikeness += 30
-                val gravityBook = Arcane.GILDED_BOOK.createGildedBook(OdysseyEnchantments.GRAVITY_WELL, 1)
+                val gravityBook = Miscellaneous.GILDED_BOOK.createGildedBook(OdysseyEnchantments.GRAVITY_WELL, 1)
                 inventory.addItem(gravityBook)
             }
             Material.NETHERITE_INGOT -> {
                 giftLikeness += 8
                 if (appeasement > 40) { inventory.addItem(ItemStack(Material.RIB_ARMOR_TRIM_SMITHING_TEMPLATE, 3)) }
-                else if (appeasement > 20) { inventory.addItem(Weapons.NETHERITE_SABER.createWeapon()) }
+                else if (appeasement > 20) {
+                    // inventory.addItem(Weapons.NETHERITE_SABER.createWeapon())
+                }
                 else { inventory.addItem(ItemStack(Material.NETHERITE_AXE, 1)) }
             }
             Material.DIAMOND -> {
                 giftLikeness += 5
-                val weapon = listOf(Weapons.DIAMOND_CLAYMORE, Weapons.DIAMOND_KATANA, Weapons.DIAMOND_HALBERD, Weapons.DIAMOND_SICKLE, Weapons.DIAMOND_WARHAMMER).random()
-                inventory.addItem(weapon.createWeapon())
+                //val weapon = listOf(Weapons.DIAMOND_CLAYMORE, Weapons.DIAMOND_KATANA, Weapons.DIAMOND_HALBERD, Weapons.DIAMOND_SICKLE, Weapons.DIAMOND_WARHAMMER).random()
+                //inventory.addItem(weapon.createWeapon())
             }
             Material.AMETHYST_SHARD -> {
                 giftLikeness += 2
-                inventory.addItem(Arcane.ARCANE_BOOK.createItemStack(maxOf(extraValue - 1, 1)))
+                inventory.addItem(Miscellaneous.ARCANE_BOOK.createItemStack(maxOf(extraValue - 1, 1)))
             }
             Material.AMETHYST_BLOCK -> {
                 giftLikeness += 8
-                val tome = listOf(Arcane.TOME_OF_PROMOTION, Arcane.TOME_OF_EMBRACE, Arcane.TOME_OF_DISCHARGE).random()
+                val tome = listOf(Miscellaneous.TOME_OF_PROMOTION, Miscellaneous.TOME_OF_EMBRACE, Miscellaneous.TOME_OF_DISCHARGE).random()
                 inventory.addItem(tome.createItemStack(1))
             }
             Material.EMERALD -> {
@@ -513,7 +514,7 @@ class TheAmbassador(location: Location) : OdysseyBoss(
                 inventory.addItem(ItemStack(randomFood.random(), extraValue))
             }
             Material.ENCHANTED_GOLDEN_APPLE -> {
-                inventory.addItem(Arcane.TOME_OF_POLYMERIZATION.createItemStack(1))
+                inventory.addItem(Miscellaneous.TOME_OF_POLYMERIZATION.createItemStack(1))
                 giftLikeness += 15
             }
             Material.HEART_OF_THE_SEA -> {
@@ -601,7 +602,7 @@ class TheAmbassador(location: Location) : OdysseyBoss(
 
     /*-----------------------------------------------------------------------------------------------*/
     // Chat Message
-    private fun Player.sendAmbassadorChat(content: AmbassadorMessage, sayPlayer: Boolean = false) {
+    internal fun Player.sendAmbassadorChat(content: AmbassadorMessage, sayPlayer: Boolean = false) {
         val message = Component.text("[The Ambassador] ", AMBASSADOR_COLOR)
         if (sayPlayer) {
             sendMessage(message.append(name().color(WHITE_COLOR)).append(Component.text(content.text, WHITE_COLOR)))
@@ -609,7 +610,6 @@ class TheAmbassador(location: Location) : OdysseyBoss(
         else {
             sendMessage(message.append(Component.text(content.text, WHITE_COLOR)))
         }
-        println(content.text)
     }
 
 }

@@ -8,6 +8,7 @@ import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags.getIntTag
 import me.shadowalzazel.mcodyssey.constants.EntityTags.removeTag
 import me.shadowalzazel.mcodyssey.constants.EntityTags.setIntTag
+import me.shadowalzazel.mcodyssey.enchantments.EnchantRegistryManager
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.*
 import net.kyori.adventure.text.Component
@@ -34,7 +35,7 @@ import kotlin.math.max
 import kotlin.math.sin
 
 
-object RangedListeners : Listener {
+object RangedListeners : Listener, EnchantRegistryManager {
 
     private val galewindCooldown = mutableMapOf<UUID, Long>()
     private val currentOverchargeTasks = mutableMapOf<UUID, OverchargeTask>()
@@ -48,11 +49,13 @@ object RangedListeners : Listener {
         val shooter = event.entity
         if (event.bow == null) { return }
         val bow = event.bow!!
-        // TODO: Make priority for some enchants
+        // Priority is in the order
 
         // Loop for all enchants
         for (enchant in bow.enchantments) {
-            when (enchant.key) {
+            // Continue if not OdysseyEnchant
+            val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
+            when (gildedEnchant) {
                 OdysseyEnchantments.ALCHEMY_ARTILLERY -> {
                     alchemyArtilleryShoot(projectile, enchant.value)
                 }
@@ -214,15 +217,20 @@ object RangedListeners : Listener {
     // Main function for enchantments relating to loading crossbows
     @EventHandler
     fun crossbowLoadingHandler(event: EntityLoadCrossbowEvent) {
-        val someEntity = event.entity
-        if (event.crossbow?.hasItemMeta() == true) {
-            val someCrossbow = event.crossbow!!
+        val entity = event.entity
+        if (event.crossbow.hasItemMeta()) {
+            val someCrossbow = event.crossbow
             for (enchant in someCrossbow.enchantments) {
+                // Continue if not OdysseyEnchant
+                //val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
+                /*
                 when (enchant.key) {
                     OdysseyEnchantments.ALCHEMY_ARTILLERY -> {
-                        //event.isCancelled = alchemyArtilleryEnchantmentLoad(someEntity, someCrossbow)
+                        // Load More Damage
                     }
                 }
+
+                 */
             }
         }
     }
@@ -235,7 +243,9 @@ object RangedListeners : Listener {
             val bow = event.bow
             val player = event.player
             for (enchant in bow.enchantments) {
-                when (enchant.key) {
+                // Continue if not OdysseyEnchant
+                val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
+                when (gildedEnchant) {
                     OdysseyEnchantments.OVERCHARGE -> {
                         overchargeEnchantmentLoad(player, bow, enchant.value)
                     }
@@ -246,9 +256,8 @@ object RangedListeners : Listener {
 
     @EventHandler
     fun bowSwapHandsHandler(event: PlayerSwapHandItemsEvent) {
-        if (event.offHandItem == null) return
-        if (event.offHandItem.type != Material.BOW && event.offHandItem!!.type != Material.CROSSBOW) return
-        val offHand = event.offHandItem!!
+        if (event.offHandItem.type != Material.BOW && event.offHandItem.type != Material.CROSSBOW) return
+        val offHand = event.offHandItem
         if (!offHand.hasItemMeta()) return
         if (offHand.itemMeta.hasEnchant(OdysseyEnchantments.SOUL_REND.toBukkit())) {
             soulRendEnchantmentActivate(event.player)
@@ -258,19 +267,19 @@ object RangedListeners : Listener {
     // TODO: QuickHands -> auto reload?? maybe compact??
 
     // Helper function for cooldown
-    private fun cooldownManager(eventHitter: LivingEntity, someMessage: String, someCooldownMap: MutableMap<UUID, Long>, cooldownTimer: Double): Boolean {
-        if (!someCooldownMap.containsKey(eventHitter.uniqueId)) {
-            someCooldownMap[eventHitter.uniqueId] = 0L
+    private fun cooldownManager(hitter: LivingEntity, message: String, cooldownMap: MutableMap<UUID, Long>, timer: Double): Boolean {
+        if (!cooldownMap.containsKey(hitter.uniqueId)) {
+            cooldownMap[hitter.uniqueId] = 0L
         }
         // Cooldown Timer
-        val timeElapsed: Long = System.currentTimeMillis() - someCooldownMap[eventHitter.uniqueId]!!
-        return if (timeElapsed > cooldownTimer * 1000) {
-            someCooldownMap[eventHitter.uniqueId] = System.currentTimeMillis()
+        val timeElapsed: Long = System.currentTimeMillis() - cooldownMap[hitter.uniqueId]!!
+        return if (timeElapsed > timer * 1000) {
+            cooldownMap[hitter.uniqueId] = System.currentTimeMillis()
             true
         } else {
-            eventHitter.sendActionBar(
+            hitter.sendActionBar(
                 Component.text(
-                    "$someMessage on Cooldown (Time Remaining: ${cooldownTimer - ((timeElapsed / 1) * 0.001)}s)",
+                    "$message on Cooldown (Time Remaining: ${timer - ((timeElapsed / 1) * 0.001)}s)",
                     TextColor.color(155, 155, 155)
                 )
             )
@@ -289,10 +298,11 @@ object RangedListeners : Listener {
 
         }
         if (this is Arrow) {
-            if (hasCustomEffects()) {
-                basePotionData = (projectile as Arrow).basePotionData
+            for (effect in (projectile as Arrow).customEffects) {
+                addCustomEffect(effect, true)
             }
-            pierceLevel = maxOf((projectile as Arrow).pierceLevel - 1, 0)
+            basePotionType = projectile.basePotionType
+            pierceLevel = maxOf(projectile.pierceLevel - 1, 0)
         }
         if (this is ThrownPotion) {
             item = (projectile as ThrownPotion).item
@@ -337,18 +347,17 @@ object RangedListeners : Listener {
             // getBasePotionType.toEffect
         }
         else if (projectile is ThrownPotion) {
-            val potion = projectile
             val effectList = mutableListOf<PotionEffect>()
-            for (effect in potion.effects) {
+            for (effect in projectile.effects) {
                 val type = effect.type
                 val duration = (effect.duration * (1 + (0.2 * level))).toInt() // 20/40/60%
                 effectList.add(PotionEffect(type, duration, effect.amplifier))
             }
-            val potionMeta = potion.potionMeta.clone()
+            val potionMeta = projectile.potionMeta.clone()
             for (effect in effectList) {
                 potionMeta.addCustomEffect(effect, true)
             }
-            potion.potionMeta = potionMeta
+            projectile.potionMeta = potionMeta
             projectile.velocity.multiply(1 + (0.1 * level))
         }
 
@@ -578,7 +587,7 @@ object RangedListeners : Listener {
         if (projectile.scoreboardTags.contains(EntityTags.FAN_FIRE_SHOT)) return
         // Math
         val vector1 = shooter.eyeLocation.direction
-        val getVector2 = { dest: Location, orig: Location -> dest.clone().subtract(orig).toVector() }
+        val getVector2 = { destination: Location, orig: Location -> destination.clone().subtract(orig).toVector() }
         val nearby = shooter.world.getNearbyLivingEntities(shooter.location, 8.0).filter {
             it != shooter && vector1.angle(getVector2(it.eyeLocation, shooter.eyeLocation)) < 1.74533
         }
@@ -711,7 +720,7 @@ object RangedListeners : Listener {
     private fun ricochetEnchantmentBlockHit(projectile: Projectile, normalVector: Vector) {
         val bounce = projectile.getIntTag(EntityTags.RICOCHET_BOUNCE) ?: return
         val modifier = projectile.getIntTag(EntityTags.RICOCHET_MODIFIER) ?: return
-        // Check if can bounce more
+        // Check if it can bounce more
         if (bounce < modifier) {
             projectile.setIntTag(EntityTags.RICOCHET_BOUNCE, bounce + 1)
         }

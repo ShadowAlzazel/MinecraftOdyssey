@@ -2,95 +2,97 @@ package me.shadowalzazel.mcodyssey.items
 
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
+import me.shadowalzazel.mcodyssey.items.creators.ItemCreator
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
+import org.bukkit.Color
 import org.bukkit.Material
 
-object Miscellaneous {
+object Miscellaneous : ItemCreator {
 
-    val PRIMO_GEM = OdysseyItem(
-        name = "Primogem",
-        material = Material.EMERALD,
-        displayName = Component.text("Primogem", TextColor.color(226, 137, 69), TextDecoration.ITALIC),
+    private val GRAY = TextColor.color(170, 170, 170)
+
+    val TOTEM_OF_VEXING = OdysseyItem("totem_of_vexing", Material.PAPER, "Totem of Vexing", ItemModels.TOTEM_OF_VEXING)
+    val IRRADIATED_FRUIT = OdysseyItem("irradiated_fruit", Material.APPLE, "Irradiated Fruit", ItemModels.IRRADIATED_FRUIT)
+    val SCULK_HEART = OdysseyItem("sculk_heart", Material.ROTTEN_FLESH, "Sculk Heart", ItemModels.SCULK_HEART)
+    val ENIGMATIC_OMAMORI = OdysseyItem("enigmatic_omamori", Material.PAPER, "Sculk Heart", ItemModels.ENIGMATIC_OMAMORI)
+
+    val BLAZING_ROCKET = OdysseyItem("blazing_rocket", Material.FIREWORK_ROCKET, "Blazing Rocket", ItemModels.BLAZING_ROCKET,
+        lore = listOf(Component.text("This rocket has a chance to explode!", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+
+    val SOUL_SPICE = OdysseyItem("soul_spice", Material.GLOWSTONE_DUST, "Soul Spice", ItemModels.SOUL_SPICE,
+        lore = listOf(Component.text("Drop this to be able to see nearby enemies.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+
+    val SCULK_POINTER = OdysseyItem("sculk_pointer", Material.COMPASS, "Sculk Pointer", ItemModels.SCULK_POINTER,
+        lore = listOf(Component.text("This device points in the direction of the nearest Ancient City.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+
+    // Books
+    val GILDED_BOOK = OdysseyItem("gilded_book", Material.ENCHANTED_BOOK, "Gilded Book", ItemModels.GILDED_BOOK)
+
+    val ARCANE_BOOK = OdysseyItem("arcane_book", Material.BOOK, "Arcane Book", ItemModels.ARCANE_BOOK,
+        lore = listOf(Component.text("A special book that can be enchanted into tomes.", TextColor.color(191, 146, 239)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+
+    val TOME_OF_DISCHARGE = OdysseyItem("tome_of_discharge", Material.ENCHANTED_BOOK, "Tome of Discharge", ItemModels.TOME_OF_DISCHARGE,
+        lore = listOf(Component.text("Removes one enchantment from an enchant slot.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))) // T1
+
+    val TOME_OF_PROMOTION = OdysseyItem("tome_of_promotion", Material.ENCHANTED_BOOK, "Tome of Promotion", ItemModels.TOME_OF_PROMOTION,
+        lore = listOf(Component.text("Increases the level of an enchantment by one, up to the max.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))) // T1
+
+    val TOME_OF_HARMONY = OdysseyItem("tome_of_harmony", Material.ENCHANTED_BOOK, "Tome of Harmony", ItemModels.TOME_OF_HARMONY,
+        lore = listOf(Component.text("Resets the repair and combination cost of an item.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))) // T2
+
+    val TOME_OF_BANISHMENT = OdysseyItem("tome_of_banishment", Material.ENCHANTED_BOOK, "Tome of Banishment", ItemModels.TOME_OF_BANISHMENT,
+        lore = listOf(Component.text("Deletes an empty enchant slot from the item.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))) // T0
+
+    val TOME_OF_EMBRACE = OdysseyItem("tome_of_embrace", Material.ENCHANTED_BOOK, "Tome of Embrace", ItemModels.TOME_OF_EMBRACE,
+        lore = listOf(Component.text("Adds an empty enchant slot to the item.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))) // T1
+
+    val TOME_OF_IMITATION = OdysseyItem("tome_of_imitation", Material.ENCHANTED_BOOK, "Tome of Replication", ItemModels.TOME_OF_REPLICATION, // T2
+        lore = listOf(Component.text("Replicates one enchantment (not the level) of an enchanted book.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+
+    val TOME_OF_EXPENDITURE = OdysseyItem("tome_of_expenditure", Material.ENCHANTED_BOOK, "Tome of Expenditure", ItemModels.TOME_OF_EXPENDITURE, // T2
+        lore = listOf(Component.text("Extracts one enchantment from an item (the item is deleted).", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+
+    val TOME_OF_AVARICE = OdysseyItem("tome_of_avarice", Material.ENCHANTED_BOOK, "Tome of Avarice", ItemModels.TOME_OF_AVARICE, // T3
+        lore = listOf(Component.text("[FINISH]", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+
+    val TOME_OF_REPLICATION = OdysseyItem("tome_of_avarice", Material.ENCHANTED_BOOK, "Tome of Euphony", ItemModels.TOME_OF_REPLICATION, // T3
+        lore = listOf(Component.text("[FINISH]", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+
+    val TOME_OF_EUPHONY = OdysseyItem("tome_of_avarice", Material.ENCHANTED_BOOK, "Tome of Euphony", ItemModels.TOME_OF_EUPHONY, // T3
+        lore = listOf(Component.text("[FINISH]", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+
+    val TOME_OF_POLYMERIZATION = OdysseyItem("tome_of_avarice", Material.ENCHANTED_BOOK, "Tome of Polymerization", ItemModels.TOME_OF_POLYMERIZATION, // T3
+        lore = listOf(Component.text("[FINISH]", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+    // Can absorb any non-conflicting enchantment.
+    // Applies the stored enchantments to an item with no cost
+
+
+    // Spirit Items
+    // TO DIFFERENT TYPES OF BUFFING ITEMS
+    // TOTEMS ARE FOUND -> More Potent / Effects can be spread
+    // CHARMS ARE MADE -> Less Potent / Personal
+
+
+    // Sniffer
+    val ASPEN_SEED = OdysseyItem("aspen_seed", Material.WHEAT_SEEDS, "Aspen Seed", ItemModels.ASPEN_SEED)
+    val MAPLE_SEED = OdysseyItem("maple_seed", Material.WHEAT_SEEDS, "Aspen Seed", ItemModels.MAPLE_SEED)
+    val SAKURA_SEED = OdysseyItem("sakura_seed", Material.WHEAT_SEEDS, "Aspen Seed", ItemModels.SAKURA_SEED)
+    val REDWOOD_SEED = OdysseyItem("redwood_seed", Material.WHEAT_SEEDS, "Aspen Seed", ItemModels.REDWOOD_SEED)
+
+    // Other
+    val PRIMO_GEM = OdysseyItem( "primogem",Material.EMERALD,"Primogem", ItemModels.PRIMOGEM,
         lore = listOf(
             Component.text("A primordial crystalline gem that's beyond", TextColor.color(215, 215, 215)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE),
             Component.text("the test world. Shines with the condensed hopes", TextColor.color(215, 215, 215)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE),
-            Component.text("and dreams of universes that once were.", TextColor.color(215, 215, 215)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.PRIMOGEM)
-
-    val TOTEM_OF_VEXING = OdysseyItem(
-        name = "totem_of_vexing",
-        material = Material.MILK_BUCKET,
-        displayName = Component.text("Totem of Vexing", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
-        lore = listOf(Component.text("A totem with vexing properties", TextColor.color(112, 123, 153)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.TOTEM_OF_VEXING)
-
-    val SOUL_CATALYST  = OdysseyItem(
-        name = "soul_catalyst",
-        material = Material.AMETHYST_SHARD,
-        displayName = Component.text("Soul Catalyst", TextColor.color(36, 29, 50), TextDecoration.ITALIC),
-        lore = listOf(Component.text("A device made to temporarily contain souls...", TextColor.color(23, 170, 177)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.SOUL_CATALYST)
-
-    val IRRADIATED_FRUIT = OdysseyItem(
-        name = "irradiated_fruit",
-        material = Material.APPLE,
-        displayName = Component.text("Irradiated Fruit", TextColor.color(255, 84, 255), TextDecoration.ITALIC),
-        lore = listOf(Component.text("They say its good for you...", TextColor.color(87, 67, 96)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.IRRADIATED_FRUIT)
-
-    val SCULK_HEART = OdysseyItem(
-        name = "sculk_heart",
-        material = Material.ROTTEN_FLESH,
-        displayName = Component.text("Sculk Heart", TextColor.color(24, 90, 94), TextDecoration.ITALIC),
-        lore = listOf(Component.text("A beating heart of the sculk", TextColor.color(24, 130, 154)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.SCULK_HEART)
-
-    val ENIGMATIC_OMAMORI = OdysseyItem(
-        name = "enigmatic_omamori",
-        material = Material.PAPER,
-        displayName = Component.text("Enigmatic Omamori", TextColor.color(57, 63, 84), TextDecoration.ITALIC),
-        lore = listOf(Component.text("A charm that attracts wandering souls...", TextColor.color(3, 170, 177)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.ENIGMATIC_OMAMORI)
-
-    val BREEZE_IN_A_BOTTLE = OdysseyItem(
-        name = "enigmatic_omamori",
-        material = Material.GLASS_BOTTLE,
-        displayName = Component.text("Breeze in a Bottle", TextColor.color(74, 140, 234), TextDecoration.ITALIC),
-        lore = listOf(Component.text("Somehow the winds are contained in this?", TextColor.color(74, 140, 234)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.BREEZE_IN_A_BOTTLE)
-
-    val CRYING_GOLD = OdysseyItem(
-        name = "crying_gold",
-        material = Material.RAW_GOLD,
-        displayName = Component.text("Crying Gold", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
-        lore = listOf(Component.text("An invaluable trinket to Piglins", TextColor.color(112, 123, 153)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.CRYING_GOLD)
-
-    val BLAZING_ROCKET = OdysseyItem(
-        name = "blazing_rocket",
-        material = Material.FIREWORK_ROCKET,
-        displayName = Component.text("Blazing Rocket", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
-        lore = listOf(Component.text("This rocket has a chance to explode!", TextColor.color(255, 55, 55)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.BLAZING_ROCKET
+            Component.text("and dreams of universes that once were.", TextColor.color(215, 215, 215)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))
     )
 
-    val SOUL_SPICE = OdysseyItem(
-        name = "soul_spice",
-        material = Material.GLOWSTONE_DUST,
-        displayName = Component.text("Soul Spice", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
-        lore = listOf(Component.text("Drop this to be able to see nearby enemies", TextColor.color(3, 170, 177)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.SOUL_SPICE
-    )
-
-    val SCULK_POINTER = OdysseyItem(
-        name = "sculk_pointer",
-        material = Material.COMPASS,
-        displayName = Component.text("Sculk Pointer", TextColor.color(255, 255, 85), TextDecoration.ITALIC),
-        lore = listOf(Component.text("This points to the nearest Ancient City", TextColor.color(24, 90, 94)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.SCULK_POINTER
-    )
+    // Unused [WIP]
+    val CRYING_GOLD = OdysseyItem("crying_gold", Material.RAW_GOLD, "Crying Gold", ItemModels.CRYING_GOLD)
+    val BREEZE_IN_A_BOTTLE = OdysseyItem("breeze_in_a_bottle", Material.GLASS_BOTTLE, "Breeze in a Bottle", ItemModels.BREEZE_IN_A_BOTTLE)
+    val SOUL_CATALYST  = OdysseyItem("soul_catalyst", Material.AMETHYST_SHARD, "Soul Catalyst", ItemModels.SOUL_CATALYST)
 
 }
 

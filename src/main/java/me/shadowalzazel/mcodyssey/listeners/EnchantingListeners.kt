@@ -6,9 +6,9 @@ import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.enchantments.EnchantRegistryManager
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
-import me.shadowalzazel.mcodyssey.items.Arcane
-import me.shadowalzazel.mcodyssey.items.Arcane.createGildedBook
+import me.shadowalzazel.mcodyssey.items.Miscellaneous
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
+import me.shadowalzazel.mcodyssey.items.creators.ItemCreator
 import net.kyori.adventure.text.Component
 import org.apache.commons.lang3.tuple.MutablePair
 import org.bukkit.Material
@@ -31,7 +31,7 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.inventory.meta.Repairable
 import kotlin.math.max
 
-object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManager {
+object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManager, ItemCreator {
 
     /*-----------------------------------------------------------------------------------------------*/
     /*-----------------------------------------------------------------------------------------------*/
@@ -155,7 +155,7 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
             return
         }
         // If slotted
-        if (firstIsSlotted) {
+        else {
             // Current gilded
             val currentGildedEnchants: Map<Enchantment, Int> = first.enchantments.filter { it.key.isOdysseyEnchant()}
             val resultEnchants = result.enchantments
@@ -247,27 +247,27 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
         when ((0..40).random() + minOf(enchanterLevel, 100)) {
             in 0..10 -> {
                 tierCost = 0
-                randomTome = listOf(Arcane.TOME_OF_BANISHMENT).random()
+                randomTome = listOf(Miscellaneous.TOME_OF_BANISHMENT).random()
             }
             in 11..40 -> {
                 tierCost = 1
-                randomTome = listOf(Arcane.TOME_OF_DISCHARGE, Arcane.TOME_OF_EMBRACE).random()
+                randomTome = listOf(Miscellaneous.TOME_OF_DISCHARGE, Miscellaneous.TOME_OF_EMBRACE).random()
             }
             in 41..70 -> {
                 tierCost = 2
-                randomTome = listOf(Arcane.TOME_OF_PROMOTION, Arcane.TOME_OF_HARMONY).random()
+                randomTome = listOf(Miscellaneous.TOME_OF_PROMOTION, Miscellaneous.TOME_OF_IMITATION).random()
             }
             in 71..110 -> {
                 tierCost = 3
-                randomTome = listOf(Arcane.TOME_OF_EXPENDITURE, Arcane.TOME_OF_REPLICATION).random()
+                randomTome = listOf(Miscellaneous.TOME_OF_EXPENDITURE, Miscellaneous.TOME_OF_HARMONY).random()
             }
             in 111..200 -> {
                 tierCost = 4
-                randomTome = listOf(Arcane.TOME_OF_AVARICE).random()
+                randomTome = listOf(Miscellaneous.TOME_OF_AVARICE).random()
             }
             else -> {
                 tierCost = 0
-                randomTome = listOf(Arcane.TOME_OF_BANISHMENT).random()
+                randomTome = listOf(Miscellaneous.TOME_OF_BANISHMENT).random()
             }
         }
 
@@ -429,6 +429,7 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
                 }
             }
         }
+        /*
         else if (hasGold && hasEquipment) {
             event.result = when (template.itemMeta.customModelData) {
                 ItemModels.GILDED_BOOK -> {
@@ -449,6 +450,8 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
                 }
             }
         }
+
+         */
     }
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -466,7 +469,7 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
             viewers.forEach { it.sendFailMessage("This item has the maximum of three gilded slots.") }
             return ItemStack(Material.AIR)
         }
-        val enchantList = item.enchantments.filter { it.key !is OdysseyEnchantment }
+        val enchantList = item.enchantments.filter { it.key.isNotOdysseyEnchant() }
         val enchantSize = enchantList.size
         if (enchantSize < 4) {
             viewers.forEach { it.sendFailMessage("This tome requires at least 4 enchants on the item to use.") }
@@ -565,8 +568,9 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
         }
         // Create Book
         val extractedEnchant = item.enchantments.toList().random()
-        val book = if (extractedEnchant.first is OdysseyEnchantment) {
-            Arcane.GILDED_BOOK.createGildedBook(extractedEnchant.first as OdysseyEnchantment, extractedEnchant.second)
+        val extractedIsGilded = extractedEnchant.first.isOdysseyEnchant()
+        val book = if (extractedIsGilded) {
+            Miscellaneous.GILDED_BOOK.createGildedBook(extractedEnchant.first.convertToOdysseyEnchant(), extractedEnchant.second)
         } else {
             ItemStack(Material.ENCHANTED_BOOK, 1).apply {
                 val newMeta = itemMeta.clone() as EnchantmentStorageMeta
@@ -594,11 +598,11 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
             viewers.forEach { it.sendFailMessage("This tome needs at least one enchant to be used") }
             return ItemStack(Material.AIR)
         }
-        if (item.getGildedSlots() < book.enchantments.keys.count { it is OdysseyEnchantment } ) {
+        if (item.getGildedSlots() < book.enchantments.keys.count { it.isOdysseyEnchant() } ) {
             viewers.forEach { it.sendFailMessage("This tome has more gilded enchants than slots on the item") }
             return ItemStack(Material.AIR)
         }
-        if (item.getEnchantSlots() < book.enchantments.keys.count { it !is OdysseyEnchantment } ) {
+        if (item.getEnchantSlots() < book.enchantments.keys.count { it.isNotOdysseyEnchant() } ) {
             viewers.forEach { it.sendFailMessage("This tome has more regular enchants than slots on the item") }
             return ItemStack(Material.AIR)
         }
@@ -682,7 +686,7 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
         }
         // Book
         val book = if (promotedEnchant.first.isOdysseyEnchant()) {
-            Arcane.GILDED_BOOK.createGildedBook(promotedEnchant.first as OdysseyEnchantment, promotedEnchant.second + 1)
+            Miscellaneous.GILDED_BOOK.createGildedBook(promotedEnchant.first.convertToOdysseyEnchant(), promotedEnchant.second + 1)
         } else {
             item.clone().apply {
                 val newMeta = itemMeta.clone() as EnchantmentStorageMeta
@@ -698,11 +702,12 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
         return if (item.itemMeta.hasEnchants() || (item.itemMeta as EnchantmentStorageMeta).hasStoredEnchants()) {
             item.clone()
         } else {
-            Arcane.TOME_OF_REPLICATION.createItemStack(1)
+            Miscellaneous.TOME_OF_REPLICATION.createItemStack(1)
         }
     }
 
     /*-----------------------------------------------------------------------------------------------*/
+    /*
     private fun gildedBookToEquipment(book: ItemStack, item: ItemStack, viewers: List<HumanEntity>): ItemStack {
         // Gilded Book Sentries
         if (book.enchantments.size > 1) {
@@ -793,9 +798,11 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
             viewers.forEach { it.sendFailMessage("The gilded books do not create a higher level enchantment.") }
             return ItemStack(Material.AIR)
         }
-        return Arcane.GILDED_BOOK.createGildedBook(firstEnchant.key.convertToOdysseyEnchant(), newLevel + 1)
+        return Miscellaneous.GILDED_BOOK.createGildedBook(firstEnchant.key.convertToOdysseyEnchant(), newLevel + 1)
     }
 
+
+     */
     /*-----------------------------------------------------------------------------------------------*/
     /*-----------------------------------------------------------------------------------------------*/
 

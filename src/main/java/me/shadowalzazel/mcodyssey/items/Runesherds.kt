@@ -14,6 +14,9 @@ import org.bukkit.inventory.ItemStack
 
 object Runesherds : RunesherdManager {
 
+    private val GRAY = TextColor.color(170, 170, 170)
+    private val RUNEVOID = TextColor.color(85, 67 ,129)
+
     private val ARMOR_LIST = listOf(EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD)
     private val ALL_LIST = listOf(EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.CHEST,
         EquipmentSlot.HEAD, EquipmentSlot.OFF_HAND, EquipmentSlot.HAND)
@@ -23,8 +26,8 @@ object Runesherds : RunesherdManager {
         val item = createItemStack(amount).also {
             it.addRunesherdTag()
         }
-        if (attribute != null && affectedEquipment != null && affectedEquipment.isNotEmpty()) {
-            val runeName = "odyssey." + name + "_modifier"
+        if (attribute != null && !affectedEquipment.isNullOrEmpty()) {
+            val runeName = "odyssey." + itemName + "_modifier"
             val runeID = getIDForRunesherd(attribute)
             item.addRuneModifier(attribute, value, runeName, runeID, affectedEquipment[0])
         }
@@ -35,8 +38,8 @@ object Runesherds : RunesherdManager {
         val item = createItemStack(amount).also {
             it.addRunesherdTag()
         }
-        if (attribute != null && affectedEquipment != null && affectedEquipment.isNotEmpty()) {
-            val runeName = "odyssey." + name + "_modifier"
+        if (attribute != null && !affectedEquipment.isNullOrEmpty()) {
+            val runeName = "odyssey." + itemName + "_modifier"
             val runeID = getIDForRunesherd(attribute)
             val newValue = value + (((0..100).random() / 100) * bonus) // Get an offset
             item.addRuneModifier(attribute, newValue, runeName, runeID, ALL_LIST.random())
@@ -54,67 +57,36 @@ object Runesherds : RunesherdManager {
     /*-----------------------------------------------------------------------------------------------*/
 
     // ORB
-    val FRAGMENTED_ORB = OdysseyItem(
-        name = "fragmented_orb",
-        material = Material.CLAY_BALL,
-        displayName = Component.text("Fragmented Orb", TextColor.color(85, 67 ,129), TextDecoration.ITALIC),
-        lore = listOf(Component.text("An un matured runeware runesherds", TextColor.color(155, 155, 155)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.FRAGMENTED_ORB
-    )
+    val FRAGMENTED_ORB = OdysseyItem("fragmented_orb", Material.CLAY_BALL, "Fragmented Orb", ItemModels.FRAGMENTED_ORB,
+        lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
-    val GLAZED_RUNE_ORB = OdysseyItem(
-        name = "glazed_rune_orb",
-        material = Material.BRICK,
-        displayName = Component.text("Glazed Rune Orb", TextColor.color(85, 67 ,129), TextDecoration.ITALIC),
-        lore = listOf(Component.text("A matured runeware", TextColor.color(155, 155, 155)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.GLAZED_RUNE_ORB
-    )
+    val GLAZED_RUNE_ORB = OdysseyItem("glazed_rune_orb", Material.BRICK, "Glazed Rune Orb", ItemModels.GLAZED_RUNE_ORB,
+        lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
     // TOTEM
-    val CLAY_TOTEM = OdysseyItem(
-        name = "clay_totem",
-        material = Material.CLAY_BALL,
-        displayName = Component.text("Clay Totem", TextColor.color(85, 67 ,129), TextDecoration.ITALIC),
-        lore = listOf(Component.text("An un matured runeware runesherds", TextColor.color(155, 155, 155)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.CLAY_TOTEM
-    )
+    val CLAY_TOTEM = OdysseyItem("clay_totem", Material.CLAY_BALL, "Clay Totem", ItemModels.CLAY_TOTEM,
+        lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
-    val GLAZED_RUNE_TOTEM = OdysseyItem(
-        name = "glazed_rune_totem",
-        material = Material.BRICK,
-        displayName = Component.text("Glazed Rune Totem", TextColor.color(85, 67 ,129), TextDecoration.ITALIC),
-        lore = listOf(Component.text("A matured runeware", TextColor.color(155, 155, 155)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.GLAZED_RUNE_TOTEM
-    )
+    val GLAZED_RUNE_TOTEM = OdysseyItem("glazed_rune_totem", Material.BRICK, "Glazed Rune Totem", ItemModels.GLAZED_RUNE_TOTEM,
+        lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
-    // FLOWER
-    val CLAY_FLOWER = OdysseyItem(
-        name = "clay_totem",
-        material = Material.CLAY_BALL,
-        displayName = Component.text("Clay Totem", TextColor.color(85, 67 ,129), TextDecoration.ITALIC),
-        lore = listOf(Component.text("An un matured runeware runesherds", TextColor.color(155, 155, 155)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.CLAY_TOTEM
-    )
+    // FLOWER [WIP]
+    /*
+    val CLAY_FLOWER = OdysseyItem("clay_flower", Material.CLAY_BALL, "Clay FLower", 221,
+        lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
-    val GLAZED_RUNE_FLOWER = OdysseyItem(
-        name = "glazed_rune_totem",
-        material = Material.BRICK,
-        displayName = Component.text("Glazed Rune Totem", TextColor.color(85, 67 ,129), TextDecoration.ITALIC),
-        lore = listOf(Component.text("A matured runeware", TextColor.color(155, 155, 155)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        customModel = ItemModels.GLAZED_RUNE_TOTEM
-    )
-
-
+    val GLAZED_RUNE_FLOWER = OdysseyItem("glazed_rune_flower", Material.BRICK, "Glazed Rune Flower", 11,
+        lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+     */
     // ROD
-
     // SKULL
 
     /*-----------------------------------------------------------------------------------------------*/
 
     val ASSAULT_RUNESHERD = OdysseyRunesherd(
-        name = "assault_runesherd",
-        material = Material.BRICK,
-        displayName = Component.text("Assault Runesherd", TextColor.color(85, 67 ,129)),
+        itemName = "assault_runesherd",
+        overrideMaterial = Material.BRICK,
+        customName = "Assault Runesherd",
         customModel = ItemModels.ASSAULT_RUNESHERD,
         attribute = Attribute.GENERIC_ATTACK_DAMAGE,
         value = 1.0,
@@ -122,9 +94,9 @@ object Runesherds : RunesherdManager {
     )
 
     val GUARD_RUNESHERD = OdysseyRunesherd(
-        name = "guard_runesherd",
-        material = Material.BRICK,
-        displayName = Component.text("Guard Runesherd", TextColor.color(85, 67 ,129)),
+        itemName = "guard_runesherd",
+        overrideMaterial = Material.BRICK,
+        customName = "Guard Runesherd",
         customModel = ItemModels.GUARD_RUNESHERD,
         attribute = Attribute.GENERIC_ARMOR,
         value = 1.0,
@@ -132,9 +104,9 @@ object Runesherds : RunesherdManager {
     )
 
     val FINESSE_RUNESHERD = OdysseyRunesherd(
-        name = "finesse_runesherd",
-        material = Material.BRICK,
-        displayName = Component.text("Finesse Runesherd", TextColor.color(85, 67 ,129)),
+        itemName = "finesse_runesherd",
+        overrideMaterial = Material.BRICK,
+        customName = "Finesse Runesherd",
         customModel = ItemModels.FINESSE_RUNESHERD,
         attribute = Attribute.GENERIC_ATTACK_SPEED,
         value = 0.2,
@@ -142,9 +114,9 @@ object Runesherds : RunesherdManager {
     )
 
     val SWIFT_RUNESHERD = OdysseyRunesherd(
-        name = "swift_runesherd",
-        material = Material.BRICK,
-        displayName = Component.text("Swift Runesherd", TextColor.color(85, 67 ,129)),
+        itemName = "swift_runesherd",
+        overrideMaterial = Material.BRICK,
+        customName = "Swift Runesherd",
         customModel = ItemModels.SWIFT_RUNESHERD,
         attribute = Attribute.GENERIC_MOVEMENT_SPEED,
         value = 0.03,
@@ -152,9 +124,9 @@ object Runesherds : RunesherdManager {
     )
 
     val VITALITY_RUNESHERD = OdysseyRunesherd(
-        name = "vitality_runesherd",
-        material = Material.BRICK,
-        displayName = Component.text("Vitality Runesherd", TextColor.color(85, 67 ,129)),
+        itemName = "vitality_runesherd",
+        overrideMaterial = Material.BRICK,
+        customName = "Vitality Runesherd",
         customModel = ItemModels.VITALITY_RUNESHERD,
         attribute = Attribute.GENERIC_MAX_HEALTH,
         value = 2.0,
@@ -162,9 +134,9 @@ object Runesherds : RunesherdManager {
     )
 
     val STEADFAST_RUNESHERD = OdysseyRunesherd(
-        name = "steadfast_runesherd",
-        material = Material.BRICK,
-        displayName = Component.text("Steadfast Runesherd", TextColor.color(85, 67 ,129)),
+        itemName = "steadfast_runesherd",
+        overrideMaterial = Material.BRICK,
+        customName = "Steadfast Runesherd",
         customModel = ItemModels.STEADFAST_RUNESHERD,
         attribute = Attribute.GENERIC_KNOCKBACK_RESISTANCE,
         value = 0.2,
@@ -172,9 +144,9 @@ object Runesherds : RunesherdManager {
     )
 
     val FORCE_RUNESHERD = OdysseyRunesherd(
-        name = "force_runesherd",
-        material = Material.BRICK,
-        displayName = Component.text("Force Runesherd", TextColor.color(85, 67 ,129)),
+        itemName = "force_runesherd",
+        overrideMaterial = Material.BRICK,
+        customName = "Force Runesherd",
         customModel = ItemModels.FORCE_RUNESHERD,
         attribute = Attribute.GENERIC_ATTACK_KNOCKBACK,
         value = 0.5,

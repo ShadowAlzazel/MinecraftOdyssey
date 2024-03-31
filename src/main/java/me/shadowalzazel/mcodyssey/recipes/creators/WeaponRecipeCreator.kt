@@ -2,7 +2,7 @@ package me.shadowalzazel.mcodyssey.recipes.creators
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.constants.ItemTags.getOdysseyTag
-import me.shadowalzazel.mcodyssey.items.Materials
+import me.shadowalzazel.mcodyssey.items.Ingredients
 import me.shadowalzazel.mcodyssey.items.creators.ItemCreator
 import me.shadowalzazel.mcodyssey.items.creators.ToolCreator
 import me.shadowalzazel.mcodyssey.items.utility.ToolMaterial
@@ -26,6 +26,11 @@ class WeaponRecipeCreator : ItemCreator {
 
     // Patterns
     private val toolPatterns = mapOf(
+        // Other Overrides
+        "shuriken" to listOf(
+            " X ",
+            "XCX",
+            " X "),
         // Sword Overrides
         "katana" to listOf(
             "  X",
@@ -80,6 +85,10 @@ class WeaponRecipeCreator : ItemCreator {
             "|XX",
             "|XX",
             "|  "),
+        "poleaxe" to listOf(
+            "XXX",
+            " |X",
+            "|  "),
         // Pickaxe Overrides
         "warhammer" to listOf(
             " X ",
@@ -125,33 +134,36 @@ class WeaponRecipeCreator : ItemCreator {
             '|' to MaterialChoice(Material.STICK)
         ),
         "silver" to mapOf(
-            'X' to ExactChoice(Materials.SILVER_INGOT.createItemStack(1)),
+            'X' to ExactChoice(Ingredients.SILVER_INGOT.createItemStack(1)),
             '|' to MaterialChoice(Material.STICK)
         ),
         "soul_steel" to mapOf(
-            'X' to ExactChoice(Materials.SOUL_STEEL_INGOT.createItemStack(1)),
+            'X' to ExactChoice(Ingredients.SOUL_STEEL_INGOT.createItemStack(1)),
             '|' to MaterialChoice(Material.STICK)
         ),
         "titanium" to mapOf(
-            'X' to ExactChoice(Materials.TITANIUM_INGOT.createItemStack(1)),
+            'X' to ExactChoice(Ingredients.TITANIUM_INGOT.createItemStack(1)),
             '|' to MaterialChoice(Material.STICK)
         ),
         "andonized_titanium" to mapOf(
-            'X' to ExactChoice(Materials.ANDONIZED_TITANIUM_INGOT.createItemStack(1)),
+            'X' to ExactChoice(Ingredients.ANDONIZED_TITANIUM_INGOT.createItemStack(1)),
             '|' to MaterialChoice(Material.STICK)
         ),
         "iridium" to mapOf(
-            'X' to ExactChoice(Materials.IRIDIUM_INGOT.createItemStack(1)),
+            'X' to ExactChoice(Ingredients.IRIDIUM_INGOT.createItemStack(1)),
             '|' to MaterialChoice(Material.STICK)
         ),
         "mithril" to mapOf(
-            'X' to ExactChoice(Materials.MITHRIL_INGOT.createItemStack(1)),
+            'X' to ExactChoice(Ingredients.MITHRIL_INGOT.createItemStack(1)),
             '|' to MaterialChoice(Material.STICK)
         ),
     )
 
     // Complementary Keys
     private val toolKeys = mapOf(
+        "shuriken" to mapOf(
+            'C' to MaterialChoice(Material.IRON_NUGGET)
+        ),
         "katana" to mapOf(
             'C' to MaterialChoice(Material.COPPER_INGOT)
         ),
@@ -176,7 +188,8 @@ class WeaponRecipeCreator : ItemCreator {
     )
 
     private fun createWeaponRecipe(material: ToolMaterial, type: ToolType): Recipe {
-        val result = toolCreator.createToolStack(material, type)
+        val amount = if (type == ToolType.SHURIKEN) { 16 } else { 1 } // MOVE TO DICT LATER
+        val result = toolCreator.createToolStack(material, type, amount)
         // Create name variables
         val itemName = result.getOdysseyTag()!!
         val resultKey = NamespacedKey(Odyssey.instance, itemName)
@@ -191,8 +204,11 @@ class WeaponRecipeCreator : ItemCreator {
         // Assemble recipe
         val recipe = ShapedRecipe(resultKey, result).apply {
             shape(*pattern.toTypedArray())
+            val patternChars = pattern.reduce { acc, s -> if (s !in acc) acc + s else acc}
             for (ingredient in ingredientMap) {
-                setIngredient(ingredient.key, ingredient.value)
+                if (ingredient.key in patternChars) {
+                    setIngredient(ingredient.key, ingredient.value)
+                }
             }
             group = type.itemName
             category = CraftingBookCategory.EQUIPMENT
@@ -205,12 +221,14 @@ class WeaponRecipeCreator : ItemCreator {
         // Get entries from enums
         val toolTypeEntries = ToolType.entries.toList()
         val toolMaterialEntries = ToolMaterial.entries.toList()
-        // Iterator
+        // Iterator For model type weapons
         for (mat in toolMaterialEntries) {
             for (type in toolTypeEntries) {
                 recipes.add(createWeaponRecipe(mat, type))
             }
         }
+        //
+
         return recipes
     }
 

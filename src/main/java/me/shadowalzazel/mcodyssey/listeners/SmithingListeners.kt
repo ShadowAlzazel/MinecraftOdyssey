@@ -9,7 +9,7 @@ import me.shadowalzazel.mcodyssey.constants.ItemTags.addStringTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
 import me.shadowalzazel.mcodyssey.items.Ingredients
-import me.shadowalzazel.mcodyssey.trims.Trims
+import me.shadowalzazel.mcodyssey.trims.TrimMaterials
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
@@ -146,7 +146,7 @@ object SmithingListeners : Listener, EnchantSlotManager {
         }
 
         /*-----------------------------------------------------------------------------------------------*/
-        // Trims
+        // TrimMaterials
         if (result.itemMeta is ArmorMeta) {
             val armorMeta = result.itemMeta as ArmorMeta
             val count = event.inventory.inputMineral!!.amount
@@ -154,26 +154,26 @@ object SmithingListeners : Listener, EnchantSlotManager {
 
             when(event.inventory.inputMineral) {
                 Ingredients.ALEXANDRITE.createItemStack(count) -> {
-                    newTrimMaterial = Trims.ALEXANDRITE
+                    newTrimMaterial = TrimMaterials.ALEXANDRITE
                 }
                 Ingredients.KUNZITE.createItemStack(count) -> {
-                    newTrimMaterial = Trims.KUNZITE
+                    newTrimMaterial = TrimMaterials.KUNZITE
                 }
                 Ingredients.JADE.createItemStack(count) -> {
-                    newTrimMaterial = Trims.JADE
+                    newTrimMaterial = TrimMaterials.JADE
                 }
                 Ingredients.RUBY.createItemStack(count) -> {
-                    newTrimMaterial = Trims.RUBY
+                    newTrimMaterial = TrimMaterials.RUBY
                 }
                 Ingredients.SOUL_QUARTZ.createItemStack(count) -> {
-                    newTrimMaterial = Trims.SOUL_QUARTZ
+                    newTrimMaterial = TrimMaterials.SOUL_QUARTZ
                 }
                 Ingredients.SOUL_STEEL_INGOT.createItemStack(count) -> {
-                    newTrimMaterial = Trims.SOUL_STEEL
+                    newTrimMaterial = TrimMaterials.SOUL_STEEL
                 }
                 ItemStack(Material.OBSIDIAN, count) -> {
                     // TODO: CURRENTLY DOES NOT WORK AS NO EVENT RESULT IS MADE
-                    newTrimMaterial = Trims.OBSIDIAN
+                    newTrimMaterial = TrimMaterials.OBSIDIAN
                 }
                 else -> {
                     return

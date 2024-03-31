@@ -2,17 +2,19 @@ package me.shadowalzazel.mcodyssey.recipes.crafting
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.items.*
+import me.shadowalzazel.mcodyssey.items.Equipment
 import me.shadowalzazel.mcodyssey.items.Runesherds.createRuneware
-import me.shadowalzazel.mcodyssey.items.Runesherds.createSherdStack
+import me.shadowalzazel.mcodyssey.recipes.creators.BlazingRocketsCreator
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.*
-import org.bukkit.inventory.meta.FireworkMeta
 import org.bukkit.inventory.recipe.CraftingBookCategory
 
 class Misc {
 
     fun getRecipes(): List<Recipe> {
+        val rocketCreator = BlazingRocketsCreator()
+
         return listOf(
             clayTotemRecipe(),
             arcaneBookRecipe(),
@@ -24,18 +26,18 @@ class Misc {
             soulSteelUpgradeTemplateRecipe(),
             soulSpiceRecipe(),
 
-            blazingRocketsRecipe(1, "one"),
-            blazingRocketsRecipe(2, "two"),
-            blazingRocketsRecipe(3, "three"),
-            blazingRocketsRecipe(4, "four"),
-            blazingRocketsRecipe(5, "five")
+            rocketCreator.blazingRocketsRecipe(1, "one"),
+            rocketCreator.blazingRocketsRecipe(2, "two"),
+            rocketCreator.blazingRocketsRecipe(3, "three"),
+            rocketCreator.blazingRocketsRecipe(4, "four"),
+            rocketCreator.blazingRocketsRecipe(5, "five")
         )
     }
 
     /*-----------------------------------------------------------------------------------------------*/
 
     private fun arcaneBookRecipe(): ShapedRecipe {
-        val result = Arcane.ARCANE_BOOK.createItemStack(1)
+        val result = Miscellaneous.ARCANE_BOOK.createItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "arcane_book"), result).apply {
             shape(" A ", "ABA", " AC")
             setIngredient('A', Material.AMETHYST_SHARD)
@@ -132,7 +134,7 @@ class Misc {
     }
 
     private fun soulSteelUpgradeTemplateRecipe(): ShapedRecipe {
-        val result = Templates.SOUL_STEEL_UPGRADE_TEMPLATE.createItemStack(1)
+        val result = Equipment.SOUL_STEEL_UPGRADE_TEMPLATE.createItemStack(1)
         val soulCrystal = Ingredients.SOUL_QUARTZ.createItemStack(1)
         val ectoplasm = Ingredients.ECTOPLASM.createItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "soul_steel_upgrade_template_crafting"), result).apply {
@@ -145,24 +147,5 @@ class Misc {
         return recipe
     }
 
-    /*-----------------------------------------------------------------------------------------------*/
-
-    private fun blazingRocketsRecipe(tier: Int, tierName: String): ShapelessRecipe {
-        // New Rocket
-        val rocket = Miscellaneous.BLAZING_ROCKET.createItemStack(3)
-        rocket.itemMeta = (rocket.itemMeta as FireworkMeta).also {
-            it.power = tier + 3
-        }
-        // Recipe
-        val recipe = ShapelessRecipe(NamespacedKey(Odyssey.instance, "blazing_rocket_tier_$tierName"), rocket).apply {
-            addIngredient(2, Material.GUNPOWDER)
-            addIngredient(tier, Material.BLAZE_POWDER)
-            addIngredient(1, Material.PAPER)
-            addIngredient(RecipeChoice.MaterialChoice(listOf(Material.GUNPOWDER, Material.FIREWORK_STAR)))
-            category = CraftingBookCategory.MISC
-            group = "blazing_rockets"
-        }
-        return recipe
-    }
 
 }

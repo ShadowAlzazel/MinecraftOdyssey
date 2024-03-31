@@ -6,11 +6,12 @@ import me.shadowalzazel.mcodyssey.constants.AttributeIDs
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
-import me.shadowalzazel.mcodyssey.items.Weapons
-import me.shadowalzazel.mcodyssey.items.Weapons.createWeapon
+import me.shadowalzazel.mcodyssey.items.creators.ToolCreator
+import me.shadowalzazel.mcodyssey.items.utility.ToolMaterial
+import me.shadowalzazel.mcodyssey.items.utility.ToolType
 import me.shadowalzazel.mcodyssey.mobs.neutral.DubiousDealer
 import me.shadowalzazel.mcodyssey.recipes.merchant.ArcaneSales
-import me.shadowalzazel.mcodyssey.trims.Trims
+import me.shadowalzazel.mcodyssey.trims.TrimMaterials
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Material
@@ -88,10 +89,8 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
         val nameText = "${dangerPrefixes.random()} ${mob.name} ${conjunctions.random()} $enchantContext"
         val newName = Component.text(nameText).color(TextColor.color(255, 170, 0))
         // Weapon
-        val weaponList = listOf(Weapons.DIAMOND_CLAYMORE, Weapons.DIAMOND_WARHAMMER, Weapons.DIAMOND_HALBERD,
-            Weapons.DIAMOND_KATANA, Weapons.DIAMOND_LONG_AXE, Weapons.DIAMOND_SABER,
-            Weapons.DIAMOND_SCYTHE, Weapons.DIAMOND_SPEAR, Weapons.DIAMOND_RAPIER)
-        var mainHand = weaponList.random().createWeapon(0.5)
+        val weaponTypes = listOf(ToolType.SABER, ToolType.KATANA)
+        var mainHand = ToolCreator().createToolStack(ToolMaterial.GOLDEN, weaponTypes.random())
 
         val difficultyMod = getDifScale(mob)
 
@@ -100,7 +99,7 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
             // Get compatible weapon
             var canEnchant = gildedEnchant.canEnchantItem(mainHand)
             while (!canEnchant) {
-                mainHand = weaponList.random().createWeapon(0.5)
+                // Add more damage to main hand mainhand = 2
                 canEnchant = gildedEnchant.canEnchantItem(mainHand)
             }
             mainHand.itemMeta = mainHand.itemMeta.also {
@@ -185,7 +184,7 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
         // Trim
         val newTrim = ArmorTrim(
             listOf(TrimMaterial.DIAMOND, TrimMaterial.COPPER, TrimMaterial.EMERALD, TrimMaterial.AMETHYST, TrimMaterial.LAPIS,
-                Trims.JADE, Trims.ALEXANDRITE, Trims.RUBY, Trims.KUNZITE, Trims.OBSIDIAN).random(),
+                TrimMaterials.JADE, TrimMaterials.ALEXANDRITE, TrimMaterials.RUBY, TrimMaterials.KUNZITE, TrimMaterials.OBSIDIAN).random(),
             listOf(TrimPattern.WAYFINDER, TrimPattern.RAISER, TrimPattern.HOST, TrimPattern.SHAPER,
                 TrimPattern.SENTRY, TrimPattern.DUNE, TrimPattern.WILD, TrimPattern.COAST).random()
         )
@@ -299,7 +298,7 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
                 }
             }
             if (promoted) {
-                // Trims
+                // TrimMaterials
                 val newTrim = ArmorTrim(trimMaterial!!, TrimPattern.SNOUT)
                 if (equipment.helmet.itemMeta is ArmorMeta) {
                     val newMeta = (equipment.helmet.itemMeta as ArmorMeta)

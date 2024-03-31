@@ -1,16 +1,10 @@
 package me.shadowalzazel.mcodyssey.listeners
 
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.items.Ingredients
-import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.MiscListeners
 import org.bukkit.Material
 import org.bukkit.entity.EntityType
-import org.bukkit.entity.Item
-import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerFishEvent
-import org.bukkit.inventory.ItemStack
 
 object FishingListeners : Listener {
 

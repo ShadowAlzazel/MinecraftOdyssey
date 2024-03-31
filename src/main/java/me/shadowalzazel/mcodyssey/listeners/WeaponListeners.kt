@@ -10,6 +10,7 @@ import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.ItemTags
 import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.getIntTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.getOdysseyTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.getStringTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.getUUIDTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
@@ -87,7 +88,6 @@ object WeaponListeners : Listener {
     private val currentGrappleShotTasks = mutableMapOf<UUID, GrapplingHookShot>()
     private val currentGrapplePullTasks = mutableMapOf<UUID, GrapplingHookPull>()
 
-    @Suppress("UnstableApiUsage")
     @EventHandler(priority = EventPriority.LOWEST)
     fun mainWeaponDamageHandler(event: EntityDamageByEntityEvent) {
         // Check if event damager and damaged is living entity
@@ -109,6 +109,7 @@ object WeaponListeners : Listener {
         if (event.cause == EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) {
             val bonusSweepDamage = SWEEP_MAP[mainWeaponType] ?: 0.0
             event.damage += bonusSweepDamage
+            println("SWEEP BONUS")
         }
         // Prevent Recursive AOE calls
         if (victim.scoreboardTags.contains(EntityTags.MELEE_AOE_HIT)) {
@@ -134,15 +135,13 @@ object WeaponListeners : Listener {
         val twoHanded = offHandWeapon.type == Material.AIR
         val shieldInOff = offHandWeapon.type == Material.SHIELD
         val isMounted = (player.vehicle != null) && (player in player.vehicle!!.passengers)
+        val isSneaking = player.isSneaking
         val isCrit = event.isCritical
         val fullAttack = player.attackCooldown > 0.99
         // For bonus damage maps
         weaponBonusStatsHandler(event, mainWeaponType)
         // Get bonus/special effects
         when(mainWeaponType) {
-            null -> {
-                // Nothing
-            }
             "sickle" -> {
                 victim.shieldBlockingDelay = 20
                 // SWEEP
@@ -173,9 +172,17 @@ object WeaponListeners : Listener {
                     victim.shieldBlockingDelay = 60
                 }
             }
+            "spear" -> {
+                if (isSneaking) {
+                    event.damage += 2.0
+                }
+            }
             "halberd" -> {
                 if (twoHanded || shieldInOff) {
-                    // WIP
+                    // WIP Faster Attack
+                }
+                if (isSneaking) {
+                    event.damage += 2.0
                 }
             }
             "lance" -> {
@@ -233,7 +240,7 @@ object WeaponListeners : Listener {
         val health = victim.health
         // Get bonuses from maps
         val bludgeoningDamage = BLUDGEON_MAP[weapon]?.let { minOf(it, armor.div(2))} ?: 0.0 // Dmg = x < armor / 2
-        val laceratingDamage = LACERATE_MAP[weapon]?.let { minOf(it - armor, 0.0) } ?: 0.0 // Dmg = x - armor
+        val laceratingDamage = LACERATE_MAP[weapon]?.let { maxOf(it - armor, 0.0) } ?: 0.0 // Dmg = x - armor
         val piercingDamage = PIERCE_MAP[weapon]?.let { minOf(armor, it) } ?: 0.0
         val cleavingDamage = CLEAVE_MAP[weapon] ?: 0.0
         // Piercing
@@ -302,6 +309,9 @@ object WeaponListeners : Listener {
             }
             "chakram" -> {
                 chakramThrowableHandler(event)
+            }
+            "shuriken" -> {
+                shurikenThrowableHandler(event)
             }
         }
     }
@@ -429,6 +439,34 @@ object WeaponListeners : Listener {
         task.runTaskLater(Odyssey.instance, 15)
     }
 
+    private fun shurikenThrowableHandler(event: PlayerInteractEvent) {
+        val player = event.player
+        val throwable = player.equipment.itemInMainHand
+        // Get CD
+        if (player.getCooldown(throwable.type) > 0) return
+        // Spawn Shuriken
+        (player.world.spawnEntity(player.eyeLocation, EntityType.SNOWBALL) as Snowball).also {
+            // Set Item
+            it.item = throwable
+            // Tags
+            var damage = 1.0
+            val attackModifiers = throwable.itemMeta.attributeModifiers?.get(Attribute.GENERIC_ATTACK_DAMAGE)
+            if (attackModifiers != null) {
+                for (modifier in attackModifiers) { // FIX LATER
+                    damage += modifier.amount
+                }
+            }
+            it.setIntTag(EntityTags.THROWABLE_DAMAGE, damage.toInt())
+            it.addScoreboardTag(EntityTags.THROWN_SHURIKEN)
+            // Velocity
+            it.velocity = player.eyeLocation.direction.clone().normalize().multiply(2.6)
+            it.shooter = player
+            it.setHasLeftShooter(false)
+        }
+        player.setCooldown(throwable.type, 4)
+        throwable.subtract(1)
+    }
+
     /*-----------------------------------------------------------------------------------------------*/
     @EventHandler(priority = EventPriority.LOWEST)
     fun weaponHandSwapHandler(event: PlayerSwapHandItemsEvent) {
@@ -448,7 +486,6 @@ object WeaponListeners : Listener {
 
     }
 
-
     /*-----------------------------------------------------------------------------------------------*/
     // Handler for projectile based throwable weapons
     @EventHandler(priority = EventPriority.LOWEST)
@@ -467,6 +504,9 @@ object WeaponListeners : Listener {
                     }
                     EntityTags.EXPLOSIVE_ARROW -> {
                         explosiveArrowHitHandler(event)
+                    }
+                    EntityTags.THROWN_SHURIKEN -> {
+                        shurikenHitEntityHandler(event)
                     }
                 }
             }
@@ -502,8 +542,9 @@ object WeaponListeners : Listener {
         if (projectile.shooter != null) {
             val thrower = projectile.shooter ?: return
             victim.addScoreboardTag(EntityTags.THROWABLE_ATTACK_HIT)
-            if (thrower is HumanEntity) {
-                thrower.attack(victim)
+            // Match same weapon
+            if (thrower is HumanEntity && thrower.equipment.itemInMainHand.getOdysseyTag() == projectile.item.getOdysseyTag()) {
+                thrower.attack(victim) // TODO: Fix to apply
             } else {
                 victim.damage(damage * 1.0, thrower as LivingEntity)
             }
@@ -581,7 +622,22 @@ object WeaponListeners : Listener {
         }
     }
 
-
+    private fun shurikenHitEntityHandler(event: ProjectileHitEvent) {
+        val projectile: Projectile = event.entity
+        if (projectile !is ThrowableProjectile) return
+        val damage = projectile.getIntTag(EntityTags.THROWABLE_DAMAGE) ?: return
+        val victim = event.hitEntity ?: return
+        if (victim !is LivingEntity) return
+        // Damage hit entity
+        victim.addScoreboardTag(EntityTags.THROWABLE_ATTACK_HIT)
+        if (projectile.shooter != null) {
+            val thrower = projectile.shooter ?: return
+            victim.addScoreboardTag(EntityTags.THROWABLE_ATTACK_HIT)
+            victim.damage(damage * 1.0, thrower as LivingEntity)
+        } else {
+            victim.damage(damage * 1.0)
+        }
+    }
 
     /*-----------------------------------------------------------------------------------------------*/
     // Event for detecting when entity shoots bow
@@ -626,7 +682,7 @@ object WeaponListeners : Listener {
     @EventHandler
     fun crossbowLoadHandler(event: EntityLoadCrossbowEvent) {
         // Checks
-        val crossbow = event.crossbow ?: return
+        val crossbow = event.crossbow
         if (!crossbow.hasItemMeta()) return
         if (!crossbow.itemMeta.hasCustomModelData()) return
 
@@ -848,7 +904,7 @@ object WeaponListeners : Listener {
         val otherBowMeta = otherBow.itemMeta as CrossbowMeta
         if (!otherBowMeta.hasCustomModelData()) return
         if (otherBowMeta.hasChargedProjectiles()) return
-        val bowMeta = event.crossbow!!.itemMeta as CrossbowMeta
+        val bowMeta = event.crossbow.itemMeta as CrossbowMeta
         if (bowMeta.hasChargedProjectiles()) return
         // Load
         val loadedItem = ItemStack(Material.ARROW, 1)

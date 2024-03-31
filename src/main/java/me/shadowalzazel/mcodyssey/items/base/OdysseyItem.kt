@@ -1,34 +1,36 @@
 package me.shadowalzazel.mcodyssey.items.base
 
 import me.shadowalzazel.mcodyssey.constants.DataKeys
-import me.shadowalzazel.mcodyssey.constants.ItemTags
-import me.shadowalzazel.mcodyssey.constants.ItemTags.setIntTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
-import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
-import me.shadowalzazel.mcodyssey.items.utility.WeaponMaterial
-import me.shadowalzazel.mcodyssey.items.utility.WeaponType
-import me.shadowalzazel.mcodyssey.listeners.EnchantingListeners.updateSlotLore
-import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.MeleeListeners.isOdysseyEnchant
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
-import org.bukkit.enchantments.Enchantment
-import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.persistence.PersistentDataType
 
 
 open class OdysseyItem(
-    val name: String,
-    internal val material: Material,
-    internal val displayName: Component? = null,
-    internal val lore: List<Component>? = null,
-    internal val customModel: Int? = null,
-    internal val weaponMaterial: WeaponMaterial? = null,
-    internal val weaponType: WeaponType? = null,
-    internal val enchantments: MutableMap<Enchantment, Int>? = null
+    val itemName: String,
+    val overrideMaterial: Material,
+    val customName: String,
+    val customModel: Int? = null,
+    val lore: List<Component>? = null
 ) {
 
+    fun createItemStack(amount: Int = 1): ItemStack {
+        val itemStack = ItemStack(overrideMaterial, amount).also {
+            // Set Variables
+            val meta = it.itemMeta
+            meta.persistentDataContainer.set(DataKeys.ITEM_KEY, PersistentDataType.STRING, itemName) // Change for 1.20.5 to itemName component
+            meta.displayName(Component.text(customName).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))
+            // Optional Variables
+            if (customModel != null) { meta.setCustomModelData(customModel) }
+            if (lore != null) { meta.lore(lore) }
+            // Assemble meta
+            it.itemMeta = meta
+        }
+        return itemStack
+    }
+    /*
     fun createItemStack(amount: Int): ItemStack {
         val itemStack = ItemStack(material, amount)
         // On item meta; Add lore, display name, custom model, damage stats, effects, color if applicable
@@ -55,29 +57,6 @@ open class OdysseyItem(
         }
         return itemStack
     }
-
-
-    // NOTES: Potions
-
-    // CUSTOM AFFIXES
-    // ITEM SLOT STATS?
-    // ATK DAMAGE
-    // HEALTH
-    // MAKE POTION THAT CONVERTS POISON DAMAGE TO HEAL. THO TAKES DOUBLE DAMAGE FROM WITHER
-
-    // flask_of_rose -> do damage when hit?
-    // TO DO : -> when consume a custom model potion to keep the model
-    // POTION OF FISHING
-    // Make villagers killed from brew not affect your status
-
-    // KERNEL POTION
-    // BASIS FOR FLOWER POTION
-    // WHEN COMBINED WITH FLOWER makes POTION THAT ACTS LIEK BONEMEAL BUT APPLIES FLOWER GROWTH/ NOISE ?!
-
-    // Anchor - Yone E
-    // Flashbang, Knock-Up, Freeze,
-
-    // Necronomicon: Make Pages that can add to personal necronomicon using components
-    // Original from Vail is to powerful
+     */
 
 }

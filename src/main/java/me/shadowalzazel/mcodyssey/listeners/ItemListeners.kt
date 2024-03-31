@@ -19,7 +19,7 @@ object ItemListeners : Listener {
 
         // For all Item on Drop Uses
         when (event.itemDrop.itemStack.getOdysseyTag()) {
-            Miscellaneous.SOUL_SPICE.name -> {
+            Miscellaneous.SOUL_SPICE.itemName -> {
                 soulSpiceItem(event)
             }
             else -> {

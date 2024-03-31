@@ -25,7 +25,6 @@ import org.bukkit.entity.ThrownPotion
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.persistence.PersistentDataType
-import org.bukkit.potion.PotionData
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionType
 
@@ -221,68 +220,31 @@ interface AlchemyManager {
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-    // TEMPORARY Data
-    fun ItemStack.getEffectFromData(): PotionEffect {
-        val potionData = (itemMeta as PotionMeta).basePotionData
-        val baseTime: Int
-        var extendedMultiplier: Double = 8.0 / 3.0
-        var upgradedMultiplier: Double = 1.0 / 2.0
-        var amplifier = if (potionData.isUpgraded) { 1 } else { 0 }
-        when (potionData.type) {
-            PotionType.TURTLE_MASTER -> {
-                baseTime = 20 * 20
-                upgradedMultiplier = 1.0
-                extendedMultiplier = 2.0
-            }
-            PotionType.POISON, PotionType.REGEN -> {
-                baseTime = 45 * 20
-                extendedMultiplier = 2.0
-            }
-            PotionType.WEAKNESS, PotionType.SLOW_FALLING -> {
-                baseTime = 90 * 20
-            }
-            PotionType.SLOWNESS -> {
-                baseTime = 90 * 20
-                upgradedMultiplier = 2.0 / 9.0
-                if (potionData.isUpgraded) { amplifier = 3 }
-            }
-            PotionType.INSTANT_HEAL, PotionType.INSTANT_DAMAGE -> {
-                baseTime = 0
-            }
-            else -> {
-                baseTime = 3 * 60 * 20
-            }
-        }
-
-        var time = baseTime.toDouble()
-        if (potionData.isUpgraded) { time *= upgradedMultiplier }
-        else if (potionData.isExtended) { time *= extendedMultiplier }
-        return PotionEffect(potionData.type.effectType!!, time.toInt(), amplifier)
-    }
-
-    /*-----------------------------------------------------------------------------------------------*/
     // Potion Creators
     fun createPotionVials(potion: ItemStack): ItemStack {
         val meta = (potion.itemMeta as PotionMeta).clone()
 
         // Do net Detect Water
-        if (meta.basePotionData.type != PotionType.WATER) {
-            // Base Effects
-            val baseEffect = potion.getEffectFromData() // BREAKS WITH WATER!!!
-            meta.addCustomEffect(baseEffect, true)
-            // Custom Effects
+        if (meta.basePotionType != PotionType.WATER) {
             val newEffects = mutableListOf<PotionEffect>()
+            // Base Effects
+            for (effect in meta.basePotionType.potionEffects) {
+                val duration = (effect.duration * 0.4).toInt()
+                newEffects.add(PotionEffect(effect.type, duration, effect.amplifier))
+            }
+            // Custom Effects
             for (effect in meta.customEffects) {
                 val duration = (effect.duration * 0.4).toInt()
                 newEffects.add(PotionEffect(effect.type, duration, effect.amplifier))
             }
+            // Override effects
             for (effect in newEffects) {
                 meta.addCustomEffect(effect, true)
             }
         }
         // Meta Apply
         meta.setCustomModelData(ItemModels.VIAL_CHARGE_5)
-        meta.basePotionData = PotionData(PotionType.THICK)
+        meta.basePotionType = PotionType.THICK
         return potion.clone().apply {
             itemMeta = meta
             setIntTag(ItemTags.POTION_CHARGES_LEFT, 5)

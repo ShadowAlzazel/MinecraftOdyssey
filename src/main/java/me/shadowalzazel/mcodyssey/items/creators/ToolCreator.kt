@@ -15,10 +15,16 @@ import org.bukkit.persistence.PersistentDataType
 
 class ToolCreator : AttributeManager {
 
-    fun createToolStack(material: ToolMaterial, type: ToolType): ItemStack {
-        val minecraftItemKey = "${material.itemOverridePre}_${type.itemOverrideSuf}"
+    private val otherTools = listOf(ToolType.SHURIKEN)
+
+    fun createToolStack(material: ToolMaterial, type: ToolType, amount: Int = 1): ItemStack {
+        val minecraftItemKey = if (type in otherTools) {
+            type.itemOverrideSuf // Get item key from tool
+        } else {
+            "${material.itemOverridePre}_${type.itemOverrideSuf}"
+        }
         val minecraftItem = Material.matchMaterial(minecraftItemKey) ?: return ItemStack(Material.AIR)
-        val itemStack = ItemStack(minecraftItem, 1).also {
+        val itemStack = ItemStack(minecraftItem, amount).also {
             // Create Variables
             val model = (material.itemModelPre * 100) + (type.itemModelSuf)
             val itemName = "${material.itemName}_${type.itemName}"

@@ -18,7 +18,7 @@ object ArtisanListeners : Listener {
         val bottle = event.player.equipment.itemInMainHand
         if (bottle.type != Material.POTION) return
         if (!bottle.hasItemMeta()) return
-        if ((bottle.itemMeta as PotionMeta).basePotionData.type != PotionType.WATER) return
+        if ((bottle.itemMeta as PotionMeta).basePotionType != PotionType.WATER) return
         // Check hook
         val hook = event.player.rayTraceBlocks(6.0)?.hitBlock ?: return
         if (hook.type != Material.TRIPWIRE_HOOK) return

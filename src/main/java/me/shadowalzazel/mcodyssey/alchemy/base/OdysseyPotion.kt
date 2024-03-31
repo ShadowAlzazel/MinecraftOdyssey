@@ -10,7 +10,7 @@ import org.bukkit.potion.PotionEffect
 class OdysseyPotion(
     name: String,
     material: Material,
-    displayName: Component? = null,
+    customName: String,
     lore: List<Component>? = null, // EMPTY LIST ->
     customModel: Int? = null,
     internal val potionEffects: List<PotionEffect>? = null,
@@ -20,15 +20,8 @@ class OdysseyPotion(
     internal val odysseyEffectTimeInTicks: Int = 0,
     internal val odysseyEffectAmplifier: Int = 1, // Starts at 1
 ) : OdysseyItem(
-    name = name,
-    material = material,
-    displayName = displayName,
+    itemName = name,
+    overrideMaterial = material,
+    customName = customName,
     lore = lore,
-    customModel = customModel,
-    weaponMaterial = null,
-    weaponType = null,
-    enchantments = null) {
-
-}
-
-
+    customModel = customModel)
