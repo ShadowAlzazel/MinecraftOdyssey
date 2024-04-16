@@ -97,11 +97,14 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
         // Melee Enchant
         if (gildedEnchant in OdysseyEnchantments.MELEE_SET) {
             // Get compatible weapon
+            /*
             var canEnchant = gildedEnchant.canEnchantItem(mainHand)
             while (!canEnchant) {
                 // Add more damage to main hand mainhand = 2
                 canEnchant = gildedEnchant.canEnchantItem(mainHand)
             }
+
+             */
             mainHand.itemMeta = mainHand.itemMeta.also {
                 it.addEnchant(gildedEnchant.toBukkit(), gildedEnchant.maximumLevel, true)
             }

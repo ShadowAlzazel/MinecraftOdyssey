@@ -29,7 +29,6 @@ import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.inventory.meta.Repairable
-import kotlin.math.max
 
 object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManager, ItemCreator {
 
@@ -136,7 +135,7 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
         if (second == null) return
         // Assumes that NMS is present and transfer enchantments
         val result = event.result ?: return
-        // Activating Slots First Time {WIP fix exploit of adding 3 gilded to a non slotted to get 4]
+        // Activating Slots First Time {WIP fix exploit of adding 3 gilded to a non slotted to get 4
         if (!firstIsSlotted) {
             val slots = MutablePair(2, 1)
             for (enchant in event.result!!.enchantments) {
@@ -327,11 +326,64 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
             }
         }
         enchantsToRemove.forEach { newEnchants.remove(it) }
+        getChiseledBookshelvesBonus(event)
         // Add Bonus Gilded
         //item.rollGildedEnchants(maxSlots.second, newEnchants, event.expLevelCost, event.enchanter.level)
         // Lore
         item.addItemFlags(ItemFlag.HIDE_ENCHANTS)
         item.updateSlotLore(newEnchants)
+    }
+
+    private fun getChiseledBookshelvesBonus(event: EnchantItemEvent) {
+        val newEnchants = event.enchantsToAdd
+        // (Enchant, % chance)
+        val shelfEnchantsChance = mutableMapOf<Enchantment, Int>()
+
+        // Pairs of x,z offsets
+        val ringList = listOf(
+            Pair(2, -1), Pair(2, 0), Pair(2, 1),
+            Pair(-2, -1), Pair(-2, 0), Pair(-2, 1),
+            Pair(-1, 2), Pair(0, 2), Pair(1, 2),
+            Pair(-1, -2), Pair(0, -2), Pair(1, -2),
+        )
+        for (pair in ringList) {
+            val block = event.enchantBlock.location.clone().toCenterLocation().add(pair.first.toDouble(), 0.0, pair.second.toDouble()).block
+            if (block.type != Material.CHISELED_BOOKSHELF) continue
+            val shelfData = block.blockData
+            val blockState = block.state
+            if (shelfData !is org.bukkit.block.data.type.ChiseledBookshelf) continue
+            if (blockState !is org.bukkit.block.ChiseledBookshelf) continue
+            for (book in blockState.inventory.storageContents) {
+                if (book == null) continue
+                if (!book.hasItemMeta()) continue
+                if (book.itemMeta !is EnchantmentStorageMeta) continue
+                val bookMeta = book.itemMeta as EnchantmentStorageMeta
+                if (bookMeta.storedEnchants.isEmpty()) continue
+                // Add value to chance
+                bookMeta.storedEnchants.forEach {
+                    if (it.key !in shelfEnchantsChance) { shelfEnchantsChance[it.key] = it.value }
+                    else {
+                        shelfEnchantsChance[it.key] = shelfEnchantsChance[it.key]!! + it.value
+                    }
+                }
+            }
+        }
+        // Get final calculations (Enchant, lvl)
+        val finalEnchants = mutableMapOf<Enchantment, Int>()
+        for (rolled in shelfEnchantsChance) {
+            if (rolled.value >= (1..100).random()) {
+                // MAYBE add - negative modifier per unique enchants?
+                finalEnchants[rolled.key] = rolled.value.floorDiv(100) + 1
+            }
+            println("Bonus Enchant: ${rolled.key} with ${rolled.value}%")
+        }
+
+        println(finalEnchants)
+        // Chance
+        // Lvl = Chance / 100 -> 500% = lvl5
+
+        // MAYBE ADD MORE LVLS BASED ON BASE ENCHANTS TO ADD
+        // SHARP 3 = 300%
     }
 
     private fun ItemStack.rollGildedEnchants(gildedSlots: Int, newEnchants: MutableMap<Enchantment, Int>, lapisCost: Int, levels: Int) {

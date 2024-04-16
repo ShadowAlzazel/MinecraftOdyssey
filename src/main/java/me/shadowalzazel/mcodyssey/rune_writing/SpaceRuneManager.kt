@@ -95,5 +95,16 @@ interface SpaceRuneManager {
     // can use elementary row operations using crafting table when placed in slot (if
     // in top left, add to top left value)
 
+    // SPACE RUNE FRAGMENT
+    // Can store 1 int by renaming in anvil (cost more levels)
+    // made up of endstone, echoshard,
+
+    // SPACE RUNE SCROLL
+    // made up of 3 fragments, tps you to that location as it is just a vector but is 1 time use
+
+    // SPACE RUNE TABLET
+    // A linear transformation
+    // maybe can put in lodestone block for the end
+
     // Maybe make the edge (i) perpendicular to overworld or use it to get from edge to end to overworld
 }

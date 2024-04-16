@@ -7,6 +7,7 @@ import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.enchantments.melee.*
 import me.shadowalzazel.mcodyssey.enchantments.misc.*
 import me.shadowalzazel.mcodyssey.enchantments.ranged.*
+import net.minecraft.Util
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.ResourceLocation
 import org.bukkit.enchantments.Enchantment

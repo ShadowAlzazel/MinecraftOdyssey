@@ -7,11 +7,15 @@ import org.bukkit.enchantments.Enchantment
 import org.bukkit.enchantments.Enchantment.FIRE_ASPECT
 import org.bukkit.inventory.ItemStack
 
-object FreezingAspect : OdysseyEnchantment("freezing_aspect", "Freezing Aspect", 2) {
+object FreezingAspect : OdysseyEnchantment(
+    "freezing_aspect",
+    "Freezing Aspect",
+    2,
+    Rarity.RARE
+) {
 
 
     /* Minecraft NMS Methods */
-    override fun getRarity(): Rarity = Rarity.UNCOMMON
     override fun getMinCost(level: Int) = 5 + (level * 10)
     override fun getMaxCost(level: Int) = getMinCost(level) + 10
 
