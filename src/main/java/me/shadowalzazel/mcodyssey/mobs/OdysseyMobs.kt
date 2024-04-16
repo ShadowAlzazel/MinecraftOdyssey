@@ -9,7 +9,7 @@ import me.shadowalzazel.mcodyssey.mobs.passive.TreasurePig
 
 object OdysseyMobs {
 
-    val MIMIC = Mimic
+    val MIMIC = Mlime
     val SAVAGE = Savage
     val SCULK_CRAWLER = SculkCrawler
     val TREASURE_PIG = TreasurePig

@@ -70,7 +70,7 @@ interface EnchantRegistryManager  {
                 OdysseyEnchantments.BREWFUL_BREATH
             }
             "copper_chitin" -> {
-                OdysseyEnchantments.COPPER_CHITIN
+                OdysseyEnchantments.CHITIN
             }
             "cowardice" -> {
                 OdysseyEnchantments.COWARDICE

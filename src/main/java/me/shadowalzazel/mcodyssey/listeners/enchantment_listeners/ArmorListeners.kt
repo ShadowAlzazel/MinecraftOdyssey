@@ -379,7 +379,7 @@ object ArmorListeners : Listener, EnchantRegistryManager {
                 val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (gildedEnchant) {
-                    OdysseyEnchantments.COPPER_CHITIN -> {
+                    OdysseyEnchantments.CHITIN -> {
                         copperChitinEnchantment(defender, helmet)
                     }
                     OdysseyEnchantments.RECKLESS -> {
@@ -395,7 +395,7 @@ object ArmorListeners : Listener, EnchantRegistryManager {
                 val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (gildedEnchant) {
-                    OdysseyEnchantments.COPPER_CHITIN -> {
+                    OdysseyEnchantments.CHITIN -> {
                         copperChitinEnchantment(defender, chestplate)
                     }
                     OdysseyEnchantments.RECKLESS -> {
@@ -411,7 +411,7 @@ object ArmorListeners : Listener, EnchantRegistryManager {
                 val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (gildedEnchant) {
-                    OdysseyEnchantments.COPPER_CHITIN -> {
+                    OdysseyEnchantments.CHITIN -> {
                         copperChitinEnchantment(defender, leggings)
                     }
                     OdysseyEnchantments.RECKLESS -> {
@@ -427,7 +427,7 @@ object ArmorListeners : Listener, EnchantRegistryManager {
                 val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (gildedEnchant) {
-                    OdysseyEnchantments.COPPER_CHITIN -> {
+                    OdysseyEnchantments.CHITIN -> {
                         copperChitinEnchantment(defender, boots)
                     }
                     OdysseyEnchantments.RECKLESS -> {

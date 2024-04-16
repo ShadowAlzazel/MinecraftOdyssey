@@ -30,7 +30,14 @@ class ToolCreator : AttributeManager {
             val itemName = "${material.itemName}_${type.itemName}"
             val customName = "${material.customName} ${type.customName}"
             val damage = material.materialDamage + type.baseDamage
-            val speed = type.baseSpeed
+            var speed = type.baseSpeed
+            // Iridium and titanium have different speeds
+            if (material == ToolMaterial.IRIDIUM) {
+                speed *= 0.9
+            }
+            else if (material == ToolMaterial.TITANIUM || material == ToolMaterial.ANDONIZED_TITANIUM) {
+                speed *= 1.1
+            }
             // Assign variables (meta)
             val meta = it.itemMeta
             meta.setCustomModelData(model)

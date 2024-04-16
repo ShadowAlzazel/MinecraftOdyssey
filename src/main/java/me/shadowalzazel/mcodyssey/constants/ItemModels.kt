@@ -71,6 +71,8 @@ object ItemModels {
 
     // Unknown Runesherd
     const val UNKNOWN_RUNESHERD: Int = 6905632
+    //
+    const val SPACERUNE_TABLET: Int = 6905635
 
     // Food
     const val GREEN_APPLE: Int = 6904511
