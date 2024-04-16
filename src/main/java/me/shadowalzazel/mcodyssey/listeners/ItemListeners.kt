@@ -1,8 +1,12 @@
 package me.shadowalzazel.mcodyssey.listeners
 
+import me.shadowalzazel.mcodyssey.constants.ItemTags
 import me.shadowalzazel.mcodyssey.constants.ItemTags.getOdysseyTag
 import me.shadowalzazel.mcodyssey.constants.ItemTags.hasOdysseyItemTag
+import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
+import me.shadowalzazel.mcodyssey.items.Runesherds
+import me.shadowalzazel.mcodyssey.rune_writing.SpaceRuneManager
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.event.EventHandler
@@ -11,7 +15,7 @@ import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object ItemListeners : Listener {
+object ItemListeners : Listener, SpaceRuneManager {
 
     @EventHandler
     fun itemUseOnDropHandler(event: PlayerDropItemEvent) {
@@ -20,7 +24,10 @@ object ItemListeners : Listener {
         // For all Item on Drop Uses
         when (event.itemDrop.itemStack.getOdysseyTag()) {
             Miscellaneous.SOUL_SPICE.itemName -> {
-                soulSpiceItem(event)
+                soulSpiceItemHandler(event)
+            }
+            Runesherds.SPACERUNE_TABLET.itemName -> {
+                spaceRuneItemHandler(event)
             }
             else -> {
 
@@ -28,7 +35,7 @@ object ItemListeners : Listener {
         }
     }
 
-    private fun soulSpiceItem(event: PlayerDropItemEvent) {
+    private fun soulSpiceItemHandler(event: PlayerDropItemEvent) {
         val item = event.itemDrop
         if (item.itemStack.amount != 1) return
         val player = event.player
@@ -51,6 +58,19 @@ object ItemListeners : Listener {
         }
 
         event.itemDrop.remove()
+    }
+
+    private fun spaceRuneItemHandler(event: PlayerDropItemEvent) {
+        val entityItem = event.itemDrop
+        if (entityItem.itemStack.amount != 1) return
+        val item = entityItem.itemStack
+        val player = event.player
+        if (player.hasCooldown(item.type)) return
+        if (!item.hasTag(ItemTags.IS_SPACERUNE)) return
+        // Run TP
+        spaceRuneTabletTeleport(player, item)
+
+        event.isCancelled = true
     }
 
 }

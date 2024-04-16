@@ -1,8 +1,11 @@
 package me.shadowalzazel.mcodyssey.items
 
 import me.shadowalzazel.mcodyssey.constants.ItemModels
+import me.shadowalzazel.mcodyssey.constants.ItemTags
+import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import me.shadowalzazel.mcodyssey.rune_writing.RunesherdManager
+import me.shadowalzazel.mcodyssey.rune_writing.SpaceRuneManager
 import me.shadowalzazel.mcodyssey.rune_writing.base.OdysseyRunesherd
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -12,7 +15,7 @@ import org.bukkit.attribute.Attribute
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 
-object Runesherds : RunesherdManager {
+object Runesherds : RunesherdManager, SpaceRuneManager {
 
     private val GRAY = TextColor.color(170, 170, 170)
     private val RUNEVOID = TextColor.color(85, 67 ,129)
@@ -48,8 +51,17 @@ object Runesherds : RunesherdManager {
     }
 
     fun OdysseyItem.createRuneware(amount: Int = 1): ItemStack {
-        val item = createItemStack(1).also {
+        val item = createItemStack(amount).also {
             it.addRunewareTag()
+        }
+        return item
+    }
+
+    fun OdysseyItem.createSpaceRuneTablet(amount: Int = 1): ItemStack {
+        val item = createItemStack(amount).also {
+            it.addTag(ItemTags.IS_SPACERUNE)
+            it.createSpaceRuneComponents()
+            it.createSpaceRuneMatrixLore()
         }
         return item
     }
@@ -152,5 +164,10 @@ object Runesherds : RunesherdManager {
         value = 0.5,
         affectedEquipment = listOf(EquipmentSlot.HAND)
     )
+
+    /*-----------------------------------------------------------------------------------------------*/
+
+    val SPACERUNE_TABLET = OdysseyItem("spacerune_tablet", Material.BRICK, "Spacerune Tablet", ItemModels.SPACERUNE_TABLET,
+        lore = listOf(Component.text("A tablet inscribed with spatial movement transformations.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
 }

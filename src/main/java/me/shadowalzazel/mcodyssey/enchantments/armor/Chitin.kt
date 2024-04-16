@@ -7,7 +7,7 @@ import org.bukkit.enchantments.Enchantment
 import org.bukkit.enchantments.Enchantment.MENDING
 import org.bukkit.inventory.ItemStack
 
-object CopperChitin : OdysseyEnchantment("copper_chitin", "Copper Chitin", 1) {
+object Chitin : OdysseyEnchantment("chitin", "Chitin", 1) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {

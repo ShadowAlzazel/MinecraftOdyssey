@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey
 
+import com.mojang.datafixers.types.templates.Sum
 import me.shadowalzazel.mcodyssey.bosses.BossManager
 import me.shadowalzazel.mcodyssey.bosses.hog_rider.HogRiderListeners
 import me.shadowalzazel.mcodyssey.bosses.the_ambassador.AmbassadorListeners
@@ -144,6 +145,8 @@ class Odyssey : JavaPlugin() {
         getCommand("place_feature_archaic_seed")?.setExecutor(PlaceFeatureArchaicSeed)
         getCommand("give_item")?.setExecutor(GiveItem)
         getCommand("give_gilded_book")?.setExecutor(GiveGildedBook)
+        getCommand("give_spacerune_tablet")?.setExecutor(GiveSpaceRuneTablet)
+        getCommand("summon_mob")?.setExecutor(SummonMob)
         getCommand("summon_doppelganger")?.setExecutor(SummonDoppelganger)
 
         //server.pluginManager.registerEvents(OdysseyPhenomenaListeners, this)

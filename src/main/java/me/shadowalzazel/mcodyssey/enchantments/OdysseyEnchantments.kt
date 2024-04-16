@@ -22,7 +22,7 @@ object OdysseyEnchantments : EnchantRegistryManager {
     val BLACK_ROSE: OdysseyEnchantment = BlackRose
     val BLURCISE: OdysseyEnchantment = Blurcise
     val BREWFUL_BREATH: OdysseyEnchantment = BrewfulBreath
-    val COPPER_CHITIN: OdysseyEnchantment = CopperChitin
+    val CHITIN: OdysseyEnchantment = Chitin
     val COWARDICE: OdysseyEnchantment = Cowardice
     val DEVASTATING_DROP: OdysseyEnchantment = DevastatingDrop
     val DREADFUL_SHRIEK: OdysseyEnchantment = DreadfulShriek
@@ -154,7 +154,7 @@ object OdysseyEnchantments : EnchantRegistryManager {
         BLACK_ROSE,
         BLURCISE,
         BREWFUL_BREATH,
-        COPPER_CHITIN,
+        CHITIN,
         COWARDICE,
         DEVASTATING_DROP,
         DREADFUL_SHRIEK,

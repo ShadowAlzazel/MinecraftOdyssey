@@ -3,6 +3,7 @@ package me.shadowalzazel.mcodyssey.mobs.base
 import me.shadowalzazel.mcodyssey.constants.AttributeIDs
 import me.shadowalzazel.mcodyssey.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags
+import me.shadowalzazel.mcodyssey.items.Runesherds.addHealthAttribute
 import net.kyori.adventure.text.Component
 import org.bukkit.Location
 import org.bukkit.World
@@ -17,24 +18,22 @@ open class OdysseyMob(
     internal val displayName: String,
     private val tagName: String,
     private val type: EntityType,
-    private val health: Double) {
+    private val bonusHealth: Double) {
 
     // Custom Entity Type -> custom model
     open fun createMob(world: World, location: Location): Entity {
-        val newMob = world.spawnEntity(location, type).apply {
+        val mob = world.spawnEntity(location, type).apply {
             customName(Component.text(displayName))
             addScoreboardTag(EntityTags.ODYSSEY_MOB)
             addScoreboardTag(tagName)
             // Health
-            if (this@apply is LivingEntity) {
-                // CUSTOM KEY HEALTH PAIRS
-                val mobHealth = AttributeModifier(AttributeIDs.ODYSSEY_MOB_HEALTH_UUID, AttributeTags.MOB_HEALTH, health, AttributeModifier.Operation.ADD_NUMBER)
-                val healthAttribute = getAttribute(Attribute.GENERIC_MAX_HEALTH)
-                healthAttribute!!.addModifier(mobHealth)
-                health += this@OdysseyMob.health
+            if (this is LivingEntity) {
+                // Extra mob health
+                addHealthAttribute(bonusHealth)
+                health += (bonusHealth - 1)
             }
         }
-        return newMob
+        return mob
     }
 
 }

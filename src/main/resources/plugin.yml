@@ -22,9 +22,17 @@ commands:
     description: "Gives a Gilded Book with the enchantment."
     usage: /<command>
     permission: op
+  give_spacerune_tablet:
+    description: "Gives a Space Rune tablet."
+    usage: /<command>
+    permission: op
   place_feature_archaic_seed:
     description: "Places a custom feature"
     permission: default
+  summon_mob:
+    description: "Summons a Custom Mob."
+    usage: /<command>
+    permission: op
   summon_doppelganger:
     description: "Summons a Doppelganger."
     usage: /<command>

@@ -12,14 +12,15 @@ import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.EntityType
+import org.bukkit.entity.Stray
 import org.bukkit.entity.Zombie
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
 object Ruined : OdysseyMob("Ruined", MobTags.RUINED, EntityType.STRAY, 30.0) {
 
-    override fun createMob(world: World, location: Location): Zombie {
-        val entity = (super.createMob(world, location) as Zombie).apply {
+    override fun createMob(world: World, location: Location): Stray {
+        val entity = (super.createMob(world, location) as Stray).apply {
             // Effects
             addPotionEffects(listOf(
                 PotionEffect(PotionEffectType.INCREASE_DAMAGE, 99999, 4),
