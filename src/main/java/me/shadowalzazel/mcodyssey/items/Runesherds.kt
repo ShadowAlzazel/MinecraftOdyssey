@@ -170,4 +170,8 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
     val SPACERUNE_TABLET = OdysseyItem("spacerune_tablet", Material.BRICK, "Spacerune Tablet", ItemModels.SPACERUNE_TABLET,
         lore = listOf(Component.text("A tablet inscribed with spatial movement transformations.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
+
+    val SPACERUNE_SCROLL = OdysseyItem("spacerune_tablet", Material.BRICK, "Spacerune Tablet", ItemModels.SPACERUNE_TABLET,
+        lore = listOf(Component.text("A tablet inscribed with spatial movement transformations.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+
 }

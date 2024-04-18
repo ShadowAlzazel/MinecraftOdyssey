@@ -2,11 +2,21 @@ package me.shadowalzazel.mcodyssey.enchantments.armor
 
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import net.kyori.adventure.text.Component
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.item.enchantment.EnchantmentCategory
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object Opticalization : OdysseyEnchantment("opticalization", "Opticalization", 3) {
+object Opticalization : OdysseyEnchantment(
+    "opticalization",
+    "Opticalization",
+    3,
+    Rarity.RARE,
+    EnchantmentCategory.ARMOR_HEAD,
+    arrayOf(EquipmentSlot.HEAD)
+) {
+
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return false

@@ -6,7 +6,6 @@ import me.shadowalzazel.mcodyssey.items.creators.ItemCreator
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
-import org.bukkit.Color
 import org.bukkit.Material
 
 object Miscellaneous : ItemCreator {
@@ -28,11 +27,14 @@ object Miscellaneous : ItemCreator {
         lore = listOf(Component.text("This device points in the direction of the nearest Ancient City.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
     // Books
+    val ARCANE_BOOK = OdysseyItem("arcane_book", Material.ENCHANTED_BOOK, "Arcane Book", ItemModels.ARCANE_BOOK)
+
     val GILDED_BOOK = OdysseyItem("gilded_book", Material.ENCHANTED_BOOK, "Gilded Book", ItemModels.GILDED_BOOK)
 
-    val ARCANE_BOOK = OdysseyItem("arcane_book", Material.BOOK, "Arcane Book", ItemModels.ARCANE_BOOK,
-        lore = listOf(Component.text("A special book that can be enchanted into tomes.", TextColor.color(191, 146, 239)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+    val PRISMATIC_BOOK = OdysseyItem("prismatic_book", Material.BOOK, "Prismatic Book", ItemModels.PRISMATIC_BOOK,
+        lore = listOf(Component.text("A special book that can be enchanted into tomes.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
+    // Tomes
     val TOME_OF_DISCHARGE = OdysseyItem("tome_of_discharge", Material.ENCHANTED_BOOK, "Tome of Discharge", ItemModels.TOME_OF_DISCHARGE,
         lore = listOf(Component.text("Removes one enchantment from an enchant slot.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))) // T1
 
@@ -57,7 +59,7 @@ object Miscellaneous : ItemCreator {
     val TOME_OF_AVARICE = OdysseyItem("tome_of_avarice", Material.ENCHANTED_BOOK, "Tome of Avarice", ItemModels.TOME_OF_AVARICE, // T3
         lore = listOf(Component.text("[FINISH]", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
-    val TOME_OF_REPLICATION = OdysseyItem("tome_of_avarice", Material.ENCHANTED_BOOK, "Tome of Euphony", ItemModels.TOME_OF_REPLICATION, // T3
+    val TOME_OF_REPLICATION = OdysseyItem("tome_of_replication", Material.ENCHANTED_BOOK, "Tome of Replication", ItemModels.TOME_OF_REPLICATION, // T3
         lore = listOf(Component.text("[FINISH]", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
     val TOME_OF_EUPHONY = OdysseyItem("tome_of_avarice", Material.ENCHANTED_BOOK, "Tome of Euphony", ItemModels.TOME_OF_EUPHONY, // T3

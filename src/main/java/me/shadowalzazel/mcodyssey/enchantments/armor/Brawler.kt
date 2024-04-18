@@ -8,13 +8,13 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object LeapFrog : OdysseyEnchantment(
-    "leapfrog",
-    "Leap Frog",
+object Brawler : OdysseyEnchantment(
+    "brawler",
+    "Brawler",
     3,
     Rarity.UNCOMMON,
-    EnchantmentCategory.ARMOR_LEGS,
-    arrayOf(EquipmentSlot.LEGS)
+    EnchantmentCategory.ARMOR,
+    arrayOf(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET)
 ) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
@@ -23,8 +23,7 @@ object LeapFrog : OdysseyEnchantment(
 
     override fun canEnchantItem(item: ItemStack): Boolean {
         return when (item.type) {
-            Material.ENCHANTED_BOOK,
-            Material.NETHERITE_LEGGINGS, Material.DIAMOND_LEGGINGS, Material.IRON_LEGGINGS, Material.GOLDEN_LEGGINGS, Material.CHAINMAIL_LEGGINGS, Material.LEATHER_LEGGINGS -> {
+            Material.ENCHANTED_BOOK, Material.NETHERITE_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.IRON_CHESTPLATE, Material.GOLDEN_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, Material.LEATHER_CHESTPLATE -> {
                 true
             }
             else -> {
@@ -34,16 +33,14 @@ object LeapFrog : OdysseyEnchantment(
     }
 
     override fun getDescriptionToolTip(inputLevel: Int): List<Component> {
-        val amount1 = 0.4 * inputLevel
-        val text1 = "Increases jump velocity by $amount1=[0.4 x level] when the player has sneaked"
-        val text2 = "or is on top of lily pad, drip leaf, mud, muddy mangrove root,"
-        val text3 = "or a waterlogged leaf. These effects can stack"
+        val amount1 = 0.5 * inputLevel
+        val amount2 = 2 * inputLevel
+        val text1 = "Receive $amount1=[0.5 x level] less damage when $amount2=[2 x level]"
+        val text2 = "or more enemies are within a 4 block radius."
         return listOf(
             getGrayComponentText(text1),
             getGrayComponentText(text2),
-            getGrayComponentText(text3)
         )
     }
-
 
 }

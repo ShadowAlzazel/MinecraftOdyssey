@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.listeners.enchantment_listeners
 
+import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.constants.EffectTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags
@@ -66,8 +67,8 @@ object MeleeListeners : Listener, EffectsManager, EnchantRegistryManager {
                         arcaneCellEnchantment(victim, enchant.value)
                     }
                 }
-                OdysseyEnchantments.ASPHYXIATING_ASSAULT -> {
-                    event.damage += asphyxiatingAssaultEnchantment(victim, enchant.value) * power
+                OdysseyEnchantments.ASPHYXIATE -> {
+                    event.damage += asphyxiateEnchantment(victim, enchant.value) * power
                 }
                 OdysseyEnchantments.BACKSTABBER -> {
                     if (cooldownManager(attacker, "Backstabber", backstabberCooldown, 3.25)) {
@@ -85,6 +86,9 @@ object MeleeListeners : Listener, EffectsManager, EnchantRegistryManager {
                 }
                 OdysseyEnchantments.BLITZ_SHIFT -> {
                     blitzSwitchEnchantment(attacker, victim, enchant.value)
+                }
+                OdysseyEnchantments.BUDDING -> {
+                    buddingEnchantment(victim, enchant.value) // MORE STACKS -> MORE INSTANCES
                 }
                 OdysseyEnchantments.BUZZY_BEES -> {
                     if (cooldownManager(attacker, "Buzzy Bees", buzzyBeesCooldown, 4.25)) {
@@ -138,11 +142,11 @@ object MeleeListeners : Listener, EffectsManager, EnchantRegistryManager {
                 OdysseyEnchantments.RUPTURING_STRIKE -> {
                     event.damage -= rupturingStrikeEnchantment(attacker, victim, event.damage, enchant.value)
                 }
-                OdysseyEnchantments.SPORING_ROT -> {
-                    sporingRotEnchantment(victim, enchant.value) // MORE STACKS -> MORE INSTANCES
-                }
                 OdysseyEnchantments.TAR_N_DIP -> {
                     tarNDipEnchantment(victim, enchant.value)
+                }
+                OdysseyEnchantments.VITAL -> {
+                    event.damage += vitalEnchantment(event.isCritical, enchant.value)
                 }
                 OdysseyEnchantments.VOID_STRIKE -> {
                     if (cooldownManager(attacker, "Void Strike", voidStrikeCooldown, 0.45)) {
@@ -185,6 +189,25 @@ object MeleeListeners : Listener, EffectsManager, EnchantRegistryManager {
         }
     }
 
+    @EventHandler
+    fun entityKnockBackHandler(event: EntityKnockbackByEntityEvent) {
+        if (event.hitBy !is LivingEntity) return
+        val attacker = event.hitBy as LivingEntity
+        val hitWeapon = attacker.equipment?.itemInMainHand ?: return
+        //val entity = event.entity
+        // Loop
+        for (enchant in hitWeapon.enchantments) {
+            // Continue if not OdysseyEnchant
+            val odysseyEnchantment = findOdysseyEnchant(enchant.key) ?: continue
+            // When match
+            when (odysseyEnchantment) {
+                OdysseyEnchantments.GUST -> {
+                    event.acceleration = gustEnchantment(event.acceleration, enchant.value)
+                }
+            }
+        }
+    }
+
     // Helper function for cooldown
     private fun cooldownManager(attacker: LivingEntity, message: String, cooldownMap: MutableMap<UUID, Long>, timer: Double): Boolean {
         if (!cooldownMap.containsKey(attacker.uniqueId)) {
@@ -211,8 +234,8 @@ object MeleeListeners : Listener, EffectsManager, EnchantRegistryManager {
     /*-----------------------------------------------------------------------------------------------*/
     /*-----------------------------------------------------------------------------------------------*/
 
-    // -------------------------- ASPHYXIATING_ASSAULT -------------------------------
-    private fun asphyxiatingAssaultEnchantment(
+    // -------------------------- ASPHYXIATE -------------------------------
+    private fun asphyxiateEnchantment(
         victim: LivingEntity,
         level: Int
     ): Double {
@@ -308,6 +331,17 @@ object MeleeListeners : Listener, EffectsManager, EnchantRegistryManager {
     // Other enchant ideas
     // MAYBE DO NEXT TIME YOU SNEAK???? OR TOGGLE WITH
     // or do dmg based on distance?
+
+    // ------------------------------- BUDDING ------------------------------------
+    private fun buddingEnchantment(
+        victim: LivingEntity,
+        level: Int) {
+        // Effects
+        with(victim) {
+            addOdysseyEffect(EffectTags.BUDDING, 12 * 20, level * 1)
+            world.playSound(location, Sound.BLOCK_BIG_DRIPLEAF_TILT_UP, 2.5F, 0.9F)
+        }
+    }
 
     // ------------------------------- BUZZY_BEES ------------------------------------
     private fun buzzyBeesEnchantment(
@@ -521,6 +555,16 @@ object MeleeListeners : Listener, EffectsManager, EnchantRegistryManager {
             world.playSound(location, Sound.BLOCK_DEEPSLATE_BREAK, 1.5F, 0.5F)
         }
     }
+    // ------------------------------- GUST ------------------------------------
+    private fun gustEnchantment(
+        vector: Vector,
+        level: Int
+    ): Vector {
+        val mag = vector.length()
+        val upVector = vector.normalize().clone()
+        val newVector = upVector.setX(0.0).setY(1.0).setZ(0.0).multiply(mag * level)
+        return newVector
+    }
     // ------------------------------- HEMORRHAGE ------------------------------------
     private fun hemorrhageEnchantment(
         victim: LivingEntity,
@@ -581,16 +625,6 @@ object MeleeListeners : Listener, EffectsManager, EnchantRegistryManager {
         }
         return rupturingDamage
     }
-    // ------------------------------- SPORING_ROT ------------------------------------
-    private fun sporingRotEnchantment(
-        victim: LivingEntity,
-        level: Int) {
-        // Effects
-        with(victim) {
-            addOdysseyEffect(EffectTags.ROTTING, 12 * 20, level * 1)
-            world.playSound(location, Sound.BLOCK_BIG_DRIPLEAF_TILT_UP, 2.5F, 0.9F)
-        }
-    }
     // ------------------------------- TAR_N_DIP ------------------------------------
     private fun tarNDipEnchantment(
         victim: LivingEntity,
@@ -600,6 +634,13 @@ object MeleeListeners : Listener, EffectsManager, EnchantRegistryManager {
             addOdysseyEffect(EffectTags.TARRED, 10 * 20, level * 1)
             world.playSound(location, Sound.ENTITY_BLAZE_SHOOT, 2.5F, 1.5F)
         }
+    }
+    // ------------------------------- DOUSE ------------------------------------
+    private fun vitalEnchantment(isCrit: Boolean, level: Int): Double {
+        if (isCrit) {
+            return 1.0 * level
+        }
+        return 0.0
     }
     // ------------------------------- VOID_STRIKE ------------------------------------
     private fun voidStrikeEnchantment(

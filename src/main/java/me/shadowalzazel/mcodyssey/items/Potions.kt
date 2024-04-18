@@ -163,7 +163,7 @@ object Potions : AlchemyManager {
         customName = "Flask o' Rot",
         customModel = ItemModels.CONICAL_BOTTLE,
         isOdysseyEffect = true,
-        odysseyEffectTag = EffectTags.ROTTING,
+        odysseyEffectTag = EffectTags.BUDDING,
         odysseyEffectTimeInTicks = 60 * 20,
         odysseyEffectAmplifier = 1,
         potionColor = Color.fromRGB(114, 227, 154))

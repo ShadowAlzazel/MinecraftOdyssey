@@ -2,11 +2,20 @@ package me.shadowalzazel.mcodyssey.enchantments.armor
 
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import net.kyori.adventure.text.Component
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.item.enchantment.EnchantmentCategory
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object BeastlyBrawler : OdysseyEnchantment("beastly_brawler", "Beastly Brawler", 3) {
+object Beastly : OdysseyEnchantment(
+    "beastly",
+    "Beastly",
+    3,
+    Rarity.UNCOMMON,
+    EnchantmentCategory.ARMOR,
+    arrayOf(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET)
+) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return false
@@ -24,8 +33,9 @@ object BeastlyBrawler : OdysseyEnchantment("beastly_brawler", "Beastly Brawler",
     }
 
     override fun getDescriptionToolTip(inputLevel: Int): List<Component> {
-        val amount = 2 * inputLevel
-        val text1 = "Deal $amount=[2 x level] extra damage when $amount=[2 x level]"
+        val amount1 = 0.5 * inputLevel
+        val amount2 = 2 * inputLevel
+        val text1 = "Deal $amount1=[0.5 x level] extra damage when $amount2=[2 x level]"
         val text2 = "or more enemies are within a 4 block radius."
         return listOf(
             getGrayComponentText(text1),

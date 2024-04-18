@@ -1,29 +1,30 @@
 package me.shadowalzazel.mcodyssey.enchantments.melee
 
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.item.enchantment.EnchantmentCategory
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.enchantments.Enchantment.SWEEPING_EDGE
 import org.bukkit.inventory.ItemStack
 
-object Whirlwind : OdysseyEnchantment("whirlwind", "Whirlwind", 3) {
+object Budding : OdysseyEnchantment(
+    "budding",
+    "Budding",
+    3,
+    Rarity.UNCOMMON,
+    EnchantmentCategory.DIGGER,
+    arrayOf(EquipmentSlot.MAINHAND)
+) {
+    // HOE ONLY
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            SWEEPING_EDGE -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {
         return when (item.type) {
             Material.ENCHANTED_BOOK,
-            Material.NETHERITE_AXE, Material.DIAMOND_AXE, Material.IRON_AXE, Material.GOLDEN_AXE, Material.STONE_AXE, Material.WOODEN_AXE -> {
+            Material.NETHERITE_HOE, Material.DIAMOND_HOE, Material.IRON_HOE, Material.GOLDEN_HOE, Material.STONE_HOE, Material.WOODEN_HOE -> {
                 true
             }
             else -> {
@@ -31,5 +32,4 @@ object Whirlwind : OdysseyEnchantment("whirlwind", "Whirlwind", 3) {
             }
         }
     }
-
 }

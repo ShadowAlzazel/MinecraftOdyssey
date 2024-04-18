@@ -9,7 +9,7 @@ object EffectTags {
 
     // TYPES
     const val FREEZING: String = "odyssey.freezing" // Freeze Ticks + Slow
-    const val ROTTING: String = "odyssey.rotting" // give Hunger, do damage, stacking, spores,
+    const val BUDDING: String = "odyssey.rotting" // give Hunger, do damage, stacking, spores,
     const val TARRED: String = "odyssey.tarred" //
     const val ABLAZE: String = "odyssey.ablaze" // More damage Fire ticks
     const val MIASMA: String = "odyssey.miasma" // TODO: Prevent Hunger Regen

@@ -37,16 +37,21 @@ interface ItemCreator : EnchantRegistryManager  {
         return itemStack
     }
 
-    fun OdysseyItem.createGildedBook(enchantment: OdysseyEnchantment, level: Int = 1) : ItemStack {
-        if (itemName != "gilded_book") return ItemStack(Material.AIR)
+    fun OdysseyItem.createArcaneBook(enchantment: OdysseyEnchantment, level: Int = 1) : ItemStack {
+        if (itemName != "arcane_book") return ItemStack(Material.AIR)
         val registeredEnchant = convertToBukkitEnchant(enchantment) ?: return ItemStack(Material.AIR)
         val newBook = this.createItemStack(1)
         newBook.itemMeta = (newBook.itemMeta as EnchantmentStorageMeta).also {
             it.addEnchant(registeredEnchant, level, true) // KEEP HERE OR MOVE DETECTION IN LISTENERS
             it.addStoredEnchant(registeredEnchant, level, false)
-            val textLore = mutableListOf(enchantment.getTextForLore(level)) + Component.text("") + enchantment.getDescriptionToolTip(level)
-            val nameComponent = it.displayName()!!.color(SlotColors.GILDED.color)
-            it.displayName(nameComponent.append(Component.text(" - " + enchantment.translatableName, enchantment.subtype.displayColor)))
+            // Set lore and description
+            val loreName = enchantment.toBukkit().displayName(level)
+            val newToolTip = enchantment.getDescriptionToolTip(level)
+            val textLore = mutableListOf(loreName) + Component.text("") + newToolTip
+            val bookName = it.displayName()!!.color(SlotColors.ARCANE.color)
+            val fullName = bookName.append(loreName.color(SlotColors.ARCANE.color))
+            //it.displayName(bookName.append(Component.text(" - " + enchantment.translatableName, enchantment.subtype.displayColor)))
+            it.displayName(fullName)
             it.lore(textLore)
         }
         return newBook

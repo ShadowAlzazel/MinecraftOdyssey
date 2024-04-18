@@ -37,7 +37,7 @@ class Misc {
     /*-----------------------------------------------------------------------------------------------*/
 
     private fun arcaneBookRecipe(): ShapedRecipe {
-        val result = Miscellaneous.ARCANE_BOOK.createItemStack(1)
+        val result = Miscellaneous.PRISMATIC_BOOK.createItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "arcane_book"), result).apply {
             shape(" A ", "ABA", " AC")
             setIngredient('A', Material.AMETHYST_SHARD)

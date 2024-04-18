@@ -54,8 +54,8 @@ interface EffectsManager {
             EffectTags.MIASMA -> {
                 miasmaAssigner(modifiedDuration, amplifier, refreshDelay)
             }
-            EffectTags.ROTTING -> {
-                rottingAssigner(modifiedDuration, amplifier, refreshDelay)
+            EffectTags.BUDDING -> {
+                buddingAssigner(modifiedDuration, amplifier, refreshDelay)
             }
             EffectTags.SOUL_DAMAGE -> {
                 soulDamageAssigner(modifiedDuration, amplifier, refreshDelay)
@@ -193,17 +193,17 @@ interface EffectsManager {
     }
 
     // Decaying
-    private fun LivingEntity.rottingAssigner(
+    private fun LivingEntity.buddingAssigner(
         durationInTicks: Int,
         amplifier: Int,
         delay: Int = 0
     ) {
         val potionEffect = PotionEffect(PotionEffectType.HUNGER, durationInTicks, amplifier)
         addPotionEffect(potionEffect)
-        if (EffectTags.ROTTING !in scoreboardTags) {
-            addScoreboardTag(EffectTags.ROTTING)
+        if (EffectTags.BUDDING !in scoreboardTags) {
+            addScoreboardTag(EffectTags.BUDDING)
         }
-        RottingTask(this, amplifier, (durationInTicks / 20) / 2).runTaskTimer(Odyssey.instance, 0, 20 * 2)
+        BuddingTask(this, amplifier, (durationInTicks / 20) / 2).runTaskTimer(Odyssey.instance, 0, 20 * 2)
     }
 
     // Soul Damage
