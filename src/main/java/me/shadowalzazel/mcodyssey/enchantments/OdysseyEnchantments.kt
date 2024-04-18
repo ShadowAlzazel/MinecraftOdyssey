@@ -18,11 +18,11 @@ object OdysseyEnchantments : EnchantRegistryManager {
 
     // Armor
     val ANTIBONK: OdysseyEnchantment = Antibonk
-    val BEASTLY_BRAWLER: OdysseyEnchantment = BeastlyBrawler
+    val BEASTLY: OdysseyEnchantment = Beastly
     val BLACK_ROSE: OdysseyEnchantment = BlackRose
     val BLURCISE: OdysseyEnchantment = Blurcise
+    val BRAWLER: OdysseyEnchantment = Brawler
     val BREWFUL_BREATH: OdysseyEnchantment = BrewfulBreath
-    val CHITIN: OdysseyEnchantment = Chitin
     val COWARDICE: OdysseyEnchantment = Cowardice
     val DEVASTATING_DROP: OdysseyEnchantment = DevastatingDrop
     val DREADFUL_SHRIEK: OdysseyEnchantment = DreadfulShriek
@@ -32,7 +32,6 @@ object OdysseyEnchantments : EnchantRegistryManager {
     val LEAP_FROG: OdysseyEnchantment = LeapFrog
     val MANDIBLEMANIA: OdysseyEnchantment = Mandiblemania
     val MOLTEN_CORE: OdysseyEnchantment = MoltenCore
-    val MOONWARD: OdysseyEnchantment = Moonward
     val OPTICALIZATION: OdysseyEnchantment = Opticalization
     val POLLEN_GUARD: OdysseyEnchantment = PollenGuard
     val POTION_BARRIER: OdysseyEnchantment = PotionBarrier
@@ -53,13 +52,14 @@ object OdysseyEnchantments : EnchantRegistryManager {
     val WAR_CRY: OdysseyEnchantment = WarCry
 
     // Melee
-    val ASPHYXIATING_ASSAULT: OdysseyEnchantment = AsphyxiatingAssault
+    val ASPHYXIATE: OdysseyEnchantment = Asphyxiate
     val ARCANE_CELL: OdysseyEnchantment = ArcaneCell
     val BACKSTABBER: OdysseyEnchantment = Backstabber
     val BANE_OF_THE_ILLAGER: OdysseyEnchantment = BaneOfTheIllager
     val BANE_OF_THE_SEA: OdysseyEnchantment = BaneOfTheSea
     val BANE_OF_THE_SWINE: OdysseyEnchantment = BaneOfTheSwine
     val BLITZ_SHIFT: OdysseyEnchantment = BlitzShift
+    val BUDDING: OdysseyEnchantment = Budding
     val BUZZY_BEES: OdysseyEnchantment = BuzzyBees
     val COMMITTED: OdysseyEnchantment = Committed
     val CULL_THE_WEAK: OdysseyEnchantment = CullTheWeak
@@ -73,13 +73,18 @@ object OdysseyEnchantments : EnchantRegistryManager {
     val FROSTY_FUSE: OdysseyEnchantment = FrostyFuse
     val GRAVITY_WELL: OdysseyEnchantment = GravityWell
     val GUARDING_STRIKE: OdysseyEnchantment = GuardingStrike
+    val GUST: OdysseyEnchantment = Gust
     val HEMORRHAGE: OdysseyEnchantment = Hemorrhage
     val ILLUCIDATION: OdysseyEnchantment = Illucidation
     val RUPTURING_STRIKE: OdysseyEnchantment = RupturingStrike
-    val SPORING_ROT: OdysseyEnchantment = SporingRot
     val TAR_N_DIP: OdysseyEnchantment = TarNDip
+    val VITAL: OdysseyEnchantment = Vital
     val VOID_STRIKE: OdysseyEnchantment = VoidStrike
     val WHIRLWIND: OdysseyEnchantment = Whirlwind
+
+    // All
+    val CHITIN: OdysseyEnchantment = Chitin
+    val MOONPATCH: OdysseyEnchantment = Moonpatch
 
     // Misc
     val BOMB_OB: OdysseyEnchantment = BombOb
@@ -119,13 +124,14 @@ object OdysseyEnchantments : EnchantRegistryManager {
     val VULNEROCITY: OdysseyEnchantment = Vulnerocity
 
     val MELEE_SET = setOf(
-        ASPHYXIATING_ASSAULT,
+        ASPHYXIATE,
         ARCANE_CELL,
         BACKSTABBER,
         BANE_OF_THE_ILLAGER,
         BANE_OF_THE_SEA,
         BANE_OF_THE_SWINE,
         BLITZ_SHIFT,
+        BUDDING,
         BUZZY_BEES,
         COMMITTED,
         CULL_THE_WEAK,
@@ -139,20 +145,22 @@ object OdysseyEnchantments : EnchantRegistryManager {
         FROSTY_FUSE,
         GRAVITY_WELL,
         GUARDING_STRIKE,
+        GUST,
         HEMORRHAGE,
         ILLUCIDATION,
         RUPTURING_STRIKE,
-        SPORING_ROT,
         TAR_N_DIP,
+        VITAL,
         VOID_STRIKE,
         WHIRLWIND
     )
 
     val ARMOR_SET = setOf(
         ANTIBONK,
-        BEASTLY_BRAWLER,
+        BEASTLY,
         BLACK_ROSE,
         BLURCISE,
+        BRAWLER,
         BREWFUL_BREATH,
         CHITIN,
         COWARDICE,
@@ -164,7 +172,7 @@ object OdysseyEnchantments : EnchantRegistryManager {
         LEAP_FROG,
         MANDIBLEMANIA,
         MOLTEN_CORE,
-        MOONWARD,
+        MOONPATCH,
         OPTICALIZATION,
         POLLEN_GUARD,
         POTION_BARRIER,
@@ -228,17 +236,10 @@ object OdysseyEnchantments : EnchantRegistryManager {
 
     val REGISTERED_SET = ARMOR_SET + MELEE_SET + MISC_SET + RANGED_SET + setOf(GILDED_POWER)
     val EXOTIC_LIST = setOf(SINGULARITY_SHOT, GRAVITY_WELL,
-        STELLAR_SHOWER, SCULK_SENSITIVE, BLACK_ROSE) // To exclude for table
+        STELLAR_SHOWER, SCULK_SENSITIVE, BLACK_ROSE) // To exclude from enchantment table
 
     // Register
     fun registerAll() {
-        /* ---------- PRE 1.20.4 ----------- */
-        /*
-        for (odysseyEnchant in REGISTERED_SET) {
-            val registered = Arrays.stream(Enchantment.values()).collect(Collectors.toList()).contains(odysseyEnchant)
-            if (!registered) registerOdysseyEnchantment(odysseyEnchant as Enchantment)
-        }
-         */
         for (odysseyEnchant in REGISTERED_SET) {
             var registered = false
             try {

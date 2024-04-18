@@ -2,11 +2,20 @@ package me.shadowalzazel.mcodyssey.enchantments.armor
 
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import net.kyori.adventure.text.Component
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.item.enchantment.EnchantmentCategory
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object VeiledInShadow : OdysseyEnchantment("veiled_in_shadow", "Veiled in Shadow", 5) {
+object VeiledInShadow : OdysseyEnchantment(
+    "veiled_in_shadow",
+    "Veiled in Shadow",
+    5,
+    Rarity.VERY_RARE,
+    EnchantmentCategory.ARMOR,
+    arrayOf(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET)
+) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return false

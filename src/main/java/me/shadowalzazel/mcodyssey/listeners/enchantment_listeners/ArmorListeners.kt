@@ -72,6 +72,9 @@ object ArmorListeners : Listener, EnchantRegistryManager {
                     OdysseyEnchantments.ANTIBONK -> {
                         event.damage = antibonkEnchantment(event.isCritical, event.damage, enchant.value)
                     }
+                    OdysseyEnchantments.BRAWLER -> {
+                        event.damage -= brawlerEnchantment(defender, enchant.value)
+                    }
                     OdysseyEnchantments.ILLUMINEYE -> {
                         illumineyeEnchantment(enemy, defender, enchant.value)
                     }
@@ -106,6 +109,9 @@ object ArmorListeners : Listener, EnchantRegistryManager {
                     OdysseyEnchantments.BLACK_ROSE -> {
                         blackRoseEnchantment(enemy, enchant.value)
                     }
+                    OdysseyEnchantments.BRAWLER -> {
+                        event.damage -= brawlerEnchantment(defender, enchant.value)
+                    }
                     OdysseyEnchantments.IGNORE_PAIN -> {
                         ignorePainEnchantment(defender, enchant.value)
                     }
@@ -137,6 +143,9 @@ object ArmorListeners : Listener, EnchantRegistryManager {
                 val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (gildedEnchant) {
+                    OdysseyEnchantments.BRAWLER -> {
+                        event.damage -= brawlerEnchantment(defender, enchant.value)
+                    }
                     OdysseyEnchantments.COWARDICE -> {
                         cowardiceEnchantment(enemy, defender, enchant.value)
                     }
@@ -168,6 +177,9 @@ object ArmorListeners : Listener, EnchantRegistryManager {
                 val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (gildedEnchant) {
+                    OdysseyEnchantments.BRAWLER -> {
+                        event.damage -= brawlerEnchantment(defender, enchant.value)
+                    }
                     OdysseyEnchantments.RECKLESS -> {
                         event.damage += recklessEnchantment(enchant.value)
                     }
@@ -203,9 +215,12 @@ object ArmorListeners : Listener, EnchantRegistryManager {
             val helmet = attacker.equipment?.helmet
             for (enchant in helmet!!.enchantments) {
                 // Continue if not OdysseyEnchant
-                val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
+                val odysseyEnchantment = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
-                when (gildedEnchant) {
+                when (odysseyEnchantment) {
+                    OdysseyEnchantments.BEASTLY -> {
+                        event.damage += beastlyEnchantment(attacker, enchant.value)
+                    }
                     OdysseyEnchantments.MANDIBLEMANIA -> {
                         mandiblemaniaAttackEnchantment(attacker, enemy, enchant.value)
                     }
@@ -219,14 +234,27 @@ object ArmorListeners : Listener, EnchantRegistryManager {
             val chestplate = attacker.equipment?.chestplate
             for (enchant in chestplate!!.enchantments) {
                 // Continue if not OdysseyEnchant
-                val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
+                val odysseyEnchantment = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
-                when (gildedEnchant) {
-                    OdysseyEnchantments.BEASTLY_BRAWLER -> {
-                        event.damage += beastlyBrawlerEnchantment(attacker, enchant.value)
+                when (odysseyEnchantment) {
+                    OdysseyEnchantments.BEASTLY -> {
+                        event.damage += beastlyEnchantment(attacker, enchant.value)
                     }
                     OdysseyEnchantments.VICIOUS_VIGOR -> {
                         event.damage += viciousVigorEnchantment(attacker, enchant.value)
+                    }
+                }
+            }
+        }
+        if (attacker.equipment?.leggings?.hasItemMeta() == true) {
+            val leggings = attacker.equipment?.leggings
+            for (enchant in leggings!!.enchantments) {
+                // Continue if not OdysseyEnchant
+                val odysseyEnchantment = findOdysseyEnchant(enchant.key) ?: continue
+                // When match
+                when (odysseyEnchantment) {
+                    OdysseyEnchantments.BEASTLY -> {
+                        event.damage += beastlyEnchantment(attacker, enchant.value)
                     }
                 }
             }
@@ -235,9 +263,12 @@ object ArmorListeners : Listener, EnchantRegistryManager {
             val boots = attacker.equipment?.boots
             for (enchant in boots!!.enchantments) {
                 // Continue if not OdysseyEnchant
-                val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
+                val odysseyEnchantment = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
-                when (gildedEnchant) {
+                when (odysseyEnchantment) {
+                    OdysseyEnchantments.BEASTLY -> {
+                        event.damage += beastlyEnchantment(attacker, enchant.value)
+                    }
                     OdysseyEnchantments.STATIC_SOCKS -> {
                         event.damage += staticSocksAttackEnchantment(attacker, enchant.value)
                     }
@@ -443,7 +474,7 @@ object ArmorListeners : Listener, EnchantRegistryManager {
         if (!event.item.hasItemMeta()) return
         // Copper Chitin
 
-        if (event.item.enchantments.containsKey(OdysseyEnchantments.MOONWARD.toBukkit())) {
+        if (event.item.enchantments.containsKey(OdysseyEnchantments.MOONPATCH.toBukkit())) {
             moonwardEnchantment(event)
         }
 
@@ -626,13 +657,13 @@ object ArmorListeners : Listener, EnchantRegistryManager {
     }
 
 
-    /*----------------------------------------BEASTLY_BRAWLER----------------------------------------*/
-    private fun beastlyBrawlerEnchantment(
+    /*----------------------------------------BRAWLER----------------------------------------*/
+    private fun brawlerEnchantment(
         defender: LivingEntity,
         level: Int
     ): Double {
-        if (defender.location.getNearbyLivingEntities(4.0).size >= level) {
-            return level * 2.0
+        if (defender.location.getNearbyLivingEntities(4.0).size >= 2 * level) {
+            return level * 0.5
         }
         return 0.0
     }
@@ -662,6 +693,16 @@ object ArmorListeners : Listener, EnchantRegistryManager {
         return 0.0
     }
 
+    /*----------------------------------------BRAWLER----------------------------------------*/
+    private fun beastlyEnchantment(
+        attacker: LivingEntity,
+        level: Int
+    ): Double {
+        if (attacker.location.getNearbyLivingEntities(4.0).size >= 2 * level) {
+            return level * 0.5
+        }
+        return 0.0
+    }
 
     // ------------------------------- BREWFUL_BREATH ------------------------------------
     private fun brewfulBreathEnchantment(

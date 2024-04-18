@@ -131,7 +131,7 @@ interface AlchemyManager {
                 Component.text("Freezing $numeral ${createTimeString(timeInTicks / 20)}", color)
                     .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
             }
-            EffectTags.ROTTING -> {
+            EffectTags.BUDDING -> {
                 Component.text("Rotting $numeral ${createTimeString(timeInTicks / 20)}", color)
                     .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
             }
@@ -178,7 +178,7 @@ interface AlchemyManager {
             EffectTags.FREEZING -> {
                 EffectColors.FREEZING.color
             }
-            EffectTags.ROTTING -> {
+            EffectTags.BUDDING -> {
                 EffectColors.ROTTING.color
             }
             EffectTags.TARRED -> {
@@ -310,7 +310,7 @@ interface AlchemyManager {
             EffectTags.FREEZING -> {
                 cloudTag = EntityTags.FREEZING_CLOUD
             }
-            EffectTags.ROTTING -> {
+            EffectTags.BUDDING -> {
                 cloudTag = EntityTags.DECAYING_CLOUD
             }
             EffectTags.TARRED -> {

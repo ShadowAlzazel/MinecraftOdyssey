@@ -1,35 +1,24 @@
 package me.shadowalzazel.mcodyssey.enchantments.melee
 
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import net.kyori.adventure.text.Component
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.item.enchantment.EnchantmentCategory
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.enchantments.Enchantment.FIRE_ASPECT
 import org.bukkit.inventory.ItemStack
 
-object FreezingAspect : OdysseyEnchantment(
-    "freezing_aspect",
-    "Freezing Aspect",
-    2,
-    Rarity.RARE
+object Vital : OdysseyEnchantment(
+    "vital",
+    "Vital",
+    3,
+    Rarity.RARE,
+    EnchantmentCategory.WEAPON,
+    arrayOf(EquipmentSlot.MAINHAND)
 ) {
 
-
-    /* Minecraft NMS Methods */
-    override fun getMinCost(level: Int) = 5 + (level * 10)
-    override fun getMaxCost(level: Int) = getMinCost(level) + 10
-
-
-    // Methods for Bukkit
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            FIRE_ASPECT, OdysseyEnchantments.TAR_N_DIP.toBukkit() -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {
@@ -46,6 +35,14 @@ object FreezingAspect : OdysseyEnchantment(
                 false
             }
         }
+    }
+
+    override fun getDescriptionToolTip(inputLevel: Int): List<Component> {
+        val amount = 2.5 * inputLevel
+        val text = "Reduce critical hit damage by $amount=[2.5 x level]."
+        return listOf(
+            getGrayComponentText(text)
+        )
     }
 
 }

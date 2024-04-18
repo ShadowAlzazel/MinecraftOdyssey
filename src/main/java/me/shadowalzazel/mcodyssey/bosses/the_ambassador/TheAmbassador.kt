@@ -8,7 +8,7 @@ import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.items.Exotics
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
-import me.shadowalzazel.mcodyssey.items.Miscellaneous.createGildedBook
+import me.shadowalzazel.mcodyssey.items.Miscellaneous.createArcaneBook
 import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.GravitySingularityTask
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -450,7 +450,7 @@ class TheAmbassador(location: Location) : OdysseyBoss(
         when (material) {
             Material.NETHER_STAR -> {
                 giftLikeness += 30
-                val gravityBook = Miscellaneous.GILDED_BOOK.createGildedBook(OdysseyEnchantments.GRAVITY_WELL, 1)
+                val gravityBook = Miscellaneous.ARCANE_BOOK.createArcaneBook(OdysseyEnchantments.GRAVITY_WELL, 1)
                 inventory.addItem(gravityBook)
             }
             Material.NETHERITE_INGOT -> {
@@ -468,7 +468,7 @@ class TheAmbassador(location: Location) : OdysseyBoss(
             }
             Material.AMETHYST_SHARD -> {
                 giftLikeness += 2
-                inventory.addItem(Miscellaneous.ARCANE_BOOK.createItemStack(maxOf(extraValue - 1, 1)))
+                inventory.addItem(Miscellaneous.PRISMATIC_BOOK.createItemStack(maxOf(extraValue - 1, 1)))
             }
             Material.AMETHYST_BLOCK -> {
                 giftLikeness += 8

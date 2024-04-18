@@ -8,12 +8,6 @@ import org.bukkit.enchantments.Enchantment
 
 interface EnchantRegistryManager  {
 
-    // Call to check enchant is Odyssey
-    fun enchantIsOdyssey(enchantment: Enchantment): Boolean {
-        val enchant = findOdysseyEnchant(enchantment)
-        return enchant != null // IF finds -> Is odyssey enchantment
-    }
-
     // Extension to easily check if odyssey/not
     fun Enchantment.isOdysseyEnchant(): Boolean {
         val enchant = findOdysseyEnchant(this)
@@ -26,6 +20,12 @@ interface EnchantRegistryManager  {
         return enchant == null // IF Null -> Is NOT odyssey enchantment
     }
 
+    // Called When enchant needs to be OdysseyEnchantment Class
+    fun Enchantment.convertToOdysseyEnchant(): OdysseyEnchantment {
+        return getOdysseyEnchantFromString(this.key.key)!!
+    }
+
+
     // Get bukkit
     fun convertToBukkitEnchant(enchantment: OdysseyEnchantment): Enchantment? {
         //val key = enchantment.getKey()
@@ -34,15 +34,16 @@ interface EnchantRegistryManager  {
         return enchant
     }
 
-    // Called When enchant needs to be OdysseyEnchantment Class
-    fun Enchantment.convertToOdysseyEnchant(): OdysseyEnchantment {
-        return getEnchantmentFromString(this.key.key)!!
+    // Call to check enchant is Odyssey
+    fun enchantIsOdyssey(enchantment: Enchantment): Boolean {
+        val enchant = findOdysseyEnchant(enchantment)
+        return enchant != null // IF finds -> Is odyssey enchantment
     }
 
     // Tries to find OdysseyEnchantment from a bukkit enchantment
     fun findOdysseyEnchant(enchantment: Enchantment): OdysseyEnchantment? {
         val key = enchantment.key.key
-        return getEnchantmentFromString(key)
+        return getOdysseyEnchantFromString(key)
     }
 
     /*
@@ -52,13 +53,13 @@ interface EnchantRegistryManager  {
      */
 
     // MAYBE CHANGE TO DICT??
-    fun getEnchantmentFromString(name: String): OdysseyEnchantment? {
+    fun getOdysseyEnchantFromString(name: String): OdysseyEnchantment? {
         return when(name) {
             "antibonk" -> {
                 OdysseyEnchantments.ANTIBONK
             }
-            "beastly_brawler" -> {
-                OdysseyEnchantments.BEASTLY_BRAWLER
+            "beastly" -> {
+                OdysseyEnchantments.BEASTLY
             }
             "black_rose" -> {
                 OdysseyEnchantments.BLACK_ROSE
@@ -66,10 +67,13 @@ interface EnchantRegistryManager  {
             "blurcise" -> {
                 OdysseyEnchantments.BLURCISE
             }
+            "brawler" -> {
+                OdysseyEnchantments.BRAWLER
+            }
             "brewful_breath" -> {
                 OdysseyEnchantments.BREWFUL_BREATH
             }
-            "copper_chitin" -> {
+            "chitin" -> {
                 OdysseyEnchantments.CHITIN
             }
             "cowardice" -> {
@@ -99,8 +103,8 @@ interface EnchantRegistryManager  {
             "molten_core" -> {
                 OdysseyEnchantments.MOLTEN_CORE
             }
-            "moonward" -> {
-                OdysseyEnchantments.MOONWARD
+            "moonpatch" -> {
+                OdysseyEnchantments.MOONPATCH
             }
             "opticalization" -> {
                 OdysseyEnchantments.OPTICALIZATION
@@ -156,8 +160,8 @@ interface EnchantRegistryManager  {
             "war_cry" -> {
                 OdysseyEnchantments.WAR_CRY
             }
-            "asphyxiating_assault" -> {
-                OdysseyEnchantments.ASPHYXIATING_ASSAULT
+            "asphyxiate" -> {
+                OdysseyEnchantments.ASPHYXIATE
             }
             "arcane_cell" -> {
                 OdysseyEnchantments.ARCANE_CELL
@@ -176,6 +180,9 @@ interface EnchantRegistryManager  {
             }
             "blitz_shift" -> {
                 OdysseyEnchantments.BLITZ_SHIFT
+            }
+            "budding" -> {
+                OdysseyEnchantments.BUDDING
             }
             "buzzy_bees" -> {
                 OdysseyEnchantments.BUZZY_BEES
@@ -216,6 +223,9 @@ interface EnchantRegistryManager  {
             "guarding_strike" -> {
                 OdysseyEnchantments.GUARDING_STRIKE
             }
+            "gust" -> {
+                OdysseyEnchantments.GUST
+            }
             "hemorrhage" -> {
                 OdysseyEnchantments.HEMORRHAGE
             }
@@ -225,11 +235,11 @@ interface EnchantRegistryManager  {
             "rupturing_strike" -> {
                 OdysseyEnchantments.RUPTURING_STRIKE
             }
-            "sporing_rot" -> {
-                OdysseyEnchantments.SPORING_ROT
-            }
             "tar_n_dip" -> {
                 OdysseyEnchantments.TAR_N_DIP
+            }
+            "vital" -> {
+                OdysseyEnchantments.VITAL
             }
             "void_strike" -> {
                 OdysseyEnchantments.VOID_STRIKE

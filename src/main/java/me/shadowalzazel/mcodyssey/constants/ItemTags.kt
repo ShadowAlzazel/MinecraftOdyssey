@@ -39,7 +39,7 @@ object ItemTags {
 
     // Engraving
     const val IS_ENGRAVED: String = "odyssey.is_engraved"
-    const val ENGRAVED_BY: String = "engraved_by"
+    const val ENGRAVED_BY: String = "odyssey.engraved_by"
 
     // Weapon Types
     const val WEAPON_TYPE: String = "odyssey.weapon_type" // Key for string type
@@ -54,9 +54,10 @@ object ItemTags {
     const val IS_CHAKRAM: String = "odyssey.is_chakram"
 
     // Enchanting
-    const val GILDED_SLOTS: String = "gilded_slots"
-    const val ENCHANT_SLOTS: String = "enchant_slots"
+    const val GILDED_SLOTS: String = "odyssey.gilded_slots"
+    const val ENCHANT_SLOTS: String = "odyssey.enchant_slots"
     const val IS_SLOTTED: String = "odyssey.is_slotted"
+    const val GILDED_ENCHANT: String = "odyssey.gilded_enchant"
 
     // Runes
     const val IS_RUNEWARE: String = "odyssey.is_runeware" // A finished runic vessel capable of holding multiple rune shards

@@ -8,7 +8,7 @@ import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-object EnchantGilded : CommandExecutor, EnchantSlotManager, EnchantRegistryManager {
+object EnchantWithOdyssey : CommandExecutor, EnchantSlotManager, EnchantRegistryManager {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
         if (sender !is Player) return false
@@ -18,7 +18,7 @@ object EnchantGilded : CommandExecutor, EnchantSlotManager, EnchantRegistryManag
         // Get args
         val level = args[1].toInt()
         val string = args[0]
-        val odysseyEnchantment = getEnchantmentFromString(string) ?: return false
+        val odysseyEnchantment = getOdysseyEnchantFromString(string) ?: return false
         val registeredEnchantment = convertToBukkitEnchant(odysseyEnchantment) ?: return false
         // Passed Checks
         val item = sender.equipment.itemInMainHand

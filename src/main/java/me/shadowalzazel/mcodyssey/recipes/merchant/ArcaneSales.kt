@@ -26,16 +26,16 @@ object ArcaneSales : ItemCreator {
     }
 
     fun createLowTierGildedEnchantTrade(): MerchantRecipe {
-        val enchants = listOf(OdysseyEnchantments.EXPLODING, OdysseyEnchantments.ASPHYXIATING_ASSAULT,
+        val enchants = listOf(OdysseyEnchantments.EXPLODING, OdysseyEnchantments.ASPHYXIATE,
             OdysseyEnchantments.BANE_OF_THE_ILLAGER, OdysseyEnchantments.BACKSTABBER, OdysseyEnchantments.HEAVY_BALLISTICS)
-        return MerchantRecipe(Miscellaneous.GILDED_BOOK.createGildedBook(enchants.random(), 1), 1, 1, true).apply {
+        return MerchantRecipe(Miscellaneous.ARCANE_BOOK.createArcaneBook(enchants.random(), 1), 1, 1, true).apply {
             setIgnoreDiscounts(true)
             addIngredient(ItemStack(Material.EMERALD, (26..36).random()))
         }
     }
 
     fun createArcaneBookTrade(): MerchantRecipe {
-        val book = Miscellaneous.ARCANE_BOOK.createItemStack(1)
+        val book = Miscellaneous.PRISMATIC_BOOK.createItemStack(1)
         return MerchantRecipe(book, 1, (5..9).random(), true).apply {
             setIgnoreDiscounts(true)
             addIngredient(ItemStack(Material.EMERALD, (13..21).random()))

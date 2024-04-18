@@ -10,7 +10,7 @@ commands:
     description: "Summons an Odyssey boss."
     usage: /<command>
     permission: op
-  enchant_gilded:
+  enchant_with_odyssey:
     description: "Applies the gilded enchantment to the current item in the main hand."
     usage: /<command>
     permission: op
@@ -18,7 +18,7 @@ commands:
     description: "Gives an Odyssey custom item."
     usage: /<command>
     permission: op
-  give_gilded_book:
+  give_arcane_book:
     description: "Gives a Gilded Book with the enchantment."
     usage: /<command>
     permission: op

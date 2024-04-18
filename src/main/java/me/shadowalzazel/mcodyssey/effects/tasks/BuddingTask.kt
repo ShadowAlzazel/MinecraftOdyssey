@@ -5,8 +5,8 @@ import org.bukkit.Particle
 import org.bukkit.entity.LivingEntity
 import org.bukkit.scheduler.BukkitRunnable
 
-// DECAYING task
-class RottingTask(private val victim: LivingEntity, private val factor: Int, private val maxCount: Int) : BukkitRunnable() {
+// BUDDING task
+class BuddingTask(private val victim: LivingEntity, private val factor: Int, private val maxCount: Int) : BukkitRunnable() {
     private var timer = System.currentTimeMillis()
     private var counter = 0
 
@@ -14,7 +14,7 @@ class RottingTask(private val victim: LivingEntity, private val factor: Int, pri
         victim.also {
             counter += 1
             // Check if no longer decaying
-            if (EffectTags.ROTTING !in victim.scoreboardTags) { this.cancel() }
+            if (EffectTags.BUDDING !in victim.scoreboardTags) { this.cancel() }
 
             with(it.world) {
                 val location = it.location.clone().add(0.0, 0.5, 0.0)
@@ -35,7 +35,7 @@ class RottingTask(private val victim: LivingEntity, private val factor: Int, pri
             // Every 2 sec
             val timeElapsed = System.currentTimeMillis() - timer
             if (counter > maxCount || timeElapsed > (maxCount * 2) * 1000) {
-                if (!it.isDead) it.scoreboardTags.remove(EffectTags.ROTTING)
+                if (!it.isDead) it.scoreboardTags.remove(EffectTags.BUDDING)
                 this.cancel()
             }
         }

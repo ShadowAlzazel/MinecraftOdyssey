@@ -2,11 +2,20 @@ package me.shadowalzazel.mcodyssey.enchantments.armor
 
 import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import net.kyori.adventure.text.Component
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.item.enchantment.EnchantmentCategory
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object DevastatingDrop : OdysseyEnchantment("devastating_drop", "Devastating Drop", 4) {
+object DevastatingDrop : OdysseyEnchantment(
+    "devastating_drop",
+    "Devastating Drop",
+    4,
+    Rarity.UNCOMMON,
+    EnchantmentCategory.ARMOR_FEET,
+    arrayOf(EquipmentSlot.FEET)
+) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return false

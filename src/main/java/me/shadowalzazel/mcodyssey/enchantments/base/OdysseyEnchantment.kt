@@ -28,40 +28,47 @@ open class OdysseyEnchantment(
     val name: String,
     val translatableName: String,
     val maximumLevel: Int,
-    val subtype: Subtype = Subtype.GILDED) :
+    rarity: Rarity = Rarity.UNCOMMON,
+    category: EnchantmentCategory = EnchantmentCategory.WEAPON,
+    equipmentSlots: Array<EquipmentSlot> = arrayOf(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET, EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND),
+    val subtype: Subtype = Subtype.NORMAL) :
     Enchantment(
-        Rarity.COMMON,
-        EnchantmentCategory.WEAPON,
-        EquipmentSlot.entries.toTypedArray()
+        rarity,
+        category,
+        equipmentSlots
     ) {
 
     private val romanNum = mapOf(1 to "I", 2 to "II", 3 to "III", 4 to "IV", 5 to "V", 6 to "VI", 7 to "VII", 8 to "VIII", 9 to "IX", 10 to "X")
 
     // Important Method to convert OdysseyEnchant To Enchantment[Bukkit]
     fun toBukkit(): org.bukkit.enchantments.Enchantment {
-        val foundEnchant = EnchantRegistry.get(NamespacedKey(Odyssey.instance, name))
-        return foundEnchant!!
+        return EnchantRegistry.get(NamespacedKey(Odyssey.instance, name))!!
     }
 
     /* Minecraft NMS Methods */
-    override fun getRarity(): Rarity = Rarity.COMMON
+    /*
+    override fun getRarity(): Rarity {
+        return super.getRarity()
+    }
+     */
+
     override fun getMinLevel(): Int = 1
     override fun getMaxLevel(): Int = maximumLevel
-    override fun getMinCost(level: Int): Int = 1
-    override fun getMaxCost(level: Int): Int = 15
-    override fun getDamageProtection(var0: Int, var1: DamageSource): Int = 0
-    override fun getDamageBonus(var0: Int, var1: MobType): Float = 0f
+    override fun getMinCost(level: Int): Int = 1 + level * 10
+    override fun getMaxCost(level: Int): Int = getMinCost(level) + 10
+    override fun getDamageProtection(level: Int, source: DamageSource): Int = 0
+    override fun getDamageBonus(level: Int, group: MobType): Float = 0f
     override fun checkCompatibility(other: Enchantment): Boolean { return this != other }
     override fun getOrCreateDescriptionId(): String {
+        println(descriptionId)
         if (descriptionId == null) {
-            descriptionId = Util.makeDescriptionId("enchantment", BuiltInRegistries.ENCHANTMENT.getKey(this))
+            this.descriptionId = Util.makeDescriptionId("enchantment", BuiltInRegistries.ENCHANTMENT.getKey(this))
             //descriptionId = "enchantment.minecraft.$name"
         }
         return descriptionId!!
     }
     override fun getDescriptionId(): String = this.getOrCreateDescriptionId()
     override fun getFullname(level: Int): McComponent {
-        //val mutableComponent: MutableComponent = McComponent.literal(translatableName)
         val mutableComponent: MutableComponent = McComponent.translatable(getDescriptionId())
         if (this.isCurse) {
             mutableComponent.withStyle(ChatFormatting.RED)
@@ -81,8 +88,8 @@ open class OdysseyEnchantment(
     override fun canEnchant(itemStack: net.minecraft.world.item.ItemStack): Boolean {
         return category.canEnchant(itemStack.item)
     }
-    override fun doPostAttack(var0: LivingEntity, var1: Entity, var2: Int) = Unit
-    override fun doPostHurt(var0: LivingEntity, var1: Entity, var2: Int) = Unit
+    override fun doPostAttack(user: LivingEntity, target: Entity, level: Int) = Unit
+    override fun doPostHurt(user: LivingEntity, target: Entity, level: Int) = Unit
     override fun isTreasureOnly(): Boolean = false
     override fun isCurse(): Boolean = false
     override fun isTradeable(): Boolean = true

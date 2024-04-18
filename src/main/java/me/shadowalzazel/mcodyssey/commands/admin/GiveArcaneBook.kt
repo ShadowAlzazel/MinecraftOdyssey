@@ -9,7 +9,7 @@ import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-object GiveGildedBook : CommandExecutor, EnchantSlotManager, EnchantRegistryManager, ItemCreator {
+object GiveArcaneBook : CommandExecutor, EnchantSlotManager, EnchantRegistryManager, ItemCreator {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
         if (sender !is Player) return false
@@ -18,10 +18,8 @@ object GiveGildedBook : CommandExecutor, EnchantSlotManager, EnchantRegistryMana
         // Get args
         val level = args[1].toInt()
         val string = args[0]
-        val odysseyEnchantment = getEnchantmentFromString(string) ?: return false
-        //val registeredEnchantment = convertToBukkitEnchant(odysseyEnchantment) ?: return false
-        // Add
-        val item = Miscellaneous.GILDED_BOOK.createGildedBook(odysseyEnchantment, level)
+        val odysseyEnchantment = getOdysseyEnchantFromString(string) ?: return false
+        val item = Miscellaneous.ARCANE_BOOK.createArcaneBook(odysseyEnchantment, level)
         sender.inventory.addItem(item)
         return true
     }

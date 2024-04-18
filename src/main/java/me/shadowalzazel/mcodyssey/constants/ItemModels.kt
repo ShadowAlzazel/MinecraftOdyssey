@@ -32,27 +32,32 @@ object ItemModels {
     const val TOTEM_OF_VEXING: Int = 6905404
 
     // Books
-    const val ARCANE_BOOK: Int = 6905501
-    const val VOLUME_OF_FARM_TOOLS: Int = 6905520
+    const val ARCANE_BOOK: Int = 6905501 // Different display for odyssey enchantment
+    const val GILDED_BOOK: Int = 6905502 // Powerful permanent enchants
+    const val PRISMATIC_BOOK: Int = 6905503 // Converts to Tomes
+
+    // Volumes (books with multiple enchants)
+    const val VOLUME_OF_TOOLS: Int = 6905520
     const val VOLUME_OF_POLE_ARMS: Int = 6905521
     const val VOLUME_OF_SWORDS: Int = 6905522
     const val VOLUME_OF_SPEARS: Int = 6905523
     const val VOLUME_OF_AXES: Int = 6905524
     const val VOLUME_OF_CLUBS: Int = 6905525
-    const val GILDED_BOOK: Int = 6906066
 
     // Tomes
-    const val TOME_OF_DISCHARGE: Int = 6906067
-    const val TOME_OF_PROMOTION: Int = 6906068
-    const val TOME_OF_REPLICATION: Int = 6906069
-    const val TOME_OF_HARMONY: Int = 6906070
-    const val TOME_OF_BANISHMENT: Int = 6906071
-    const val TOME_OF_EMBRACE: Int = 6906072
-    const val TOME_OF_EXPENDITURE: Int = 6906073
+    const val TOME_OF_DISCHARGE: Int = 6906067 // Removes 1 specific enchant
+    const val TOME_OF_PROMOTION: Int = 6906068 // increases the level of 1 enchant
+    const val TOME_OF_REPLICATION: Int = 6906069 // Copies a book
+    const val TOME_OF_HARMONY: Int = 6906070 // Lowers combine/repair cost
+    const val TOME_OF_BANISHMENT: Int = 6906071 // Destroys as slot (and the enchant if applicable, NOT WITH GILDED)
+    const val TOME_OF_EMBRACE: Int = 6906072 // Adds a slot
+    const val TOME_OF_EXPENDITURE: Int = 6906073 // Destroys item but extracts 1 enchantment
     const val TOME_OF_INFUSION: Int = 6906074
     const val TOME_OF_EUPHONY: Int = 6906075
     const val TOME_OF_AVARICE: Int = 6906076
     const val TOME_OF_POLYMERIZATION: Int = 6906077
+    const val TOME_OF_EXTRACTION: Int = 6906077
+    const val TOME_OF_IMITATION: Int = 6906077
 
     // Runesherds
     const val ASSAULT_RUNESHERD: Int = 6901453 // Main hand - Attack Damage
