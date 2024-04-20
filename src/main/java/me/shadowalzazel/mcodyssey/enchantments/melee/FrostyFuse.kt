@@ -1,13 +1,22 @@
 package me.shadowalzazel.mcodyssey.enchantments.melee
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.item.enchantment.EnchantmentCategory
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.enchantments.Enchantment.FIRE_ASPECT
 import org.bukkit.inventory.ItemStack
 
-object FrostyFuse : OdysseyEnchantment("frosty_fuse", "Frosty Fuse", 3) {
+object FrostyFuse : OdysseyEnchantment(
+    "frosty_fuse",
+    "Frosty Fuse",
+    3,
+    Rarity.RARE,
+    EnchantmentCategory.WEAPON,
+    arrayOf(EquipmentSlot.MAINHAND)
+) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {

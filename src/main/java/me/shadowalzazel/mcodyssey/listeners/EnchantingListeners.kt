@@ -5,7 +5,7 @@ import me.shadowalzazel.mcodyssey.arcane.EnchantSlotManager
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.enchantments.EnchantRegistryManager
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import me.shadowalzazel.mcodyssey.items.creators.ItemCreator
@@ -20,6 +20,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.enchantment.EnchantItemEvent
+import org.bukkit.event.enchantment.PrepareItemEnchantEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.event.inventory.PrepareSmithingEvent
 import org.bukkit.inventory.EnchantingInventory
@@ -185,6 +186,12 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
     }
 
     /*-----------------------------------------------------------------------------------------------*/
+    @EventHandler
+    fun enchantPrepareHandler(event: PrepareItemEnchantEvent) {
+        println(event.offers)
+        println(event.enchantmentBonus)
+        println(event)
+    }
 
     @EventHandler
     fun enchantingTableHandler(event: EnchantItemEvent) {

@@ -1,12 +1,21 @@
 package me.shadowalzazel.mcodyssey.enchantments.melee
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.item.enchantment.EnchantmentCategory
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object DecayingTouch : OdysseyEnchantment("decaying_touch", "Decaying Touch", 3) {
+object DecayingTouch : OdysseyEnchantment(
+    "decaying_touch",
+    "Decaying Touch",
+    3,
+    Rarity.UNCOMMON,
+    EnchantmentCategory.WEAPON,
+    arrayOf(EquipmentSlot.MAINHAND)
+) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return false

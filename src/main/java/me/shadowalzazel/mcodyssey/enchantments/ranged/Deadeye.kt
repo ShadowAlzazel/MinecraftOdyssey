@@ -1,13 +1,23 @@
 package me.shadowalzazel.mcodyssey.enchantments.ranged
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
 import net.kyori.adventure.text.Component
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.item.enchantment.EnchantmentCategory
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object Deadeye : OdysseyEnchantment("deadeye", "Deadeye", 4) {
+object Deadeye : OdysseyEnchantment(
+    "deadeye",
+    "Deadeye",
+    4,
+    Rarity.UNCOMMON,
+    EnchantmentCategory.BOW,
+    arrayOf(EquipmentSlot.MAINHAND)
+) {
+
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return false

@@ -50,7 +50,6 @@ object RangedListeners : Listener, EnchantRegistryManager {
         if (event.bow == null) { return }
         val bow = event.bow!!
         // Priority is in the order
-
         // Loop for all enchants
         for (enchant in bow.enchantments) {
             // Continue if not OdysseyEnchant
@@ -58,6 +57,9 @@ object RangedListeners : Listener, EnchantRegistryManager {
             when (gildedEnchant) {
                 OdysseyEnchantments.ALCHEMY_ARTILLERY -> {
                     alchemyArtilleryShoot(projectile, enchant.value)
+                }
+                OdysseyEnchantments.BALLISTICS -> {
+                    ballisticsEnchantmentShoot(projectile, enchant.value)
                 }
                 OdysseyEnchantments.BOLA_SHOT -> {
                     bolaShotEnchantmentShoot(projectile, enchant.value)
@@ -86,9 +88,6 @@ object RangedListeners : Listener, EnchantRegistryManager {
                 OdysseyEnchantments.FAN_FIRE -> {
                     fanFireEnchantmentShoot(projectile, shooter, enchant.value)
                 }
-                OdysseyEnchantments.HEAVY_BALLISTICS -> {
-                    heavyBallisticsEnchantmentShoot(projectile, enchant.value)
-                }
                 OdysseyEnchantments.LUCKY_DRAW -> {
                     event.setConsumeItem(!luckyDrawEnchantmentShoot(enchant.value))
                 }
@@ -103,7 +102,7 @@ object RangedListeners : Listener, EnchantRegistryManager {
                 OdysseyEnchantments.OVERCHARGE -> {
                     overchargeEnchantmentShoot(projectile, shooter, bow)
                 }
-                OdysseyEnchantments.PERPETUAL_PROJECTILE -> {
+                OdysseyEnchantments.PERPETUAL -> {
                     perpetualProjectileEnchantmentShoot(projectile, enchant.value)
                 }
                 OdysseyEnchantments.RICOCHET -> {
@@ -121,7 +120,7 @@ object RangedListeners : Listener, EnchantRegistryManager {
                 OdysseyEnchantments.SOUL_REND -> {
                     soulRendEnchantmentShoot(projectile, enchant.value)
                 }
-                OdysseyEnchantments.TEMPORAL_TORRENT -> {
+                OdysseyEnchantments.TEMPORAL -> {
                     temporalTorrentEnchantmentShoot(projectile, enchant.value)
                 }
                 OdysseyEnchantments.VULNEROCITY -> {
@@ -145,6 +144,9 @@ object RangedListeners : Listener, EnchantRegistryManager {
         // TODO: Maybe sort in priority the tags
         for (tag in projectile.scoreboardTags) {
             when (tag) {
+                EntityTags.BALLISTICS_ARROW -> {
+                    event.damage += ballisticsEnchantmentHit(projectile)
+                }
                 EntityTags.DEADEYE_ARROW -> {
                     event.damage += deadeyeEnchantmentHit(projectile, victim)
                 }
@@ -153,9 +155,6 @@ object RangedListeners : Listener, EnchantRegistryManager {
                 }
                 EntityTags.ENTANGLEMENT_ARROW -> {
                     event.damage += entanglementEnchantmentHit(projectile, victim, shooter)
-                }
-                EntityTags.HEAVY_BALLISTICS_ARROW -> {
-                    event.damage += heavyBallisticsEnchantmentHit(projectile)
                 }
                 EntityTags.LUXPOSE_ARROW -> {
                     event.damage += luxposeEnchantmentHit(projectile, victim)
@@ -244,8 +243,8 @@ object RangedListeners : Listener, EnchantRegistryManager {
             val player = event.player
             for (enchant in bow.enchantments) {
                 // Continue if not OdysseyEnchant
-                val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
-                when (gildedEnchant) {
+                val odysseyEnchantment = findOdysseyEnchant(enchant.key) ?: continue
+                when (odysseyEnchantment) {
                     OdysseyEnchantments.OVERCHARGE -> {
                         overchargeEnchantmentLoad(player, bow, enchant.value)
                     }
@@ -362,6 +361,20 @@ object RangedListeners : Listener, EnchantRegistryManager {
         }
 
     }
+
+    // ------------------------------- BALLISTICS ------------------------------------
+    private fun ballisticsEnchantmentShoot(projectile: Entity, level: Int) {
+        with(projectile) {
+            addScoreboardTag(EntityTags.BALLISTICS_ARROW)
+            setIntTag(EntityTags.BALLISTICS_MODIFIER, level)
+        }
+    }
+
+    private fun ballisticsEnchantmentHit(projectile: Projectile): Double {
+        val modifier = projectile.getIntTag(EntityTags.BALLISTICS_MODIFIER) ?: return 0.0
+        return modifier * 1.0
+    }
+
 
     // ------------------------------- BOLA_SHOT ------------------------------------
     private fun bolaShotEnchantmentShoot(projectile: Entity, level: Int) {
@@ -618,19 +631,6 @@ object RangedListeners : Listener, EnchantRegistryManager {
         task.runTaskLater(Odyssey.instance, 6)
     }
 
-    // ------------------------------- HEAVY_BALLISTICS ------------------------------------
-    private fun heavyBallisticsEnchantmentShoot(projectile: Entity, level: Int) {
-        with(projectile) {
-            addScoreboardTag(EntityTags.HEAVY_BALLISTICS_ARROW)
-            setIntTag(EntityTags.HEAVY_BALLISTICS_MODIFIER, level)
-        }
-    }
-
-    private fun heavyBallisticsEnchantmentHit(projectile: Projectile): Double {
-        val modifier = projectile.getIntTag(EntityTags.HEAVY_BALLISTICS_MODIFIER) ?: return 0.0
-        return modifier * 1.0
-    }
-
 
     // ------------------------------- LUCKY_DRAW ------------------------------------
     private fun luckyDrawEnchantmentShoot(enchantmentStrength: Int): Boolean {
@@ -819,8 +819,8 @@ object RangedListeners : Listener, EnchantRegistryManager {
     private fun temporalTorrentEnchantmentShoot(projectile: Entity, level: Int) {
         with(projectile) {
             if (projectile !is Projectile) return
-            addScoreboardTag(EntityTags.TEMPORAL_TORRENT_ARROW)
-            setIntTag(EntityTags.TEMPORAL_TORRENT_MODIFIER, level)
+            addScoreboardTag(EntityTags.TEMPORAL_ARROW)
+            setIntTag(EntityTags.TORRENT_MODIFIER, level)
             // Task
             val task = TemporalTorrentTask(level, projectile.velocity.clone(), projectile)
             projectile.velocity = projectile.velocity.clone().multiply(1.0 - (0.1 * level))

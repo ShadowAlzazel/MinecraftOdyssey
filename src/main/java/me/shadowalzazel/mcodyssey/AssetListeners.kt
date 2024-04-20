@@ -21,7 +21,7 @@ object AssetListeners : Listener {
         val resourcePackLink = "https://www.dropbox.com/s/6hob8iad499vz95/odyssey-resource-pack-test.zip?dl=1"
 
         // Put hash into resource-pack-sha1 WITHIN server.properties
-        val resourcePackHash = "2e36c7d8d07655d7b65586fba878bee951791485"
+        val resourcePackHash = "48bc6b3dc0325ffce587d94fc2b9f321bb654cc2"
         joiningPlayer.setResourcePack(
             resourcePackLink,
             resourcePackHash,
@@ -34,9 +34,6 @@ object AssetListeners : Listener {
     fun playerJoinHandler(event: PlayerJoinEvent) {
         // Force the player to use the resource pack
         resourcePackHandler(event.player)
-        // RESET
-        //event.player.equipment.setItemInMainHand(ItemStack(Material.STRING, 1))
-
     }
 
     @EventHandler

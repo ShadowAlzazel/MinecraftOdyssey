@@ -1,13 +1,22 @@
 package me.shadowalzazel.mcodyssey.enchantments.melee
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.item.enchantment.EnchantmentCategory
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.enchantments.Enchantment.SWEEPING_EDGE
 import org.bukkit.inventory.ItemStack
 
-object Whirlwind : OdysseyEnchantment("whirlwind", "Whirlwind", 3) {
+object Whirlwind : OdysseyEnchantment(
+    "whirlwind",
+    "Whirlwind",
+    3,
+    Rarity.RARE,
+    EnchantmentCategory.DIGGER,
+    arrayOf(EquipmentSlot.MAINHAND)
+) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {

@@ -5,7 +5,7 @@ import me.shadowalzazel.mcodyssey.attributes.AttributeManager
 import me.shadowalzazel.mcodyssey.constants.AttributeIDs
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.items.creators.ToolCreator
 import me.shadowalzazel.mcodyssey.items.utility.ToolMaterial
 import me.shadowalzazel.mcodyssey.items.utility.ToolType
@@ -83,33 +83,36 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
 
 
     private fun gildedMobCreator(mob: LivingEntity) {
-        val gildedEnchant = listOf(OdysseyEnchantments.MELEE_SET, OdysseyEnchantments.ARMOR_SET).random().random()
-        val enchantContext = gildedEnchant.translatableName
-        val conjunctions = listOf("no", "of", "de", "con", "imbued by", "keeper of", "the")
-        val nameText = "${dangerPrefixes.random()} ${mob.name} ${conjunctions.random()} $enchantContext"
-        val newName = Component.text(nameText).color(TextColor.color(255, 170, 0))
         // Weapon
-        val weaponTypes = listOf(ToolType.SABER, ToolType.KATANA)
-        var mainHand = ToolCreator().createToolStack(ToolMaterial.GOLDEN, weaponTypes.random())
-
-        val difficultyMod = getDifScale(mob)
-
-        // Melee Enchant
-        if (gildedEnchant in OdysseyEnchantments.MELEE_SET) {
-            // Get compatible weapon
-            /*
-            var canEnchant = gildedEnchant.canEnchantItem(mainHand)
-            while (!canEnchant) {
-                // Add more damage to main hand mainhand = 2
-                canEnchant = gildedEnchant.canEnchantItem(mainHand)
+        val weaponTypes = listOf(ToolType.SABER, ToolType.KATANA, ToolType.LONGSWORD, ToolType.POLEAXE, ToolType.WARHAMMER)
+        val mainHand: ItemStack
+        val gildedEnchant: OdysseyEnchantment
+        // Get Gilded
+        when(mob.type) {
+            EntityType.SKELETON, EntityType.STRAY -> {
+                gildedEnchant = OdysseyEnchantments.RANGED_SET.random()
+                mainHand = mob.equipment?.itemInMainHand ?: ItemStack(Material.BOW)
             }
-
-             */
-            mainHand.itemMeta = mainHand.itemMeta.also {
-                it.addEnchant(gildedEnchant.toBukkit(), gildedEnchant.maximumLevel, true)
+            EntityType.ZOMBIE, EntityType.HUSK -> {
+                gildedEnchant = OdysseyEnchantments.MELEE_SET.random()
+                mainHand = ToolCreator().createToolStack(ToolMaterial.GOLDEN, weaponTypes.random())
+            }
+            else -> {
+                gildedEnchant = OdysseyEnchantments.ARMOR_SET.random()
+                mainHand = ToolCreator().createToolStack(ToolMaterial.GOLDEN, weaponTypes.random())
             }
         }
+        // Naming
+        val enchantName = gildedEnchant.translatableName
+        val conjunctions = listOf("no", "of", "de", "con", "imbued by", "keeper of", "the")
+        val nameText = "${dangerPrefixes.random()} ${mob.name} ${conjunctions.random()} $enchantName"
+        val newName = Component.text(nameText).color(TextColor.color(255, 170, 0))
 
+        // Difficulty
+        val difficultyMod = getDifScale(mob)
+        mainHand.itemMeta = mainHand.itemMeta.also {
+            it.addEnchant(gildedEnchant.toBukkit(), gildedEnchant.maximumLevel + 1, true)
+        }
         // Main hand
         mainHand.itemMeta = mainHand.itemMeta.also {
             if (weaponCheckIfCanApply(Enchantment.DAMAGE_ALL, gildedEnchant, mainHand))  {
@@ -129,14 +132,17 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
             }
         }
         mainHand.createNewEnchantSlots()
-
-        // Armor
-        val helmet = createGildedArmor(Material.GOLDEN_HELMET, gildedEnchant)
-        val chestplate = createGildedArmor(Material.GOLDEN_CHESTPLATE, gildedEnchant)
-        val leggings = createGildedArmor(Material.GOLDEN_LEGGINGS, gildedEnchant)
-        val boots = createGildedArmor(Material.GOLDEN_BOOTS, gildedEnchant)
-
-        // Apply
+        // Armor Trimming
+        val helmet = createTrimmedArmor(Material.GOLDEN_HELMET)
+        val chestplate = createTrimmedArmor(Material.GOLDEN_CHESTPLATE)
+        val leggings = createTrimmedArmor(Material.GOLDEN_LEGGINGS)
+        val boots = createTrimmedArmor(Material.GOLDEN_BOOTS)
+        // Armor Enchanting
+        enchantMobArmor(helmet, gildedEnchant)
+        enchantMobArmor(chestplate, gildedEnchant)
+        enchantMobArmor(leggings, gildedEnchant)
+        enchantMobArmor(boots, gildedEnchant)
+        // Apply to Mob
         mob.apply {
             // Options
             customName(newName)
@@ -172,7 +178,6 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
                 addPotionEffect(PotionEffect(PotionEffectType.INCREASE_DAMAGE, 999999, 1))
             }
         }
-
         println("Spawned Gilded Mob at: ${mob.location}")
     }
 
@@ -182,7 +187,7 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
         return true
     }
 
-    private fun createGildedArmor(armorType: Material, gildedEnchant: OdysseyEnchantment): ItemStack {
+    private fun createTrimmedArmor(armorType: Material): ItemStack {
         val armor = ItemStack(armorType, 1)
         // Trim
         val newTrim = ArmorTrim(
@@ -191,9 +196,15 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
             listOf(TrimPattern.WAYFINDER, TrimPattern.RAISER, TrimPattern.HOST, TrimPattern.SHAPER,
                 TrimPattern.SENTRY, TrimPattern.DUNE, TrimPattern.WILD, TrimPattern.COAST).random()
         )
-        // Apply
         armor.itemMeta = (armor.itemMeta as ArmorMeta).also {
             it.trim = newTrim
+        }
+        return armor
+    }
+
+    private fun enchantMobArmor(armor: ItemStack, gildedEnchant: OdysseyEnchantment): ItemStack {
+        // Apply
+        armor.itemMeta = (armor.itemMeta as ArmorMeta).also {
             it.addEnchant(Enchantment.DURABILITY, (1..3).random(), false)
             val prot = listOf(Enchantment.PROTECTION_PROJECTILE, Enchantment.PROTECTION_ENVIRONMENTAL,
                 Enchantment.PROTECTION_EXPLOSIONS, Enchantment.PROTECTION_FIRE).random()
@@ -214,7 +225,6 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
             it.y = 0.0
             it.distance(it.clone().zero()).absoluteValue
         }
-
         // Formula
         val scaleDist = 1.0 / 10000.0
         return (scaleDist * distanceFromZero) + (scaleDist * distanceFromZero).pow(2)

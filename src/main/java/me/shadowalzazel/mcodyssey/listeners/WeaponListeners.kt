@@ -105,6 +105,7 @@ object WeaponListeners : Listener {
         val model = mainWeapon.itemMeta.customModelData
         // Get weapon type
         val mainWeaponType = mainWeapon.getStringTag(ItemTags.WEAPON_TYPE)
+        val mainWeaponMaterial = mainWeapon.getStringTag(ItemTags.MATERIAL_TYPE)
         // Sweep damage should not? call other bonuses?
         if (event.cause == EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) {
             val bonusSweepDamage = SWEEP_MAP[mainWeaponType] ?: 0.0
@@ -197,8 +198,18 @@ object WeaponListeners : Listener {
             }
 
         }
+        // Check material type
+        when(mainWeaponMaterial) {
+            "silver" -> {
+                val isMonster = { entity: LivingEntity -> entity is Zombie || entity is AbstractSkeleton || entity is Creeper || entity is Spider }
+                if (isMonster(victim)) {
+                    event.damage += 2.0
+                }
+            }
+        }
+
         // Change [WIP]
-        when (model) {
+        when(model) {
             ItemModels.VOID_LINKED_KUNAI -> {
                 markedVoidTargets[player.uniqueId] = victim // Right now saves to player, change to save per item
                 println("Player ${player.uniqueId} Marked ${victim.uniqueId} ")
@@ -432,6 +443,7 @@ object WeaponListeners : Listener {
             it.setGravity(false)
             it.shooter = player
             it.setHasLeftShooter(false)
+            it.boundingBox.expand(6.0)
         }
         player.setCooldown(mainWeapon.type, 6 * 20)
         // Return Task

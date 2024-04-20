@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.enchantments.base
 
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack

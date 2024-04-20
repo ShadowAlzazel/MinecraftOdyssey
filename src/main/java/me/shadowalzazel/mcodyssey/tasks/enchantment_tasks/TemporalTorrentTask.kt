@@ -29,7 +29,7 @@ class TemporalTorrentTask (
 
     override fun run() { // Every 4 ticks / 0.2 secs
         counter += 1
-        if (!projectile.scoreboardTags.contains(EntityTags.TEMPORAL_TORRENT_ARROW)) return
+        if (!projectile.scoreboardTags.contains(EntityTags.TEMPORAL_ARROW)) return
         if (projectile.isDead) this.cancel()
 
         if (counter > level) {
