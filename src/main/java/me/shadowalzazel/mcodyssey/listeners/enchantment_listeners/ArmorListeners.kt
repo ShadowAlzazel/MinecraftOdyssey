@@ -72,8 +72,8 @@ object ArmorListeners : Listener, EnchantRegistryManager {
                     OdysseyEnchantments.ANTIBONK -> {
                         event.damage = antibonkEnchantment(event.isCritical, event.damage, enchant.value)
                     }
-                    OdysseyEnchantments.BRAWLER -> {
-                        event.damage -= brawlerEnchantment(defender, enchant.value)
+                    OdysseyEnchantments.BEASTLY -> {
+                        event.damage -= beastlyEnchantment(defender, enchant.value)
                     }
                     OdysseyEnchantments.ILLUMINEYE -> {
                         illumineyeEnchantment(enemy, defender, enchant.value)
@@ -109,8 +109,8 @@ object ArmorListeners : Listener, EnchantRegistryManager {
                     OdysseyEnchantments.BLACK_ROSE -> {
                         blackRoseEnchantment(enemy, enchant.value)
                     }
-                    OdysseyEnchantments.BRAWLER -> {
-                        event.damage -= brawlerEnchantment(defender, enchant.value)
+                    OdysseyEnchantments.BEASTLY -> {
+                        event.damage -= beastlyEnchantment(defender, enchant.value)
                     }
                     OdysseyEnchantments.IGNORE_PAIN -> {
                         ignorePainEnchantment(defender, enchant.value)
@@ -143,8 +143,8 @@ object ArmorListeners : Listener, EnchantRegistryManager {
                 val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (gildedEnchant) {
-                    OdysseyEnchantments.BRAWLER -> {
-                        event.damage -= brawlerEnchantment(defender, enchant.value)
+                    OdysseyEnchantments.BEASTLY -> {
+                        event.damage -= beastlyEnchantment(defender, enchant.value)
                     }
                     OdysseyEnchantments.COWARDICE -> {
                         cowardiceEnchantment(enemy, defender, enchant.value)
@@ -177,8 +177,8 @@ object ArmorListeners : Listener, EnchantRegistryManager {
                 val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (gildedEnchant) {
-                    OdysseyEnchantments.BRAWLER -> {
-                        event.damage -= brawlerEnchantment(defender, enchant.value)
+                    OdysseyEnchantments.BEASTLY -> {
+                        event.damage -= beastlyEnchantment(defender, enchant.value)
                     }
                     OdysseyEnchantments.RECKLESS -> {
                         event.damage += recklessEnchantment(enchant.value)
@@ -218,8 +218,8 @@ object ArmorListeners : Listener, EnchantRegistryManager {
                 val odysseyEnchantment = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (odysseyEnchantment) {
-                    OdysseyEnchantments.BEASTLY -> {
-                        event.damage += beastlyEnchantment(attacker, enchant.value)
+                    OdysseyEnchantments.BRAWLER -> {
+                        event.damage += brawlerEnchantment(attacker, enchant.value)
                     }
                     OdysseyEnchantments.MANDIBLEMANIA -> {
                         mandiblemaniaAttackEnchantment(attacker, enemy, enchant.value)
@@ -237,8 +237,8 @@ object ArmorListeners : Listener, EnchantRegistryManager {
                 val odysseyEnchantment = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (odysseyEnchantment) {
-                    OdysseyEnchantments.BEASTLY -> {
-                        event.damage += beastlyEnchantment(attacker, enchant.value)
+                    OdysseyEnchantments.BRAWLER -> {
+                        event.damage += brawlerEnchantment(attacker, enchant.value)
                     }
                     OdysseyEnchantments.VICIOUS_VIGOR -> {
                         event.damage += viciousVigorEnchantment(attacker, enchant.value)
@@ -253,8 +253,8 @@ object ArmorListeners : Listener, EnchantRegistryManager {
                 val odysseyEnchantment = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (odysseyEnchantment) {
-                    OdysseyEnchantments.BEASTLY -> {
-                        event.damage += beastlyEnchantment(attacker, enchant.value)
+                    OdysseyEnchantments.BRAWLER -> {
+                        event.damage += brawlerEnchantment(attacker, enchant.value)
                     }
                 }
             }
@@ -266,8 +266,8 @@ object ArmorListeners : Listener, EnchantRegistryManager {
                 val odysseyEnchantment = findOdysseyEnchant(enchant.key) ?: continue
                 // When match
                 when (odysseyEnchantment) {
-                    OdysseyEnchantments.BEASTLY -> {
-                        event.damage += beastlyEnchantment(attacker, enchant.value)
+                    OdysseyEnchantments.BRAWLER -> {
+                        event.damage += brawlerEnchantment(attacker, enchant.value)
                     }
                     OdysseyEnchantments.STATIC_SOCKS -> {
                         event.damage += staticSocksAttackEnchantment(attacker, enchant.value)

@@ -1,12 +1,24 @@
 package me.shadowalzazel.mcodyssey.enchantments.melee
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.item.enchantment.EnchantmentCategory
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object GravityWell : OdysseyEnchantment("gravity_well", "Gravity Well", 3) {
+object GravityWell : OdysseyEnchantment(
+    "gravity_well",
+    "Gravity Well",
+    3,
+    Rarity.RARE,
+    EnchantmentCategory.WEAPON,
+    arrayOf(EquipmentSlot.MAINHAND)
+) {
+
+    override fun isTradeable(): Boolean = false
+    override fun isDiscoverable(): Boolean = false
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {

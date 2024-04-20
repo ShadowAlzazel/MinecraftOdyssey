@@ -1,12 +1,20 @@
 package me.shadowalzazel.mcodyssey.enchantments.ranged
 
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.item.enchantment.EnchantmentCategory
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object StellarShower : OdysseyEnchantment("stellar_shower", "Stellar Shower", 4) {
+object RainOfArrows : OdysseyEnchantment(
+    "rain_of_arrows",
+    "Rain of Arrows",
+    4,
+    Rarity.VERY_RARE,
+    EnchantmentCategory.BOW,
+    arrayOf(EquipmentSlot.MAINHAND)
+) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return false
@@ -22,5 +30,8 @@ object StellarShower : OdysseyEnchantment("stellar_shower", "Stellar Shower", 4)
             }
         }
     }
+
+    // Shoot a projectile, at the target location, arrows rain down
+
 
 }

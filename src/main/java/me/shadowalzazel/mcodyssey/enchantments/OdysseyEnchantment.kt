@@ -1,6 +1,7 @@
-package me.shadowalzazel.mcodyssey.enchantments.base
+package me.shadowalzazel.mcodyssey.enchantments
 
 import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.enchantments.base.Subtype
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.TextColor
@@ -31,34 +32,30 @@ open class OdysseyEnchantment(
     rarity: Rarity = Rarity.UNCOMMON,
     category: EnchantmentCategory = EnchantmentCategory.WEAPON,
     equipmentSlots: Array<EquipmentSlot> = arrayOf(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET, EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND),
-    val subtype: Subtype = Subtype.NORMAL) :
+    val subtype: Subtype = Subtype.NORMAL
+) :
     Enchantment(
         rarity,
         category,
         equipmentSlots
     ) {
 
-    private val romanNum = mapOf(1 to "I", 2 to "II", 3 to "III", 4 to "IV", 5 to "V", 6 to "VI", 7 to "VII", 8 to "VIII", 9 to "IX", 10 to "X")
-
-    // Important Method to convert OdysseyEnchant To Enchantment[Bukkit]
+    // Important Method to convert OdysseyEnchantment[NMS] To Enchantment[Bukkit]
     fun toBukkit(): org.bukkit.enchantments.Enchantment {
         return EnchantRegistry.get(NamespacedKey(Odyssey.instance, name))!!
     }
 
     /* Minecraft NMS Methods */
-    /*
-    override fun getRarity(): Rarity {
-        return super.getRarity()
-    }
-     */
-
     override fun getMinLevel(): Int = 1
     override fun getMaxLevel(): Int = maximumLevel
     override fun getMinCost(level: Int): Int = 1 + level * 10
     override fun getMaxCost(level: Int): Int = getMinCost(level) + 10
     override fun getDamageProtection(level: Int, source: DamageSource): Int = 0
     override fun getDamageBonus(level: Int, group: MobType): Float = 0f
-    override fun checkCompatibility(other: Enchantment): Boolean { return this != other }
+    override fun checkCompatibility(other: Enchantment): Boolean {
+        val notSame = this != other
+        return notSame
+    }
     override fun getOrCreateDescriptionId(): String {
         println(descriptionId)
         if (descriptionId == null) {
@@ -95,7 +92,6 @@ open class OdysseyEnchantment(
     override fun isTradeable(): Boolean = true
     override fun isDiscoverable(): Boolean = true
 
-
     /* Bukkit Methods */
     open fun canEnchantItem(item: ItemStack): Boolean {
         return when (item.type) {
@@ -107,35 +103,23 @@ open class OdysseyEnchantment(
             }
         }
     }
+    // Get Conflicts
+    open fun conflictsWith(other: BukkitEnchant): Boolean {
+        return false
+    }
 
     /* Odyssey Methods */
-    fun getTextForLore(level: Int): TextComponent {
-        return Component.text("$translatableName ${romanNum[level]}", subtype.displayColor)
-            .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-    }
-
-    fun getTextComponent(level: Int): Component {
-        return Component.text("$translatableName ${romanNum[level]}", subtype.displayColor)
-            .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-    }
-
     internal fun getGrayComponentText(text: String): TextComponent {
         return Component
             .text(text)
             .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
             .color(TextColor.color(170, 170, 170))
     }
-
     // Get tool tip
     open fun getDescriptionToolTip(inputLevel: Int): List<Component> {
         return listOf(
             getGrayComponentText(translatableName)
         )
-    }
-
-    // Get Conflicts
-    open fun conflictsWith(other: BukkitEnchant): Boolean {
-        return false
     }
 
 }

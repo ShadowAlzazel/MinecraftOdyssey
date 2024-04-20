@@ -4,7 +4,7 @@ import me.shadowalzazel.mcodyssey.arcane.SlotColors
 import me.shadowalzazel.mcodyssey.constants.AttributeIDs
 import me.shadowalzazel.mcodyssey.constants.DataKeys
 import me.shadowalzazel.mcodyssey.enchantments.EnchantRegistryManager
-import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor

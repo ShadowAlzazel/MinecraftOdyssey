@@ -3,10 +3,7 @@ package me.shadowalzazel.mcodyssey.constants
 import me.shadowalzazel.mcodyssey.Odyssey
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.Entity
-import org.bukkit.entity.LivingEntity
-import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
-import java.util.UUID
 
 object EntityTags {
 
@@ -54,13 +51,13 @@ object EntityTags {
     const val BLOOD_MOON_MOB: String = "odyssey.blood_moon_mob"
 
     // ARROWS
+    const val BALLISTICS_ARROW: String = "odyssey.ballistics_arrow"
     const val DEADEYE_ARROW: String = "odyssey.deadeye_arrow"
     const val DEATH_FROM_ABOVE_ARROW: String = "odyssey.death_from_above_arrow"
     const val BOLA_SHOT_ARROW: String = "odyssey.bola_shot_arrow"
     const val CHAIN_REACTION_ARROW: String = "odyssey.chain_reaction_arrow"
     const val CLUSTER_SHOT_ARROW: String = "odyssey.cluster_shot_arrow"
     const val ENTANGLEMENT_ARROW: String = "odyssey.entanglement_arrow"
-    const val HEAVY_BALLISTICS_ARROW: String = "odyssey.heavy_ballistics_arrow"
     const val LUXPOSE_ARROW: String = "odyssey.luxpose_arrow"
     const val OVERCHARGE_ARROW: String = "odyssey.overcharge_arrow"
     const val PERPETUAL_ARROW: String = "odyssey.perpetual_arrow"
@@ -68,7 +65,7 @@ object EntityTags {
     const val SHARPSHOOTER_ARROW: String = "odyssey.sharpshooter_arrow"
     const val SINGLE_OUT_ARROW: String = "odyssey.single_out_arrow"
     const val SOUL_REND_ARROW: String = "odyssey.soul_rend_arrow"
-    const val TEMPORAL_TORRENT_ARROW: String = "odyssey.temporal_torrent_arrow"
+    const val TEMPORAL_ARROW: String = "odyssey.temporal_arrow"
     const val VULNEROCITY_ARROW: String = "odyssey.vulnerocity_arrow"
 
     const val ORIGINAL_ARROW: String = "odyssey.original_arrow"
@@ -76,6 +73,7 @@ object EntityTags {
     const val REPLICATED_BURST_ARROW: String = "odyssey.replicated_burst_arrow"
 
     // ARROW UTILITY
+    const val BALLISTICS_MODIFIER: String = "odyssey.ballistics_modifier"
     const val BOLA_SHOT_MODIFIER: String = "odyssey.bola_shot_modifier"
     const val DEADEYE_MODIFIER: String = "odyssey.deadeye_modifier"
     const val DEATH_FROM_ABOVE_MODIFIER: String = "odyssey.death_from_above_modifier"
@@ -87,7 +85,6 @@ object EntityTags {
     const val CHAIN_REACTION_SPAWNED: String = "odyssey.chain_reaction_spawned"
     const val CHAIN_REACTION_LAST_HIT: String = "odyssey.chain_reaction_last_hit"
     const val CLUSTER_SHOT_MODIFIER: String = "odyssey.cluster_shot_modifier"
-    const val HEAVY_BALLISTICS_MODIFIER: String = "odyssey.heavy_ballistics_modifier"
     const val LUXPOSE_MODIFIER: String = "odyssey.luxpose_modifier"
     const val OVERCHARGE_MODIFIER: String = "odyssey.overcharge_modifier"
     const val OVERCHARGING: String = "odyssey.bow_overcharging"
@@ -98,7 +95,7 @@ object EntityTags {
     const val SINGLE_OUT_MODIFIER: String = "odyssey.single_out_modifier"
     const val SOUL_REND_MODIFIER: String = "odyssey.soul_rend_modifier"
     const val SOUL_RENDED_BY: String = "odyssey.soul_rended_by"
-    const val TEMPORAL_TORRENT_MODIFIER: String = "odyssey.temporal_torrent_modifier"
+    const val TORRENT_MODIFIER: String = "odyssey.temporal_modifier"
     const val VULNEROCITY_MODIFIER: String = "odyssey.vulnerocity_modifier"
 
     // CONSUMABLE ARROWS

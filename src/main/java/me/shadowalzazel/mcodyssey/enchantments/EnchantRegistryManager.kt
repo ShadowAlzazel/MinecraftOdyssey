@@ -1,7 +1,6 @@
 package me.shadowalzazel.mcodyssey.enchantments
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
 import org.bukkit.NamespacedKey
 import org.bukkit.Registry
 import org.bukkit.enchantments.Enchantment
@@ -280,6 +279,9 @@ interface EnchantRegistryManager  {
             "bola_shot" -> {
                 OdysseyEnchantments.BOLA_SHOT
             }
+            "ballistics" -> {
+                OdysseyEnchantments.BALLISTICS
+            }
             "burst_barrage" -> {
                 OdysseyEnchantments.BURST_BARRAGE
             }
@@ -307,9 +309,6 @@ interface EnchantRegistryManager  {
             "gale_wind" -> {
                 OdysseyEnchantments.GALE_WIND
             }
-            "heavy_ballistics" -> {
-                OdysseyEnchantments.HEAVY_BALLISTICS
-            }
             "lucky_draw" -> {
                 OdysseyEnchantments.LUCKY_DRAW
             }
@@ -319,8 +318,11 @@ interface EnchantRegistryManager  {
             "overcharge" -> {
                 OdysseyEnchantments.OVERCHARGE
             }
-            "perpetual_projectile" -> {
-                OdysseyEnchantments.PERPETUAL_PROJECTILE
+            "perpetual" -> {
+                OdysseyEnchantments.PERPETUAL
+            }
+            "rain_of_arrows" -> {
+                OdysseyEnchantments.RAIN_OF_ARROWS
             }
             "ricochet" -> {
                 OdysseyEnchantments.RICOCHET
@@ -337,11 +339,8 @@ interface EnchantRegistryManager  {
             "soul_rend" -> {
                 OdysseyEnchantments.SOUL_REND
             }
-            "stellar_shower" -> {
-                OdysseyEnchantments.STELLAR_SHOWER
-            }
-            "temporal_torrent" -> {
-                OdysseyEnchantments.TEMPORAL_TORRENT
+            "temporal" -> {
+                OdysseyEnchantments.TEMPORAL
             }
             "vulnerocity" -> {
                 OdysseyEnchantments.VULNEROCITY

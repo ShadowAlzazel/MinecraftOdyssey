@@ -1,22 +1,24 @@
 package me.shadowalzazel.mcodyssey.enchantments.misc
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.item.enchantment.EnchantmentCategory
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object LengthyLine : OdysseyEnchantment("lengthy_line", "Lengthy Line", 3) {
+object LengthyLine : OdysseyEnchantment(
+    "lengthy_line",
+    "Lengthy Line",
+    3,
+    Rarity.UNCOMMON,
+    EnchantmentCategory.FISHING_ROD,
+    arrayOf(EquipmentSlot.MAINHAND)
+) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
-        return when (other) {
-            OdysseyEnchantments.FROG_FRIGHT.toBukkit() -> {
-                true
-            }
-            else -> {
-                false
-            }
-        }
+        return false
     }
 
     override fun canEnchantItem(item: ItemStack): Boolean {

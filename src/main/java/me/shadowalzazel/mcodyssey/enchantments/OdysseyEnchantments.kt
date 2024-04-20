@@ -3,7 +3,7 @@ package me.shadowalzazel.mcodyssey.enchantments
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.enchantments.armor.*
 import me.shadowalzazel.mcodyssey.enchantments.base.GildedPower
-import me.shadowalzazel.mcodyssey.enchantments.base.OdysseyEnchantment
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.enchantments.melee.*
 import me.shadowalzazel.mcodyssey.enchantments.misc.*
 import me.shadowalzazel.mcodyssey.enchantments.ranged.*
@@ -99,6 +99,7 @@ object OdysseyEnchantments : EnchantRegistryManager {
 
     // Ranged
     val ALCHEMY_ARTILLERY: OdysseyEnchantment = AlchemyArtillery
+    val BALLISTICS: OdysseyEnchantment = Ballistics
     val BOLA_SHOT: OdysseyEnchantment = BolaShot
     val BURST_BARRAGE: OdysseyEnchantment = BurstBarrage
     val CHAIN_REACTION: OdysseyEnchantment = ChainReaction
@@ -109,18 +110,17 @@ object OdysseyEnchantments : EnchantRegistryManager {
     val FAN_FIRE: OdysseyEnchantment = FanFire
     val ENTANGLEMENT: OdysseyEnchantment = Entanglement
     val GALE_WIND: OdysseyEnchantment = GaleWind
-    val HEAVY_BALLISTICS: OdysseyEnchantment = HeavyBallistics
     val LUXPOSE: OdysseyEnchantment = Luxpose
     val LUCKY_DRAW: OdysseyEnchantment = LuckyDraw
     val OVERCHARGE: OdysseyEnchantment = Overcharge
-    val PERPETUAL_PROJECTILE: OdysseyEnchantment = PerpetualProjectile
+    val PERPETUAL: OdysseyEnchantment = Perpetual
     val RICOCHET: OdysseyEnchantment = Ricochet
     val SHARPSHOOTER: OdysseyEnchantment = Sharpshooter
     val SINGLE_OUT: OdysseyEnchantment = SingleOut
     val SINGULARITY_SHOT: OdysseyEnchantment = SingularityShot
     val SOUL_REND: OdysseyEnchantment = SoulRend
-    val STELLAR_SHOWER: OdysseyEnchantment = StellarShower // TODO
-    val TEMPORAL_TORRENT: OdysseyEnchantment = TemporalTorrent
+    val RAIN_OF_ARROWS: OdysseyEnchantment = RainOfArrows // TODO
+    val TEMPORAL: OdysseyEnchantment = Temporal
     val VULNEROCITY: OdysseyEnchantment = Vulnerocity
 
     val MELEE_SET = setOf(
@@ -207,6 +207,7 @@ object OdysseyEnchantments : EnchantRegistryManager {
 
     val RANGED_SET = setOf(
         ALCHEMY_ARTILLERY,
+        BALLISTICS,
         BOLA_SHOT,
         BURST_BARRAGE,
         CHAIN_REACTION,
@@ -217,26 +218,24 @@ object OdysseyEnchantments : EnchantRegistryManager {
         ENTANGLEMENT,
         FAN_FIRE,
         GALE_WIND,
-        HEAVY_BALLISTICS,
         LUCKY_DRAW,
         LUXPOSE,
         OVERCHARGE,
-        PERPETUAL_PROJECTILE,
+        PERPETUAL,
+        RAIN_OF_ARROWS,
         RICOCHET,
         SHARPSHOOTER,
         SINGLE_OUT,
         SINGULARITY_SHOT,
         SOUL_REND,
-        STELLAR_SHOWER,
-        TEMPORAL_TORRENT,
+        TEMPORAL,
         VULNEROCITY
     )
 
     private const val ODYSSEY_NAMESPACE: String = "odyssey"
 
     val REGISTERED_SET = ARMOR_SET + MELEE_SET + MISC_SET + RANGED_SET + setOf(GILDED_POWER)
-    val EXOTIC_LIST = setOf(SINGULARITY_SHOT, GRAVITY_WELL,
-        STELLAR_SHOWER, SCULK_SENSITIVE, BLACK_ROSE) // To exclude from enchantment table
+    val EXOTIC_LIST = setOf(SINGULARITY_SHOT, GRAVITY_WELL, SCULK_SENSITIVE, BLACK_ROSE) // To exclude from enchantment table
 
     // Register
     fun registerAll() {
