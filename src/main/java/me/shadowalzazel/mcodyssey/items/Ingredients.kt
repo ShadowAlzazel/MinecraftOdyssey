@@ -3,6 +3,7 @@ package me.shadowalzazel.mcodyssey.items
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import org.bukkit.Material
+import org.bukkit.entity.Item
 
 object Ingredients {
 
@@ -23,14 +24,15 @@ object Ingredients {
     val WARDEN_ENTRAILS = OdysseyItem("warden_entrails", Material.ROTTEN_FLESH, "Warden Entrails", ItemModels.WARDEN_ENTRAILS)
 
     // Materials
-    val SOUL_STEEL_INGOT = OdysseyItem("soul_steel_ingot", Material.IRON_INGOT,"Soul Steel Ingot", 6906618)
-    val SILVER_INGOT = OdysseyItem("silver_ingot", Material.IRON_INGOT, "Silver Ingot", 6906619)
-    val MITHRIL_INGOT = OdysseyItem("mithril_ingot", Material.IRON_INGOT,"Mithril Ingot", 6906777)
-    val IRIDIUM_INGOT = OdysseyItem("iridium_ingot", Material.IRON_INGOT,"Iridium Ingot", 6906878)
-    val TITANIUM_INGOT = OdysseyItem("titanium_ingot", Material.IRON_INGOT,"Titanium Ingot", 6906879)
-    val HEATED_TITANIUM_INGOT = OdysseyItem("heated_titanium_ingot", Material.IRON_INGOT,"Heated Titanium Ingot", 6906880)
-    val ANDONIZED_TITANIUM_INGOT = OdysseyItem("andonized_titanium_ingot", Material.IRON_INGOT,"Andonized Titanium Ingot", 6906881)
+    val SOUL_STEEL_INGOT = OdysseyItem("soul_steel_ingot", Material.IRON_INGOT,"Soul Steel Ingot", ItemModels.SOUL_STEEL_INGOT)
+    val SILVER_INGOT = OdysseyItem("silver_ingot", Material.IRON_INGOT, "Silver Ingot", ItemModels.SILVER_INGOT)
+    val MITHRIL_INGOT = OdysseyItem("mithril_ingot", Material.IRON_INGOT,"Mithril Ingot", ItemModels.MITHRIL_INGOT)
+    val IRIDIUM_INGOT = OdysseyItem("iridium_ingot", Material.IRON_INGOT,"Iridium Ingot", ItemModels.IRIDIUM_INGOT)
+    val TITANIUM_INGOT = OdysseyItem("titanium_ingot", Material.IRON_INGOT,"Titanium Ingot", ItemModels.TITANIUM_INGOT)
+    val HEATED_TITANIUM_INGOT = OdysseyItem("heated_titanium_ingot", Material.IRON_INGOT,"Heated Titanium Ingot", ItemModels.HEATED_TITANIUM_INGOT)
+    val ANDONIZED_TITANIUM_INGOT = OdysseyItem("andonized_titanium_ingot", Material.IRON_INGOT,"Andonized Titanium Ingot", ItemModels.ANDONIZED_TITANIUM_INGOT)
 
+    val SILVER_NUGGET = OdysseyItem("silver_nugget", Material.IRON_NUGGET, "Silver Nugget", ItemModels.SILVER_NUGGET)
 
     // Big When statement
     /*

@@ -53,7 +53,7 @@ class Equipment : ItemCreator {
         val result = Equipment.WARPING_WAND.createItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "warping_wand"), result).apply {
             shape("W", "V", "V")
-            setIngredient('W', Material.WARPED_STEM)
+            setIngredient('W', Material.WARPED_FUNGUS)
             setIngredient('V', Material.TWISTING_VINES)
             group = "wands"
             category = CraftingBookCategory.EQUIPMENT

@@ -75,6 +75,7 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
         if (potion.hasTag(ItemTags.IS_POTION_VIAL)) {
             val replacement = consumePotionVial(potion) ?: return
             // Cancel consume if gets replacement
+            thrownPotion.velocity = thrownPotion.velocity.multiply(2.0)
             event.setShouldConsume(false)
             thrownPotion.item = replacement.clone().also {
                 it.setIntTag(ItemTags.POTION_CHARGES_LEFT, 1)

@@ -112,7 +112,6 @@ object ItemModels {
     const val DOG_SIZZLE_CRISP: Int = 6908124
     const val DOG_MILK_BONE: Int = 6908125
 
-
     // Misc
     const val ELENCUILE_ESSENCE: Int = 6905465
     const val IRRADIATED_SHARD: Int = 6905466
@@ -136,6 +135,16 @@ object ItemModels {
     const val SOUL_STEEL_UPGRADE_TEMPLATE: Int = 6906646
     const val ENIGMATIC_OMAMORI: Int = 6906649
     const val SOUL_STEEL_INGOT: Int = 6906618
+
+    // Ingots
+    const val SILVER_INGOT: Int = 6906619
+    const val MITHRIL_INGOT: Int = 6906777
+    const val IRIDIUM_INGOT: Int = 6906878
+    const val TITANIUM_INGOT: Int = 6906879
+    const val HEATED_TITANIUM_INGOT: Int = 6906880
+    const val ANDONIZED_TITANIUM_INGOT: Int = 6906881
+
+    const val SILVER_NUGGET: Int = 6906619
 
     const val NECRONOMICON_BOOK: Int = 6905066
 

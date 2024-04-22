@@ -4,6 +4,7 @@ import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.items.*
 import me.shadowalzazel.mcodyssey.items.Equipment
 import me.shadowalzazel.mcodyssey.items.Runesherds.createRuneware
+import me.shadowalzazel.mcodyssey.listeners.EnchantingListeners.createNewStack
 import me.shadowalzazel.mcodyssey.recipes.creators.BlazingRocketsCreator
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
@@ -17,7 +18,7 @@ class Misc {
 
         return listOf(
             clayTotemRecipe(),
-            arcaneBookRecipe(),
+            prismaticBookRecipe(),
             bundleRecipe(),
             enigmaticOmamoriRecipe(),
             fragmentedOrbRecipe(),
@@ -25,6 +26,7 @@ class Misc {
             soulCatalystRecipe(),
             soulSteelUpgradeTemplateRecipe(),
             soulSpiceRecipe(),
+            silverIngotRecipe(),
 
             rocketCreator.blazingRocketsRecipe(1, "one"),
             rocketCreator.blazingRocketsRecipe(2, "two"),
@@ -36,10 +38,10 @@ class Misc {
 
     /*-----------------------------------------------------------------------------------------------*/
 
-    private fun arcaneBookRecipe(): ShapedRecipe {
+    private fun prismaticBookRecipe(): ShapedRecipe {
         val result = Miscellaneous.PRISMATIC_BOOK.createItemStack(1)
-        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "arcane_book"), result).apply {
-            shape(" A ", "ABA", " AC")
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "prismatic_book"), result).apply {
+            shape(" C ", "ABA", " C ")
             setIngredient('A', Material.AMETHYST_SHARD)
             setIngredient('B', Material.ENCHANTED_BOOK)
             setIngredient('C', Material.PRISMARINE_CRYSTALS)
@@ -55,6 +57,16 @@ class Misc {
             setIngredient('S', Material.STRING)
             setIngredient('R', Material.RABBIT_HIDE)
             category = CraftingBookCategory.MISC
+        }
+        return recipe
+    }
+
+    private fun silverIngotRecipe(): ShapedRecipe {
+        val result = Ingredients.SILVER_INGOT.createNewStack(1)
+        val nugget = Ingredients.SILVER_NUGGET.createNewStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "silver_ingot"), result).apply {
+            shape("NNN", "NNN", "NNN")
+            setIngredient('N', RecipeChoice.ExactChoice(nugget))
         }
         return recipe
     }

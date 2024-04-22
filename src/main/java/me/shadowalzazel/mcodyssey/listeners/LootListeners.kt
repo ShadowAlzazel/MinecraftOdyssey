@@ -23,6 +23,14 @@ object LootListeners : Listener, ItemCreator {
         if (event.entity.killer !is Player) {
             return
         }
+        // Mineshaft
+        if (event.entity.scoreboardTags.contains(EntityTags.IN_MINESHAFT)) {
+            println("ROLLED")
+            val mobLootLogic = LootLogic(1.0, event.entity, event.entity.killer!!)
+            if (mobLootLogic.roll(33.0)) {
+                event.entity.world.dropItem(event.entity.location, Ingredients.SILVER_NUGGET.createNewStack(1))
+            }
+        }
         if (!event.entity.hasLineOfSight(event.entity.killer!!)) {
             return
         }
