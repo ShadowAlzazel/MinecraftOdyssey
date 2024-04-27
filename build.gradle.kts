@@ -13,7 +13,7 @@ plugins {
 }
 
 group = "me.shadowalzazel"
-version = "v0.1-ALPHA-1.20.4"
+version = "v0.1-BETA-1.20.5"
 description = "A server side expansion pack for a new minecraft adventure!"
 
 java {
