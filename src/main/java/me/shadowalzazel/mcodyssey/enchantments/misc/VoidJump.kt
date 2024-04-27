@@ -15,7 +15,7 @@ object VoidJump : OdysseyEnchantment(
     3,
     Rarity.UNCOMMON,
     EnchantmentCategory.WEARABLE,
-    arrayOf(EquipmentSlot.MAINHAND)
+    arrayOf(EquipmentSlot.CHEST)
 ) {
 
     override fun canEnchant(itemStack: net.minecraft.world.item.ItemStack): Boolean {

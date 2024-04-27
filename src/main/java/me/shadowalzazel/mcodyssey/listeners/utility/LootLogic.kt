@@ -31,8 +31,8 @@ class LootLogic(
 
     }
 
-    fun roll(modifier: Double = 0.0): Boolean {
-        return (raw + modifier + lootLuck) * 10 > (0..1000).random()
+    fun roll(bonus: Double = 0.0): Boolean {
+        return (raw + bonus + lootLuck) * 10 > (0..1000).random()
     }
 
 

@@ -56,7 +56,6 @@ object ItemListeners : Listener, SpaceRuneManager {
             playSound(player.location, Sound.PARTICLE_SOUL_ESCAPE, 2.5F, 1.4F)
             playSound(player.location, Sound.BLOCK_SAND_BREAK, 1.0F, 1.6F)
         }
-
         event.itemDrop.remove()
     }
 

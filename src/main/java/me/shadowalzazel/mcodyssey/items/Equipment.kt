@@ -34,10 +34,10 @@ object Equipment {
     // TODO: Work with tome of polymerization and Volumes
     // Basic ranged wand to trigger on book
     val ARCANE_WAND  = OdysseyItem("arcane_wand", Material.WOODEN_SHOVEL, "Arcane Wand", ItemModels.ARCANE_WAND,
-        lore = listOf(Component.text("The standard arcane tool for using gilded books at range.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+        lore = listOf(Component.text("The standard arcane tool for using arcane books at range.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
     val WARPING_WAND = OdysseyItem("warping_wand", Material.WOODEN_SHOVEL, "Warping Wand", ItemModels.ARCANE_WAND,
-        lore = listOf(Component.text("The standard arcane tool for using gilded books at range.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+        lore = listOf(Component.text("A wand capable of attacking enemies in a cone", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
     val EXPLOSIVE_ARROW = OdysseyItem("explosive_arrow", Material.ARROW, "Explosive Arrow", ItemModels.EXPLOSIVE_ARROW,
         lore = listOf(Component.text("An arrow that explodes on impact!", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))

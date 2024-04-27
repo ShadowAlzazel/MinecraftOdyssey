@@ -1,9 +1,8 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import com.destroystokyo.paper.event.inventory.PrepareResultEvent
-import me.shadowalzazel.mcodyssey.arcane.EnchantSlotManager
+import me.shadowalzazel.mcodyssey.arcane.TomeManager
 import me.shadowalzazel.mcodyssey.constants.ItemModels
-import me.shadowalzazel.mcodyssey.enchantments.EnchantRegistryManager
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
@@ -30,9 +29,8 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.inventory.meta.Repairable
 
-object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManager, ItemCreator {
+object EnchantingListeners : Listener, TomeManager, ItemCreator {
 
-    /*-----------------------------------------------------------------------------------------------*/
     /*-----------------------------------------------------------------------------------------------*/
 
     @EventHandler
@@ -227,7 +225,7 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
             ItemModels.VOLUME_OF_CLUBS -> {
                 event.item.enchantments.filter { it.key.canEnchantItem(ItemStack(Material.WOODEN_PICKAXE, 1)) }
             }
-            ItemModels.ARCANE_BOOK -> {
+            ItemModels.PRISMATIC_BOOK -> {
                 enchantingTomeHandler(event)
             }
         }
@@ -243,19 +241,19 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
                 tierCost = 0
                 randomTome = listOf(Miscellaneous.TOME_OF_BANISHMENT).random()
             }
-            in 11..40 -> {
+            in 11..30 -> {
                 tierCost = 1
                 randomTome = listOf(Miscellaneous.TOME_OF_DISCHARGE, Miscellaneous.TOME_OF_EMBRACE).random()
             }
-            in 41..70 -> {
+            in 31..60 -> {
                 tierCost = 2
                 randomTome = listOf(Miscellaneous.TOME_OF_PROMOTION, Miscellaneous.TOME_OF_IMITATION).random()
             }
-            in 71..110 -> {
+            in 61..100 -> {
                 tierCost = 3
                 randomTome = listOf(Miscellaneous.TOME_OF_EXPENDITURE, Miscellaneous.TOME_OF_HARMONY).random()
             }
-            in 111..200 -> {
+            in 101..200 -> {
                 tierCost = 4
                 randomTome = listOf(Miscellaneous.TOME_OF_AVARICE).random()
             }
@@ -380,7 +378,6 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
         println("Bonus Enchants: $finalEnchants")
         // Chance
         // Lvl = Chance / 100 -> 500% = lvl5
-
         // MAYBE ADD MORE LVLS BASED ON BASE ENCHANTS TO ADD
         // SHARP 3 = 300%
         for (enchant in finalEnchants) {
@@ -428,7 +425,6 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
         }
         // Variables
         val hasCrystals = (mineral.type == Material.PRISMARINE_CRYSTALS)
-        val hasGold = mineral.type == Material.GOLD_NUGGET
         val hasEquipment = equipment.type != Material.ENCHANTED_BOOK && equipment.type != Material.BOOK
         val hasBook = equipment.type == Material.ENCHANTED_BOOK
 
@@ -485,29 +481,6 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
                 }
             }
         }
-        /*
-        else if (hasGold && hasEquipment) {
-            event.result = when (template.itemMeta.customModelData) {
-                ItemModels.GILDED_BOOK -> {
-                    gildedBookToEquipment(template, equipment, event.viewers)
-                }
-                else -> {
-                    ItemStack(Material.AIR)
-                }
-            }
-        }
-        else if (hasGold && hasBook) {
-            event.result = when (template.itemMeta.customModelData) {
-                ItemModels.GILDED_BOOK -> {
-                    gildedBookToBook(template, equipment, event.viewers)
-                }
-                else -> {
-                    ItemStack(Material.AIR)
-                }
-            }
-        }
-
-         */
     }
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -763,104 +736,6 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-    /*
-    private fun gildedBookToEquipment(book: ItemStack, item: ItemStack, viewers: List<HumanEntity>): ItemStack {
-        // Gilded Book Sentries
-        if (book.enchantments.size > 1) {
-            viewers.forEach { it.sendFailMessage("The gilded book has more than one enchantment") }
-            return ItemStack(Material.AIR)
-        }
-        val isOdysseyEnchant = book.enchantments.any { it.key is OdysseyEnchantment }
-        if (!isOdysseyEnchant) {
-            viewers.forEach { it.sendFailMessage("The gilded book does not have a gilded enchantment") }
-            return ItemStack(Material.AIR)
-        }
-        val bookEnchant = book.enchantments.entries.first { it.key is OdysseyEnchantment }
-        val canEnchantItem = bookEnchant.key.canEnchantItem(item)
-        if (!canEnchantItem) {
-            viewers.forEach { it.sendFailMessage("The enchantment ${bookEnchant.key.key} can not be applied to the item") }
-            return ItemStack(Material.AIR)
-        }
-        var conflictingEnchant: Enchantment? = null
-        val conflictsWithItem = item.enchantments.any {
-            conflictingEnchant = it.key
-            bookEnchant.key.conflictsWith(it.key)
-        }
-        if (conflictsWithItem)  {
-            viewers.forEach { it.sendFailMessage("The enchantment ${bookEnchant.key.key} conflicts with the enchant ${conflictingEnchant!!.key}") }
-            return ItemStack(Material.AIR)
-        }
-        val itemHasEnchant = item.enchantments.containsKey(bookEnchant.key)
-        val gildedCount = item.enchantments.keys.count { it is OdysseyEnchantment }
-        if (gildedCount >= item.getGildedSlots() && !itemHasEnchant) {
-            viewers.forEach { it.sendFailMessage("There are no empty gilded slots on this item") }
-            return ItemStack(Material.AIR)
-        }
-        // New Enchant
-        if (!itemHasEnchant) {
-            // Apply
-            return item.apply {
-                addUnsafeEnchantment(bookEnchant.key, bookEnchant.value)
-                updateSlotLore()
-            }
-        }
-        else {
-            // Check if not max
-            val equipmentLevel = item.enchantments[bookEnchant.key]!!
-            val notMaxLevel = equipmentLevel < bookEnchant.key.maxLevel
-            val canUpgrade = equipmentLevel <= bookEnchant.value
-            if (!(canUpgrade && notMaxLevel)) {
-                viewers.forEach { it.sendFailMessage("${bookEnchant.key.displayName(bookEnchant.value)} is at the max level (Max: ${bookEnchant.key.maxLevel}).") }
-                return ItemStack(Material.AIR)
-            }
-            // Continue
-            val newMax = max(equipmentLevel + 1, bookEnchant.value)
-            return item.apply {
-                removeEnchantment(bookEnchant.key)
-                addUnsafeEnchantment(bookEnchant.key, newMax)
-                updateSlotLore()
-            }
-        }
-    }
-
-    /*-----------------------------------------------------------------------------------------------*/
-
-    private fun gildedBookToBook(first: ItemStack, second: ItemStack, viewers: List<HumanEntity>): ItemStack {
-        // Gilded Book Sentries
-        if (first.enchantments.size > 1 || second.enchantments.size > 1) {
-            viewers.forEach { it.sendFailMessage("The gilded book has more than one enchantment") }
-            return ItemStack(Material.AIR)
-        }
-        val areOdysseyEnchants = first.enchantments.any { it.key is OdysseyEnchantment } && second.enchantments.any { it.key is OdysseyEnchantment }
-        if (!areOdysseyEnchants) {
-            viewers.forEach { it.sendFailMessage("The gilded book does not have a gilded enchantment") }
-            return ItemStack(Material.AIR)
-        }
-        val firstEnchant = first.enchantments.entries.first { it.key is OdysseyEnchantment }
-        val secondEnchant = second.enchantments.entries.first { it.key is OdysseyEnchantment }
-        if (firstEnchant.key != secondEnchant.key) {
-            viewers.forEach { it.sendFailMessage("The gilded books are not the same enchantment") }
-            return ItemStack(Material.AIR)
-        }
-        // Checks
-        val notMaxLevel = firstEnchant.value < firstEnchant.key.maxLevel && secondEnchant.value < secondEnchant.key.maxLevel
-        if (!notMaxLevel) {
-            viewers.forEach { it.sendFailMessage("${firstEnchant.key.key} is at the max level (Max: ${firstEnchant.key.maxLevel}).") }
-            return ItemStack(Material.AIR)
-        }
-        val oldMax = maxOf(firstEnchant.value, secondEnchant.value)
-        val newLevel = minOf(firstEnchant.value, secondEnchant.value)
-        if (newLevel < oldMax) {
-            viewers.forEach { it.sendFailMessage("The gilded books do not create a higher level enchantment.") }
-            return ItemStack(Material.AIR)
-        }
-        return Miscellaneous.GILDED_BOOK.createGildedBook(firstEnchant.key.convertToOdysseyEnchant(), newLevel + 1)
-    }
-
-
-     */
-    /*-----------------------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------------------*/
 
     // Get the compatible enchants for items
     private fun getMaterialEnchantSet(itemType: Material): Set<OdysseyEnchantment> {
@@ -930,7 +805,7 @@ object EnchantingListeners : Listener, EnchantSlotManager, EnchantRegistryManage
                 3
             }
             Material.BOW, Material.CROSSBOW -> {
-                3
+                4
             }
             else -> {
                 2

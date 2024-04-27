@@ -23,6 +23,8 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.world.ChunkPopulateEvent
+import org.bukkit.generator.structure.Structure
+import org.bukkit.generator.structure.StructureType
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ArmorMeta
 import org.bukkit.inventory.meta.trim.ArmorTrim
@@ -69,6 +71,7 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
                 if (event.entity !is Enemy) return
                 // Surface Spawns for now -> fix for mob farms
                 if (event.entity is Guardian) return
+                checkStructure(event.entity)
                 if (event.entity.location.block.lightFromSky < 1) return
                 // Roll Gilded - Base 2%
                 val mobEx = if (event.entity is Zombie || event.entity is Skeleton) 25 else 0
@@ -78,10 +81,23 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
             }
         }
     }
+
+    private fun checkStructure(mob: LivingEntity) {
+        val structures = mob.location.chunk.structures
+        if (structures.isEmpty()) return
+        val inside = structures.filter { mob.boundingBox.overlaps(it.boundingBox) }
+        if (inside.isEmpty()) return
+        // Check if inside
+        for (struct in inside) {
+            // Is Mesa
+            if (struct.structure == Structure.MINESHAFT || struct.structure == Structure.MINESHAFT_MESA) {
+                mob.addScoreboardTag(EntityTags.IN_MINESHAFT)
+            }
+        }
+    }
+
     // 2% For gilded mob
     // 10% For a pack of elites
-
-
     private fun gildedMobCreator(mob: LivingEntity) {
         // Weapon
         val weaponTypes = listOf(ToolType.SABER, ToolType.KATANA, ToolType.LONGSWORD, ToolType.POLEAXE, ToolType.WARHAMMER)

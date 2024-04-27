@@ -14,6 +14,9 @@ object EntityTags {
     const val RUNNING_PIG: String = "odyssey.running_pig"
     const val CLONED: String = "odyssey.cloned"
 
+    // MINESHAFT
+    const val IN_MINESHAFT: String = "odyssey.in_mineshaft"
+
     // SNIFFERS
     const val CAN_DIG_BIOME_SEEDS: String = "odyssey.can_dig_biome_seeds"
 
@@ -30,7 +33,7 @@ object EntityTags {
 
     // CLOUD UTILITY
     const val TIMED_CLOUD: String = "odyssey.timed_cloud"
-    const val CUSTOM_EFFECT_CLOUD: String = "Odyssey.custom_effect_cloud"
+    const val CUSTOM_EFFECT_CLOUD: String = "odyssey.custom_effect_cloud"
 
     // ALCHEMY - PERSISTENT DATA CONTAINER
     const val CUSTOM_EFFECT_TIME: String = "odyssey.custom_effect_time" // Stores Int for ticks [PDT]
