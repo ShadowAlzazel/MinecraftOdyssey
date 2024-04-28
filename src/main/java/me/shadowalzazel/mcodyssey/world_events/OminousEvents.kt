@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.world_events
 
-enum class OminousEvent { // Triggered by Bad Omen
+enum class OminousEvents { // Triggered by Bad Omen
 
 
     OMINOUS_LEGION, // A Horde of pillagers appears at a beacon 'BEACON LVL + OMEN LVL'

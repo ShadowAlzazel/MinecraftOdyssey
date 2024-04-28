@@ -12,7 +12,6 @@ import org.bukkit.inventory.ItemStack
 
 object AssetListeners : Listener {
 
-
     private fun resourcePackHandler(joiningPlayer: Player) {
 
         // PROD
@@ -26,7 +25,7 @@ object AssetListeners : Listener {
             resourcePackLink,
             resourcePackHash,
             true,
-            Component.text("Please Allow Odyssey to download a server side resource pack!", TextColor.color(255, 170, 0))
+            Component.text("Please allow Odyssey to download a server side resource pack!", TextColor.color(255, 170, 0))
         )
     }
 

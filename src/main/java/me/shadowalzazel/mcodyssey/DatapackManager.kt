@@ -4,7 +4,7 @@ import java.io.File
 import java.io.FileNotFoundException
 
 
-class AssetManager(val odyssey: Odyssey) {
+class DatapackManager(val odyssey: Odyssey) {
 
     /*
     private val hasTerralith: Boolean = odyssey.overworld.isBedWorks
@@ -16,13 +16,17 @@ class AssetManager(val odyssey: Odyssey) {
     fun findOdysseyDatapack(): Boolean {
         val worldFilePath = Odyssey.instance.overworld.worldFolder.path
         val datapackPathString = "/datapacks/OdysseyDataPack"
+        var foundSuccessful = false
 
-        return try {
+        try {
             val datapackMetaFile = File("${worldFilePath + datapackPathString}/pack.mcmeta")
-            true
+            foundSuccessful = true
         } catch (ex: FileNotFoundException) {
             Odyssey.instance.logger.info(ex.message)
-            false
+            foundSuccessful = false
         }
+        // DO a LOOP 3 times to find pack
+
+        return foundSuccessful
     }
 }

@@ -37,12 +37,12 @@ object ItemModels {
     const val PRISMATIC_BOOK: Int = 6905503 // Converts to Tomes
 
     // Volumes (books with multiple enchants)
-    const val VOLUME_OF_TOOLS: Int = 6905520
-    const val VOLUME_OF_POLE_ARMS: Int = 6905521
-    const val VOLUME_OF_SWORDS: Int = 6905522
-    const val VOLUME_OF_SPEARS: Int = 6905523
-    const val VOLUME_OF_AXES: Int = 6905524
-    const val VOLUME_OF_CLUBS: Int = 6905525
+    const val VOLUME_OF_BLUNTING: Int = 6905520
+    const val VOLUME_OF_CLEAVING: Int = 6905521
+    const val VOLUME_OF_POKING: Int = 6905522
+    const val VOLUME_OF_SLASHING: Int = 6905523
+    const val VOLUME_OF_TILLING: Int = 6905524
+    const val VOLUME_OF_HELMETS: Int = 6905525
 
     // Tomes
     const val TOME_OF_DISCHARGE: Int = 6906067 // Removes 1 specific enchant
