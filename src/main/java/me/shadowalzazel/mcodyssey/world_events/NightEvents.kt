@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.world_events
 
-enum class NightEvent { // These events are cyclic 
+enum class NightEvents { // These events are cyclic
 
     ABYSS, // Darkness at night
     ACIDIC_RAIN, // Poison Rain

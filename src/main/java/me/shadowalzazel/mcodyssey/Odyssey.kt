@@ -26,7 +26,6 @@ import java.io.FileNotFoundException
 class Odyssey : JavaPlugin() {
 
     // Managers
-    private val assetManager: AssetManager
     val bossManager: BossManager
 
     // Overworld
@@ -39,18 +38,16 @@ class Odyssey : JavaPlugin() {
     var currentSolarPhenomenon: OdysseyPhenomenon? = null
     var playersRequiredForLuck: Int = 99
 
-
     companion object {
         lateinit var instance : Odyssey
     }
 
     init {
         instance = this
-        assetManager = AssetManager(this)
         bossManager = BossManager(this)
     }
 
-    private fun eventRegister(listener: Listener) {
+    private fun registerEventListeners(listener: Listener) {
         server.pluginManager.registerEvents(listener, this@Odyssey)
     }
 
@@ -58,13 +55,15 @@ class Odyssey : JavaPlugin() {
     override fun onEnable() {
         // Start Timer
         val timerStart: Long = System.currentTimeMillis()
-
-        // Enchantment NMS (Allow new registries)
-        ReflectionUtils.unfreezeRegistry(BuiltInRegistries.ENCHANTMENT)
-
         // Config start up
         config.options().copyDefaults()
         saveConfig()
+
+        // Asset Loader
+        val datapackManager = DatapackManager(this)
+
+        // Enchantment NMS (Allow new registries)
+        ReflectionUtils.unfreezeRegistry(BuiltInRegistries.ENCHANTMENT)
 
         // Find Worlds
         // Need to find the main world to locate datapacks
@@ -83,7 +82,7 @@ class Odyssey : JavaPlugin() {
 
         // Find the Odyssey Datapack as it is required
         logger.info("Finding Odyssey Datapack...")
-        val foundPack = assetManager.findOdysseyDatapack()
+        val foundPack = datapackManager.findOdysseyDatapack()
         if (!foundPack) {
             logger.info("Disabling Odyssey Plugin! Can Not Find Datapack!")
             server.pluginManager.disablePlugin(this)
@@ -93,7 +92,6 @@ class Odyssey : JavaPlugin() {
         // Register Enchantments
         logger.info("Registering Enchantments...")
         OdysseyEnchantments.registerAll()
-
 
         // Register Recipes
         logger.info("Registering Recipes...")
@@ -134,19 +132,23 @@ class Odyssey : JavaPlugin() {
             RunesherdListeners,
             EffectListeners,
             PetListener
-        ).forEach { eventRegister(it) }
-
-
+        ).forEach {
+            registerEventListeners(it)
+        }
 
         // Set Commands
-        getCommand("summon_boss")?.setExecutor(SummonBoss)
-        getCommand("enchant_with_odyssey")?.setExecutor(EnchantWithOdyssey)
-        getCommand("place_feature_archaic_seed")?.setExecutor(PlaceFeatureArchaicSeed)
-        getCommand("give_item")?.setExecutor(GiveItem)
-        getCommand("give_arcane_book")?.setExecutor(GiveArcaneBook)
-        getCommand("give_spacerune_tablet")?.setExecutor(GiveSpaceRuneTablet)
-        getCommand("summon_mob")?.setExecutor(SummonMob)
-        getCommand("summon_doppelganger")?.setExecutor(SummonDoppelganger)
+        logger.info("Setting Commands...")
+        mapOf("summon_boss" to SummonBoss,
+            "enchant_with_odyssey" to EnchantWithOdyssey,
+            "place_feature_archaic_seed" to PlaceFeatureArchaicSeed,
+            "give_item" to GiveItem,
+            "give_arcane_book" to GiveArcaneBook,
+            "give_spacerune_tablet" to GiveSpaceRuneTablet,
+            "summon_mob" to SummonMob,
+            "summon_doppelganger" to SummonDoppelganger,
+        ).forEach {
+            getCommand(it.key)?.setExecutor(it.value)
+        }
 
         //server.pluginManager.registerEvents(OdysseyPhenomenaListeners, this)
         //playersRequiredForLuck = 4
@@ -162,8 +164,8 @@ class Odyssey : JavaPlugin() {
 
         // Hello World!
         val timeElapsed = (System.currentTimeMillis() - timerStart).div(1000.0)
-        logger.info("Odyssey Start Up sequence in ($timeElapsed) seconds!")
-        logger.info("The Odyssey has just begun!")
+        logger.info("Odyssey start up sequence in ($timeElapsed) seconds!")
+        logger.info("The Odyssey has just begun! Good luck.")
     }
 
     override fun onDisable() {

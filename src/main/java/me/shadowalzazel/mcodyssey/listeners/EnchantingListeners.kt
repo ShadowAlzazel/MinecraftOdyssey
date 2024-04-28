@@ -207,22 +207,22 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
 
     private fun enchantingBookHandler(event: EnchantItemEvent) {
         when (event.item.itemMeta.customModelData) {
-            ItemModels.VOLUME_OF_TOOLS -> {
+            ItemModels.VOLUME_OF_BLUNTING -> {
                 event.item.enchantments.filter { it.key.canEnchantItem(ItemStack(Material.WOODEN_SWORD, 1)) }
             }
-            ItemModels.VOLUME_OF_AXES -> {
+            ItemModels.VOLUME_OF_TILLING -> {
                 event.item.enchantments.filter { it.key.canEnchantItem(ItemStack(Material.WOODEN_AXE, 1)) }
             }
-            ItemModels.VOLUME_OF_SWORDS -> {
+            ItemModels.VOLUME_OF_POKING -> {
                 event.item.enchantments.filter { it.key.canEnchantItem(ItemStack(Material.WOODEN_SWORD, 1)) }
             }
-            ItemModels.VOLUME_OF_POLE_ARMS -> {
+            ItemModels.VOLUME_OF_CLEAVING -> {
                 event.item.enchantments.filter { it.key.canEnchantItem(ItemStack(Material.WOODEN_HOE, 1)) }
             }
-            ItemModels.VOLUME_OF_SPEARS -> {
+            ItemModels.VOLUME_OF_SLASHING -> {
                 event.item.enchantments.filter { it.key.canEnchantItem(ItemStack(Material.WOODEN_SHOVEL, 1)) }
             }
-            ItemModels.VOLUME_OF_CLUBS -> {
+            ItemModels.VOLUME_OF_HELMETS -> {
                 event.item.enchantments.filter { it.key.canEnchantItem(ItemStack(Material.WOODEN_PICKAXE, 1)) }
             }
             ItemModels.PRISMATIC_BOOK -> {
