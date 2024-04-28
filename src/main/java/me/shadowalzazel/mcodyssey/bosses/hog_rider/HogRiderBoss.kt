@@ -39,10 +39,10 @@ class HogRiderBoss : OdysseyBoss(
         smokyWarHammerMeta.lore = smokyWarHammerLore
 
         // Add Enchantments
-        smokyWarHammerMeta.addEnchant(Enchantment.DAMAGE_ALL, 5, true)
+        smokyWarHammerMeta.addEnchant(Enchantment.SHARPNESS, 5, true)
         smokyWarHammerMeta.addEnchant(Enchantment.KNOCKBACK, 3, true)
         smokyWarHammerMeta.addEnchant(Enchantment.FIRE_ASPECT, 2, true)
-        smokyWarHammerMeta.addEnchant(Enchantment.DURABILITY, 3, true)
+        smokyWarHammerMeta.addEnchant(Enchantment.UNBREAKING, 3, true)
         //smokyWarHammerMeta.addEnchant(OdysseyEnchantments.BANE_OF_THE_SWINE, 5, true)
         //smokyWarHammerMeta.addEnchant(OdysseyEnchantments.FREEZING_ASPECT, 2, true)
         //smokyWarHammerMeta.addEnchant(OdysseyEnchantments.GUARDING_STRIKE, 2, true)
@@ -84,7 +84,7 @@ class HogRiderBoss : OdysseyBoss(
         // Add Potion Effects
         val flameResistance = PotionEffect(PotionEffectType.FIRE_RESISTANCE, 99999, 3)
         val enhancedHealth = PotionEffect(PotionEffectType.HEALTH_BOOST, 99999, 235)
-        val abnormalStrength = PotionEffect(PotionEffectType.INCREASE_DAMAGE, 99999, 5)
+        val abnormalStrength = PotionEffect(PotionEffectType.STRENGTH, 99999, 5)
         val abnormalSpeed = PotionEffect(PotionEffectType.SPEED, 99999, 2)
         //
         val hogRiderEffects = listOf(enhancedHealth, flameResistance, abnormalStrength)

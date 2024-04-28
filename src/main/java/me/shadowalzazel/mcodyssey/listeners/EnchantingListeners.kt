@@ -266,8 +266,8 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         // Particles and sounds
         with(event.enchantBlock.world) {
             val enchantLocation = event.enchantBlock.location.clone().toCenterLocation()
-            spawnParticle(Particle.CRIT_MAGIC, enchantLocation, 125, 0.5, 0.5, 0.5)
-            spawnParticle(Particle.VILLAGER_HAPPY, enchantLocation, 65, 0.5, 0.5, 0.5)
+            spawnParticle(Particle.CRIT, enchantLocation, 125, 0.5, 0.5, 0.5)
+            spawnParticle(Particle.HAPPY_VILLAGER, enchantLocation, 65, 0.5, 0.5, 0.5)
             spawnParticle(Particle.ELECTRIC_SPARK, enchantLocation, 65, 0.5, 0.5, 0.5)
             playSound(enchantLocation, Sound.BLOCK_ENCHANTMENT_TABLE_USE, 2.5F, 0.9F)
             playSound(enchantLocation, Sound.BLOCK_AMETHYST_BLOCK_CHIME, 2.5F, 1.3F)

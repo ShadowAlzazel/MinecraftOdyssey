@@ -22,9 +22,9 @@ object PreacherOfTheAbyss : OdysseyMob("Preacher of the Abyss", MobTags.PREACHER
         return (super.createMob(world, location) as WitherSkeleton).apply {
             // Effects
             addPotionEffects(listOf(
-                PotionEffect(PotionEffectType.INCREASE_DAMAGE, 99999, 8),
-                PotionEffect(PotionEffectType.FAST_DIGGING, 99999, 8),
-                PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 99999, 0),
+                PotionEffect(PotionEffectType.STRENGTH, 99999, 8),
+                PotionEffect(PotionEffectType.HASTE, 99999, 8),
+                PotionEffect(PotionEffectType.RESISTANCE, 99999, 0),
                 PotionEffect(PotionEffectType.SPEED, 99999, 0)
             ))
             // Miscellaneous

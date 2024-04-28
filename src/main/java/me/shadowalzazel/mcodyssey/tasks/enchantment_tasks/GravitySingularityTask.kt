@@ -32,7 +32,7 @@ class GravitySingularityTask (
             with(singularity.world) {
                 val someLocation = singularityLocation.clone().add(0.0, 0.25, 0.0)
                 spawnParticle(Particle.END_ROD, someLocation, 15, 0.5, 0.5, 0.5)
-                spawnParticle(Particle.CRIT_MAGIC, someLocation, 45, 0.5, 0.40, 0.5)
+                spawnParticle(Particle.CRIT, someLocation, 45, 0.5, 0.40, 0.5)
                 spawnParticle(Particle.PORTAL, someLocation, 55, 0.5, 0.4, 0.5)
                 spawnParticle(Particle.SONIC_BOOM, someLocation, 2, 0.0, 0.0, 0.0)
             }

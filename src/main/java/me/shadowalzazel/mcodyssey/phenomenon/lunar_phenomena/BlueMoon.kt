@@ -26,7 +26,7 @@ object BlueMoon : OdysseyPhenomenon("Blood Moon",
         someWorld.players.forEach {
             it.addPotionEffects(blueMoonEffects)
             it.sendMessage(Component.text("A blue moon illuminates the night...", TextColor.color(136, 143, 255)))
-            it.spawnParticle(Particle.SPELL_MOB_AMBIENT, it.location, 15, 0.5, 0.5, 0.5)
+            it.spawnParticle(Particle.ENTITY_EFFECT, it.location, 15, 0.5, 0.5, 0.5)
             it.playSound(it.location, Sound.BLOCK_AMETHYST_BLOCK_CHIME, 2.5F, 0.5F)
         }
 

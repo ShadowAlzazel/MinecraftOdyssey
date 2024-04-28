@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.commands.admin
 
-import me.shadowalzazel.mcodyssey.constants.ItemTags.setIntTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.setIntTag
 import me.shadowalzazel.mcodyssey.items.Runesherds
 import me.shadowalzazel.mcodyssey.items.Runesherds.createSpaceRuneTablet
 import me.shadowalzazel.mcodyssey.rune_writing.SpaceRuneManager

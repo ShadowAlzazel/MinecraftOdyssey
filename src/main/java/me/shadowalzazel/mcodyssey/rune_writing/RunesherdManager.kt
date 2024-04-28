@@ -2,13 +2,13 @@ package me.shadowalzazel.mcodyssey.rune_writing
 
 import me.shadowalzazel.mcodyssey.attributes.AttributeManager
 import me.shadowalzazel.mcodyssey.constants.AttributeIDs
-import me.shadowalzazel.mcodyssey.constants.ItemTags
-import me.shadowalzazel.mcodyssey.constants.ItemTags.setIntTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.getIntTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.getOdysseyTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.hasOdysseyItemTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.setIntTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getIntTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getOdysseyTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasOdysseyItemTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasTag
 import me.shadowalzazel.mcodyssey.items.Runesherds
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
@@ -28,35 +28,35 @@ internal interface RunesherdManager : AttributeManager {
     // TAGS
 
     fun ItemStack.addRunesherdTag() {
-        addTag(ItemTags.IS_RUNESHERD)
+        addTag(ItemDataTags.IS_RUNESHERD)
     }
 
     fun ItemStack.hasRunesherdTag(): Boolean {
-        return hasTag(ItemTags.IS_RUNESHERD)
+        return hasTag(ItemDataTags.IS_RUNESHERD)
     }
 
     fun ItemStack.addRuneAugmentTag() {
-        addTag(ItemTags.HAS_RUNE_AUGMENT)
+        addTag(ItemDataTags.HAS_RUNE_AUGMENT)
     }
 
     fun ItemStack.hasRuneAugmentTag(): Boolean {
-        return hasTag(ItemTags.HAS_RUNE_AUGMENT)
+        return hasTag(ItemDataTags.HAS_RUNE_AUGMENT)
     }
 
     fun ItemStack.addRunewareTag() {
-        addTag(ItemTags.IS_RUNEWARE)
+        addTag(ItemDataTags.IS_RUNEWARE)
     }
 
     fun ItemStack.hasRunewareTag(): Boolean {
-        return hasTag(ItemTags.IS_RUNEWARE)
+        return hasTag(ItemDataTags.IS_RUNEWARE)
     }
 
     fun ItemStack.setRuneAugmentCount(amount: Int) {
-        setIntTag(ItemTags.RUNEWARE_AUGMENT_COUNT, amount)
+        setIntTag(ItemDataTags.RUNEWARE_AUGMENT_COUNT, amount)
     }
 
     fun ItemStack.getRuneAugmentCount(): Int {
-        return getIntTag(ItemTags.RUNEWARE_AUGMENT_COUNT) ?: 0
+        return getIntTag(ItemDataTags.RUNEWARE_AUGMENT_COUNT) ?: 0
     }
 
     /*-----------------------------------------------------------------------------------------------*/

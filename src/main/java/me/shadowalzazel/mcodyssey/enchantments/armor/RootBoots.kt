@@ -2,8 +2,8 @@ package me.shadowalzazel.mcodyssey.enchantments.armor
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
 import net.kyori.adventure.text.Component
+import net.minecraft.tags.ItemTags
 import net.minecraft.world.entity.EquipmentSlot
-import net.minecraft.world.item.enchantment.EnchantmentCategory
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.enchantments.Enchantment.DEPTH_STRIDER
@@ -13,8 +13,12 @@ object RootBoots : OdysseyEnchantment(
     "root_boots",
     "Root Boots",
     3,
-    Rarity.UNCOMMON,
-    EnchantmentCategory.ARMOR_FEET,
+    10,
+    constantCost(8),
+    dynamicCost(8, 10),
+    5,
+    ItemTags.FOOT_ARMOR_ENCHANTABLE,
+    ItemTags.FOOT_ARMOR_ENCHANTABLE,
     arrayOf(EquipmentSlot.FEET)
 ) {
 

@@ -38,8 +38,8 @@ object DragonListeners : Listener {
                         it.addPotionEffects(
                             listOf(
                                 PotionEffect(PotionEffectType.WEAKNESS, 10 * 20, 0),
-                                PotionEffect(PotionEffectType.SLOW_DIGGING, 10 * 20, 0),
-                                PotionEffect(PotionEffectType.CONFUSION, 1 * 20, 3)
+                                PotionEffect(PotionEffectType.MINING_FATIGUE, 10 * 20, 0),
+                                PotionEffect(PotionEffectType.NAUSEA, 1 * 20, 3)
                             )
                         )
                     }
@@ -54,7 +54,7 @@ object DragonListeners : Listener {
                 val ground = event.entity.location.clone().toHighestLocation(HeightMap.MOTION_BLOCKING)
                 ground.getNearbyEntities(14.0, 16.0, 14.0).forEach {
                     if (it is Player) {
-                        it.world.spawnEntity(it.location.clone(), EntityType.LIGHTNING)
+                        it.world.spawnEntity(it.location.clone(), EntityType.LIGHTNING_BOLT)
                         it.damage(3.0, event.entity)
                         it.world.spawnParticle(Particle.SONIC_BOOM, ground, 1, 0.0, 0.0, 0.0)
                         it.world.spawnParticle(Particle.ELECTRIC_SPARK, ground, 25, 0.4, 0.1, 0.5)
@@ -62,7 +62,7 @@ object DragonListeners : Listener {
                     }
                 }
                 with(ground.world) {
-                    spawnEntity(ground, EntityType.LIGHTNING)
+                    spawnEntity(ground, EntityType.LIGHTNING_BOLT)
                     spawnParticle(Particle.SONIC_BOOM, ground, 1, 0.0, 0.0, 0.0)
                     spawnParticle(Particle.ELECTRIC_SPARK, ground, 25, 0.4, 0.1, 0.5)
                 }
@@ -125,9 +125,9 @@ object DragonListeners : Listener {
             // Fireball
             with(event.entity.world) {
                 // Particles
-                spawnParticle(Particle.SPELL_WITCH, event.entity.location, 45, 1.0, 0.2, 1.0)
+                spawnParticle(Particle.WITCH, event.entity.location, 45, 1.0, 0.2, 1.0)
                 // Firework
-                (spawnEntity(event.entity.location, org.bukkit.entity.EntityType.FIREWORK) as Firework).also {
+                (spawnEntity(event.entity.location, org.bukkit.entity.EntityType.FIREWORK_ROCKET) as Firework).also {
                     val newMeta = it.fireworkMeta
                     newMeta.power = 110
                     newMeta.addEffect(
@@ -150,7 +150,7 @@ object DragonListeners : Listener {
 
     @EventHandler
     fun enderCrystalExplosion(event: ExplosionPrimeEvent) {
-        if (event.entityType != EntityType.ENDER_CRYSTAL) return
+        if (event.entityType != EntityType.END_CRYSTAL) return
         if (event.entity.location.world.enderDragonBattle == null) return
         val battle = event.entity.world.enderDragonBattle!!
         if (battle.enderDragon == null) return

@@ -390,8 +390,8 @@ object RangedListeners : Listener, EnchantRegistryManager {
         val modifier = projectile.getIntTag(EntityTags.BOLA_SHOT_MODIFIER) ?: return
         victim.location.block.type = Material.COBWEB
         victim.addPotionEffects(listOf(
-            PotionEffect(PotionEffectType.SLOW, 20 * (3 + modifier), 0),
-            PotionEffect(PotionEffectType.SLOW_DIGGING, 20 * (3 + modifier), 0)))
+            PotionEffect(PotionEffectType.SLOWNESS, 20 * (3 + modifier), 0),
+            PotionEffect(PotionEffectType.MINING_FATIGUE, 20 * (3 + modifier), 0)))
         // MAYBE ADD DELAYED TASK TO REMOVE COB WEBS?
 
     }

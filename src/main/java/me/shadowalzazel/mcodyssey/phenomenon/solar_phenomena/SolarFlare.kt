@@ -28,7 +28,7 @@ object SolarFlare : OdysseyPhenomenon("Solar Flare",
 
         someWorld.players.forEach {
             it.sendMessage(Component.text("A minor solar flare just hit the world!", TextColor.color(176, 147, 82)))
-            it.spawnParticle(Particle.EXPLOSION_NORMAL, it.location, 35, 0.5, 0.5, 0.5)
+            it.spawnParticle(Particle.EXPLOSION, it.location, 35, 0.5, 0.5, 0.5)
             it.spawnParticle(Particle.LAVA, it.location, 14, 0.5, 0.5, 0.5)
             it.playSound(it.location, Sound.ITEM_TRIDENT_RIPTIDE_3, 2.5F, 1.5F)
             it.playSound(it.location, Sound.BLOCK_LAVA_AMBIENT, 2.5F, 0.5F)

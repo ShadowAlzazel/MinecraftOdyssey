@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.tasks.weapon_tasks
 
-import me.shadowalzazel.mcodyssey.constants.ItemTags
-import me.shadowalzazel.mcodyssey.constants.ItemTags.removeTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.removeTag
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.CrossbowMeta
@@ -20,7 +20,7 @@ class LoadAutoCrossbow(
                 meta.addChargedProjectile(item)
             }
             crossbow.itemMeta = meta
-            crossbow.removeTag(ItemTags.AUTO_LOADER_LOADING)
+            crossbow.removeTag(ItemDataTags.AUTO_LOADER_LOADING)
             crossbow.damage(2, entity)
             this.cancel()
         }

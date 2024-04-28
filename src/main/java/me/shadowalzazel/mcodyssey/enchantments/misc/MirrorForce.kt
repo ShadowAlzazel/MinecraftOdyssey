@@ -1,9 +1,8 @@
 package me.shadowalzazel.mcodyssey.enchantments.misc
 
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
+import net.minecraft.tags.ItemTags
 import net.minecraft.world.entity.EquipmentSlot
-import net.minecraft.world.item.enchantment.EnchantmentCategory
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -12,8 +11,12 @@ object MirrorForce : OdysseyEnchantment(
     "mirror_force",
     "Mirror Force",
     3,
-    Rarity.RARE,
-    EnchantmentCategory.WEARABLE,
+    10,
+    constantCost(8),
+    dynamicCost(8, 10),
+    3,
+    ItemTags.EQUIPPABLE_ENCHANTABLE,
+    ItemTags.EQUIPPABLE_ENCHANTABLE,
     arrayOf(EquipmentSlot.OFFHAND)
 ) {
 

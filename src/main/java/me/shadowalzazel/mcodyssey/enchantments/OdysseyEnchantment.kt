@@ -11,47 +11,57 @@ import net.minecraft.Util
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.MutableComponent
-import net.minecraft.network.chat.Component as McComponent
+import net.minecraft.tags.TagKey
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.MobType
+import net.minecraft.world.item.Item
 import net.minecraft.world.item.enchantment.Enchantment
-import net.minecraft.world.item.enchantment.EnchantmentCategory
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
-import org.bukkit.Registry.ENCHANTMENT as EnchantRegistry
 import org.bukkit.inventory.ItemStack
+import net.minecraft.network.chat.Component as chatComponentNMS
+import net.minecraft.tags.ItemTags as NMSItemTags
+import org.bukkit.Registry.ENCHANTMENT as BukkitEnchantRegistry
 import org.bukkit.enchantments.Enchantment as BukkitEnchant
 
 open class OdysseyEnchantment(
     val name: String,
     val translatableName: String,
     val maximumLevel: Int,
-    rarity: Rarity = Rarity.UNCOMMON,
-    category: EnchantmentCategory = EnchantmentCategory.WEAPON,
-    equipmentSlots: Array<EquipmentSlot> = arrayOf(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET, EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND),
+    rarity: Int = 10, // VERY - 1, RARE - 5, UNCOMMON - 10, COMMON - 20
+    minCost: Enchantment.Cost = Enchantment.constantCost(10),
+    maxCost: Enchantment.Cost = Enchantment.dynamicCost(10, 10),
+    anvilCost: Int = 2,
+    supportedItems: TagKey<Item> = NMSItemTags.WEAPON_ENCHANTABLE,
+    primaryItems: TagKey<Item>  = NMSItemTags.WEAPON_ENCHANTABLE,
+    equipmentSlots: Array<EquipmentSlot> = EquipmentSlot.entries.toTypedArray(),
     val subtype: Subtype = Subtype.NORMAL
-) :
-    Enchantment(
-        rarity,
-        category,
-        equipmentSlots
-    ) {
+) : Enchantment(definition(
+            supportedItems,
+            primaryItems,
+            rarity, // Weight
+            maximumLevel,
+            minCost,
+            maxCost,
+            anvilCost,
+            *equipmentSlots // Array to varargs
+    )) {
+    // ------------------------------------------------------------------------------------------------------------
 
     // Important Method to convert OdysseyEnchantment[NMS] To Enchantment[Bukkit]
     fun toBukkit(): org.bukkit.enchantments.Enchantment {
-        return EnchantRegistry.get(NamespacedKey(Odyssey.instance, name))!!
+        return BukkitEnchantRegistry.get(NamespacedKey(Odyssey.instance, name))!!
     }
 
     /* Minecraft NMS Methods */
-    override fun getMinLevel(): Int = 1
-    override fun getMaxLevel(): Int = maximumLevel
-    override fun getMinCost(level: Int): Int = 1 + level * 10
-    override fun getMaxCost(level: Int): Int = getMinCost(level) + 10
+    //override fun getMinLevel(): Int = 1
+    //override fun getMaxLevel(): Int = maximumLevel
+    // fun getMinCost(level: Int): Int = 1 + level * 10
+   // override fun getMaxCost(level: Int): Int = getMinCost(level) + 10
     override fun getDamageProtection(level: Int, source: DamageSource): Int = 0
-    override fun getDamageBonus(level: Int, group: MobType): Float = 0f
+    //override fun getDamageBonus(level: Int, entityType: EntityType?): Float = 0f
     override fun checkCompatibility(other: Enchantment): Boolean {
         val notSame = this != other
         return notSame
@@ -65,8 +75,8 @@ open class OdysseyEnchantment(
         return descriptionId!!
     }
     override fun getDescriptionId(): String = this.getOrCreateDescriptionId()
-    override fun getFullname(level: Int): McComponent {
-        val mutableComponent: MutableComponent = McComponent.translatable(getDescriptionId())
+    override fun getFullname(level: Int): chatComponentNMS {
+        val mutableComponent: MutableComponent = chatComponentNMS.translatable(getDescriptionId())
         if (this.isCurse) {
             mutableComponent.withStyle(ChatFormatting.RED)
         } else {
@@ -74,7 +84,7 @@ open class OdysseyEnchantment(
         }
 
         if (level != 1 || this.maximumLevel != 1) {
-            mutableComponent.append(CommonComponents.SPACE).append(McComponent.translatable("enchantment.level.$level"))
+            mutableComponent.append(CommonComponents.SPACE).append(chatComponentNMS.translatable("enchantment.level.$level"))
         }
 
         println("Mutable: $mutableComponent")
@@ -83,7 +93,7 @@ open class OdysseyEnchantment(
     }
 
     override fun canEnchant(itemStack: net.minecraft.world.item.ItemStack): Boolean {
-        return category.canEnchant(itemStack.item)
+        return super.canEnchant(itemStack)
     }
     override fun doPostAttack(user: LivingEntity, target: Entity, level: Int) = Unit
     override fun doPostHurt(user: LivingEntity, target: Entity, level: Int) = Unit

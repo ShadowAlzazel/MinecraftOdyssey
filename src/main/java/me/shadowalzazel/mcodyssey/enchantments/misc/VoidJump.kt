@@ -1,9 +1,9 @@
 package me.shadowalzazel.mcodyssey.enchantments.misc
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
+import net.minecraft.tags.ItemTags
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.item.ElytraItem
-import net.minecraft.world.item.enchantment.EnchantmentCategory
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.enchantments.Enchantment.*
@@ -13,18 +13,21 @@ object VoidJump : OdysseyEnchantment(
     "void_jump",
     "Void Jump",
     3,
-    Rarity.UNCOMMON,
-    EnchantmentCategory.WEARABLE,
+    5,
+    constantCost(8),
+    dynamicCost(8, 10),
+    3,
+    ItemTags.ARMOR_ENCHANTABLE,
+    ItemTags.ARMOR_ENCHANTABLE,
     arrayOf(EquipmentSlot.CHEST)
 ) {
-
     override fun canEnchant(itemStack: net.minecraft.world.item.ItemStack): Boolean {
         return itemStack.item is ElytraItem
     }
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            PROTECTION_ENVIRONMENTAL, PROTECTION_PROJECTILE, PROTECTION_EXPLOSIONS, PROTECTION_FIRE -> {
+            PROTECTION, PROJECTILE_PROTECTION, BLAST_PROTECTION, FIRE_PROTECTION -> {
                 true
             }
             else -> {

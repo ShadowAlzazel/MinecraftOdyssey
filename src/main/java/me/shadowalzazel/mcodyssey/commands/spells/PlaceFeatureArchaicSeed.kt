@@ -1,9 +1,9 @@
 package me.shadowalzazel.mcodyssey.commands.spells
 
-import me.shadowalzazel.mcodyssey.constants.ItemTags
-import me.shadowalzazel.mcodyssey.constants.ItemTags.ARCHAIC_NAMESPACE
-import me.shadowalzazel.mcodyssey.constants.ItemTags.getStringTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.ARCHAIC_NAMESPACE
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getStringTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasTag
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.command.Command
@@ -18,7 +18,7 @@ object PlaceFeatureArchaicSeed : CommandExecutor{
         if (sender.equipment?.itemInMainHand?.type != Material.WHEAT_SEEDS) return false
         val archaicSeed = sender.equipment!!.itemInMainHand
         if (!archaicSeed.hasItemMeta()) return false
-        if (!archaicSeed.hasTag(ItemTags.IS_ARCHAIC_SEED)) return false
+        if (!archaicSeed.hasTag(ItemDataTags.IS_ARCHAIC_SEED)) return false
         // Plant
 
         println("RUN PLACE COMMAND")
@@ -49,7 +49,7 @@ object PlaceFeatureArchaicSeed : CommandExecutor{
         }
 
         with(sender.world) {
-            spawnParticle(Particle.CRIT_MAGIC, sender.location, 30, 0.35, 0.5, 0.35)
+            spawnParticle(Particle.CRIT, sender.location, 30, 0.35, 0.5, 0.35)
         }
         sender.performCommand("place feature $seedNamespace $coordinates")
 

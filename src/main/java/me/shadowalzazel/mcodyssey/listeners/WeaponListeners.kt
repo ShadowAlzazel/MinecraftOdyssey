@@ -7,16 +7,16 @@ import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags.getIntTag
 import me.shadowalzazel.mcodyssey.constants.EntityTags.setIntTag
 import me.shadowalzazel.mcodyssey.constants.ItemModels
-import me.shadowalzazel.mcodyssey.constants.ItemTags
-import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.getIntTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.getOdysseyTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.getStringTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.getUUIDTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.removeTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.setIntTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.setUUIDTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getIntTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getOdysseyTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getStringTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getUUIDTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.removeTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.setIntTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.setUUIDTag
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.BLUDGEON_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.CLEAVE_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.LACERATE_MAP
@@ -104,8 +104,8 @@ object WeaponListeners : Listener {
         val offHandWeapon = player.equipment.itemInOffHand
         val model = mainWeapon.itemMeta.customModelData
         // Get weapon type
-        val mainWeaponType = mainWeapon.getStringTag(ItemTags.WEAPON_TYPE)
-        val mainWeaponMaterial = mainWeapon.getStringTag(ItemTags.MATERIAL_TYPE)
+        val mainWeaponType = mainWeapon.getStringTag(ItemDataTags.WEAPON_TYPE)
+        val mainWeaponMaterial = mainWeapon.getStringTag(ItemDataTags.MATERIAL_TYPE)
         // Sweep damage should not? call other bonuses?
         if (event.cause == EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) {
             val bonusSweepDamage = SWEEP_MAP[mainWeaponType] ?: 0.0
@@ -286,7 +286,7 @@ object WeaponListeners : Listener {
         // Sentries
         if (!mainWeapon.hasItemMeta()) return
         if (!mainWeapon.itemMeta!!.hasCustomModelData()) return
-        val weaponType = mainWeapon.getStringTag(ItemTags.WEAPON_TYPE) ?: return
+        val weaponType = mainWeapon.getStringTag(ItemDataTags.WEAPON_TYPE) ?: return
         val reach = REACH_MAP[weaponType] ?: return
         if (reach < 4.0) return // Get reach for weapons exceeding range
         // Get Entity
@@ -303,7 +303,7 @@ object WeaponListeners : Listener {
         val offHandWeapon = player.equipment.itemInOffHand
         val fullAttack = player.attackCooldown > 0.9
         // Offhand Dual Weldable
-        when(val offWeaponType = offHandWeapon.getStringTag(ItemTags.WEAPON_TYPE)) {
+        when(val offWeaponType = offHandWeapon.getStringTag(ItemDataTags.WEAPON_TYPE)) {
             "dagger", "sickle", "chakram", "cutlass" -> {
                 val entity = getRayTraceTarget(player, offWeaponType)
                 if (entity is LivingEntity) { // Attack with offhand
@@ -314,7 +314,7 @@ object WeaponListeners : Listener {
             }
         }
         // Throwable
-        when(val mainWeaponType = mainWeapon.getStringTag(ItemTags.WEAPON_TYPE)) {
+        when(val mainWeaponType = mainWeapon.getStringTag(ItemDataTags.WEAPON_TYPE)) {
             "kunai" -> { //model == ItemModels.VOID_LINKED_KUNAI
                 kunaiThrowableHandler(event)
             }
@@ -720,7 +720,7 @@ object WeaponListeners : Listener {
     private fun explosiveArrowHitHandler(event: ProjectileHitEvent) {
         val projectile = event.entity
         val location = projectile.location
-        location.world.spawnParticle(Particle.EXPLOSION_LARGE, location, 1, 0.0, 0.04, 0.0)
+        location.world.spawnParticle(Particle.EXPLOSION, location, 1, 0.0, 0.04, 0.0)
         location.world.playSound(location, Sound.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 0.8F, 1.2F)
         for (entity in location.getNearbyLivingEntities(2.5)) {
             // indirect distance square
@@ -803,12 +803,12 @@ object WeaponListeners : Listener {
             // Matches
             val isArrow = offhand.type == crossbowMeta.chargedProjectiles[0].type && projectileMeta !is PotionMeta && offhand.type != Material.FIREWORK_ROCKET
             if (offhand.itemMeta == projectileMeta || isArrow) {
-                if (!crossbow.hasTag(ItemTags.AUTO_LOADER_LOADING)) {
+                if (!crossbow.hasTag(ItemDataTags.AUTO_LOADER_LOADING)) {
                     offhand.subtract(1)
                     val task = LoadAutoCrossbow(event.entity, crossbow, loadedItems)
                     task.runTaskLater(Odyssey.instance, 1)
                 }
-                crossbow.addTag(ItemTags.AUTO_LOADER_LOADING)
+                crossbow.addTag(ItemDataTags.AUTO_LOADER_LOADING)
             }
         }
     }
@@ -828,10 +828,10 @@ object WeaponListeners : Listener {
         }
 
         val potionOffHand = loader.equipment!!.itemInOffHand
-        return if (!crossbow.hasTag(ItemTags.ALCHEMY_ARTILLERY_LOADED)) {
+        return if (!crossbow.hasTag(ItemDataTags.ALCHEMY_ARTILLERY_LOADED)) {
             val newUUID = UUID.randomUUID()
             val oldUUID =  UUID.fromString(crossbow.getUUIDTag())
-            crossbow.addTag(ItemTags.ALCHEMY_ARTILLERY_LOADED)
+            crossbow.addTag(ItemDataTags.ALCHEMY_ARTILLERY_LOADED)
             crossbow.setUUIDTag(newUUID)
             // Load Item to UUID
             // STORE IN COMPONENTS FOR 1.20.5 !!
@@ -839,14 +839,14 @@ object WeaponListeners : Listener {
             if (offhandIsAmmo && oldPotion != null) {
                 LOADED_ALCHEMICAL_AMMO[newUUID] = oldPotion.clone()
                 LOADED_ALCHEMICAL_AMMO[oldUUID] = null
-                crossbow.addTag(ItemTags.ALCHEMY_COPY_STORED)
+                crossbow.addTag(ItemDataTags.ALCHEMY_COPY_STORED)
             } else {
                 LOADED_ALCHEMICAL_AMMO[newUUID] = potionOffHand.clone()
             }
 
             // Load counter into tag/component
             val multiCounter = if (crossbow.itemMeta.hasEnchant(Enchantment.MULTISHOT)) 3 else 1
-            crossbow.setIntTag(ItemTags.ALCHEMICAL_AMMO_COUNT, multiCounter)
+            crossbow.setIntTag(ItemDataTags.ALCHEMICAL_AMMO_COUNT, multiCounter)
             loader.equipment!!.itemInOffHand.subtract()
             // Maybe need to load twice?? 1 the potion, then the ammo?
             false
@@ -859,33 +859,34 @@ object WeaponListeners : Listener {
         // Sentries
         val crossbow = event.bow ?: return
         if (crossbow.type != Material.CROSSBOW) return
-        if (!crossbow.hasTag(ItemTags.ALCHEMY_ARTILLERY_LOADED)) return
+        if (!crossbow.hasTag(ItemDataTags.ALCHEMY_ARTILLERY_LOADED)) return
         // Potions
         val shooter = event.entity
         val projectile = event.projectile
         var lastShot = false
         var thrownPotion: ThrownPotion? = null
         val bowUUID = UUID.fromString(crossbow.getUUIDTag())
-        val count = crossbow.getIntTag(ItemTags.ALCHEMICAL_AMMO_COUNT) ?: 1
+        val count = crossbow.getIntTag(ItemDataTags.ALCHEMICAL_AMMO_COUNT) ?: 1
         if (count >= 1) {
             // Change to store in component projectiles 1.20.5
             // Spawn potion with item
-            thrownPotion = (shooter.world.spawnEntity(projectile.location, EntityType.SPLASH_POTION) as ThrownPotion).also {
+            // TODO: Fix
+            thrownPotion = (shooter.world.spawnEntity(projectile.location, EntityType.POTION) as ThrownPotion).also {
                 it.item = LOADED_ALCHEMICAL_AMMO[bowUUID] ?: ItemStack(Material.SPLASH_POTION, 1)
                 it.velocity = projectile.velocity.clone().multiply(0.6)
                 it.shooter = shooter
             }
             // Multishot compatibility
-            crossbow.setIntTag(ItemTags.ALCHEMICAL_AMMO_COUNT, count - 1)
+            crossbow.setIntTag(ItemDataTags.ALCHEMICAL_AMMO_COUNT, count - 1)
             if (count - 1 == 0) {
                 lastShot = true
             }
         }
         if (lastShot) {
-            crossbow.removeTag(ItemTags.ALCHEMY_ARTILLERY_LOADED)
+            crossbow.removeTag(ItemDataTags.ALCHEMY_ARTILLERY_LOADED)
             // Do not remove saved potion if ammo
-            if (crossbow.hasTag(ItemTags.ALCHEMY_COPY_STORED)) {
-                crossbow.removeTag(ItemTags.ALCHEMY_COPY_STORED)
+            if (crossbow.hasTag(ItemDataTags.ALCHEMY_COPY_STORED)) {
+                crossbow.removeTag(ItemDataTags.ALCHEMY_COPY_STORED)
             } /*
             else {
                 LOADED_ALCHEMICAL_AMMO[bowUUID] = null

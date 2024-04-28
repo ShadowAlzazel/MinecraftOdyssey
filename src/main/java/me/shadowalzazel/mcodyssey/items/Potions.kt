@@ -4,10 +4,10 @@ import me.shadowalzazel.mcodyssey.alchemy.AlchemyManager
 import me.shadowalzazel.mcodyssey.alchemy.base.OdysseyPotion
 import me.shadowalzazel.mcodyssey.constants.EffectTags
 import me.shadowalzazel.mcodyssey.constants.ItemModels
-import me.shadowalzazel.mcodyssey.constants.ItemTags
-import me.shadowalzazel.mcodyssey.constants.ItemTags.setIntTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.addStringTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.setIntTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addStringTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addTag
 import me.shadowalzazel.mcodyssey.effects.EffectColors
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -32,17 +32,17 @@ object Potions : AlchemyManager {
                 potionMeta.basePotionType = PotionType.THICK
                 // For Cauldron usage
                 if (this@createPotionStack == CRYSTALLINE_POTION) {
-                    potionMeta.basePotionType = PotionType.UNCRAFTABLE
+                    potionMeta.basePotionType = PotionType.MUNDANE
                 }
             }
             itemMeta = potionMeta
             if (isOdysseyEffect) {
-                potionMeta.basePotionType = PotionType.UNCRAFTABLE
+                potionMeta.basePotionType = PotionType.MUNDANE
                 itemMeta = potionMeta
-                addTag(ItemTags.IS_ODYSSEY_EFFECT)
-                addStringTag(ItemTags.ODYSSEY_EFFECT_TAG, odysseyEffectTag)
-                setIntTag(ItemTags.ODYSSEY_EFFECT_TIME, odysseyEffectTimeInTicks) // Int
-                setIntTag(ItemTags.ODYSSEY_EFFECT_AMPLIFIER, odysseyEffectAmplifier) // Int
+                addTag(ItemDataTags.IS_ODYSSEY_EFFECT)
+                addStringTag(ItemDataTags.ODYSSEY_EFFECT_TAG, odysseyEffectTag)
+                setIntTag(ItemDataTags.ODYSSEY_EFFECT_TIME, odysseyEffectTimeInTicks) // Int
+                setIntTag(ItemDataTags.ODYSSEY_EFFECT_AMPLIFIER, odysseyEffectAmplifier) // Int
                 addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS)
                 val component = createEffectComponent(odysseyEffectTag, odysseyEffectTimeInTicks, odysseyEffectAmplifier)
                 val newLore = lore() ?: mutableListOf()
@@ -94,7 +94,7 @@ object Potions : AlchemyManager {
         material = Material.POTION,
         customName = "Potion of Resistance",
         customModel = ItemModels.PEARSHAPE_BOTTLE,
-        potionEffects = listOf(PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 3 * 60 * 20 , 0)),
+        potionEffects = listOf(PotionEffect(PotionEffectType.RESISTANCE, 3 * 60 * 20 , 0)),
         potionColor = Color.fromRGB(65, 97, 122))
 
     val POTION_OF_HASTE = OdysseyPotion(
@@ -102,7 +102,7 @@ object Potions : AlchemyManager {
         material = Material.POTION,
         customName = "Potion of Haste",
         customModel = ItemModels.PEARSHAPE_BOTTLE,
-        potionEffects = listOf(PotionEffect(PotionEffectType.FAST_DIGGING, 3 * 60 * 20 , 0)),
+        potionEffects = listOf(PotionEffect(PotionEffectType.HASTE, 3 * 60 * 20 , 0)),
         potionColor = Color.fromRGB(255, 233, 133))
 
     val POTION_OF_BIOLUMINESCENCE = OdysseyPotion(
@@ -130,7 +130,7 @@ object Potions : AlchemyManager {
         customModel = ItemModels.PEARSHAPE_BOTTLE,
         potionEffects = listOf(
             PotionEffect(PotionEffectType.ABSORPTION, 2 * 60 * 20 , 2),
-            PotionEffect(PotionEffectType.SLOW, 2 * 60 * 20 , 0)),
+            PotionEffect(PotionEffectType.SLOWNESS, 2 * 60 * 20 , 0)),
         potionColor = Color.fromRGB(42, 51, 38))
 
     val POTION_OF_WRATH = OdysseyPotion(
@@ -139,7 +139,7 @@ object Potions : AlchemyManager {
         customName = "Potion of Wrath",
         customModel = ItemModels.PEARSHAPE_BOTTLE,
         potionEffects = listOf(
-            PotionEffect(PotionEffectType.INCREASE_DAMAGE, 2 * 60 * 20 , 2),
+            PotionEffect(PotionEffectType.STRENGTH, 2 * 60 * 20 , 2),
             PotionEffect(PotionEffectType.HUNGER, 2 * 60 * 20 , 1)),
         potionColor = Color.fromRGB(250, 60, 17))
 
@@ -151,7 +151,7 @@ object Potions : AlchemyManager {
         potionEffects = listOf(
             PotionEffect(PotionEffectType.SPEED, 2 * 60 * 20 , 2),
             PotionEffect(PotionEffectType.HUNGER, 2 * 60 * 20 , 1),
-            PotionEffect(PotionEffectType.CONFUSION, 10 * 20 , 0)),
+            PotionEffect(PotionEffectType.NAUSEA, 10 * 20 , 0)),
         potionColor = Color.fromRGB(220, 210, 217))
 
 
@@ -265,11 +265,11 @@ object Potions : AlchemyManager {
         customName = "Bottle o' Shimmer",
         customModel = ItemModels.DAIRYSHAPE_BOTTLE,
         potionEffects = listOf(
-            PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 120 * 20, 1),
-            PotionEffect(PotionEffectType.INCREASE_DAMAGE, 120 * 20, 1),
+            PotionEffect(PotionEffectType.RESISTANCE, 120 * 20, 1),
+            PotionEffect(PotionEffectType.STRENGTH, 120 * 20, 1),
             PotionEffect(PotionEffectType.GLOWING, 120 * 20, 1),
             PotionEffect(PotionEffectType.HUNGER, 120 * 20, 0),
-            PotionEffect(PotionEffectType.CONFUSION, 120 * 20, 0)),
+            PotionEffect(PotionEffectType.NAUSEA, 120 * 20, 0)),
         potionColor = EffectColors.SHIMMER.itemColor())
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -296,7 +296,7 @@ object Potions : AlchemyManager {
         customName = "Spelunker's Concoction",
         customModel = ItemModels.CONCOCTION_BOTTLE,
         potionEffects = listOf(
-            PotionEffect(PotionEffectType.FAST_DIGGING, 3 * 60 * 20 , 0),
+            PotionEffect(PotionEffectType.HASTE, 3 * 60 * 20 , 0),
             PotionEffect(PotionEffectType.GLOWING, 3 * 60 * 20, 0)),
         potionColor = Color.fromRGB(115, 215, 233))
 

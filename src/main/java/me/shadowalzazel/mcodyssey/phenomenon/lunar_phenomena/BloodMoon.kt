@@ -23,8 +23,8 @@ object BloodMoon : OdysseyPhenomenon("Blood Moon",
     10) {
 
     private val bloodMoonMobEffects = listOf(
-        PotionEffect(PotionEffectType.INCREASE_DAMAGE, 300 * 20,1),
-        PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 300 * 20,0),
+        PotionEffect(PotionEffectType.STRENGTH, 300 * 20,1),
+        PotionEffect(PotionEffectType.RESISTANCE, 300 * 20,0),
         PotionEffect(PotionEffectType.HEALTH_BOOST, 300 * 20,4)
     )
 
@@ -38,9 +38,9 @@ object BloodMoon : OdysseyPhenomenon("Blood Moon",
         someWorld.players.forEach {
             it.addPotionEffect(bloodMoonEffect)
             it.sendMessage(Component.text("The blood moon rises...", TextColor.color(96, 17, 12)))
-            it.spawnParticle(Particle.SPELL_MOB_AMBIENT, it.location, 15, 0.5, 0.5, 0.5)
+            it.spawnParticle(Particle.ENTITY_EFFECT, it.location, 15, 0.5, 0.5, 0.5)
             it.playSound(it.location, Sound.ENTITY_WITHER_AMBIENT, 2.5F, 0.5F)
-            it.spawnParticle(Particle.BLOCK_CRACK, it.location, 95, 0.95, 0.8, 0.95, Material.REDSTONE_BLOCK.createBlockData())
+            it.spawnParticle(Particle.BLOCK, it.location, 95, 0.95, 0.8, 0.95, Material.REDSTONE_BLOCK.createBlockData())
         }
     }
 

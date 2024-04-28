@@ -2,11 +2,11 @@ package me.shadowalzazel.mcodyssey.enchantments.ranged
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
 import net.kyori.adventure.text.Component
+import net.minecraft.tags.ItemTags
 import net.minecraft.world.entity.EquipmentSlot
-import net.minecraft.world.item.enchantment.EnchantmentCategory
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.enchantments.Enchantment.ARROW_INFINITE
+import org.bukkit.enchantments.Enchantment.INFINITY
 import org.bukkit.enchantments.Enchantment.MULTISHOT
 import org.bukkit.inventory.ItemStack
 
@@ -14,15 +14,19 @@ object BurstBarrage : OdysseyEnchantment(
     "burst_barrage",
     "Burst Barrage",
     5,
-    Rarity.RARE,
-    EnchantmentCategory.BOW,
+    5,
+    constantCost(8),
+    dynamicCost(8, 10),
+    5,
+    ItemTags.BOW_ENCHANTABLE,
+    ItemTags.BOW_ENCHANTABLE,
     arrayOf(EquipmentSlot.MAINHAND)
 ) {
 
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            ARROW_INFINITE, MULTISHOT -> {
+            INFINITY, MULTISHOT -> {
                 true
             }
             else -> {

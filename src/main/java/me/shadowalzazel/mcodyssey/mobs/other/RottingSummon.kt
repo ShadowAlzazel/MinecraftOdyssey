@@ -12,7 +12,7 @@ object RottingSummon : OdysseyMob("Rotting Summon", "rotting_summon",EntityType.
 
     override fun createMob(someWorld: World, spawningLocation: Location): Zombie {
         val newSummon = (super.createMob(someWorld, spawningLocation) as Zombie).apply {
-            addPotionEffect(PotionEffect(PotionEffectType.SLOW, 20 * 9999, 1))
+            addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS, 20 * 9999, 1))
         }
         return newSummon
     }

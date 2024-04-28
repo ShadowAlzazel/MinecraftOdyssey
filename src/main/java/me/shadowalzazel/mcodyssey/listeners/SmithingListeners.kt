@@ -4,10 +4,10 @@ import me.shadowalzazel.mcodyssey.arcane.EnchantSlotManager
 import me.shadowalzazel.mcodyssey.arcane.SlotColors
 import me.shadowalzazel.mcodyssey.constants.AttributeIDs
 import me.shadowalzazel.mcodyssey.constants.ItemModels
-import me.shadowalzazel.mcodyssey.constants.ItemTags
-import me.shadowalzazel.mcodyssey.constants.ItemTags.addStringTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addStringTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasTag
 import me.shadowalzazel.mcodyssey.items.Ingredients
 import me.shadowalzazel.mcodyssey.trims.TrimMaterials
 import net.kyori.adventure.text.Component
@@ -45,7 +45,7 @@ object SmithingListeners : Listener, EnchantSlotManager {
         /*-----------------------------------------------------------------------------------------------*/
         // Engraving
         if (result.type == Material.AMETHYST_SHARD && addition.type == Material.AMETHYST_SHARD) {
-            val isEngraved = equipment.hasTag(ItemTags.IS_ENGRAVED)
+            val isEngraved = equipment.hasTag(ItemDataTags.IS_ENGRAVED)
             if (isEngraved) {
                 event.viewers.forEach { it.sendFailMessage("This Item Is Already Engraved!") }
                 event.result = ItemStack(Material.AIR)
@@ -53,7 +53,7 @@ object SmithingListeners : Listener, EnchantSlotManager {
             }
             event.result = equipment.clone().also {
                 if (it.amount > 1) it.amount = 1
-                it.addTag(ItemTags.IS_ENGRAVED)
+                it.addTag(ItemDataTags.IS_ENGRAVED)
                 val newLore = it.itemMeta.lore() ?: mutableListOf()
                 val pretext = when (equipment.type) {
                     Material.POTION -> {
@@ -64,7 +64,7 @@ object SmithingListeners : Listener, EnchantSlotManager {
                     }
                 }
                 for (engraver in event.viewers) {
-                    it.addStringTag(ItemTags.ENGRAVED_BY, engraver.name)
+                    it.addStringTag(ItemDataTags.ENGRAVED_BY, engraver.name)
                     val engraving = Component.text("$pretext by ${engraver.name}", SlotColors.AMETHYST.color, TextDecoration.ITALIC)
                     newLore.add(engraving)
                 }
@@ -81,7 +81,7 @@ object SmithingListeners : Listener, EnchantSlotManager {
             if (!addition.itemMeta.hasCustomModelData()) return
             if (!equipment.itemMeta.hasCustomModelData()) return
             if (addition.itemMeta.customModelData != ItemModels.SOUL_STEEL_INGOT) return
-            if (equipment.hasTag(ItemTags.SOUL_STEEL_TOOL)) return
+            if (equipment.hasTag(ItemDataTags.SOUL_STEEL_TOOL)) return
             val equipmentModel = equipment.itemMeta.customModelData
 
             // Temporary Maps -> Move to seperate Enums
@@ -126,7 +126,7 @@ object SmithingListeners : Listener, EnchantSlotManager {
                 it.uniqueId == AttributeIDs.ITEM_ATTACK_DAMAGE_UUID
             } ?: return
 
-            newItem.addTag(ItemTags.SOUL_STEEL_TOOL)
+            newItem.addTag(ItemDataTags.SOUL_STEEL_TOOL)
             newItem.itemMeta = newItem.itemMeta.clone().also { meta ->
                 meta.setCustomModelData(ironToSoulSteelMap[equipmentModel]!!)
                 meta.displayName(Component.text("Soul Steel ${soulSteelName[equipmentModel]!!}", TextColor.color(88, 95, 123), TextDecoration.ITALIC))
@@ -192,7 +192,7 @@ object SmithingListeners : Listener, EnchantSlotManager {
         // Netherite
         if (addition.type == Material.NETHERITE_INGOT && result.itemMeta.hasCustomModelData()) {
             val newItem = event.inventory.result!!.clone()
-            if (newItem.hasTag(ItemTags.NETHERITE_TOOL)) return
+            if (newItem.hasTag(ItemDataTags.NETHERITE_TOOL)) return
             val oldDamageModifier = newItem.itemMeta.getAttributeModifiers(Attribute.GENERIC_ATTACK_DAMAGE)?.first {
                 it.uniqueId == AttributeIDs.ITEM_ATTACK_DAMAGE_UUID
             } ?: return
@@ -207,7 +207,7 @@ object SmithingListeners : Listener, EnchantSlotManager {
                 meta.removeAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, oldDamageModifier)
                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, newDamageModifier)
             }
-            newItem.addTag(ItemTags.NETHERITE_TOOL)
+            newItem.addTag(ItemDataTags.NETHERITE_TOOL)
             event.result = newItem
             return
         }

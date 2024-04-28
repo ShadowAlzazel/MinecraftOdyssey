@@ -77,7 +77,7 @@ object OdysseyItemListeners : Listener {
                             somePlayer.addPotionEffects(listOf(
                                 PotionEffect(PotionEffectType.HUNGER, 20 * 30, 1),
                                 PotionEffect(PotionEffectType.WITHER, 20 * 30, 0),
-                                PotionEffect(PotionEffectType.SLOW_DIGGING, 20 * 30, 1)
+                                PotionEffect(PotionEffectType.MINING_FATIGUE, 20 * 30, 1)
                             ))
                         }
                     }
@@ -106,7 +106,7 @@ object OdysseyItemListeners : Listener {
                     event.damage = 0.0
                     if ((1..3).random() != 1) { someEntity.equipment!!.setItemInOffHand(ItemStack(Material.AIR, 1)) }
                     someEntity.world.playSound(someEntity.location, Sound.ITEM_TOTEM_USE, 2.5F, 0.2F)
-                    someEntity.world.spawnParticle(Particle.CRIT_MAGIC, someEntity.location, 100, 0.5, 0.5, 0.5)
+                    someEntity.world.spawnParticle(Particle.CRIT, someEntity.location, 100, 0.5, 0.5, 0.5)
                 }
             }
         }
@@ -158,14 +158,14 @@ object OdysseyItemListeners : Listener {
             val blockBreak = Material.GOLD_BLOCK.createBlockData()
             val blockDust = Material.GOLD_BLOCK.createBlockData()
             val someLocation = eventPlayer.location.clone().add(0.0, 0.35, 0.0)
-            spawnParticle(Particle.REDSTONE, someLocation, 75, 0.95, 0.75, 0.95, blockLight)
-            spawnParticle(Particle.BLOCK_CRACK, someLocation, 95, 0.95, 0.8, 0.95, blockBreak)
+            spawnParticle(Particle.DUST, someLocation, 75, 0.95, 0.75, 0.95, blockLight)
+            spawnParticle(Particle.BLOCK, someLocation, 95, 0.95, 0.8, 0.95, blockBreak)
             spawnParticle(Particle.FALLING_DUST, someLocation, 35, 0.75, 0.25, 0.75, blockDust)
             playSound(someLocation, Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0F, 5.0F)
         }
             eventPlayer.also {
             it.isInvulnerable = true
-            it.addPotionEffect(PotionEffect(PotionEffectType.SLOW, 20 * 8, 100))
+            it.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS, 20 * 8, 100))
             it.addPotionEffect(PotionEffect(PotionEffectType.GLOWING, 20 * 8, 100))
             it.addScoreboardTag("Temporal_Stasis")
         }
@@ -238,7 +238,7 @@ object OdysseyItemListeners : Listener {
             addPotionEffects(listOf(
                 PotionEffect(PotionEffectType.HUNGER, 20 * 30, 1),
                 PotionEffect(PotionEffectType.WITHER, 20 * 30, 0),
-                PotionEffect(PotionEffectType.SLOW_DIGGING, 20 * 30, 1))
+                PotionEffect(PotionEffectType.MINING_FATIGUE, 20 * 30, 1))
             )
         }
     }

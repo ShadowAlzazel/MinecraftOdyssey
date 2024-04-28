@@ -8,7 +8,7 @@ import org.bukkit.persistence.PersistentDataType
 import java.util.*
 
 
-object ItemTags {
+object ItemDataTags {
 
     // Seeds
     const val IS_ARCHAIC_SEED: String = "odyssey.is_archaic_seed"

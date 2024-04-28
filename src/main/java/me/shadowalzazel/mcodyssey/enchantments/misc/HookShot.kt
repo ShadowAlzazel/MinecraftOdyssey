@@ -1,19 +1,22 @@
 package me.shadowalzazel.mcodyssey.enchantments.misc
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
+import net.minecraft.tags.ItemTags
 import net.minecraft.world.entity.EquipmentSlot
-import net.minecraft.world.item.enchantment.EnchantmentCategory
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.enchantments.Enchantment.ARROW_INFINITE
 import org.bukkit.inventory.ItemStack
 
 object HookShot : OdysseyEnchantment(
     "hook_shot",
     "Hook Shot",
     2,
-    Rarity.UNCOMMON,
-    EnchantmentCategory.FISHING_ROD,
+    10,
+    constantCost(8),
+    dynamicCost(8, 10),
+    3,
+    ItemTags.FISHING_ENCHANTABLE,
+    ItemTags.FISHING_ENCHANTABLE,
     arrayOf(EquipmentSlot.MAINHAND)
 ) {
 

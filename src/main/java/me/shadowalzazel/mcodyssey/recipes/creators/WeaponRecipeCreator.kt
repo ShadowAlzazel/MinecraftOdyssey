@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.recipes.creators
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.constants.ItemTags.getOdysseyTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getOdysseyTag
 import me.shadowalzazel.mcodyssey.items.Ingredients
 import me.shadowalzazel.mcodyssey.items.creators.ItemCreator
 import me.shadowalzazel.mcodyssey.items.creators.ToolCreator

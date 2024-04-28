@@ -193,7 +193,7 @@ class TheAmbassador(location: Location) : OdysseyBoss(
             addPotionEffects(
                 listOf(
                     PotionEffect(PotionEffectType.REGENERATION, 20 * 300, 0),
-                    PotionEffect(PotionEffectType.SLOW, 20 * 300, 1)
+                    PotionEffect(PotionEffectType.SLOWNESS, 20 * 300, 1)
                 )
             )
             // Add Item
@@ -206,7 +206,7 @@ class TheAmbassador(location: Location) : OdysseyBoss(
     // Create a new firework entity
     private fun createSuperFirework(targetLocation: Location): Firework {
         val randomColors = listOf(Color.BLUE, Color.RED, Color.YELLOW, Color.FUCHSIA, Color.AQUA)
-        val superFirework: Firework = (entity.world.spawnEntity(targetLocation, EntityType.FIREWORK) as Firework).apply {
+        val superFirework: Firework = (entity.world.spawnEntity(targetLocation, EntityType.FIREWORK_ROCKET) as Firework).apply {
             fireworkMeta = fireworkMeta.clone().also {
                 it.addEffect(
                     FireworkEffect.builder()
@@ -294,7 +294,7 @@ class TheAmbassador(location: Location) : OdysseyBoss(
                 it.spawnParticle(Particle.DAMAGE_INDICATOR, it.location, 43, 1.5, 0.5, 1.5)
                 it.spawnParticle(Particle.PORTAL, it.location, 42, 2.5, 0.5, 2.5)
                 it.spawnParticle(Particle.END_ROD, it.location, 35, 2.0, 1.0, 2.0)
-                it.spawnParticle(Particle.SPELL_WITCH, it.location, 25, 1.0, 1.0, 1.0)
+                it.spawnParticle(Particle.WITCH, it.location, 25, 1.0, 1.0, 1.0)
                 it.swingMainHand()
                 spawnHoloDummy(it.location)
             }
@@ -309,7 +309,7 @@ class TheAmbassador(location: Location) : OdysseyBoss(
             teleport(entity.location)
             addPotionEffects(listOf(
                 PotionEffect(PotionEffectType.LEVITATION, 20 * 10, 1),
-                PotionEffect(PotionEffectType.SLOW, 20 * 10, 2)
+                PotionEffect(PotionEffectType.SLOWNESS, 20 * 10, 2)
             ))
             damage(10.0, entity)
             // Sounds and Effects
@@ -319,7 +319,7 @@ class TheAmbassador(location: Location) : OdysseyBoss(
             spawnParticle(Particle.DAMAGE_INDICATOR, this.location, 43, 1.5, 0.5, 1.5)
             spawnParticle(Particle.PORTAL, this.location, 42, 2.5, 0.5, 2.5)
             spawnParticle(Particle.END_ROD, this.location, 35, 2.0, 1.0, 2.0)
-            spawnParticle(Particle.SPELL_WITCH, this.location, 25, 1.0, 1.0, 1.0)
+            spawnParticle(Particle.WITCH, this.location, 25, 1.0, 1.0, 1.0)
             sendAmbassadorChat(AmbassadorMessage.ELYTRA_PULL_BACK_ATTACK)
         }
     }
@@ -581,10 +581,10 @@ class TheAmbassador(location: Location) : OdysseyBoss(
 
         // Particles
         if (giftLikeness >= 10) {
-            entity.world.spawnParticle(Particle.SPELL_WITCH, player.location, 35, 1.0, 1.0, 1.0)
+            entity.world.spawnParticle(Particle.WITCH, player.location, 35, 1.0, 1.0, 1.0)
         }
         else if (giftLikeness >= 5) {
-            entity.world.spawnParticle(Particle.VILLAGER_HAPPY, player.location, 35, 1.0, 1.0, 1.0)
+            entity.world.spawnParticle(Particle.HAPPY_VILLAGER, player.location, 35, 1.0, 1.0, 1.0)
         }
         else if (giftLikeness < -2) {
             player.sendAmbassadorChat(AmbassadorMessage.BAD_GIFTS)

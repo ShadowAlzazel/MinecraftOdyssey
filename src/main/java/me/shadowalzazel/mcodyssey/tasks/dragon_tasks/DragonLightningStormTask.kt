@@ -30,9 +30,9 @@ class DragonLightningStormTask (private val dragon: EnderDragon) : BukkitRunnabl
         val ground = dragon.location.clone().toHighestLocation(HeightMap.MOTION_BLOCKING)
         ground.getNearbyEntities(10.0, 10.0, 10.0).forEach {
             if (it is Player) {
-                it.world.spawnEntity(it.location.clone(), EntityType.LIGHTNING)
+                it.world.spawnEntity(it.location.clone(), EntityType.LIGHTNING_BOLT)
                 it.damage(5.0, dragon)
-                it.world.spawnParticle(Particle.EXPLOSION_NORMAL, it.location, 1, 0.0, 0.0, 0.0)
+                it.world.spawnParticle(Particle.EXPLOSION, it.location, 1, 0.0, 0.0, 0.0)
                 it.world.spawnParticle(Particle.ELECTRIC_SPARK, ground, 25, 0.5, 0.2, 0.5)
 
             }

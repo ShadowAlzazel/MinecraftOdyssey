@@ -33,7 +33,7 @@ object AcidicDownpour : OdysseyPhenomenon("Acidic Downpour",
             it.spawnParticle(Particle.SQUID_INK, it.location, 15, 0.5, 0.5, 0.5)
             it.playSound(it.location, Sound.BLOCK_SLIME_BLOCK_PLACE, 2.5F, 1.5F)
             it.playSound(it.location, Sound.ENTITY_FOX_SCREECH, 2.5F, 0.5F)
-            it.spawnParticle(Particle.BLOCK_CRACK, it.location, 95, 0.95, 0.8, 0.95, Material.GREEN_CONCRETE.createBlockData())
+            it.spawnParticle(Particle.BLOCK, it.location, 95, 0.95, 0.8, 0.95, Material.GREEN_CONCRETE.createBlockData())
         }
 
     }

@@ -23,7 +23,7 @@ object CometSighting : OdysseyPhenomenon("Comet Sighting",
 
         // Effects
         val cometLightEffect = PotionEffect(PotionEffectType.NIGHT_VISION, 12000, 0)
-        val cometInspireEffect = PotionEffect(PotionEffectType.INCREASE_DAMAGE, 12000, 0)
+        val cometInspireEffect = PotionEffect(PotionEffectType.STRENGTH, 12000, 0)
         someWorld.players.forEach {
             when((0..2).random()) {
                 in 0..1 -> {

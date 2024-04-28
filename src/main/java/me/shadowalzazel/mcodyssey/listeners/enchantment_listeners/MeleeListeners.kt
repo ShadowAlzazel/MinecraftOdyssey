@@ -250,7 +250,7 @@ object MeleeListeners : Listener, EffectsManager, EnchantRegistryManager {
         // Run
         with(victim) {
             addScoreboardTag(EffectTags.ARCANE_JAILED)
-            world.spawnParticle(Particle.SPELL_WITCH, location, 5, 0.2, 0.2, 0.2)
+            world.spawnParticle(Particle.WITCH, location, 5, 0.2, 0.2, 0.2)
             val task = ArcaneCellTask(victim, location, level, (2 + (2 * level)) * 20)
             task.runTaskTimer(Odyssey.instance, 5, 5)
         }
@@ -269,7 +269,7 @@ object MeleeListeners : Listener, EffectsManager, EnchantRegistryManager {
         if (isInvisible || isNotTarget) {
             // Particles and sounds
             with(victim.world) {
-                spawnParticle(Particle.CRIT_MAGIC, victim.location, 25, 0.5, 0.5, 0.5)
+                spawnParticle(Particle.CRIT, victim.location, 25, 0.5, 0.5, 0.5)
                 spawnParticle(Particle.WARPED_SPORE, victim.location, 25, 0.5, 0.5, 0.5)
                 spawnParticle(Particle.ELECTRIC_SPARK, victim.location, 15, 0.5, 0.5, 0.5)
                 spawnParticle(Particle.CRIT, victim.location, 15, 0.5, 0.5, 0.5)
@@ -354,8 +354,8 @@ object MeleeListeners : Listener, EffectsManager, EnchantRegistryManager {
                     it.addPotionEffects(
                         listOf(
                             PotionEffect(PotionEffectType.SPEED, 10 * 20, level - 1),
-                            PotionEffect(PotionEffectType.INCREASE_DAMAGE, 10 * 20, level - 1),
-                            PotionEffect(PotionEffectType.FAST_DIGGING, 10 * 20, 0),
+                            PotionEffect(PotionEffectType.STRENGTH, 10 * 20, level - 1),
+                            PotionEffect(PotionEffectType.HASTE, 10 * 20, 0),
                             PotionEffect(PotionEffectType.ABSORPTION, 10 * 20, level - 1)
                         )
                     )
@@ -378,9 +378,9 @@ object MeleeListeners : Listener, EffectsManager, EnchantRegistryManager {
     }
     // ------------------------------- CULL_THE_WEAK ------------------------------------
     private fun cullTheWeakEnchantment(victim: LivingEntity, level: Int): Double {
-        val hasSlowness = victim.hasPotionEffect(PotionEffectType.SLOW)
+        val hasSlowness = victim.hasPotionEffect(PotionEffectType.SLOWNESS)
         val hasWeakness = victim.hasPotionEffect(PotionEffectType.WEAKNESS)
-        val hasFatigue = victim.hasPotionEffect(PotionEffectType.SLOW_DIGGING)
+        val hasFatigue = victim.hasPotionEffect(PotionEffectType.MINING_FATIGUE)
 
         return if (hasSlowness || hasWeakness || hasFatigue) {
             var damage = 0.0
@@ -447,7 +447,7 @@ object MeleeListeners : Listener, EffectsManager, EnchantRegistryManager {
                 it.direction = Vector(0.0, -3.0, 0.0)
             }
             // Firework
-            (spawnEntity(victim.location, EntityType.FIREWORK) as Firework).also {
+            (spawnEntity(victim.location, EntityType.FIREWORK_ROCKET) as Firework).also {
                 val newMeta = it.fireworkMeta
                 newMeta.power = level * 30
                 newMeta.addEffect(
@@ -468,11 +468,11 @@ object MeleeListeners : Listener, EffectsManager, EnchantRegistryManager {
         val newLocation = victim.location.clone().add(vector).toHighestLocation(HeightMap.MOTION_BLOCKING_NO_LEAVES)
         with(victim) {
             world.playSound(location, Sound.ENTITY_VEX_CHARGE, 2.5F, 0.5F)
-            world.spawnParticle(Particle.SPELL_WITCH, newLocation, 35, 0.05, 0.5, 0.05)
+            world.spawnParticle(Particle.WITCH, newLocation, 35, 0.05, 0.5, 0.05)
         }
 
         victim.getNearbyEntities(3.5, 2.0, 3.5).filterIsInstance<Creature>().forEach {
-            it.world.spawnParticle(Particle.SPELL_WITCH, it.location, 10, 0.05, 0.5, 0.05)
+            it.world.spawnParticle(Particle.WITCH, it.location, 10, 0.05, 0.5, 0.05)
             it.pathfinder.stopPathfinding()
             it.pathfinder.moveTo(newLocation)
         }
@@ -495,13 +495,13 @@ object MeleeListeners : Listener, EffectsManager, EnchantRegistryManager {
             val tongueLashVector = attacker.location.clone().subtract(it.location).toVector().normalize().multiply(1.1 + (level * 0.1))
             val frogFrightTask = FrogFrightTask(victim, tongueLashVector.multiply(-1.0))
             frogFrightTask.runTaskLater(Odyssey.instance, 9)
-            it.addPotionEffect(PotionEffect(PotionEffectType.SLOW, 3, 1))
+            it.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS, 3, 1))
             it.damage(1.0)
         }
 
         // Particles
         with(victim.world) {
-            spawnParticle(Particle.TOWN_AURA, victim.location, 15, 0.25, 0.25, 0.25)
+            spawnParticle(Particle.COMPOSTER, victim.location, 15, 0.25, 0.25, 0.25)
             playSound(victim.location, Sound.ENTITY_FROG_EAT, 2.5F, 0.7F)
         }
 
@@ -546,10 +546,10 @@ object MeleeListeners : Listener, EffectsManager, EnchantRegistryManager {
             // TODO: Add proper effect that adds raw armor
             val isCrouching = attacker is Player && attacker.isSneaking
             if (velocity.length() < 0.2 || isCrouching) {
-                addPotionEffect(PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, (3 + (level * 2)) * 20, 0))
+                addPotionEffect(PotionEffect(PotionEffectType.RESISTANCE, (3 + (level * 2)) * 20, 0))
             }
             // Particles and Sounds
-            world.spawnParticle(Particle.SUSPENDED, location, 35, 1.0, 0.5, 1.0)
+            world.spawnParticle(Particle.ENCHANTED_HIT, location, 35, 1.0, 0.5, 1.0)
             world.spawnParticle(Particle.ELECTRIC_SPARK, location, 35, 1.0, 0.5, 1.0)
             world.playSound(location, Sound.ENTITY_IRON_GOLEM_ATTACK, 1.5F, 0.5F)
             world.playSound(location, Sound.BLOCK_DEEPSLATE_BREAK, 1.5F, 0.5F)
@@ -613,7 +613,7 @@ object MeleeListeners : Listener, EffectsManager, EnchantRegistryManager {
                 world.playSound(victim.location, Sound.ITEM_CROSSBOW_QUICK_CHARGE_2, 2.5F, 1.7F)
                 world.spawnParticle(Particle.CRIT, victim.location, 25, 1.0, 0.5, 1.0)
                 val blockData = Material.QUARTZ_BRICKS.createBlockData()
-                world.spawnParticle(Particle.BLOCK_CRACK, victim.location, 25, 0.95, 0.8, 0.95, blockData)
+                world.spawnParticle(Particle.BLOCK, victim.location, 25, 0.95, 0.8, 0.95, blockData)
             }
             else if (scoreboardTags.contains(EffectTags.PARTLY_RUPTURED)) {
                 removeScoreboardTag(EffectTags.PARTLY_RUPTURED)
@@ -670,7 +670,7 @@ object MeleeListeners : Listener, EffectsManager, EnchantRegistryManager {
             val location = victim.location
             spawnParticle(Particle.PORTAL, location, (modifier + 1) * 8, 1.15, 0.85, 1.15)
             spawnParticle(Particle.WAX_OFF, location, (modifier + 1) * 2, 1.0, 0.75, 1.0)
-            spawnParticle(Particle.SPELL_WITCH, location, (modifier + 1) * 5, 1.0, 0.75, 1.0)
+            spawnParticle(Particle.WITCH, location, (modifier + 1) * 5, 1.0, 0.75, 1.0)
             playSound(location, Sound.BLOCK_BEACON_DEACTIVATE, 1.5F, 0.5F)
             playSound(location, Sound.BLOCK_AMETHYST_BLOCK_BREAK, 1.7F, 0.2F)
             playSound(location, Sound.ENTITY_ENDER_EYE_DEATH, 3.5F, 0.4F)
@@ -692,7 +692,7 @@ object MeleeListeners : Listener, EffectsManager, EnchantRegistryManager {
         }
         // Particles
         with(attacker.world) {
-            spawnParticle(Particle.EXPLOSION_LARGE, attacker.location, 10, 1.25, 0.75, 1.25)
+            spawnParticle(Particle.EXPLOSION, attacker.location, 10, 1.25, 0.75, 1.25)
             playSound(attacker.location, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1.2F, 0.7F)
             playSound(attacker.location, Sound.ITEM_SHIELD_BLOCK, 1.2F, 0.6F)
             playSound(attacker.location, Sound.ITEM_TRIDENT_RIPTIDE_3, 1.2F, 0.6F)

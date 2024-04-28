@@ -20,7 +20,7 @@ class AlchemyCauldronTask(private val cauldronBlock: Block, private val result: 
                 // Cancel task if not Water Cauldron
                 if (getBlockAt(someLocation).type != Material.WATER_CAULDRON) { this@AlchemyCauldronTask.cancel() }
                 // Static Particles
-                spawnParticle(Particle.WATER_BUBBLE, someLocation.clone().add(0.0, 0.25, 0.0), 5, 0.45, 0.25, 0.45)
+                spawnParticle(Particle.BUBBLE, someLocation.clone().add(0.0, 0.25, 0.0), 5, 0.45, 0.25, 0.45)
                 // Directional Particles
                 val randomLocation = someLocation.clone().add((0..10).random() * 0.15, 0.0, (0..10).random() * 0.15)
                 spawnParticle(Particle.BUBBLE_POP, randomLocation, 0, 0.0, 0.2, 0.0)

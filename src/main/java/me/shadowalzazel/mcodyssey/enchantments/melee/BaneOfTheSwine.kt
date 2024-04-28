@@ -1,10 +1,10 @@
 package me.shadowalzazel.mcodyssey.enchantments.melee
 
 
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
+import net.minecraft.tags.ItemTags
 import net.minecraft.world.entity.EquipmentSlot
-import net.minecraft.world.item.enchantment.EnchantmentCategory
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.enchantments.Enchantment.*
@@ -14,14 +14,18 @@ object BaneOfTheSwine : OdysseyEnchantment(
     "bane_of_the_swine",
     "Bane of the Swine",
     5,
-    Rarity.UNCOMMON,
-    EnchantmentCategory.WEAPON,
+    10,
+    constantCost(8),
+    dynamicCost(8, 10),
+    5,
+    ItemTags.WEAPON_ENCHANTABLE,
+    ItemTags.WEAPON_ENCHANTABLE,
     arrayOf(EquipmentSlot.MAINHAND)
 ) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {
-            DAMAGE_ARTHROPODS, DAMAGE_ALL, DAMAGE_UNDEAD,
+            BANE_OF_ARTHROPODS, SHARPNESS, SMITE,
             OdysseyEnchantments.BANE_OF_THE_SEA.toBukkit(),
             OdysseyEnchantments.BANE_OF_THE_ILLAGER.toBukkit() -> {
                 true

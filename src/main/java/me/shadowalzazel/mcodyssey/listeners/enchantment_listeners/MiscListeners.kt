@@ -70,7 +70,7 @@ object MiscListeners : Listener, EnchantRegistryManager {
 
     private fun caughtFish(event: PlayerFishEvent) {
         if (event.caught == null) { return }
-        if (event.caught!!.type != EntityType.DROPPED_ITEM) { return }
+        if (event.caught!!.type != EntityType.ITEM) { return }
         //
         val rod = if (event.player.inventory.itemInMainHand.type == Material.FISHING_ROD) {
             event.player.inventory.itemInMainHand
@@ -147,7 +147,7 @@ object MiscListeners : Listener, EnchantRegistryManager {
                 it.direction = Vector(0.0, -3.0, 0.0)
             }
             // Firework
-            (spawnEntity(victim.location, EntityType.FIREWORK) as Firework).also {
+            (spawnEntity(victim.location, EntityType.FIREWORK_ROCKET) as Firework).also {
                 val newMeta = it.fireworkMeta
                 newMeta.power = enchantmentStrength * 30
                 newMeta.addEffect(

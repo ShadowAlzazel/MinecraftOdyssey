@@ -22,7 +22,7 @@ object SpiritsRelease : OdysseyPhenomenon("Spirits Release",
         super.successfulActivation(someWorld)
 
         // Effects for Fairy Follow Day
-        val bearSpiritEffect = PotionEffect(PotionEffectType.INCREASE_DAMAGE, 12000, 1)
+        val bearSpiritEffect = PotionEffect(PotionEffectType.STRENGTH, 12000, 1)
         val ramSpiritEffect = PotionEffect(PotionEffectType.SPEED, 12000, 1)
         val phoenixSpiritEffect = PotionEffect(PotionEffectType.SATURATION, 12000, 1)
 

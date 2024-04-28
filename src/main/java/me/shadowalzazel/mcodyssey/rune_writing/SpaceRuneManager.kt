@@ -1,9 +1,9 @@
 package me.shadowalzazel.mcodyssey.rune_writing
 
-import me.shadowalzazel.mcodyssey.constants.ItemTags
-import me.shadowalzazel.mcodyssey.constants.ItemTags.getIntTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.setIntTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getIntTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.setIntTag
 import me.shadowalzazel.mcodyssey.rune_writing.base.SpaceRuneMatrix
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -30,7 +30,7 @@ interface SpaceRuneManager {
     // Switch to check
     fun spaceRuneTabletTeleport(entity: Entity, item: ItemStack): Boolean {
         if (!item.hasItemMeta()) return false
-        if (!item.hasTag(ItemTags.IS_SPACERUNE)) return false
+        if (!item.hasTag(ItemDataTags.IS_SPACERUNE)) return false
         val spaceRuneMatrix = item.getSpaceRuneMatrix() ?: return false
         // Call teleport
         teleportFromSpaceRuneMatrix(entity, spaceRuneMatrix)

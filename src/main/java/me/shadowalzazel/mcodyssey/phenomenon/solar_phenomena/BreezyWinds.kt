@@ -29,7 +29,7 @@ object BreezyWinds : OdysseyPhenomenon("Breezy Winds",
             it.addPotionEffect(breezeEffect)
             it.sendMessage(Component.text("A swift wind follows your side...", TextColor.color(56, 127, 232)))
             it.spawnParticle(Particle.SPIT, it.location, 15, 0.5, 0.5, 0.5)
-            it.spawnParticle(Particle.EXPLOSION_NORMAL, it.location, 5, 0.5, 0.5, 0.5)
+            it.spawnParticle(Particle.EXPLOSION, it.location, 5, 0.5, 0.5, 0.5)
             it.playSound(it.location, Sound.ITEM_TRIDENT_RIPTIDE_3, 2.5F, 1.5F)
         }
 

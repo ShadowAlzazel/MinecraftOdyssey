@@ -18,9 +18,9 @@ class LightningCloudTask(private val dragon: EnderDragon, private val cloud: Are
         val ground = cloud.location.clone()
         ground.getNearbyEntities(7.0, 6.0, 7.0).forEach {
             if (it is Player) {
-                it.world.spawnEntity(it.location, EntityType.LIGHTNING)
+                it.world.spawnEntity(it.location, EntityType.LIGHTNING_BOLT)
                 it.damage(5.0, dragon)
-                it.world.spawnParticle(Particle.EXPLOSION_NORMAL, it.location, 1, 0.0, 0.0, 0.0)
+                it.world.spawnParticle(Particle.EXPLOSION, it.location, 1, 0.0, 0.0, 0.0)
                 it.world.spawnParticle(Particle.ELECTRIC_SPARK, it.location, 25, 0.5, 0.2, 0.5)
             }
         }

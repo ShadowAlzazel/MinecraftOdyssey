@@ -9,7 +9,7 @@ plugins {
     `maven-publish`
     kotlin("jvm") version "1.9.23"
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("io.papermc.paperweight.userdev") version "1.5.10" // Check for new versions at https://plugins.gradle.org/plugin/io.papermc.paperweight.userdev
+    id("io.papermc.paperweight.userdev") version "1.6.2" // Check for new versions at https://plugins.gradle.org/plugin/io.papermc.paperweight.userdev
 }
 
 group = "me.shadowalzazel"
@@ -17,11 +17,11 @@ version = "v0.2-BETA-1.20.5"
 description = "A server side expansion pack for a new minecraft adventure!"
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 }
 
 repositories {
@@ -31,13 +31,13 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.20.5-R0.1-SNAPSHOT")
     api(libs.org.jetbrains.kotlin.kotlin.stdlib.jdk8)
     api(libs.org.jetbrains.kotlinx.kotlinx.coroutines.core)
     api(libs.org.jetbrains.kotlinx.kotlinx.serialization.json)
     testImplementation(libs.org.jetbrains.kotlin.kotlin.test)
     implementation(kotlin("stdlib-jdk8"))
-    paperweight.paperDevBundle("1.20.4-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.20.5-R0.1-SNAPSHOT")
 }
 
 publishing {
@@ -57,7 +57,7 @@ tasks {
 
         // Set the release flag. This configures what version bytecode the compiler will emit, as well as what JDK APIs are usable.
         // See https://openjdk.java.net/jeps/247 for more information.
-        options.release.set(17)
+        options.release.set(21)
     }
     javadoc {
         options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything

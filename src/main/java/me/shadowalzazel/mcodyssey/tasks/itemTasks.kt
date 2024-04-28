@@ -49,8 +49,8 @@ class TemporalStasisTask(private val somePlayer: Player) : BukkitRunnable() {
                 val blockBreak = org.bukkit.Material.GOLD_BLOCK.createBlockData()
                 val blockDust = org.bukkit.Material.GOLD_BLOCK.createBlockData()
                 val someLocation = somePlayer.location.clone().add(0.0, 0.35, 0.0)
-                spawnParticle(Particle.REDSTONE , someLocation, 75, 0.95, 0.75, 0.95, blockLight)
-                spawnParticle(Particle.BLOCK_CRACK, someLocation, 95, 0.95, 0.8, 0.95, blockBreak)
+                spawnParticle(Particle.DUST , someLocation, 75, 0.95, 0.75, 0.95, blockLight)
+                spawnParticle(Particle.BLOCK, someLocation, 95, 0.95, 0.8, 0.95, blockBreak)
                 spawnParticle(Particle.FALLING_DUST, someLocation, 35, 0.75, 0.25, 0.75, blockDust)
             }
             somePlayer.isInvulnerable = false

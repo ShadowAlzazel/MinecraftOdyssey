@@ -813,13 +813,13 @@ object ArmorListeners : Listener, EnchantRegistryManager {
                         0
                     ),
                     PotionEffect(
-                        PotionEffectType.SLOW,
+                        PotionEffectType.SLOWNESS,
                         (2 + (level * 2)) * 20,
                         0
                     )
                 )
             )
-            it.world.spawnParticle(Particle.SUSPENDED, it.location, 15, 0.3, 0.5, 0.3)
+            it.world.spawnParticle(Particle.SCULK_CHARGE_POP, it.location, 15, 0.3, 0.5, 0.3)
         }
         player.world.playSound(player.location, Sound.ENTITY_WARDEN_ROAR, 7.5F, 1.5F)
         player.world.playSound(player.location, Sound.ENTITY_FOX_AGGRO, 7.5F, 2.5F)
@@ -856,7 +856,7 @@ object ArmorListeners : Listener, EnchantRegistryManager {
             // Particles
             with(player.world) {
                 spawnParticle(Particle.HEART, player.location, 35, 0.5, 0.5, 0.5)
-                spawnParticle(Particle.VILLAGER_HAPPY, player.location, 35, 0.5, 0.5, 0.5)
+                spawnParticle(Particle.HAPPY_VILLAGER, player.location, 35, 0.5, 0.5, 0.5)
                 spawnParticle(Particle.COMPOSTER, player.location, 35, 0.5, 0.5, 0.5)
                 playSound(player.location, Sound.ENTITY_STRIDER_HAPPY, 1.5F, 0.5F)
                 playSound(player.location, Sound.BLOCK_RESPAWN_ANCHOR_SET_SPAWN, 1.5F, 0.5F)
@@ -1258,7 +1258,7 @@ object ArmorListeners : Listener, EnchantRegistryManager {
                     it.addPotionEffects(
                         listOf(
                             PotionEffect(PotionEffectType.POISON, ((level * 2) + 2) * 20, 0),
-                            PotionEffect(PotionEffectType.CONFUSION, ((level * 2) + 2) * 20, 0),
+                            PotionEffect(PotionEffectType.NAUSEA, ((level * 2) + 2) * 20, 0),
                         )
                     )
                 }
@@ -1277,7 +1277,7 @@ object ArmorListeners : Listener, EnchantRegistryManager {
                     it.addPotionEffects(
                         listOf(
                             PotionEffect(PotionEffectType.BLINDNESS, ((level * 2) + 2) * 20, 1),
-                            PotionEffect(PotionEffectType.SLOW, ((level * 2) + 2) * 20, 0)
+                            PotionEffect(PotionEffectType.SLOWNESS, ((level * 2) + 2) * 20, 0)
                         )
                     )
                     if (it is Creature) {
@@ -1289,7 +1289,7 @@ object ArmorListeners : Listener, EnchantRegistryManager {
         // Particles
         with(defender.world) {
             spawnParticle(Particle.SQUID_INK, defender.location, 85, 0.75, 0.5, 0.75)
-            spawnParticle(Particle.SMOKE_LARGE, defender.location, 85, 1.0, 0.5, 1.0)
+            spawnParticle(Particle.LARGE_SMOKE, defender.location, 85, 1.0, 0.5, 1.0)
         }
     }
 
@@ -1309,7 +1309,7 @@ object ArmorListeners : Listener, EnchantRegistryManager {
         if (angle < 1.74533) { return } // a > 100 deg
 
         target.addPotionEffect(
-            PotionEffect(PotionEffectType.SLOW, (level) * 10, 5))
+            PotionEffect(PotionEffectType.SLOWNESS, (level) * 10, 5))
 
         player.setCooldown(spyglass.type, 20 * 2)
     }
@@ -1324,7 +1324,7 @@ object ArmorListeners : Listener, EnchantRegistryManager {
         val angle = attacker.eyeLocation.direction.angle(defender.eyeLocation.direction)
         if (angle < 1.74533) return
         attacker.addPotionEffect(
-            PotionEffect(PotionEffectType.SLOW, (level) * 10, 5))
+            PotionEffect(PotionEffectType.SLOWNESS, (level) * 10, 5))
 
     }
 
@@ -1417,7 +1417,7 @@ object ArmorListeners : Listener, EnchantRegistryManager {
             it as LivingEntity
             it.addPotionEffects(
                 listOf(
-                    PotionEffect(PotionEffectType.INCREASE_DAMAGE, (4 + (level * 2)) * 20, 0),
+                    PotionEffect(PotionEffectType.STRENGTH, (4 + (level * 2)) * 20, 0),
                     PotionEffect(PotionEffectType.SPEED, (4 + (level * 2)) * 20, 0)
                 )
             )

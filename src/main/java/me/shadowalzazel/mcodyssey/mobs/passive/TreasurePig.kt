@@ -31,7 +31,7 @@ object TreasurePig: OdysseyMob("Treasure Pig", MobTags.TREASURE_PIG, EntityType.
         val treasurePigEntity = (super.createMob(world, location) as Pig).apply {
             addPotionEffects(listOf(
                 PotionEffect(PotionEffectType.SPEED, 99999, 4),
-                PotionEffect(PotionEffectType.JUMP, 99999, 2)
+                PotionEffect(PotionEffectType.JUMP_BOOST, 99999, 2)
             ))
             canPickupItems = true
             customName(Component.text(this@TreasurePig.displayName, TextColor.color(255, 170, 75)))
@@ -59,7 +59,7 @@ object TreasurePig: OdysseyMob("Treasure Pig", MobTags.TREASURE_PIG, EntityType.
                     dropItem(pig.location, ItemStack(Material.GOLD_NUGGET, (1..2).random()))
                     playSound(pig.location, Sound.ENTITY_WITHER_BREAK_BLOCK, 2.5F, 0.5F)
                     val goldBlockBreak = Material.GOLD_BLOCK.createBlockData()
-                    spawnParticle(Particle.BLOCK_CRACK, pig.location, 35, 0.95, 0.8, 0.95, goldBlockBreak)
+                    spawnParticle(Particle.BLOCK, pig.location, 35, 0.95, 0.8, 0.95, goldBlockBreak)
                 }
             }
             else {

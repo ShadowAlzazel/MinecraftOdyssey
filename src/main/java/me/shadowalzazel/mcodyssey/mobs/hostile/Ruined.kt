@@ -23,8 +23,8 @@ object Ruined : OdysseyMob("Ruined", MobTags.RUINED, EntityType.STRAY, 30.0) {
         val entity = (super.createMob(world, location) as Stray).apply {
             // Effects
             addPotionEffects(listOf(
-                PotionEffect(PotionEffectType.INCREASE_DAMAGE, 99999, 4),
-                PotionEffect(PotionEffectType.FAST_DIGGING, 99999, 8)
+                PotionEffect(PotionEffectType.STRENGTH, 99999, 4),
+                PotionEffect(PotionEffectType.HASTE, 99999, 8)
             ))
             // Miscellaneous
             health = 50.0
@@ -33,8 +33,8 @@ object Ruined : OdysseyMob("Ruined", MobTags.RUINED, EntityType.STRAY, 30.0) {
             clearActiveItem()
             // Weapon
             val weapon = WeaponCreator.toolCreator.createToolStack(ToolMaterial.DIAMOND, ToolType.CLAYMORE).apply {
-                addUnsafeEnchantment(Enchantment.DURABILITY, 3)
-                addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5)
+                addUnsafeEnchantment(Enchantment.UNBREAKING, 3)
+                addUnsafeEnchantment(Enchantment.SHARPNESS, 5)
                 addUnsafeEnchantment(Enchantment.KNOCKBACK, 3)
                 itemMeta.displayName(Component.text("Maligned Claymore"))
             }

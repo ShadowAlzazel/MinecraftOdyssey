@@ -49,9 +49,9 @@ open class OdysseyItem(
             it.persistentDataContainer.set(DataKeys.ITEM_KEY, PersistentDataType.STRING, name)
         }
         if (enchantments != null) {
-            itemStack.addTag(ItemTags.IS_SLOTTED)
-            itemStack.setIntTag(ItemTags.ENCHANT_SLOTS, enchantSlots)
-            itemStack.setIntTag(ItemTags.GILDED_SLOTS, gildedSlots)
+            itemStack.addTag(ItemDataTags.IS_SLOTTED)
+            itemStack.setIntTag(ItemDataTags.ENCHANT_SLOTS, enchantSlots)
+            itemStack.setIntTag(ItemDataTags.GILDED_SLOTS, gildedSlots)
             itemStack.updateSlotLore()
             itemStack.addItemFlags(ItemFlag.HIDE_ENCHANTS)
         }
