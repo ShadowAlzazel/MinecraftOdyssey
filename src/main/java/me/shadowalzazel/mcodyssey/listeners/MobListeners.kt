@@ -2,7 +2,7 @@ package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.constants.EntityTags
-import me.shadowalzazel.mcodyssey.constants.ItemTags.isThisItem
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.isThisItem
 import me.shadowalzazel.mcodyssey.tasks.mob_tasks.PiglinRallyTask
 import org.bukkit.Material
 import org.bukkit.MusicInstrument
@@ -113,7 +113,7 @@ object MobListeners : Listener{
             it.world.playSound(it.location, Sound.ITEM_GOAT_HORN_SOUND_5, 5.5F, 0.95F)
             val horn = ItemStack(Material.GOAT_HORN)
             val musicMeta = horn.itemMeta as MusicInstrumentMeta
-            musicMeta.instrument = MusicInstrument.CALL
+            musicMeta.instrument = MusicInstrument.CALL_GOAT_HORN
             horn.itemMeta = musicMeta
             it.equipment.setItemInOffHand(horn)
             it.swingOffHand()

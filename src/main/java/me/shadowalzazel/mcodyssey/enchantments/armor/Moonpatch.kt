@@ -2,7 +2,8 @@ package me.shadowalzazel.mcodyssey.enchantments.armor
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
 import net.kyori.adventure.text.Component
-import net.minecraft.world.item.enchantment.EnchantmentCategory
+import net.minecraft.tags.ItemTags
+import net.minecraft.world.entity.EquipmentSlot
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.enchantments.Enchantment.MENDING
@@ -12,12 +13,17 @@ object Moonpatch : OdysseyEnchantment(
     "moonpatch",
     "Moonpatch",
     1,
-    Rarity.RARE,
-    EnchantmentCategory.VANISHABLE,
+    1,
+    constantCost(20),
+    dynamicCost(30, 10),
+    5,
+    ItemTags.DURABILITY_ENCHANTABLE,
+    ItemTags.DURABILITY_ENCHANTABLE,
+    EquipmentSlot.entries.toTypedArray()
 ) {
 
-    override fun getMinCost(level: Int): Int = 20
-    override fun getMaxCost(level: Int): Int = getMinCost(level) + 50
+    //override fun getMinCost(level: Int): Int = 20
+    //override fun getMaxCost(level: Int): Int = getMinCost(level) + 50
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return when (other) {

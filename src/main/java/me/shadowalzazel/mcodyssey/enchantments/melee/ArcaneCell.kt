@@ -1,10 +1,10 @@
 package me.shadowalzazel.mcodyssey.enchantments.melee
 
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import net.kyori.adventure.text.Component
+import net.minecraft.tags.ItemTags
 import net.minecraft.world.entity.EquipmentSlot
-import net.minecraft.world.item.enchantment.EnchantmentCategory
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -13,8 +13,12 @@ object ArcaneCell : OdysseyEnchantment(
     "arcane_cell",
     "Arcane Cell",
     3,
-    Rarity.VERY_RARE,
-    EnchantmentCategory.WEAPON,
+    5,
+    constantCost(8),
+    dynamicCost(8, 10),
+    5,
+    ItemTags.WEAPON_ENCHANTABLE,
+    ItemTags.WEAPON_ENCHANTABLE,
     arrayOf(EquipmentSlot.MAINHAND)
 ) {
 

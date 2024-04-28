@@ -3,9 +3,9 @@ package me.shadowalzazel.mcodyssey.listeners
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.alchemy.SoulBraiseRecipes
 import me.shadowalzazel.mcodyssey.constants.ItemModels
-import me.shadowalzazel.mcodyssey.constants.ItemTags
-import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasTag
 import me.shadowalzazel.mcodyssey.items.Ingredients
 import me.shadowalzazel.mcodyssey.listeners.utility.SculkFinderSynchro
 import org.bukkit.Material
@@ -60,19 +60,19 @@ object SoulBraisingListener : Listener {
 
     private fun compassChecker(initial: ItemStack, itemResult: Entity?) {
         if (itemResult == null) return
-        if (itemResult.type != EntityType.DROPPED_ITEM) return
+        if (itemResult.type != EntityType.ITEM) return
         if (itemResult !is Item) return
         if ((itemResult.itemStack.type != Material.COMPASS) && (itemResult.itemStack.type != Material.RECOVERY_COMPASS)) return
         if (!itemResult.itemStack.hasItemMeta()) return
         println("Item: ${itemResult.itemStack}")
         // For re-calibration
-        if (initial.hasTag(ItemTags.IS_SCULK_FINDER) && initial.type == Material.COMPASS) {
+        if (initial.hasTag(ItemDataTags.IS_SCULK_FINDER) && initial.type == Material.COMPASS) {
             val finderTask = SculkFinderSynchro(itemResult.location.block, itemResult.itemStack.clone())
             finderTask.runTaskLater(Odyssey.instance, 10)
         }
         // Create new compass and add tag
         else if (initial.type == Material.RECOVERY_COMPASS) {
-            val newCompass = itemResult.itemStack.also { it.addTag(ItemTags.IS_SCULK_FINDER) }
+            val newCompass = itemResult.itemStack.also { it.addTag(ItemDataTags.IS_SCULK_FINDER) }
             val finderTask = SculkFinderSynchro(itemResult.location.block, newCompass.clone())
             finderTask.runTaskLater(Odyssey.instance, 10)
         }
@@ -87,7 +87,7 @@ object SoulBraisingListener : Listener {
 
         with(killer.equipment) {
             val hasSoulSteelWeapon = if (itemInMainHand.itemMeta?.hasCustomModelData() == true) {
-                itemInMainHand.hasTag(ItemTags.SOUL_STEEL_TOOL)
+                itemInMainHand.hasTag(ItemDataTags.SOUL_STEEL_TOOL)
             } else {
                 false
             }

@@ -1,10 +1,9 @@
 package me.shadowalzazel.mcodyssey.enchantments.ranged
 
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
 import net.kyori.adventure.text.Component
+import net.minecraft.tags.ItemTags
 import net.minecraft.world.entity.EquipmentSlot
-import net.minecraft.world.item.enchantment.EnchantmentCategory
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -13,8 +12,12 @@ object SingularityShot : OdysseyEnchantment(
     "singularity_shot",
     "Singularity Shot",
     3,
-    Rarity.VERY_RARE,
-    EnchantmentCategory.BOW,
+    1,
+    constantCost(8),
+    dynamicCost(8, 10),
+    5,
+    ItemTags.BOW_ENCHANTABLE,
+    ItemTags.BOW_ENCHANTABLE,
     arrayOf(EquipmentSlot.MAINHAND)
 ) {
 

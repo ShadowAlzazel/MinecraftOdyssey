@@ -21,7 +21,6 @@ object ReflectionUtils {
                 i++
             }
         }
-
         return null
     }
 
@@ -32,5 +31,10 @@ object ReflectionUtils {
         val frozen = getField(MappedRegistry::class.java, Boolean::class.java, 0) ?: return
         frozen.setBoolean(registry, false)
     }
+
+    fun <T> freezeRegistry(registry: Registry<T>) {
+        registry.freeze()
+    }
+
 }
 

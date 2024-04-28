@@ -1,8 +1,8 @@
 package me.shadowalzazel.mcodyssey.items
 
 import me.shadowalzazel.mcodyssey.constants.ItemModels
-import me.shadowalzazel.mcodyssey.constants.ItemTags
-import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addTag
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import me.shadowalzazel.mcodyssey.rune_writing.RunesherdManager
 import me.shadowalzazel.mcodyssey.rune_writing.SpaceRuneManager
@@ -59,7 +59,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
 
     fun OdysseyItem.createSpaceRuneTablet(amount: Int = 1): ItemStack {
         val item = createItemStack(amount).also {
-            it.addTag(ItemTags.IS_SPACERUNE)
+            it.addTag(ItemDataTags.IS_SPACERUNE)
             it.createSpaceRuneComponents()
             it.createSpaceRuneMatrixLore()
         }

@@ -46,7 +46,7 @@ object FishingListeners : Listener {
     // When click and get item
     private fun caughtFish(event: PlayerFishEvent) {
         if (event.caught == null) { return }
-        if (event.caught!!.type != EntityType.DROPPED_ITEM) { return }
+        if (event.caught!!.type != EntityType.ITEM) { return }
         //
         val rod = if (event.player.inventory.itemInMainHand.type == Material.FISHING_ROD) {
             event.player.inventory.itemInMainHand

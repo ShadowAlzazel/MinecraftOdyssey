@@ -1,10 +1,10 @@
 package me.shadowalzazel.mcodyssey.enchantments.armor
 
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import net.kyori.adventure.text.Component
+import net.minecraft.tags.ItemTags
 import net.minecraft.world.entity.EquipmentSlot
-import net.minecraft.world.item.enchantment.EnchantmentCategory
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -13,8 +13,12 @@ object Untouchable : OdysseyEnchantment(
     "untouchable",
     "Untouchable",
     1,
-    Rarity.RARE,
-    EnchantmentCategory.ARMOR_CHEST,
+    5,
+    constantCost(8),
+    dynamicCost(8, 10),
+    5,
+    ItemTags.CHEST_ARMOR_ENCHANTABLE,
+    ItemTags.CHEST_ARMOR_ENCHANTABLE,
     arrayOf(EquipmentSlot.CHEST)
 ) {
 

@@ -28,7 +28,7 @@ object GravityShift : OdysseyPhenomenon("Gravity shift",
 
     // Low Gravity Effects
     private val lowGravityEffects = listOf(
-        PotionEffect(PotionEffectType.JUMP, 12000, 2),
+        PotionEffect(PotionEffectType.JUMP_BOOST, 12000, 2),
         PotionEffect(PotionEffectType.SLOW_FALLING, 12000, 1))
 
     override fun successfulActivation(someWorld: World) {
@@ -38,7 +38,7 @@ object GravityShift : OdysseyPhenomenon("Gravity shift",
             it.addPotionEffects(lowGravityEffects)
             it.sendMessage(Component.text("${it.server.name} experiencing a relativistic shift and unstable gravity zones!", TextColor.color(56, 127, 232)))
             it.spawnParticle(Particle.SPIT, it.location, 15, 0.5, 0.5, 0.5)
-            it.spawnParticle(Particle.EXPLOSION_NORMAL, it.location, 5, 0.5, 0.5, 0.5)
+            it.spawnParticle(Particle.EXPLOSION, it.location, 5, 0.5, 0.5, 0.5)
             it.playSound(it.location, Sound.ITEM_TRIDENT_RIPTIDE_3, 2.5F, 1.5F)
         }
     }

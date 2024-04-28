@@ -36,7 +36,7 @@ object StarryNight : OdysseyPhenomenon("Starry Night",
     override fun persistentSpawningActives(someEntity: LivingEntity) {
         if (someEntity.location.block.lightFromSky > 5) {
             // Firework
-            (someEntity.world.spawnEntity(someEntity.location.clone().add(0.0, 3.0, 0.0), EntityType.FIREWORK) as Firework).also {
+            (someEntity.world.spawnEntity(someEntity.location.clone().add(0.0, 3.0, 0.0), EntityType.FIREWORK_ROCKET) as Firework).also {
                 val newMeta = it.fireworkMeta
                 newMeta.power = 1
                 newMeta.addEffect(

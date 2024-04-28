@@ -22,7 +22,7 @@ object ChillingNight: OdysseyPhenomenon("Chilling Night",
         println("The atmosphere freezes ${someWorld.name}!")
 
         // Player Effects
-        val chillingNight = PotionEffect(PotionEffectType.SLOW, 20 * 20, 1)
+        val chillingNight = PotionEffect(PotionEffectType.SLOWNESS, 20 * 20, 1)
 
         someWorld.players.forEach {
             it.addPotionEffect(chillingNight)
@@ -37,7 +37,7 @@ object ChillingNight: OdysseyPhenomenon("Chilling Night",
     }
 
     override fun persistentPlayerActives(someWorld: World) {
-        val chillingNight = PotionEffect(PotionEffectType.SLOW, 20 * 5, 1)
+        val chillingNight = PotionEffect(PotionEffectType.SLOWNESS, 20 * 5, 1)
         someWorld.players.forEach {
             val hasLight: Boolean = it.equipment.itemInOffHand.type == Material.LANTERN || it.equipment.itemInOffHand.type == Material.TORCH
 

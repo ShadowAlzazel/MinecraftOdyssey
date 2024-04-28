@@ -15,8 +15,8 @@ class LootLogic(
 
     init {
         if (player.equipment.itemInMainHand.itemMeta != null) {
-            if (player.equipment.itemInMainHand.itemMeta.hasEnchant(Enchantment.LOOT_BONUS_MOBS)) {
-                lootLuck += player.activeItem.getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS) * 1.0
+            if (player.equipment.itemInMainHand.itemMeta.hasEnchant(Enchantment.LOOTING)) {
+                lootLuck += player.activeItem.getEnchantmentLevel(Enchantment.LOOTING) * 1.0
             }
         }
         if (player.hasPotionEffect(PotionEffectType.LUCK)) {

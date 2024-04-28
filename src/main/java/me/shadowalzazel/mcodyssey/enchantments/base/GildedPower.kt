@@ -5,7 +5,7 @@ import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-object GildedPower : OdysseyEnchantment("gildedpower", "Gilded Power", 3) {
+object GildedPower : OdysseyEnchantment("gilded_power", "Gilded Power", 3) {
 
     override fun conflictsWith(other: Enchantment): Boolean {
         return false

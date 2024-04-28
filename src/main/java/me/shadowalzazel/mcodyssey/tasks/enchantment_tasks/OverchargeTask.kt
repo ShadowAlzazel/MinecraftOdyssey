@@ -58,7 +58,7 @@ class OverchargeTask(
             if (level == modifier) { // Max Charge
                 playSound(shooter.location, Sound.ENTITY_WARDEN_SONIC_BOOM, 1.5F, 1.8F)
             }
-            shooter.addPotionEffect(PotionEffect(PotionEffectType.SLOW, 20 * 2, modifier))
+            shooter.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS, 20 * 2, modifier))
         }
     }
 }

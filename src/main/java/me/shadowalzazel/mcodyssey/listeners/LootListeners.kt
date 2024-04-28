@@ -197,7 +197,7 @@ object LootListeners : Listener, ItemCreator {
             playSound(location, Sound.BLOCK_AMETHYST_CLUSTER_PLACE, 1.5F, 0.9F)
             playSound(location, Sound.BLOCK_AMETHYST_BLOCK_PLACE, 1.5F, 0.9F)
             playSound(location, Sound.BLOCK_ENCHANTMENT_TABLE_USE, 1.5F, 0.9F)
-            world.spawnParticle(Particle.TOTEM, location, 25, 2.0, 1.0, 2.0)
+            world.spawnParticle(Particle.TOTEM_OF_UNDYING, location, 25, 2.0, 1.0, 2.0)
             world.spawnParticle(Particle.END_ROD, location, 25, 2.0, 1.0, 2.0)
             world.spawnParticle(Particle.GLOW, location, 35, 2.0, 1.0, 2.0)
         }

@@ -1,6 +1,5 @@
 package me.shadowalzazel.mcodyssey.occurrences.base
 
-import me.shadowalzazel.mcodyssey.seasons.SeasonType
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.entity.EntityType
@@ -56,9 +55,9 @@ open class Occurrence (
         }
     }
 
-    fun requirementHandler(someSeason: SeasonType, someWorld: World) : Boolean {
+    fun requirementHandler(someWorld: World) : Boolean {
         // Used to activate and put into activation
-        return requirements.all { it.checkRequirement(someSeason, someWorld) }
+        return false
     }
 
 

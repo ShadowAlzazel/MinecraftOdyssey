@@ -62,9 +62,6 @@ class Odyssey : JavaPlugin() {
         // Asset Loader
         val datapackManager = DatapackManager(this)
 
-        // Enchantment NMS (Allow new registries)
-        ReflectionUtils.unfreezeRegistry(BuiltInRegistries.ENCHANTMENT)
-
         // Find Worlds
         // Need to find the main world to locate datapacks
         logger.info("Finding Datapack World...")
@@ -89,9 +86,14 @@ class Odyssey : JavaPlugin() {
             return
         }
 
+        // Enchantment NMS (Allow new registries)
+        ReflectionUtils.unfreezeRegistry(BuiltInRegistries.ENCHANTMENT)
         // Register Enchantments
         logger.info("Registering Enchantments...")
+        //OdysseyEnchantments.registerTest()
         OdysseyEnchantments.registerAll()
+        // Freeze NMS
+        ReflectionUtils.freezeRegistry(BuiltInRegistries.ENCHANTMENT)
 
         // Register Recipes
         logger.info("Registering Recipes...")
@@ -106,7 +108,8 @@ class Odyssey : JavaPlugin() {
 
         // Register Events
         logger.info("Registering Events...")
-        listOf(AssetListeners,
+        listOf(
+            AssetListeners,
             ArcaneListeners,
             SmithingListeners,
             AlchemyListener,

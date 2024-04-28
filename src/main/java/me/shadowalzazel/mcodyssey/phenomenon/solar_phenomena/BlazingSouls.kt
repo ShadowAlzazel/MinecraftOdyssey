@@ -25,10 +25,10 @@ object BlazingSouls : OdysseyPhenomenon("Blazing Souls",
             PotionEffect(PotionEffectType.FIRE_RESISTANCE, 12000, 0),
             PotionEffect(PotionEffectType.SPEED, 12000, 0))
         val blazingMindEffects = listOf(
-            PotionEffect(PotionEffectType.FAST_DIGGING, 12000, 0))
+            PotionEffect(PotionEffectType.HASTE, 12000, 0))
         val blazingSoulEffects = listOf(
             PotionEffect(PotionEffectType.GLOWING, 12000, 1),
-            PotionEffect(PotionEffectType.INCREASE_DAMAGE, 12000, 1))
+            PotionEffect(PotionEffectType.STRENGTH, 12000, 1))
 
         // Player Effects
         someWorld.players.forEach {

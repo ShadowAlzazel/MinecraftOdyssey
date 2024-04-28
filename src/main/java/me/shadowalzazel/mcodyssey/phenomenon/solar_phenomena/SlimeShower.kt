@@ -32,7 +32,7 @@ object SlimeShower : OdysseyPhenomenon("Slime Shower",
         val fallingSlimeEffects = listOf(
             PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 30, 1),
             PotionEffect(PotionEffectType.REGENERATION, 20 * 600, 1),
-            PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 600, 1),
+            PotionEffect(PotionEffectType.RESISTANCE, 20 * 600, 1),
             PotionEffect(PotionEffectType.HEALTH_BOOST, 20 * 600, 1))
         //
         someWorld.players.forEach {

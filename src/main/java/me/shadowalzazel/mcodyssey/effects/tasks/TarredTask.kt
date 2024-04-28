@@ -43,9 +43,9 @@ class TarredTask(private val dousedVictim: LivingEntity, private val douseCount:
                 val dousingBlock = Material.COAL_BLOCK.createBlockData()
                 val dousingDust = Material.BLACK_CONCRETE_POWDER.createBlockData()
                 val someLocation = it.location.clone().add(0.0, 0.5, 0.0)
-                spawnParticle(Particle.BLOCK_CRACK, someLocation, 35, 0.45, 0.25, 0.45, dousingBlock)
+                spawnParticle(Particle.BLOCK, someLocation, 35, 0.45, 0.25, 0.45, dousingBlock)
                 spawnParticle(Particle.FALLING_DUST, someLocation, 35, 0.45, 0.25, 0.45, dousingDust)
-                spawnParticle(Particle.SMOKE_NORMAL, someLocation, 15, 0.25, 1.0, 0.25)
+                spawnParticle(Particle.SMOKE, someLocation, 15, 0.25, 1.0, 0.25)
             }
 
             // Timing

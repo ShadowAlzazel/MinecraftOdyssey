@@ -1,11 +1,11 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.constants.EntityTags
-import me.shadowalzazel.mcodyssey.constants.ItemTags
-import me.shadowalzazel.mcodyssey.constants.ItemTags.ARCHAIC_NAMESPACE
-import me.shadowalzazel.mcodyssey.constants.ItemTags.addStringTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.ARCHAIC_NAMESPACE
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addStringTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasTag
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
 import org.bukkit.Material
 import org.bukkit.Particle
@@ -60,7 +60,7 @@ object SnifferListeners : Listener {
         val archaicSeeds = listOf(Miscellaneous.ASPEN_SEED, Miscellaneous.MAPLE_SEED, Miscellaneous.SAKURA_SEED, Miscellaneous.REDWOOD_SEED)
         val seed = archaicSeeds.random()
         val drop = seed.createItemStack(1).apply {
-            addTag(ItemTags.IS_ARCHAIC_SEED)
+            addTag(ItemDataTags.IS_ARCHAIC_SEED)
             val namespaceSeed =  when(seed.itemName) {
                 "aspen_seed" -> {
                     "odyssey:aspen_forest/tree_aspen"
@@ -90,7 +90,7 @@ object SnifferListeners : Listener {
         if (event.player.equipment.itemInMainHand.type != Material.WHEAT_SEEDS) return
         val archaicSeed = event.player.equipment.itemInMainHand
         if (!archaicSeed.hasItemMeta()) return
-        if (!archaicSeed.hasTag(ItemTags.IS_ARCHAIC_SEED)) return
+        if (!archaicSeed.hasTag(ItemDataTags.IS_ARCHAIC_SEED)) return
         if (event.blockAgainst.type != Material.FARMLAND) return
         // Run
         println("PASSED EVENT CHECK")

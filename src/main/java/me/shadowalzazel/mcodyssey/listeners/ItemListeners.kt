@@ -1,9 +1,9 @@
 package me.shadowalzazel.mcodyssey.listeners
 
-import me.shadowalzazel.mcodyssey.constants.ItemTags
-import me.shadowalzazel.mcodyssey.constants.ItemTags.getOdysseyTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.hasOdysseyItemTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getOdysseyTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasOdysseyItemTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasTag
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
 import me.shadowalzazel.mcodyssey.items.Runesherds
 import me.shadowalzazel.mcodyssey.rune_writing.SpaceRuneManager
@@ -65,7 +65,7 @@ object ItemListeners : Listener, SpaceRuneManager {
         val item = entityItem.itemStack
         val player = event.player
         if (player.hasCooldown(item.type)) return
-        if (!item.hasTag(ItemTags.IS_SPACERUNE)) return
+        if (!item.hasTag(ItemDataTags.IS_SPACERUNE)) return
         // Run TP
         spaceRuneTabletTeleport(player, item)
 

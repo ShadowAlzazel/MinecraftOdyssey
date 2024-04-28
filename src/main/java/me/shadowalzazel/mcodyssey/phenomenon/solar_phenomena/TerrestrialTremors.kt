@@ -22,11 +22,11 @@ object TerrestrialTremors : OdysseyPhenomenon("Terrestrial Tremors",
         if (someWorld.players.size >= 1) {
             val tremorMagnitude = (1..10).random()
             // Tremors Effects
-            val shakeEffect = PotionEffect(PotionEffectType.SLOW, 20 * (3 * tremorMagnitude), 1)
-            val tremorEffect = PotionEffect(PotionEffectType.SLOW, 20 * (5 * tremorMagnitude), 2)
-            val trembleFatigueEffect = PotionEffect(PotionEffectType.SLOW_DIGGING, 20 * (5 * tremorMagnitude), 1)
+            val shakeEffect = PotionEffect(PotionEffectType.SLOWNESS, 20 * (3 * tremorMagnitude), 1)
+            val tremorEffect = PotionEffect(PotionEffectType.SLOWNESS, 20 * (5 * tremorMagnitude), 2)
+            val trembleFatigueEffect = PotionEffect(PotionEffectType.MINING_FATIGUE, 20 * (5 * tremorMagnitude), 1)
             val trembleWeaknessEffect = PotionEffect(PotionEffectType.WEAKNESS, 20 * (5 * tremorMagnitude), 0)
-            val trembleConfusionEffect = PotionEffect(PotionEffectType.CONFUSION, 20 * (4 * tremorMagnitude), 1)
+            val trembleConfusionEffect = PotionEffect(PotionEffectType.NAUSEA, 20 * (4 * tremorMagnitude), 1)
 
             // Get epicenter
             val randomPlayer = someWorld.players.random()

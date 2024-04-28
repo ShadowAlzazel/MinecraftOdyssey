@@ -22,8 +22,8 @@ object Vanguard : OdysseyMob("Vanguard", "vanguard", EntityType.SKELETON, 30.0) 
     fun createKnight(world: World, location: Location): Pair<Skeleton, SkeletonHorse> {
         // Poleaxe Weapon
         val weapon = WeaponCreator.toolCreator.createToolStack(ToolMaterial.COPPER, ToolType.POLEAXE).apply {
-            addUnsafeEnchantment(Enchantment.DURABILITY, 3)
-            addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5)
+            addUnsafeEnchantment(Enchantment.UNBREAKING, 3)
+            addUnsafeEnchantment(Enchantment.SHARPNESS, 5)
             addUnsafeEnchantment(Enchantment.KNOCKBACK, 3)
             itemMeta.displayName(Component.text("Norinthian Poleaxe"))
         }
@@ -50,14 +50,14 @@ object Vanguard : OdysseyMob("Vanguard", "vanguard", EntityType.SKELETON, 30.0) 
     override fun createMob(world: World, location: Location): Skeleton {
         // Spear
         val weapon = WeaponCreator.toolCreator.createToolStack(ToolMaterial.COPPER, ToolType.SPEAR).apply {
-            addUnsafeEnchantment(Enchantment.DURABILITY, 3)
-            addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5)
+            addUnsafeEnchantment(Enchantment.UNBREAKING, 3)
+            addUnsafeEnchantment(Enchantment.SHARPNESS, 5)
             addUnsafeEnchantment(Enchantment.KNOCKBACK, 3)
             itemMeta.displayName(Component.text("Norinthian Spear"))
         }
         val shield = ItemStack(Material.SHIELD, 1).apply {
-            addUnsafeEnchantment(Enchantment.DURABILITY, 3)
-            addUnsafeEnchantment(Enchantment.PROTECTION_PROJECTILE, 5)
+            addUnsafeEnchantment(Enchantment.UNBREAKING, 3)
+            addUnsafeEnchantment(Enchantment.PROJECTILE_PROTECTION, 5)
             addUnsafeEnchantment(Enchantment.KNOCKBACK, 5)
             itemMeta.displayName(Component.text("Norinthian Shield"))
         }
@@ -65,8 +65,8 @@ object Vanguard : OdysseyMob("Vanguard", "vanguard", EntityType.SKELETON, 30.0) 
         val entity = (super.createMob(world, location) as Skeleton).apply {
             // Effects
             addPotionEffects(listOf(
-                PotionEffect(PotionEffectType.INCREASE_DAMAGE, 99999, 4),
-                PotionEffect(PotionEffectType.FAST_DIGGING, 99999, 8)))
+                PotionEffect(PotionEffectType.STRENGTH, 99999, 4),
+                PotionEffect(PotionEffectType.HASTE, 99999, 8)))
             // Miscellaneous
             health = 50.0
             canPickupItems = true

@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.listeners
 
-import me.shadowalzazel.mcodyssey.constants.ItemTags.getOdysseyTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.hasOdysseyItemTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getOdysseyTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasOdysseyItemTag
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -26,19 +26,19 @@ object FoodListeners : Listener {
 
         when (event.item.getOdysseyTag()!!) {
             "beetroot_cookie" -> {
-                event.player.addPotionEffect(PotionEffect(PotionEffectType.INCREASE_DAMAGE, 6 * 20, 0))
+                event.player.addPotionEffect(PotionEffect(PotionEffectType.STRENGTH, 6 * 20, 0))
             }
             "pumpkin_cookie" -> {
-                event.player.addPotionEffect(PotionEffect(PotionEffectType.FAST_DIGGING, 6 * 20, 0))
+                event.player.addPotionEffect(PotionEffect(PotionEffectType.HASTE, 6 * 20, 0))
             }
             "honey_cookie" -> {
                 event.player.addPotionEffect(PotionEffect(PotionEffectType.REGENERATION, 6 * 20, 0))
             }
             "apple_cookie" -> {
-                event.player.addPotionEffect(PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 6 * 20, 0))
+                event.player.addPotionEffect(PotionEffect(PotionEffectType.RESISTANCE, 6 * 20, 0))
             }
             "berry_cookie" -> {
-                event.player.addPotionEffect(PotionEffect(PotionEffectType.INCREASE_DAMAGE, 6 * 20, 0))
+                event.player.addPotionEffect(PotionEffect(PotionEffectType.STRENGTH, 6 * 20, 0))
             }
             "glow_berry_cookie" -> {
                 event.player.addPotionEffect(PotionEffect(PotionEffectType.GLOWING, 6 * 20, 0))

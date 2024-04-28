@@ -21,7 +21,7 @@ object DubiousDealer : OdysseyMob("Dubious Dealer", MobTags.DUBIOUS_DEALER, Enti
             // Effects
             addPotionEffects(listOf(
                 PotionEffect(PotionEffectType.SPEED, 99999, 2),
-                PotionEffect(PotionEffectType.FAST_DIGGING, 99999, 8)
+                PotionEffect(PotionEffectType.HASTE, 99999, 8)
             ))
             // Miscellaneous
             health = 40.0

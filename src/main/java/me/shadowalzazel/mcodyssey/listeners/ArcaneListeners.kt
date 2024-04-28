@@ -1,8 +1,8 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.constants.ItemModels
-import me.shadowalzazel.mcodyssey.constants.ItemTags.getOdysseyTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.hasOdysseyItemTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getOdysseyTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasOdysseyItemTag
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
@@ -73,7 +73,7 @@ object ArcaneListeners: Listener {
         val distance = player.location.distance(entity.location)
         for (x in 0..(distance.toInt())) {
             location = location.add(unitVector)
-            player.world.spawnParticle(Particle.SPELL_WITCH, location, 3, 0.01, 0.01, 0.01)
+            player.world.spawnParticle(Particle.WITCH, location, 3, 0.01, 0.01, 0.01)
             // Amethyst noise step/hit every %3
             if (x % 3 == 0) {
                 entity.world.playSound(entity.location, Sound.BLOCK_AMETHYST_CLUSTER_HIT, 2F, 2F)

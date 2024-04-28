@@ -27,9 +27,9 @@ class BlazingTask(private val victim: LivingEntity, private val amplifier: Int, 
                 val ignitedDust = Material.PUMPKIN.createBlockData()
                 spawnParticle(Particle.FALLING_DUST, someLocation, 35, 0.75, 0.25, 0.75, ignitedDust)
                 spawnParticle(Particle.SMALL_FLAME, someLocation, 50, 1.05, 0.25, 1.05)
-                spawnParticle(Particle.SMOKE_NORMAL, someLocation, 10, 1.25, 0.25, 1.25)
+                spawnParticle(Particle.SMOKE, someLocation, 10, 1.25, 0.25, 1.25)
                 spawnParticle(Particle.FLAME, someLocation, 35, 0.75, 0.25, 0.75)
-                spawnParticle(Particle.SMOKE_LARGE, someLocation, 5, 0.75, 0.25, 0.75)
+                spawnParticle(Particle.LARGE_SMOKE, someLocation, 5, 0.75, 0.25, 0.75)
                 spawnParticle(Particle.LAVA, someLocation, 85, 0.75, 0.25, 0.75)
             }
 

@@ -1,8 +1,8 @@
 package me.shadowalzazel.mcodyssey.enchantments.ranged
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
+import net.minecraft.tags.ItemTags
 import net.minecraft.world.entity.EquipmentSlot
-import net.minecraft.world.item.enchantment.EnchantmentCategory
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -11,8 +11,12 @@ object RainOfArrows : OdysseyEnchantment(
     "rain_of_arrows",
     "Rain of Arrows",
     4,
-    Rarity.VERY_RARE,
-    EnchantmentCategory.BOW,
+    3,
+    constantCost(8),
+    dynamicCost(8, 10),
+    5,
+    ItemTags.BOW_ENCHANTABLE,
+    ItemTags.BOW_ENCHANTABLE,
     arrayOf(EquipmentSlot.MAINHAND)
 ) {
 

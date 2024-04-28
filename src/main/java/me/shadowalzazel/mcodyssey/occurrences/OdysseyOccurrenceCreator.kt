@@ -91,7 +91,7 @@ class OdysseyOccurrenceCreator {
                 "is_dark" to listOf(
                     OccurrenceAction.ApplyPotionEffects(
                         listOf(
-                            PotionEffect(PotionEffectType.SLOW, 10 * 20, 1)
+                            PotionEffect(PotionEffectType.SLOWNESS, 10 * 20, 1)
                         )
                     ),
                     OccurrenceAction.ApplyFreeze(20 * 7)

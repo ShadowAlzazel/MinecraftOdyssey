@@ -25,16 +25,16 @@ object ShimmerIntoxication : OdysseyPhenomenon("Shimmer Intoxication",
 
         // Low Gravity Effects
         val shimmerEffects = listOf(
-            PotionEffect(PotionEffectType.INCREASE_DAMAGE, 12000, 1),
-            PotionEffect(PotionEffectType.CONFUSION, 120, 0),
-            PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 12000, 1))
+            PotionEffect(PotionEffectType.STRENGTH, 12000, 1),
+            PotionEffect(PotionEffectType.NAUSEA, 120, 0),
+            PotionEffect(PotionEffectType.RESISTANCE, 12000, 1))
 
         someWorld.players.forEach {
             it.addPotionEffects(shimmerEffects)
             it.sendMessage(Component.text("You don't remember what happened but there are empty bottles of shimmer in you hand", TextColor.color(78, 0, 161)))
             it.inventory.addItem(ItemStack(Material.GLASS_BOTTLE, 2))
-            it.spawnParticle(Particle.SPELL_WITCH, it.location, 55, 0.5, 0.5, 0.5)
-            it.spawnParticle(Particle.SPELL_MOB_AMBIENT, it.location, 35, 0.5, 0.5, 0.5)
+            it.spawnParticle(Particle.WITCH, it.location, 55, 0.5, 0.5, 0.5)
+            it.spawnParticle(Particle.ENTITY_EFFECT, it.location, 35, 0.5, 0.5, 0.5)
             it.playSound(it.location, Sound.ENTITY_GENERIC_DRINK, 2.5F, 1.5F)
         }
     }

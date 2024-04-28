@@ -50,7 +50,7 @@ object AmbassadorListeners: Listener {
         event.entity.getNearbyEntities(2.5, 2.5, 2.5).forEach {
             if (it is LivingEntity) {
                 it.damage(25.0)
-                it.world.spawnParticle(Particle.CRIT_MAGIC, it.location, 95, 1.5, 1.0, 1.5)
+                it.world.spawnParticle(Particle.CRIT, it.location, 95, 1.5, 1.0, 1.5)
             }
         }
     }

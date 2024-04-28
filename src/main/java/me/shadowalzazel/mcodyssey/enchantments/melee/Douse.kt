@@ -1,9 +1,9 @@
 package me.shadowalzazel.mcodyssey.enchantments.melee
 
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
+import net.minecraft.tags.ItemTags
 import net.minecraft.world.entity.EquipmentSlot
-import net.minecraft.world.item.enchantment.EnchantmentCategory
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.enchantments.Enchantment.FIRE_ASPECT
@@ -13,8 +13,12 @@ object Douse : OdysseyEnchantment(
     "douse",
     "Douse",
     3,
-    Rarity.UNCOMMON,
-    EnchantmentCategory.WEAPON,
+    10,
+    constantCost(8),
+    dynamicCost(8, 10),
+    5,
+    ItemTags.WEAPON_ENCHANTABLE,
+    ItemTags.WEAPON_ENCHANTABLE,
     arrayOf(EquipmentSlot.MAINHAND)
 ) {
 

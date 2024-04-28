@@ -245,7 +245,7 @@ object CauldronRecipes {
             ItemStack(Material.CHORUS_FLOWER, 1)),
         isCombination = true,
         comboEffectTypeList = listOf(
-            PotionEffectType.FAST_DIGGING,
+            PotionEffectType.HASTE,
             PotionEffectType.GLOWING),
         viableFuel = fireFuels)
 

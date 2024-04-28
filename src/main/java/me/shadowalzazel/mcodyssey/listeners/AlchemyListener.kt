@@ -9,12 +9,12 @@ import me.shadowalzazel.mcodyssey.alchemy.base.AlchemyCauldronRecipe
 import me.shadowalzazel.mcodyssey.alchemy.utility.CauldronEventSynchro
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.constants.ItemModels
-import me.shadowalzazel.mcodyssey.constants.ItemTags
-import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.getIntTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.hasOdysseyItemTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.setIntTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getIntTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasOdysseyItemTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.setIntTag
 import me.shadowalzazel.mcodyssey.effects.*
 import org.bukkit.Color
 import org.bukkit.Material
@@ -72,13 +72,13 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
         val thrownPotion = event.projectile
         if (thrownPotion !is ThrownPotion) return
         val potion = event.itemStack
-        if (potion.hasTag(ItemTags.IS_POTION_VIAL)) {
+        if (potion.hasTag(ItemDataTags.IS_POTION_VIAL)) {
             val replacement = consumePotionVial(potion) ?: return
             // Cancel consume if gets replacement
             thrownPotion.velocity = thrownPotion.velocity.multiply(2.0)
             event.setShouldConsume(false)
             thrownPotion.item = replacement.clone().also {
-                it.setIntTag(ItemTags.POTION_CHARGES_LEFT, 1)
+                it.setIntTag(ItemDataTags.POTION_CHARGES_LEFT, 1)
                 val meta = it.itemMeta
                 meta.setCustomModelData(ItemModels.VIAL_CHARGE_1)
                 it.itemMeta = meta
@@ -91,7 +91,7 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
     private fun potionConsumeSplashHandler(event: PlayerItemConsumeEvent) {
         val item = event.item
         // Check charges fpr vial
-        if (item.hasTag(ItemTags.IS_POTION_VIAL)) {
+        if (item.hasTag(ItemDataTags.IS_POTION_VIAL)) {
             val replacement = consumePotionVial(item)
             if (replacement != null) {
                 event.replacement = replacement
@@ -112,7 +112,7 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
             event.player.addOdysseyEffect(effect, duration, amplifier)
         }
         // Check charges fpr vial
-        if (item.hasTag(ItemTags.IS_POTION_VIAL)) {
+        if (item.hasTag(ItemDataTags.IS_POTION_VIAL)) {
             val replacement = consumePotionVial(item)
             if (replacement != null) {
                 event.replacement = replacement
@@ -122,7 +122,7 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
 
     private fun consumePotionVial(item: ItemStack): ItemStack? {
         // Potion Vials (also have charges when thrown)
-        val charges = item.getIntTag(ItemTags.POTION_CHARGES_LEFT) ?: 0
+        val charges = item.getIntTag(ItemDataTags.POTION_CHARGES_LEFT) ?: 0
         if (charges <= 1) return null
         // Run charge
         val meta = item.itemMeta.clone()
@@ -131,7 +131,7 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
         }
         return item.also {
             it.itemMeta = meta
-            it.setIntTag(ItemTags.POTION_CHARGES_LEFT, charges - 1)
+            it.setIntTag(ItemDataTags.POTION_CHARGES_LEFT, charges - 1)
         }
     }
 
@@ -407,10 +407,10 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
     // (TODO: Fix for all: odyssey effects, custom effects,
     private fun makeExtendedPlusPotion(potion: ItemStack): ItemStack {
         if (potion.itemMeta !is PotionMeta) return potion
-        if (potion.hasTag(ItemTags.IS_EXTENDED_PLUS)) return potion
-        if (potion.hasTag(ItemTags.IS_UPGRADED_PLUS)) return potion
+        if (potion.hasTag(ItemDataTags.IS_EXTENDED_PLUS)) return potion
+        if (potion.hasTag(ItemDataTags.IS_UPGRADED_PLUS)) return potion
         val meta = (potion.itemMeta as PotionMeta)
-        val potionType = meta.basePotionType
+        val potionType = meta.basePotionType ?: return potion
         // (WIX)
         //if (potionType.isExtendable) return potion // Is Tier 1 Duration -> No
         //if (!potionType.isUpgradeable) return potion // Is Tier 2 Power -> No
@@ -424,16 +424,16 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
         meta.basePotionType = PotionType.THICK
         return potion.clone().also {
             it.itemMeta = meta
-            it.addTag(ItemTags.IS_EXTENDED_PLUS)
+            it.addTag(ItemDataTags.IS_EXTENDED_PLUS)
         }
     }
 
     private fun makeUpgradedPlusPotion(potion: ItemStack): ItemStack {
         if (potion.itemMeta !is PotionMeta) return potion
-        if (potion.hasTag(ItemTags.IS_EXTENDED_PLUS)) return potion
-        if (potion.hasTag(ItemTags.IS_UPGRADED_PLUS)) return potion
+        if (potion.hasTag(ItemDataTags.IS_EXTENDED_PLUS)) return potion
+        if (potion.hasTag(ItemDataTags.IS_UPGRADED_PLUS)) return potion
         val meta = (potion.itemMeta as PotionMeta)
-        val potionType = meta.basePotionType
+        val potionType = meta.basePotionType ?: return potion
         // (WIX)
         //if (!potionType.isExtendable) return potion // Is Tier 2 Duration -> No
         //if (potionType.isUpgradeable) return potion // Is Tier 1 Power -> No
@@ -447,13 +447,13 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
         meta.basePotionType = PotionType.THICK
         return potion.clone().also {
             it.itemMeta = meta
-            it.addTag(ItemTags.IS_UPGRADED_PLUS)
+            it.addTag(ItemDataTags.IS_UPGRADED_PLUS)
         }
     }
 
     private fun makeVialPotion(potion: ItemStack): ItemStack {
         if (potion.itemMeta !is PotionMeta) return potion
-        if (potion.hasTag(ItemTags.IS_POTION_VIAL)) return potion
+        if (potion.hasTag(ItemDataTags.IS_POTION_VIAL)) return potion
         // (WIX)
         val vial = createPotionVials(potion.clone())
         return vial

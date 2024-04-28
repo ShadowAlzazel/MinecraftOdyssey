@@ -1,12 +1,12 @@
 package me.shadowalzazel.mcodyssey.arcane
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.constants.ItemTags
-import me.shadowalzazel.mcodyssey.constants.ItemTags.setIntTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.addTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.getIntTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.getStringTag
-import me.shadowalzazel.mcodyssey.constants.ItemTags.hasTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.setIntTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getIntTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getStringTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasTag
 import me.shadowalzazel.mcodyssey.enchantments.EnchantRegistryManager
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
@@ -21,19 +21,19 @@ import org.bukkit.inventory.ItemStack
 internal interface EnchantSlotManager : EnchantRegistryManager {
 
     fun ItemStack.isSlotted(): Boolean {
-        return hasTag(ItemTags.IS_SLOTTED)
+        return hasTag(ItemDataTags.IS_SLOTTED)
     }
 
     fun ItemStack.getEnchantSlots(): Int {
-        return getIntTag(ItemTags.ENCHANT_SLOTS) ?: 0
+        return getIntTag(ItemDataTags.ENCHANT_SLOTS) ?: 0
     }
 
     fun ItemStack.getGildedSlots(): Int {
-        return getIntTag(ItemTags.GILDED_SLOTS) ?: 0
+        return getIntTag(ItemDataTags.GILDED_SLOTS) ?: 0
     }
 
     fun ItemStack.getGildedEnchantKey(): Enchantment? {
-        val name = getStringTag(ItemTags.GILDED_ENCHANT) ?: return null
+        val name = getStringTag(ItemDataTags.GILDED_ENCHANT) ?: return null
         if (name == "null") return null
         // org.bukkit.Registry.ENCHANTMENT.get(NamespacedKey(Odyssey.instance))
         val enchantment = if (getOdysseyEnchantFromString(name) != null) {
@@ -51,14 +51,14 @@ internal interface EnchantSlotManager : EnchantRegistryManager {
 
     // Not Restricted
     fun ItemStack.setPairSlots(slots: Pair<Int, Int>) {
-        addTag(ItemTags.IS_SLOTTED)
-        setIntTag(ItemTags.ENCHANT_SLOTS, slots.first)
-        setIntTag(ItemTags.GILDED_SLOTS, slots.second)
+        addTag(ItemDataTags.IS_SLOTTED)
+        setIntTag(ItemDataTags.ENCHANT_SLOTS, slots.first)
+        setIntTag(ItemDataTags.GILDED_SLOTS, slots.second)
     }
 
     fun ItemStack.addEnchantSlot() {
         val count = getEnchantSlots()
-        setIntTag(ItemTags.ENCHANT_SLOTS, count + 1)
+        setIntTag(ItemDataTags.ENCHANT_SLOTS, count + 1)
     }
 
     fun ItemStack.addGildedSlot(override: Boolean = false) {
@@ -66,17 +66,17 @@ internal interface EnchantSlotManager : EnchantRegistryManager {
         if (count >= 1 && !override) {
             return
         }
-        setIntTag(ItemTags.GILDED_SLOTS, count + 1)
+        setIntTag(ItemDataTags.GILDED_SLOTS, count + 1)
     }
 
     fun ItemStack.removeEnchantSlot() {
         val count = getEnchantSlots()
-        setIntTag(ItemTags.ENCHANT_SLOTS, maxOf(1, count - 1))
+        setIntTag(ItemDataTags.ENCHANT_SLOTS, maxOf(1, count - 1))
     }
 
     fun ItemStack.removeGildedSlot() {
         val count = getGildedSlots()
-        setIntTag(ItemTags.GILDED_SLOTS, maxOf(0, count - 1))
+        setIntTag(ItemDataTags.GILDED_SLOTS, maxOf(0, count - 1))
     }
 
     // Usage for ONLY display not logic
@@ -165,8 +165,8 @@ internal interface EnchantSlotManager : EnchantRegistryManager {
         }
          */
         // Move Engraving To Bottom
-        if (hasTag(ItemTags.IS_ENGRAVED)) {
-            val engraver = getStringTag(ItemTags.ENGRAVED_BY)!!
+        if (hasTag(ItemDataTags.IS_ENGRAVED)) {
+            val engraver = getStringTag(ItemDataTags.ENGRAVED_BY)!!
             val engraving = Component.text("Created by $engraver", SlotColors.AMETHYST.color, TextDecoration.ITALIC)
             newLore.remove(engraving)
             newLore.add(engraving)

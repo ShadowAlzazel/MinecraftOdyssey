@@ -4,7 +4,6 @@ import me.shadowalzazel.mcodyssey.occurrences.base.Condition
 import me.shadowalzazel.mcodyssey.occurrences.base.OccurrenceAction
 import me.shadowalzazel.mcodyssey.occurrences.base.OccurrenceType
 import me.shadowalzazel.mcodyssey.occurrences.base.Requirement
-import me.shadowalzazel.mcodyssey.seasons.SeasonType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
@@ -32,7 +31,6 @@ fun oMain() {
         ),
         "negatable_by_allay" to false,
         "requirements" to listOf(
-            Requirement.IsSeason(listOf(SeasonType.AUTUMN)),
             Requirement.IsTime(1, 1121)
         ),
         "criteria" to mapOf(

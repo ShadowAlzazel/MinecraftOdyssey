@@ -39,7 +39,7 @@ object FlauntingFairies : OdysseyPhenomenon("Flaunting Fairies",
                 in 1..2 -> {
                     it.addPotionEffects(listOf(luckEffect, followEffect))
                     it.sendMessage(Component.text("A fairy has taken quite a liking to you!", TextColor.color(167, 112, 255)))
-                    it.spawnParticle(Particle.VILLAGER_HAPPY, it.location, 14, 0.5, 0.5, 0.5)
+                    it.spawnParticle(Particle.HAPPY_VILLAGER, it.location, 14, 0.5, 0.5, 0.5)
                 }
                 else -> {
                     it.sendMessage(Component.text("A couple fairies flaunt with you but soon disappear...", TextColor.color(167, 112, 255)))

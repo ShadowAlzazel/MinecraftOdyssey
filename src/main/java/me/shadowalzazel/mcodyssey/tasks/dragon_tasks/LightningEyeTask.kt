@@ -21,9 +21,9 @@ class LightningEyeTask(private val dragon: EnderDragon, private val display: Ite
         val ground = display.location.clone()
         ground.getNearbyEntities(8.5, 6.0, 8.5).forEach {
             if (it is Player) {
-                it.world.spawnEntity(it.location, EntityType.LIGHTNING)
+                it.world.spawnEntity(it.location, EntityType.LIGHTNING_BOLT)
                 it.damage(5.0, dragon)
-                it.world.spawnParticle(Particle.EXPLOSION_NORMAL, it.location, 1, 0.0, 0.0, 0.0)
+                it.world.spawnParticle(Particle.EXPLOSION, it.location, 1, 0.0, 0.0, 0.0)
                 it.world.spawnParticle(Particle.ELECTRIC_SPARK, it.location, 25, 0.5, 0.2, 0.5)
                 it.addPotionEffect(
                     PotionEffect(

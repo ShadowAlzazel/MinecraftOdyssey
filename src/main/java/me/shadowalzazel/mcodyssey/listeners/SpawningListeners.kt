@@ -131,18 +131,18 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
         }
         // Main hand
         mainHand.itemMeta = mainHand.itemMeta.also {
-            if (weaponCheckIfCanApply(Enchantment.DAMAGE_ALL, gildedEnchant, mainHand))  {
-                it.addEnchant(Enchantment.DAMAGE_ALL, (3..5).random(), false)
+            if (weaponCheckIfCanApply(Enchantment.SHARPNESS, gildedEnchant, mainHand))  {
+                it.addEnchant(Enchantment.SHARPNESS, (3..5).random(), false)
             }
-            if (weaponCheckIfCanApply(Enchantment.DURABILITY, gildedEnchant, mainHand))  {
-                it.addEnchant(Enchantment.DURABILITY, (1..3).random(), false)
+            if (weaponCheckIfCanApply(Enchantment.UNBREAKING, gildedEnchant, mainHand))  {
+                it.addEnchant(Enchantment.UNBREAKING, (1..3).random(), false)
             }
             if (weaponCheckIfCanApply(Enchantment.KNOCKBACK, gildedEnchant, mainHand))  {
                 it.addEnchant(Enchantment.KNOCKBACK, (1..2).random(), false)
             }
             // Bonus
-            val bonusEnchant = listOf(Enchantment.FIRE_ASPECT, Enchantment.KNOCKBACK, Enchantment.LOOT_BONUS_BLOCKS,
-            Enchantment.DAMAGE_UNDEAD, Enchantment.LOOT_BONUS_MOBS, Enchantment.SWEEPING_EDGE).random()
+            val bonusEnchant = listOf(Enchantment.FIRE_ASPECT, Enchantment.KNOCKBACK, Enchantment.LOOTING,
+            Enchantment.SMITE, Enchantment.LOOTING, Enchantment.SWEEPING_EDGE).random()
             if (weaponCheckIfCanApply(bonusEnchant, gildedEnchant, mainHand)) {
                 it.addEnchant(bonusEnchant, (1..bonusEnchant.maxLevel).random(), false)
             }
@@ -189,9 +189,9 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
             // Potion
             if (this !is Creeper) {
                 addPotionEffect(PotionEffect(PotionEffectType.REGENERATION, 999999, 1))
-                addPotionEffect(PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 999999, 0))
+                addPotionEffect(PotionEffect(PotionEffectType.RESISTANCE, 999999, 0))
                 addPotionEffect(PotionEffect(PotionEffectType.SPEED, 999999, 0))
-                addPotionEffect(PotionEffect(PotionEffectType.INCREASE_DAMAGE, 999999, 1))
+                addPotionEffect(PotionEffect(PotionEffectType.STRENGTH, 999999, 1))
             }
         }
         println("Spawned Gilded Mob at: ${mob.location}")
@@ -221,9 +221,9 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
     private fun enchantMobArmor(armor: ItemStack, gildedEnchant: OdysseyEnchantment): ItemStack {
         // Apply
         armor.itemMeta = (armor.itemMeta as ArmorMeta).also {
-            it.addEnchant(Enchantment.DURABILITY, (1..3).random(), false)
-            val prot = listOf(Enchantment.PROTECTION_PROJECTILE, Enchantment.PROTECTION_ENVIRONMENTAL,
-                Enchantment.PROTECTION_EXPLOSIONS, Enchantment.PROTECTION_FIRE).random()
+            it.addEnchant(Enchantment.UNBREAKING, (1..3).random(), false)
+            val prot = listOf(Enchantment.PROJECTILE_PROTECTION, Enchantment.PROTECTION,
+                Enchantment.BLAST_PROTECTION, Enchantment.FIRE_PROTECTION).random()
             it.addEnchant(prot, (1..prot.maxLevel).random(), false)
             if (gildedEnchant.canEnchantItem(armor)) {
                 it.addEnchant(gildedEnchant.toBukkit(), gildedEnchant.maxLevel, false)

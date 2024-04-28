@@ -73,7 +73,7 @@ object OtherListeners : Listener {
 
     private fun createDetonatingFirework(targetLocation: Location): Firework {
         val randomColors = listOf(Color.BLUE, Color.RED, Color.YELLOW, Color.ORANGE, Color.AQUA)
-        val superFirework: Firework = (targetLocation.world.spawnEntity(targetLocation, EntityType.FIREWORK) as Firework).apply {
+        val superFirework: Firework = (targetLocation.world.spawnEntity(targetLocation, EntityType.FIREWORK_ROCKET) as Firework).apply {
             fireworkMeta = fireworkMeta.clone().also {
                 it.addEffect(
                     FireworkEffect.builder()
