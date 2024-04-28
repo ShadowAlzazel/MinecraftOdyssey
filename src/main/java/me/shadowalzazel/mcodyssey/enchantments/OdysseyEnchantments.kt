@@ -8,7 +8,8 @@ import me.shadowalzazel.mcodyssey.enchantments.misc.*
 import me.shadowalzazel.mcodyssey.enchantments.ranged.*
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.ResourceLocation
-import org.bukkit.enchantments.Enchantment
+import net.minecraft.tags.ItemTags
+import net.minecraft.world.entity.EquipmentSlot
 
 object OdysseyEnchantments : EnchantRegistryManager {
 
@@ -244,6 +245,7 @@ object OdysseyEnchantments : EnchantRegistryManager {
                 net.minecraft.core.Registry.register( // Using own namespace for safety and support
                     BuiltInRegistries.ENCHANTMENT,
                     ResourceLocation(ODYSSEY_NAMESPACE, odysseyEnchant.name),
+                    //odysseyEnchant.name,
                     odysseyEnchant
                 )
                 registered = true
@@ -258,26 +260,28 @@ object OdysseyEnchantments : EnchantRegistryManager {
         }
     }
 
-
-    /* ---------- PRE 1.20.4 ----------- */
-    private fun registerOdysseyEnchantment(enchantment: Enchantment?) {
-        var registered = false
+    fun registerTest() {
+        val testEnchantment = net.minecraft.world.item.enchantment.Enchantment(
+            net.minecraft.world.item.enchantment.Enchantment.definition(
+                ItemTags.WEAPON_ENCHANTABLE,
+                ItemTags.WEAPON_ENCHANTABLE,
+                5, // Weight
+                3,
+                net.minecraft.world.item.enchantment.Enchantment.constantCost(10),
+                net.minecraft.world.item.enchantment.Enchantment.constantCost(15),
+                3,
+                EquipmentSlot.MAINHAND // Array to varargs
+            )
+        )
         try {
-            if (enchantment != null) {
-                val field = Enchantment::class.java.getDeclaredField("acceptingNew")
-                field.isAccessible = true
-                field[null] = true
-                //Odyssey.instance.server.getRegistry()
-                //Enchantment.registerEnchantment(enchantment)
-            }
-            registered = true
-        } catch (e: Exception) {
-            e.printStackTrace()
+            net.minecraft.core.Registry.register( // Using own namespace for safety and support
+                BuiltInRegistries.ENCHANTMENT,
+                "test_enchant",
+                testEnchantment
+            )
         }
-        if (registered) {  // Send to console
-            Odyssey.instance.logger.info("Registered: $enchantment")
-        } else {
-            Odyssey.instance.logger.info("Failed to register: $enchantment")
+        catch (exception: Exception) {
+            exception.printStackTrace()
         }
     }
 
