@@ -12,8 +12,6 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
-import org.bukkit.NamespacedKey
-import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
@@ -75,12 +73,13 @@ internal interface EnchantSlotManager : EnchantmentDataManager {
 
     // Usage for ONLY display not logic
     fun ItemStack.updateSlotLore(
-        newEnchants: MutableMap<Enchantment, Int>? = null,
+        newEnchants: MutableMap<EnchantContainer, Int>? = null,
         resetLore: Boolean = false
     ) {
         val newLore = itemMeta.lore() ?: mutableListOf()
+        val headerHolder = Component.text("Header Holder")
         if (!newLore.contains(slotSeperator)) {
-            newLore.add(Component.text("Header Holder"))
+            newLore.add(headerHolder)
             newLore.add(slotSeperator)
         }
         val sepIndex = newLore.indexOf(slotSeperator)
@@ -110,32 +109,35 @@ internal interface EnchantSlotManager : EnchantmentDataManager {
             }
         }
         // Get Enchantment Maps
-        val nonOdysseyEnchants = newEnchants?.filter { !it.key.isOdysseyEnchant() } ?: enchantments.filter { !it.key.isOdysseyEnchant() }
-        val odysseyEnchants = newEnchants?.filter { it.key.isOdysseyEnchant() } ?: enchantments.filter { it.key.isOdysseyEnchant() }
+        val minecraftEnchantContainers = newEnchants?.filter { it.key.isBukkit } ?: createEnchantContainerMap(enchantments)
+        val odysseyEnchantments = getOdysseyEnchantments()
+        val odysseyEnchantContainers = newEnchants?.filter { it.key.isOdyssey } ?: createEnchantContainerMap(odysseyEnchantments)
         val gildedEnchantKey = getGildedEnchantKey()
         // Add Enchants Over empty slots
         var enchantmentCount = 0
-        nonOdysseyEnchants.forEach {
-            val color = if (it.key.isCursed) {
+        minecraftEnchantContainers.forEach {
+            val enchant = it.key.bukkitEnchant!!
+            val color = if (enchant.isCursed) {
                 SlotColors.CURSED.color
             } else {
                 SlotColors.ENCHANT.color
             }
             enchantmentCount += 1
-            newLore[sepIndex + enchantmentCount] = it.key
+            newLore[sepIndex + enchantmentCount] = enchant
                 .displayName(it.value)
                 .color(color)
                 .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
         }
         // Separate to get subtypes
-        odysseyEnchants.forEach {
-            val color = if (it.key.isCursed) {
+        odysseyEnchantContainers.forEach {
+            val enchant = it.key.odysseyEnchant!!
+            val color = if (enchant.isCurse) {
                 SlotColors.CURSED.color
             } else {
                 SlotColors.ENCHANT.color
             }
             enchantmentCount += 1
-            newLore[sepIndex + enchantmentCount] = it.key
+            newLore[sepIndex + enchantmentCount] = enchant
                 .displayName(it.value)
                 .color(color)
                 .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
@@ -143,12 +145,25 @@ internal interface EnchantSlotManager : EnchantmentDataManager {
         // Get gilded
         var gildedCount = 0
         if (gildedEnchantKey != null) {
-            val level = newEnchants?.get(gildedEnchantKey) ?: 1
+            // Set lore on if odyssey or bukkit
+            if (gildedEnchantKey.isBukkit) {
+                val enchant = gildedEnchantKey.bukkitEnchant!!
+                val level = enchantments[enchant]!!
+                newLore[sepIndex + enchantSlots] = enchant
+                    .displayName(level)
+                    .color(SlotColors.GILDED.color)
+                    .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                enchantments[gildedEnchantKey.bukkitEnchant]
+            }
+            else if (gildedEnchantKey.isOdyssey) {
+                val enchant = gildedEnchantKey.odysseyEnchant!!
+                val level = odysseyEnchantments[enchant]!!
+                newLore[sepIndex + enchantSlots] = enchant
+                    .displayName(level)
+                    .color(SlotColors.GILDED.color)
+                    .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+            }
             gildedCount += 1
-            newLore[sepIndex + enchantmentCount] = gildedEnchantKey
-                .displayName(level)
-                .color(SlotColors.GILDED.color)
-                .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
         }
         /*
         odysseyEnchants.forEach {
@@ -179,7 +194,8 @@ internal interface EnchantSlotManager : EnchantmentDataManager {
         }
         setPairSlots(Pair(enchantSlots, 0))
         addItemFlags(ItemFlag.HIDE_ENCHANTS)
-        updateSlotLore(enchantments)
+        val containers = createEnchantContainerMap(enchantments).toMutableMap()
+        updateSlotLore(containers)
     }
 
     /*-----------------------------------------------------------------------------------------------*/

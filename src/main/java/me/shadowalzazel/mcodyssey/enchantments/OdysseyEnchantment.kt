@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.enchantments
 
+import io.papermc.paper.adventure.PaperAdventure
 import me.shadowalzazel.mcodyssey.enchantments.util.Subtype
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
@@ -86,6 +87,9 @@ open class OdysseyEnchantment(
             mutableComponent.append(CommonComponents.SPACE).append(chatComponent.translatable("enchantment.level.$level"))
         }
         return mutableComponent
+    }
+    fun displayName(level: Int): Component {
+        return PaperAdventure.asAdventure(this.getFullname(level))
     }
     open fun getDamageProtection(level: Int, source: DamageSource): Int = 0
     open fun checkNmsConflict(other: Enchantment): Boolean {

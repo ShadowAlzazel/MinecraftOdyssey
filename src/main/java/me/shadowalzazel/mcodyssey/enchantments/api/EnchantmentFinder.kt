@@ -2,8 +2,13 @@ package me.shadowalzazel.mcodyssey.enchantments.api
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
+import org.bukkit.enchantments.Enchantment
 
 interface EnchantmentFinder {
+
+    fun Enchantment.isOdysseyEnchant(): Boolean {
+        return false
+    }
 
     fun getOdysseyEnchantFromString(name: String): OdysseyEnchantment? {
         return when(name) {

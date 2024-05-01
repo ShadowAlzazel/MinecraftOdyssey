@@ -12,22 +12,68 @@ import net.minecraft.world.item.ItemStack as NmsStack
 import net.minecraft.world.item.component.CustomData
 import org.bukkit.NamespacedKey
 import org.bukkit.craftbukkit.inventory.CraftItemStack
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack as BukkitStack
 
 interface EnchantmentDataManager : EnchantmentFinder {
 
-    fun createEnchantContainer(name: String): EnchantContainer {
+    // Containers
+    fun createEnchantContainer(name: String): EnchantContainer? {
         // org.bukkit.Registry.ENCHANTMENT.get(NamespacedKey(Odyssey.instance))
         val foundOdyssey = getOdysseyEnchantFromString(name)
         val foundBukkit = org.bukkit.Registry.ENCHANTMENT.get(NamespacedKey.minecraft(name))
         val container = if (foundBukkit != null) {
-            EnchantContainer(bukkitEnchant = foundBukkit)
-        } else {
-            EnchantContainer(odysseyEnchant = foundOdyssey)
+            createEnchantContainer(foundBukkit)
+        } else if (foundOdyssey != null){
+            createEnchantContainer(foundOdyssey)
+        }
+        else {
+            null
         }
         return container
     }
 
+    fun createEnchantContainer(bukkitEnchant: Enchantment): EnchantContainer {
+        return EnchantContainer(bukkitEnchant, null)
+    }
+
+    fun createEnchantContainer(odysseyEnchantment: OdysseyEnchantment): EnchantContainer {
+        return EnchantContainer(null, odysseyEnchantment)
+    }
+
+    fun createEnchantContainerList(enchantments: List<Enchantment>): List<EnchantContainer> {
+        val containerList = mutableListOf<EnchantContainer>()
+        for (x in enchantments) {
+            containerList.add(createEnchantContainer(x))
+        }
+        return containerList.toList()
+    }
+
+    fun createEnchantContainerList(enchantments: List<OdysseyEnchantment>): List<EnchantContainer> {
+        val containerList = mutableListOf<EnchantContainer>()
+        for (x in enchantments) {
+            containerList.add(createEnchantContainer(x))
+        }
+        return containerList.toList()
+    }
+
+    fun createEnchantContainerMap(enchantments: Map<Enchantment, Int>): Map<EnchantContainer, Int> {
+        val containerMap = mutableMapOf<EnchantContainer, Int>()
+        for (x in enchantments) {
+            containerMap[createEnchantContainer(x.key)] = x.value
+        }
+        return containerMap
+    }
+
+    fun createEnchantContainerMap(enchantments: Map<OdysseyEnchantment, Int>): Map<EnchantContainer, Int> {
+        val containerMap = mutableMapOf<EnchantContainer, Int>()
+        for (x in enchantments) {
+            containerMap[createEnchantContainer(x.key)] = x.value
+        }
+        return containerMap
+    }
+
+    // Tags
     fun getEnchantmentTag(nmsStack: NmsStack): Tag? {
         val components = nmsStack.components
         val customDataKey = ResourceLocation("minecraft", "custom_data")
@@ -43,10 +89,10 @@ interface EnchantmentDataManager : EnchantmentFinder {
     }
 
     // Returns a list of odyssey enchantments or null if empty
-    fun getEnchantmentList(enchantmentTag: Tag): List<OdysseyEnchantment>? {
+    fun getEnchantmentMap(enchantmentTag: Tag): Map<OdysseyEnchantment, Int>? {
         val tagList = enchantmentTag as ListTag
         //println("tag type: ${tagList.type}")
-        val enchantList: MutableList<OdysseyEnchantment> = mutableListOf()
+        val enchantMap: MutableMap<OdysseyEnchantment, Int> = mutableMapOf()
         for (enchantTag in tagList) {
             if (enchantTag !is CompoundTag) continue
             val enchantName = enchantTag.tags.keys.first()
@@ -58,21 +104,21 @@ interface EnchantmentDataManager : EnchantmentFinder {
             val shortName = enchantName.removeRange(0,8) //odyssey:
             val odysseyEnchant = getOdysseyEnchantFromString(shortName) ?: continue
             println("Found Enchantment: $odysseyEnchant")
-            enchantList.add(odysseyEnchant)
+            enchantMap[odysseyEnchant] = level.asInt
         }
         // Return null if empty
-        return if (enchantList.isEmpty()) {
+        return if (enchantMap.isEmpty()) {
             null
         } else {
-            enchantList
+            enchantMap
         }
     }
 
-    fun BukkitStack.getOdysseyEnchantments(): List<OdysseyEnchantment> {
+    fun BukkitStack.getOdysseyEnchantments(): Map<OdysseyEnchantment, Int> {
         val itemAsNms = CraftItemStack.asNMSCopy(this)
-        val enchantContainer = getEnchantmentTag(itemAsNms) ?: return emptyList()
-        val enchantList = getEnchantmentList(enchantContainer) ?: return emptyList()
-        return enchantList
+        val enchantTag = getEnchantmentTag(itemAsNms) ?: return emptyMap()
+        val enchantMap = getEnchantmentMap(enchantTag) ?: return emptyMap()
+        return enchantMap
     }
 
 }

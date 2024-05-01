@@ -3,6 +3,7 @@ package me.shadowalzazel.mcodyssey.enchantments.util
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
 import org.bukkit.enchantments.Enchantment
 
+// This class is meant to store a form of enchantment and NOT levels
 class EnchantContainer(
     val bukkitEnchant: Enchantment? = null,
     val odysseyEnchant: OdysseyEnchantment? = null
