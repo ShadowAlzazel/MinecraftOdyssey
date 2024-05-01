@@ -10,6 +10,7 @@ import me.shadowalzazel.mcodyssey.constants.EntityTags.removeTag
 import me.shadowalzazel.mcodyssey.constants.EntityTags.setIntTag
 import me.shadowalzazel.mcodyssey.enchantments.EnchantRegistryManager
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
+import me.shadowalzazel.mcodyssey.enchantments.api.EnchantmentDataManager
 import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.*
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -35,7 +36,7 @@ import kotlin.math.max
 import kotlin.math.sin
 
 
-object RangedListeners : Listener, EnchantRegistryManager {
+object RangedListeners : Listener, EnchantmentDataManager {
 
     private val galewindCooldown = mutableMapOf<UUID, Long>()
     private val currentOverchargeTasks = mutableMapOf<UUID, OverchargeTask>()
@@ -47,14 +48,11 @@ object RangedListeners : Listener, EnchantRegistryManager {
         val projectile = event.projectile
         if (projectile.scoreboardTags.contains(EntityTags.REPLICATED_ARROW)) { return }
         val shooter = event.entity
-        if (event.bow == null) { return }
-        val bow = event.bow!!
-        // Priority is in the order
+        val bow = event.bow ?: return
+        // Priority is in the order !!
         // Loop for all enchants
-        for (enchant in bow.enchantments) {
-            // Continue if not OdysseyEnchant
-            val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
-            when (gildedEnchant) {
+        for (enchant in bow.getOdysseyEnchantments()) {
+            when (enchant) {
                 OdysseyEnchantments.ALCHEMY_ARTILLERY -> {
                     alchemyArtilleryShoot(projectile, enchant.value)
                 }
@@ -139,7 +137,6 @@ object RangedListeners : Listener, EnchantRegistryManager {
         if (projectile.shooter == null) { return }
         val shooter: LivingEntity = projectile.shooter as LivingEntity
         val victim: LivingEntity = event.entity as LivingEntity
-
         // Loop over arrow projectile tags
         // TODO: Maybe sort in priority the tags
         for (tag in projectile.scoreboardTags) {
@@ -182,8 +179,6 @@ object RangedListeners : Listener, EnchantRegistryManager {
     // Main function for enchantments relating to projectile hits
     @EventHandler
     fun mainProjectileHitHandler(event: ProjectileHitEvent) {
-        //if (event.entity.shooter !is LivingEntity) { return }
-        //val shooter: LivingEntity = event.entity.shooter as LivingEntity
         val projectile: Projectile = event.entity
         if (event.hitEntity is LivingEntity) {
             val victim: LivingEntity = event.hitEntity as LivingEntity
@@ -241,10 +236,8 @@ object RangedListeners : Listener, EnchantRegistryManager {
         if (event.bow.hasItemMeta()) {
             val bow = event.bow
             val player = event.player
-            for (enchant in bow.enchantments) {
-                // Continue if not OdysseyEnchant
-                val odysseyEnchantment = findOdysseyEnchant(enchant.key) ?: continue
-                when (odysseyEnchantment) {
+            for (enchant in bow.getOdysseyEnchantments()) {
+                when (enchant) {
                     OdysseyEnchantments.OVERCHARGE -> {
                         overchargeEnchantmentLoad(player, bow, enchant.value)
                     }
@@ -258,13 +251,12 @@ object RangedListeners : Listener, EnchantRegistryManager {
         if (event.offHandItem.type != Material.BOW && event.offHandItem.type != Material.CROSSBOW) return
         val offHand = event.offHandItem
         if (!offHand.hasItemMeta()) return
-        if (offHand.itemMeta.hasEnchant(OdysseyEnchantments.SOUL_REND.toBukkit())) {
+        if (offHand.getOdysseyEnchantments().contains(OdysseyEnchantments.SOUL_REND)) {
             soulRendEnchantmentActivate(event.player)
         }
     }
 
     // TODO: QuickHands -> auto reload?? maybe compact??
-
     // Helper function for cooldown
     private fun cooldownManager(hitter: LivingEntity, message: String, cooldownMap: MutableMap<UUID, Long>, timer: Double): Boolean {
         if (!cooldownMap.containsKey(hitter.uniqueId)) {

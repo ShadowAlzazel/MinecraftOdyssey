@@ -2,6 +2,8 @@ package me.shadowalzazel.mcodyssey.enchantments.api
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.enchantments.util.EnchantContainer
+import net.minecraft.core.component.DataComponentMap
+import net.minecraft.core.component.DataComponentType
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.IntTag
@@ -78,29 +80,26 @@ interface EnchantmentDataManager : EnchantmentFinder {
         val components = nmsStack.components
         val customDataKey = ResourceLocation("minecraft", "custom_data")
         val dataType = BuiltInRegistries.DATA_COMPONENT_TYPE.get(customDataKey)!!
-        val componentData = components.get(dataType)!!
-        if (componentData !is CustomData) return null
-        val customData = componentData as CustomData
-        val dataTag = customData.copyTag()
-        val enchantTag = dataTag.get("odyssey:enchantments")
+        val customComponent = components.get(dataType)!!
+        if (customComponent !is CustomData) return null
+        val customTag = customComponent.copyTag()
+        val enchantmentsTag = customTag.get("odyssey:enchantments")
         //println("Data Tag: $dataTag")
         //println("Odyssey Enchantments: $enchantContainer")
-        return enchantTag
+        if (enchantmentsTag !is ListTag) return null
+        return enchantmentsTag // ListTag
     }
 
     // Returns a list of odyssey enchantments or null if empty
-    fun getEnchantmentMap(enchantmentTag: Tag): Map<OdysseyEnchantment, Int>? {
-        val tagList = enchantmentTag as ListTag
-        //println("tag type: ${tagList.type}")
+    fun getEnchantmentMap(enchantmentsTag: Tag): Map<OdysseyEnchantment, Int>? {
+        if (enchantmentsTag !is ListTag) return null
         val enchantMap: MutableMap<OdysseyEnchantment, Int> = mutableMapOf()
-        for (enchantTag in tagList) {
+        for (enchantTag in enchantmentsTag) {
             if (enchantTag !is CompoundTag) continue
             val enchantName = enchantTag.tags.keys.first()
             val level = enchantTag[enchantName] ?: continue
             if (level !is IntTag) continue
-            //println("Tag: $enchantTag")
-            //println("Name: $enchantName, Level: $level")
-            println("As String: $enchantName lvl: $level")
+            //println("As String: $enchantName lvl: $level")
             val shortName = enchantName.removeRange(0,8) //odyssey:
             val odysseyEnchant = getOdysseyEnchantFromString(shortName) ?: continue
             println("Found Enchantment: $odysseyEnchant")
@@ -112,6 +111,25 @@ interface EnchantmentDataManager : EnchantmentFinder {
         } else {
             enchantMap
         }
+    }
+
+    fun createEnchantmentDataTag(nmsStack: NmsStack) {
+        val itemCopy = nmsStack.copy()
+        val components = nmsStack.components
+        val customDataKey = ResourceLocation("minecraft", "custom_data")
+        val dataType = BuiltInRegistries.DATA_COMPONENT_TYPE.get(customDataKey) as DataComponentType<CustomData>
+        val newOdysseyEnchantTag = CompoundTag().put("odyssey:enchantments", ListTag())!!
+        //CustomData.update(dataType, itemCopy, newOdysseyEnchantTag)
+
+    }
+
+    fun getOrCreateEnchantmentMap(bukkitStack: BukkitStack) {
+        val itemAsNms = CraftItemStack.asNMSCopy(bukkitStack)
+        val enchantTag = getEnchantmentTag(itemAsNms)
+    }
+
+    fun BukkitStack.addOdysseyEnchantment(enchant: OdysseyEnchantment) {
+        //val enchantMap
     }
 
     fun BukkitStack.getOdysseyEnchantments(): Map<OdysseyEnchantment, Int> {
