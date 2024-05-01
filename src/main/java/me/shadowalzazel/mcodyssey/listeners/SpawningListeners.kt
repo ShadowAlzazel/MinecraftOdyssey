@@ -125,9 +125,12 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
 
         // Difficulty
         val difficultyMod = getDifScale(mob)
+        /*
         mainHand.itemMeta = mainHand.itemMeta.also {
             it.addEnchant(gildedEnchant.toBukkit(), gildedEnchant.maximumLevel + 1, true)
         }
+         */
+        mainHand.addOdysseyEnchantment(gildedEnchant, gildedEnchant.maximumLevel + (1..2).random())
         // Main hand
         mainHand.itemMeta = mainHand.itemMeta.also {
             if (weaponCheckIfCanApply(Enchantment.SHARPNESS, gildedEnchant, mainHand))  {
@@ -219,19 +222,18 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
 
     private fun enchantMobArmor(armor: ItemStack, gildedEnchant: OdysseyEnchantment): ItemStack {
         // Apply
+        if (gildedEnchant.canEnchantItem(armor)) {
+            armor.addOdysseyEnchantment(gildedEnchant, gildedEnchant.maximumLevel + 1)
+        }
         armor.itemMeta = (armor.itemMeta as ArmorMeta).also {
             it.addEnchant(Enchantment.UNBREAKING, (1..3).random(), false)
             val prot = listOf(Enchantment.PROJECTILE_PROTECTION, Enchantment.PROTECTION,
                 Enchantment.BLAST_PROTECTION, Enchantment.FIRE_PROTECTION).random()
             it.addEnchant(prot, (1..prot.maxLevel).random(), false)
-            if (gildedEnchant.canEnchantItem(armor)) {
-                it.addEnchant(gildedEnchant.toBukkit(), gildedEnchant.maxLevel, false)
-            }
         }
         armor.createNewEnchantSlots()
         return armor
     }
-
 
     private fun getDifScale(entity: Entity): Double {
         // Find the XY distance from zero

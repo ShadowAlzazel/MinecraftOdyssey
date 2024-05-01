@@ -128,7 +128,7 @@ interface EnchantmentDataManager : EnchantmentFinder {
         val enchantTag = getEnchantmentTag(itemAsNms)
     }
 
-    fun BukkitStack.addOdysseyEnchantment(enchant: OdysseyEnchantment) {
+    fun BukkitStack.addOdysseyEnchantment(enchant: OdysseyEnchantment, level: Int, override: Boolean = false) {
         //val enchantMap
     }
 

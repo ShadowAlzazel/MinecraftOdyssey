@@ -1,20 +1,11 @@
 package me.shadowalzazel.mcodyssey.enchantments
 
-import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.enchantments.armor.*
 import me.shadowalzazel.mcodyssey.enchantments.melee.*
 import me.shadowalzazel.mcodyssey.enchantments.misc.*
 import me.shadowalzazel.mcodyssey.enchantments.ranged.*
-import net.minecraft.core.Registry
-import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.core.registries.Registries
-import net.minecraft.resources.ResourceLocation
-import net.minecraft.tags.ItemTags
-import net.minecraft.world.entity.EquipmentSlot
 
-object OdysseyEnchantments : EnchantRegistryManager {
-
-    // Utility
+object OdysseyEnchantments  {
 
     // Armor
     val ANTIBONK: OdysseyEnchantment = Antibonk
@@ -232,12 +223,10 @@ object OdysseyEnchantments : EnchantRegistryManager {
         VULNEROCITY
     )
 
-    private const val ODYSSEY_NAMESPACE: String = "odyssey"
-
-    val REGISTERED_SET = ARMOR_SET + MELEE_SET + MISC_SET + RANGED_SET
+    val ALL_SET = ARMOR_SET + MELEE_SET + MISC_SET + RANGED_SET
     val EXOTIC_LIST = setOf(SINGULARITY_SHOT, GRAVITY_WELL, SCULK_SENSITIVE, BLACK_ROSE) // To exclude from enchantment table
 
-    // Register
+    // Old Register
     /*
     fun registerAll() {
         for (odysseyEnchant in REGISTERED_SET) {
@@ -245,7 +234,7 @@ object OdysseyEnchantments : EnchantRegistryManager {
             try {
                 net.minecraft.core.Registry.register( // Using own namespace for safety and support
                     BuiltInRegistries.ENCHANTMENT,
-                    ResourceLocation(ODYSSEY_NAMESPACE, odysseyEnchant.name),
+                    ResourceLocation("odyssey", odysseyEnchant.name),
                     //odysseyEnchant.name,
                     odysseyEnchant
                 )
