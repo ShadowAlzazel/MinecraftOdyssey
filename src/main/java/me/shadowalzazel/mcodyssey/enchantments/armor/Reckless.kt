@@ -5,6 +5,8 @@ import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import net.kyori.adventure.text.Component
 import net.minecraft.tags.ItemTags
 import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.item.enchantment.Enchantment.constantCost
+import net.minecraft.world.item.enchantment.Enchantment.dynamicCost
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -22,9 +24,9 @@ object Reckless : OdysseyEnchantment(
     arrayOf(EquipmentSlot.CHEST)
 ) {
 
-    override fun conflictsWith(other: Enchantment): Boolean {
+    override fun checkOdysseyConflict(other: OdysseyEnchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.RELENTLESS.toBukkit() -> {
+            OdysseyEnchantments.RELENTLESS -> {
                 true
             }
             else -> {

@@ -24,7 +24,6 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.world.ChunkPopulateEvent
 import org.bukkit.generator.structure.Structure
-import org.bukkit.generator.structure.StructureType
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ArmorMeta
 import org.bukkit.inventory.meta.trim.ArmorTrim
@@ -198,7 +197,7 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
     }
 
     private fun weaponCheckIfCanApply(enchantment: Enchantment, gilded: OdysseyEnchantment, item: ItemStack): Boolean {
-        if (gilded.conflictsWith(enchantment)) return false
+        if (gilded.checkBukkitConflict(enchantment)) return false
         if (!enchantment.canEnchantItem(item)) return false
         return true
     }

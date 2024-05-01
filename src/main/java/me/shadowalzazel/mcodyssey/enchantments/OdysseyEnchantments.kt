@@ -5,7 +5,9 @@ import me.shadowalzazel.mcodyssey.enchantments.armor.*
 import me.shadowalzazel.mcodyssey.enchantments.melee.*
 import me.shadowalzazel.mcodyssey.enchantments.misc.*
 import me.shadowalzazel.mcodyssey.enchantments.ranged.*
+import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.ItemTags
 import net.minecraft.world.entity.EquipmentSlot
@@ -236,6 +238,7 @@ object OdysseyEnchantments : EnchantRegistryManager {
     val EXOTIC_LIST = setOf(SINGULARITY_SHOT, GRAVITY_WELL, SCULK_SENSITIVE, BLACK_ROSE) // To exclude from enchantment table
 
     // Register
+    /*
     fun registerAll() {
         for (odysseyEnchant in REGISTERED_SET) {
             var registered = false
@@ -282,5 +285,7 @@ object OdysseyEnchantments : EnchantRegistryManager {
             exception.printStackTrace()
         }
     }
+
+     */
 
 }

@@ -1,13 +1,13 @@
 package me.shadowalzazel.mcodyssey.arcane
 
-import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags.setIntTag
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addTag
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getIntTag
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getStringTag
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasTag
-import me.shadowalzazel.mcodyssey.enchantments.EnchantRegistryManager
+import me.shadowalzazel.mcodyssey.enchantments.api.EnchantmentDataManager
+import me.shadowalzazel.mcodyssey.enchantments.util.EnchantContainer
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.TextColor
@@ -18,7 +18,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 
-internal interface EnchantSlotManager : EnchantRegistryManager {
+internal interface EnchantSlotManager : EnchantmentDataManager {
 
     fun ItemStack.isSlotted(): Boolean {
         return hasTag(ItemDataTags.IS_SLOTTED)
@@ -32,16 +32,10 @@ internal interface EnchantSlotManager : EnchantRegistryManager {
         return getIntTag(ItemDataTags.GILDED_SLOTS) ?: 0
     }
 
-    fun ItemStack.getGildedEnchantKey(): Enchantment? {
+    fun ItemStack.getGildedEnchantKey(): EnchantContainer? {
         val name = getStringTag(ItemDataTags.GILDED_ENCHANT) ?: return null
         if (name == "null") return null
-        // org.bukkit.Registry.ENCHANTMENT.get(NamespacedKey(Odyssey.instance))
-        val enchantment = if (getOdysseyEnchantFromString(name) != null) {
-            org.bukkit.Registry.ENCHANTMENT.get(NamespacedKey(Odyssey.instance, name))
-        } else {
-            org.bukkit.Registry.ENCHANTMENT.get(NamespacedKey.minecraft(name))
-        }
-        return enchantment
+        return createEnchantContainer(name)
     }
 
     // Returns A Pair of (ENCHANT, GILDED) slots

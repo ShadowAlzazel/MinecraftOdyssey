@@ -152,7 +152,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
                 val foundConflict = resultEnchants.keys.any {
                     conflictingEnchant = it
                     if (enchant.isOdysseyEnchant()) {
-                        enchant.convertToOdysseyEnchant().conflictsWith(enchant) && it != enchant
+                        enchant.convertToOdysseyEnchant().checkBukkitConflict(enchant) && it != enchant
                     } else {
                         enchant.conflictsWith(it) && it != enchant
                     }
@@ -387,6 +387,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         }
     }
 
+    /*
     private fun ItemStack.rollGildedEnchants(gildedSlots: Int, newEnchants: MutableMap<Enchantment, Int>, lapisCost: Int, levels: Int) {
         for (x in 1..minOf(gildedSlots, lapisCost)) {
             val hasRolled = (10 + minOf(levels, 75)) >= (1..100).random()
@@ -394,7 +395,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
             val randomGilded = getMaterialEnchantSet(type).random()
             if (!randomGilded.canEnchantItem(this)) continue
             if (randomGilded.toBukkit() in newEnchants.keys) continue
-            val hasConflict = newEnchants.keys.any { randomGilded.conflictsWith(it) }
+            val hasConflict = newEnchants.keys.any { randomGilded.checkBukkitConflict(it) }
             if (hasConflict) continue
             // Passed All conditions
             newEnchants.also {
@@ -402,6 +403,8 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
             }
         }
     }
+
+     */
 
     /*-----------------------------------------------------------------------------------------------*/
     /*-----------------------------------------------------------------------------------------------*/

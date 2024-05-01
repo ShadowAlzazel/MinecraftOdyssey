@@ -4,6 +4,8 @@ import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import net.minecraft.tags.ItemTags
 import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.item.enchantment.Enchantment.constantCost
+import net.minecraft.world.item.enchantment.Enchantment.dynamicCost
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -21,9 +23,9 @@ object FrogFright : OdysseyEnchantment(
     arrayOf(EquipmentSlot.MAINHAND)
 ) {
 
-    override fun conflictsWith(other: Enchantment): Boolean {
+    override fun checkOdysseyConflict(other: OdysseyEnchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.GRAVITY_WELL.toBukkit() -> {
+            OdysseyEnchantments.GRAVITY_WELL -> {
                 true
             }
             else -> {

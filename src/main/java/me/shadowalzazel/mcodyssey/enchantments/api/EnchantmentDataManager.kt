@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.enchantments.api
 
-import me.shadowalzazel.mcodyssey.enchantments.EnchantRegistryManager
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
+import me.shadowalzazel.mcodyssey.enchantments.util.EnchantContainer
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.IntTag
@@ -10,12 +10,25 @@ import net.minecraft.nbt.Tag
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack as NmsStack
 import net.minecraft.world.item.component.CustomData
+import org.bukkit.NamespacedKey
 import org.bukkit.craftbukkit.inventory.CraftItemStack
 import org.bukkit.inventory.ItemStack as BukkitStack
 
-interface EnchantmentDataManager : EnchantRegistryManager {
+interface EnchantmentDataManager : EnchantmentFinder {
 
-    fun getEnchantmentContainer(nmsStack: NmsStack): Tag? {
+    fun createEnchantContainer(name: String): EnchantContainer {
+        // org.bukkit.Registry.ENCHANTMENT.get(NamespacedKey(Odyssey.instance))
+        val foundOdyssey = getOdysseyEnchantFromString(name)
+        val foundBukkit = org.bukkit.Registry.ENCHANTMENT.get(NamespacedKey.minecraft(name))
+        val container = if (foundBukkit != null) {
+            EnchantContainer(bukkitEnchant = foundBukkit)
+        } else {
+            EnchantContainer(odysseyEnchant = foundOdyssey)
+        }
+        return container
+    }
+
+    fun getEnchantmentTag(nmsStack: NmsStack): Tag? {
         val components = nmsStack.components
         val customDataKey = ResourceLocation("minecraft", "custom_data")
         val dataType = BuiltInRegistries.DATA_COMPONENT_TYPE.get(customDataKey)!!
@@ -23,15 +36,15 @@ interface EnchantmentDataManager : EnchantRegistryManager {
         if (componentData !is CustomData) return null
         val customData = componentData as CustomData
         val dataTag = customData.copyTag()
-        val enchantContainer = dataTag.get("odyssey:enchantments")
+        val enchantTag = dataTag.get("odyssey:enchantments")
         //println("Data Tag: $dataTag")
         //println("Odyssey Enchantments: $enchantContainer")
-        return enchantContainer
+        return enchantTag
     }
 
     // Returns a list of odyssey enchantments or null if empty
-    fun getEnchantmentList(enchantmentContainer: Tag): List<OdysseyEnchantment>? {
-        val tagList = enchantmentContainer as ListTag
+    fun getEnchantmentList(enchantmentTag: Tag): List<OdysseyEnchantment>? {
+        val tagList = enchantmentTag as ListTag
         //println("tag type: ${tagList.type}")
         val enchantList: MutableList<OdysseyEnchantment> = mutableListOf()
         for (enchantTag in tagList) {
@@ -57,7 +70,7 @@ interface EnchantmentDataManager : EnchantRegistryManager {
 
     fun BukkitStack.getOdysseyEnchantments(): List<OdysseyEnchantment> {
         val itemAsNms = CraftItemStack.asNMSCopy(this)
-        val enchantContainer = getEnchantmentContainer(itemAsNms) ?: return emptyList()
+        val enchantContainer = getEnchantmentTag(itemAsNms) ?: return emptyList()
         val enchantList = getEnchantmentList(enchantContainer) ?: return emptyList()
         return enchantList
     }
