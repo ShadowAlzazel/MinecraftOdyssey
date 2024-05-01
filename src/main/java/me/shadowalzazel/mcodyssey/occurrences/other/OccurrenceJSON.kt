@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.occurrences.other
 
 
+/*
 @kotlinx.serialization.Serializable
 data class OccurrenceJSON(
     val name: String,
@@ -23,3 +24,5 @@ data class ConditionJSON(
     val type: String,
     val entries: List<String>
 )
+
+ */

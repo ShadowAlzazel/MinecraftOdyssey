@@ -11,6 +11,7 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.Damageable
 import org.bukkit.persistence.PersistentDataType
 
 class ToolCreator : AttributeManager {
@@ -29,7 +30,8 @@ class ToolCreator : AttributeManager {
             val model = (material.itemModelPre * 100) + (type.itemModelSuf)
             val itemName = "${material.itemName}_${type.itemName}"
             val customName = "${material.customName} ${type.customName}"
-            val damage = material.materialDamage + type.baseDamage
+            val damage = material.attackDamage + type.baseDamage
+            val maxDurability = material.maxDurability
             var speed = type.baseSpeed
             // Iridium and titanium have different speeds
             if (material == ToolMaterial.IRIDIUM) {
@@ -38,8 +40,13 @@ class ToolCreator : AttributeManager {
             else if (material == ToolMaterial.TITANIUM || material == ToolMaterial.ANDONIZED_TITANIUM) {
                 speed *= 1.1
             }
-            // Assign variables (meta)
+            // Assign variables (meta/components)
             val meta = it.itemMeta
+            // Tools with custom durability
+            if (maxDurability != null && meta is Damageable) {
+                meta.setMaxDamage(maxDurability)
+            }
+            meta.setItemName(itemName)
             meta.setCustomModelData(model)
             meta.persistentDataContainer.set(DataKeys.ITEM_KEY, PersistentDataType.STRING, itemName) // Change for 1.20.5 to itemName component
             meta.displayName(Component.text(customName).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))

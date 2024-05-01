@@ -2,7 +2,6 @@ package me.shadowalzazel.mcodyssey.enchantments
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.enchantments.armor.*
-import me.shadowalzazel.mcodyssey.enchantments.base.GildedPower
 import me.shadowalzazel.mcodyssey.enchantments.melee.*
 import me.shadowalzazel.mcodyssey.enchantments.misc.*
 import me.shadowalzazel.mcodyssey.enchantments.ranged.*
@@ -14,7 +13,6 @@ import net.minecraft.world.entity.EquipmentSlot
 object OdysseyEnchantments : EnchantRegistryManager {
 
     // Utility
-    val GILDED_POWER: OdysseyEnchantment = GildedPower
 
     // Armor
     val ANTIBONK: OdysseyEnchantment = Antibonk
@@ -234,7 +232,7 @@ object OdysseyEnchantments : EnchantRegistryManager {
 
     private const val ODYSSEY_NAMESPACE: String = "odyssey"
 
-    val REGISTERED_SET = ARMOR_SET + MELEE_SET + MISC_SET + RANGED_SET + setOf(GILDED_POWER)
+    val REGISTERED_SET = ARMOR_SET + MELEE_SET + MISC_SET + RANGED_SET
     val EXOTIC_LIST = setOf(SINGULARITY_SHOT, GRAVITY_WELL, SCULK_SENSITIVE, BLACK_ROSE) // To exclude from enchantment table
 
     // Register
