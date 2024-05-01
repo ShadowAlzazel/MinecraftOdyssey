@@ -99,8 +99,8 @@ open class OdysseyEnchantment(
     override fun doPostHurt(user: LivingEntity, target: Entity, level: Int) = Unit
     override fun isTreasureOnly(): Boolean = false
     override fun isCurse(): Boolean = false
-    override fun isTradeable(): Boolean = true
-    override fun isDiscoverable(): Boolean = true
+    override fun isTradeable(): Boolean = false
+    override fun isDiscoverable(): Boolean = false
 
     /* Bukkit Methods */
     open fun canEnchantItem(item: ItemStack): Boolean {
