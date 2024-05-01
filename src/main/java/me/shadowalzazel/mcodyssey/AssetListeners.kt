@@ -14,7 +14,6 @@ import org.bukkit.event.player.PlayerQuitEvent
 object AssetListeners : Listener {
 
     private fun resourcePackHandler(joiningPlayer: Player) {
-
         // PROD
         //val resourcePackLink = "https://www.dropbox.com/s/2sdfqy76ym39h44/odyssey-resource-pack.zip?dl=1"
         // TEST
@@ -22,6 +21,10 @@ object AssetListeners : Listener {
 
         // Put hash into resource-pack-sha1 WITHIN server.properties
         val resourcePackHash = "09a55f5160b677c033e1446ceb35258d450e01de"
+        // Prevent double loading screen
+        val serverPackHash = joiningPlayer.server.resourcePackHash
+        if (serverPackHash == resourcePackHash && joiningPlayer.server.isResourcePackRequired) return
+        // Set if not pre-set
         joiningPlayer.setResourcePack(
             resourcePackLink,
             resourcePackHash,
@@ -31,19 +34,14 @@ object AssetListeners : Listener {
 
     }
 
+    // Prompt player with resource pack
     @EventHandler
     fun playerJoinHandler(event: PlayerJoinEvent) {
-        val player = event.player
-        // Force the player to use the resource pack
-        resourcePackHandler(player)
-        // Cookies
-        // val nub = byteArrayOf(0x48)
-        // player.storeCookie(NamespacedKey(Odyssey.instance, "test"), nub)
+        resourcePackHandler(event.player)
     }
 
     @EventHandler
     fun playerLeaveHandler(event: PlayerQuitEvent) {
-        //
     }
 
 }

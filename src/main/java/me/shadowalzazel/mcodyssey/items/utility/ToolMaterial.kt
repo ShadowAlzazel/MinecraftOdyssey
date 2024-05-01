@@ -3,7 +3,7 @@ package me.shadowalzazel.mcodyssey.items.utility
 enum class ToolMaterial(
     val itemName: String, // 'item_name' component
     val customName: String, // 'custom_name' component
-    val materialDamage: Double,
+    val attackDamage: Double,
     val itemModelPre: Int, // 'custom_model_data' component [12345--]
     val itemOverridePre: String, // for finding the item id
     val maxDurability: Int? = null

@@ -18,6 +18,10 @@ commands:
     description: "Gives an Odyssey custom item."
     usage: /<command>
     permission: op
+  get_item_data:
+    description: "Gets the data components of a held item."
+    usage: /<command>
+    permission: op
   give_arcane_book:
     description: "Gives a Gilded Book with the enchantment."
     usage: /<command>

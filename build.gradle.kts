@@ -4,6 +4,10 @@
  * This project uses @Incubating APIs which are subject to change.
  */
 
+group = "me.shadowalzazel"
+version = "v0.3-BETA-1.20.6"
+description = "A server side expansion pack for a new minecraft adventure!"
+
 plugins {
     `java-library`
     `maven-publish`
@@ -11,10 +15,6 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("io.papermc.paperweight.userdev") version "1.6.2" // Check for new versions at https://plugins.gradle.org/plugin/io.papermc.paperweight.userdev
 }
-
-group = "me.shadowalzazel"
-version = "v0.2-BETA-1.20.5"
-description = "A server side expansion pack for a new minecraft adventure!"
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(21))
@@ -31,13 +31,14 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.20.5-R0.1-SNAPSHOT")
-    api(libs.org.jetbrains.kotlin.kotlin.stdlib.jdk8)
-    api(libs.org.jetbrains.kotlinx.kotlinx.coroutines.core)
-    api(libs.org.jetbrains.kotlinx.kotlinx.serialization.json)
-    testImplementation(libs.org.jetbrains.kotlin.kotlin.test)
+    compileOnly("io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1-Beta")
     implementation(kotlin("stdlib-jdk8"))
-    paperweight.paperDevBundle("1.20.5-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.20.6-R0.1-SNAPSHOT")
+    //api(org.jetbrains.kotlin.kotlin.stdlib.jdk8)
+    //api(org.jetbrains.kotlinx.kotlinx.coroutines.core)
+    //api(org.jetbrains.kotlinx.kotlinx.serialization.json)
+    //testImplementation("org.jetbrains.kotlin.kotlin.test")
 }
 
 publishing {

@@ -87,13 +87,13 @@ class Odyssey : JavaPlugin() {
         }
 
         // Enchantment NMS (Allow new registries)
-        ReflectionUtils.unfreezeRegistry(BuiltInRegistries.ENCHANTMENT)
+        //ReflectionUtils.unfreezeRegistry(BuiltInRegistries.ENCHANTMENT)
         // Register Enchantments
         logger.info("Registering Enchantments...")
         //OdysseyEnchantments.registerTest()
-        OdysseyEnchantments.registerAll()
+        //OdysseyEnchantments.registerAll()
         // Freeze NMS
-        ReflectionUtils.freezeRegistry(BuiltInRegistries.ENCHANTMENT)
+        //ReflectionUtils.freezeRegistry(BuiltInRegistries.ENCHANTMENT)
 
         // Register Recipes
         logger.info("Registering Recipes...")
@@ -144,6 +144,7 @@ class Odyssey : JavaPlugin() {
         mapOf("summon_boss" to SummonBoss,
             "enchant_with_odyssey" to EnchantWithOdyssey,
             "place_feature_archaic_seed" to PlaceFeatureArchaicSeed,
+            "get_item_data" to GetItemData,
             "give_item" to GiveItem,
             "give_arcane_book" to GiveArcaneBook,
             "give_spacerune_tablet" to GiveSpaceRuneTablet,
