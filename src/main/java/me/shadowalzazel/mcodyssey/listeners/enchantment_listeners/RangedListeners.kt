@@ -51,7 +51,7 @@ object RangedListeners : Listener, EnchantmentDataManager {
         // Priority is in the order !!
         // Loop for all enchants
         for (enchant in bow.getOdysseyEnchantments()) {
-            when (enchant) {
+            when (enchant.key) {
                 OdysseyEnchantments.ALCHEMY_ARTILLERY -> {
                     alchemyArtilleryShoot(projectile, enchant.value)
                 }
@@ -236,7 +236,7 @@ object RangedListeners : Listener, EnchantmentDataManager {
             val bow = event.bow
             val player = event.player
             for (enchant in bow.getOdysseyEnchantments()) {
-                when (enchant) {
+                when (enchant.key) {
                     OdysseyEnchantments.OVERCHARGE -> {
                         overchargeEnchantmentLoad(player, bow, enchant.value)
                     }

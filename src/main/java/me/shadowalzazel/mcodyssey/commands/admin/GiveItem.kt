@@ -17,9 +17,8 @@ object GiveItem : CommandExecutor, ItemCreator {
         val itemName = args[0]
         val amount = minOf(64, maxOf(1, args[1].toInt()))
         // Change to Base
-        //val mat = getByItemKey(itemName) ?: return false
-        //sender.inventory.addItem(mat.createItemStack(amount))
-
+        val item = findItemByNameKey(itemName) ?: return false // MAYBE CREATE A LAMBDA TO MATCH TO DIFFERENT CREATE FUNCTIONS
+        sender.inventory.addItem(item.createItemStack(amount))
         return true
     }
 }

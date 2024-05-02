@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.listeners.utility
 
 import io.papermc.paper.world.MoonPhase
+import me.shadowalzazel.mcodyssey.commands.admin.GiveArcaneBook.hasOdysseyEnchantment
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import org.bukkit.entity.Player
 import org.bukkit.inventory.meta.Damageable
@@ -25,7 +26,7 @@ class MoonwardPhase (val player: Player) : BukkitRunnable() {
         if (player.location.block.lightFromSky < 8) return
 
         // Regen every ten ticks
-        if (player.equipment.helmet.itemMeta.hasEnchant(OdysseyEnchantments.MOONPATCH.toBukkit())) {
+        if (player.equipment.helmet.hasOdysseyEnchantment(OdysseyEnchantments.MOONPATCH)) {
             val armorMeta = player.equipment.helmet.itemMeta
             if (armorMeta is Damageable) {
                 if (armorMeta.hasDamage()) {
@@ -34,7 +35,7 @@ class MoonwardPhase (val player: Player) : BukkitRunnable() {
             }
             player.equipment.helmet.itemMeta = armorMeta
         }
-        if (player.equipment.chestplate.itemMeta.hasEnchant(OdysseyEnchantments.MOONPATCH.toBukkit())) {
+        if (player.equipment.chestplate.hasOdysseyEnchantment(OdysseyEnchantments.MOONPATCH)) {
             val armorMeta = player.equipment.chestplate.itemMeta
             if (armorMeta is Damageable) {
                 if (armorMeta.hasDamage()) {
@@ -43,7 +44,7 @@ class MoonwardPhase (val player: Player) : BukkitRunnable() {
             }
             player.equipment.chestplate.itemMeta = armorMeta
         }
-        if (player.equipment.leggings.itemMeta.hasEnchant(OdysseyEnchantments.MOONPATCH.toBukkit())) {
+        if (player.equipment.leggings.hasOdysseyEnchantment(OdysseyEnchantments.MOONPATCH)) {
             val armorMeta = player.equipment.leggings.itemMeta
             if (armorMeta is Damageable) {
                 if (armorMeta.hasDamage()) {
@@ -52,7 +53,7 @@ class MoonwardPhase (val player: Player) : BukkitRunnable() {
             }
             player.equipment.leggings.itemMeta = armorMeta
         }
-        if (player.equipment.boots.itemMeta.hasEnchant(OdysseyEnchantments.MOONPATCH.toBukkit())) {
+        if (player.equipment.boots.hasOdysseyEnchantment(OdysseyEnchantments.MOONPATCH)) {
             val armorMeta = player.equipment.boots.itemMeta
             if (armorMeta is Damageable) {
                 if (armorMeta.hasDamage()) {

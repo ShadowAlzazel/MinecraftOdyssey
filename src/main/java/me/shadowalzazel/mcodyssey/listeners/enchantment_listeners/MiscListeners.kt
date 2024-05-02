@@ -48,7 +48,7 @@ object MiscListeners : Listener, EnchantmentDataManager {
             event.player.inventory.itemInOffHand
         }
         for (enchant in rod.getOdysseyEnchantments()) {
-            when (enchant) {
+            when (enchant.key) {
                 OdysseyEnchantments.BOMB_OB -> {
                     if (event.caught!! is LivingEntity) {
                         bombObEnchantment(event.caught!! as LivingEntity, enchant.value)
@@ -74,7 +74,7 @@ object MiscListeners : Listener, EnchantmentDataManager {
             event.player.inventory.itemInOffHand
         }
         for (enchant in rod.getOdysseyEnchantments()) {
-            when (enchant) {
+            when (enchant.key) {
                 OdysseyEnchantments.O_SHINY -> {
                     val item = event.caught as Item
 
@@ -110,7 +110,7 @@ object MiscListeners : Listener, EnchantmentDataManager {
             event.player.inventory.itemInOffHand
         }
         for (enchant in rod.getOdysseyEnchantments()) {
-            when (enchant) {
+            when (enchant.key) {
                 OdysseyEnchantments.LENGTHY_LINE -> {
                     println(event.hook.velocity)
                     event.hook.velocity = event.hook.velocity.multiply(1 + (0.5 * enchant.value))
@@ -192,7 +192,7 @@ object MiscListeners : Listener, EnchantmentDataManager {
         if (player.equipment.chestplate != null && player.equipment.chestplate.hasItemMeta() && player.gameMode != GameMode.SPECTATOR) {
             val elytra = player.equipment.chestplate
             // Check if player has enchantment
-            if (elytra.getOdysseyEnchantments().contains(OdysseyEnchantments.VOID_JUMP)) {
+            if (elytra.hasOdysseyEnchantment(OdysseyEnchantments.VOID_JUMP)) {
                 // Check Speed
                 val speed = player.velocity.clone().length()
                 if (speed > 0.125) {

@@ -109,9 +109,9 @@ internal interface EnchantSlotManager : EnchantmentDataManager {
             }
         }
         // Get Enchantment Maps
-        val minecraftEnchantContainers = newEnchants?.filter { it.key.isBukkit } ?: createEnchantContainerMap(enchantments)
+        val minecraftEnchantContainers = newEnchants?.filter { it.key.isBukkit } ?: createBukkitEnchantContainerMap(enchantments)
         val odysseyEnchantments = getOdysseyEnchantments()
-        val odysseyEnchantContainers = newEnchants?.filter { it.key.isOdyssey } ?: createEnchantContainerMap(odysseyEnchantments)
+        val odysseyEnchantContainers = newEnchants?.filter { it.key.isOdyssey } ?: createOdysseyEnchantContainerMap(odysseyEnchantments)
         val gildedEnchantKey = getGildedEnchantKey()
         // Add Enchants Over empty slots
         var enchantmentCount = 0
@@ -189,13 +189,15 @@ internal interface EnchantSlotManager : EnchantmentDataManager {
     // Create Base New Slots
     fun ItemStack.createNewEnchantSlots() {
         var enchantSlots = 2
-        for (enchant in enchantments) {
-            enchantSlots += 1
-        }
+        enchantSlots += enchantments.size
+        val odysseyEnchantments = this.getOdysseyEnchantments()
+        enchantSlots += odysseyEnchantments.size
         setPairSlots(Pair(enchantSlots, 0))
         addItemFlags(ItemFlag.HIDE_ENCHANTS)
-        val containers = createEnchantContainerMap(enchantments).toMutableMap()
-        updateSlotLore(containers)
+        val bukkitContainers = createBukkitEnchantContainerMap(enchantments)
+        val odysseyContainers = createOdysseyEnchantContainerMap(odysseyEnchantments)
+        val enchantContainers = bukkitContainers + odysseyContainers
+        updateSlotLore(enchantContainers.toMutableMap())
     }
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -215,7 +217,7 @@ internal interface EnchantSlotManager : EnchantmentDataManager {
 
     /*-----------------------------------------------------------------------------------------------*/
     // Fail Message
-    fun LivingEntity.sendFailMessage(reason: String, color: TextColor = SlotColors.ENCHANT.color) {
+    fun LivingEntity.sendBarMessage(reason: String, color: TextColor = SlotColors.ENCHANT.color) {
         this.sendActionBar(
             Component.text(
                 reason,

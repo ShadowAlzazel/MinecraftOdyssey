@@ -130,7 +130,7 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
             it.addEnchant(gildedEnchant.toBukkit(), gildedEnchant.maximumLevel + 1, true)
         }
          */
-        mainHand.addOdysseyEnchantment(gildedEnchant, gildedEnchant.maximumLevel + (1..2).random())
+        mainHand.setOdysseyEnchantment(gildedEnchant, gildedEnchant.maximumLevel + (1..2).random())
         // Main hand
         mainHand.itemMeta = mainHand.itemMeta.also {
             if (weaponCheckIfCanApply(Enchantment.SHARPNESS, gildedEnchant, mainHand))  {
@@ -223,7 +223,7 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
     private fun enchantMobArmor(armor: ItemStack, gildedEnchant: OdysseyEnchantment): ItemStack {
         // Apply
         if (gildedEnchant.canEnchantItem(armor)) {
-            armor.addOdysseyEnchantment(gildedEnchant, gildedEnchant.maximumLevel + 1)
+            armor.setOdysseyEnchantment(gildedEnchant, gildedEnchant.maximumLevel + 1)
         }
         armor.itemMeta = (armor.itemMeta as ArmorMeta).also {
             it.addEnchant(Enchantment.UNBREAKING, (1..3).random(), false)

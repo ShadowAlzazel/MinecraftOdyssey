@@ -85,15 +85,8 @@ class Odyssey : JavaPlugin() {
             server.pluginManager.disablePlugin(this)
             return
         }
-
-        // Enchantment NMS (Allow new registries)
-        //ReflectionUtils.unfreezeRegistry(BuiltInRegistries.ENCHANTMENT)
-        // Register Enchantments
-        logger.info("Registering Enchantments...")
-        //OdysseyEnchantments.registerTest()
-        //OdysseyEnchantments.registerAll()
-        // Freeze NMS
-        //ReflectionUtils.freezeRegistry(BuiltInRegistries.ENCHANTMENT)
+        // Enable Enchants
+        logger.info("Enabling Enchantments...")
 
         // Register Recipes
         logger.info("Registering Recipes...")

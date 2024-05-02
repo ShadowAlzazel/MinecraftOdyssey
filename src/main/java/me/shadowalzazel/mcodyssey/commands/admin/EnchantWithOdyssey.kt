@@ -20,8 +20,7 @@ object EnchantWithOdyssey : CommandExecutor, EnchantSlotManager {
         val enchant = getOdysseyEnchantFromString(string) ?: return false
         // Passed Checks
         val item = sender.equipment.itemInMainHand
-        //item.addUnsafeEnchantment(registeredEnchantment, level) // TODO!!!!!!!!!!!!
-        // CHANGE
+        item.setOdysseyEnchantment(enchant, level, true)
         item.createNewEnchantSlots()
         return true
     }

@@ -4,7 +4,7 @@ import me.shadowalzazel.mcodyssey.arcane.SlotColors
 import me.shadowalzazel.mcodyssey.constants.AttributeIDs
 import me.shadowalzazel.mcodyssey.constants.DataKeys
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
-import me.shadowalzazel.mcodyssey.enchantments.api.EnchantmentDataManager
+import me.shadowalzazel.mcodyssey.items.Ingredients
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -17,8 +17,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.persistence.PersistentDataType
 
-interface ItemCreator : EnchantmentDataManager {
-
+interface ItemCreator  {
 
     fun OdysseyItem.createNewStack(amount: Int = 1): ItemStack {
         val itemStack = ItemStack(overrideMaterial, amount).also {
@@ -114,5 +113,19 @@ interface ItemCreator : EnchantmentDataManager {
         return itemStack
     }
  */
+
+    fun findItemByNameKey(name: String): OdysseyItem? {
+        return when(name) {
+            "iridium_ingot" -> Ingredients.IRIDIUM_INGOT
+            "andonized_titanium_ingot" -> Ingredients.ANDONIZED_TITANIUM_INGOT
+            "titanium_ingot" -> Ingredients.TITANIUM_INGOT
+            "mithril_ingot" -> Ingredients.MITHRIL_INGOT
+            "silver_ingot" -> Ingredients.SILVER_INGOT
+            "soul_steel_ingot" -> Ingredients.SOUL_STEEL_INGOT
+            else -> null
+        }
+    }
+
+
 
 }

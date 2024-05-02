@@ -24,8 +24,8 @@ class ToolCreator : AttributeManager {
         } else {
             "${material.itemOverridePre}_${type.itemOverrideSuf}"
         }
-        val minecraftItem = Material.matchMaterial(minecraftItemKey) ?: return ItemStack(Material.AIR)
-        val itemStack = ItemStack(minecraftItem, amount).also {
+        val minecraftMaterial = Material.matchMaterial(minecraftItemKey) ?: return ItemStack(Material.AIR)
+        val itemStack = ItemStack(minecraftMaterial, amount).also {
             // Create Variables
             val model = (material.itemModelPre * 100) + (type.itemModelSuf)
             val itemName = "${material.itemName}_${type.itemName}"

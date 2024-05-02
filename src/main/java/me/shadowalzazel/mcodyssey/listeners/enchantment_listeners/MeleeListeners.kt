@@ -58,7 +58,7 @@ object MeleeListeners : Listener, EffectsManager, EnchantmentDataManager {
         val power = if (attacker is Player) { attacker.attackCooldown.toDouble() } else { 1.0 }
         // Loop for all enchants
         for (enchant in weapon.getOdysseyEnchantments()) {
-            when (enchant) {
+            when (enchant.key) {
                 OdysseyEnchantments.ARCANE_CELL -> {
                     if (cooldownManager(attacker, "Arcane Cell", arcaneCellCooldown, 5.25)) {
                         arcaneCellEnchantment(victim, enchant.value)
@@ -169,7 +169,7 @@ object MeleeListeners : Listener, EffectsManager, EnchantmentDataManager {
         val weapon = killer.equipment?.itemInMainHand ?: return
         // Loop for all enchants
         for (enchant in weapon.getOdysseyEnchantments()) {
-            when (enchant) {
+            when (enchant.key) {
                 OdysseyEnchantments.EXPLODING -> {
                     if (cooldownManager(killer, "Exploding", explodingCooldown, 1.25)) {
                         explodingEnchantment(victim, enchant.value)
@@ -189,7 +189,7 @@ object MeleeListeners : Listener, EffectsManager, EnchantmentDataManager {
         val hitWeapon = attacker.equipment?.itemInMainHand ?: return
         // Loop
         for (enchant in hitWeapon.getOdysseyEnchantments()) {
-            when (enchant) {
+            when (enchant.key) {
                 OdysseyEnchantments.GUST -> {
                     event.acceleration = gustEnchantment(event.acceleration, enchant.value)
                 }

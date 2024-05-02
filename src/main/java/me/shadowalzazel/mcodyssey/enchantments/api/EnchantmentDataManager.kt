@@ -43,55 +43,169 @@ interface EnchantmentDataManager : EnchantmentFinder {
         return EnchantContainer(null, odysseyEnchantment)
     }
 
-    fun createEnchantContainerList(enchantments: List<Enchantment>): List<EnchantContainer> {
+    fun createBukkitEnchantContainerList(bukkitEnchants: List<Enchantment>): List<EnchantContainer> {
         val containerList = mutableListOf<EnchantContainer>()
-        for (x in enchantments) {
+        for (x in bukkitEnchants) {
             containerList.add(createEnchantContainer(x))
         }
         return containerList.toList()
     }
 
-    fun createEnchantContainerList(enchantments: List<OdysseyEnchantment>): List<EnchantContainer> {
+    fun createOdysseyEnchantContainerList(odysseyEnchants: List<OdysseyEnchantment>): List<EnchantContainer> {
         val containerList = mutableListOf<EnchantContainer>()
-        for (x in enchantments) {
+        for (x in odysseyEnchants) {
             containerList.add(createEnchantContainer(x))
         }
         return containerList.toList()
     }
 
-    fun createEnchantContainerMap(enchantments: Map<Enchantment, Int>): Map<EnchantContainer, Int> {
+    fun createBukkitEnchantContainerMap(bukkitEnchants: Map<Enchantment, Int>): Map<EnchantContainer, Int> {
         val containerMap = mutableMapOf<EnchantContainer, Int>()
-        for (x in enchantments) {
+        for (x in bukkitEnchants) {
             containerMap[createEnchantContainer(x.key)] = x.value
         }
         return containerMap
     }
 
-    fun createEnchantContainerMap(enchantments: Map<OdysseyEnchantment, Int>): Map<EnchantContainer, Int> {
+    fun createOdysseyEnchantContainerMap(odysseyEnchants: Map<OdysseyEnchantment, Int>): Map<EnchantContainer, Int> {
         val containerMap = mutableMapOf<EnchantContainer, Int>()
-        for (x in enchantments) {
+        for (x in odysseyEnchants) {
             containerMap[createEnchantContainer(x.key)] = x.value
         }
         return containerMap
     }
 
-    // Tags
-    fun getEnchantmentTag(nmsStack: NmsStack): Tag? {
-        val components = nmsStack.components
+    fun BukkitStack.hasOdysseyEnchants(): Boolean {
+        return getOdysseyEnchantments().isNotEmpty()
+    }
+
+    fun BukkitStack.hasOdysseyEnchantment(enchant: OdysseyEnchantment): Boolean {
+        return getOdysseyEnchantments().contains(enchant)
+    }
+
+    fun BukkitStack.removeOdysseyEnchantment(enchant: OdysseyEnchantment) {
+        val enchantMap = getOdysseyEnchantments().toMutableMap()
+        val contains = enchantMap.keys.contains(enchant)
+        if (!contains) return
+        this.updateEnchantmentsNBT(enchantMap)
+    }
+
+    // Tries to get an enchantment Map if not
+    fun BukkitStack.getOdysseyEnchantments(): Map<OdysseyEnchantment, Int> {
+        val itemAsNms = CraftItemStack.asNMSCopy(this)
+        val enchantmentsTag = getEnchantmentsDataTag(itemAsNms) ?: return emptyMap()
+        val enchantMap = getEnchantmentsMap(enchantmentsTag) ?: return emptyMap()
+        return enchantMap
+    }
+
+    // This method sets and odyssey enchantment/overriding existing enchant
+    fun BukkitStack.setOdysseyEnchantment(enchant: OdysseyEnchantment, level: Int, pastMax: Boolean = false) {
+        val enchantMap = getOdysseyEnchantments().toMutableMap()
+        val checkedLevel = if (pastMax && enchant.maximumLevel <= level) level else enchant.maximumLevel
+        enchantMap[enchant] = checkedLevel
+        this.updateEnchantmentsNBT(enchantMap)
+        // Change Glint
+        val newMeta = itemMeta
+        newMeta.setEnchantmentGlintOverride(true)
+        itemMeta = newMeta
+    }
+
+    // This method is to add an enchantment via survival like anvil
+    fun BukkitStack.addOdysseyEnchantment(enchant: OdysseyEnchantment, level: Int, pastMax: Boolean = false) {
+        val enchantMap = getOdysseyEnchantments().toMutableMap()
+        val hasMatching = enchantMap.keys.contains(enchant)
+        if (hasMatching) {
+            val oldLevel = enchantMap[enchant]!!
+            val combinedLevel = if (oldLevel == level) { maxOf(level + 1, enchant.maximumLevel) } else { maxOf(level, oldLevel) }
+            enchantMap[enchant] = combinedLevel
+        } else {
+            enchantMap[enchant] = level
+        }
+        this.updateEnchantmentsNBT(enchantMap)
+        // Change Glint
+        val newMeta = itemMeta
+        newMeta.setEnchantmentGlintOverride(true)
+        itemMeta = newMeta
+    }
+
+    // -----------------------------------------------------
+    // Internal Methods DO NOT USE outside
+
+    // Primary method to update item NBT tag pertaining to enchantments
+    private fun BukkitStack.updateEnchantmentsNBT(newEnchants: Map<OdysseyEnchantment, Int>) {
+        this.overrideEnchantmentsTag(newEnchantmentsDataTag(newEnchants))
+    }
+
+    // Overrides/Updates the entire "odyssey:enchantments" tag with a new list
+    private fun BukkitStack.overrideEnchantmentsTag(enchantmentsTag: ListTag) {
+        val nmsStack = CraftItemStack.asNMSCopy(this)
+        // Get custom_data component
         val customDataKey = ResourceLocation("minecraft", "custom_data")
-        val dataType = BuiltInRegistries.DATA_COMPONENT_TYPE.get(customDataKey)!!
-        val customComponent = components.get(dataType)!!
-        if (customComponent !is CustomData) return null
-        val customTag = customComponent.copyTag()
-        val enchantmentsTag = customTag.get("odyssey:enchantments")
-        //println("Data Tag: $dataTag")
-        //println("Odyssey Enchantments: $enchantContainer")
+        val dataType = BuiltInRegistries.DATA_COMPONENT_TYPE.get(customDataKey) ?: return // DataComponentType<CustomData>
+        // Create new compound tag
+        val updatedTag = CompoundTag()
+        updatedTag.put("odyssey:enchantments", enchantmentsTag)
+        // Create new custom_data
+        val updatedData = CustomData.of(updatedTag)
+        // Build and apply new custom_data
+        val builder = DataComponentMap.builder()
+        builder.set(dataType as DataComponentType<CustomData>, updatedData)
+        nmsStack.applyComponents(builder.build())
+        // set item meta
+        this.itemMeta = CraftItemStack.asBukkitCopy(nmsStack).itemMeta
+    }
+
+    // Create a new "odyssey:enchantments" listTag
+    private fun createEnchantmentsDataTag(nmsStack: NmsStack) {
+        // Create new tag
+        val newOdysseyEnchantTag = CompoundTag()
+        newOdysseyEnchantTag.put("odyssey:enchantments", ListTag())
+        // Get custom_data component
+        val customDataKey = ResourceLocation("minecraft", "custom_data")
+        val dataType = BuiltInRegistries.DATA_COMPONENT_TYPE.get(customDataKey) ?: return // DataComponentType<CustomData>
+        // Builder
+        val newCustomData = CustomData.of(newOdysseyEnchantTag)
+        val builder = DataComponentMap.builder()
+        builder.set(dataType as DataComponentType<CustomData>, newCustomData)
+        val customDataMap = builder.build()
+        nmsStack.applyComponents(customDataMap)
+        // Passing in function called consumer which takes in custom_data component
+        // val tagConsumer = Consumer<CompoundTag> {
+        //    it.put("odyssey:enchantments", ListTag())!!
+        //}
+    }
+
+    // New Enchantment NBT Data Tag from map of enchantments
+    private fun newEnchantmentsDataTag(enchantments: Map<OdysseyEnchantment, Int>): ListTag {
+        // Create new tag list
+        val enchantmentTag = ListTag()
+        // Iterate and create new enchantTag
+        for (enchant in enchantments) {
+            val newEnchantTag = CompoundTag()
+            val namesKey = "odyssey:${enchant.key.name}"
+            newEnchantTag.putInt(namesKey, enchant.value)
+            enchantmentTag.add(newEnchantTag)
+        }
+        return enchantmentTag
+    }
+
+    // Get enchant tags under "odyssey:enchantments"
+    private fun getEnchantmentsDataTag(nmsStack: NmsStack): ListTag? {
+        // Get custom_data component
+        val itemComponents = nmsStack.components
+        val customDataKey = ResourceLocation("minecraft", "custom_data")
+        val dataType = BuiltInRegistries.DATA_COMPONENT_TYPE.get(customDataKey) ?: return null
+        val customDataComponent = itemComponents.get(dataType) ?: return null
+        if (customDataComponent !is CustomData) return null
+        val customDataTag = customDataComponent.copyTag()
+        // Get enchantment root tag
+        val enchantmentsTag = customDataTag.get("odyssey:enchantments")
         if (enchantmentsTag !is ListTag) return null
-        return enchantmentsTag // ListTag
+        return enchantmentsTag
     }
 
     // Returns a list of odyssey enchantments or null if empty
-    fun getEnchantmentMap(enchantmentsTag: Tag): Map<OdysseyEnchantment, Int>? {
+    private fun getEnchantmentsMap(enchantmentsTag: Tag): Map<OdysseyEnchantment, Int>? {
         if (enchantmentsTag !is ListTag) return null
         val enchantMap: MutableMap<OdysseyEnchantment, Int> = mutableMapOf()
         for (enchantTag in enchantmentsTag) {
@@ -102,7 +216,7 @@ interface EnchantmentDataManager : EnchantmentFinder {
             //println("As String: $enchantName lvl: $level")
             val shortName = enchantName.removeRange(0,8) //odyssey:
             val odysseyEnchant = getOdysseyEnchantFromString(shortName) ?: continue
-            println("Found Enchantment: $odysseyEnchant")
+            //println("Found Enchantment: $odysseyEnchant")
             enchantMap[odysseyEnchant] = level.asInt
         }
         // Return null if empty
@@ -113,30 +227,15 @@ interface EnchantmentDataManager : EnchantmentFinder {
         }
     }
 
-    fun createEnchantmentDataTag(nmsStack: NmsStack) {
-        val itemCopy = nmsStack.copy()
-        val components = nmsStack.components
-        val customDataKey = ResourceLocation("minecraft", "custom_data")
-        val dataType = BuiltInRegistries.DATA_COMPONENT_TYPE.get(customDataKey) as DataComponentType<CustomData>
-        val newOdysseyEnchantTag = CompoundTag().put("odyssey:enchantments", ListTag())!!
-        //CustomData.update(dataType, itemCopy, newOdysseyEnchantTag)
-
-    }
-
-    fun getOrCreateEnchantmentMap(bukkitStack: BukkitStack) {
+    private fun getOrCreateEnchantmentsTag(bukkitStack: BukkitStack): ListTag {
         val itemAsNms = CraftItemStack.asNMSCopy(bukkitStack)
-        val enchantTag = getEnchantmentTag(itemAsNms)
+        var enchantmentsTag = getEnchantmentsDataTag(itemAsNms)
+        if (enchantmentsTag == null) {
+            createEnchantmentsDataTag(itemAsNms)
+            enchantmentsTag = getEnchantmentsDataTag(itemAsNms)!!
+            bukkitStack.itemMeta = CraftItemStack.asBukkitCopy(itemAsNms).itemMeta
+        }
+        return enchantmentsTag
     }
-
-    fun BukkitStack.addOdysseyEnchantment(enchant: OdysseyEnchantment, level: Int, override: Boolean = false) {
-        //val enchantMap
-    }
-
-    fun BukkitStack.getOdysseyEnchantments(): Map<OdysseyEnchantment, Int> {
-        val itemAsNms = CraftItemStack.asNMSCopy(this)
-        val enchantTag = getEnchantmentTag(itemAsNms) ?: return emptyMap()
-        val enchantMap = getEnchantmentMap(enchantTag) ?: return emptyMap()
-        return enchantMap
-    }
-
+    // -----------------------------------------------------
 }
