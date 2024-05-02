@@ -30,33 +30,5 @@ open class OdysseyItem(
         }
         return itemStack
     }
-    /*
-    fun createItemStack(amount: Int): ItemStack {
-        val itemStack = ItemStack(material, amount)
-        // On item meta; Add lore, display name, custom model, damage stats, effects, color if applicable
-        var enchantSlots = 0
-        var gildedSlots = 0
-        itemStack.itemMeta = (itemStack.itemMeta as ItemMeta).also {
-            if (displayName != null) { it.displayName(displayName) }
-            if (lore != null) { it.lore(lore) }
-            if (customModel != null) { it.setCustomModelData(customModel) }
-            if (enchantments != null) {
-                for (enchant in enchantments) {
-                    if (enchant.key.isOdysseyEnchant()) { gildedSlots += 1 } else { enchantSlots += 1 }
-                    it.addEnchant(enchant.key, enchant.value, true)
-                }
-            }
-            it.persistentDataContainer.set(DataKeys.ITEM_KEY, PersistentDataType.STRING, name)
-        }
-        if (enchantments != null) {
-            itemStack.addTag(ItemDataTags.IS_SLOTTED)
-            itemStack.setIntTag(ItemDataTags.ENCHANT_SLOTS, enchantSlots)
-            itemStack.setIntTag(ItemDataTags.GILDED_SLOTS, gildedSlots)
-            itemStack.updateSlotLore()
-            itemStack.addItemFlags(ItemFlag.HIDE_ENCHANTS)
-        }
-        return itemStack
-    }
-     */
 
 }

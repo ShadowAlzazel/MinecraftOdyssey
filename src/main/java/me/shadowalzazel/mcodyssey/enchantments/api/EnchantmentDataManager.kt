@@ -143,6 +143,7 @@ interface EnchantmentDataManager : EnchantmentFinder {
         // Get custom_data component
         val customDataKey = ResourceLocation("minecraft", "custom_data")
         val dataType = BuiltInRegistries.DATA_COMPONENT_TYPE.get(customDataKey) ?: return // DataComponentType<CustomData>
+        dataType as DataComponentType<CustomData>
         // Create new compound tag
         val enchantmentRootTag = CompoundTag()
         enchantmentRootTag.put("odyssey:enchantments", enchantmentsTag)
@@ -159,7 +160,7 @@ interface EnchantmentDataManager : EnchantmentFinder {
         }
         // Build and apply new custom_data
         val builder = DataComponentMap.builder()
-        builder.set(dataType as DataComponentType<CustomData>, updatedCustomData)
+        builder.set(dataType, updatedCustomData)
         nmsStack.applyComponents(builder.build())
         // set item meta
         this.itemMeta = CraftItemStack.asBukkitCopy(nmsStack).itemMeta
@@ -173,16 +174,13 @@ interface EnchantmentDataManager : EnchantmentFinder {
         // Get custom_data component
         val customDataKey = ResourceLocation("minecraft", "custom_data")
         val dataType = BuiltInRegistries.DATA_COMPONENT_TYPE.get(customDataKey) ?: return // DataComponentType<CustomData>
+        dataType as DataComponentType<CustomData>
         // Builder
         val newCustomData = CustomData.of(newOdysseyEnchantTag)
         val builder = DataComponentMap.builder()
-        builder.set(dataType as DataComponentType<CustomData>, newCustomData)
+        builder.set(dataType, newCustomData)
         val customDataMap = builder.build()
         nmsStack.applyComponents(customDataMap)
-        // Passing in function called consumer which takes in custom_data component
-        // val tagConsumer = Consumer<CompoundTag> {
-        //    it.put("odyssey:enchantments", ListTag())!!
-        //}
     }
 
     // New Enchantment NBT Data Tag from map of enchantments
@@ -223,10 +221,8 @@ interface EnchantmentDataManager : EnchantmentFinder {
             val enchantName = enchantTag.tags.keys.first()
             val level = enchantTag[enchantName] ?: continue
             if (level !is IntTag) continue
-            //println("As String: $enchantName lvl: $level")
             val shortName = enchantName.removeRange(0,8) //odyssey:
             val odysseyEnchant = getOdysseyEnchantFromString(shortName) ?: continue
-            //println("Found Enchantment: $odysseyEnchant")
             enchantMap[odysseyEnchant] = level.asInt
         }
         // Return null if empty

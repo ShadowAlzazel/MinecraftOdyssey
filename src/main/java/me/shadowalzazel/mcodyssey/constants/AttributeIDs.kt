@@ -4,7 +4,7 @@ import java.util.*
 
 object AttributeIDs {
 
-    // Minecraft
+    // Minecraft (items)
     val ITEM_ATTACK_SPEED_RESET_UUID: UUID = UUID.fromString("FA233E1C-4180-4865-B01B-BCCE9565ACA3")
     val ITEM_ATTACK_SPEED_UUID: UUID = UUID.fromString("FA233E1C-4180-4865-B01B-BCCE9985ACA3")
     val ITEM_ATTACK_DAMAGE_UUID: UUID = UUID.fromString("CB3F55D3-645C-4F38-A497-9C13A34DB5CF")
@@ -13,10 +13,11 @@ object AttributeIDs {
     val ITEM_ARMOR_UUID: UUID = UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")
     val ITEM_SPRINTING_SPEED: UUID = UUID.fromString("662A6B8D-DA3E-4C1C-8813-96EA6097278D")
     val HEALTH_BOOST: UUID = UUID.fromString("5D6F0BA2-1186-46AC-B896-C61C5CEE99CC")
-    // Generics
+    //
     val ITEM_ARMOR_TOUGHNESS_UUID: UUID = UUID.fromString("61487b4a-71af-4aaa-9f33-b329d474c588")
     val KNOCKBACK_RESISTANCE: UUID = UUID.fromString("bf075f62-f9b0-4baa-b34a-04d764f78a74")
     val ATTACK_KNOCKBACK: UUID = UUID.fromString("1-1-438d-0-28d34")
+    val ITEM_ENTITY_RANGE_UUID = UUID.fromString("d3f7a441-fa1c-4637-8ba2-e6a802114aa1")
 
     // Custom Helmet
     val ARMOR_HELMET_UUID: UUID = UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")
@@ -61,7 +62,6 @@ object AttributeIDs {
     val EXTRA_ATTACK_GENERIC_UUID: UUID = UUID.fromString("8dbe2ecc-de19-455b-aeec-2b505aa0625e")
     val EXTRA_ARMOR_GENERIC_UUID: UUID = UUID.fromString("439464a5-b5c9-432c-893a-4cd9ef356a17")
     val EXTRA_SPEED_GENERIC_UUID: UUID = UUID.fromString("02a1ee5a-aca0-402f-9198-f00ec07c26ac")
-
 
     // Extra health
     val EXTRA_HEALTH_ERISHKIGAL_FRUIT: UUID = UUID.fromString("c994412e-9e72-4881-a55f-1f2d1c95f125")

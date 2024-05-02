@@ -33,6 +33,7 @@ class ToolCreator : AttributeManager {
             val damage = material.attackDamage + type.baseDamage
             val maxDurability = material.maxDurability
             var speed = type.baseSpeed
+            val bonusRange = type.bonusRange
             // Iridium and titanium have different speeds
             if (material == ToolMaterial.IRIDIUM) {
                 speed *= 0.9
@@ -53,7 +54,10 @@ class ToolCreator : AttributeManager {
             it.itemMeta = meta
             it.addStringTag(ItemDataTags.WEAPON_TYPE, type.itemName)
             it.addStringTag(ItemDataTags.MATERIAL_TYPE, material.itemName)
-            // Assign attributes
+            // Assign Base attributes
+            if (bonusRange != null) {
+                it.addEntityRangeAttribute(bonusRange, AttributeTags.ITEM_BASE_ENTITY_RANGE)
+            }
             it.addAttackDamageAttribute(damage, AttributeTags.ITEM_BASE_ATTACK_DAMAGE)
             it.setNewAttackSpeedAttribute(speed, AttributeTags.ITEM_BASE_ATTACK_SPEED)
         }

@@ -34,5 +34,6 @@ object AttributeTags {
     // Items - Weapons
     const val ITEM_BASE_ATTACK_DAMAGE = "odyssey.attack_damage"
     const val ITEM_BASE_ATTACK_SPEED = "odyssey.attack_speed"
+    const val ITEM_BASE_ENTITY_RANGE = "odyssey.entity_range"
 
 }

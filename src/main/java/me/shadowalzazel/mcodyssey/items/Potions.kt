@@ -43,7 +43,6 @@ object Potions : AlchemyManager {
                 addStringTag(ItemDataTags.ODYSSEY_EFFECT_TAG, odysseyEffectTag)
                 setIntTag(ItemDataTags.ODYSSEY_EFFECT_TIME, odysseyEffectTimeInTicks) // Int
                 setIntTag(ItemDataTags.ODYSSEY_EFFECT_AMPLIFIER, odysseyEffectAmplifier) // Int
-                addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS)
                 val component = createEffectComponent(odysseyEffectTag, odysseyEffectTimeInTicks, odysseyEffectAmplifier)
                 val newLore = lore() ?: mutableListOf()
                 newLore.add(component)

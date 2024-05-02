@@ -110,7 +110,6 @@ object WeaponListeners : Listener {
         if (event.cause == EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) {
             val bonusSweepDamage = SWEEP_MAP[mainWeaponType] ?: 0.0
             event.damage += bonusSweepDamage
-            println("SWEEP BONUS")
         }
         // Prevent Recursive AOE calls
         if (victim.scoreboardTags.contains(EntityTags.MELEE_AOE_HIT)) {
@@ -289,11 +288,14 @@ object WeaponListeners : Listener {
         val weaponType = mainWeapon.getStringTag(ItemDataTags.WEAPON_TYPE) ?: return
         val reach = REACH_MAP[weaponType] ?: return
         if (reach < 4.0) return // Get reach for weapons exceeding range
-        // Get Entity
+        // Old reach function
+        /*
         val entity = getRayTraceTarget(player, weaponType)
         if (entity is LivingEntity) {
             player.attack(entity)
         }
+
+         */
     }
 
     // For dual wielding weapons or special attacks

@@ -9,6 +9,8 @@ import net.minecraft.core.Registry
 import java.lang.reflect.Field
 
 // Gracefully borrowed from Coll1234567
+
+@Deprecated(message = "No Longer Using Registry")
 object ReflectionUtils {
     private fun getField(clazz: Class<*>, type: Class<*>, index: Int): Field? {
         var i = 0
@@ -35,6 +37,58 @@ object ReflectionUtils {
     fun <T> freezeRegistry(registry: Registry<T>) {
         registry.freeze()
     }
+
+    // Old Register
+    /*
+    fun registerAll() {
+        for (odysseyEnchant in REGISTERED_SET) {
+            var registered = false
+            try {
+                net.minecraft.core.Registry.register( // Using own namespace for safety and support
+                    BuiltInRegistries.ENCHANTMENT,
+                    ResourceLocation("odyssey", odysseyEnchant.name),
+                    //odysseyEnchant.name,
+                    odysseyEnchant
+                )
+                registered = true
+            }
+            catch (exception: Exception) {
+                exception.printStackTrace()
+            }
+            // SUCCESS!!
+            if (registered) {
+                Odyssey.instance.logger.info("Registered: $odysseyEnchant")
+            }
+        }
+    }
+
+    fun registerTest() {
+        val testEnchantment = net.minecraft.world.item.enchantment.Enchantment(
+            net.minecraft.world.item.enchantment.Enchantment.definition(
+                ItemTags.WEAPON_ENCHANTABLE,
+                ItemTags.WEAPON_ENCHANTABLE,
+                5, // Weight
+                3,
+                net.minecraft.world.item.enchantment.Enchantment.constantCost(10),
+                net.minecraft.world.item.enchantment.Enchantment.constantCost(15),
+                3,
+                EquipmentSlot.MAINHAND // Array to varargs
+            )
+        )
+        try {
+            net.minecraft.core.Registry.register( // Using own namespace for safety and support
+                BuiltInRegistries.ENCHANTMENT,
+                "test_enchant",
+                testEnchantment
+            )
+        }
+        catch (exception: Exception) {
+            exception.printStackTrace()
+        }
+    }
+
+     */
+
 
 }
 
