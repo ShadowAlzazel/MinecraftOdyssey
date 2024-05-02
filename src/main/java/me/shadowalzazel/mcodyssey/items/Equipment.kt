@@ -15,7 +15,6 @@ object Equipment {
     val SOUL_STEEL_UPGRADE_TEMPLATE = OdysseyItem("soul_steel_upgrade_template", Material.COPPER_INGOT, "Soul Steel Upgrade Template", ItemModels.SOUL_STEEL_UPGRADE_TEMPLATE,
         lore = listOf(Component.text("A Smithing Template used to upgrade Iron tools into Soul Steel.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
-
     // Weapon Molds
     // WIP [Molds - Katana/Weapons]
     // Copper Molds +0.5dmg [CONSUMED]

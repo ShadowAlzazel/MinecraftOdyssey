@@ -8,6 +8,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.player.PlayerBedEnterEvent
 
+@Deprecated(message = "No Longer Using Registry")
 object OdysseyPhenomenaListeners : Listener {
 
     // Function to prevent players from sleeping
@@ -23,7 +24,6 @@ object OdysseyPhenomenaListeners : Listener {
             }
         }
     }
-
 
 
     // Main function for creature related spawns regarding phenomena

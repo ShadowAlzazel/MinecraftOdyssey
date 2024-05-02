@@ -40,7 +40,7 @@ object ArcaneListeners: Listener {
         if (ARCANE_REACH_MAP[model] == null) return
         val mainHandBook = player.equipment.itemInOffHand
         if (!mainHandBook.hasItemMeta()) return
-        if (!mainHandBook.itemMeta!!.hasCustomModelData()) return // Can only use volumes
+        if (!mainHandBook.itemMeta!!.hasCustomModelData()) return // Can only use volumes ??????
         // Sentries Passed
         val itemTag = offHandEquipment.getOdysseyTag() ?: return
         when (itemTag) {

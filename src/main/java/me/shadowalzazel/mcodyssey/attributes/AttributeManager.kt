@@ -11,7 +11,6 @@ import java.util.*
 
 internal interface AttributeManager {
 
-
      fun LivingEntity.addHealthAttribute(
         value: Double,
         name: String = AttributeTags.EXTRA_HEALTH_GENERIC,
@@ -81,15 +80,33 @@ internal interface AttributeManager {
         }
     }
 
-
     /*-----------------------------------------------------------------------------------------------*/
+    // Items
 
     fun ItemStack.addGenericAttribute(
-
-    ) {
-
+        value: Double,
+        name: String,
+        id: UUID,
+        slot: EquipmentSlot,
+        attribute: Attribute)
+    {
+        val modifier = AttributeModifier(id, name, value, AttributeModifier.Operation.ADD_NUMBER, slot)
+        itemMeta = itemMeta.also {
+            it.addAttributeModifier(attribute, modifier)
+        }
     }
 
+    fun ItemStack.addEntityRangeAttribute(
+        value: Double,
+        name: String,
+        id: UUID = AttributeIDs.ITEM_ENTITY_RANGE_UUID,
+        slot: EquipmentSlot = EquipmentSlot.HAND)
+    {
+        val modifier = AttributeModifier(id, name, value, AttributeModifier.Operation.ADD_NUMBER, slot)
+        itemMeta = itemMeta.also {
+            it.addAttributeModifier(Attribute.PLAYER_ENTITY_INTERACTION_RANGE, modifier)
+        }
+    }
 
     fun ItemStack.addAttackDamageAttribute(
         value: Double,

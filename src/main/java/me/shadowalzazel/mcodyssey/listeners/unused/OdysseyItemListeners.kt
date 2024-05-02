@@ -26,6 +26,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import java.util.*
 
+@Deprecated(message = "No Longer Using Registry")
 object OdysseyItemListeners : Listener {
 
     // Main Function dealing with Odyssey Crafting

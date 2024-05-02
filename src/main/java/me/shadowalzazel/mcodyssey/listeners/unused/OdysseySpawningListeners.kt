@@ -2,6 +2,7 @@ package me.shadowalzazel.mcodyssey.listeners.unused
 
 import org.bukkit.event.Listener
 
+@Deprecated(message = "No Longer Using Registry")
 object OdysseySpawningListeners : Listener {
     /*
     private val dangerPrefixes = setOf(

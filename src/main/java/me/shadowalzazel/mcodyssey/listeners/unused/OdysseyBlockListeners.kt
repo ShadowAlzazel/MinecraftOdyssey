@@ -14,6 +14,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockPlaceEvent
 import java.util.*
 
+@Deprecated(message = "No Longer Using Registry")
 object OdysseyBlockListeners : Listener {
 
 
