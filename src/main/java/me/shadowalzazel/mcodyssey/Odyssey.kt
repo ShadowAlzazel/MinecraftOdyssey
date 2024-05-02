@@ -5,8 +5,6 @@ import me.shadowalzazel.mcodyssey.bosses.hog_rider.HogRiderListeners
 import me.shadowalzazel.mcodyssey.bosses.the_ambassador.AmbassadorListeners
 import me.shadowalzazel.mcodyssey.commands.admin.*
 import me.shadowalzazel.mcodyssey.commands.spells.PlaceFeatureArchaicSeed
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.enchantments.ReflectionUtils
 import me.shadowalzazel.mcodyssey.listeners.*
 import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.ArmorListeners
 import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.MeleeListeners
@@ -15,7 +13,6 @@ import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.RangedListener
 import me.shadowalzazel.mcodyssey.phenomenon.base.OdysseyPhenomenon
 import me.shadowalzazel.mcodyssey.recipes.RecipeManager
 import me.shadowalzazel.mcodyssey.recipes.brewing.BrewerMixes
-import net.minecraft.core.registries.BuiltInRegistries
 import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.event.Listener
