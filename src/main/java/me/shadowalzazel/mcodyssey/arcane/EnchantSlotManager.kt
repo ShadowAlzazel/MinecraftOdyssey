@@ -108,7 +108,7 @@ internal interface EnchantSlotManager : EnchantmentDataManager {
                 newLore[i] = emptyGildedSlot
             }
         }
-        // Get Enchantment Maps
+        // Get Enchantment Containers
         val minecraftEnchantContainers = newEnchants?.filter { it.key.isBukkit } ?: createBukkitEnchantContainerMap(enchantments)
         val odysseyEnchantments = getOdysseyEnchantments()
         val odysseyEnchantContainers = newEnchants?.filter { it.key.isOdyssey } ?: createOdysseyEnchantContainerMap(odysseyEnchantments)
@@ -165,14 +165,6 @@ internal interface EnchantSlotManager : EnchantmentDataManager {
             }
             gildedCount += 1
         }
-        /*
-        odysseyEnchants.forEach {
-            gildedCount += 1
-            newLore[sepIndex + enchantSlots.first + gildedCount] = (it.key.convertToOdysseyEnchant())
-                .getTextForLore(it.value)
-                .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-        }
-         */
         // Move Engraving To Bottom
         if (hasTag(ItemDataTags.IS_ENGRAVED)) {
             val engraver = getStringTag(ItemDataTags.ENGRAVED_BY)!!
@@ -183,6 +175,7 @@ internal interface EnchantSlotManager : EnchantmentDataManager {
         // Header
         newLore[sepIndex - 1] = enchantHeader(enchantmentCount + gildedCount, enchantSlots + gildedSlots)
         // New Lore
+        addItemFlags(ItemFlag.HIDE_ENCHANTS)
         lore(newLore)
     }
 
@@ -193,7 +186,6 @@ internal interface EnchantSlotManager : EnchantmentDataManager {
         val odysseyEnchantments = this.getOdysseyEnchantments()
         enchantSlots += odysseyEnchantments.size
         setPairSlots(Pair(enchantSlots, 0))
-        addItemFlags(ItemFlag.HIDE_ENCHANTS)
         val bukkitContainers = createBukkitEnchantContainerMap(enchantments)
         val odysseyContainers = createOdysseyEnchantContainerMap(odysseyEnchantments)
         val enchantContainers = bukkitContainers + odysseyContainers

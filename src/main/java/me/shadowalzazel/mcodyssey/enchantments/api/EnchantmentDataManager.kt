@@ -15,6 +15,7 @@ import net.minecraft.world.item.component.CustomData
 import org.bukkit.NamespacedKey
 import org.bukkit.craftbukkit.inventory.CraftItemStack
 import org.bukkit.enchantments.Enchantment
+import java.util.function.Consumer
 import org.bukkit.inventory.ItemStack as BukkitStack
 
 interface EnchantmentDataManager : EnchantmentFinder {
@@ -143,13 +144,22 @@ interface EnchantmentDataManager : EnchantmentFinder {
         val customDataKey = ResourceLocation("minecraft", "custom_data")
         val dataType = BuiltInRegistries.DATA_COMPONENT_TYPE.get(customDataKey) ?: return // DataComponentType<CustomData>
         // Create new compound tag
-        val updatedTag = CompoundTag()
-        updatedTag.put("odyssey:enchantments", enchantmentsTag)
-        // Create new custom_data
-        val updatedData = CustomData.of(updatedTag)
+        val enchantmentRootTag = CompoundTag()
+        enchantmentRootTag.put("odyssey:enchantments", enchantmentsTag)
+        // Update customData component if exists
+        val customDataComponent = nmsStack.components.get(dataType)
+        val updatedCustomData = if (customDataComponent is CustomData) {
+            val tagConsumer = Consumer<CompoundTag> {
+                it.put("odyssey:enchantments", enchantmentsTag)
+            }
+            val updatedData = customDataComponent.update(tagConsumer)
+            updatedData
+        } else {
+            CustomData.of(enchantmentRootTag)
+        }
         // Build and apply new custom_data
         val builder = DataComponentMap.builder()
-        builder.set(dataType as DataComponentType<CustomData>, updatedData)
+        builder.set(dataType as DataComponentType<CustomData>, updatedCustomData)
         nmsStack.applyComponents(builder.build())
         // set item meta
         this.itemMeta = CraftItemStack.asBukkitCopy(nmsStack).itemMeta
