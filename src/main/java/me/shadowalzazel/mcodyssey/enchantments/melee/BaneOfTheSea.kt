@@ -4,6 +4,8 @@ import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import net.minecraft.tags.ItemTags
 import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.item.enchantment.Enchantment.constantCost
+import net.minecraft.world.item.enchantment.Enchantment.dynamicCost
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.enchantments.Enchantment.*
@@ -22,11 +24,21 @@ object BaneOfTheSea : OdysseyEnchantment(
     arrayOf(EquipmentSlot.MAINHAND)
 ) {
 
-    override fun conflictsWith(other: Enchantment): Boolean {
+    override fun checkBukkitConflict(other: Enchantment): Boolean {
         return when (other) {
-            BANE_OF_ARTHROPODS, IMPALING, SHARPNESS, SMITE,
-            OdysseyEnchantments.BANE_OF_THE_SWINE.toBukkit(),
-            OdysseyEnchantments.BANE_OF_THE_ILLAGER.toBukkit() -> {
+            BANE_OF_ARTHROPODS, IMPALING, SHARPNESS, SMITE -> {
+                true
+            }
+            else -> {
+                false
+            }
+        }
+    }
+
+    override fun checkOdysseyConflict(other: OdysseyEnchantment): Boolean {
+        return when (other) {
+            OdysseyEnchantments.BANE_OF_THE_SWINE,
+            OdysseyEnchantments.BANE_OF_THE_ILLAGER -> {
                 true
             }
             else -> {

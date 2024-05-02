@@ -47,7 +47,7 @@ object SmithingListeners : Listener, EnchantSlotManager {
         if (result.type == Material.AMETHYST_SHARD && addition.type == Material.AMETHYST_SHARD) {
             val isEngraved = equipment.hasTag(ItemDataTags.IS_ENGRAVED)
             if (isEngraved) {
-                event.viewers.forEach { it.sendFailMessage("This Item Is Already Engraved!") }
+                event.viewers.forEach { it.sendBarMessage("This Item Is Already Engraved!") }
                 event.result = ItemStack(Material.AIR)
                 return
             }

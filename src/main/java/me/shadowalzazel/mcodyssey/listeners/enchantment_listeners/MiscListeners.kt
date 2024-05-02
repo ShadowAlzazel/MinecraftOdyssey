@@ -1,21 +1,19 @@
 package me.shadowalzazel.mcodyssey.listeners.enchantment_listeners
 
-import me.shadowalzazel.mcodyssey.enchantments.EnchantRegistryManager
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
+import me.shadowalzazel.mcodyssey.enchantments.api.EnchantmentDataManager
 import me.shadowalzazel.mcodyssey.items.Ingredients
 import org.bukkit.*
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.ProjectileHitEvent
 import org.bukkit.event.entity.ProjectileLaunchEvent
 import org.bukkit.event.player.PlayerFishEvent
-import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.Vector
 import java.util.*
 
-object MiscListeners : Listener, EnchantRegistryManager {
+object MiscListeners : Listener, EnchantmentDataManager {
 
     private var voidJumpCooldown = mutableMapOf<UUID, Long>()
 
@@ -49,11 +47,8 @@ object MiscListeners : Listener, EnchantRegistryManager {
         else {
             event.player.inventory.itemInOffHand
         }
-        for (enchant in rod.enchantments) {
-            // Continue if not OdysseyEnchant
-            val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
-            // When match
-            when (gildedEnchant) {
+        for (enchant in rod.getOdysseyEnchantments()) {
+            when (enchant.key) {
                 OdysseyEnchantments.BOMB_OB -> {
                     if (event.caught!! is LivingEntity) {
                         bombObEnchantment(event.caught!! as LivingEntity, enchant.value)
@@ -78,12 +73,8 @@ object MiscListeners : Listener, EnchantRegistryManager {
         else {
             event.player.inventory.itemInOffHand
         }
-        //
-        for (enchant in rod.enchantments) {
-            // Continue if not OdysseyEnchant
-            val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
-            // When match
-            when (gildedEnchant) {
+        for (enchant in rod.getOdysseyEnchantments()) {
+            when (enchant.key) {
                 OdysseyEnchantments.O_SHINY -> {
                     val item = event.caught as Item
 
@@ -99,12 +90,10 @@ object MiscListeners : Listener, EnchantRegistryManager {
                         Ingredients.KUNZITE.createItemStack((1..(enchant.value)).random()),
                         Ingredients.ALEXANDRITE.createItemStack((1..(enchant.value)).random()),
                     )
-
                     //item.itemStack = gems.random()
                     if (item.itemStack.type !in goodPulls) {
                         item.itemStack = gems.random()
                     }
-
                 }
                 OdysseyEnchantments.WISE_BAIT -> {
                     event.expToDrop *= (1 + (0.5 * enchant.value)).toInt()
@@ -120,11 +109,8 @@ object MiscListeners : Listener, EnchantRegistryManager {
         else {
             event.player.inventory.itemInOffHand
         }
-        for (enchant in rod.enchantments) {
-            // Continue if not OdysseyEnchant
-            val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
-            // When match
-            when (gildedEnchant) {
+        for (enchant in rod.getOdysseyEnchantments()) {
+            when (enchant.key) {
                 OdysseyEnchantments.LENGTHY_LINE -> {
                     println(event.hook.velocity)
                     event.hook.velocity = event.hook.velocity.multiply(1 + (0.5 * enchant.value))
@@ -167,12 +153,10 @@ object MiscListeners : Listener, EnchantRegistryManager {
         println(victim.velocity)
     }
 
-
     /*-----------------------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------------------*/
-
 
     // MIRROR_FORCE enchantment effects
+    /*
     @EventHandler
     fun mirrorForceEnchantment(event: ProjectileHitEvent) {
         if (event.hitEntity != null) {
@@ -186,12 +170,10 @@ object MiscListeners : Listener, EnchantRegistryManager {
                                 if (blockingEntity.handRaised == EquipmentSlot.OFF_HAND) {
                                     println("Blocked!")
                                     //cooldown is part of the factor
-
                                     //event.entity.velocity = event.entity.location.subtract(blockingEntity.location).toVector()
                                     event.entity.velocity.multiply(-2.0)
                                     //direction
                                     // Use normal
-
                                 }
                             }
                         }
@@ -201,6 +183,8 @@ object MiscListeners : Listener, EnchantRegistryManager {
         }
     }
 
+     */
+
     // ---------------------------------------------- VOID_JUMP -------------------------------------------
 
     private fun voidJumpConditionsMet(player: Player) : Boolean {
@@ -208,7 +192,7 @@ object MiscListeners : Listener, EnchantRegistryManager {
         if (player.equipment.chestplate != null && player.equipment.chestplate.hasItemMeta() && player.gameMode != GameMode.SPECTATOR) {
             val elytra = player.equipment.chestplate
             // Check if player has enchantment
-            if (elytra.itemMeta.hasEnchant(OdysseyEnchantments.VOID_JUMP.toBukkit())) {
+            if (elytra.hasOdysseyEnchantment(OdysseyEnchantments.VOID_JUMP)) {
                 // Check Speed
                 val speed = player.velocity.clone().length()
                 if (speed > 0.125) {
@@ -230,7 +214,6 @@ object MiscListeners : Listener, EnchantRegistryManager {
         }
     }
 
-    // VOID_JUMP Ender pearl handler
     @EventHandler
     fun voidJumpHandler(event: ProjectileLaunchEvent) {
         // Check if shot pearl and shooter is player
@@ -239,7 +222,6 @@ object MiscListeners : Listener, EnchantRegistryManager {
             if (!voidJumpConditionsMet(event.entity.shooter as Player)) {
                 return
             }
-
             // Apply
             with(event.entity.shooter as Player) {
                 // Cooldown
@@ -250,20 +232,19 @@ object MiscListeners : Listener, EnchantRegistryManager {
                     return@voidJumpHandler
                 }
                 voidJumpCooldown[uniqueId] = System.currentTimeMillis()
-
                 // Get vector
-                val enchantmentLevel = equipment.chestplate.getEnchantmentLevel(OdysseyEnchantments.VOID_JUMP.toBukkit())
+                val elytra = equipment.chestplate
+                val enchantments = elytra.getOdysseyEnchantments()
+                val jumpLevel = enchantments[OdysseyEnchantments.VOID_JUMP] ?: 1
                 val unitVector = velocity.clone().normalize()
                 val jumpLocation = location.clone().add(
-                    unitVector.clone().multiply((enchantmentLevel * 5.0) + 5)
+                    unitVector.clone().multiply((jumpLevel * 5.0) + 5)
                 )
-
                 // Apply teleport, new velocity, and particles
                 voidJumpParticles(location)
                 teleport(jumpLocation)
                 voidJumpParticles(jumpLocation)
                 velocity = unitVector.clone().multiply(1)
-                
                 // Inventory
                 inventory.also {
                     if (it.itemInMainHand.type == Material.ENDER_PEARL) {
@@ -291,6 +272,7 @@ object MiscListeners : Listener, EnchantRegistryManager {
 
 
     // Temp main hand make for all later
+    /*
     @EventHandler
     fun hookShotEnchantment(event: ProjectileHitEvent) {
         if (event.entity is FishHook) {
@@ -300,7 +282,7 @@ object MiscListeners : Listener, EnchantRegistryManager {
                 if (someThrower.equipment != null) {
                     if (someThrower.equipment!!.itemInMainHand.hasItemMeta()) {
                         val someFishingRod = someThrower.equipment!!.itemInMainHand
-                        if (someFishingRod.itemMeta.hasEnchant(OdysseyEnchantments.HOOK_SHOT.toBukkit())) {
+                        if (someFishingRod.getOdysseyEnchantments().contains(OdysseyEnchantments.VOID_JUMP)) {
                             val hookFactor = someFishingRod.itemMeta.getEnchantLevel(OdysseyEnchantments.HOOK_SHOT.toBukkit())
                             if (event.hitBlock != null) {
                                 val someBlock = event.hitBlock
@@ -319,5 +301,7 @@ object MiscListeners : Listener, EnchantRegistryManager {
         }
     }
 
+
+     */
 
 }

@@ -3,8 +3,8 @@ package me.shadowalzazel.mcodyssey.items.creators
 import me.shadowalzazel.mcodyssey.arcane.SlotColors
 import me.shadowalzazel.mcodyssey.constants.AttributeIDs
 import me.shadowalzazel.mcodyssey.constants.DataKeys
-import me.shadowalzazel.mcodyssey.enchantments.EnchantRegistryManager
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
+import me.shadowalzazel.mcodyssey.items.Ingredients
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -17,8 +17,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.persistence.PersistentDataType
 
-interface ItemCreator : EnchantRegistryManager  {
-
+interface ItemCreator  {
 
     fun OdysseyItem.createNewStack(amount: Int = 1): ItemStack {
         val itemStack = ItemStack(overrideMaterial, amount).also {
@@ -39,18 +38,14 @@ interface ItemCreator : EnchantRegistryManager  {
 
     fun OdysseyItem.createArcaneBook(enchantment: OdysseyEnchantment, level: Int = 1) : ItemStack {
         if (itemName != "arcane_book") return ItemStack(Material.AIR)
-        val registeredEnchant = convertToBukkitEnchant(enchantment) ?: return ItemStack(Material.AIR)
         val newBook = this.createItemStack(1)
         newBook.itemMeta = (newBook.itemMeta as EnchantmentStorageMeta).also {
-            it.addEnchant(registeredEnchant, level, true) // KEEP HERE OR MOVE DETECTION IN LISTENERS
-            it.addStoredEnchant(registeredEnchant, level, false)
             // Set lore and description
-            val loreName = enchantment.toBukkit().displayName(level)
+            val loreName = enchantment.displayName(level)
             val newToolTip = enchantment.getDescriptionToolTip(level)
             val textLore = mutableListOf(loreName) + Component.text("") + newToolTip
             val bookName = it.displayName()!!.color(SlotColors.ARCANE.color)
             val fullName = bookName.append(loreName.color(SlotColors.ARCANE.color))
-            //it.displayName(bookName.append(Component.text(" - " + enchantment.translatableName, enchantment.subtype.displayColor)))
             it.displayName(fullName)
             it.lore(textLore)
         }
@@ -118,5 +113,19 @@ interface ItemCreator : EnchantRegistryManager  {
         return itemStack
     }
  */
+
+    fun findItemByNameKey(name: String): OdysseyItem? {
+        return when(name) {
+            "iridium_ingot" -> Ingredients.IRIDIUM_INGOT
+            "andonized_titanium_ingot" -> Ingredients.ANDONIZED_TITANIUM_INGOT
+            "titanium_ingot" -> Ingredients.TITANIUM_INGOT
+            "mithril_ingot" -> Ingredients.MITHRIL_INGOT
+            "silver_ingot" -> Ingredients.SILVER_INGOT
+            "soul_steel_ingot" -> Ingredients.SOUL_STEEL_INGOT
+            else -> null
+        }
+    }
+
+
 
 }

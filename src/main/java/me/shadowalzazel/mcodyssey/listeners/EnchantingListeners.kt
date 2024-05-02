@@ -8,7 +8,6 @@ import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import me.shadowalzazel.mcodyssey.items.creators.ItemCreator
-import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.Particle
@@ -59,14 +58,14 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         val second = event.inventory.secondItem
         // Create Variables to detect conditions
         val firstHasOdysseyEnchantments = if (first.itemMeta is EnchantmentStorageMeta) {
-            (first.itemMeta as EnchantmentStorageMeta).enchants.any { it.key.isOdysseyEnchant() }
+            first.hasOdysseyEnchants()
         } else {
-            first.itemMeta.enchants.any { it.key.isOdysseyEnchant() }
+            first.hasOdysseyEnchants()
         }
         val secondHasOdysseyEnchantments = if (second?.itemMeta is EnchantmentStorageMeta) {
-            (second.itemMeta as EnchantmentStorageMeta).enchants.any { it.key.isOdysseyEnchant() }
+            second.hasOdysseyEnchants()
         } else {
-            second?.itemMeta?.enchants?.any { it.key.isOdysseyEnchant() }
+            second?.hasOdysseyEnchants()
         }
         val firstIsBook = first.type == Material.ENCHANTED_BOOK
         val firstBookIsOdyssey = firstHasOdysseyEnchantments && firstIsBook
@@ -74,7 +73,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         val secondBookIsOdyssey = secondHasOdysseyEnchantments == true && secondIsBook
         // Prevent Gilded Book + Enchanted Book [MAYBE make VOLUME tomes]
         if ((firstBookIsOdyssey && !secondBookIsOdyssey && secondIsBook) || (secondBookIsOdyssey && !firstBookIsOdyssey && firstIsBook)) {
-            viewers.forEach { it.sendFailMessage("Can not combine Arcane Books and Enchanted Books!") }
+            viewers.forEach { it.sendBarMessage("Can not combine Arcane Books and Enchanted Books!") }
             event.result = ItemStack(Material.AIR)
             return
         }
@@ -88,20 +87,20 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
             val secondStoredMeta = second!!.itemMeta as EnchantmentStorageMeta
             // Somehow the Arcane book got more than 1 enchant
             if (firstStoredMeta.storedEnchants.size > 1) {
-                viewers.forEach { it.sendFailMessage("The first Arcane Book has more than 1 enchantment!") }
+                viewers.forEach { it.sendBarMessage("The first Arcane Book has more than 1 enchantment!") }
                 event.result = ItemStack(Material.AIR)
                 return
             }
             // Somehow the second Arcane book got more than 1 enchant
             if (secondStoredMeta.storedEnchants.size > 1) {
-                viewers.forEach { it.sendFailMessage("The second Arcane Book has more than 1 enchantment!") }
+                viewers.forEach { it.sendBarMessage("The second Arcane Book has more than 1 enchantment!") }
                 event.result = ItemStack(Material.AIR)
                 return
             }
             val matching = firstStoredMeta.storedEnchants.keys.first() == secondStoredMeta.storedEnchants.keys.first()
             // If not matching set to air
             if (!matching) {
-                viewers.forEach { it.sendFailMessage("Can not combine Arcane Books with different enchantments!") }
+                viewers.forEach { it.sendBarMessage("Can not combine Arcane Books with different enchantments!") }
                 event.result = ItemStack(Material.AIR)
                 return
             }
@@ -112,9 +111,9 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
                     val meta = itemMeta as EnchantmentStorageMeta
                     val newLevel = meta.storedEnchants[enchant]!!
                     val newLoreName = enchant.displayName(newLevel)
-                    val newToolTip = enchant.convertToOdysseyEnchant().getDescriptionToolTip(newLevel)
-                    val changedLore = mutableListOf(newLoreName) + Component.text("") + newToolTip
-                    meta.lore(changedLore)
+                    //val newToolTip = enchant.convertToOdysseyEnchant().getDescriptionToolTip(newLevel)
+                    //val changedLore = mutableListOf(newLoreName) + Component.text("") + newToolTip
+                    //meta.lore(changedLore)
                     itemMeta = meta
                 }
                 return
@@ -130,7 +129,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
             event.result = event.result!!.apply {
                 createNewEnchantSlots()
                 addItemFlags(ItemFlag.HIDE_ENCHANTS)
-                updateSlotLore(event.result!!.enchantments)
+                updateSlotLore()
             }
             return
         }
@@ -140,9 +139,10 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
             val gildedEnchant = first.getGildedEnchantKey()
             // Check slot sizes
             val enchantSlots = result.getEnchantSlots()
-            val nonGildedEnchants = result.enchantments.filter { it.key != gildedEnchant }
+            val nonGildedEnchants = result.enchantments.filter { it.key != gildedEnchant?.bukkitEnchant }
+            // val nonGildedEnchants = result.enchantments.filter { it.key != gildedEnchant }
             if (enchantSlots < nonGildedEnchants.size) {
-                viewers.forEach { it.sendFailMessage("There are not enough empty 'Enchant Slots' on the first item!") }
+                viewers.forEach { it.sendBarMessage("There are not enough empty 'Enchant Slots' on the first item!") }
                 event.result = ItemStack(Material.AIR)
                 return
             }
@@ -151,8 +151,8 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
                 var conflictingEnchant: Enchantment? = null
                 val foundConflict = resultEnchants.keys.any {
                     conflictingEnchant = it
-                    if (enchant.isOdysseyEnchant()) {
-                        enchant.convertToOdysseyEnchant().conflictsWith(enchant) && it != enchant
+                    if (enchant.isOdysseyEnchant()) { // TODO !!!!!!!!!!! FIX
+                        OdysseyEnchantments.VOID_STRIKE.checkBukkitConflict(enchant) && it != enchant
                     } else {
                         enchant.conflictsWith(it) && it != enchant
                     }
@@ -163,7 +163,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
                         val enchantText = enchant.displayName(resultEnchants[enchant]!!)
                         val conflictText = conflictingEnchant!!.displayName(resultEnchants[conflictingEnchant]!!)
                         val fullText = "The enchantment [$enchantText}] conflicts with the enchantment [$conflictText]!"
-                        it.sendFailMessage(fullText)
+                        it.sendBarMessage(fullText)
                     }
                     event.result = ItemStack(Material.AIR)
                     return
@@ -173,7 +173,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
             val gildedSlots = result.getGildedSlots()
             val gildedCount = if (gildedEnchant != null) 1 else 0
             if (gildedEnchant != null && gildedSlots < gildedCount) {
-                viewers.forEach { it.sendFailMessage("There are not enough empty 'Gilded Slots' on the first item!") }
+                viewers.forEach { it.sendBarMessage("There are not enough empty 'Gilded Slots' on the first item!") }
                 event.result = ItemStack(Material.AIR)
                 return
             }
@@ -330,7 +330,8 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         enchantsToRemove.forEach { newEnchants.remove(it) }
         // Lore
         item.addItemFlags(ItemFlag.HIDE_ENCHANTS)
-        item.updateSlotLore(newEnchants)
+        val containerMap = createBukkitEnchantContainerMap(newEnchants).toMutableMap()
+        item.updateSlotLore(containerMap)
     }
 
     private fun getChiseledBookshelvesBonus(event: EnchantItemEvent) {
@@ -387,6 +388,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         }
     }
 
+    /*
     private fun ItemStack.rollGildedEnchants(gildedSlots: Int, newEnchants: MutableMap<Enchantment, Int>, lapisCost: Int, levels: Int) {
         for (x in 1..minOf(gildedSlots, lapisCost)) {
             val hasRolled = (10 + minOf(levels, 75)) >= (1..100).random()
@@ -394,7 +396,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
             val randomGilded = getMaterialEnchantSet(type).random()
             if (!randomGilded.canEnchantItem(this)) continue
             if (randomGilded.toBukkit() in newEnchants.keys) continue
-            val hasConflict = newEnchants.keys.any { randomGilded.conflictsWith(it) }
+            val hasConflict = newEnchants.keys.any { randomGilded.checkBukkitConflict(it) }
             if (hasConflict) continue
             // Passed All conditions
             newEnchants.also {
@@ -402,6 +404,8 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
             }
         }
     }
+
+     */
 
     /*-----------------------------------------------------------------------------------------------*/
     /*-----------------------------------------------------------------------------------------------*/
@@ -431,7 +435,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         // Legacy Check
         val isLegacy = !equipment.isSlotted() && equipment.itemMeta.hasLore() && equipment.lore()!!.contains(slotSeperator)
         if (isLegacy) {
-            event.viewers.forEach { it.sendFailMessage("You need to reactivate this item. Combine with empty paper or gold nugget at the anvil!") }
+            event.viewers.forEach { it.sendBarMessage("You need to reactivate this item. Combine with empty paper or gold nugget at the anvil!") }
             return
         }
 
@@ -487,21 +491,21 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
 
     private fun tomeOfAvariceToEquipment(item: ItemStack, viewers: List<HumanEntity>): ItemStack {
         if (!item.isSlotted()) {
-            viewers.forEach { it.sendFailMessage("This item needs to be slotted to use this tome.") }
+            viewers.forEach { it.sendBarMessage("This item needs to be slotted to use this tome.") }
             return ItemStack(Material.AIR)
         }
         if (!item.itemMeta.hasEnchants()) {
-            viewers.forEach { it.sendFailMessage("This item needs to be enchanted to use this tome.") }
+            viewers.forEach { it.sendBarMessage("This item needs to be enchanted to use this tome.") }
             return ItemStack(Material.AIR)
         }
         if (item.getGildedSlots() >= 3) {
-            viewers.forEach { it.sendFailMessage("This item has the maximum of three gilded slots.") }
+            viewers.forEach { it.sendBarMessage("This item has the maximum of three gilded slots.") }
             return ItemStack(Material.AIR)
         }
-        val enchantList = item.enchantments.filter { it.key.isNotOdysseyEnchant() }
+        val enchantList = item.enchantments.filter { !it.key.isOdysseyEnchant() }
         val enchantSize = enchantList.size
         if (enchantSize < 4) {
-            viewers.forEach { it.sendFailMessage("This tome requires at least 4 enchants on the item to use.") }
+            viewers.forEach { it.sendBarMessage("This tome requires at least 4 enchants on the item to use.") }
             return ItemStack(Material.AIR)
         }
         // Add Slot remove enchants
@@ -514,7 +518,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
 
     private fun tomeOfBanishmentToEquipment(item: ItemStack, viewers: List<HumanEntity>): ItemStack {
         if (!item.isSlotted()) {
-            viewers.forEach { it.sendFailMessage("This item needs to be slotted to use this tome.") }
+            viewers.forEach { it.sendBarMessage("This item needs to be slotted to use this tome.") }
             return ItemStack(Material.AIR)
         }
         val enchantSlotCount = item.getEnchantSlots()
@@ -545,7 +549,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
                 item.removeGildedSlot()
             }
             else {
-                viewers.forEach { it.sendFailMessage("This item needs at least one slot to use this tome") }
+                viewers.forEach { it.sendBarMessage("This item needs at least one slot to use this tome") }
                 return ItemStack(Material.AIR)
             }
         }
@@ -555,11 +559,11 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
 
     private fun tomeOfDischargeToEquipment(item: ItemStack, viewers: List<HumanEntity>): ItemStack {
         if (!item.isSlotted()) {
-            viewers.forEach { it.sendFailMessage("This item needs to be slotted to use this tome.") }
+            viewers.forEach { it.sendBarMessage("This item needs to be slotted to use this tome.") }
             return ItemStack(Material.AIR)
         }
         if (!item.itemMeta.hasEnchants()) {
-            viewers.forEach { it.sendFailMessage("This item needs to be enchanted to use this tome.") }
+            viewers.forEach { it.sendBarMessage("This item needs to be enchanted to use this tome.") }
             return ItemStack(Material.AIR)
         }
         // Remove Enchantment
@@ -580,7 +584,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
 
     private fun tomeOfEmbraceToEquipment(item: ItemStack, viewers: List<HumanEntity>): ItemStack {
         if (!item.isSlotted()) {
-            viewers.forEach { it.sendFailMessage("This item needs to be slotted to use this tome.") }
+            viewers.forEach { it.sendBarMessage("This item needs to be slotted to use this tome.") }
             return ItemStack(Material.AIR)
         }
         // Add Slot
@@ -592,14 +596,14 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
 
     private fun tomeOfExpenditureToEquipment(item: ItemStack, viewers: List<HumanEntity>): ItemStack {
         if (!item.itemMeta.hasEnchants()) {
-            viewers.forEach { it.sendFailMessage("This item needs to be enchanted to use this tome.") }
+            viewers.forEach { it.sendBarMessage("This item needs to be enchanted to use this tome.") }
             return ItemStack(Material.AIR)
         }
         // Create Book
         val extractedEnchant = item.enchantments.toList().random()
         val extractedIsGilded = extractedEnchant.first.isOdysseyEnchant()
         val book = if (extractedIsGilded) {
-            Miscellaneous.ARCANE_BOOK.createArcaneBook(extractedEnchant.first.convertToOdysseyEnchant(), extractedEnchant.second)
+            Miscellaneous.ARCANE_BOOK.createArcaneBook(OdysseyEnchantments.VOID_JUMP, extractedEnchant.second) // TODO !!!!!!!!! FIX
         } else {
             ItemStack(Material.ENCHANTED_BOOK, 1).apply {
                 val newMeta = itemMeta.clone() as EnchantmentStorageMeta
@@ -620,19 +624,19 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
 
     private fun tomeOfPolymerizationToEquipment(book: ItemStack, item: ItemStack, viewers: List<HumanEntity>): ItemStack {
         if (item.itemMeta.hasEnchants()) {
-            viewers.forEach { it.sendFailMessage("This item needs no enchants to be used.") }
+            viewers.forEach { it.sendBarMessage("This item needs no enchants to be used.") }
             return ItemStack(Material.AIR)
         }
         if (!book.itemMeta.hasEnchants()) {
-            viewers.forEach { it.sendFailMessage("This tome needs at least one enchant to be used") }
+            viewers.forEach { it.sendBarMessage("This tome needs at least one enchant to be used") }
             return ItemStack(Material.AIR)
         }
         if (item.getGildedSlots() < book.enchantments.keys.count { it.isOdysseyEnchant() } ) {
-            viewers.forEach { it.sendFailMessage("This tome has more gilded enchants than slots on the item") }
+            viewers.forEach { it.sendBarMessage("This tome has more gilded enchants than slots on the item") }
             return ItemStack(Material.AIR)
         }
-        if (item.getEnchantSlots() < book.enchantments.keys.count { it.isNotOdysseyEnchant() } ) {
-            viewers.forEach { it.sendFailMessage("This tome has more regular enchants than slots on the item") }
+        if (item.getEnchantSlots() < book.enchantments.keys.count { !it.isOdysseyEnchant() } ) {
+            viewers.forEach { it.sendBarMessage("This tome has more regular enchants than slots on the item") }
             return ItemStack(Material.AIR)
         }
         // Apply new
@@ -645,11 +649,11 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
 
     private fun tomeOfPromotionToEquipment(item: ItemStack, viewers: List<HumanEntity>): ItemStack {
         if (!item.isSlotted() && item.type != Material.ENCHANTED_BOOK) {
-            viewers.forEach { it.sendFailMessage("This item needs to be slotted to use this tome.") }
+            viewers.forEach { it.sendBarMessage("This item needs to be slotted to use this tome.") }
             return ItemStack(Material.AIR)
         }
         if (!item.itemMeta.hasEnchants()) {
-            viewers.forEach { it.sendFailMessage("This item needs to be enchanted to use this tome.") }
+            viewers.forEach { it.sendBarMessage("This item needs to be enchanted to use this tome.") }
             return ItemStack(Material.AIR)
         }
         // Check book meta and enchant meta
@@ -660,7 +664,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
                 promotedEnchant = notMaxList.random()
             }
             catch (except: NoSuchElementException) {
-                viewers.forEach { it.sendFailMessage("The item enchantments are at the max level.") }
+                viewers.forEach { it.sendBarMessage("The item enchantments are at the max level.") }
                 return ItemStack(Material.AIR)
             }
             promotedEnchant = item.enchantments.toList().random()
@@ -671,7 +675,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         if (promotedEnchant == null) return ItemStack(Material.AIR)
         if (promotedEnchant.first.maxLevel <= promotedEnchant.second) {
             val message = "${promotedEnchant.first.key} is at the max level (Max: ${promotedEnchant.first.maxLevel})."
-            viewers.forEach { it.sendFailMessage(message) }
+            viewers.forEach { it.sendBarMessage(message) }
             return ItemStack(Material.AIR)
         }
 
@@ -692,7 +696,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
                 notMaxList.random()
             }
             catch (except: NoSuchElementException) {
-                viewers.forEach { it.sendFailMessage("The enchantment is at the max level.") }
+                viewers.forEach { it.sendBarMessage("The enchantment is at the max level.") }
                 return ItemStack(Material.AIR)
             }
 
@@ -702,7 +706,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
                 notMaxList.random()
             }
             catch (except: NoSuchElementException) {
-                viewers.forEach { it.sendFailMessage("The enchantments are at the max level.") }
+                viewers.forEach { it.sendBarMessage("The enchantments are at the max level.") }
                 return ItemStack(Material.AIR)
             }
         } else {
@@ -710,12 +714,12 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         }
         // Sentries
         if (promotedEnchant.first.maxLevel <= promotedEnchant.second) {
-            viewers.forEach { it.sendFailMessage("${promotedEnchant.first.displayName(promotedEnchant.second)} is at the max level (Max: ${promotedEnchant.first.maxLevel}).") }
+            viewers.forEach { it.sendBarMessage("${promotedEnchant.first.displayName(promotedEnchant.second)} is at the max level (Max: ${promotedEnchant.first.maxLevel}).") }
             return ItemStack(Material.AIR)
         }
         // Book
         val book = if (promotedEnchant.first.isOdysseyEnchant()) {
-            Miscellaneous.ARCANE_BOOK.createArcaneBook(promotedEnchant.first.convertToOdysseyEnchant(), promotedEnchant.second + 1)
+            Miscellaneous.ARCANE_BOOK.createArcaneBook(OdysseyEnchantments.ARCANE_CELL, promotedEnchant.second + 1) /// TODO FIXXXX!!!!
         } else {
             item.clone().apply {
                 val newMeta = itemMeta.clone() as EnchantmentStorageMeta

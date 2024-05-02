@@ -1,10 +1,6 @@
 package me.shadowalzazel.mcodyssey.arcane
 
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
-import me.shadowalzazel.mcodyssey.listeners.EnchantingListeners.addEnchantSlot
-import me.shadowalzazel.mcodyssey.listeners.EnchantingListeners.isSlotted
-import me.shadowalzazel.mcodyssey.listeners.EnchantingListeners.sendFailMessage
-import me.shadowalzazel.mcodyssey.listeners.EnchantingListeners.updateSlotLore
 import org.bukkit.Material
 import org.bukkit.entity.HumanEntity
 import org.bukkit.inventory.ItemStack
@@ -17,12 +13,12 @@ internal interface TomeManager : EnchantSlotManager {
 
     fun tomeOfDischargeOnItem(item: ItemStack, viewers: List<HumanEntity>): ItemStack {
         if (!item.isSlotted()) {
-            viewers.forEach { it.sendFailMessage("This item needs to be slotted to use this tome.") }
+            viewers.forEach { it.sendBarMessage("This item needs to be slotted to use this tome.") }
             return ItemStack(Material.AIR)
         }
         val meta = item.itemMeta
         if (!meta.hasEnchants() || meta is EnchantmentStorageMeta && meta.storedEnchants.isEmpty()) {
-            viewers.forEach { it.sendFailMessage("This item needs to be enchanted to use this tome.") }
+            viewers.forEach { it.sendBarMessage("This item needs to be enchanted to use this tome.") }
             return ItemStack(Material.AIR)
         }
         val enchantments = if (meta is EnchantmentStorageMeta) { meta.storedEnchants } else { meta.enchants }
@@ -42,7 +38,7 @@ internal interface TomeManager : EnchantSlotManager {
 
     private fun tomeOfEmbraceOnItem(item: ItemStack, viewers: List<HumanEntity>): ItemStack {
         if (!item.isSlotted()) {
-            viewers.forEach { it.sendFailMessage("This item needs to be slotted to use this tome.") }
+            viewers.forEach { it.sendBarMessage("This item needs to be slotted to use this tome.") }
             return ItemStack(Material.AIR)
         }
         // Add Slot

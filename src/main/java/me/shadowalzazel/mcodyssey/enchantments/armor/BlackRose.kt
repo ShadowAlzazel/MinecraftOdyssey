@@ -4,6 +4,8 @@ import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
 import net.kyori.adventure.text.Component
 import net.minecraft.tags.ItemTags
 import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.item.enchantment.Enchantment.constantCost
+import net.minecraft.world.item.enchantment.Enchantment.dynamicCost
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -24,7 +26,7 @@ object BlackRose : OdysseyEnchantment(
     override fun isTradeable(): Boolean = false
     override fun isDiscoverable(): Boolean = false
 
-    override fun conflictsWith(other: Enchantment): Boolean {
+    override fun checkBukkitConflict(other: Enchantment): Boolean {
         return false
     }
 

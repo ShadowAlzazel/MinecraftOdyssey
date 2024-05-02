@@ -24,7 +24,6 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.world.ChunkPopulateEvent
 import org.bukkit.generator.structure.Structure
-import org.bukkit.generator.structure.StructureType
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ArmorMeta
 import org.bukkit.inventory.meta.trim.ArmorTrim
@@ -126,9 +125,12 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
 
         // Difficulty
         val difficultyMod = getDifScale(mob)
+        /*
         mainHand.itemMeta = mainHand.itemMeta.also {
             it.addEnchant(gildedEnchant.toBukkit(), gildedEnchant.maximumLevel + 1, true)
         }
+         */
+        mainHand.setOdysseyEnchantment(gildedEnchant, gildedEnchant.maximumLevel + (1..2).random())
         // Main hand
         mainHand.itemMeta = mainHand.itemMeta.also {
             if (weaponCheckIfCanApply(Enchantment.SHARPNESS, gildedEnchant, mainHand))  {
@@ -198,7 +200,7 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
     }
 
     private fun weaponCheckIfCanApply(enchantment: Enchantment, gilded: OdysseyEnchantment, item: ItemStack): Boolean {
-        if (gilded.conflictsWith(enchantment)) return false
+        if (gilded.checkBukkitConflict(enchantment)) return false
         if (!enchantment.canEnchantItem(item)) return false
         return true
     }
@@ -220,19 +222,18 @@ object SpawningListeners : Listener, AttributeManager, EnchantSlotManager {
 
     private fun enchantMobArmor(armor: ItemStack, gildedEnchant: OdysseyEnchantment): ItemStack {
         // Apply
+        if (gildedEnchant.canEnchantItem(armor)) {
+            armor.setOdysseyEnchantment(gildedEnchant, gildedEnchant.maximumLevel + 1)
+        }
         armor.itemMeta = (armor.itemMeta as ArmorMeta).also {
             it.addEnchant(Enchantment.UNBREAKING, (1..3).random(), false)
             val prot = listOf(Enchantment.PROJECTILE_PROTECTION, Enchantment.PROTECTION,
                 Enchantment.BLAST_PROTECTION, Enchantment.FIRE_PROTECTION).random()
             it.addEnchant(prot, (1..prot.maxLevel).random(), false)
-            if (gildedEnchant.canEnchantItem(armor)) {
-                it.addEnchant(gildedEnchant.toBukkit(), gildedEnchant.maxLevel, false)
-            }
         }
         armor.createNewEnchantSlots()
         return armor
     }
-
 
     private fun getDifScale(entity: Entity): Double {
         // Find the XY distance from zero

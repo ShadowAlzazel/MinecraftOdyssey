@@ -1,14 +1,13 @@
 package me.shadowalzazel.mcodyssey.commands.admin
 
 import me.shadowalzazel.mcodyssey.arcane.EnchantSlotManager
-import me.shadowalzazel.mcodyssey.enchantments.EnchantRegistryManager
 import org.bukkit.Material
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-object EnchantWithOdyssey : CommandExecutor, EnchantSlotManager, EnchantRegistryManager {
+object EnchantWithOdyssey : CommandExecutor, EnchantSlotManager {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
         if (sender !is Player) return false
@@ -18,12 +17,10 @@ object EnchantWithOdyssey : CommandExecutor, EnchantSlotManager, EnchantRegistry
         // Get args
         val level = args[1].toInt()
         val string = args[0]
-        val odysseyEnchantment = getOdysseyEnchantFromString(string) ?: return false
-        val registeredEnchantment = convertToBukkitEnchant(odysseyEnchantment) ?: return false
+        val enchant = getOdysseyEnchantFromString(string) ?: return false
         // Passed Checks
         val item = sender.equipment.itemInMainHand
-        item.addUnsafeEnchantment(registeredEnchantment, level)
-        // CHANGE
+        item.setOdysseyEnchantment(enchant, level, true)
         item.createNewEnchantSlots()
         return true
     }

@@ -4,6 +4,8 @@ import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import net.minecraft.tags.ItemTags
 import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.item.enchantment.Enchantment.constantCost
+import net.minecraft.world.item.enchantment.Enchantment.dynamicCost
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -21,10 +23,11 @@ object TarNDip : OdysseyEnchantment(
     arrayOf(EquipmentSlot.MAINHAND)
 ) {
 
-    override fun conflictsWith(other: Enchantment): Boolean {
+    override fun checkOdysseyConflict(other: OdysseyEnchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.FREEZING_ASPECT.toBukkit(), OdysseyEnchantments.FROSTY_FUSE.toBukkit(),
-            OdysseyEnchantments.DOUSE.toBukkit() -> {
+            OdysseyEnchantments.FREEZING_ASPECT,
+            OdysseyEnchantments.FROSTY_FUSE,
+            OdysseyEnchantments.DOUSE -> {
                 true
             }
             else -> {

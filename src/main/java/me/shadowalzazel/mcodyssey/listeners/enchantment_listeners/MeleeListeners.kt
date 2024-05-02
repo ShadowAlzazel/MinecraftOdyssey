@@ -8,8 +8,8 @@ import me.shadowalzazel.mcodyssey.constants.EntityTags.getIntTag
 import me.shadowalzazel.mcodyssey.constants.EntityTags.removeTag
 import me.shadowalzazel.mcodyssey.constants.EntityTags.setIntTag
 import me.shadowalzazel.mcodyssey.effects.EffectsManager
-import me.shadowalzazel.mcodyssey.enchantments.EnchantRegistryManager
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
+import me.shadowalzazel.mcodyssey.enchantments.api.EnchantmentDataManager
 import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.ArcaneCellTask
 import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.FrogFrightTask
 import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.FrostyFuseTask
@@ -30,7 +30,7 @@ import org.bukkit.util.Vector
 import java.util.*
 import kotlin.math.log2
 
-object MeleeListeners : Listener, EffectsManager, EnchantRegistryManager {
+object MeleeListeners : Listener, EffectsManager, EnchantmentDataManager {
 
     // Internal cool downs for enchantments
     private var arcaneCellCooldown = mutableMapOf<UUID, Long>()
@@ -57,11 +57,8 @@ object MeleeListeners : Listener, EffectsManager, EnchantRegistryManager {
         val weapon = attacker.equipment!!.itemInMainHand
         val power = if (attacker is Player) { attacker.attackCooldown.toDouble() } else { 1.0 }
         // Loop for all enchants
-        for (enchant in weapon.enchantments) {
-            // Continue if not OdysseyEnchant
-            val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
-            // When match
-            when (gildedEnchant) {
+        for (enchant in weapon.getOdysseyEnchantments()) {
+            when (enchant.key) {
                 OdysseyEnchantments.ARCANE_CELL -> {
                     if (cooldownManager(attacker, "Arcane Cell", arcaneCellCooldown, 5.25)) {
                         arcaneCellEnchantment(victim, enchant.value)
@@ -169,14 +166,10 @@ object MeleeListeners : Listener, EffectsManager, EnchantRegistryManager {
         val killer = event.entity.killer as LivingEntity
         if (killer.equipment?.itemInMainHand?.hasItemMeta() == false) { return }
         val victim: LivingEntity = event.entity
-        val weapon = killer.equipment?.itemInMainHand
-
+        val weapon = killer.equipment?.itemInMainHand ?: return
         // Loop for all enchants
-        for (enchant in weapon!!.enchantments) {
-            // Continue if not OdysseyEnchant
-            val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
-            // When match
-            when (gildedEnchant) {
+        for (enchant in weapon.getOdysseyEnchantments()) {
+            when (enchant.key) {
                 OdysseyEnchantments.EXPLODING -> {
                     if (cooldownManager(killer, "Exploding", explodingCooldown, 1.25)) {
                         explodingEnchantment(victim, enchant.value)
@@ -194,13 +187,9 @@ object MeleeListeners : Listener, EffectsManager, EnchantRegistryManager {
         if (event.hitBy !is LivingEntity) return
         val attacker = event.hitBy as LivingEntity
         val hitWeapon = attacker.equipment?.itemInMainHand ?: return
-        //val entity = event.entity
         // Loop
-        for (enchant in hitWeapon.enchantments) {
-            // Continue if not OdysseyEnchant
-            val odysseyEnchantment = findOdysseyEnchant(enchant.key) ?: continue
-            // When match
-            when (odysseyEnchantment) {
+        for (enchant in hitWeapon.getOdysseyEnchantments()) {
+            when (enchant.key) {
                 OdysseyEnchantments.GUST -> {
                     event.acceleration = gustEnchantment(event.acceleration, enchant.value)
                 }

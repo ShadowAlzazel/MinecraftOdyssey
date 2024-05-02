@@ -4,6 +4,8 @@ import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import net.minecraft.tags.ItemTags
 import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.item.enchantment.Enchantment.constantCost
+import net.minecraft.world.item.enchantment.Enchantment.dynamicCost
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -24,9 +26,9 @@ object GravityWell : OdysseyEnchantment(
     override fun isTradeable(): Boolean = false
     override fun isDiscoverable(): Boolean = false
 
-    override fun conflictsWith(other: Enchantment): Boolean {
+    override fun checkOdysseyConflict(other: OdysseyEnchantment): Boolean {
         return when (other) {
-            OdysseyEnchantments.FROG_FRIGHT.toBukkit(), OdysseyEnchantments.ARCANE_CELL.toBukkit() -> {
+            OdysseyEnchantments.FROG_FRIGHT, OdysseyEnchantments.ARCANE_CELL -> {
                 true
             }
             else -> {
