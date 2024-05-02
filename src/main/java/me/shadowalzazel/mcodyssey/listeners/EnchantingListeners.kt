@@ -57,20 +57,12 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         val viewers = event.viewers
         val second = event.inventory.secondItem
         // Create Variables to detect conditions
-        val firstHasOdysseyEnchantments = if (first.itemMeta is EnchantmentStorageMeta) {
-            first.hasOdysseyEnchants()
-        } else {
-            first.hasOdysseyEnchants()
-        }
-        val secondHasOdysseyEnchantments = if (second?.itemMeta is EnchantmentStorageMeta) {
-            second.hasOdysseyEnchants()
-        } else {
-            second?.hasOdysseyEnchants()
-        }
+        val firstHasOdysseyEnchantments = first.hasOdysseyEnchants()
+        val secondHasOdysseyEnchantments = second?.hasOdysseyEnchants() == true
         val firstIsBook = first.type == Material.ENCHANTED_BOOK
         val firstBookIsOdyssey = firstHasOdysseyEnchantments && firstIsBook
         val secondIsBook = second?.type == Material.ENCHANTED_BOOK
-        val secondBookIsOdyssey = secondHasOdysseyEnchantments == true && secondIsBook
+        val secondBookIsOdyssey = secondHasOdysseyEnchantments && secondIsBook
         // Prevent Gilded Book + Enchanted Book [MAYBE make VOLUME tomes]
         if ((firstBookIsOdyssey && !secondBookIsOdyssey && secondIsBook) || (secondBookIsOdyssey && !firstBookIsOdyssey && firstIsBook)) {
             viewers.forEach { it.sendBarMessage("Can not combine Arcane Books and Enchanted Books!") }

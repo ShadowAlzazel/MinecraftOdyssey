@@ -27,6 +27,8 @@ internal interface RunesherdManager : AttributeManager {
     /* ---------------------------------------- */
     // TAGS
 
+    // TODO: Invert values
+
     fun ItemStack.addRunesherdTag() {
         addTag(ItemDataTags.IS_RUNESHERD)
     }
@@ -63,30 +65,21 @@ internal interface RunesherdManager : AttributeManager {
     // Find Attribute
     private fun findRunesherdAttribute(name: String): Attribute? {
         return when (name) {
-            Runesherds.ASSAULT_RUNESHERD.itemName -> {
-                Attribute.GENERIC_ATTACK_DAMAGE
-            }
-            Runesherds.GUARD_RUNESHERD.itemName -> {
-                Attribute.GENERIC_ARMOR
-            }
-            Runesherds.FINESSE_RUNESHERD.itemName -> {
-                Attribute.GENERIC_ATTACK_SPEED
-            }
-            Runesherds.SWIFT_RUNESHERD.itemName -> {
-                Attribute.GENERIC_MOVEMENT_SPEED
-            }
-            Runesherds.VITALITY_RUNESHERD.itemName -> {
-                Attribute.GENERIC_MAX_HEALTH
-            }
-            Runesherds.STEADFAST_RUNESHERD.itemName -> {
-                Attribute.GENERIC_KNOCKBACK_RESISTANCE
-            }
-            Runesherds.FORCE_RUNESHERD.itemName -> {
-                Attribute.GENERIC_ATTACK_KNOCKBACK
-            }
-            else -> {
-                null
-            }
+            Runesherds.ASSAULT_RUNESHERD.itemName -> { Attribute.GENERIC_ATTACK_DAMAGE }
+            Runesherds.GUARD_RUNESHERD.itemName -> { Attribute.GENERIC_ARMOR }
+            Runesherds.FINESSE_RUNESHERD.itemName -> { Attribute.GENERIC_ATTACK_SPEED }
+            Runesherds.SWIFT_RUNESHERD.itemName -> { Attribute.GENERIC_MOVEMENT_SPEED }
+            Runesherds.VITALITY_RUNESHERD.itemName -> { Attribute.GENERIC_MAX_HEALTH }
+            Runesherds.STEADFAST_RUNESHERD.itemName -> { Attribute.GENERIC_KNOCKBACK_RESISTANCE }
+            Runesherds.FORCE_RUNESHERD.itemName -> { Attribute.GENERIC_ATTACK_KNOCKBACK }
+            Runesherds.BREAK_RUNESHERD.itemName -> { Attribute.PLAYER_BLOCK_BREAK_SPEED }
+            Runesherds.BREACH_RUNESHERD.itemName -> { Attribute.PLAYER_BLOCK_INTERACTION_RANGE }
+            Runesherds.JUMP_RUNESHERD.itemName -> { Attribute.GENERIC_JUMP_STRENGTH }
+            Runesherds.GRAVITY_RUNESHERD.itemName -> { Attribute.GENERIC_GRAVITY }
+            Runesherds.RANGE_RUNESHERD.itemName -> { Attribute.PLAYER_ENTITY_INTERACTION_RANGE }
+            Runesherds.SIZE_RUNESHERD.itemName -> { Attribute.GENERIC_SCALE }
+            // TODO: Step height/toughness
+            else -> { null }
         }
     }
 
@@ -99,7 +92,15 @@ internal interface RunesherdManager : AttributeManager {
             Attribute.GENERIC_MOVEMENT_SPEED -> { AttributeIDs.RUNESHERD_MOVEMENT_SPEED_UUID }
             Attribute.GENERIC_MAX_HEALTH -> { AttributeIDs.RUNESHERD_MAX_HEALTH_UUID }
             Attribute.GENERIC_KNOCKBACK_RESISTANCE -> { AttributeIDs.RUNESHERD_KNOCKBACK_RESISTANCE_UUID }
-            Attribute.GENERIC_ATTACK_KNOCKBACK -> { AttributeIDs.ATTACK_KNOCKBACK }
+            Attribute.GENERIC_ATTACK_KNOCKBACK -> { AttributeIDs.RUNESHERD_ATTACK_KNOCKBACK_UUID }
+            Attribute.PLAYER_BLOCK_BREAK_SPEED -> { AttributeIDs.RUNESHERD_BLOCK_BREAK_SPEED_UUID }
+            Attribute.PLAYER_BLOCK_INTERACTION_RANGE -> { AttributeIDs.RUNESHERD_BLOCK_INTERACTION_RANGE_UUID }
+            Attribute.GENERIC_JUMP_STRENGTH -> { AttributeIDs.RUNESHERD_JUMP_STRENGTH_UUID }
+            Attribute.GENERIC_GRAVITY -> { AttributeIDs.RUNESHERD_GRAVITY_UUID }
+            Attribute.PLAYER_ENTITY_INTERACTION_RANGE -> { AttributeIDs.RUNESHERD_ENTITY_INTERACTION_RANGE_UUID }
+            Attribute.GENERIC_SCALE -> { AttributeIDs.RUNESHERD_SCALE_UUID }
+            Attribute.GENERIC_STEP_HEIGHT -> { AttributeIDs.RUNESHERD_STEP_HEIGHT_UUID }
+            Attribute.GENERIC_ARMOR_TOUGHNESS -> { AttributeIDs.RUNESHERD_ARMOR_TOUGHNESS_UUID }
             else -> {  UUID.randomUUID() }
         }
     }
@@ -112,29 +113,14 @@ internal interface RunesherdManager : AttributeManager {
         slot: EquipmentSlot
     ) {
         when(attribute) {
-            Attribute.GENERIC_ATTACK_DAMAGE -> {
-                addAttackDamageAttribute(value, name, id, slot)
-            }
-            Attribute.GENERIC_ARMOR -> {
-                addArmorAttribute(value, name, id, slot)
-            }
-            Attribute.GENERIC_ATTACK_SPEED -> {
-                addAttackSpeedAttribute(value, name, id, slot)
-            }
-            Attribute.GENERIC_MOVEMENT_SPEED -> {
-                addMovementSpeedAttribute(value, name, id, slot)
-            }
-            Attribute.GENERIC_MAX_HEALTH -> {
-                addMaxHealthAttribute(value, name,  id, slot)
-            }
-            Attribute.GENERIC_KNOCKBACK_RESISTANCE -> {
-                addKnockbackResistanceAttribute(value, name, id, slot)
-            }
-            Attribute.GENERIC_ATTACK_KNOCKBACK -> {
-                addAttackKnockbackAttribute(value, name, id, slot)
-            }
-            else -> {
-            }
+            Attribute.GENERIC_ATTACK_DAMAGE -> { addAttackDamageAttribute(value, name, id, slot) }
+            Attribute.GENERIC_ARMOR -> { addArmorAttribute(value, name, id, slot) }
+            Attribute.GENERIC_ATTACK_SPEED -> { addAttackSpeedAttribute(value, name, id, slot) }
+            Attribute.GENERIC_MOVEMENT_SPEED -> { addMovementSpeedAttribute(value, name, id, slot) }
+            Attribute.GENERIC_MAX_HEALTH -> { addMaxHealthAttribute(value, name,  id, slot) }
+            Attribute.GENERIC_KNOCKBACK_RESISTANCE -> { addKnockbackResistanceAttribute(value, name, id, slot) }
+            Attribute.GENERIC_ATTACK_KNOCKBACK -> { addAttackKnockbackAttribute(value, name, id, slot) }
+            else -> { addGenericAttribute(value, name, id, slot, attribute) }
         }
     }
 
