@@ -22,13 +22,10 @@ object AttributeIDs {
     // Custom Helmet
     val ARMOR_HELMET_UUID: UUID = UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")
 
-    // Runesherds - 1.21
-    val RUNESHERD_STEP_HEIGHT_UUID: UUID = UUID.fromString("c624500d-3e53-49aa-b3a4-82899edb5390")
+    // Runesherds
     val RUNESHERD_BLOCK_INTERACTION_RANGE_UUID: UUID = UUID.fromString("bbcad961-67ce-427e-959b-67c1bb3db4b7")
     val RUNESHERD_ENTITY_INTERACTION_RANGE_UUID: UUID = UUID.fromString("2dc2a532-1188-4153-81eb-78c748be41b4")
     val RUNESHERD_BLOCK_BREAK_SPEED_UUID: UUID = UUID.fromString("6e539306-588a-424b-b7df-2a089f82b128")
-
-    // Runesherds
     val RUNESHERD_ATTACK_DAMAGE_UUID: UUID = UUID.fromString("37684ffb-9504-4d9f-bd05-e8ca33860a01")
     val RUNESHERD_ARMOR_UUID: UUID = UUID.fromString("6e7d4e90-35bd-4718-b875-9bf1afaa68c6")
     val RUNESHERD_MOVEMENT_SPEED_UUID: UUID = UUID.fromString("b5d0bd0f-979e-4ec5-a8cc-63df0548f31b")
@@ -36,12 +33,14 @@ object AttributeIDs {
     val RUNESHERD_MAX_HEALTH_UUID: UUID = UUID.fromString("111770c6-d9de-4068-b4a8-81d80957562c")
     val RUNESHERD_ATTACK_KNOCKBACK_UUID: UUID = UUID.fromString("2edda600-746d-4637-83f0-d58b2789dc96")
     val RUNESHERD_KNOCKBACK_RESISTANCE_UUID: UUID = UUID.fromString("e9f08a78-3c09-4b86-a6ad-e3e2de16ca5a")
-    val RUNESHERD_ARMOR_TOUGHNESS_UUID: UUID = UUID.fromString("23b4b3a0-2976-46a1-bc4b-d17ef2800b7e")
-
-    // Runesherds - End
+    val RUNESHERD_SCALE_UUID: UUID = UUID.fromString("2607c2ba-ae83-4c0e-9694-c16de5ab4c2f")
     val RUNESHERD_GRAVITY_UUID: UUID = UUID.fromString("07db03ed-f4ce-4bc6-ab0e-e97decda7dae")
     val RUNESHERD_SAFE_FALL_DISTANCE_UUID: UUID = UUID.fromString("9a92c55e-de6e-411b-a380-01860c1b8f6a")
     val RUNESHERD_JUMP_STRENGTH_UUID: UUID = UUID.fromString("6263de34-08ce-4b5d-9561-ce7b32c2cbfd")
+
+    val RUNESHERD_STEP_HEIGHT_UUID: UUID = UUID.fromString("c624500d-3e53-49aa-b3a4-82899edb5390")
+    val RUNESHERD_ARMOR_TOUGHNESS_UUID: UUID = UUID.fromString("23b4b3a0-2976-46a1-bc4b-d17ef2800b7e")
+    val RUNESHERD_EXTRA_UUID: UUID = UUID.fromString("8e973c1d-4a30-46a1-9dec-5e3e34c405d0")
 
     // Mob
     val ODYSSEY_MOB_HEALTH_UUID: UUID = UUID.fromString("c994412e-9e72-4881-a55f-1f2d1c95f454")

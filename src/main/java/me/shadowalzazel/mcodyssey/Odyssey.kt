@@ -58,7 +58,6 @@ class Odyssey : JavaPlugin() {
 
         // Asset Loader
         val datapackManager = DatapackManager(this)
-
         // Find Worlds
         // Need to find the main world to locate datapacks
         logger.info("Finding Datapack World...")

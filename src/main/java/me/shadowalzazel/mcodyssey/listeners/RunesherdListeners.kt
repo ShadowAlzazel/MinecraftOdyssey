@@ -5,7 +5,8 @@ import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasOdysseyItemTag
 import me.shadowalzazel.mcodyssey.items.Runesherds
 import me.shadowalzazel.mcodyssey.items.Runesherds.createLootSherdStack
 import me.shadowalzazel.mcodyssey.items.Runesherds.createRuneware
-import me.shadowalzazel.mcodyssey.items.Runesherds.createSherdStack
+import me.shadowalzazel.mcodyssey.items.Runesherds.createPresetSherdStack
+import me.shadowalzazel.mcodyssey.items.Runesherds.runesherdRuinsList
 import me.shadowalzazel.mcodyssey.rune_writing.RunesherdManager
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
@@ -61,7 +62,6 @@ object RunesherdListeners : Listener, RunesherdManager {
         event.result = item
         return
     }
-
 
     @Suppress("UnstableApiUsage")
     @EventHandler
@@ -123,7 +123,6 @@ object RunesherdListeners : Listener, RunesherdManager {
             event.isCancelled = true
             return
         }
-
         val runeware = when (input.itemMeta.customModelData) {
             ItemModels.FRAGMENTED_ORB -> {
                 Runesherds.GLAZED_RUNE_ORB.createRuneware(1)
@@ -167,16 +166,12 @@ object RunesherdListeners : Listener, RunesherdManager {
         if (item.itemStack.type != Material.BRICK) return
         if (!item.itemStack.itemMeta.hasCustomModelData()) return
         if (item.itemStack.itemMeta.customModelData != ItemModels.UNKNOWN_RUNESHERD) return
-        // Change to runesherd
-        val runesherdList = listOf(Runesherds.FINESSE_RUNESHERD, Runesherds.FORCE_RUNESHERD, Runesherds.ASSAULT_RUNESHERD,
-            Runesherds.GUARD_RUNESHERD, Runesherds.SWIFT_RUNESHERD, Runesherds.VITALITY_RUNESHERD, Runesherds.STEADFAST_RUNESHERD)
-
-        // RNG
+        // Roll 70 for a preset slot, 30 for random slot
         if ((0..100).random() > 70) {
-            item.itemStack = runesherdList.random().createSherdStack(1)
+            item.itemStack = runesherdRuinsList.random().createPresetSherdStack(1)
         }
         else {
-            item.itemStack = runesherdList.random().createLootSherdStack(1) // Do more random slots
+            item.itemStack = runesherdRuinsList.random().createLootSherdStack(1) // Do more random slots
         }
     }
 

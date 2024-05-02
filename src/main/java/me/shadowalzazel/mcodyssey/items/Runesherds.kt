@@ -25,20 +25,20 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         EquipmentSlot.HEAD, EquipmentSlot.OFF_HAND, EquipmentSlot.HAND)
     private val WEAPON_LIST = listOf(EquipmentSlot.OFF_HAND, EquipmentSlot.HAND)
 
-    fun OdysseyRunesherd.createSherdStack(amount: Int = 1): ItemStack {
-        val item = createItemStack(amount).also {
+    fun OdysseyRunesherd.createPresetSherdStack(amount: Int = 1): ItemStack {
+        val item = this.createItemStack(amount).also {
             it.addRunesherdTag()
         }
         if (attribute != null && !affectedEquipment.isNullOrEmpty()) {
             val runeName = "odyssey." + itemName + "_modifier"
             val runeID = getIDForRunesherd(attribute)
-            item.addRuneModifier(attribute, value, runeName, runeID, affectedEquipment[0])
+            item.addRuneModifier(attribute, value, runeName, runeID, affectedEquipment.random())
         }
         return item
     }
 
     fun OdysseyRunesherd.createLootSherdStack(amount: Int = 1, bonus: Double = 0.0): ItemStack {
-        val item = createItemStack(amount).also {
+        val item = this.createItemStack(amount).also {
             it.addRunesherdTag()
         }
         if (attribute != null && !affectedEquipment.isNullOrEmpty()) {
@@ -51,14 +51,14 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
     }
 
     fun OdysseyItem.createRuneware(amount: Int = 1): ItemStack {
-        val item = createItemStack(amount).also {
+        val item = this.createItemStack(amount).also {
             it.addRunewareTag()
         }
         return item
     }
 
     fun OdysseyItem.createSpaceRuneTablet(amount: Int = 1): ItemStack {
-        val item = createItemStack(amount).also {
+        val item = this.createItemStack(amount).also {
             it.addTag(ItemDataTags.IS_SPACERUNE)
             it.createSpaceRuneComponents()
             it.createSpaceRuneMatrixLore()
@@ -112,7 +112,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         customModel = ItemModels.GUARD_RUNESHERD,
         attribute = Attribute.GENERIC_ARMOR,
         value = 1.0,
-        affectedEquipment = listOf(EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET, EquipmentSlot.HEAD)
+        affectedEquipment = ARMOR_LIST
     )
 
     val FINESSE_RUNESHERD = OdysseyRunesherd(
@@ -132,7 +132,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         customModel = ItemModels.SWIFT_RUNESHERD,
         attribute = Attribute.GENERIC_MOVEMENT_SPEED,
         value = 0.03,
-        affectedEquipment = listOf(EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD)
+        affectedEquipment = listOf(EquipmentSlot.FEET)
     )
 
     val VITALITY_RUNESHERD = OdysseyRunesherd(
@@ -164,6 +164,74 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         value = 0.5,
         affectedEquipment = listOf(EquipmentSlot.HAND)
     )
+
+    val BREAK_RUNESHERD = OdysseyRunesherd(
+        itemName = "break_runesherd",
+        overrideMaterial = Material.BRICK,
+        customName = "Break Runesherd",
+        customModel = ItemModels.BREAK_RUNESHERD,
+        attribute = Attribute.PLAYER_BLOCK_BREAK_SPEED,
+        value = 1.0,
+        affectedEquipment = listOf(EquipmentSlot.HAND)
+    )
+
+    val BREACH_RUNESHERD = OdysseyRunesherd(
+        itemName = "breach_runesherd",
+        overrideMaterial = Material.BRICK,
+        customName = "Breach Runesherd",
+        customModel = ItemModels.BREACH_RUNESHERD,
+        attribute = Attribute.PLAYER_BLOCK_INTERACTION_RANGE,
+        value = 1.0,
+        affectedEquipment = listOf(EquipmentSlot.HAND)
+    )
+
+    val JUMP_RUNESHERD = OdysseyRunesherd(
+        itemName = "jump_runesherd",
+        overrideMaterial = Material.BRICK,
+        customName = "Jump Runesherd",
+        customModel = ItemModels.JUMP_RUNESHERD,
+        attribute = Attribute.GENERIC_JUMP_STRENGTH,
+        value = 0.5,
+        affectedEquipment = listOf(EquipmentSlot.LEGS)
+    )
+
+    // TODO: Step Size
+
+    val GRAVITY_RUNESHERD = OdysseyRunesherd(
+        itemName = "gravity_runesherd",
+        overrideMaterial = Material.BRICK,
+        customName = "Gravity Runesherd",
+        customModel = ItemModels.GRAVITY_RUNESHERD,
+        attribute = Attribute.GENERIC_GRAVITY,
+        value = -0.01,
+        affectedEquipment = listOf(EquipmentSlot.HEAD)
+    )
+
+    val RANGE_RUNESHERD = OdysseyRunesherd(
+        itemName = "range_runesherd",
+        overrideMaterial = Material.BRICK,
+        customName = "Range Runesherd",
+        customModel = ItemModels.RANGE_RUNESHERD,
+        attribute = Attribute.PLAYER_ENTITY_INTERACTION_RANGE,
+        value = 0.5,
+        affectedEquipment = listOf(EquipmentSlot.HAND)
+    )
+
+    val SIZE_RUNESHERD = OdysseyRunesherd(
+        itemName = "size_runesherd",
+        overrideMaterial = Material.BRICK,
+        customName = "Size Runesherd",
+        customModel = ItemModels.SIZE_RUNESHERD,
+        attribute = Attribute.GENERIC_SCALE,
+        value = 0.25,
+        affectedEquipment = listOf(EquipmentSlot.CHEST)
+    )
+
+    val runesherdRuinsList = listOf(
+        ASSAULT_RUNESHERD, GUARD_RUNESHERD, FINESSE_RUNESHERD, SWIFT_RUNESHERD,
+        VITALITY_RUNESHERD, STEADFAST_RUNESHERD, FORCE_RUNESHERD, BREAK_RUNESHERD,
+        BREACH_RUNESHERD,  JUMP_RUNESHERD,  GRAVITY_RUNESHERD,  RANGE_RUNESHERD,
+        SIZE_RUNESHERD)
 
     /*-----------------------------------------------------------------------------------------------*/
 

@@ -60,13 +60,19 @@ object ItemModels {
     const val TOME_OF_IMITATION: Int = 6906077
 
     // Runesherds
-    const val ASSAULT_RUNESHERD: Int = 6901453 // Main hand - Attack Damage
-    const val GUARD_RUNESHERD: Int = 6901454 // Armor - Armor
-    const val FINESSE_RUNESHERD: Int = 6901455 // Main Hand - Attack Speed
-    const val SWIFT_RUNESHERD: Int = 6901456 // Armor - Speed
-    const val VITALITY_RUNESHERD: Int = 6901457 // Armor - Health
-    const val STEADFAST_RUNESHERD: Int = 6901458 // Armor - Knockback Resistance
-    const val FORCE_RUNESHERD: Int = 6901459 // Main Hand - Attack Knockback
+    const val ASSAULT_RUNESHERD: Int = 6901453 // Attack Damage
+    const val GUARD_RUNESHERD: Int = 6901454 // Armor
+    const val FINESSE_RUNESHERD: Int = 6901455 // Attack Speed
+    const val SWIFT_RUNESHERD: Int = 6901456 // Speed
+    const val VITALITY_RUNESHERD: Int = 6901457 // Health
+    const val STEADFAST_RUNESHERD: Int = 6901458 // Knockback Resistance
+    const val FORCE_RUNESHERD: Int = 6901459 // Attack Knockback
+    const val BREAK_RUNESHERD: Int = 6901459 // Break Speed
+    const val BREACH_RUNESHERD: Int = 6901459 // Block Break Range
+    const val JUMP_RUNESHERD: Int = 6901459 // Jump
+    const val GRAVITY_RUNESHERD: Int = 6901459 // Gravity
+    const val RANGE_RUNESHERD: Int = 6901459 // Attack Range
+    const val SIZE_RUNESHERD: Int = 6901459 // Size
 
     // Runeware
     const val FRAGMENTED_ORB: Int = 6901544

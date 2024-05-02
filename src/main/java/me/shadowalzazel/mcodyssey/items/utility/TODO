@@ -29,21 +29,21 @@
 // LANCE
 
 // ODYSSEY
-// [More Durability than stone], [iron-tier mine]
 COPPER(2.0, "Copper"),
-// [less durability than netherite], [exclusive to edge], [+1 stat], template + copper
+// [More Durability than stone], [iron-tier mine]
 MITHRIL(6.0, "Mithril"),
-// [+15% Exp Drop], [slightly more durability than iron], template + iron
+// [less durability than netherite], [exclusive to edge], [+1 stat], template + copper
 SOUL_STEEL(4.0, "Soul Steel"),
-// [Way more durability], [-10% speed (block, attack)], [boom immune]
+// [+15% Exp Drop], [slightly more durability than iron], template + iron
 IRIDIUM(5.0, "Iridium"),
-// [+2 Dmg against monster], [=durability to iron]
+// [Way more durability], [-10% speed (block, attack)], [boom immune]
 SILVER(3.0, "Silver"),
-// [+10% Damage Life Steal, applies withering to user], wither rose + (silver)
+// [+2 Dmg against monster], [=durability to iron]
 WITHERGLINT(4.0, "Wither Glint"),
+// [+10% Damage Life Steal, applies withering to user], wither rose + (silver)
 // []
+// TITANIUM = +10% speed [-diamond durability]
 RUNE_STONE(4.0, "Rune Stone"),
-// TITANIUM = +5% speed [-diamond durability]
 
 // MISC
 BAMBOO(1.5, "Bamboo"),

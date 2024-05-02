@@ -31,7 +31,7 @@ enum class ToolType(
     // Pickaxe Overrides
     WARHAMMER("warhammer", "Warhammer", 4.0, 1.4, 11, "pickaxe"),
     // Hoe Overrides
-    SCYTHE("scythe", "Scythe", 3.0, 1.1, 92, "hoe"),
+    SCYTHE("scythe", "Scythe", 3.0, 1.1, 92, "hoe", 1.0),
     // Others
     SHURIKEN("shuriken", "Shuriken", 0.5, 1.0, 1, "iron_nugget")
 
