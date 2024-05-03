@@ -121,14 +121,15 @@ object WeaponListeners : Listener {
         if (wasThrowable) {
             victim.removeScoreboardTag(EntityTags.THROWABLE_ATTACK_HIT)
         } else { // Cancel if above max range
-            val maxRange = MAX_RANGE_MAP[mainWeaponType]
+            //val maxRange = MAX_RANGE_MAP[mainWeaponType]
+            /*
             if (maxRange != null) {
                 val closestDistance = minOf(player.eyeLocation.distance(victim.location), player.eyeLocation.distance(victim.eyeLocation))
                 if (closestDistance > maxRange) {
                     event.isCancelled = true
                     return
                 }
-            }
+            }  */
         }
         if (event.damage > 1.0 && !wasThrowable) { event.damage -= 1.0 } // Reduce Weapon Damage by 1 to match attribute display
         // Conditions

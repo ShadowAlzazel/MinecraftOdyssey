@@ -14,7 +14,6 @@ import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Color
 import org.bukkit.Material
-import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.potion.PotionEffect
@@ -24,7 +23,7 @@ import org.bukkit.potion.PotionType
 object Potions : AlchemyManager {
 
     fun OdysseyPotion.createPotionStack(): ItemStack {
-        return createItemStack(1).apply {
+        return newItemStack(1).apply {
             val potionMeta = itemMeta as PotionMeta
             if (potionColor != null) potionMeta.color = potionColor
             if (!potionEffects.isNullOrEmpty()) {

@@ -55,7 +55,7 @@ object TreasurePig: OdysseyMob("Treasure Pig", MobTags.TREASURE_PIG, EntityType.
             if (!pig.isDead && counter < 40) {
                 counter += 1
                 with(pig.world) {
-                    dropItem(pig.location, lootTable.random().createItemStack(1))
+                    dropItem(pig.location, lootTable.random().newItemStack(1))
                     dropItem(pig.location, ItemStack(Material.GOLD_NUGGET, (1..2).random()))
                     playSound(pig.location, Sound.ENTITY_WITHER_BREAK_BLOCK, 2.5F, 0.5F)
                     val goldBlockBreak = Material.GOLD_BLOCK.createBlockData()

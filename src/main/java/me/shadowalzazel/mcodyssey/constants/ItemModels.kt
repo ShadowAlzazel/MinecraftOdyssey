@@ -67,12 +67,12 @@ object ItemModels {
     const val VITALITY_RUNESHERD: Int = 6901457 // Health
     const val STEADFAST_RUNESHERD: Int = 6901458 // Knockback Resistance
     const val FORCE_RUNESHERD: Int = 6901459 // Attack Knockback
-    const val BREAK_RUNESHERD: Int = 6901459 // Break Speed
-    const val BREACH_RUNESHERD: Int = 6901459 // Block Break Range
-    const val JUMP_RUNESHERD: Int = 6901459 // Jump
-    const val GRAVITY_RUNESHERD: Int = 6901459 // Gravity
-    const val RANGE_RUNESHERD: Int = 6901459 // Attack Range
-    const val SIZE_RUNESHERD: Int = 6901459 // Size
+    const val BREAK_RUNESHERD: Int = 6901460 // Break Speed
+    const val BREACH_RUNESHERD: Int = 6901461 // Block Break Range
+    const val JUMP_RUNESHERD: Int = 6901462 // Jump
+    const val GRAVITY_RUNESHERD: Int = 6901463 // Gravity
+    const val RANGE_RUNESHERD: Int = 6901464 // Attack Range
+    const val SIZE_RUNESHERD: Int = 6901465 // Size
 
     // Runeware
     const val FRAGMENTED_ORB: Int = 6901544
@@ -238,7 +238,7 @@ object ItemModels {
 
     // Soul Steel [69063XX]
 
-    // Soul Steel [69066XX]
+    // Soul Steel [69066XX] TODO !!! Conversion map for smithing
     const val SOUL_STEEL_KATANA: Int = 6906644
     const val SOUL_STEEL_CLAYMORE: Int = 6906645
     const val SOUL_STEEL_DAGGER: Int = 6906646
@@ -265,16 +265,19 @@ object ItemModels {
     const val SOUL_STEEL_POLEAXE: Int = 6906686
     const val SOUL_STEEL_LABRYS: Int = 6906687
 
-    // Iridium [69071XX]
-
-    // Mithril [69076XX]
-
-    // Unused Weapons
+    // Special Crafted Weapons
     const val ZWEIHANDER: Int = 6905777
+    const val VOID_LINKED_KUNAI: Int = 6905778
 
-    // Exotics
-    const val VOID_LINKED_KUNAI: Int = 6905001
-    const val ABZU_BLADE: Int = 6905002
-    const val KINETIC_BLASTER: Int = 6905003
+    // EXOTICS
+    const val KINETIC_BLASTER: Int = 6908600
+    // MELEE EXOTICS
+    const val KNIGHT_BREAKER: Int = 6909600
+    const val SHOGUN_LIGHTNING: Int = 6909601
+    const val ABZU_BLADE: Int = 6909602
+    const val EXCALIBUR: Int = 6909603
+    const val FROST_FANG: Int = 6909604
+    const val ELUCIDATOR: Int = 6909605
+    const val SERENITY_IRIS: Int = 6909606
 
 }

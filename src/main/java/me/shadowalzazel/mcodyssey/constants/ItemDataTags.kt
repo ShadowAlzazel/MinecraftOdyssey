@@ -53,6 +53,9 @@ object ItemDataTags {
     const val IS_KUNAI: String = "odyssey.is_kunai"
     const val IS_CHAKRAM: String = "odyssey.is_chakram"
 
+    // Tier
+    const val IS_EXOTIC: String = "odyssey.is_exotic"
+
     // Enchanting
     const val GILDED_SLOTS: String = "odyssey.gilded_slots"
     const val ENCHANT_SLOTS: String = "odyssey.enchant_slots"

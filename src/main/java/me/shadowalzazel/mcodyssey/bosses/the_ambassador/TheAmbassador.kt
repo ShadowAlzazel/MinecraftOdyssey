@@ -132,7 +132,7 @@ class TheAmbassador(location: Location) : OdysseyBoss(
             health = 950.0
             // Add Kinetic Blaster
             clearActiveItem()
-            equipment.setItemInMainHand(Exotics.KINETIC_BLASTER.createItemStack(1))
+            equipment.setItemInMainHand(Exotics.KINETIC_BLASTER.newItemStack(1))
         }
     }
 
@@ -142,7 +142,7 @@ class TheAmbassador(location: Location) : OdysseyBoss(
         if (entity != this.illusioner) return
         if (vanquisher is Player) {
             //vanquisher.world.dropItem(vanquisher.location, (Arcane.GILDED_BOOK.createGildedBook(OdysseyEnchantments.GRAVITY_WELL, 1)))
-            vanquisher.world.dropItem(vanquisher.location, (Miscellaneous.PRIMO_GEM.createItemStack(15)))
+            vanquisher.world.dropItem(vanquisher.location, (Miscellaneous.PRIMO_GEM.newItemStack(15)))
             vanquisher.giveExpLevels(40)
         }
         val vanquisherName = vanquisher?.name ?: "An unknown Hero"
@@ -198,7 +198,7 @@ class TheAmbassador(location: Location) : OdysseyBoss(
             )
             // Add Item
             clearActiveItem()
-            equipment.setItemInMainHand(Exotics.KINETIC_BLASTER.createItemStack(1))
+            equipment.setItemInMainHand(Exotics.KINETIC_BLASTER.newItemStack(1))
             equipment.itemInMainHandDropChance = 0F
         }
     }
@@ -468,12 +468,12 @@ class TheAmbassador(location: Location) : OdysseyBoss(
             }
             Material.AMETHYST_SHARD -> {
                 giftLikeness += 2
-                inventory.addItem(Miscellaneous.PRISMATIC_BOOK.createItemStack(maxOf(extraValue - 1, 1)))
+                inventory.addItem(Miscellaneous.PRISMATIC_BOOK.newItemStack(maxOf(extraValue - 1, 1)))
             }
             Material.AMETHYST_BLOCK -> {
                 giftLikeness += 8
                 val tome = listOf(Miscellaneous.TOME_OF_PROMOTION, Miscellaneous.TOME_OF_EMBRACE, Miscellaneous.TOME_OF_DISCHARGE).random()
-                inventory.addItem(tome.createItemStack(1))
+                inventory.addItem(tome.newItemStack(1))
             }
             Material.EMERALD -> {
                 giftLikeness += 4
@@ -514,7 +514,7 @@ class TheAmbassador(location: Location) : OdysseyBoss(
                 inventory.addItem(ItemStack(randomFood.random(), extraValue))
             }
             Material.ENCHANTED_GOLDEN_APPLE -> {
-                inventory.addItem(Miscellaneous.TOME_OF_POLYMERIZATION.createItemStack(1))
+                inventory.addItem(Miscellaneous.TOME_OF_POLYMERIZATION.newItemStack(1))
                 giftLikeness += 15
             }
             Material.HEART_OF_THE_SEA -> {

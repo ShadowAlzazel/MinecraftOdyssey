@@ -4,7 +4,7 @@ import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.items.*
 import me.shadowalzazel.mcodyssey.items.Equipment
 import me.shadowalzazel.mcodyssey.items.Runesherds.createRuneware
-import me.shadowalzazel.mcodyssey.listeners.EnchantingListeners.createNewStack
+import me.shadowalzazel.mcodyssey.listeners.EnchantingListeners.createStack
 import me.shadowalzazel.mcodyssey.recipes.creators.BlazingRocketsCreator
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
@@ -39,7 +39,7 @@ class Misc {
     /*-----------------------------------------------------------------------------------------------*/
 
     private fun prismaticBookRecipe(): ShapedRecipe {
-        val result = Miscellaneous.PRISMATIC_BOOK.createItemStack(1)
+        val result = Miscellaneous.PRISMATIC_BOOK.newItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "prismatic_book"), result).apply {
             shape(" C ", "ABA", " C ")
             setIngredient('A', Material.AMETHYST_SHARD)
@@ -62,8 +62,8 @@ class Misc {
     }
 
     private fun silverIngotRecipe(): ShapedRecipe {
-        val result = Ingredients.SILVER_INGOT.createNewStack(1)
-        val nugget = Ingredients.SILVER_NUGGET.createNewStack(1)
+        val result = Ingredients.SILVER_INGOT.createStack(1)
+        val nugget = Ingredients.SILVER_NUGGET.createStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "silver_ingot"), result).apply {
             shape("NNN", "NNN", "NNN")
             setIngredient('N', RecipeChoice.ExactChoice(nugget))
@@ -72,9 +72,9 @@ class Misc {
     }
 
     private fun enigmaticOmamoriRecipe(): ShapedRecipe {
-        val result = Miscellaneous.ENIGMATIC_OMAMORI.createItemStack(1)
-        val soulCrystal = Ingredients.SOUL_QUARTZ.createItemStack(1)
-        val soulIngot = Ingredients.SOUL_STEEL_INGOT.createItemStack(1)
+        val result = Miscellaneous.ENIGMATIC_OMAMORI.newItemStack(1)
+        val soulCrystal = Ingredients.SOUL_QUARTZ.newItemStack(1)
+        val soulIngot = Ingredients.SOUL_STEEL_INGOT.newItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "enigmatic_omamori"), result).apply {
             shape(" W ", "XYX", "XZX")
             setIngredient('Z', RecipeChoice.ExactChoice(soulIngot))
@@ -108,8 +108,8 @@ class Misc {
     }
 
     private fun irradiatedFruitRecipe(): ShapedRecipe {
-        val result = Miscellaneous.IRRADIATED_FRUIT.createItemStack(1)
-        val irradiatedRod = Ingredients.IRRADIATED_ROD.createItemStack(1)
+        val result = Miscellaneous.IRRADIATED_FRUIT.newItemStack(1)
+        val irradiatedRod = Ingredients.IRRADIATED_ROD.newItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "irradiated_fruit"), result).apply {
             shape("XZX", "ZYZ", "XZX")
             setIngredient('X', RecipeChoice.ExactChoice(irradiatedRod))
@@ -120,9 +120,9 @@ class Misc {
     }
 
     private fun soulCatalystRecipe(): ShapedRecipe {
-        val result = Miscellaneous.SOUL_CATALYST.createItemStack(1)
-        val soulCrystal = Ingredients.SOUL_QUARTZ.createItemStack(1)
-        val ectoplasm = Ingredients.ECTOPLASM.createItemStack(1)
+        val result = Miscellaneous.SOUL_CATALYST.newItemStack(1)
+        val soulCrystal = Ingredients.SOUL_QUARTZ.newItemStack(1)
+        val ectoplasm = Ingredients.ECTOPLASM.newItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "soul_catalyst"), result).apply {
             shape("XZX", "ZYZ", "XZX")
             setIngredient('X', Material.TINTED_GLASS)
@@ -133,8 +133,8 @@ class Misc {
     }
 
     private fun soulSpiceRecipe(): ShapelessRecipe {
-        val result = Miscellaneous.SOUL_SPICE.createItemStack(3)
-        val soulCrystal = Ingredients.SOUL_QUARTZ.createItemStack(1)
+        val result = Miscellaneous.SOUL_SPICE.newItemStack(3)
+        val soulCrystal = Ingredients.SOUL_QUARTZ.newItemStack(1)
         // Recipe
         val recipe = ShapelessRecipe(NamespacedKey(Odyssey.instance, "soul_spice"), result).apply {
             addIngredient(1, Material.GLOWSTONE_DUST)
@@ -146,9 +146,9 @@ class Misc {
     }
 
     private fun soulSteelUpgradeTemplateRecipe(): ShapedRecipe {
-        val result = Equipment.SOUL_STEEL_UPGRADE_TEMPLATE.createItemStack(1)
-        val soulCrystal = Ingredients.SOUL_QUARTZ.createItemStack(1)
-        val ectoplasm = Ingredients.ECTOPLASM.createItemStack(1)
+        val result = Equipment.SOUL_STEEL_UPGRADE_TEMPLATE.newItemStack(1)
+        val soulCrystal = Ingredients.SOUL_QUARTZ.newItemStack(1)
+        val ectoplasm = Ingredients.ECTOPLASM.newItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "soul_steel_upgrade_template_crafting"), result).apply {
             shape("SES", "SCS", "SSS")
             setIngredient('C', RecipeChoice.ExactChoice(soulCrystal))

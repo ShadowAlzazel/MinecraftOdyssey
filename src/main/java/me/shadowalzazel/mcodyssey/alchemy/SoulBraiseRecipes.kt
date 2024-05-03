@@ -42,7 +42,7 @@ object SoulBraiseRecipes {
     private val SCULK_HEART_RECIPE = SoulBraiseRecipe(
         itemResult = Miscellaneous.SCULK_HEART,
         mobSummon = null,
-        braiseIngredients = listOf(Ingredients.WARDEN_ENTRAILS.createItemStack(1)),
+        braiseIngredients = listOf(Ingredients.WARDEN_ENTRAILS.newItemStack(1)),
         braiseMaterial = setOf(Material.SCULK_CATALYST),
         BraiseBase.PLUS)
 

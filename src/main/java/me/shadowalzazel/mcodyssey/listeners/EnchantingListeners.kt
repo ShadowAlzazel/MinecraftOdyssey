@@ -271,7 +271,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
             event.enchanter.getAdvancementProgress(advancement).awardCriteria("requirement")
         }
 
-        (event.inventory as EnchantingInventory).item = randomTome.createItemStack(1)
+        (event.inventory as EnchantingInventory).item = randomTome.newItemStack(1)
         event.enchanter.level -= minOf(tierCost + 1, event.enchanter.level)
         event.isCancelled = true
     }
@@ -727,7 +727,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         return if (item.itemMeta.hasEnchants() || (item.itemMeta as EnchantmentStorageMeta).hasStoredEnchants()) {
             item.clone()
         } else {
-            Miscellaneous.TOME_OF_REPLICATION.createItemStack(1)
+            Miscellaneous.TOME_OF_REPLICATION.newItemStack(1)
         }
     }
 

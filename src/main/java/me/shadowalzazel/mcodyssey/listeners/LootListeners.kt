@@ -28,7 +28,7 @@ object LootListeners : Listener, ItemCreator {
             println("ROLLED")
             val mobLootLogic = LootLogic(1.0, event.entity, event.entity.killer!!)
             if (mobLootLogic.roll(33.0)) {
-                event.entity.world.dropItem(event.entity.location, Ingredients.SILVER_NUGGET.createNewStack(1))
+                event.entity.world.dropItem(event.entity.location, Ingredients.SILVER_NUGGET.createStack(1))
             }
         }
         if (!event.entity.hasLineOfSight(event.entity.killer!!)) {
@@ -76,7 +76,7 @@ object LootListeners : Listener, ItemCreator {
                 }
                 // TODO: Is Blood Moon
                 if (mobLootLogic.roll(4.0)) {
-                    mob.world.dropItem(mob.location, (Ingredients.COAGULATED_BLOOD.createItemStack((1..3).random())))
+                    mob.world.dropItem(mob.location, (Ingredients.COAGULATED_BLOOD.newItemStack((1..3).random())))
                 }
             }
             is Witch -> {
@@ -148,15 +148,15 @@ object LootListeners : Listener, ItemCreator {
             }
             is Vex -> {
                 if (mobLootLogic.roll(4.5)) {
-                    mob.world.dropItem(mob.location, (Miscellaneous.TOTEM_OF_VEXING.createItemStack(1)))
+                    mob.world.dropItem(mob.location, (Miscellaneous.TOTEM_OF_VEXING.newItemStack(1)))
                 }
             }
             is ElderGuardian -> {
-                mob.world.dropItem(mob.location, (Ingredients.IRRADIATED_ROD.createItemStack((1..3).random())))
-                mob.world.dropItem(mob.location, (Ingredients.IRRADIATED_SHARD.createItemStack((2..5).random())))
+                mob.world.dropItem(mob.location, (Ingredients.IRRADIATED_ROD.newItemStack((1..3).random())))
+                mob.world.dropItem(mob.location, (Ingredients.IRRADIATED_SHARD.newItemStack((2..5).random())))
             }
             is Warden -> {
-                mob.world.dropItem(mob.location, (Ingredients.WARDEN_ENTRAILS.createItemStack(1)))
+                mob.world.dropItem(mob.location, (Ingredients.WARDEN_ENTRAILS.newItemStack(1)))
                 mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBook(OdysseyEnchantments.SCULK_SENSITIVE, 1)))
                 droppedItemSound(player)
             }
@@ -181,7 +181,7 @@ object LootListeners : Listener, ItemCreator {
             Material.AMETHYST_CLUSTER, Material.LARGE_AMETHYST_BUD -> {
                 event.items.forEach {
                     if (it.itemStack.type == Material.AMETHYST_SHARD) {
-                        it.world.dropItem(it.location, (Foods.CRYSTAL_CANDY.createItemStack((0..2).random())))
+                        it.world.dropItem(it.location, (Foods.CRYSTAL_CANDY.newItemStack((0..2).random())))
                     }
                 }
             }

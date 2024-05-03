@@ -133,7 +133,7 @@ object SoulBraisingListener : Listener {
                     spawnParticle(Particle.SCULK_SOUL, location, 35, 0.25, 0.35, 0.25)
                     playSound(location, Sound.PARTICLE_SOUL_ESCAPE, 4.5F, 1.2F)
                     playSound(location, Sound.BLOCK_SOUL_SAND_BREAK, 2.5F, 1.2F)
-                    dropItem(location, Ingredients.ECTOPLASM.createItemStack((1..3).random()))
+                    dropItem(location, Ingredients.ECTOPLASM.newItemStack((1..3).random()))
                 }
             }
         }

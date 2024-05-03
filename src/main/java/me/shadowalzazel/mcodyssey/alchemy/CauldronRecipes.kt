@@ -101,7 +101,7 @@ object CauldronRecipes {
         ingredientSize = 4,
         ingredientList = listOf(
             ItemStack(Material.WARPED_FUNGUS, 2),
-            Ingredients.COAGULATED_BLOOD.createItemStack(2),
+            Ingredients.COAGULATED_BLOOD.newItemStack(2),
             ItemStack(Material.CRIMSON_FUNGUS, 2),
             Potions.CRYSTALLINE_POTION.createPotionStack()),
         viableFuel = soulFireFuels)
@@ -162,7 +162,7 @@ object CauldronRecipes {
         potion = Potions.FLASK_OF_IRRADIATION,
         ingredientSize = 4,
         ingredientList = listOf(
-            Ingredients.IRRADIATED_SHARD.createItemStack(1),
+            Ingredients.IRRADIATED_SHARD.newItemStack(1),
             ItemStack(Material.PRISMARINE_CRYSTALS, 1),
             ItemStack(Material.GHAST_TEAR, 1),
             Potions.CRYSTALLINE_POTION.createPotionStack()),
@@ -194,8 +194,8 @@ object CauldronRecipes {
         potion = Potions.BOTTLE_OF_SOULS,
         ingredientSize = 4,
         ingredientList = listOf(
-            Ingredients.ECTOPLASM.createItemStack(1),
-            Ingredients.SOUL_QUARTZ.createItemStack(1),
+            Ingredients.ECTOPLASM.newItemStack(1),
+            Ingredients.SOUL_QUARTZ.newItemStack(1),
             ItemStack(Material.CRYING_OBSIDIAN, 1),
             Potions.CRYSTALLINE_POTION.createPotionStack()),
         viableFuel = soulFireFuels)
@@ -204,8 +204,8 @@ object CauldronRecipes {
         potion = Potions.ACCURSED_BREW,
         ingredientSize = 4,
         ingredientList = listOf(
-            Ingredients.ECTOPLASM.createItemStack(1),
-            Ingredients.COAGULATED_BLOOD.createItemStack(2),
+            Ingredients.ECTOPLASM.newItemStack(1),
+            Ingredients.COAGULATED_BLOOD.newItemStack(2),
             ItemStack(Material.ROTTEN_FLESH, 3),
             Potions.CRYSTALLINE_POTION.createPotionStack()),
         viableFuel = soulFireFuels)

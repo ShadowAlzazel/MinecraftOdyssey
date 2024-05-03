@@ -59,7 +59,7 @@ object SnifferListeners : Listener {
         // Get Archaic Biome Seeds
         val archaicSeeds = listOf(Miscellaneous.ASPEN_SEED, Miscellaneous.MAPLE_SEED, Miscellaneous.SAKURA_SEED, Miscellaneous.REDWOOD_SEED)
         val seed = archaicSeeds.random()
-        val drop = seed.createItemStack(1).apply {
+        val drop = seed.newItemStack(1).apply {
             addTag(ItemDataTags.IS_ARCHAIC_SEED)
             val namespaceSeed =  when(seed.itemName) {
                 "aspen_seed" -> {
