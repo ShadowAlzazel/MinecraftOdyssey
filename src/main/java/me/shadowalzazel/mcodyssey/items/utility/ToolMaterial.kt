@@ -11,7 +11,7 @@ enum class ToolMaterial(
 
     // Minecraft
     WOODEN("wooden", "Wooden", 1.0, 69051, "wooden"),
-    GOLDEN("golden", "Wooden", 1.5, 69052, "golden"),
+    GOLDEN("golden", "Golden", 1.5, 69052, "golden"),
     STONE("stone", "Stone", 2.0, 69053, "stone"),
     IRON("iron", "Iron", 3.0, 69057, "iron"),
     DIAMOND("diamond", "Diamond", 4.0, 69058, "diamond"),

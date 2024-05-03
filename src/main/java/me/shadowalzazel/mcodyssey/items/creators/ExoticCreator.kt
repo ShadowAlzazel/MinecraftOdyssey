@@ -65,9 +65,9 @@ interface ExoticCreator : AttributeManager {
     private fun createAbzuBlade(item: ItemStack) {
         item.apply {
             addStringTag(ItemDataTags.WEAPON_TYPE, "claymore")
-            addAttackDamageAttribute(19.5, AttributeTags.ITEM_BASE_ATTACK_DAMAGE)
+            addAttackDamageAttribute(21.0, AttributeTags.ITEM_BASE_ATTACK_DAMAGE)
             addEntityRangeAttribute(0.7, AttributeTags.ITEM_BASE_ENTITY_RANGE)
-            setNewAttackSpeedAttribute(0.9, AttributeTags.ITEM_BASE_ATTACK_SPEED)
+            setNewAttackSpeedAttribute(0.8, AttributeTags.ITEM_BASE_ATTACK_SPEED)
             setMaxDurability(3109)
         }
     }
@@ -98,7 +98,7 @@ interface ExoticCreator : AttributeManager {
             addStringTag(ItemDataTags.WEAPON_TYPE, "longsword")
             addAttackDamageAttribute(14.0, AttributeTags.ITEM_BASE_ATTACK_DAMAGE)
             addEntityRangeAttribute(0.3, AttributeTags.ITEM_BASE_ENTITY_RANGE)
-            setNewAttackSpeedAttribute(1.3, AttributeTags.ITEM_BASE_ATTACK_SPEED)
+            setNewAttackSpeedAttribute(1.5, AttributeTags.ITEM_BASE_ATTACK_SPEED)
             setMaxDurability(2797)
         }
     }

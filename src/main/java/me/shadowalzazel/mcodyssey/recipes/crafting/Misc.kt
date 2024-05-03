@@ -17,11 +17,16 @@ class Misc {
         val rocketCreator = BlazingRocketsCreator()
 
         return listOf(
+            fragmentedOrbRecipe(),
             clayTotemRecipe(),
+            claySkullRecipe(),
+            clayDowelRecipe(),
+            fragmentedRodsRecipe(),
+            clayKeyRecipe(),
+
             prismaticBookRecipe(),
             bundleRecipe(),
             enigmaticOmamoriRecipe(),
-            fragmentedOrbRecipe(),
             irradiatedFruitRecipe(),
             soulCatalystRecipe(),
             soulSteelUpgradeTemplateRecipe(),
@@ -37,7 +42,68 @@ class Misc {
     }
 
     /*-----------------------------------------------------------------------------------------------*/
+    // Runeware
+    private fun fragmentedOrbRecipe(): ShapedRecipe {
+        val result = Runesherds.FRAGMENTED_ORB.createRuneware(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "fragmented_orb"), result).apply {
+            shape(" C ", "CFC", " C ")
+            setIngredient('C', Material.CLAY_BALL)
+            setIngredient('F', Material.FLINT)
+        }
+        return recipe
+    }
 
+    private fun clayTotemRecipe(): ShapedRecipe {
+        val result = Runesherds.CLAY_TOTEM.createRuneware(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "clay_totem"), result).apply {
+            shape(" L ", "CCC", " C ")
+            setIngredient('C', Material.CLAY_BALL)
+            setIngredient('L', Material.LAPIS_LAZULI)
+        }
+        return recipe
+    }
+
+    private fun claySkullRecipe(): ShapedRecipe {
+        val result = Runesherds.CLAY_SKULL.createRuneware(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "clay_skull"), result).apply {
+            shape("   ", "LCL", "CCC")
+            setIngredient('C', Material.CLAY_BALL)
+            setIngredient('L', Material.LAPIS_LAZULI)
+        }
+        return recipe
+    }
+
+    private fun clayDowelRecipe(): ShapedRecipe {
+        val result = Runesherds.CLAY_DOWEL.createRuneware(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "clay_dowel"), result).apply {
+            shape("  C", " L ", "C  ")
+            setIngredient('C', Material.CLAY_BALL)
+            setIngredient('L', Material.LAPIS_LAZULI)
+        }
+        return recipe
+    }
+
+    private fun fragmentedRodsRecipe(): ShapedRecipe {
+        val result = Runesherds.FRAGMENTED_RODS.createRuneware(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "fragmented_rods"), result).apply {
+            shape("F F", "CFC", " C ")
+            setIngredient('C', Material.CLAY_BALL)
+            setIngredient('F', Material.FLINT)
+        }
+        return recipe
+    }
+
+    private fun clayKeyRecipe(): ShapedRecipe {
+        val result = Runesherds.CLAY_KEY.createRuneware(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "clay_key"), result).apply {
+            shape("L ", "C ", "CC")
+            setIngredient('C', Material.CLAY_BALL)
+            setIngredient('L', Material.LAPIS_LAZULI)
+        }
+        return recipe
+    }
+
+    // Misc
     private fun prismaticBookRecipe(): ShapedRecipe {
         val result = Miscellaneous.PRISMATIC_BOOK.newItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "prismatic_book"), result).apply {
@@ -61,6 +127,7 @@ class Misc {
         return recipe
     }
 
+
     private fun silverIngotRecipe(): ShapedRecipe {
         val result = Ingredients.SILVER_INGOT.createStack(1)
         val nugget = Ingredients.SILVER_NUGGET.createStack(1)
@@ -70,6 +137,7 @@ class Misc {
         }
         return recipe
     }
+
 
     private fun enigmaticOmamoriRecipe(): ShapedRecipe {
         val result = Miscellaneous.ENIGMATIC_OMAMORI.newItemStack(1)
@@ -81,28 +149,6 @@ class Misc {
             setIngredient('Y', RecipeChoice.ExactChoice(soulCrystal))
             setIngredient('X', Material.PAPER)
             setIngredient('W', Material.STRING)
-        }
-        return recipe
-    }
-
-
-    private fun clayTotemRecipe(): ShapedRecipe {
-        val result = Runesherds.CLAY_TOTEM.createRuneware(1)
-        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "clay_totem"), result).apply {
-            shape(" L ", "CCC", " C ")
-            setIngredient('C', Material.CLAY_BALL)
-            setIngredient('L', Material.LAPIS_LAZULI)
-        }
-        return recipe
-    }
-
-
-    private fun fragmentedOrbRecipe(): ShapedRecipe {
-        val result = Runesherds.FRAGMENTED_ORB.createRuneware(1)
-        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "fragmented_orb"), result).apply {
-            shape(" C ", "CFC", " C ")
-            setIngredient('C', Material.CLAY_BALL)
-            setIngredient('F', Material.FLINT)
         }
         return recipe
     }

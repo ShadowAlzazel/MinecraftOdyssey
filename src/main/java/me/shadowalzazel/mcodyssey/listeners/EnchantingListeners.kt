@@ -31,7 +31,6 @@ import org.bukkit.inventory.meta.Repairable
 object EnchantingListeners : Listener, TomeManager, ItemCreator {
 
     /*-----------------------------------------------------------------------------------------------*/
-
     @EventHandler
     fun grindstoneHandler(event: PrepareResultEvent) {
         if (event.inventory !is GrindstoneInventory) return
@@ -46,7 +45,6 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-
     @EventHandler
     fun anvilHandler(event: PrepareAnvilEvent) {
         // Handled natively by class
@@ -197,6 +195,53 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         }
     }
 
+    // BOOK that stores EXP points
+    // can be read to take points
+    // like mending steal away points and is 1st priority
+    // PRISMATIC TOME (new tome book) converts to Tomes
+    // MINI GAME
+    // Books with click events
+    // when clicked on thing -> changes the nbt data of that book
+
+    // sculk related, need sculk and echo shards to craft
+    // ARCANE BOOK (new gilded book)
+    // GILDED ENCHANTS ARE LIKE CURSES (not removable)
+    // When all clicks, transform Book?
+
+    private fun enchantingItemHandler(event: EnchantItemEvent) {
+        val item = event.item
+        val newEnchants = event.enchantsToAdd
+        getChiseledBookshelvesBonus(event) // Call this before slots
+        // Get slots or create new slots
+        val slotsPair = if (item.isSlotted()) { item.getPairSlots() } else { getMaterialEnchantSlots(item.type) }
+        // New Enchant Slots
+        if (!item.isSlotted()) {
+            item.setPairSlots(slotsPair)
+        }
+        val enchantSlots = slotsPair.first
+        val gildedSlots = slotsPair.second
+        var usedEnchantSlots = 0
+        var usedGildedSlots = 0
+        // Get Hint
+        val hint = event.enchantmentHint
+        // Remove excess enchants over slot limit
+        val enchantsToRemove = mutableListOf<Enchantment>()
+        for (newEnchant in newEnchants.keys) {
+            if (newEnchant == hint) {
+                continue
+            }
+            // Append to removal list
+            usedEnchantSlots += 1
+            if (usedEnchantSlots > enchantSlots) {
+                enchantsToRemove.add(newEnchant)
+            }
+        }
+        enchantsToRemove.forEach { newEnchants.remove(it) }
+        // Update New Slots
+        val containerMap = createBukkitEnchantContainerMap(newEnchants).toMutableMap()
+        item.updateSlotLore(containerMap)
+    }
+
     private fun enchantingBookHandler(event: EnchantItemEvent) {
         when (event.item.itemMeta.customModelData) {
             ItemModels.VOLUME_OF_BLUNTING -> {
@@ -274,56 +319,6 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         (event.inventory as EnchantingInventory).item = randomTome.newItemStack(1)
         event.enchanter.level -= minOf(tierCost + 1, event.enchanter.level)
         event.isCancelled = true
-    }
-
-    // BOOK that stores EXP points
-    // can be read to take points
-    // like mending steal away points and is 1st priority
-    // sculk related, need sculk and echo shards to craft
-
-    // PRISMATIC TOME (new tome book) converts to Tomes
-    // ARCANE BOOK (new gilded book)
-
-    // GILDED ENCHANTS ARE LIKE CURSES (not removable)
-
-    // MINI GAME
-    // Books with click events
-    // when clicked on thing -> changes the nbt data of that book
-    // When all clicks, transform Book?
-
-    private fun enchantingItemHandler(event: EnchantItemEvent) {
-        val item = event.item
-        val newEnchants = event.enchantsToAdd
-        getChiseledBookshelvesBonus(event) // Call this before slots
-        // Get slots or create new slots
-        val slotsPair = if (item.isSlotted()) { item.getPairSlots() } else { getMaterialEnchantSlots(item.type) }
-        // New Enchant Slots
-        if (!item.isSlotted()) {
-            item.setPairSlots(slotsPair)
-        }
-        val enchantSlots = slotsPair.first
-        val gildedSlots = slotsPair.second
-        var usedEnchantSlots = 0
-        var usedGildedSlots = 0
-        // Get Hint
-        val hint = event.enchantmentHint
-        // Remove excess enchants over slot limit
-        val enchantsToRemove = mutableListOf<Enchantment>()
-        for (newEnchant in newEnchants.keys) {
-            if (newEnchant == hint) {
-                continue
-            }
-            // Append to removal list
-            usedEnchantSlots += 1
-            if (usedEnchantSlots > enchantSlots) {
-                enchantsToRemove.add(newEnchant)
-            }
-        }
-        enchantsToRemove.forEach { newEnchants.remove(it) }
-        // Lore
-        item.addItemFlags(ItemFlag.HIDE_ENCHANTS)
-        val containerMap = createBukkitEnchantContainerMap(newEnchants).toMutableMap()
-        item.updateSlotLore(containerMap)
     }
 
     private fun getChiseledBookshelvesBonus(event: EnchantItemEvent) {

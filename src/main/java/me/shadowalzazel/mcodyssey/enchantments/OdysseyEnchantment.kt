@@ -53,13 +53,13 @@ open class OdysseyEnchantment(
     var descriptionId: String? = null
 
     /* Conflict Methods */
-    fun isConflicting(nmsEnchant: Enchantment): Boolean  {
+    fun conflictsWith(nmsEnchant: Enchantment): Boolean  {
         return checkNmsConflict(nmsEnchant)
     }
-    fun isConflicting(bukkitEnchant: org.bukkit.enchantments.Enchantment): Boolean {
+    fun conflictsWith(bukkitEnchant: org.bukkit.enchantments.Enchantment): Boolean {
         return checkBukkitConflict(bukkitEnchant)
     }
-    fun isConflicting(odysseyEnchant: OdysseyEnchantment): Boolean {
+    fun conflictsWith(odysseyEnchant: OdysseyEnchantment): Boolean {
         return checkOdysseyConflict(odysseyEnchant)
     }
     open fun checkOdysseyConflict(other: OdysseyEnchantment) : Boolean {
@@ -96,7 +96,7 @@ open class OdysseyEnchantment(
         val notSame = this != other
         return notSame
     }
-    open fun canEnchant(itemStack: net.minecraft.world.item.ItemStack): Boolean {
+    open fun canEnchantStack(itemStack: net.minecraft.world.item.ItemStack): Boolean {
         return itemStack.`is`(properties.supportedItems)
     }
     open fun doPostAttack(user: LivingEntity, target: Entity, level: Int) = Unit
