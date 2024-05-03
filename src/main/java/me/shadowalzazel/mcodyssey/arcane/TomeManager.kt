@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.arcane
 
+import me.shadowalzazel.mcodyssey.enchantments.api.EnchantSlotManager
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
 import org.bukkit.Material
 import org.bukkit.entity.HumanEntity

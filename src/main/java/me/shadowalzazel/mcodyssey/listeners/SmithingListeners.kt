@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.listeners
 
-import me.shadowalzazel.mcodyssey.arcane.EnchantSlotManager
+import me.shadowalzazel.mcodyssey.enchantments.api.EnchantSlotManager
 import me.shadowalzazel.mcodyssey.arcane.SlotColors
 import me.shadowalzazel.mcodyssey.constants.AttributeIDs
 import me.shadowalzazel.mcodyssey.constants.ItemModels

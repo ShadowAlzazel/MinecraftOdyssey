@@ -23,7 +23,7 @@ object VoidJump : OdysseyEnchantment(
     ItemTags.ARMOR_ENCHANTABLE,
     arrayOf(EquipmentSlot.CHEST)
 ) {
-    override fun canEnchant(itemStack: net.minecraft.world.item.ItemStack): Boolean {
+    override fun canEnchantStack(itemStack: net.minecraft.world.item.ItemStack): Boolean {
         return itemStack.item is ElytraItem
     }
 

@@ -76,6 +76,12 @@ interface EnchantmentDataManager : EnchantmentFinder {
         return containerMap
     }
 
+    fun BukkitStack.getEnchantmentContainers(): Map<EnchantContainer, Int> {
+        val bukkitContainers = createBukkitEnchantContainerMap(this.enchantments)
+        val odysseyContainers = createOdysseyEnchantContainerMap(this.getOdysseyEnchantments())
+        return bukkitContainers + odysseyContainers
+    }
+
     fun BukkitStack.hasOdysseyEnchants(): Boolean {
         return getOdysseyEnchantments().isNotEmpty()
     }
@@ -143,7 +149,7 @@ interface EnchantmentDataManager : EnchantmentFinder {
         // Get custom_data component
         val customDataKey = ResourceLocation("minecraft", "custom_data")
         val dataType = BuiltInRegistries.DATA_COMPONENT_TYPE.get(customDataKey) ?: return // DataComponentType<CustomData>
-        dataType as DataComponentType<CustomData>
+        dataType as DataComponentType<CustomData> // Type is ALREADY set from Registry
         // Create new compound tag
         val enchantmentRootTag = CompoundTag()
         enchantmentRootTag.put("odyssey:enchantments", enchantmentsTag)

@@ -1,12 +1,12 @@
-package me.shadowalzazel.mcodyssey.arcane
+package me.shadowalzazel.mcodyssey.enchantments.api
 
+import me.shadowalzazel.mcodyssey.arcane.SlotColors
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags.setIntTag
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addTag
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getIntTag
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getStringTag
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasTag
-import me.shadowalzazel.mcodyssey.enchantments.api.EnchantmentDataManager
 import me.shadowalzazel.mcodyssey.enchantments.util.EnchantContainer
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
@@ -172,10 +172,12 @@ internal interface EnchantSlotManager : EnchantmentDataManager {
             newLore.remove(engraving)
             newLore.add(engraving)
         }
-        // Header
+        // Hide
+        itemMeta = itemMeta.also {
+            it.addItemFlags(ItemFlag.HIDE_ENCHANTS)
+        }
+        // Header and set lore
         newLore[sepIndex - 1] = enchantHeader(enchantmentCount + gildedCount, enchantSlots + gildedSlots)
-        // New Lore
-        addItemFlags(ItemFlag.HIDE_ENCHANTS)
         lore(newLore)
     }
 
