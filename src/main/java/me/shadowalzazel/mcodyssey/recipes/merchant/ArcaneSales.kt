@@ -11,7 +11,7 @@ object ArcaneSales : ItemCreator {
 
     fun createLowTierTomeTrade(): MerchantRecipe {
         val tomes = listOf(Miscellaneous.TOME_OF_EMBRACE, Miscellaneous.TOME_OF_DISCHARGE, Miscellaneous.TOME_OF_BANISHMENT)
-        return MerchantRecipe(tomes.random().createItemStack(1), 1, (2..5).random(), true).apply {
+        return MerchantRecipe(tomes.random().newItemStack(1), 1, (2..5).random(), true).apply {
             setIgnoreDiscounts(true)
             addIngredient(ItemStack(Material.EMERALD, (23..32).random()))
         }
@@ -19,7 +19,7 @@ object ArcaneSales : ItemCreator {
 
     fun createMidTierTomeTrade(): MerchantRecipe {
         val tomes = listOf(Miscellaneous.TOME_OF_PROMOTION, Miscellaneous.TOME_OF_HARMONY)
-        return MerchantRecipe(tomes.random().createItemStack(1), 1, (2..3).random(), true).apply {
+        return MerchantRecipe(tomes.random().newItemStack(1), 1, (2..3).random(), true).apply {
             setIgnoreDiscounts(true)
             addIngredient(ItemStack(Material.EMERALD, (30..37).random()))
         }
@@ -35,7 +35,7 @@ object ArcaneSales : ItemCreator {
     }
 
     fun createArcaneBookTrade(): MerchantRecipe {
-        val book = Miscellaneous.PRISMATIC_BOOK.createItemStack(1)
+        val book = Miscellaneous.PRISMATIC_BOOK.newItemStack(1)
         return MerchantRecipe(book, 1, (5..9).random(), true).apply {
             setIgnoreDiscounts(true)
             addIngredient(ItemStack(Material.EMERALD, (13..21).random()))

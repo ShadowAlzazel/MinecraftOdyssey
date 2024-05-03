@@ -9,7 +9,7 @@ import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
-internal interface AttributeManager {
+interface AttributeManager {
 
      fun LivingEntity.addHealthAttribute(
         value: Double,

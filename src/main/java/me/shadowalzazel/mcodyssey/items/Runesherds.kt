@@ -26,7 +26,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
     private val WEAPON_LIST = listOf(EquipmentSlot.OFF_HAND, EquipmentSlot.HAND)
 
     fun OdysseyRunesherd.createPresetSherdStack(amount: Int = 1): ItemStack {
-        val item = this.createItemStack(amount).also {
+        val item = this.newItemStack(amount).also {
             it.addRunesherdTag()
         }
         if (attribute != null && !affectedEquipment.isNullOrEmpty()) {
@@ -38,7 +38,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
     }
 
     fun OdysseyRunesherd.createLootSherdStack(amount: Int = 1, bonus: Double = 0.0): ItemStack {
-        val item = this.createItemStack(amount).also {
+        val item = this.newItemStack(amount).also {
             it.addRunesherdTag()
         }
         if (attribute != null && !affectedEquipment.isNullOrEmpty()) {
@@ -51,14 +51,14 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
     }
 
     fun OdysseyItem.createRuneware(amount: Int = 1): ItemStack {
-        val item = this.createItemStack(amount).also {
+        val item = this.newItemStack(amount).also {
             it.addRunewareTag()
         }
         return item
     }
 
     fun OdysseyItem.createSpaceRuneTablet(amount: Int = 1): ItemStack {
-        val item = this.createItemStack(amount).also {
+        val item = this.newItemStack(amount).also {
             it.addTag(ItemDataTags.IS_SPACERUNE)
             it.createSpaceRuneComponents()
             it.createSpaceRuneMatrixLore()
@@ -171,7 +171,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         customName = "Break Runesherd",
         customModel = ItemModels.BREAK_RUNESHERD,
         attribute = Attribute.PLAYER_BLOCK_BREAK_SPEED,
-        value = 1.0,
+        value = 0.5,
         affectedEquipment = listOf(EquipmentSlot.HAND)
     )
 
@@ -191,7 +191,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         customName = "Jump Runesherd",
         customModel = ItemModels.JUMP_RUNESHERD,
         attribute = Attribute.GENERIC_JUMP_STRENGTH,
-        value = 0.5,
+        value = 0.3,
         affectedEquipment = listOf(EquipmentSlot.LEGS)
     )
 

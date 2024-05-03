@@ -16,7 +16,7 @@ open class OdysseyItem(
     val lore: List<Component>? = null
 ) {
 
-    fun createItemStack(amount: Int = 1): ItemStack {
+    fun newItemStack(amount: Int = 1): ItemStack { // Mostly used for internal functions that extend the base
         val itemStack = ItemStack(overrideMaterial, amount).also {
             // Set Variables
             val meta = it.itemMeta

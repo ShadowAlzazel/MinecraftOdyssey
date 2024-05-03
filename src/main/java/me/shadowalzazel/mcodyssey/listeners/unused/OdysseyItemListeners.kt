@@ -47,7 +47,7 @@ object OdysseyItemListeners : Listener {
                     }
 
                      */
-                    Miscellaneous.IRRADIATED_FRUIT.createItemStack(1) -> {
+                    Miscellaneous.IRRADIATED_FRUIT.newItemStack(1) -> {
                         irradiatedFruitCrafting(somePlayer)
                     }
                     //Misc.IRRADIATED_FRUIT_RECIPE.result
@@ -72,7 +72,7 @@ object OdysseyItemListeners : Listener {
                     }
 
                      */
-                    Miscellaneous.IRRADIATED_FRUIT.createItemStack(someStackValue) -> {
+                    Miscellaneous.IRRADIATED_FRUIT.newItemStack(someStackValue) -> {
                         if (!extraHealthCalculator(somePlayer, AttributeIDs.EXTRA_HEALTH_IRRADIATED_FRUIT)) { event.isCancelled }
                         else {
                             somePlayer.addPotionEffects(listOf(
@@ -82,7 +82,7 @@ object OdysseyItemListeners : Listener {
                             ))
                         }
                     }
-                    Miscellaneous.SCULK_HEART.createItemStack(someStackValue) -> {
+                    Miscellaneous.SCULK_HEART.newItemStack(someStackValue) -> {
                         if (!extraHealthCalculator(somePlayer, AttributeIDs.EXTRA_HEALTH_SCULK_HEART)) { event.isCancelled }
                         else {
                             somePlayer.addPotionEffect(PotionEffect(PotionEffectType.DARKNESS, 20 * 30, 1))
@@ -103,7 +103,7 @@ object OdysseyItemListeners : Listener {
         if (event.entity is LivingEntity) {
             val someEntity = event.entity as LivingEntity
             if (someEntity.equipment?.itemInOffHand != null) {
-                if (someEntity.equipment?.itemInOffHand == Miscellaneous.TOTEM_OF_VEXING.createItemStack(1)) {
+                if (someEntity.equipment?.itemInOffHand == Miscellaneous.TOTEM_OF_VEXING.newItemStack(1)) {
                     event.damage = 0.0
                     if ((1..3).random() != 1) { someEntity.equipment!!.setItemInOffHand(ItemStack(Material.AIR, 1)) }
                     someEntity.world.playSound(someEntity.location, Sound.ITEM_TOTEM_USE, 2.5F, 0.2F)

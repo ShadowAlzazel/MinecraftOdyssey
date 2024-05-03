@@ -4,6 +4,7 @@ import me.shadowalzazel.mcodyssey.arcane.SlotColors
 import me.shadowalzazel.mcodyssey.constants.AttributeIDs
 import me.shadowalzazel.mcodyssey.constants.DataKeys
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
+import me.shadowalzazel.mcodyssey.items.Exotics
 import me.shadowalzazel.mcodyssey.items.Ingredients
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import net.kyori.adventure.text.Component
@@ -17,9 +18,9 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.persistence.PersistentDataType
 
-interface ItemCreator  {
+interface ItemCreator : ExoticCreator {
 
-    fun OdysseyItem.createNewStack(amount: Int = 1): ItemStack {
+    fun OdysseyItem.createStack(amount: Int = 1): ItemStack {
         val itemStack = ItemStack(overrideMaterial, amount).also {
             // Set Variables
             val meta  = it.itemMeta
@@ -38,7 +39,7 @@ interface ItemCreator  {
 
     fun OdysseyItem.createArcaneBook(enchantment: OdysseyEnchantment, level: Int = 1) : ItemStack {
         if (itemName != "arcane_book") return ItemStack(Material.AIR)
-        val newBook = this.createItemStack(1)
+        val newBook = this.newItemStack(1)
         newBook.itemMeta = (newBook.itemMeta as EnchantmentStorageMeta).also {
             // Set lore and description
             val loreName = enchantment.displayName(level)
@@ -53,7 +54,7 @@ interface ItemCreator  {
     }
 
     fun OdysseyItem.createTome() : ItemStack {
-        val tome = this.createItemStack()
+        val tome = this.newItemStack()
         val meta = tome.itemMeta
         meta.displayName(
             Component.text(customName, TextColor.color(255, 255, 85))
@@ -63,7 +64,7 @@ interface ItemCreator  {
     }
 
     fun OdysseyItem.createArmor(bonus: Double = 0.0): ItemStack {
-        val armor = this.createItemStack(1)
+        val armor = this.newItemStack(1)
         val meta = armor.itemMeta.also {
             val armorModifier = AttributeModifier(AttributeIDs.ARMOR_HELMET_UUID, "odyssey.armor_helmet", bonus, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HEAD)
             it.addAttributeModifier(Attribute.GENERIC_ARMOR, armorModifier)
@@ -72,49 +73,8 @@ interface ItemCreator  {
         return armor
     }
 
-    /*
-    fun getByItemKey(text: String): Materials? {
-        try {
-            val mat = Materials.valueOf(text.uppercase(Locale.getDefault()))
-            return mat
-        }
-        catch (exception: IllegalArgumentException) {
-            return null
-        }
-    }
 
-     */
-
-    /* OLD ODYSSEY ITEM CLASS
-    fun createItemStack(amount: Int): ItemStack {
-        val itemStack = ItemStack(material, amount)
-        // On item meta; Add lore, display name, custom model, damage stats, effects, color if applicable
-        var enchantSlots = 0
-        var gildedSlots = 0
-        itemStack.itemMeta = (itemStack.itemMeta as ItemMeta).also {
-            if (displayName != null) { it.displayName(displayName) }
-            if (lore != null) { it.lore(lore) }
-            if (customModel != null) { it.setCustomModelData(customModel) }
-            if (enchantments != null) {
-                for (enchant in enchantments) {
-                    if (enchant.key.isOdysseyEnchant()) { gildedSlots += 1 } else { enchantSlots += 1 }
-                    it.addEnchant(enchant.key, enchant.value, true)
-                }
-            }
-            it.persistentDataContainer.set(DataKeys.ITEM_KEY, PersistentDataType.STRING, name)
-        }
-        if (enchantments != null) {
-            itemStack.addTag(ItemDataTags.IS_SLOTTED)
-            itemStack.setIntTag(ItemDataTags.ENCHANT_SLOTS, enchantSlots)
-            itemStack.setIntTag(ItemDataTags.GILDED_SLOTS, gildedSlots)
-            itemStack.updateSlotLore()
-            itemStack.addItemFlags(ItemFlag.HIDE_ENCHANTS)
-        }
-        return itemStack
-    }
- */
-
-    fun findItemByNameKey(name: String): OdysseyItem? {
+    fun findFromName(name: String): OdysseyItem? { // This is a fallback
         return when(name) {
             "iridium_ingot" -> Ingredients.IRIDIUM_INGOT
             "andonized_titanium_ingot" -> Ingredients.ANDONIZED_TITANIUM_INGOT
@@ -126,6 +86,34 @@ interface ItemCreator  {
         }
     }
 
+    // Create itemStack from matching name
+    fun createStackFromName(name: String, amount: Int): ItemStack? {
+        return when(name) {
+            "iridium_ingot" -> Ingredients.IRIDIUM_INGOT.newItemStack(amount)
+            "andonized_titanium_ingot" -> Ingredients.ANDONIZED_TITANIUM_INGOT.newItemStack(amount)
+            "titanium_ingot" -> Ingredients.TITANIUM_INGOT.newItemStack(amount)
+            "mithril_ingot" -> Ingredients.MITHRIL_INGOT.newItemStack(amount)
+            "silver_ingot" -> Ingredients.SILVER_INGOT.newItemStack(amount)
+            "soul_steel_ingot" -> Ingredients.SOUL_STEEL_INGOT.newItemStack(amount)
+            "knight_breaker" -> Exotics.KNIGHT_BREAKER.createExoticWeapon()
+            "shogun_lightning" -> Exotics.SHOGUN_LIGHTNING.createExoticWeapon()
+            "abzu_blade" -> Exotics.ABZU_BLADE.createExoticWeapon()
+            "excalibur" -> Exotics.EXCALIBUR.createExoticWeapon()
+            "frost_fang" -> Exotics.FROST_FANG.createExoticWeapon()
+            "elucidator" -> Exotics.ELUCIDATOR.createExoticWeapon()
+            else -> null
+        }
+    }
+
+    // General Creator Class
+    fun createItemFromName(name: String, amount: Int = 1): ItemStack? {
+        val odysseyStack = createStackFromName(name, amount)
+        if (odysseyStack == null) { // Fallback class
+            val odysseyItem = findFromName(name) ?: return null
+            return odysseyItem.createStack(amount)
+        }
+        return odysseyStack
+    }
 
 
 }

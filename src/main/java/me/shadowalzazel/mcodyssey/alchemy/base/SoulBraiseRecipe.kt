@@ -61,7 +61,7 @@ open class SoulBraiseRecipe(
         }
 
         if (itemResult != null) {
-            return location.world.dropItem(location.clone().add(0.0, 0.75, 0.0), itemResult.createItemStack(amount))
+            return location.world.dropItem(location.clone().add(0.0, 0.75, 0.0), itemResult.newItemStack(amount))
         } else {
             return mobSummon?.createMob(location.world, location)
         }

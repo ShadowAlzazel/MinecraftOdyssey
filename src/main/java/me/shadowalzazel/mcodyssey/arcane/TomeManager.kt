@@ -60,7 +60,7 @@ internal interface TomeManager : EnchantSlotManager {
         return if (item.itemMeta.hasEnchants() || (item.itemMeta as EnchantmentStorageMeta).hasStoredEnchants()) {
             item.clone()
         } else {
-            Miscellaneous.TOME_OF_REPLICATION.createItemStack(1)
+            Miscellaneous.TOME_OF_REPLICATION.newItemStack(1)
         }
     }
 

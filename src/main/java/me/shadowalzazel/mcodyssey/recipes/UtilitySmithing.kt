@@ -64,9 +64,9 @@ class UtilitySmithing { // USE THIS CLASS TO CREATE RECIPE WHICH ARE AVAILABLE T
     /*-----------------------------------------------------------------------------------------------*/
     // Soul Steel Template + Item + Soul Steel Ingot
     private fun soulSteelUpgrading(): SmithingTransformRecipe {
-        val result = Ingredients.SOUL_STEEL_INGOT.createItemStack(1)
-        val template = RecipeChoice.ExactChoice(Equipment.SOUL_STEEL_UPGRADE_TEMPLATE.createItemStack(1))
-        val ingot = RecipeChoice.ExactChoice(Ingredients.SOUL_STEEL_INGOT.createItemStack(1))
+        val result = Ingredients.SOUL_STEEL_INGOT.newItemStack(1)
+        val template = RecipeChoice.ExactChoice(Equipment.SOUL_STEEL_UPGRADE_TEMPLATE.newItemStack(1))
+        val ingot = RecipeChoice.ExactChoice(Ingredients.SOUL_STEEL_INGOT.newItemStack(1))
 
         return SmithingTransformRecipe(
             NamespacedKey(Odyssey.instance, "soul_steel_upgrading"),

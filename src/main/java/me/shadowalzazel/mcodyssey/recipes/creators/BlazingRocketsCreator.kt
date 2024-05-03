@@ -13,7 +13,7 @@ class BlazingRocketsCreator {
 
     internal fun blazingRocketsRecipe(tier: Int, tierName: String): ShapelessRecipe {
         // New Rocket
-        val rocket = Miscellaneous.BLAZING_ROCKET.createItemStack(3)
+        val rocket = Miscellaneous.BLAZING_ROCKET.newItemStack(3)
         rocket.itemMeta = (rocket.itemMeta as FireworkMeta).also {
             it.power = tier + 3
         }

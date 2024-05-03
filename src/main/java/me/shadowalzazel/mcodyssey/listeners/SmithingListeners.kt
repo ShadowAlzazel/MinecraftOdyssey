@@ -153,22 +153,22 @@ object SmithingListeners : Listener, EnchantSlotManager {
             val newTrimMaterial: TrimMaterial
 
             when(event.inventory.inputMineral) {
-                Ingredients.ALEXANDRITE.createItemStack(count) -> {
+                Ingredients.ALEXANDRITE.newItemStack(count) -> {
                     newTrimMaterial = TrimMaterials.ALEXANDRITE
                 }
-                Ingredients.KUNZITE.createItemStack(count) -> {
+                Ingredients.KUNZITE.newItemStack(count) -> {
                     newTrimMaterial = TrimMaterials.KUNZITE
                 }
-                Ingredients.JADE.createItemStack(count) -> {
+                Ingredients.JADE.newItemStack(count) -> {
                     newTrimMaterial = TrimMaterials.JADE
                 }
-                Ingredients.RUBY.createItemStack(count) -> {
+                Ingredients.RUBY.newItemStack(count) -> {
                     newTrimMaterial = TrimMaterials.RUBY
                 }
-                Ingredients.SOUL_QUARTZ.createItemStack(count) -> {
+                Ingredients.SOUL_QUARTZ.newItemStack(count) -> {
                     newTrimMaterial = TrimMaterials.SOUL_QUARTZ
                 }
-                Ingredients.SOUL_STEEL_INGOT.createItemStack(count) -> {
+                Ingredients.SOUL_STEEL_INGOT.newItemStack(count) -> {
                     newTrimMaterial = TrimMaterials.SOUL_STEEL
                 }
                 ItemStack(Material.OBSIDIAN, count) -> {

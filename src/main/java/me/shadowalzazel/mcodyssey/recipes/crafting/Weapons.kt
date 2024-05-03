@@ -19,7 +19,7 @@ class Weapons {
     }
 
     private fun compactCrossbowRecipe(): ShapedRecipe {
-        val result = Equipment.COMPACT_CROSSBOW.createItemStack(1)
+        val result = Equipment.COMPACT_CROSSBOW.newItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "compact_crossbow"), result).apply {
             shape(" C ", "STS", " L ")
             setIngredient('C', Material.CRIMSON_PLANKS)
@@ -32,7 +32,7 @@ class Weapons {
     }
 
     private fun autoCrossbowRecipe(): ShapedRecipe {
-        val result = Equipment.AUTO_CROSSBOW.createItemStack(1)
+        val result = Equipment.AUTO_CROSSBOW.newItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "auto_crossbow"), result).apply {
             shape("NBN", "STS", "CBC")
             setIngredient('N', Material.NETHERITE_INGOT)
@@ -46,7 +46,7 @@ class Weapons {
     }
 
     private fun alchemicalBolterRecipe(): ShapedRecipe {
-        val result = Equipment.ALCHEMICAL_BOLTER.createItemStack(1)
+        val result = Equipment.ALCHEMICAL_BOLTER.newItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "alchemical_bolter"), result).apply {
             shape("QDQ", "STS", "AQG")
             setIngredient('A', Material.DRAGON_BREATH)
@@ -62,7 +62,7 @@ class Weapons {
 
 
     private fun voidLinkedKunaiRecipe(): ShapedRecipe {
-        val result = Equipment.VOID_LINKED_KUNAI.createItemStack(1)
+        val result = Equipment.VOID_LINKED_KUNAI.newItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "void_linked_kunai"), result).apply {
             shape("N", "B", "E")
             setIngredient('N', Material.NETHERITE_INGOT)

@@ -27,7 +27,7 @@ enum class ToolType(
     LANCE("lance", "Lance", 3.0, 0.8, 76, "shovel", 3.0),
     // Axe Overrides
     LONGAXE("longaxe", "Longaxe", 6.0, 0.8, 85, "axe", 0.5),
-    POLEAXE("poleaxe", "Poleaxe", 4.0, 1.2, 86, "axe", 1.0),
+    POLEAXE("poleaxe", "Poleaxe", 4.0, 1.1, 86, "axe", 1.0),
     // Pickaxe Overrides
     WARHAMMER("warhammer", "Warhammer", 4.0, 1.4, 11, "pickaxe"),
     // Hoe Overrides

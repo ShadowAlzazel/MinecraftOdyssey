@@ -85,10 +85,10 @@ object MiscListeners : Listener, EnchantmentDataManager {
                     val gems = listOf(
                         ItemStack(Material.EMERALD, (1..(enchant.value)).random()),
                         ItemStack(Material.DIAMOND, (1..(enchant.value)).random()),
-                        Ingredients.JADE.createItemStack((1..(enchant.value)).random()),
-                        Ingredients.RUBY.createItemStack((1..(enchant.value)).random()),
-                        Ingredients.KUNZITE.createItemStack((1..(enchant.value)).random()),
-                        Ingredients.ALEXANDRITE.createItemStack((1..(enchant.value)).random()),
+                        Ingredients.JADE.newItemStack((1..(enchant.value)).random()),
+                        Ingredients.RUBY.newItemStack((1..(enchant.value)).random()),
+                        Ingredients.KUNZITE.newItemStack((1..(enchant.value)).random()),
+                        Ingredients.ALEXANDRITE.newItemStack((1..(enchant.value)).random()),
                     )
                     //item.itemStack = gems.random()
                     if (item.itemStack.type !in goodPulls) {

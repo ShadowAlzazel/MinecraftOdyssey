@@ -21,7 +21,7 @@ class Merchant {
         val someResult = ItemStack(Material.HONEYCOMB)
         val someTrade = MerchantRecipe(someResult, 1, 20, true).apply {
             setIgnoreDiscounts(true)
-            addIngredient(Miscellaneous.PRIMO_GEM.createItemStack(15))
+            addIngredient(Miscellaneous.PRIMO_GEM.newItemStack(15))
         }
 
         return someTrade

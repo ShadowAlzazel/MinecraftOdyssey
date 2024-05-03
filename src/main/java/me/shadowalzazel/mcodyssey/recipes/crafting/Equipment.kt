@@ -38,7 +38,7 @@ class Equipment : ItemCreator {
     /*-----------------------------------------------------------------------------------------------*/
 
     private fun arcaneWandRecipe(): ShapedRecipe {
-        val result = Equipment.ARCANE_WAND.createItemStack(1)
+        val result = Equipment.ARCANE_WAND.newItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "arcane_wand"), result).apply {
             shape("A", "S", "S")
             setIngredient('A', Material.AMETHYST_CLUSTER)
@@ -50,7 +50,7 @@ class Equipment : ItemCreator {
     }
 
     private fun warpingWandRecipe(): ShapedRecipe {
-        val result = Equipment.WARPING_WAND.createItemStack(1)
+        val result = Equipment.WARPING_WAND.newItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "warping_wand"), result).apply {
             shape("W", "V", "V")
             setIngredient('W', Material.WARPED_FUNGUS)
@@ -62,7 +62,7 @@ class Equipment : ItemCreator {
     }
 
     private fun explosiveArrowRecipe(): ShapedRecipe {
-        val result = Equipment.EXPLOSIVE_ARROW.createItemStack(1)
+        val result = Equipment.EXPLOSIVE_ARROW.newItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "explosive_arrow"), result).apply {
             shape("G", "A")
             setIngredient('G', Material.GUNPOWDER)

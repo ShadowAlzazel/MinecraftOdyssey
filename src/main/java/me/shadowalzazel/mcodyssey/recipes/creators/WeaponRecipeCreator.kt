@@ -134,27 +134,27 @@ class WeaponRecipeCreator : ItemCreator {
             '|' to MaterialChoice(Material.STICK)
         ),
         "silver" to mapOf(
-            'X' to ExactChoice(Ingredients.SILVER_INGOT.createItemStack(1)),
+            'X' to ExactChoice(Ingredients.SILVER_INGOT.newItemStack(1)),
             '|' to MaterialChoice(Material.STICK)
         ),
         "soul_steel" to mapOf(
-            'X' to ExactChoice(Ingredients.SOUL_STEEL_INGOT.createItemStack(1)),
+            'X' to ExactChoice(Ingredients.SOUL_STEEL_INGOT.newItemStack(1)),
             '|' to MaterialChoice(Material.STICK)
         ),
         "titanium" to mapOf(
-            'X' to ExactChoice(Ingredients.TITANIUM_INGOT.createItemStack(1)),
+            'X' to ExactChoice(Ingredients.TITANIUM_INGOT.newItemStack(1)),
             '|' to MaterialChoice(Material.STICK)
         ),
         "andonized_titanium" to mapOf(
-            'X' to ExactChoice(Ingredients.ANDONIZED_TITANIUM_INGOT.createItemStack(1)),
+            'X' to ExactChoice(Ingredients.ANDONIZED_TITANIUM_INGOT.newItemStack(1)),
             '|' to MaterialChoice(Material.STICK)
         ),
         "iridium" to mapOf(
-            'X' to ExactChoice(Ingredients.IRIDIUM_INGOT.createItemStack(1)),
+            'X' to ExactChoice(Ingredients.IRIDIUM_INGOT.newItemStack(1)),
             '|' to MaterialChoice(Material.STICK)
         ),
         "mithril" to mapOf(
-            'X' to ExactChoice(Ingredients.MITHRIL_INGOT.createItemStack(1)),
+            'X' to ExactChoice(Ingredients.MITHRIL_INGOT.newItemStack(1)),
             '|' to MaterialChoice(Material.STICK)
         ),
     )
