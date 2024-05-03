@@ -76,9 +76,18 @@ object ItemModels {
 
     // Runeware
     const val FRAGMENTED_ORB: Int = 6901544
-    const val GLAZED_RUNE_ORB: Int = 6901544
     const val CLAY_TOTEM: Int = 6901545
+    const val CLAY_SKULL: Int = 6901546
+    const val CLAY_DOWEL: Int = 6901547
+    const val FRAGMENTED_RODS: Int = 6901548
+    const val CLAY_KEY: Int = 6901549
+
+    const val GLAZED_RUNE_ORB: Int = 6901544
     const val GLAZED_RUNE_TOTEM: Int = 6901545
+    const val GLAZED_RUNE_SKULL: Int = 6901546
+    const val GLAZED_RUNE_DOWEL: Int = 6901547
+    const val GLAZED_RUNE_RODS: Int = 6901548
+    const val GLAZED_RUNE_KEY: Int = 6901549
 
     // Unknown Runesherd
     const val UNKNOWN_RUNESHERD: Int = 6905632

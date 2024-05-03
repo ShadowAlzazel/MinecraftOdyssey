@@ -53,6 +53,9 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
     fun OdysseyItem.createRuneware(amount: Int = 1): ItemStack {
         val item = this.newItemStack(amount).also {
             it.addRunewareTag()
+            //val newMeta = it.itemMeta // One stack size?
+            //newMeta.setMaxStackSize(8)
+            //it.itemMeta = newMeta
         }
         return item
     }
@@ -71,16 +74,40 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
     // ORB
     val FRAGMENTED_ORB = OdysseyItem("fragmented_orb", Material.CLAY_BALL, "Fragmented Orb", ItemModels.FRAGMENTED_ORB,
         lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
-
     val GLAZED_RUNE_ORB = OdysseyItem("glazed_rune_orb", Material.BRICK, "Glazed Rune Orb", ItemModels.GLAZED_RUNE_ORB,
         lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
     // TOTEM
     val CLAY_TOTEM = OdysseyItem("clay_totem", Material.CLAY_BALL, "Clay Totem", ItemModels.CLAY_TOTEM,
         lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
-
     val GLAZED_RUNE_TOTEM = OdysseyItem("glazed_rune_totem", Material.BRICK, "Glazed Rune Totem", ItemModels.GLAZED_RUNE_TOTEM,
         lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+
+    // SKULL
+    val CLAY_SKULL = OdysseyItem("clay_skull", Material.CLAY_BALL, "Clay Skull", ItemModels.CLAY_SKULL,
+        lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+    val GLAZED_RUNE_SKULL = OdysseyItem("glazed_skull", Material.BRICK, "Glazed Rune Skull", ItemModels.GLAZED_RUNE_SKULL,
+        lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+
+    // DOWEL
+    val CLAY_DOWEL = OdysseyItem("clay_dowel", Material.CLAY_BALL, "Clay Dowel", ItemModels.CLAY_DOWEL,
+        lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+    val GLAZED_RUNE_DOWEL = OdysseyItem("glazed_rune_dowel", Material.BRICK, "Glazed Rune Dowel", ItemModels.GLAZED_RUNE_DOWEL,
+        lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+
+    // RODS
+    val FRAGMENTED_RODS = OdysseyItem("fragmented_rods", Material.CLAY_BALL, "Fragmented Rods", ItemModels.FRAGMENTED_RODS,
+        lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+    val GLAZED_RUNE_RODS = OdysseyItem("glazed_rune_rods", Material.BRICK, "Glazed Rune Rods", ItemModels.GLAZED_RUNE_RODS,
+        lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+
+    // KEY
+    val CLAY_KEY = OdysseyItem("clay_key", Material.CLAY_BALL, "Clay Key", ItemModels.CLAY_KEY,
+        lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+    val GLAZED_RUNE_KEY = OdysseyItem("glazed_rune_key", Material.BRICK, "Glazed Rune Key", ItemModels.GLAZED_RUNE_KEY,
+        lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+
+
 
     // FLOWER [WIP]
     /*
@@ -90,8 +117,6 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
     val GLAZED_RUNE_FLOWER = OdysseyItem("glazed_rune_flower", Material.BRICK, "Glazed Rune Flower", 11,
         lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
      */
-    // ROD
-    // SKULL
 
     /*-----------------------------------------------------------------------------------------------*/
 

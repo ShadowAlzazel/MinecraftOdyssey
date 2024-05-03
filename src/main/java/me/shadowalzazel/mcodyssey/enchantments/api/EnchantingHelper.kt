@@ -28,7 +28,7 @@ interface EnchantingHelper {
     }
 
     fun selectEnchantments(item: ItemStack, playerLevel: Int, allowTreasure: Boolean = false) {
-
+        val enchantability = 1
 
     }
 

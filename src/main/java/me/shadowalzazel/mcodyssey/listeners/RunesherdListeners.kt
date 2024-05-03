@@ -123,16 +123,14 @@ object RunesherdListeners : Listener, RunesherdManager {
             event.isCancelled = true
             return
         }
-        val runeware = when (input.itemMeta.customModelData) {
-            ItemModels.FRAGMENTED_ORB -> {
-                Runesherds.GLAZED_RUNE_ORB.createRuneware(1)
-            }
-            ItemModels.CLAY_TOTEM -> {
-                Runesherds.GLAZED_RUNE_TOTEM.createRuneware(1)
-            }
-            else -> {
-                Runesherds.GLAZED_RUNE_ORB.createRuneware(1)
-            }
+        val runewareStack = when (input.itemMeta.customModelData) {
+            ItemModels.CLAY_TOTEM -> { Runesherds.GLAZED_RUNE_TOTEM.createRuneware(1) }
+            ItemModels.FRAGMENTED_ORB -> { Runesherds.GLAZED_RUNE_ORB.createRuneware(1) }
+            ItemModels.CLAY_SKULL -> { Runesherds.GLAZED_RUNE_SKULL.createRuneware(1) }
+            ItemModels.CLAY_DOWEL -> { Runesherds.GLAZED_RUNE_DOWEL.createRuneware(1) }
+            ItemModels.FRAGMENTED_RODS -> { Runesherds.GLAZED_RUNE_RODS.createRuneware(1) }
+            ItemModels.CLAY_KEY -> { Runesherds.GLAZED_RUNE_KEY.createRuneware(1) }
+            else -> { Runesherds.GLAZED_RUNE_ORB.createRuneware(1) }
         }
         // Transfer to offhand
         val attributeMap = input.itemMeta.attributeModifiers ?: return
@@ -148,13 +146,13 @@ object RunesherdListeners : Listener, RunesherdManager {
                         modifier.operation,
                         EquipmentSlot.OFF_HAND)))
         }
-        runeware.itemMeta = runeware.itemMeta.also {
+        runewareStack.itemMeta = runewareStack.itemMeta.also {
             for (pair in newList) { it.addAttributeModifier(pair.first, pair.second) }
         }
-        runeware.addRuneAugmentTag()
-        runeware.setRuneAugmentCount(3)
+        runewareStack.addRuneAugmentTag()
+        runewareStack.setRuneAugmentCount(3)
         // Set Result
-        event.result = runeware
+        event.result = runewareStack
     }
 
     @EventHandler
