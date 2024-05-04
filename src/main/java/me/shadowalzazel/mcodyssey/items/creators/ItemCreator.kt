@@ -6,6 +6,7 @@ import me.shadowalzazel.mcodyssey.constants.DataKeys
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.items.Exotics
 import me.shadowalzazel.mcodyssey.items.Ingredients
+import me.shadowalzazel.mcodyssey.items.Miscellaneous
 import me.shadowalzazel.mcodyssey.items.Potions
 import me.shadowalzazel.mcodyssey.items.Potions.createPotionStack
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
@@ -92,6 +93,8 @@ interface ItemCreator : ExoticCreator {
     // Create itemStack from matching name
     fun createStackFromName(name: String, amount: Int): ItemStack? {
         return when(name) {
+            "tome_of_discharge" -> Miscellaneous.TOME_OF_DISCHARGE.newItemStack(amount)
+            "tome_of_embrace" -> Miscellaneous.TOME_OF_EMBRACE.newItemStack(amount)
             "crystalline_potion" -> Potions.CRYSTALLINE_POTION.createPotionStack()
             "irradiated_rod" -> Ingredients.IRRADIATED_ROD.newItemStack(amount)
             "irradiated_shard" -> Ingredients.IRRADIATED_SHARD.newItemStack(amount)

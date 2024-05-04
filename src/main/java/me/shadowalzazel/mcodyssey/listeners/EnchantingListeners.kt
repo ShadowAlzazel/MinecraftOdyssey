@@ -208,6 +208,8 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
     // GILDED ENCHANTS ARE LIKE CURSES (not removable)
     // When all clicks, transform Book?
 
+    // Polymerization -> Promotion and Replication Fixes
+
     private fun enchantingItemHandler(event: EnchantItemEvent) {
         val item = event.item
         val newEnchants = event.enchantsToAdd
@@ -395,9 +397,6 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
      */
 
     /*-----------------------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------------------*/
-
-    // TODO: Polymerization -> Promotion and Replication Fixes
     @EventHandler(priority = EventPriority.HIGH)
     fun smithingEnchantHandler(event: PrepareSmithingEvent) {
         val recipe = event.inventory.recipe ?: return
@@ -418,14 +417,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         val hasCrystals = (mineral.type == Material.PRISMARINE_CRYSTALS)
         val hasEquipment = equipment.type != Material.ENCHANTED_BOOK && equipment.type != Material.BOOK
         val hasBook = equipment.type == Material.ENCHANTED_BOOK
-
-        // Legacy Check
-        val isLegacy = !equipment.isSlotted() && equipment.itemMeta.hasLore() && equipment.lore()!!.contains(slotSeperator)
-        if (isLegacy) {
-            event.viewers.forEach { it.sendBarMessage("You need to reactivate this item. Combine with empty paper or gold nugget at the anvil!") }
-            return
-        }
-
+        // Checker
         if (hasCrystals && hasEquipment) {
             event.result = when (template.itemMeta.customModelData) {
                 ItemModels.TOME_OF_AVARICE -> {
@@ -435,10 +427,10 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
                     tomeOfBanishmentToEquipment(equipment, event.viewers)
                 }
                 ItemModels.TOME_OF_DISCHARGE -> {
-                    tomeOfDischargeToEquipment(equipment, event.viewers)
+                    tomeOfDischargeOnItem(equipment, event.viewers)
                 }
                 ItemModels.TOME_OF_EMBRACE -> {
-                    tomeOfEmbraceToEquipment(equipment, event.viewers)
+                    tomeOfEmbraceOnItem(equipment, event.viewers)
                 }
                 ItemModels.TOME_OF_EXPENDITURE -> {
                     tomeOfExpenditureToEquipment(equipment, event.viewers)

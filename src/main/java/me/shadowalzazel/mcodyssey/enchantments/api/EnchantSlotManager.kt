@@ -174,6 +174,13 @@ internal interface EnchantSlotManager : EnchantmentDataManager {
         }
         // Hide
         itemMeta = itemMeta.also {
+            // Manage Glint
+            if (enchantmentCount == 0 && gildedCount == 0) {
+                it.setEnchantmentGlintOverride(null)
+            }
+            else {
+                it.setEnchantmentGlintOverride(true)
+            }
             it.addItemFlags(ItemFlag.HIDE_ENCHANTS)
         }
         // Header and set lore

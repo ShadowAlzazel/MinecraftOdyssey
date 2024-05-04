@@ -18,26 +18,31 @@ internal interface TomeManager : EnchantSlotManager {
             return ItemStack(Material.AIR)
         }
         val meta = item.itemMeta
-        if (!meta.hasEnchants() || meta is EnchantmentStorageMeta && meta.storedEnchants.isEmpty()) {
-            viewers.forEach { it.sendBarMessage("This item needs to be enchanted to use this tome.") }
+        val hasStoredEnchants = meta is EnchantmentStorageMeta && meta.storedEnchants.isEmpty()
+        val hasOdysseyEnchants = item.hasOdysseyEnchants()
+        if (!meta.hasEnchants() && !hasStoredEnchants && !hasOdysseyEnchants) {
+            viewers.forEach { it.sendBarMessage("The item needs to be enchanted to use this tome.") }
             return ItemStack(Material.AIR)
         }
-        val enchantments = if (meta is EnchantmentStorageMeta) { meta.storedEnchants } else { meta.enchants }
+        val containers = item.getEnchantmentContainers().toList()
+        val randomContainer = containers.random()
+        item.removeEnchantViaContainer(randomContainer.first)
         // Remove Enchantment
-        val enchantToRemove = enchantments.toList().random()
-        return item.apply {
-            if (meta is EnchantmentStorageMeta) {
-                meta.removeStoredEnchant(enchantToRemove.first)
-            }
-            else {
-                meta.removeEnchant(enchantToRemove.first)
-            }
-            itemMeta = meta
-            updateSlotLore()
-        }
+        //val enchantments = if (meta is EnchantmentStorageMeta) { meta.storedEnchants } else { meta.enchants }
+        //val odysseyEnchantments = item.getOdysseyEnchantments()
+        /*
+        val containerPairs = item.getEnchantmentContainers().toList().toMutableList()
+        val randomInt = (0..<containerPairs.size).random()
+        containerPairs.removeAt(randomInt)
+        val enchantContainers = containerPairs.toList().toMap()
+        // Call set from containers
+        item.setEnchantmentsFromContainer(enchantContainers)
+         */
+        item.updateSlotLore()
+        return item
     }
 
-    private fun tomeOfEmbraceOnItem(item: ItemStack, viewers: List<HumanEntity>): ItemStack {
+    fun tomeOfEmbraceOnItem(item: ItemStack, viewers: List<HumanEntity>): ItemStack {
         if (!item.isSlotted()) {
             viewers.forEach { it.sendBarMessage("This item needs to be slotted to use this tome.") }
             return ItemStack(Material.AIR)

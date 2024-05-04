@@ -15,6 +15,7 @@ import net.minecraft.world.item.component.CustomData
 import org.bukkit.NamespacedKey
 import org.bukkit.craftbukkit.inventory.CraftItemStack
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import java.util.function.Consumer
 import org.bukkit.inventory.ItemStack as BukkitStack
 
@@ -76,8 +77,13 @@ interface EnchantmentDataManager : EnchantmentFinder {
         return containerMap
     }
 
+    // Works for books too XOR currently
     fun BukkitStack.getEnchantmentContainers(): Map<EnchantContainer, Int> {
-        val bukkitContainers = createBukkitEnchantContainerMap(this.enchantments)
+        val bukkitContainers = if (itemMeta is EnchantmentStorageMeta) {
+            createBukkitEnchantContainerMap((itemMeta as EnchantmentStorageMeta).storedEnchants)
+        } else {
+            createBukkitEnchantContainerMap(this.enchantments)
+        }
         val odysseyContainers = createOdysseyEnchantContainerMap(this.getOdysseyEnchantments())
         return bukkitContainers + odysseyContainers
     }
@@ -94,7 +100,43 @@ interface EnchantmentDataManager : EnchantmentFinder {
         val enchantMap = getOdysseyEnchantments().toMutableMap()
         val contains = enchantMap.keys.contains(enchant)
         if (!contains) return
+        enchantMap.remove(enchant)
         this.updateEnchantmentsNBT(enchantMap)
+    }
+
+    // Check XOR !!!
+    fun BukkitStack.removeEnchantViaContainer(container: EnchantContainer) {
+        val meta = itemMeta
+        if (container.isOdyssey) {
+            removeOdysseyEnchantment(container.odysseyEnchant!!)
+        }
+        else if (container.isBukkit) {
+            val bukkitEnchant = container.bukkitEnchant!!
+            if (meta is EnchantmentStorageMeta) { meta.removeStoredEnchant(bukkitEnchant) }
+            else { meta.removeEnchant(bukkitEnchant) }
+            itemMeta = meta
+        }
+    }
+
+
+    // Called when setting/modifying item (no conflict checker)
+    fun BukkitStack.setEnchantmentsFromContainer(containers: Map<EnchantContainer, Int>) {
+        val meta = itemMeta
+        val odysseyEnchants = mutableMapOf<OdysseyEnchantment, Int>()
+        for (enchant in containers) {
+            if (enchant.key.isBukkit) {
+                if (meta is EnchantmentStorageMeta) {
+                    meta.storedEnchants[enchant.key.bukkitEnchant!!] = enchant.value
+                } else {
+                    meta.addEnchant(enchant.key.bukkitEnchant!!, enchant.value, false)
+                }
+            }
+            else if (enchant.key.isOdyssey) {
+                odysseyEnchants[enchant.key.odysseyEnchant!!] = enchant.value
+            }
+        }
+        itemMeta = meta
+        this.updateEnchantmentsNBT(odysseyEnchants)
     }
 
     // Tries to get an enchantment Map if not
@@ -117,7 +159,7 @@ interface EnchantmentDataManager : EnchantmentFinder {
         itemMeta = newMeta
     }
 
-    // This method is to add an enchantment via survival like anvil
+    // This method is to add an enchantment via survival like anvil (DOES NOT CHECK CONFLICTS)
     fun BukkitStack.addOdysseyEnchantment(enchant: OdysseyEnchantment, level: Int, pastMax: Boolean = false) {
         val enchantMap = getOdysseyEnchantments().toMutableMap()
         val hasMatching = enchantMap.keys.contains(enchant)

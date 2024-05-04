@@ -93,7 +93,7 @@ class AlchemyCauldronRecipe(
                     if (potionMeta.color != null) { colors.add(potionMeta.color!!) }
                 }
             }
-            println("Cauldron EFFECTS: ${resultMeta.customEffects}")
+            //println("Cauldron EFFECTS: ${resultMeta.customEffects}")
             // Colors
             if (colors.isNotEmpty()) {
             }
