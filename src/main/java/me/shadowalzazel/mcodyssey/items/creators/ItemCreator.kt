@@ -6,6 +6,8 @@ import me.shadowalzazel.mcodyssey.constants.DataKeys
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.items.Exotics
 import me.shadowalzazel.mcodyssey.items.Ingredients
+import me.shadowalzazel.mcodyssey.items.Potions
+import me.shadowalzazel.mcodyssey.items.Potions.createPotionStack
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.MeleeListeners.addOdysseyEnchantment
 import net.kyori.adventure.text.Component
@@ -77,26 +79,37 @@ interface ItemCreator : ExoticCreator {
     }
 
 
-    fun findFromName(name: String): OdysseyItem? { // This is a fallback
-        return when(name) {
-            "iridium_ingot" -> Ingredients.IRIDIUM_INGOT
-            "anodized_titanium_ingot" -> Ingredients.ANODIZED_TITANIUM_INGOT
-            "titanium_ingot" -> Ingredients.TITANIUM_INGOT
-            "mithril_ingot" -> Ingredients.MITHRIL_INGOT
-            "silver_ingot" -> Ingredients.SILVER_INGOT
-            "soul_steel_ingot" -> Ingredients.SOUL_STEEL_INGOT
-            else -> null
+    // General Creator Class
+    fun createItemFromName(name: String, amount: Int = 1): ItemStack? {
+        val odysseyStack = createStackFromName(name, amount)
+        if (odysseyStack == null) { // Fallback class
+            val odysseyItem = findFromName(name) ?: return null
+            return odysseyItem.createStack(amount)
         }
+        return odysseyStack
     }
 
     // Create itemStack from matching name
     fun createStackFromName(name: String, amount: Int): ItemStack? {
         return when(name) {
+            "crystalline_potion" -> Potions.CRYSTALLINE_POTION.createPotionStack()
+            "irradiated_rod" -> Ingredients.IRRADIATED_ROD.newItemStack(amount)
+            "irradiated_shard" -> Ingredients.IRRADIATED_SHARD.newItemStack(amount)
+            "ectoplasm" -> Ingredients.ECTOPLASM.newItemStack(amount)
+            "coagulated_blood" -> Ingredients.COAGULATED_BLOOD.newItemStack(amount)
+            "warden_entrails" -> Ingredients.WARDEN_ENTRAILS.newItemStack(amount)
+            "soul_quartz" -> Ingredients.SOUL_QUARTZ.newItemStack(amount)
+            "kunzite" -> Ingredients.KUNZITE.newItemStack(amount)
+            "alexandrite" -> Ingredients.ALEXANDRITE.newItemStack(amount)
+            "jade" -> Ingredients.JADE.newItemStack(amount)
+            "ruby" -> Ingredients.RUBY.newItemStack(amount)
             "iridium_ingot" -> Ingredients.IRIDIUM_INGOT.newItemStack(amount)
             "anodized_titanium_ingot" -> Ingredients.ANODIZED_TITANIUM_INGOT.newItemStack(amount)
+            "heated_titanium_ingot" -> Ingredients.HEATED_TITANIUM_INGOT.newItemStack(amount)
             "titanium_ingot" -> Ingredients.TITANIUM_INGOT.newItemStack(amount)
             "mithril_ingot" -> Ingredients.MITHRIL_INGOT.newItemStack(amount)
             "silver_ingot" -> Ingredients.SILVER_INGOT.newItemStack(amount)
+            "silver_nugget" -> Ingredients.SILVER_NUGGET.newItemStack(amount)
             "soul_steel_ingot" -> Ingredients.SOUL_STEEL_INGOT.newItemStack(amount)
             "knight_breaker" -> Exotics.KNIGHT_BREAKER.createExoticWeapon()
             "shogun_lightning" -> Exotics.SHOGUN_LIGHTNING.createExoticWeapon()
@@ -108,14 +121,17 @@ interface ItemCreator : ExoticCreator {
         }
     }
 
-    // General Creator Class
-    fun createItemFromName(name: String, amount: Int = 1): ItemStack? {
-        val odysseyStack = createStackFromName(name, amount)
-        if (odysseyStack == null) { // Fallback class
-            val odysseyItem = findFromName(name) ?: return null
-            return odysseyItem.createStack(amount)
+    // FALLBACK
+    fun findFromName(name: String): OdysseyItem? {
+        return when(name) {
+            "iridium_ingot" -> Ingredients.IRIDIUM_INGOT
+            "anodized_titanium_ingot" -> Ingredients.ANODIZED_TITANIUM_INGOT
+            "titanium_ingot" -> Ingredients.TITANIUM_INGOT
+            "mithril_ingot" -> Ingredients.MITHRIL_INGOT
+            "silver_ingot" -> Ingredients.SILVER_INGOT
+            "soul_steel_ingot" -> Ingredients.SOUL_STEEL_INGOT
+            else -> null
         }
-        return odysseyStack
     }
 
 
