@@ -145,8 +145,8 @@ class WeaponRecipeCreator : ItemCreator {
             'X' to ExactChoice(Ingredients.TITANIUM_INGOT.newItemStack(1)),
             '|' to MaterialChoice(Material.STICK)
         ),
-        "andonized_titanium" to mapOf(
-            'X' to ExactChoice(Ingredients.ANDONIZED_TITANIUM_INGOT.newItemStack(1)),
+        "anodized_titanium" to mapOf(
+            'X' to ExactChoice(Ingredients.ANODIZED_TITANIUM_INGOT.newItemStack(1)),
             '|' to MaterialChoice(Material.STICK)
         ),
         "iridium" to mapOf(

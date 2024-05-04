@@ -7,6 +7,7 @@ import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.items.Exotics
 import me.shadowalzazel.mcodyssey.items.Ingredients
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
+import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.MeleeListeners.addOdysseyEnchantment
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
@@ -41,15 +42,17 @@ interface ItemCreator : ExoticCreator {
         if (itemName != "arcane_book") return ItemStack(Material.AIR)
         val newBook = this.newItemStack(1)
         newBook.itemMeta = (newBook.itemMeta as EnchantmentStorageMeta).also {
-            // Set lore and description
-            val loreName = enchantment.displayName(level)
+            // Set lore, description, and display name
+            val enchantName = enchantment.displayName(level)
             val newToolTip = enchantment.getDescriptionToolTip(level)
-            val textLore = mutableListOf(loreName) + Component.text("") + newToolTip
-            val bookName = it.displayName()!!.color(SlotColors.ARCANE.color)
-            val fullName = bookName.append(loreName.color(SlotColors.ARCANE.color))
+            val textLore = mutableListOf(enchantName) + Component.text("") + newToolTip
+            val bookText = this.customName + " - "
+            val bookName = Component.text(bookText).color(SlotColors.ARCANE.color)
+            val fullName = bookName.append(enchantName.color(SlotColors.ARCANE.color))
             it.displayName(fullName)
             it.lore(textLore)
         }
+        newBook.addOdysseyEnchantment(enchantment, level, true)
         return newBook
     }
 
@@ -77,7 +80,7 @@ interface ItemCreator : ExoticCreator {
     fun findFromName(name: String): OdysseyItem? { // This is a fallback
         return when(name) {
             "iridium_ingot" -> Ingredients.IRIDIUM_INGOT
-            "andonized_titanium_ingot" -> Ingredients.ANDONIZED_TITANIUM_INGOT
+            "anodized_titanium_ingot" -> Ingredients.ANODIZED_TITANIUM_INGOT
             "titanium_ingot" -> Ingredients.TITANIUM_INGOT
             "mithril_ingot" -> Ingredients.MITHRIL_INGOT
             "silver_ingot" -> Ingredients.SILVER_INGOT
@@ -90,7 +93,7 @@ interface ItemCreator : ExoticCreator {
     fun createStackFromName(name: String, amount: Int): ItemStack? {
         return when(name) {
             "iridium_ingot" -> Ingredients.IRIDIUM_INGOT.newItemStack(amount)
-            "andonized_titanium_ingot" -> Ingredients.ANDONIZED_TITANIUM_INGOT.newItemStack(amount)
+            "anodized_titanium_ingot" -> Ingredients.ANODIZED_TITANIUM_INGOT.newItemStack(amount)
             "titanium_ingot" -> Ingredients.TITANIUM_INGOT.newItemStack(amount)
             "mithril_ingot" -> Ingredients.MITHRIL_INGOT.newItemStack(amount)
             "silver_ingot" -> Ingredients.SILVER_INGOT.newItemStack(amount)

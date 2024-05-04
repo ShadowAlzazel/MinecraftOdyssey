@@ -14,8 +14,7 @@ class OdysseyRunesherd(
     lore: List<Component>? = null,
     internal val attribute: Attribute? = null,
     internal val value: Double = 0.0,
-    internal val affectedEquipment: List<EquipmentSlot>? = null,
-    internal val odysseyAttribute: Int? = null
+    internal val affectedEquipment: List<EquipmentSlot>? = null
 ) : OdysseyItem(
     itemName = itemName,
     overrideMaterial = overrideMaterial,

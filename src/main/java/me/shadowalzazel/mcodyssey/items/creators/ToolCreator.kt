@@ -38,7 +38,7 @@ class ToolCreator : AttributeManager {
             if (material == ToolMaterial.IRIDIUM) {
                 speed *= 0.9
             }
-            else if (material == ToolMaterial.TITANIUM || material == ToolMaterial.ANDONIZED_TITANIUM) {
+            else if (material == ToolMaterial.TITANIUM || material == ToolMaterial.ANODIZED_TITANIUM) {
                 speed *= 1.1
             }
             // Assign variables (meta/components)

@@ -13,15 +13,14 @@ class Equipment : ItemCreator {
 
     fun getRecipes(): List<Recipe> {
         return listOf(
-            arcaneWandRecipe(),
             warpingWandRecipe(),
             explosiveArrowRecipe(),
-            hornedHelmetRecipe()
+            hornedHelmetRecipe(),
+            arcaneWandRecipe()
         )
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-
     private fun hornedHelmetRecipe(): ShapedRecipe {
         val result = Equipment.HORNED_HELMET.createArmor(2.0)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "horned_helmet"), result).apply {
@@ -30,6 +29,18 @@ class Equipment : ItemCreator {
             setIngredient('H', Material.GOAT_HORN)
             setIngredient('C', Material.COPPER_INGOT)
             group = "helmets"
+            category = CraftingBookCategory.EQUIPMENT
+        }
+        return recipe
+    }
+
+    private fun explosiveArrowRecipe(): ShapedRecipe {
+        val result = Equipment.EXPLOSIVE_ARROW.newItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "explosive_arrow"), result).apply {
+            shape("G", "A")
+            setIngredient('G', Material.GUNPOWDER)
+            setIngredient('A', Material.ARROW)
+            group = "arrows"
             category = CraftingBookCategory.EQUIPMENT
         }
         return recipe
@@ -56,18 +67,6 @@ class Equipment : ItemCreator {
             setIngredient('W', Material.WARPED_FUNGUS)
             setIngredient('V', Material.TWISTING_VINES)
             group = "wands"
-            category = CraftingBookCategory.EQUIPMENT
-        }
-        return recipe
-    }
-
-    private fun explosiveArrowRecipe(): ShapedRecipe {
-        val result = Equipment.EXPLOSIVE_ARROW.newItemStack(1)
-        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "explosive_arrow"), result).apply {
-            shape("G", "A")
-            setIngredient('G', Material.GUNPOWDER)
-            setIngredient('A', Material.ARROW)
-            group = "arrows"
             category = CraftingBookCategory.EQUIPMENT
         }
         return recipe

@@ -157,7 +157,7 @@ object ItemModels {
     const val IRIDIUM_INGOT: Int = 6906878
     const val TITANIUM_INGOT: Int = 6906879
     const val HEATED_TITANIUM_INGOT: Int = 6906880
-    const val ANDONIZED_TITANIUM_INGOT: Int = 6906881
+    const val ANODIZED_TITANIUM_INGOT: Int = 6906881
 
     const val SILVER_NUGGET: Int = 6906619
 

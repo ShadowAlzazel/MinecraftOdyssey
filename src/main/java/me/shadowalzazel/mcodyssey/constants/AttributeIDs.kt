@@ -17,7 +17,7 @@ object AttributeIDs {
     val ITEM_ARMOR_TOUGHNESS_UUID: UUID = UUID.fromString("61487b4a-71af-4aaa-9f33-b329d474c588")
     val KNOCKBACK_RESISTANCE: UUID = UUID.fromString("bf075f62-f9b0-4baa-b34a-04d764f78a74")
     val ATTACK_KNOCKBACK: UUID = UUID.fromString("1-1-438d-0-28d34")
-    val ITEM_ENTITY_RANGE_UUID = UUID.fromString("d3f7a441-fa1c-4637-8ba2-e6a802114aa1")
+    val ITEM_ENTITY_RANGE_UUID: UUID = UUID.fromString("d3f7a441-fa1c-4637-8ba2-e6a802114aa1")
 
     // Custom Helmet
     val ARMOR_HELMET_UUID: UUID = UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")
