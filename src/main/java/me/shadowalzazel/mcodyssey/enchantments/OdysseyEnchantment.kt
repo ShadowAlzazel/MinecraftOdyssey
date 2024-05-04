@@ -131,7 +131,7 @@ open class OdysseyEnchantment(
     // Get tool tip
     open fun getDescriptionToolTip(inputLevel: Int): List<Component> {
         return listOf(
-            getGrayComponentText(translatableName)
+            getGrayComponentText("$translatableName[WIP] How this get here.")
         )
     }
 

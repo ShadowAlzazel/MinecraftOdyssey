@@ -135,6 +135,7 @@ class Odyssey : JavaPlugin() {
             "place_feature_archaic_seed" to PlaceFeatureArchaicSeed,
             "get_item_data" to GetItemData,
             "give_item" to GiveItem,
+            "give_weapon" to GiveWeapon,
             "give_arcane_book" to GiveArcaneBook,
             "give_spacerune_tablet" to GiveSpaceRuneTablet,
             "summon_mob" to SummonMob,

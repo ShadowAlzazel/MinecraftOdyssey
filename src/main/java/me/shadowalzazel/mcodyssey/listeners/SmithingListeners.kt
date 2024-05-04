@@ -151,26 +151,18 @@ object SmithingListeners : Listener, EnchantSlotManager {
             val armorMeta = result.itemMeta as ArmorMeta
             val count = event.inventory.inputMineral!!.amount
             val newTrimMaterial: TrimMaterial
-
             when(event.inventory.inputMineral) {
-                Ingredients.ALEXANDRITE.newItemStack(count) -> {
-                    newTrimMaterial = TrimMaterials.ALEXANDRITE
-                }
-                Ingredients.KUNZITE.newItemStack(count) -> {
-                    newTrimMaterial = TrimMaterials.KUNZITE
-                }
-                Ingredients.JADE.newItemStack(count) -> {
-                    newTrimMaterial = TrimMaterials.JADE
-                }
-                Ingredients.RUBY.newItemStack(count) -> {
-                    newTrimMaterial = TrimMaterials.RUBY
-                }
-                Ingredients.SOUL_QUARTZ.newItemStack(count) -> {
-                    newTrimMaterial = TrimMaterials.SOUL_QUARTZ
-                }
-                Ingredients.SOUL_STEEL_INGOT.newItemStack(count) -> {
-                    newTrimMaterial = TrimMaterials.SOUL_STEEL
-                }
+                Ingredients.ALEXANDRITE.newItemStack(count) -> { newTrimMaterial = TrimMaterials.ALEXANDRITE }
+                Ingredients.KUNZITE.newItemStack(count) -> { newTrimMaterial = TrimMaterials.KUNZITE }
+                Ingredients.JADE.newItemStack(count) -> { newTrimMaterial = TrimMaterials.JADE }
+                Ingredients.RUBY.newItemStack(count) -> { newTrimMaterial = TrimMaterials.RUBY }
+                Ingredients.SOUL_QUARTZ.newItemStack(count) -> { newTrimMaterial = TrimMaterials.SOUL_QUARTZ }
+                Ingredients.SOUL_STEEL_INGOT.newItemStack(count) -> { newTrimMaterial = TrimMaterials.SOUL_STEEL }
+                Ingredients.IRIDIUM_INGOT.newItemStack(count) -> { newTrimMaterial = TrimMaterials.IRIDIUM }
+                Ingredients.MITHRIL_INGOT.newItemStack(count) -> { newTrimMaterial = TrimMaterials.MITHRIL }
+                Ingredients.TITANIUM_INGOT.newItemStack(count) -> { newTrimMaterial = TrimMaterials.TITANIUM }
+                Ingredients.ANODIZED_TITANIUM_INGOT.newItemStack(count) -> { newTrimMaterial = TrimMaterials.ANODIZED_TITANIUM }
+                Ingredients.SILVER_INGOT.newItemStack(count) -> { newTrimMaterial = TrimMaterials.SILVER }
                 ItemStack(Material.OBSIDIAN, count) -> {
                     // TODO: CURRENTLY DOES NOT WORK AS NO EVENT RESULT IS MADE
                     newTrimMaterial = TrimMaterials.OBSIDIAN
@@ -179,11 +171,11 @@ object SmithingListeners : Listener, EnchantSlotManager {
                     return
                 }
             }
-
+            // Apply new trim
             val newTrim = ArmorTrim(newTrimMaterial, (event.inventory.result!!.itemMeta as ArmorMeta).trim!!.pattern)
             armorMeta.trim = newTrim
             event.result = event.result!!.clone().apply {
-                (itemMeta) = armorMeta
+                itemMeta = armorMeta
             }
             return
         }

@@ -3,7 +3,6 @@ package me.shadowalzazel.mcodyssey.items
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import org.bukkit.Material
-import org.bukkit.entity.Item
 
 object Ingredients {
 
@@ -30,14 +29,8 @@ object Ingredients {
     val IRIDIUM_INGOT = OdysseyItem("iridium_ingot", Material.IRON_INGOT,"Iridium Ingot", ItemModels.IRIDIUM_INGOT)
     val TITANIUM_INGOT = OdysseyItem("titanium_ingot", Material.IRON_INGOT,"Titanium Ingot", ItemModels.TITANIUM_INGOT)
     val HEATED_TITANIUM_INGOT = OdysseyItem("heated_titanium_ingot", Material.IRON_INGOT,"Heated Titanium Ingot", ItemModels.HEATED_TITANIUM_INGOT)
-    val ANDONIZED_TITANIUM_INGOT = OdysseyItem("andonized_titanium_ingot", Material.IRON_INGOT,"Andonized Titanium Ingot", ItemModels.ANDONIZED_TITANIUM_INGOT)
+    val ANODIZED_TITANIUM_INGOT = OdysseyItem("anodized_titanium_ingot", Material.IRON_INGOT,"Anodized Titanium Ingot", ItemModels.ANODIZED_TITANIUM_INGOT)
 
     val SILVER_NUGGET = OdysseyItem("silver_nugget", Material.IRON_NUGGET, "Silver Nugget", ItemModels.SILVER_NUGGET)
-
-    // Big When statement
-    /*
-    fun getItemByName(text: String) {
-    }
-     */
 
 }

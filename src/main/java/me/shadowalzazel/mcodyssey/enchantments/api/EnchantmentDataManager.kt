@@ -106,9 +106,9 @@ interface EnchantmentDataManager : EnchantmentFinder {
     }
 
     // This method sets and odyssey enchantment/overriding existing enchant
-    fun BukkitStack.setOdysseyEnchantment(enchant: OdysseyEnchantment, level: Int, pastMax: Boolean = false) {
+    fun BukkitStack.setOdysseyEnchantment(enchant: OdysseyEnchantment, level: Int, overMax: Boolean = false) {
         val enchantMap = getOdysseyEnchantments().toMutableMap()
-        val checkedLevel = if (pastMax && enchant.maximumLevel <= level) level else enchant.maximumLevel
+        val checkedLevel = if (overMax) level else minOf(level, enchant.maximumLevel)
         enchantMap[enchant] = checkedLevel
         this.updateEnchantmentsNBT(enchantMap)
         // Change Glint

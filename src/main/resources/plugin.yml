@@ -18,6 +18,10 @@ commands:
     description: "Gives an Odyssey custom item."
     usage: /<command>
     permission: op
+  give_weapon:
+    description: "Gives an Odyssey weapon from available materials and types."
+    usage: /<command>
+    permission: op
   get_item_data:
     description: "Gets the data components of a held item."
     usage: /<command>
