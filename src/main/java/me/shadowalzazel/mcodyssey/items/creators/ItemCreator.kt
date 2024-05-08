@@ -95,6 +95,9 @@ interface ItemCreator : ExoticCreator {
         return when(name) {
             "tome_of_discharge" -> Miscellaneous.TOME_OF_DISCHARGE.newItemStack(amount)
             "tome_of_embrace" -> Miscellaneous.TOME_OF_EMBRACE.newItemStack(amount)
+            "tome_of_promotion" -> Miscellaneous.TOME_OF_PROMOTION.newItemStack(amount)
+            "tome_of_harmony" -> Miscellaneous.TOME_OF_HARMONY.newItemStack(amount)
+            "tome_of_replication" -> Miscellaneous.TOME_OF_REPLICATION.newItemStack(amount)
             "crystalline_potion" -> Potions.CRYSTALLINE_POTION.createPotionStack()
             "irradiated_rod" -> Ingredients.IRRADIATED_ROD.newItemStack(amount)
             "irradiated_shard" -> Ingredients.IRRADIATED_SHARD.newItemStack(amount)

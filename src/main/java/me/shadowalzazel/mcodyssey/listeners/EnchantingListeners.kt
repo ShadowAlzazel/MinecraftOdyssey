@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import com.destroystokyo.paper.event.inventory.PrepareResultEvent
-import me.shadowalzazel.mcodyssey.arcane.TomeManager
+import me.shadowalzazel.mcodyssey.enchantments.api.TomeManager
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
@@ -41,7 +41,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         val slotted = result.isSlotted()
         if (!slotted) return
         // Sentries passed
-        event.result = result.clone().also { it.updateSlotLore() }
+        event.result = result.clone().also { it.updateSlotContainerLore() }
     }
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -119,7 +119,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
             event.result = event.result!!.apply {
                 createNewEnchantSlots()
                 addItemFlags(ItemFlag.HIDE_ENCHANTS)
-                updateSlotLore()
+                updateSlotContainerLore()
             }
             return
         }
@@ -168,7 +168,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
                 return
             }
             event.result = event.result!!.apply {
-                updateSlotLore()
+                updateSlotContainerLore()
             }
         }
     }
@@ -241,7 +241,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         enchantsToRemove.forEach { newEnchants.remove(it) }
         // Update New Slots
         val containerMap = createBukkitEnchantContainerMap(newEnchants).toMutableMap()
-        item.updateSlotLore(containerMap)
+        item.updateSlotContainerLore(containerMap)
     }
 
     private fun enchantingBookHandler(event: EnchantItemEvent) {
@@ -417,9 +417,9 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         val hasCrystals = (mineral.type == Material.PRISMARINE_CRYSTALS)
         val hasEquipment = equipment.type != Material.ENCHANTED_BOOK && equipment.type != Material.BOOK
         val hasBook = equipment.type == Material.ENCHANTED_BOOK
-        // Checker
+        // Check for [TOME] + [EQUIPMENT] + [CRYSTALS]
         if (hasCrystals && hasEquipment) {
-            event.result = when (template.itemMeta.customModelData) {
+            val newResult = when (template.itemMeta.customModelData) {
                 ItemModels.TOME_OF_AVARICE -> {
                     tomeOfAvariceToEquipment(equipment, event.viewers)
                 }
@@ -436,23 +436,25 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
                     tomeOfExpenditureToEquipment(equipment, event.viewers)
                 }
                 ItemModels.TOME_OF_HARMONY -> {
-                    tomeOfHarmonyToEquipment(equipment)
+                    tomeOfHarmonyOnItem(equipment)
                 }
                 ItemModels.TOME_OF_POLYMERIZATION -> {
                     tomeOfPolymerizationToEquipment(template, equipment, event.viewers)
                 }
                 ItemModels.TOME_OF_PROMOTION -> {
-                    tomeOfPromotionToEquipment(equipment, event.viewers)
+                    tomeOfPromotionOnItem(equipment, event.viewers)
                 }
                 else -> {
-                    ItemStack(Material.AIR)
+                    null
                 }
             }
+            // Change result to air if null result
+            event.result = newResult ?: ItemStack(Material.AIR)
         }
         else if (hasCrystals && hasBook) {
             event.result = when (template.itemMeta.customModelData) {
                 ItemModels.TOME_OF_PROMOTION -> {
-                    tomeOfPromotionToBook(equipment, event.viewers)
+                    tomeOfPromotionOnItem(equipment, event.viewers)
                 }
                 ItemModels.TOME_OF_REPLICATION -> {
                     event.inventory.inputTemplate = tomeOfReplicationToBook(equipment)
@@ -491,7 +493,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         return item.apply {
             addGildedSlot()
             for (enchant in enchantList) { removeEnchantment(enchant.key) }
-            updateSlotLore()
+            updateSlotContainerLore()
         }
     }
 
@@ -518,7 +520,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
                 itemMeta = itemMeta.also {
                     it.removeEnchant(enchantToRemove.first)
                 }
-                updateSlotLore()
+                updateSlotContainerLore()
             }
         } else { // Remove Slot
             if (enchantSlotCount > 1) {
@@ -532,45 +534,8 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
                 return ItemStack(Material.AIR)
             }
         }
-        item.updateSlotLore()
+        item.updateSlotContainerLore()
         return item
-    }
-
-    private fun tomeOfDischargeToEquipment(item: ItemStack, viewers: List<HumanEntity>): ItemStack {
-        if (!item.isSlotted()) {
-            viewers.forEach { it.sendBarMessage("This item needs to be slotted to use this tome.") }
-            return ItemStack(Material.AIR)
-        }
-        if (!item.itemMeta.hasEnchants()) {
-            viewers.forEach { it.sendBarMessage("This item needs to be enchanted to use this tome.") }
-            return ItemStack(Material.AIR)
-        }
-        // Remove Enchantment
-        val enchantToRemove = item.enchantments.toList().random()
-        return item.apply {
-            if (enchantToRemove.first.isOdysseyEnchant()) {
-                removeEnchantment(enchantToRemove.first)
-            }
-            else {
-                removeEnchantment(enchantToRemove.first)
-            }
-            itemMeta = itemMeta.also {
-                it.removeEnchant(enchantToRemove.first)
-            }
-            updateSlotLore()
-        }
-    }
-
-    private fun tomeOfEmbraceToEquipment(item: ItemStack, viewers: List<HumanEntity>): ItemStack {
-        if (!item.isSlotted()) {
-            viewers.forEach { it.sendBarMessage("This item needs to be slotted to use this tome.") }
-            return ItemStack(Material.AIR)
-        }
-        // Add Slot
-        return item.apply {
-            addEnchantSlot()
-            updateSlotLore()
-        }
     }
 
     private fun tomeOfExpenditureToEquipment(item: ItemStack, viewers: List<HumanEntity>): ItemStack {
@@ -595,12 +560,6 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         return book
     }
 
-    private fun tomeOfHarmonyToEquipment(item: ItemStack): ItemStack {
-        return item.apply {
-            itemMeta = itemMeta.also { if (it is Repairable) it.repairCost = 1 }
-        }
-    }
-
     private fun tomeOfPolymerizationToEquipment(book: ItemStack, item: ItemStack, viewers: List<HumanEntity>): ItemStack {
         if (item.itemMeta.hasEnchants()) {
             viewers.forEach { it.sendBarMessage("This item needs no enchants to be used.") }
@@ -622,92 +581,8 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         return item.apply {
             // TODO: Make more robust
             addUnsafeEnchantments(book.enchantments)
-            updateSlotLore()
+            updateSlotContainerLore()
         }
-    }
-
-    private fun tomeOfPromotionToEquipment(item: ItemStack, viewers: List<HumanEntity>): ItemStack {
-        if (!item.isSlotted() && item.type != Material.ENCHANTED_BOOK) {
-            viewers.forEach { it.sendBarMessage("This item needs to be slotted to use this tome.") }
-            return ItemStack(Material.AIR)
-        }
-        if (!item.itemMeta.hasEnchants()) {
-            viewers.forEach { it.sendBarMessage("This item needs to be enchanted to use this tome.") }
-            return ItemStack(Material.AIR)
-        }
-        // Check book meta and enchant meta
-        var promotedEnchant: Pair<Enchantment, Int>? = null
-        if (item.itemMeta.hasEnchants()) {
-            try {
-                val notMaxList = item.enchantments.toList().shuffled().filter { it.second < it.first.maxLevel }
-                promotedEnchant = notMaxList.random()
-            }
-            catch (except: NoSuchElementException) {
-                viewers.forEach { it.sendBarMessage("The item enchantments are at the max level.") }
-                return ItemStack(Material.AIR)
-            }
-            promotedEnchant = item.enchantments.toList().random()
-        } else if ((item.itemMeta as EnchantmentStorageMeta).hasStoredEnchants()) {
-            promotedEnchant = (item.itemMeta as EnchantmentStorageMeta).storedEnchants.toList().random()
-        }
-        // More Sentries
-        if (promotedEnchant == null) return ItemStack(Material.AIR)
-        if (promotedEnchant.first.maxLevel <= promotedEnchant.second) {
-            val message = "${promotedEnchant.first.key} is at the max level (Max: ${promotedEnchant.first.maxLevel})."
-            viewers.forEach { it.sendBarMessage(message) }
-            return ItemStack(Material.AIR)
-        }
-
-        return item.apply {
-            removeEnchantment(promotedEnchant.first)
-            addEnchantment(promotedEnchant.first, promotedEnchant.second + 1)
-            updateSlotLore()
-        }
-    }
-
-    /*-----------------------------------------------------------------------------------------------*/
-
-    private fun tomeOfPromotionToBook(item: ItemStack, viewers: List<HumanEntity>): ItemStack {
-        // Checks book meta and enchant item meta
-        val promotedEnchant: Pair<Enchantment, Int> = if (item.itemMeta.hasEnchants()) {
-            try {
-                val notMaxList = item.enchantments.toList().shuffled().filter { it.second < it.first.maxLevel }
-                notMaxList.random()
-            }
-            catch (except: NoSuchElementException) {
-                viewers.forEach { it.sendBarMessage("The enchantment is at the max level.") }
-                return ItemStack(Material.AIR)
-            }
-
-        } else if ((item.itemMeta as EnchantmentStorageMeta).hasStoredEnchants()) {
-            try {
-                val notMaxList = (item.itemMeta as EnchantmentStorageMeta).storedEnchants.toList().shuffled().filter { it.second < it.first.maxLevel }
-                notMaxList.random()
-            }
-            catch (except: NoSuchElementException) {
-                viewers.forEach { it.sendBarMessage("The enchantments are at the max level.") }
-                return ItemStack(Material.AIR)
-            }
-        } else {
-            return ItemStack(Material.AIR)
-        }
-        // Sentries
-        if (promotedEnchant.first.maxLevel <= promotedEnchant.second) {
-            viewers.forEach { it.sendBarMessage("${promotedEnchant.first.displayName(promotedEnchant.second)} is at the max level (Max: ${promotedEnchant.first.maxLevel}).") }
-            return ItemStack(Material.AIR)
-        }
-        // Book
-        val book = if (promotedEnchant.first.isOdysseyEnchant()) {
-            Miscellaneous.ARCANE_BOOK.createArcaneBook(OdysseyEnchantments.ARCANE_CELL, promotedEnchant.second + 1) /// TODO FIXXXX!!!!
-        } else {
-            item.clone().apply {
-                val newMeta = itemMeta.clone() as EnchantmentStorageMeta
-                newMeta.removeStoredEnchant(promotedEnchant.first)
-                newMeta.addStoredEnchant(promotedEnchant.first, promotedEnchant.second + 1, false)
-                itemMeta = newMeta
-            }
-        }
-        return book
     }
 
     private fun tomeOfReplicationToBook(item: ItemStack): ItemStack {
@@ -791,7 +666,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
                 4
             }
             else -> {
-                2
+                3
             }
         }
         return Pair(enchantSlots, gildedSlots)

@@ -20,25 +20,25 @@ object LootListeners : Listener, ItemCreator {
 
     @EventHandler
     fun mobDeathDropHandler(event: EntityDeathEvent) {
-        if (event.entity.killer !is Player) {
-            return
-        }
+        if (event.entity.killer !is Player) return
+        val mob = event.entity
+        if (!mob.hasAI()) return
+        val killer = mob.killer!!
         // Mineshaft
-        if (event.entity.scoreboardTags.contains(EntityTags.IN_MINESHAFT)) {
-            println("ROLLED")
-            val mobLootLogic = LootLogic(1.0, event.entity, event.entity.killer!!)
+        if (mob.scoreboardTags.contains(EntityTags.IN_MINESHAFT)) {
+            val mobLootLogic = LootLogic(1.0, mob, killer)
             if (mobLootLogic.roll(33.0)) {
-                event.entity.world.dropItem(event.entity.location, Ingredients.SILVER_NUGGET.createStack(1))
+                mob.world.dropItem(mob.location, Ingredients.SILVER_NUGGET.createStack(1))
             }
         }
-        if (!event.entity.hasLineOfSight(event.entity.killer!!)) {
-            return
+        // Arcane Book Handler
+        if (mob.hasLineOfSight(killer)) {
+            mobArcaneBookLoot(mob, killer)
         }
-        mobLootHandler(event.entity, event.entity.killer!!)
     }
 
 
-    private fun mobLootHandler(mob: LivingEntity, player: Player) {
+    private fun mobArcaneBookLoot(mob: LivingEntity, player: Player) {
         // Create a calculation class that handles all the logic
         val mobLootLogic = LootLogic(1.0, mob, player)
         // Loot check and entity check

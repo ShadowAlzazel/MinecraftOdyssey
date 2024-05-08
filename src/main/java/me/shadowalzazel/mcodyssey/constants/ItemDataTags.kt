@@ -74,7 +74,7 @@ object ItemDataTags {
 
     /*-----------------------------------------------------------------------------------------------*/
 
-    fun PersistentDataContainer.hasOdysseyTag(): Boolean {
+    private fun PersistentDataContainer.hasOdysseyTag(): Boolean {
         return has(DataKeys.ITEM_KEY)
     }
 

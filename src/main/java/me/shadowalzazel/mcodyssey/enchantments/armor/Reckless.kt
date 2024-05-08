@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack
 object Reckless : OdysseyEnchantment(
     "reckless",
     "Reckless",
-    3,
+    4,
     10,
     constantCost(8),
     dynamicCost(8, 10),

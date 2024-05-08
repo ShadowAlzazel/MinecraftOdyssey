@@ -19,6 +19,8 @@ object ArcaneListeners: Listener {
 
     private val ARCANE_REACH_MAP = mapOf(
         ItemModels.ARCANE_WAND to 32.0, // Range
+        ItemModels.ARCANE_BLADE to 8.0,
+        ItemModels.ARCANE_SCEPTER to 32.0,
         ItemModels.WARPING_WAND to 8.0, // Cone
     )
 
@@ -31,21 +33,27 @@ object ArcaneListeners: Listener {
 
     private fun leftClickHandler(event: PlayerInteractEvent) {
         val player = event.player
-        val offHandEquipment = player.equipment.itemInOffHand
-        if (!offHandEquipment.hasItemMeta()) return
-        if (!offHandEquipment.itemMeta!!.hasCustomModelData()) return
-        if (!offHandEquipment.hasOdysseyItemTag()) return
-        if (player.hasCooldown(offHandEquipment.type)) return
-        val model = offHandEquipment.itemMeta!!.customModelData
+        val offHand = player.equipment.itemInOffHand
+        if (!offHand.hasItemMeta()) return
+        if (!offHand.itemMeta!!.hasCustomModelData()) return
+        if (!offHand.hasOdysseyItemTag()) return
+        if (player.hasCooldown(offHand.type)) return
+        val model = offHand.itemMeta!!.customModelData
         if (ARCANE_REACH_MAP[model] == null) return
         val mainHandBook = player.equipment.itemInOffHand
         if (!mainHandBook.hasItemMeta()) return
-        if (!mainHandBook.itemMeta!!.hasCustomModelData()) return // Can only use volumes ??????
+        // if (!mainHandBook.itemMeta!!.hasCustomModelData()) return // Can only use volumes ??????
         // Sentries Passed
-        val itemTag = offHandEquipment.getOdysseyTag() ?: return
+        val itemTag = offHand.getOdysseyTag() ?: return
         when (itemTag) {
             "arcane_wand" -> {
                 arcaneWandHandler(event)
+            }
+            "arcane_blade" -> {
+
+            }
+            "arcane_scepter" -> {
+
             }
             "warping_wand" -> {
                 warpingWandHandler(event)
@@ -56,16 +64,16 @@ object ArcaneListeners: Listener {
 
     private fun arcaneWandHandler(event: PlayerInteractEvent) {
         val player = event.player
-        val offHandEquipment = player.equipment.itemInOffHand
-        val mainHandEquipment = player.equipment.itemInMainHand
-        if (mainHandEquipment.type != Material.BOOK && mainHandEquipment.type != Material.ENCHANTED_BOOK) return
-        val entity = getRayTraceTarget(player, offHandEquipment.itemMeta!!.customModelData)
+        val offHand = player.equipment.itemInOffHand
+        val mainHand = player.equipment.itemInMainHand
+        if (mainHand.type != Material.BOOK && mainHand.type != Material.ENCHANTED_BOOK) return
+        val entity = getRayTraceTarget(player, offHand.itemMeta!!.customModelData)
         if (entity !is LivingEntity) return
         // Run Attack
         player.attack(entity)
-        player.setCooldown(offHandEquipment.type, 3 * 20)
-        if (offHandEquipment.itemMeta is Damageable) {
-            (offHandEquipment.itemMeta as Damageable).damage -= 1
+        player.setCooldown(offHand.type, 3 * 20)
+        if (offHand.itemMeta is Damageable) {
+            (offHand.itemMeta as Damageable).damage -= 1
         }
         // Particles
         var location = player.location.clone()
@@ -82,6 +90,13 @@ object ArcaneListeners: Listener {
         }
         player.world.playSound(player.location, Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, 2F, 2F)
         entity.world.playSound(entity.location, Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, 2F, 2F)
+    }
+
+    private fun arcaneBladeHandler(event: PlayerInteractEvent) {
+        val player = event.player
+        val offHand = player.equipment.itemInOffHand
+        val mainHand = player.equipment.itemInMainHand
+        if (mainHand.type != Material.BOOK && mainHand.type != Material.ENCHANTED_BOOK) return
     }
 
     private fun ovalWandHandler(event: PlayerInteractEvent) {

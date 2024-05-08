@@ -12,6 +12,7 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
@@ -73,7 +74,81 @@ internal interface EnchantSlotManager : EnchantmentDataManager {
 
     // Usage for ONLY display not logic
     fun ItemStack.updateSlotLore(
-        newEnchants: MutableMap<EnchantContainer, Int>? = null,
+        newEnchants: MutableMap<Enchantment, Int>? = null,
+        resetLore: Boolean = false
+    ) {
+        val newLore = itemMeta.lore() ?: mutableListOf()
+        if (!newLore.contains(slotSeperator)) {
+            newLore.add(Component.text("Header Holder"))
+            newLore.add(slotSeperator)
+        }
+        val sepIndex = newLore.indexOf(slotSeperator)
+        val enchantSlots = getEnchantSlots()
+        val gildedSlots = getGildedSlots()
+        // Loop add Empty Slots first
+        for (e in 1..enchantSlots) {
+            val i = e + sepIndex
+            if (!newLore.indices.contains(i)) {
+                newLore.add(i, emptyEnchantSlot)
+            } else {
+                newLore[i] = emptyEnchantSlot
+            }
+        }
+        for (g in 1..gildedSlots) {
+            val i = sepIndex + enchantSlots + g
+            if (!newLore.indices.contains(i)) {
+                newLore.add(i, emptyGildedSlot)
+            } else {
+                newLore[i] = emptyGildedSlot
+            }
+        }
+        // Add Enchants Over empty slots
+        val updatedEnchantments = newEnchants ?: this.enchantments
+        var enchantmentCount = 0
+        updatedEnchantments.forEach {
+            val enchant = it.key
+            val color = if (enchant.isCursed) {
+                SlotColors.CURSED.color
+            } else {
+                SlotColors.ENCHANT.color
+            }
+            enchantmentCount += 1
+            newLore[sepIndex + enchantmentCount] = enchant
+                .displayName(it.value)
+                .color(color)
+                .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+        }
+        // Get gilded
+        var gildedCount = 0
+        val gildedEnchantKey = getGildedEnchantKey()
+        if (gildedEnchantKey != null) {
+            gildedCount += 1
+        }
+        // Move Engraving To Bottom
+        if (hasTag(ItemDataTags.IS_ENGRAVED)) {
+            val engraver = getStringTag(ItemDataTags.ENGRAVED_BY)!!
+            val engraving = Component.text("Created by $engraver", SlotColors.AMETHYST.color, TextDecoration.ITALIC)
+            newLore.remove(engraving)
+            newLore.add(engraving)
+        }
+        // Update Glint
+        itemMeta = itemMeta.also {
+            if (enchantmentCount == 0 && gildedCount == 0) {
+                it.setEnchantmentGlintOverride(null)
+            }
+            else {
+                it.addItemFlags(ItemFlag.HIDE_ENCHANTS)
+                it.setEnchantmentGlintOverride(true)
+            }
+        }
+        // Header and add Lore
+        newLore[sepIndex - 1] = createEnchantHeader(enchantmentCount + gildedCount, enchantSlots + gildedSlots)
+        lore(newLore)
+    }
+
+    // OLD METHOD (pre 24w18a)
+    fun ItemStack.updateSlotContainerLore(
+        newEnchantContainer: MutableMap<EnchantContainer, Int>? = null,
         resetLore: Boolean = false
     ) {
         val newLore = itemMeta.lore() ?: mutableListOf()
@@ -109,9 +184,9 @@ internal interface EnchantSlotManager : EnchantmentDataManager {
             }
         }
         // Get Enchantment Containers
-        val minecraftEnchantContainers = newEnchants?.filter { it.key.isBukkit } ?: createBukkitEnchantContainerMap(enchantments)
+        val minecraftEnchantContainers = newEnchantContainer?.filter { it.key.isBukkit } ?: createBukkitEnchantContainerMap(enchantments)
         val odysseyEnchantments = getOdysseyEnchantments()
-        val odysseyEnchantContainers = newEnchants?.filter { it.key.isOdyssey } ?: createOdysseyEnchantContainerMap(odysseyEnchantments)
+        val odysseyEnchantContainers = newEnchantContainer?.filter { it.key.isOdyssey } ?: createOdysseyEnchantContainerMap(odysseyEnchantments)
         val gildedEnchantKey = getGildedEnchantKey()
         // Add Enchants Over empty slots
         var enchantmentCount = 0
@@ -184,7 +259,7 @@ internal interface EnchantSlotManager : EnchantmentDataManager {
             it.addItemFlags(ItemFlag.HIDE_ENCHANTS)
         }
         // Header and set lore
-        newLore[sepIndex - 1] = enchantHeader(enchantmentCount + gildedCount, enchantSlots + gildedSlots)
+        newLore[sepIndex - 1] = createEnchantHeader(enchantmentCount + gildedCount, enchantSlots + gildedSlots)
         lore(newLore)
     }
 
@@ -198,7 +273,7 @@ internal interface EnchantSlotManager : EnchantmentDataManager {
         val bukkitContainers = createBukkitEnchantContainerMap(enchantments)
         val odysseyContainers = createOdysseyEnchantContainerMap(odysseyEnchantments)
         val enchantContainers = bukkitContainers + odysseyContainers
-        updateSlotLore(enchantContainers.toMutableMap())
+        updateSlotContainerLore(enchantContainers.toMutableMap())
     }
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -212,7 +287,7 @@ internal interface EnchantSlotManager : EnchantmentDataManager {
     val emptyEnchantSlot: TextComponent
         get() = Component.text("+ Empty Enchant Slot", SlotColors.GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
 
-    fun enchantHeader(used: Int = 0, total: Int = 0): TextComponent {
+    fun createEnchantHeader(used: Int = 0, total: Int = 0): TextComponent {
         return Component.text("Enchantments: [$used/$total]", SlotColors.ENCHANT.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
     }
 
