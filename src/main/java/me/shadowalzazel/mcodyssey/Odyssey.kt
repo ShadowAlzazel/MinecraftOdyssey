@@ -14,7 +14,7 @@ import me.shadowalzazel.mcodyssey.phenomenon.base.OdysseyPhenomenon
 import me.shadowalzazel.mcodyssey.recipes.RecipeManager
 import me.shadowalzazel.mcodyssey.recipes.brewing.BrewerMixes
 import me.shadowalzazel.mcodyssey.world_events.DailyWorldEventManager
-import me.shadowalzazel.mcodyssey.world_events.tasks.DateTimeSyncer
+import me.shadowalzazel.mcodyssey.world_events.DateTimeSyncer
 import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.event.Listener

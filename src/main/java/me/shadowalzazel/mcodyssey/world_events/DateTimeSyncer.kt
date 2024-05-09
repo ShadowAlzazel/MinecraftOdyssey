@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.world_events.tasks
+package me.shadowalzazel.mcodyssey.world_events
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import org.bukkit.scheduler.BukkitRunnable
@@ -30,6 +30,7 @@ class DateTimeSyncer(val odyssey: Odyssey) : BukkitRunnable() {
         if (worldEventManager.isDailyEventActive) {
             worldEventManager.currentDailyEvent?.persistentActionHandler(odyssey.overworld)
         }
+        // PUT CHECK STRUCTURE EVENT HERE
 
     }
 

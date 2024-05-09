@@ -1,7 +1,9 @@
 package me.shadowalzazel.mcodyssey.world_events
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.world_events.utility.DailyWorldEvent
+import me.shadowalzazel.mcodyssey.world_events.daily_events.DayEvents
+import me.shadowalzazel.mcodyssey.world_events.daily_events.NightEvents
+import me.shadowalzazel.mcodyssey.world_events.daily_events.DailyWorldEvent
 import org.bukkit.World
 
 class DailyWorldEventManager(val odyssey: Odyssey) {
