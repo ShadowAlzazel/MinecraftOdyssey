@@ -11,7 +11,7 @@ class OdysseyPotion(
     name: String,
     material: Material,
     customName: String,
-    lore: List<Component>? = null, // EMPTY LIST ->
+    lore: List<Component>? = null,
     customModel: Int? = null,
     internal val potionEffects: List<PotionEffect>? = null,
     internal val potionColor: Color? = null,

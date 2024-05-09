@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.alchemy
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.arcane.SlotColors
+import me.shadowalzazel.mcodyssey.enchantments.api.SlotColors
 import me.shadowalzazel.mcodyssey.constants.EffectTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.constants.ItemModels

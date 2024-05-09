@@ -54,10 +54,10 @@ object ItemModels {
     const val TOME_OF_EXPENDITURE: Int = 6906073 // Destroys item but extracts 1 enchantment
     const val TOME_OF_INFUSION: Int = 6906074
     const val TOME_OF_EUPHONY: Int = 6906075
-    const val TOME_OF_AVARICE: Int = 6906076
-    const val TOME_OF_POLYMERIZATION: Int = 6906077
-    const val TOME_OF_EXTRACTION: Int = 6906077
-    const val TOME_OF_IMITATION: Int = 6906077
+    const val TOME_OF_AVARICE: Int = 6906076 // Destroys Item but gives a lot of XP
+    const val TOME_OF_POLYMERIZATION: Int = 6906077 // Adds enchants for no XP cost
+    const val TOME_OF_EXTRACTION: Int = 6906078
+    const val TOME_OF_IMITATION: Int = 6906079 // Copies 1 enchant at minimum level
 
     // Runesherds
     const val ASSAULT_RUNESHERD: Int = 6901453 // Attack Damage
@@ -68,7 +68,7 @@ object ItemModels {
     const val STEADFAST_RUNESHERD: Int = 6901458 // Knockback Resistance
     const val FORCE_RUNESHERD: Int = 6901459 // Attack Knockback
     const val BREAK_RUNESHERD: Int = 6901460 // Break Speed
-    const val BREACH_RUNESHERD: Int = 6901461 // Block Break Range
+    const val GRASP_RUNESHERD: Int = 6901461 // Block Break Range
     const val JUMP_RUNESHERD: Int = 6901462 // Jump
     const val GRAVITY_RUNESHERD: Int = 6901463 // Gravity
     const val RANGE_RUNESHERD: Int = 6901464 // Attack Range
@@ -183,9 +183,12 @@ object ItemModels {
     const val SAYA: Int = 6903819
     const val EXPLOSIVE_ARROW: Int = 6903820
 
-    // Wands
+    // Arcane
     const val ARCANE_WAND: Int = 6903910
-    const val WARPING_WAND: Int = 6903911
+    const val ARCANE_BLADE: Int = 6903911
+    const val ARCANE_SCEPTER: Int = 6903912
+
+    const val WARPING_WAND: Int = 6906911
 
     // Crossbows
     const val GRAPPLING_HOOK: Int = 6905530

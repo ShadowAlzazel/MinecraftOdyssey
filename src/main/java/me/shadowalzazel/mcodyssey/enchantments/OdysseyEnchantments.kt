@@ -73,11 +73,10 @@ object OdysseyEnchantments  {
     val VOID_STRIKE: OdysseyEnchantment = VoidStrike
     val WHIRLWIND: OdysseyEnchantment = Whirlwind
 
-    // All
+    // Misc
     val CHITIN: OdysseyEnchantment = Chitin
     val MOONPATCH: OdysseyEnchantment = Moonpatch
 
-    // Misc
     val BOMB_OB: OdysseyEnchantment = BombOb
     val HOOK_SHOT: OdysseyEnchantment = HookShot
     val LENGTHY_LINE: OdysseyEnchantment = LengthyLine
@@ -85,7 +84,7 @@ object OdysseyEnchantments  {
     val REVERSED_RECOIL: OdysseyEnchantment = ReversedRecoil // TODO
     val O_SHINY: OdysseyEnchantment = OShiny
     val VOID_JUMP: OdysseyEnchantment = VoidJump
-    val WISE_BAIT: OdysseyEnchantment = WiseBait
+    val WISE_BAIT: OdysseyEnchantment = WiseBait // TODO
     val YANK: OdysseyEnchantment = Yank
 
     // Ranged

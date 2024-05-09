@@ -5,6 +5,7 @@ import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
+@Deprecated(message = "Changed in 24w18a")
 interface EnchantingHelper {
 
     // Checks

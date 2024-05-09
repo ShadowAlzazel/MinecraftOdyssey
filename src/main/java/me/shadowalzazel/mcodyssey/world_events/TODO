@@ -1,0 +1,11 @@
+TODO("If new day/ something else " +
+                "If player near village structure" +
+                "If village inhabited" +
+                "If not in cooldown" +
+                "Do some OldOccurrence, send rumors to player" +
+                "Ideas: Market Sale, Raid, Nether Invasion, ? " +
+                "If Allay nearby lower chance")
+
+
+     // TODO: Make Announcement show village name
+        // If structure in list, send name, else add name to list and counters!

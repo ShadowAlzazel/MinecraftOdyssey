@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.arcane
+package me.shadowalzazel.mcodyssey.enchantments.api
 
 import net.kyori.adventure.text.format.TextColor
 

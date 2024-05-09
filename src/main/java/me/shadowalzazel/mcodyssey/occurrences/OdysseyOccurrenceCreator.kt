@@ -12,7 +12,7 @@ class OdysseyOccurrenceCreator {
 
     // CURRENTLY DOES NOT READ FROM JSON FIX LATER
 
-
+    /*
 
     fun createLunarOccurrences(): List<Occurrence> {
 
@@ -45,11 +45,11 @@ class OdysseyOccurrenceCreator {
             ),
             mapOf(
                 "is_dark" to listOf(
-                    Condition.BlockLighting(0, 8, true),
-                    Condition.IsMobType(EntityType.PLAYER)
+                    EntityConditions.BlockLighting(0, 8, true),
+                    EntityConditions.IsMobType(EntityType.PLAYER)
                 ),
                 "on_activation" to listOf(
-                    Condition.AlwaysTrue
+                    EntityConditions.AlwaysTrue
                 )
             ),
             mapOf(
@@ -81,10 +81,10 @@ class OdysseyOccurrenceCreator {
             ),
             mapOf(
                 "is_dark" to listOf(
-                    Condition.BlockLighting(0, 8, true),
+                    EntityConditions.BlockLighting(0, 8, true),
                 ),
                 "is_wet" to listOf(
-                    Condition.IsWet(in_rain = true, true)
+                    EntityConditions.IsWet(in_rain = true, true)
                 )
             ),
             mapOf(
@@ -116,6 +116,8 @@ class OdysseyOccurrenceCreator {
 
 
 
+
+     */
 
 
 

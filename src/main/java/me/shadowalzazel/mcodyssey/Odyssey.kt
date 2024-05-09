@@ -13,6 +13,8 @@ import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.RangedListener
 import me.shadowalzazel.mcodyssey.phenomenon.base.OdysseyPhenomenon
 import me.shadowalzazel.mcodyssey.recipes.RecipeManager
 import me.shadowalzazel.mcodyssey.recipes.brewing.BrewerMixes
+import me.shadowalzazel.mcodyssey.world_events.DailyWorldEventManager
+import me.shadowalzazel.mcodyssey.world_events.tasks.DateTimeSyncer
 import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.event.Listener
@@ -24,6 +26,8 @@ class Odyssey : JavaPlugin() {
 
     // Managers
     val bossManager: BossManager
+    val worldEventManager: DailyWorldEventManager
+    val dateTimeSyncer: DateTimeSyncer
 
     // Overworld
     lateinit var overworld: World
@@ -42,6 +46,8 @@ class Odyssey : JavaPlugin() {
     init {
         instance = this
         bossManager = BossManager(this)
+        worldEventManager = DailyWorldEventManager(this)
+        dateTimeSyncer = DateTimeSyncer(this)
     }
 
     private fun registerEventListeners(listener: Listener) {
@@ -58,14 +64,14 @@ class Odyssey : JavaPlugin() {
 
         // Asset Loader
         val datapackManager = DatapackManager(this)
-        // Find Worlds
-        // Need to find the main world to locate datapacks
+
+        // Need to find the main world for others
         logger.info("Finding Datapack World...")
         for (world in server.worlds) {
             overworld = world
             try {
-                val dataPackFolder = File("${world.worldFolder}/datapacks")
-                logger.info("Datapacks in $dataPackFolder")
+                val folderPath = File("${world.worldFolder}/datapacks")
+                logger.info("Datapacks in $folderPath")
                 break
             }
             catch (ex: FileNotFoundException) {
@@ -94,7 +100,6 @@ class Odyssey : JavaPlugin() {
         BrewerMixes.getMixes().forEach {
             server.potionBrewer.addPotionMix(it)
         }
-
         // Register Events
         logger.info("Registering Events...")
         listOf(
@@ -123,11 +128,11 @@ class Odyssey : JavaPlugin() {
             ArtisanListeners,
             RunesherdListeners,
             EffectListeners,
-            PetListener
+            PetListener,
+            WorldEventsListener
         ).forEach {
             registerEventListeners(it)
         }
-
         // Set Commands
         logger.info("Setting Commands...")
         mapOf("summon_boss" to SummonBoss,
@@ -143,18 +148,10 @@ class Odyssey : JavaPlugin() {
         ).forEach {
             getCommand(it.key)?.setExecutor(it.value)
         }
-
-        //server.pluginManager.registerEvents(OdysseyPhenomenaListeners, this)
-        //playersRequiredForLuck = 4
-        // Getting main world for phenomenon timer
-        //val cycleHandler = PhenomenonCycleHandler(mainWorld!!)
-        //cycleHandler.runTaskTimer(this, 20 * 10L, 20 * 10)
-        //val persistentHandler = PersistentPhenomenonHandler()
-        //persistentHandler.runTaskTimer(this, 20 * 5, 20 * 5)
-
-        // Run situations
-        //val situationHandler = OldOccurrenceHandler(mainWorld!!)
-        //situationHandler.runTaskTimer(this, 20 * 10L, 20 * 10)
+        // Starting World Date
+        logger.info("Initializing World Events...")
+        dateTimeSyncer.currentDay = 0 //dateTimeSyncer.getDay()
+        dateTimeSyncer.runTaskTimer(this, 20, 20 * 10) // Run every 200 ticks = 10 secs
 
         // Hello World!
         val timeElapsed = (System.currentTimeMillis() - timerStart).div(1000.0)

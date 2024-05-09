@@ -73,7 +73,7 @@ internal interface RunesherdManager : AttributeManager {
             Runesherds.STEADFAST_RUNESHERD.itemName -> { Attribute.GENERIC_KNOCKBACK_RESISTANCE }
             Runesherds.FORCE_RUNESHERD.itemName -> { Attribute.GENERIC_ATTACK_KNOCKBACK }
             Runesherds.BREAK_RUNESHERD.itemName -> { Attribute.PLAYER_BLOCK_BREAK_SPEED }
-            Runesherds.BREACH_RUNESHERD.itemName -> { Attribute.PLAYER_BLOCK_INTERACTION_RANGE }
+            Runesherds.GRASP_RUNESHERD.itemName -> { Attribute.PLAYER_BLOCK_INTERACTION_RANGE }
             Runesherds.JUMP_RUNESHERD.itemName -> { Attribute.GENERIC_JUMP_STRENGTH }
             Runesherds.GRAVITY_RUNESHERD.itemName -> { Attribute.GENERIC_GRAVITY }
             Runesherds.RANGE_RUNESHERD.itemName -> { Attribute.PLAYER_ENTITY_INTERACTION_RANGE }

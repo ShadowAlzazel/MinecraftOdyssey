@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.occurrences.base
 
+import me.shadowalzazel.mcodyssey.world_events.utility.EntityConditions
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.entity.EntityType
@@ -14,7 +15,7 @@ open class Occurrence (
     val mainType: OccurrenceType,
     private val negatableByAllay: Boolean,
     private val requirements: List<Requirement>,
-    private val criteria: Map<String, List<Condition>>,
+    private val criteria: Map<String, List<EntityConditions>>,
     private val persistentActions: Map<String, List<OccurrenceAction>>,
     private val spawningActions: Map<String, List<OccurrenceAction>>,
     private val oneTimeActions: Map<String, List<OccurrenceAction>>
@@ -64,7 +65,7 @@ open class Occurrence (
     // Probably Expensive to run
     private fun criteriaUnlocked(someEntity: LivingEntity, someKey: String): Boolean {
         // Allay checked first
-        // CURRENTLY -> allay affects EVERY Condition and Action
+        // CURRENTLY -> allay affects EVERY EntityConditions and Action
         val allayNearby: Boolean = negatableByAllay && someEntity.getNearbyEntities(16.0, 16.0, 16.0).any { it.type == EntityType.ALLAY }
         return !allayNearby && criteria[someKey]!!.all { it.checkCondition(someEntity) }
     }

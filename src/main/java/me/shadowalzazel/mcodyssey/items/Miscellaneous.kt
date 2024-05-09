@@ -45,28 +45,28 @@ object Miscellaneous : ItemCreator {
         lore = listOf(Component.text("Resets the repair and combination cost of an item.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))) // T2
 
     val TOME_OF_BANISHMENT = OdysseyItem("tome_of_banishment", Material.ENCHANTED_BOOK, "Tome of Banishment", ItemModels.TOME_OF_BANISHMENT,
-        lore = listOf(Component.text("Deletes an empty enchant slot from the item.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))) // T0
+        lore = listOf(Component.text("Removes an empty enchant slot from the item.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))) // T0
 
     val TOME_OF_EMBRACE = OdysseyItem("tome_of_embrace", Material.ENCHANTED_BOOK, "Tome of Embrace", ItemModels.TOME_OF_EMBRACE,
         lore = listOf(Component.text("Adds an empty enchant slot to the item.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))) // T1
 
-    val TOME_OF_IMITATION = OdysseyItem("tome_of_imitation", Material.ENCHANTED_BOOK, "Tome of Replication", ItemModels.TOME_OF_REPLICATION, // T2
-        lore = listOf(Component.text("Replicates one enchantment (not the level) of an enchanted book.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+    val TOME_OF_IMITATION = OdysseyItem("tome_of_imitation", Material.ENCHANTED_BOOK, "Tome of Imitation", ItemModels.TOME_OF_REPLICATION, // T2
+        lore = listOf(Component.text("Copies one enchantment (not the level) of an enchanted book.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
     val TOME_OF_EXPENDITURE = OdysseyItem("tome_of_expenditure", Material.ENCHANTED_BOOK, "Tome of Expenditure", ItemModels.TOME_OF_EXPENDITURE, // T2
-        lore = listOf(Component.text("Extracts one enchantment from an item (the item is deleted).", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+        lore = listOf(Component.text("Extracts one enchantment from an item (the item is destroyed).", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
     val TOME_OF_AVARICE = OdysseyItem("tome_of_avarice", Material.ENCHANTED_BOOK, "Tome of Avarice", ItemModels.TOME_OF_AVARICE, // T3
-        lore = listOf(Component.text("[FINISH]", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+        lore = listOf(Component.text("Converts all enchantments to experience points (the item is destroyed).", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
     val TOME_OF_REPLICATION = OdysseyItem("tome_of_replication", Material.ENCHANTED_BOOK, "Tome of Replication", ItemModels.TOME_OF_REPLICATION, // T3
+        lore = listOf(Component.text("RReplicates one book.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+
+    val TOME_OF_EUPHONY = OdysseyItem("tome_of_euphony", Material.ENCHANTED_BOOK, "Tome of Euphony", ItemModels.TOME_OF_EUPHONY, // T3
         lore = listOf(Component.text("[FINISH]", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
-    val TOME_OF_EUPHONY = OdysseyItem("tome_of_avarice", Material.ENCHANTED_BOOK, "Tome of Euphony", ItemModels.TOME_OF_EUPHONY, // T3
-        lore = listOf(Component.text("[FINISH]", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
-
-    val TOME_OF_POLYMERIZATION = OdysseyItem("tome_of_avarice", Material.ENCHANTED_BOOK, "Tome of Polymerization", ItemModels.TOME_OF_POLYMERIZATION, // T3
-        lore = listOf(Component.text("[FINISH]", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+    val TOME_OF_POLYMERIZATION = OdysseyItem("tome_of_polymerization", Material.ENCHANTED_BOOK, "Tome of Polymerization", ItemModels.TOME_OF_POLYMERIZATION, // T3
+        lore = listOf(Component.text("Adds all stored enchantments for no EXP cost.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
     // Can absorb any non-conflicting enchantment.
     // Applies the stored enchantments to an item with no cost
 

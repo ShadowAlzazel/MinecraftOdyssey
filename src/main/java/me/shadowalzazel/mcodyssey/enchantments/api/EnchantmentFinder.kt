@@ -1,13 +1,24 @@
 package me.shadowalzazel.mcodyssey.enchantments.api
 
+import io.papermc.paper.registry.RegistryAccess
+import io.papermc.paper.registry.RegistryKey
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
+import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
 
 interface EnchantmentFinder {
 
     fun Enchantment.isOdysseyEnchant(): Boolean {
-        return false
+        val key = RegistryAccess.registryAccess().getRegistry(RegistryKey.ENCHANTMENT).getKey(this)
+        return key?.namespace == "odyssey"
+    }
+
+    fun getOdysseyEnchantFromKey(name: String): Enchantment? {
+        val nameKey = NamespacedKey(Odyssey.instance, name)
+        val enchant = RegistryAccess.registryAccess().getRegistry(RegistryKey.ENCHANTMENT).get(nameKey)
+        return enchant
     }
 
     fun getOdysseyEnchantFromString(name: String): OdysseyEnchantment? {

@@ -142,6 +142,7 @@ object WeaponListeners : Listener {
         // For bonus damage maps
         weaponBonusStatsHandler(event, mainWeaponType)
         // Get bonus/special effects
+        println("Start Damage: ${event.damage}")
         when(mainWeaponType) {
             "sickle" -> {
                 victim.shieldBlockingDelay = 20
@@ -193,7 +194,9 @@ object WeaponListeners : Listener {
             }
             "longaxe" -> {
                 if (twoHanded && isCrit) {
-                    event.damage += (event.damage / 1.5) * 0.75 // 50% -> 75% Crit
+                    event.damage += 0.5 // Weird bug
+                    val extraCrit = (7.0 / 6.0) // Translates to 1.75 Damage
+                    event.damage *= extraCrit
                 }
             }
 
@@ -487,6 +490,7 @@ object WeaponListeners : Listener {
     fun weaponHandSwapHandler(event: PlayerSwapHandItemsEvent) {
         if (!event.mainHandItem.hasItemMeta()) return
         val mainHand = event.mainHandItem
+        if (!mainHand.itemMeta.hasCustomModelData()) return
         val player = event.player
         // Kunai MOVE TO FUN LATER
         if (mainHand.itemMeta.customModelData == ItemModels.VOID_LINKED_KUNAI) {

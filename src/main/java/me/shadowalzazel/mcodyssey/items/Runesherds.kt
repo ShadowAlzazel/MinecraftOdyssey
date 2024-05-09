@@ -200,11 +200,11 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         affectedEquipment = listOf(EquipmentSlot.HAND)
     )
 
-    val BREACH_RUNESHERD = OdysseyRunesherd(
-        itemName = "breach_runesherd",
+    val GRASP_RUNESHERD = OdysseyRunesherd(
+        itemName = "grasp_runesherd",
         overrideMaterial = Material.BRICK,
-        customName = "Breach Runesherd",
-        customModel = ItemModels.BREACH_RUNESHERD,
+        customName = "Grasp Runesherd",
+        customModel = ItemModels.GRASP_RUNESHERD,
         attribute = Attribute.PLAYER_BLOCK_INTERACTION_RANGE,
         value = 1.0,
         affectedEquipment = listOf(EquipmentSlot.HAND)
@@ -255,7 +255,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
     val runesherdRuinsList = listOf(
         ASSAULT_RUNESHERD, GUARD_RUNESHERD, FINESSE_RUNESHERD, SWIFT_RUNESHERD,
         VITALITY_RUNESHERD, STEADFAST_RUNESHERD, FORCE_RUNESHERD, BREAK_RUNESHERD,
-        BREACH_RUNESHERD,  JUMP_RUNESHERD,  GRAVITY_RUNESHERD,  RANGE_RUNESHERD,
+        GRASP_RUNESHERD,  JUMP_RUNESHERD,  GRAVITY_RUNESHERD,  RANGE_RUNESHERD,
         SIZE_RUNESHERD)
 
     /*-----------------------------------------------------------------------------------------------*/
