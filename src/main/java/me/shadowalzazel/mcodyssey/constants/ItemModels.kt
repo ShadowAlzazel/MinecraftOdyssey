@@ -54,10 +54,10 @@ object ItemModels {
     const val TOME_OF_EXPENDITURE: Int = 6906073 // Destroys item but extracts 1 enchantment
     const val TOME_OF_INFUSION: Int = 6906074
     const val TOME_OF_EUPHONY: Int = 6906075
-    const val TOME_OF_AVARICE: Int = 6906076
-    const val TOME_OF_POLYMERIZATION: Int = 6906077
-    const val TOME_OF_EXTRACTION: Int = 6906077
-    const val TOME_OF_IMITATION: Int = 6906077
+    const val TOME_OF_AVARICE: Int = 6906076 // Destroys Item but gives a lot of XP
+    const val TOME_OF_POLYMERIZATION: Int = 6906077 // Adds enchants for no XP cost
+    const val TOME_OF_EXTRACTION: Int = 6906078
+    const val TOME_OF_IMITATION: Int = 6906079 // Copies 1 enchant at minimum level
 
     // Runesherds
     const val ASSAULT_RUNESHERD: Int = 6901453 // Attack Damage

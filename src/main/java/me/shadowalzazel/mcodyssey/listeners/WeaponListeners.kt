@@ -490,6 +490,7 @@ object WeaponListeners : Listener {
     fun weaponHandSwapHandler(event: PlayerSwapHandItemsEvent) {
         if (!event.mainHandItem.hasItemMeta()) return
         val mainHand = event.mainHandItem
+        if (!mainHand.itemMeta.hasCustomModelData()) return
         val player = event.player
         // Kunai MOVE TO FUN LATER
         if (mainHand.itemMeta.customModelData == ItemModels.VOID_LINKED_KUNAI) {

@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.items.creators
 
-import me.shadowalzazel.mcodyssey.arcane.SlotColors
+import me.shadowalzazel.mcodyssey.enchantments.api.SlotColors
 import me.shadowalzazel.mcodyssey.constants.AttributeIDs
 import me.shadowalzazel.mcodyssey.constants.DataKeys
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
@@ -98,6 +98,11 @@ interface ItemCreator : ExoticCreator {
             "tome_of_promotion" -> Miscellaneous.TOME_OF_PROMOTION.newItemStack(amount)
             "tome_of_harmony" -> Miscellaneous.TOME_OF_HARMONY.newItemStack(amount)
             "tome_of_replication" -> Miscellaneous.TOME_OF_REPLICATION.newItemStack(amount)
+            "tome_of_banishment" -> Miscellaneous.TOME_OF_BANISHMENT.newItemStack(amount)
+            "tome_of_imitation" -> Miscellaneous.TOME_OF_IMITATION.newItemStack(amount)
+            "tome_of_expenditure" -> Miscellaneous.TOME_OF_EXPENDITURE.newItemStack(amount)
+            "tome_of_avarice" -> Miscellaneous.TOME_OF_AVARICE.newItemStack(amount)
+            "tome_of_polymerization" -> Miscellaneous.TOME_OF_POLYMERIZATION.newItemStack(amount)
             "crystalline_potion" -> Potions.CRYSTALLINE_POTION.createPotionStack()
             "irradiated_rod" -> Ingredients.IRRADIATED_ROD.newItemStack(amount)
             "irradiated_shard" -> Ingredients.IRRADIATED_SHARD.newItemStack(amount)

@@ -2,6 +2,7 @@ package me.shadowalzazel.mcodyssey.enchantments.api
 
 import org.bukkit.Material
 import org.bukkit.entity.HumanEntity
+import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.inventory.meta.Repairable
@@ -16,7 +17,7 @@ internal interface TomeManager : EnchantSlotManager {
             return null
         }
         val meta = item.itemMeta
-        val hasStoredEnchants = meta is EnchantmentStorageMeta && meta.storedEnchants.isEmpty()
+        val hasStoredEnchants = meta is EnchantmentStorageMeta && meta.storedEnchants.isNotEmpty()
         if (!meta.hasEnchants() && !hasStoredEnchants) {
             viewers.forEach { it.sendBarMessage("This item needs to be enchanted to use this tome.") }
             return null
@@ -58,7 +59,7 @@ internal interface TomeManager : EnchantSlotManager {
 
     fun tomeOfPromotionOnItem(item: ItemStack, viewers: List<HumanEntity>): ItemStack? {
         val meta = item.itemMeta
-        val hasStoredEnchants = meta is EnchantmentStorageMeta && meta.storedEnchants.isEmpty()
+        val hasStoredEnchants = meta is EnchantmentStorageMeta && meta.storedEnchants.isNotEmpty()
         if (!meta.hasEnchants() && !hasStoredEnchants) {
             viewers.forEach { it.sendBarMessage("This item needs to be enchanted to use this tome.") }
             return null
@@ -98,8 +99,9 @@ internal interface TomeManager : EnchantSlotManager {
 
     fun tomeOfReplicationOnItem(item: ItemStack, viewers: List<HumanEntity>): ItemStack? {
         val meta = item.itemMeta
-        val hasStoredEnchants = meta is EnchantmentStorageMeta && meta.storedEnchants.isEmpty()
-        if (!hasStoredEnchants && item.type != Material.ENCHANTED_BOOK) {
+        val hasStoredEnchants = meta is EnchantmentStorageMeta && meta.storedEnchants.isNotEmpty()
+        val isBook = item.type == Material.ENCHANTED_BOOK || item.type == Material.BOOK
+        if (!hasStoredEnchants && !isBook) {
             viewers.forEach { it.sendBarMessage("This tome can only be used on enchanted books with enchants!") }
             return null
         }
@@ -108,8 +110,9 @@ internal interface TomeManager : EnchantSlotManager {
 
     fun tomeOfImitationOnItem(item: ItemStack, viewers: List<HumanEntity>): ItemStack? {
         val meta = item.itemMeta
-        val hasStoredEnchants = meta is EnchantmentStorageMeta && meta.storedEnchants.isEmpty()
-        if (!hasStoredEnchants && item.type != Material.ENCHANTED_BOOK) {
+        val hasStoredEnchants = meta is EnchantmentStorageMeta && meta.storedEnchants.isNotEmpty()
+        val isBook = item.type == Material.ENCHANTED_BOOK || item.type == Material.BOOK
+        if (!hasStoredEnchants && isBook) {
             viewers.forEach { it.sendBarMessage("This tome can only be used on enchanted books with enchants!") }
             return null
         }
@@ -143,7 +146,7 @@ internal interface TomeManager : EnchantSlotManager {
     // Removes all enchants and gain XP! destroys item
     fun tomeOfAvariceOnItem(item: ItemStack, viewers: List<HumanEntity>): ItemStack? {
         val meta = item.itemMeta
-        val hasStoredEnchants = meta is EnchantmentStorageMeta && meta.storedEnchants.isEmpty()
+        val hasStoredEnchants = meta is EnchantmentStorageMeta && meta.storedEnchants.isNotEmpty()
         if (!meta.hasEnchants() && !hasStoredEnchants) {
             viewers.forEach { it.sendBarMessage("This item needs to be enchanted to use this tome.") }
             return null
@@ -157,9 +160,64 @@ internal interface TomeManager : EnchantSlotManager {
         }
         var totalLevels = 0
         for (enchant in allEnchants) {
-            totalLevels += enchant.second
+            totalLevels += enchant.second // TODO!!
+            viewers.forEach { if (it is Player) it.giveExp(totalLevels * 100) } //IDk?
         }
         return ItemStack(Material.BOOK, 1)
     }
+
+    // Adds all enchants at no cost
+    fun tomeOfPolymerizationOnItem(book: ItemStack, item: ItemStack, viewers: List<HumanEntity>): ItemStack? {
+        if (!item.isSlotted()) {
+            viewers.forEach { it.sendBarMessage("This item needs to be slotted to use this tome.") }
+            return null
+        }
+        // Check book is enchantment storage
+        val bookMeta = book.itemMeta
+        val hasStoredEnchants = bookMeta is EnchantmentStorageMeta && bookMeta.storedEnchants.isNotEmpty()
+        if (!hasStoredEnchants) {
+            viewers.forEach { it.sendBarMessage("This tome needs to have at least one enchantment stored!") }
+            return null
+        }
+        bookMeta as EnchantmentStorageMeta
+        // Get Item Enchants
+        val itemIsBook = item.itemMeta is EnchantmentStorageMeta
+        val itemEnchants = if (itemIsBook) {
+            val storedMeta = item.itemMeta as EnchantmentStorageMeta
+            storedMeta.enchants.toMutableMap()
+        } else {
+            item.enchantments.toMutableMap()
+        }
+        // Add to new meta
+        var newEnchantCount = 0
+        val oldEnchantments = itemEnchants.keys
+        val currentCount = oldEnchantments.size
+        for (enchant in bookMeta.storedEnchants) {
+            if (enchant.key !in oldEnchantments) newEnchantCount += 1 // Add
+            itemEnchants[enchant.key] = enchant.value // DOES NOT COMBINE MAX
+        }
+        // Can not pass max!
+        if (item.getEnchantSlots() < newEnchantCount + currentCount) {
+            viewers.forEach { it.sendBarMessage("This item does not have enough slots to add all enchantments!") }
+            return null
+        }
+
+        item.addEnchantments(itemEnchants.toMap())
+        item.updateSlotLore()
+        return item
+    }
+
+    fun tomeOfBanishmentOnItem(item: ItemStack, viewers: List<HumanEntity>): ItemStack? {
+        if (!item.isSlotted()) {
+            viewers.forEach { it.sendBarMessage("This item needs to be slotted to use this tome.") }
+            return null
+        }
+        // Add Slot
+        return item.apply {
+            removeEnchantSlot()
+            updateSlotLore()
+        }
+    }
+
 
 }

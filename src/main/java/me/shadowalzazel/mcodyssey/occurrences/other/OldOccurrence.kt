@@ -13,17 +13,6 @@ open class OldOccurrence(
     private val affectedStructures: List<Structure>,
     private val announcement: TextComponent) {
 
-
-    fun todo() {
-        TODO("If new day/ something else " +
-                "If player near village structure" +
-                "If village inhabited" +
-                "If not in cooldown" +
-                "Do some OldOccurrence, send rumors to player" +
-                "Ideas: Market Sale, Raid, Nether Invasion, ? " +
-                "If Allay nearby lower chance")
-    }
-
     private fun locateApplicableStructure(someWorld: World, someLocation: Location): StructureSearchResult? {
         var applicableStructure: StructureSearchResult? = null
         for (someBaseStructure in affectedStructures) {
@@ -51,8 +40,6 @@ open class OldOccurrence(
 
     protected open fun situationEffects(structureLocation: Location) {
         structureLocation.getNearbyPlayers(16 * 60.0).forEach{ it.sendMessage(announcement) }
-        // TODO: Make Announcement show village name
-        // If structure in list, send name, else add name to list and counters!
     }
 
 

@@ -5,7 +5,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.Registry
 import org.bukkit.enchantments.Enchantment
 
-@Deprecated(message = "No Longer Using Registry")
+@Deprecated(message = "No Longer Findable")
 interface EnchantRegistryManager  {
 
     // Extension to easily check if odyssey/not

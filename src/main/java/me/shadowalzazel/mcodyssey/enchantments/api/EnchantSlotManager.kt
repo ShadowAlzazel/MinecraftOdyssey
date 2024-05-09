@@ -1,6 +1,5 @@
 package me.shadowalzazel.mcodyssey.enchantments.api
 
-import me.shadowalzazel.mcodyssey.arcane.SlotColors
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags.setIntTag
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addTag

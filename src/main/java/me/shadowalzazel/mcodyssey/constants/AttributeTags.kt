@@ -1,7 +1,5 @@
 package me.shadowalzazel.mcodyssey.constants
 
-import java.util.*
-
 object AttributeTags {
 
     // Mobs
