@@ -1,6 +1,6 @@
-package me.shadowalzazel.mcodyssey.world_events
+package me.shadowalzazel.mcodyssey.world_events.daily_events
 
-import me.shadowalzazel.mcodyssey.world_events.night_events.BloodMoon
+import me.shadowalzazel.mcodyssey.world_events.daily_events.night_events.BloodMoon
 
 object NightEvents {
 

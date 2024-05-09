@@ -16,7 +16,9 @@ class Equipment : ItemCreator {
             warpingWandRecipe(),
             explosiveArrowRecipe(),
             hornedHelmetRecipe(),
-            arcaneWandRecipe()
+            arcaneWandRecipe(),
+            arcaneBladeRecipe(),
+            arcaneScepterRecipe(),
         )
     }
 
@@ -47,14 +49,39 @@ class Equipment : ItemCreator {
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-
     private fun arcaneWandRecipe(): ShapedRecipe {
         val result = Equipment.ARCANE_WAND.newItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "arcane_wand"), result).apply {
-            shape("A", "S", "S")
+            shape("A", "S")
             setIngredient('A', Material.AMETHYST_CLUSTER)
             setIngredient('S', Material.STICK)
-            group = "wands"
+            group = "arcane_wands"
+            category = CraftingBookCategory.EQUIPMENT
+        }
+        return recipe
+    }
+
+    private fun arcaneBladeRecipe(): ShapedRecipe {
+        val result = Equipment.ARCANE_BLADE.newItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "arcane_blade"), result).apply {
+            shape("A A", "AQA", " S ")
+            setIngredient('A', Material.AMETHYST_SHARD)
+            setIngredient('Q', Material.GOLD_INGOT)
+            setIngredient('S', Material.STICK)
+            group = "arcane_blades"
+            category = CraftingBookCategory.EQUIPMENT
+        }
+        return recipe
+    }
+
+    private fun arcaneScepterRecipe(): ShapedRecipe {
+        val result = Equipment.ARCANE_SCEPTER.newItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "arcane_scepter"), result).apply {
+            shape(" Q ", "ASA", " S ")
+            setIngredient('A', Material.AMETHYST_SHARD)
+            setIngredient('Q', Material.AMETHYST_CLUSTER)
+            setIngredient('S', Material.STICK)
+            group = "arcane_scepters"
             category = CraftingBookCategory.EQUIPMENT
         }
         return recipe

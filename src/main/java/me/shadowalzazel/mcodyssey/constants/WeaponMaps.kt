@@ -18,6 +18,14 @@ object WeaponMaps {
         "poleaxe" to 6.2,
     )
 
+   val ARCANE_RANGES = mapOf(
+        ItemModels.ARCANE_WAND to 32.0, // Range
+        ItemModels.ARCANE_BLADE to 8.0,
+        ItemModels.ARCANE_SCEPTER to 48.0,
+        ItemModels.WARPING_WAND to 8.0, // Cone
+    )
+
+
     // MAYBE ADD PERFECT RANGE?! -> small 10% damage bonus if in sweet spot / perfect range
 
     // Max Distance -> Outside attack is cancelled

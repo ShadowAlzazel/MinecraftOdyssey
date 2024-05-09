@@ -1,5 +1,7 @@
-package me.shadowalzazel.mcodyssey.world_events.utility
+package me.shadowalzazel.mcodyssey.world_events.daily_events
 
+import me.shadowalzazel.mcodyssey.world_events.utility.EntityConditions
+import net.kyori.adventure.text.Component
 import org.bukkit.World
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.CreatureSpawnEvent
@@ -11,6 +13,8 @@ open class DailyWorldEvent(
     internal val activationTime: ActivationTime,
     internal val playerConditions: List<EntityConditions>,
 ) {
+
+    var pityRate = 0
 
     // Roll if this event will activate this day
     fun rollTriggered(world: World, bonus: Int = 0): Boolean {
@@ -41,12 +45,22 @@ open class DailyWorldEvent(
         failedToTriggerHandler(world)
     }
 
-    private fun playerChecker(player: Player): Boolean {
+    /*-----------------------------------------------------------------------------------------------*/
+    // Utility functions
+    internal fun playerChecker(player: Player): Boolean {
         val passed = playerConditions.all { it.checkCondition(player) }
         return passed
     }
 
+    internal fun World.messagePlayers(message: Component) {
+        for (player in this.players) {
+            player.sendMessage(message)
+        }
+    }
+
     /*-----------------------------------------------------------------------------------------------*/
+    // Open functions for all logic and effects
+
     // Runs once on activation
     open fun successfulTriggerHandler(world: World) {
 
