@@ -5,7 +5,7 @@
  */
 
 group = "me.shadowalzazel"
-version = "v0.3-BETA-1.20.6"
+version = "0.3-BETA-1.20.6"
 description = "A server side expansion pack for a new minecraft adventure!"
 
 plugins {
@@ -13,7 +13,7 @@ plugins {
     `maven-publish`
     kotlin("jvm") version "1.9.23"
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("io.papermc.paperweight.userdev") version "1.6.2" // Check for new versions at https://plugins.gradle.org/plugin/io.papermc.paperweight.userdev
+    id("io.papermc.paperweight.userdev") version "1.7.1" // Check for new versions at https://plugins.gradle.org/plugin/io.papermc.paperweight.userdev
 }
 
 java {

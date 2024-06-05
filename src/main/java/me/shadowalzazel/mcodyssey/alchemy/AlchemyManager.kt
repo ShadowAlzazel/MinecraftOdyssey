@@ -221,10 +221,10 @@ interface AlchemyManager {
 
     /*-----------------------------------------------------------------------------------------------*/
     // Potion Creators
-    fun createPotionVials(potion: ItemStack): ItemStack {
+    fun createPotionVialStack(potion: ItemStack): ItemStack {
         val meta = (potion.itemMeta as PotionMeta).clone()
         if (meta.basePotionType == null) return potion
-
+        meta.setMaxStackSize(64)
         // Do net Detect Water
         if (meta.basePotionType != PotionType.WATER) {
             val newEffects = mutableListOf<PotionEffect>()
@@ -244,13 +244,14 @@ interface AlchemyManager {
             }
         }
         // Meta Apply
-        meta.setCustomModelData(ItemModels.VIAL_CHARGE_5)
+        meta.setCustomModelData(ItemModels.VIAL_CHARGE_1)
         meta.basePotionType = PotionType.THICK
         return potion.clone().apply {
             itemMeta = meta
-            setIntTag(ItemDataTags.POTION_CHARGES_LEFT, 5)
             addTag(ItemDataTags.IS_POTION_VIAL)
-            createPotionVialLore()
+            amount = 5
+            //setIntTag(ItemDataTags.POTION_CHARGES_LEFT, 5)
+            //createPotionVialLore()
         }
         // TODO: For Odyssey Effects
     }
