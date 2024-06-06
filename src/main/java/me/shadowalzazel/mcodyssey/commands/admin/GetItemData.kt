@@ -1,13 +1,12 @@
 package me.shadowalzazel.mcodyssey.commands.admin
 
-import me.shadowalzazel.mcodyssey.enchantments.api.EnchantmentDataManager
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.craftbukkit.inventory.CraftItemStack as CraftItemStack
 import org.bukkit.entity.Player
 
-object GetItemData : CommandExecutor, EnchantmentDataManager {
+object GetItemData : CommandExecutor {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
         if (sender !is Player) return false
@@ -22,9 +21,6 @@ object GetItemData : CommandExecutor, EnchantmentDataManager {
             val value = component.value
             println("Component [$type]: [$value]")
         }
-        val odysseyEnchantments = item.getOdysseyEnchantments()
-        println("Odyssey Enchantments: $odysseyEnchantments")
-
         return true
     }
 

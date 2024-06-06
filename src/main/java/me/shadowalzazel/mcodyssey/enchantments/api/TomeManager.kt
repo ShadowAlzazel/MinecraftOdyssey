@@ -1,21 +1,20 @@
 package me.shadowalzazel.mcodyssey.enchantments.api
 
+import me.shadowalzazel.mcodyssey.listeners.EnchantingListeners.getMaxEnchantabilityPoints
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Material
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.HumanEntity
+import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.inventory.meta.Repairable
 
-internal interface TomeManager : EnchantSlotManager {
-
-    // TODO!!! Not Gilded for Expenditure and Discharge
+internal interface TomeManager : EnchantabilityPointsManager {
 
     fun tomeOfDischargeOnItem(item: ItemStack, viewers: List<HumanEntity>): ItemStack? {
-        if (!item.isSlotted()) {
-            viewers.forEach { it.sendBarMessage("This item needs to be slotted to use this tome.") }
-            return null
-        }
         val meta = item.itemMeta
         val hasStoredEnchants = meta is EnchantmentStorageMeta && meta.storedEnchants.isNotEmpty()
         if (!meta.hasEnchants() && !hasStoredEnchants) {
@@ -32,11 +31,13 @@ internal interface TomeManager : EnchantSlotManager {
             val enchantToRemove = item.enchantments.toList().random()
             item.removeEnchantment(enchantToRemove.first)
         }
-        item.updateSlotLore()
+        item.updateEnchantabilityPointsLore()
         return item
     }
 
+    @Deprecated(message = "No more slots")
     fun tomeOfEmbraceOnItem(item: ItemStack, viewers: List<HumanEntity>): ItemStack? {
+        /*
         if (!item.isSlotted()) {
             viewers.forEach { it.sendBarMessage("This item needs to be slotted to use this tome.") }
             return null
@@ -46,6 +47,9 @@ internal interface TomeManager : EnchantSlotManager {
             addEnchantSlot()
             updateSlotLore()
         }
+
+         */
+        return null
     }
 
     fun tomeOfHarmonyOnItem(item: ItemStack): ItemStack? {
@@ -53,7 +57,7 @@ internal interface TomeManager : EnchantSlotManager {
         if (meta !is Repairable) return null
         meta.repairCost = 1
         item.itemMeta = meta
-        item.updateSlotLore()
+        item.updateEnchantabilityPointsLore()
         return item
     }
 
@@ -93,7 +97,7 @@ internal interface TomeManager : EnchantSlotManager {
             item.removeEnchantment(enchantToUpgrade.first)
             item.addEnchantment(enchantToUpgrade.first, checkMax)
         }
-        item.updateSlotLore()
+        item.updateEnchantabilityPointsLore()
         return item
     }
 
@@ -168,10 +172,6 @@ internal interface TomeManager : EnchantSlotManager {
 
     // Adds all enchants at no cost
     fun tomeOfPolymerizationOnItem(book: ItemStack, item: ItemStack, viewers: List<HumanEntity>): ItemStack? {
-        if (!item.isSlotted()) {
-            viewers.forEach { it.sendBarMessage("This item needs to be slotted to use this tome.") }
-            return null
-        }
         // Check book is enchantment storage
         val bookMeta = book.itemMeta
         val hasStoredEnchants = bookMeta is EnchantmentStorageMeta && bookMeta.storedEnchants.isNotEmpty()
@@ -188,26 +188,35 @@ internal interface TomeManager : EnchantSlotManager {
         } else {
             item.enchantments.toMutableMap()
         }
-        // Add to new meta
-        var newEnchantCount = 0
-        val oldEnchantments = itemEnchants.keys
-        val currentCount = oldEnchantments.size
+        // Create new map of combined enchants
+        val combinedEnchants = mutableMapOf<Enchantment, Int>()
+        val oldEnchants = itemEnchants.keys
         for (enchant in bookMeta.storedEnchants) {
-            if (enchant.key !in oldEnchantments) newEnchantCount += 1 // Add
-            itemEnchants[enchant.key] = enchant.value // DOES NOT COMBINE MAX
+            if (enchant.key !in oldEnchants) {
+                combinedEnchants[enchant.key] = enchant.value
+            }
+            combinedEnchants[enchant.key] = maxOf(enchant.value, itemEnchants[enchant.key]!!)
+        }
+        // Get enchantability
+        val maxEnchantabilityPoints = item.getMaxEnchantabilityPoints()
+        var usedEnchantabilityPoints = 0
+        for (enchant in combinedEnchants) {
+            usedEnchantabilityPoints += enchant.key.enchantabilityCost(enchant.value)
         }
         // Can not pass max!
-        if (item.getEnchantSlots() < newEnchantCount + currentCount) {
-            viewers.forEach { it.sendBarMessage("This item does not have enough slots to add all enchantments!") }
+        if (maxEnchantabilityPoints < usedEnchantabilityPoints) {
+            viewers.forEach { it.sendBarMessage("This item does not have enough points to add all enchantments!") }
             return null
         }
-
+        // Add if poss
         item.addEnchantments(itemEnchants.toMap())
-        item.updateSlotLore()
+        item.updateEnchantabilityPointsLore()
         return item
     }
 
+    @Deprecated(message = "No more slots")
     fun tomeOfBanishmentOnItem(item: ItemStack, viewers: List<HumanEntity>): ItemStack? {
+        /*
         if (!item.isSlotted()) {
             viewers.forEach { it.sendBarMessage("This item needs to be slotted to use this tome.") }
             return null
@@ -217,7 +226,21 @@ internal interface TomeManager : EnchantSlotManager {
             removeEnchantSlot()
             updateSlotLore()
         }
+
+         */
+        return null
     }
 
+
+    /*-----------------------------------------------------------------------------------------------*/
+    // Fail Message
+    private fun LivingEntity.sendBarMessage(reason: String, color: TextColor = SlotColors.ENCHANT.color) {
+        this.sendActionBar(
+            Component.text(
+                reason,
+                color
+            )
+        )
+    }
 
 }

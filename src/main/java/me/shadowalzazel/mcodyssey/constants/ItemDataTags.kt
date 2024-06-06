@@ -62,7 +62,8 @@ object ItemDataTags {
     const val IS_SLOTTED: String = "odyssey.is_slotted"
     const val GILDED_ENCHANT: String = "odyssey.gilded_enchant"
     // Enchanting - NEW
-    const val EXPERIENCE_VALUES: String = "odyssey.experience_values"
+
+    const val ENCHANTABILITY_POINTS: String = "odyssey.enchantability_points"
 
 
     // Runes

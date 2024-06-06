@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.enchantments.api
+package me.shadowalzazel.mcodyssey.enchantments.deprecated
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments

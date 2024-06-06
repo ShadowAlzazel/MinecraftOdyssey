@@ -9,7 +9,7 @@ import me.shadowalzazel.mcodyssey.constants.EntityTags.removeTag
 import me.shadowalzazel.mcodyssey.constants.EntityTags.setIntTag
 import me.shadowalzazel.mcodyssey.effects.EffectsManager
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.enchantments.api.EnchantmentDataManager
+import me.shadowalzazel.mcodyssey.enchantments.deprecated.EnchantmentDataManager
 import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.ArcaneCellTask
 import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.FrogFrightTask
 import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.FrostyFuseTask

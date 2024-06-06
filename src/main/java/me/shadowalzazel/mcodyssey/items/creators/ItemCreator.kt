@@ -4,6 +4,8 @@ import me.shadowalzazel.mcodyssey.enchantments.api.SlotColors
 import me.shadowalzazel.mcodyssey.constants.AttributeIDs
 import me.shadowalzazel.mcodyssey.constants.DataKeys
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
+import me.shadowalzazel.mcodyssey.enchantments.api.EnchantmentExtender
+import me.shadowalzazel.mcodyssey.enchantments.api.EnchantmentsManager
 import me.shadowalzazel.mcodyssey.items.Exotics
 import me.shadowalzazel.mcodyssey.items.Ingredients
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
@@ -17,12 +19,14 @@ import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.EquipmentSlot
+import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.persistence.PersistentDataType
 
-interface ItemCreator : ExoticCreator {
+interface ItemCreator : ExoticCreator, EnchantmentExtender, EnchantmentsManager {
 
     fun OdysseyItem.createStack(amount: Int = 1): ItemStack {
         val itemStack = ItemStack(overrideMaterial, amount).also {
@@ -56,6 +60,28 @@ interface ItemCreator : ExoticCreator {
             it.lore(textLore)
         }
         newBook.addOdysseyEnchantment(enchantment, level, true)
+        return newBook
+    }
+
+    fun OdysseyItem.createArcaneBookStack(enchantment: Enchantment, level: Int = 1) : ItemStack {
+        if (itemName != "arcane_book") return ItemStack(Material.AIR)
+        val newBook = this.newItemStack(1)
+        newBook.itemMeta = (newBook.itemMeta as EnchantmentStorageMeta).also {
+            // Set lore -> description and enchantability Cost
+            val pointCost = enchantment.enchantabilityCost(level)
+            val costToolTip = enchantment.displayName(level)
+                .append(Component.text(" *[$pointCost]"))
+                .decoration(TextDecoration.ITALIC, false)
+            val descriptionToolTip = enchantment.getDescriptionTooltip(level)
+            val fullLore = listOf(costToolTip, Component.text("")) + descriptionToolTip
+            it.lore(fullLore)
+            // Set name
+            val bookName = Component.text(this.customName + " - ").color(SlotColors.ARCANE.color)
+            val fullName = bookName.append(enchantment.displayName(level).color(SlotColors.ARCANE.color))
+            it.displayName(fullName)
+            it.addStoredEnchant(enchantment, level, true)
+            it.addItemFlags(ItemFlag.HIDE_STORED_ENCHANTS)
+        }
         return newBook
     }
 

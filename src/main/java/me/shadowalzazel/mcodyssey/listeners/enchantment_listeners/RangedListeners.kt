@@ -9,7 +9,7 @@ import me.shadowalzazel.mcodyssey.constants.EntityTags.getIntTag
 import me.shadowalzazel.mcodyssey.constants.EntityTags.removeTag
 import me.shadowalzazel.mcodyssey.constants.EntityTags.setIntTag
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.enchantments.api.EnchantmentDataManager
+import me.shadowalzazel.mcodyssey.enchantments.deprecated.EnchantmentDataManager
 import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.*
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor

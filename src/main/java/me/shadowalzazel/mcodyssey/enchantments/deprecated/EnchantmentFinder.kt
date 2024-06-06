@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.enchantments.api
+package me.shadowalzazel.mcodyssey.enchantments.deprecated
 
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
@@ -8,6 +8,7 @@ import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
 
+@Deprecated(message = "1.21 Moved enchantments to be Data Driven")
 interface EnchantmentFinder {
 
     fun Enchantment.isOdysseyEnchant(): Boolean {
