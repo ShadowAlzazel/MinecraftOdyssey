@@ -1,6 +1,5 @@
 package me.shadowalzazel.mcodyssey.enchantments.api
 
-import me.shadowalzazel.mcodyssey.listeners.EnchantingListeners.getMaxEnchantabilityPoints
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Material
@@ -22,33 +21,23 @@ internal interface TomeManager : EnchantabilityPointsManager {
             return null
         }
         // Remove Enchant
+        val enchantToRemove: Pair<Enchantment, Int>
         if (hasStoredEnchants) {
             val storedMeta = item.itemMeta as EnchantmentStorageMeta
-            val enchantToRemove = storedMeta.enchants.toList().random()
+            enchantToRemove = storedMeta.enchants.toList().random()
             storedMeta.removeStoredEnchant(enchantToRemove.first)
             item.itemMeta = storedMeta
         } else {
-            val enchantToRemove = item.enchantments.toList().random()
+            enchantToRemove = item.enchantments.toList().random()
             item.removeEnchantment(enchantToRemove.first)
         }
-        item.updateEnchantabilityPointsLore()
+        val removedEnchantsMap = mutableMapOf(enchantToRemove.first to enchantToRemove.second)
+        item.updateEnchantabilityPointsLore(removedEnchants=removedEnchantsMap)
         return item
     }
 
     @Deprecated(message = "No more slots")
     fun tomeOfEmbraceOnItem(item: ItemStack, viewers: List<HumanEntity>): ItemStack? {
-        /*
-        if (!item.isSlotted()) {
-            viewers.forEach { it.sendBarMessage("This item needs to be slotted to use this tome.") }
-            return null
-        }
-        // Add Slot
-        return item.apply {
-            addEnchantSlot()
-            updateSlotLore()
-        }
-
-         */
         return null
     }
 
@@ -80,22 +69,28 @@ internal interface TomeManager : EnchantabilityPointsManager {
             viewers.forEach { it.sendBarMessage("This item already has max level enchants!") }
             return null
         }
-        // Upgrade Enchant
+        // Get Enchant
         val enchantToUpgrade = availableEnchants.random()
+        // check over Enchantability point limit
+        val checkedMaxLevel = minOf(enchantToUpgrade.first.maxLevel, enchantToUpgrade.second + 1)
+        val maxEnchantabilityPoints = item.getMaxEnchantabilityPoints()
+        val usedEnchantabilityPoints = item.getUsedEnchantabilityPoints()
+        val potentialNewPoints = usedEnchantabilityPoints - getEnchantabilityCost(enchantToUpgrade) + getEnchantabilityCost(enchantToUpgrade, checkedMaxLevel)
+        if (potentialNewPoints > maxEnchantabilityPoints) {
+            viewers.forEach { it.sendBarMessage("The enchantment ${enchantToUpgrade.first.key} would be to expensive!") }
+            return null
+        }
+        // Upgrade Enchant
         if (hasStoredEnchants) {
             val storedMeta = item.itemMeta as EnchantmentStorageMeta
-            // Get max level
-            val checkMax = minOf(enchantToUpgrade.first.maxLevel, enchantToUpgrade.second + 1)
             // Remove and re-add
             storedMeta.removeStoredEnchant(enchantToUpgrade.first)
-            storedMeta.addStoredEnchant(enchantToUpgrade.first, checkMax, false)
+            storedMeta.addStoredEnchant(enchantToUpgrade.first, checkedMaxLevel, false)
             item.itemMeta = storedMeta
         } else {
-            // Get max level
-            val checkMax = minOf(enchantToUpgrade.first.maxLevel, enchantToUpgrade.second + 1)
             // Remove and re-add
             item.removeEnchantment(enchantToUpgrade.first)
-            item.addEnchantment(enchantToUpgrade.first, checkMax)
+            item.addEnchantment(enchantToUpgrade.first, checkedMaxLevel)
         }
         item.updateEnchantabilityPointsLore()
         return item
@@ -216,18 +211,6 @@ internal interface TomeManager : EnchantabilityPointsManager {
 
     @Deprecated(message = "No more slots")
     fun tomeOfBanishmentOnItem(item: ItemStack, viewers: List<HumanEntity>): ItemStack? {
-        /*
-        if (!item.isSlotted()) {
-            viewers.forEach { it.sendBarMessage("This item needs to be slotted to use this tome.") }
-            return null
-        }
-        // Add Slot
-        return item.apply {
-            removeEnchantSlot()
-            updateSlotLore()
-        }
-
-         */
         return null
     }
 

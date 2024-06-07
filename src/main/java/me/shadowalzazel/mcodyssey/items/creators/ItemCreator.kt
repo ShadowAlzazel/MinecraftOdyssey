@@ -4,6 +4,7 @@ import me.shadowalzazel.mcodyssey.enchantments.api.SlotColors
 import me.shadowalzazel.mcodyssey.constants.AttributeIDs
 import me.shadowalzazel.mcodyssey.constants.DataKeys
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
+import me.shadowalzazel.mcodyssey.enchantments.api.EnchantabilityPointsManager
 import me.shadowalzazel.mcodyssey.enchantments.api.EnchantmentExtender
 import me.shadowalzazel.mcodyssey.enchantments.api.EnchantmentsManager
 import me.shadowalzazel.mcodyssey.items.Exotics
@@ -26,7 +27,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.persistence.PersistentDataType
 
-interface ItemCreator : ExoticCreator, EnchantmentExtender, EnchantmentsManager {
+interface ItemCreator : ExoticCreator, EnchantmentExtender, EnchantabilityPointsManager {
 
     fun OdysseyItem.createStack(amount: Int = 1): ItemStack {
         val itemStack = ItemStack(overrideMaterial, amount).also {
@@ -69,9 +70,7 @@ interface ItemCreator : ExoticCreator, EnchantmentExtender, EnchantmentsManager 
         newBook.itemMeta = (newBook.itemMeta as EnchantmentStorageMeta).also {
             // Set lore -> description and enchantability Cost
             val pointCost = enchantment.enchantabilityCost(level)
-            val costToolTip = enchantment.displayName(level)
-                .append(Component.text(" *[$pointCost]"))
-                .decoration(TextDecoration.ITALIC, false)
+            val costToolTip = createEnchantLoreComponent(enchantment, level, pointCost)
             val descriptionToolTip = enchantment.getDescriptionTooltip(level)
             val fullLore = listOf(costToolTip, Component.text("")) + descriptionToolTip
             it.lore(fullLore)

@@ -18,10 +18,15 @@ import org.bukkit.inventory.ItemStack
 interface EnchantabilityPointsManager : EnchantmentsManager {
 
     // !!!!!!!!!!!!!!!!
-    // GILDED ENCHANTS ARE SLOTTED/IRREMOVABLE BUT DO NOT TAKE UP EVs
+    // GILDED ENCHANTS ARE SLOTTED/IRREMOVABLE BUT DO NOT TAKE UP EVs??
+
+    fun getEnchantabilityCost(enchant: Pair<Enchantment, Int>, override: Int? = null): Int {
+        val level = override ?: enchant.second
+        return enchant.first.enchantabilityCost(level)
+    }
 
     /*-----------------------------------------------------------------------------------------------*/
-    // Tag Functions
+    // Extension Helper Functions
     fun ItemStack.getMaxEnchantabilityPoints(): Int {
         return getIntTag(ItemDataTags.ENCHANTABILITY_POINTS) ?: getEnchantabilityDefault(this)
     }
@@ -30,10 +35,19 @@ interface EnchantabilityPointsManager : EnchantmentsManager {
         setIntTag(ItemDataTags.ENCHANTABILITY_POINTS, amount)
     }
 
+    fun ItemStack.getUsedEnchantabilityPoints(): Int {
+        var usedEnchantabilityPoints = 0
+        for (enchant in this.enchantments) {
+            usedEnchantabilityPoints += enchant.key.enchantabilityCost(enchant.value)
+        }
+        return usedEnchantabilityPoints
+    }
+
     /*-----------------------------------------------------------------------------------------------*/
     // Mains
     fun ItemStack.updateEnchantabilityPointsLore(
         newEnchants: MutableMap<Enchantment, Int>? = null,
+        removedEnchants: MutableMap<Enchantment, Int>? = null,
         resetLore: Boolean = false
     ) {
         val newLore = itemMeta.lore() ?: mutableListOf()
@@ -43,6 +57,16 @@ interface EnchantabilityPointsManager : EnchantmentsManager {
             newLore.add(Component.text("Header Holder"))
             newLore.add(slotSeperator)
         }
+        // Remove
+        if (removedEnchants != null) {
+            for (r in removedEnchants) {
+                val enchantment = r.key
+                val level = r.value
+                val pointCost = enchantment.enchantabilityCost(level)
+                newLore.remove(createEnchantLoreComponent(enchantment, level, pointCost))
+            }
+        }
+        // Then Add
         val seperatorIndex = newLore.indexOf(slotSeperator)
         for (u in 1..updatedEnchantments.size) {
             val i = u + seperatorIndex
@@ -62,18 +86,11 @@ interface EnchantabilityPointsManager : EnchantmentsManager {
         var usedEnchantabilityPoints = 0
         updatedEnchantments.forEach {
             val enchantment = it.key
-            val color = if (enchantment.isCursed) {
-                SlotColors.CURSED.color
-            } else {
-                SlotColors.ENCHANT.color
-            }
+            val level = it.value
             enchantmentCount += 1
-            val pointCost = enchantment.enchantabilityCost(it.value)
+            val pointCost = enchantment.enchantabilityCost(level)
             usedEnchantabilityPoints += pointCost
-            newLore[seperatorIndex + enchantmentCount] = enchantment
-                .displayName(it.value).append(Component.text(" *($pointCost)"))
-                .color(color)
-                .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+            newLore[seperatorIndex + enchantmentCount] = createEnchantLoreComponent(enchantment, level, pointCost)
         }
         // Engraving - Move To Bottom
         if (hasTag(ItemDataTags.IS_ENGRAVED)) {
@@ -83,7 +100,7 @@ interface EnchantabilityPointsManager : EnchantmentsManager {
             newLore.add(engraving)
         }
         // Update Glint
-        itemMeta = itemMeta.also {
+        val newMeta = itemMeta.also {
             if (enchantmentCount == 0) {
                 it.setEnchantmentGlintOverride(null)
             }
@@ -92,15 +109,30 @@ interface EnchantabilityPointsManager : EnchantmentsManager {
                 it.setEnchantmentGlintOverride(true)
             }
         }
+        itemMeta = newMeta
         // Header and add Lore
         newLore[seperatorIndex - 1] = createEnchantHeader(usedEnchantabilityPoints, maxEnchantabilityPoints)
         lore(newLore)
     }
 
+    // Create the lore component for item
+    fun createEnchantLoreComponent(enchantment: Enchantment, level: Int, pointCost: Int): Component {
+        val color = if (enchantment.isCursed) {
+            SlotColors.CURSED.color
+        } else {
+            SlotColors.GRAY.color
+        }
+        return enchantment
+            .displayName(level).append(Component.text(" [$pointCost]").color(SlotColors.ENCHANT.color))
+            .color(color)
+            .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+    }
+
     /*-----------------------------------------------------------------------------------------------*/
     // Components
     val slotSeperator: TextComponent
-        get() = Component.text("----------------------", SlotColors.GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+        //t() = Component.text(        "Enchantability Points: [00/00]"
+        get() = Component.text("-----------*-----------", SlotColors.GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
 
     val emptyGildedSlot: TextComponent
         get() = Component.text("+ Empty Gilded Slot", SlotColors.GILDED.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)

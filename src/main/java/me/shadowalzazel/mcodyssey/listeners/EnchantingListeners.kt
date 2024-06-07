@@ -26,6 +26,7 @@ import org.bukkit.inventory.EnchantingInventory
 import org.bukkit.inventory.GrindstoneInventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
+import org.bukkit.inventory.meta.Repairable
 
 object EnchantingListeners : Listener, TomeManager, ItemCreator {
 
@@ -52,6 +53,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         val second = event.inventory.secondItem
         val viewers = event.viewers
         val result = event.result ?: return
+        val anvil = event.inventory
         // Create Variables to detect conditions
         val firstHasOdysseyEnchantments = first.hasOdysseyEnchants()
         val secondHasOdysseyEnchantments = second?.hasOdysseyEnchants() == true
@@ -63,6 +65,24 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         if (!firstBookIsOdyssey && !secondBookIsOdyssey && (firstIsBook && secondIsBook)) {
             return
         }
+        // CHANGE Anvil cost from being cringe mechanic
+        if (secondIsBook && second!!.itemMeta is EnchantmentStorageMeta && result.itemMeta is Repairable) {
+            val booKMeta = second.itemMeta as EnchantmentStorageMeta
+            val resultMeta = result.itemMeta as Repairable
+            val storedEnchants = booKMeta.storedEnchants
+            // If found enchants get cost and set
+            if (storedEnchants.isNotEmpty()) {
+                var bookPoints = 0
+                for (e in storedEnchants) {
+                    bookPoints += getEnchantabilityCost(Pair(e.key, e.value))
+                }
+                // Reset to prevent cringe
+                anvil.repairCost = bookPoints
+                resultMeta.repairCost = result.enchantments.size
+            }
+            result.itemMeta = resultMeta
+        }
+        // Update
         result.updateEnchantabilityPointsLore()
     }
 
@@ -146,9 +166,12 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         val inventory: GrindstoneInventory = event.inventory as GrindstoneInventory
         if (inventory.result == null) return
         if (inventory.upperItem?.enchantments == null && inventory.lowerItem?.enchantments == null) return
+        val item = inventory.upperItem ?: inventory.lowerItem!!
         val result = inventory.result!!
+        val resultEnchantKeys = result.enchantments.keys
+        val removedEnchantments = item.enchantments.filter { it.key !in resultEnchantKeys }
         // Sentries passed
-        event.result = result.clone().also { it.updateEnchantabilityPointsLore()}
+        event.result = result.clone().also { it.updateEnchantabilityPointsLore(removedEnchants=removedEnchantments.toMutableMap()) }
     }
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -253,7 +276,8 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
             Pair(-1, -2), Pair(0, -2), Pair(1, -2),
         )
         for (pair in ringList) {
-            val block = event.enchantBlock.location.clone().toCenterLocation().add(pair.first.toDouble(), 0.0, pair.second.toDouble()).block
+            // Above y+1 above enchanting table
+            val block = event.enchantBlock.location.clone().toCenterLocation().add(pair.first.toDouble(), 1.0, pair.second.toDouble()).block
             if (block.type != Material.CHISELED_BOOKSHELF) continue
             val shelfData = block.blockData
             val blockState = block.state

@@ -31,9 +31,13 @@ interface EnchantmentExtender {
 
     private fun getToolTipText(name: String, level: Int): List<String> {
         return when(name) {
-            "antibonk" -> listOf("Reduce critical hit damage by ${2.5 * level}=[2.5 x level].")
+            // Vanilla
             "sharpness" -> listOf("Increase Melee Damage by ${0.5 * level + 0.5}=[0.5 * level + 0.5]")
+            "looting" -> listOf("Increases the number of common drops by ${level}=[level]")
+            "unbreaking" -> listOf("Increases Durability by ${level * 100}%=[level * 100]")
             "smite" -> listOf("Increase Melee Damage to undead mobs by ${2.5 * level}=[2.5 * level]")
+            // Odyssey
+            "antibonk" -> listOf("Reduce critical hit damage by ${2.5 * level}=[2.5 x level].")
             else -> listOf(name)
         }
     }
