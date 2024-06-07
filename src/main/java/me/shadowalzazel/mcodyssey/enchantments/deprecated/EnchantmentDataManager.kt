@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.enchantments.api
+package me.shadowalzazel.mcodyssey.enchantments.deprecated
 
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.enchantments.util.EnchantContainer
@@ -19,6 +19,7 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import java.util.function.Consumer
 import org.bukkit.inventory.ItemStack as BukkitStack
 
+@Deprecated(message = "1.21 Moved enchantments to be Data Driven")
 interface EnchantmentDataManager : EnchantmentFinder {
 
     // Containers

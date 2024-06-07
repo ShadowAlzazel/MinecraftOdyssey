@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.enchantments
+package me.shadowalzazel.mcodyssey.enchantments.deprecated
 
 // Code Provided by Pluggg
 

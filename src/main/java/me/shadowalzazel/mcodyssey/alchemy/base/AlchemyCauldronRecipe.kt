@@ -5,6 +5,7 @@ import me.shadowalzazel.mcodyssey.constants.ItemDataTags
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addTag
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasTag
 import me.shadowalzazel.mcodyssey.items.Potions.createPotionStack
+import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -16,7 +17,7 @@ import org.bukkit.potion.PotionEffectType
 import org.bukkit.potion.PotionType
 
 class AlchemyCauldronRecipe(
-    private val potion: OdysseyPotion,
+    private val alchemyResult: OdysseyItem,
     private val countedItems: Int,
     private val viableFuel: List<Material>,
     private val specificIngredients: List<ItemStack>, // For Materials and Specific Items
@@ -67,7 +68,11 @@ class AlchemyCauldronRecipe(
     fun synchroSuccessHandler(ingredients: MutableCollection<Item>) {
         val location = ingredients.elementAt(0).location.clone()
         location.world.playSound(location, Sound.ITEM_BOTTLE_FILL, 2.5F, 0.8F)
-        val result = potion.createPotionStack()
+        val result = if (alchemyResult is OdysseyPotion) {
+            alchemyResult.createPotionStack()
+        } else {
+            alchemyResult.newItemStack()
+        }
         // Check if is Combination
         if (isCombination) {
             val potionList = ingredients.filter { it.itemStack.hasPotionEffects() }
@@ -92,10 +97,6 @@ class AlchemyCauldronRecipe(
                 if (!isPreset) {
                     if (potionMeta.color != null) { colors.add(potionMeta.color!!) }
                 }
-            }
-            //println("Cauldron EFFECTS: ${resultMeta.customEffects}")
-            // Colors
-            if (colors.isNotEmpty()) {
             }
             // Item Meta
             result.itemMeta = resultMeta
@@ -122,13 +123,17 @@ class AlchemyCauldronRecipe(
 
     private fun specificIngredientFinder(item: ItemStack): Boolean {
         val meta = item.itemMeta
-        return if (meta is PotionMeta) {
+        return if (meta is PotionMeta) { // Check if potion is specific
             if (isAwkward(item)) return true
-            val isInList = item in specificIngredients
-            isInList
+            val isInSpecificList = item in specificIngredients
+            isInSpecificList
+        }
+        else if (isCombination) { // If combination check
+            val isInSpecificList = item in specificIngredients
+            isInSpecificList
         }
         else {
-            true // ADD ELSE IF FOR OTHER SPECIFICS
+            true
         }
     }
 

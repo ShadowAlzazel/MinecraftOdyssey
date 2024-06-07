@@ -1,19 +1,17 @@
 package me.shadowalzazel.mcodyssey.listeners.utility
 
 import io.papermc.paper.world.MoonPhase
-import me.shadowalzazel.mcodyssey.commands.admin.GiveArcaneBook.hasOdysseyEnchantment
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
+import me.shadowalzazel.mcodyssey.enchantments.api.EnchantmentsManager
 import org.bukkit.entity.Player
-import org.bukkit.inventory.meta.Damageable
 import org.bukkit.scheduler.BukkitRunnable
 
-class MoonwardPhase (val player: Player) : BukkitRunnable() {
+class MoonwardPhase(val player: Player) : BukkitRunnable(), EnchantmentsManager {
 
     // Maybe get access to moon phase player list?
 
     override fun run() {
         if (!player.isOnline) {
-            //this.cancel()
+            this.cancel()
             return
         }
         if (player.isDead) {
@@ -26,7 +24,9 @@ class MoonwardPhase (val player: Player) : BukkitRunnable() {
         if (player.location.block.lightFromSky < 8) return
 
         // Regen every ten ticks
-        if (player.equipment.helmet.hasOdysseyEnchantment(OdysseyEnchantments.MOONPATCH)) {
+        // TODO :FIX!!!!!
+        /*
+        if (player.equipment.helmet.hasEnchantment()) {
             val armorMeta = player.equipment.helmet.itemMeta
             if (armorMeta is Damageable) {
                 if (armorMeta.hasDamage()) {
@@ -63,6 +63,8 @@ class MoonwardPhase (val player: Player) : BukkitRunnable() {
             player.equipment.boots.itemMeta = armorMeta
         }
 
+         */
     }
+
 
 }

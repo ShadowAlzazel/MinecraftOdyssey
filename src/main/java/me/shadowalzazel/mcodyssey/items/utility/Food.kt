@@ -5,6 +5,7 @@ import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.inventory.meta.components.FoodComponent
 
+@Suppress("UnstableApiUsage")
 class Food(itemName: String, overrideMaterial: Material, customName: String, customModel: Int? = null, lore: List<Component>? = null) : OdysseyItem(
     itemName,
     overrideMaterial,

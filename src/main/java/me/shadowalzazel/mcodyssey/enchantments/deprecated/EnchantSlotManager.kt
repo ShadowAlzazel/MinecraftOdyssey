@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.enchantments.api
+package me.shadowalzazel.mcodyssey.enchantments.deprecated
 
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags.setIntTag
@@ -6,6 +6,7 @@ import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addTag
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getIntTag
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getStringTag
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasTag
+import me.shadowalzazel.mcodyssey.enchantments.api.SlotColors
 import me.shadowalzazel.mcodyssey.enchantments.util.EnchantContainer
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
@@ -16,6 +17,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 
+@Deprecated("Moved away from slot system")
 internal interface EnchantSlotManager : EnchantmentDataManager {
 
     fun ItemStack.isSlotted(): Boolean {

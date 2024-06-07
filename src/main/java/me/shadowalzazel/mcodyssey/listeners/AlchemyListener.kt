@@ -72,6 +72,7 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
         val thrownPotion = event.projectile
         if (thrownPotion !is ThrownPotion) return
         val potion = event.itemStack
+        /*
         if (potion.hasTag(ItemDataTags.IS_POTION_VIAL)) {
             val replacement = consumePotionVial(potion) ?: return
             // Cancel consume if gets replacement
@@ -85,18 +86,22 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
             }
         }
 
+         */
     }
 
     // USELESS DOES NOT RUN
     private fun potionConsumeSplashHandler(event: PlayerItemConsumeEvent) {
         val item = event.item
         // Check charges fpr vial
+        /*
         if (item.hasTag(ItemDataTags.IS_POTION_VIAL)) {
             val replacement = consumePotionVial(item)
             if (replacement != null) {
                 event.replacement = replacement
             }
         }
+
+         */
     }
 
     private fun potionDrinkHandler(event: PlayerItemConsumeEvent) {
@@ -112,14 +117,18 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
             event.player.addOdysseyEffect(effect, duration, amplifier)
         }
         // Check charges fpr vial
+        /*
         if (item.hasTag(ItemDataTags.IS_POTION_VIAL)) {
             val replacement = consumePotionVial(item)
             if (replacement != null) {
                 event.replacement = replacement
             }
         }
+
+         */
     }
 
+    @Deprecated("1.20.6 Components")
     private fun consumePotionVial(item: ItemStack): ItemStack? {
         // Potion Vials (also have charges when thrown)
         val charges = item.getIntTag(ItemDataTags.POTION_CHARGES_LEFT) ?: 0
@@ -135,6 +144,7 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
         }
     }
 
+    /*-----------------------------------------------------------------------------------------------*/
     // Main Splash Handler
     @EventHandler
     fun splashPotionHandler(event: PotionSplashEvent) {
@@ -434,9 +444,6 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
         if (potion.hasTag(ItemDataTags.IS_UPGRADED_PLUS)) return potion
         val meta = (potion.itemMeta as PotionMeta)
         val potionType = meta.basePotionType ?: return potion
-        // (WIX)
-        //if (!potionType.isExtendable) return potion // Is Tier 2 Duration -> No
-        //if (potionType.isUpgradeable) return potion // Is Tier 1 Power -> No
         // Get Old effects from custom effects or base type effects
         val oldEffects = mutableListOf<PotionEffect>()
         potionType.potionEffects.forEach { oldEffects.add(it) }
@@ -455,7 +462,7 @@ object AlchemyListener : Listener, AlchemyManager, EffectsManager {
         if (potion.itemMeta !is PotionMeta) return potion
         if (potion.hasTag(ItemDataTags.IS_POTION_VIAL)) return potion
         // (WIX)
-        val vial = createPotionVials(potion.clone())
+        val vial = createPotionVialStack(potion.clone())
         return vial
     }
 

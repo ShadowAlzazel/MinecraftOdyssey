@@ -31,7 +31,6 @@ class MagicMissileLauncher (
 
     // Launch modes: VLS, PlayerEye, Set Parabola, SpawnOnTop
 
-
     override fun run() {
         // Remove if passed max time
         counter += 1

@@ -56,11 +56,15 @@ object ItemDataTags {
     // Tier
     const val IS_EXOTIC: String = "odyssey.is_exotic"
 
-    // Enchanting
+    // Enchanting - OLD
     const val GILDED_SLOTS: String = "odyssey.gilded_slots"
     const val ENCHANT_SLOTS: String = "odyssey.enchant_slots"
     const val IS_SLOTTED: String = "odyssey.is_slotted"
     const val GILDED_ENCHANT: String = "odyssey.gilded_enchant"
+    // Enchanting - NEW
+
+    const val ENCHANTABILITY_POINTS: String = "odyssey.enchantability_points"
+
 
     // Runes
     const val IS_RUNEWARE: String = "odyssey.is_runeware" // A finished runic vessel capable of holding multiple rune shards

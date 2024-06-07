@@ -1,14 +1,15 @@
 package me.shadowalzazel.mcodyssey.enchantments
 
+import me.shadowalzazel.mcodyssey.enchantments.api.EnchantmentsManager
 import me.shadowalzazel.mcodyssey.enchantments.armor.*
 import me.shadowalzazel.mcodyssey.enchantments.melee.*
 import me.shadowalzazel.mcodyssey.enchantments.misc.*
 import me.shadowalzazel.mcodyssey.enchantments.ranged.*
 
-object OdysseyEnchantments  {
+object OdysseyEnchantments : EnchantmentsManager {
 
     // Armor
-    val ANTIBONK: OdysseyEnchantment = Antibonk
+    val ANTIBONK = Antibonk
     val BEASTLY: OdysseyEnchantment = Beastly
     val BLACK_ROSE: OdysseyEnchantment = BlackRose
     val BLURCISE: OdysseyEnchantment = Blurcise

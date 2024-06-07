@@ -14,27 +14,25 @@ object BrewerMixes : AlchemyManager {
 
     fun getMixes(): List<PotionMix> {
         return listOf(
-            vailBrewingPotionMix(),
+            potionVialMix(),
             potionExtendedPlusMix(),
             potionUpgradedPlusMix()
         )
     }
 
-    private fun vailBrewingPotionMix(): PotionMix {
+    private fun potionVialMix(): PotionMix {
         // Water
         val potionItem = ItemStack(Material.POTION, 1)
-        val somePotionMeta = potionItem.itemMeta as PotionMeta
-        somePotionMeta.basePotionType = PotionType.WATER
-        potionItem.itemMeta = somePotionMeta
-
-        val result: ItemStack = createPotionVials(potionItem)
+        val potionMeta = potionItem.itemMeta as PotionMeta
+        potionMeta.basePotionType = PotionType.WATER
+        potionItem.itemMeta = potionMeta
+        val result: ItemStack = createPotionVialStack(potionItem)
         val input = RecipeChoice.MaterialChoice(
             Material.POTION
         )
         val ingredient = RecipeChoice.MaterialChoice(
             Material.PRISMARINE_CRYSTALS
         )
-
         return PotionMix(
             NamespacedKey(Odyssey.instance, "vial_brewing"),
             result,
@@ -43,22 +41,19 @@ object BrewerMixes : AlchemyManager {
         )
     }
 
-
     private fun potionUpgradedPlusMix(): PotionMix {
         // Water
         val potionItem = ItemStack(Material.POTION, 1)
-        val somePotionMeta = potionItem.itemMeta as PotionMeta
-        somePotionMeta.basePotionType = PotionType.WATER
-        potionItem.itemMeta = somePotionMeta
-
-        val result: ItemStack = createPotionVials(potionItem)
+        val potionMeta = potionItem.itemMeta as PotionMeta
+        potionMeta.basePotionType = PotionType.WATER
+        potionItem.itemMeta = potionMeta
+        val result: ItemStack = createPotionVialStack(potionItem)
         val input = RecipeChoice.MaterialChoice(
             Material.POTION
         )
         val ingredient = RecipeChoice.MaterialChoice(
             Material.GLOW_BERRIES
         )
-
         return PotionMix(
             NamespacedKey(Odyssey.instance, "upgraded_plus_brewing"),
             result,
@@ -70,18 +65,16 @@ object BrewerMixes : AlchemyManager {
     private fun potionExtendedPlusMix(): PotionMix {
         // Water
         val potionItem = ItemStack(Material.POTION, 1)
-        val somePotionMeta = potionItem.itemMeta as PotionMeta
-        somePotionMeta.basePotionType = PotionType.WATER
-        potionItem.itemMeta = somePotionMeta
-
-        val result: ItemStack = createPotionVials(potionItem)
+        val potionMeta = potionItem.itemMeta as PotionMeta
+        potionMeta.basePotionType = PotionType.WATER
+        potionItem.itemMeta = potionMeta
+        val result: ItemStack = createPotionVialStack(potionItem)
         val input = RecipeChoice.MaterialChoice(
             Material.POTION
         )
         val ingredient = RecipeChoice.MaterialChoice(
             Material.HONEY_BOTTLE
         )
-
         return PotionMix(
             NamespacedKey(Odyssey.instance, "extended_plus_brewing"),
             result,
