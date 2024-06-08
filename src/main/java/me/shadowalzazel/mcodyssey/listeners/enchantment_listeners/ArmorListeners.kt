@@ -5,13 +5,12 @@ import com.destroystokyo.paper.event.player.PlayerJumpEvent
 import io.papermc.paper.entity.LookAnchor
 import io.papermc.paper.world.MoonPhase
 import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.commands.admin.GiveArcaneBook.getNameId
 import me.shadowalzazel.mcodyssey.constants.EffectTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags.getIntTag
 import me.shadowalzazel.mcodyssey.constants.EntityTags.removeTag
 import me.shadowalzazel.mcodyssey.constants.EntityTags.setIntTag
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.enchantments.deprecated.EnchantmentDataManager
 import me.shadowalzazel.mcodyssey.listeners.AlchemyListener.addOdysseyEffect
 import me.shadowalzazel.mcodyssey.listeners.utility.MoonwardPhase
 import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.SpeedySpursTask
@@ -41,7 +40,7 @@ import org.bukkit.potion.PotionEffectType
 import java.util.UUID
 import org.bukkit.inventory.meta.Damageable as Repairable
 
-object ArmorListeners : Listener, EnchantmentDataManager {
+object ArmorListeners : Listener {
 
     private val moonwardPhasePlayers = mutableListOf<UUID>()
     // Pollen
@@ -62,33 +61,33 @@ object ArmorListeners : Listener, EnchantmentDataManager {
         // Start of ifs
         if (defender.equipment?.helmet?.hasItemMeta() == true) {
             val helmet = defender.equipment?.helmet!!
-            for (enchant in helmet.getOdysseyEnchantments()) {
-                when (enchant.key) {
-                    OdysseyEnchantments.ANTIBONK -> {
+            for (enchant in helmet.enchantments) {
+                when (enchant.key.getNameId()) {
+                    "antibonk" -> {
                         event.damage = antibonkEnchantment(event.isCritical, event.damage, enchant.value)
                     }
-                    OdysseyEnchantments.BEASTLY -> {
+                    "beastly" -> {
                         event.damage -= beastlyEnchantment(defender, enchant.value)
                     }
-                    OdysseyEnchantments.ILLUMINEYE -> {
+                    "illumineye" -> {
                         illumineyeEnchantment(enemy, defender, enchant.value)
                     }
-                    OdysseyEnchantments.MANDIBLEMANIA -> {
+                    "mandiblemania" -> {
                         mandiblemaniaDefendEnchantment(defender, enemy, enchant.value)
                     }
-                    OdysseyEnchantments.OPTICALIZATION -> {
+                    "opticalization" -> {
                         opticalizationHitEnchantment(defender, enemy, enchant.value)
                     }
-                    OdysseyEnchantments.SSLITHER_SSIGHT -> {
+                    "sslither_ssight" -> {
                         sslitherSsightEnchantment(enemy, defender, enchant.value)
                     }
-                    OdysseyEnchantments.RECKLESS -> {
+                    "reckless" -> {
                         event.damage += recklessEnchantment(enchant.value)
                     }
-                    OdysseyEnchantments.RELENTLESS -> {
+                    "relentless" -> {
                         relentlessEnchantment(defender, enchant.value)
                     }
-                    OdysseyEnchantments.VEILED_IN_SHADOW -> {
+                    "veiled_in_shadow" -> {
                         veiledInShadowEnchantment(defender, enchant.value)
                     }
                 }
@@ -96,33 +95,33 @@ object ArmorListeners : Listener, EnchantmentDataManager {
         }
         if (defender.equipment?.chestplate?.hasItemMeta() == true) {
             val chestplate = defender.equipment?.chestplate!!
-            for (enchant in chestplate.getOdysseyEnchantments()) {
-                when (enchant.key) {
-                    OdysseyEnchantments.BLACK_ROSE -> {
+            for (enchant in chestplate.enchantments) {
+                when (enchant.key.getNameId()) {
+                    "black_rose" -> {
                         blackRoseEnchantment(enemy, enchant.value)
                     }
-                    OdysseyEnchantments.BEASTLY -> {
+                    "beastly" -> {
                         event.damage -= beastlyEnchantment(defender, enchant.value)
                     }
-                    OdysseyEnchantments.IGNORE_PAIN -> {
+                    "ignore_pain" -> {
                         ignorePainEnchantment(defender, enchant.value)
                     }
-                    OdysseyEnchantments.MOLTEN_CORE -> {
+                    "molten_core" -> {
                         moltenCoreEnchantment(defender, enemy, enchant.value)
                     }
-                    OdysseyEnchantments.RECKLESS -> {
+                    "reckless" -> {
                         event.damage += recklessEnchantment(enchant.value)
                     }
-                    OdysseyEnchantments.RELENTLESS -> {
+                    "relentless" -> {
                         relentlessEnchantment(defender, enchant.value)
                     }
-                    OdysseyEnchantments.UNTOUCHABLE -> {
+                    "untouchable" -> {
                         untouchableEnchantment(defender)
                     }
-                    OdysseyEnchantments.VEILED_IN_SHADOW -> {
+                    "veiled_in_shadow" -> {
                         veiledInShadowEnchantment(defender, enchant.value)
                     }
-                    OdysseyEnchantments.VENGEFUL -> {
+                    "vengeful" -> {
                         vengefulEnchantment(enemy, enchant.value)
                     }
                 }
@@ -130,30 +129,30 @@ object ArmorListeners : Listener, EnchantmentDataManager {
         }
         if (defender.equipment?.leggings?.hasItemMeta() == true) {
             val leggings = defender.equipment?.leggings!!
-            for (enchant in leggings.getOdysseyEnchantments()) {
-                when (enchant.key) {
-                    OdysseyEnchantments.BEASTLY -> {
+            for (enchant in leggings.enchantments) {
+                when (enchant.key.getNameId()) {
+                    "beastly" -> {
                         event.damage -= beastlyEnchantment(defender, enchant.value)
                     }
-                    OdysseyEnchantments.COWARDICE -> {
+                    "cowardice" -> {
                         cowardiceEnchantment(enemy, defender, enchant.value)
                     }
-                    OdysseyEnchantments.BLURCISE -> {
+                    "blurcise" -> {
                         event.damage -= blurciseEnchantment(defender, enchant.value)
                     }
-                    OdysseyEnchantments.RECKLESS -> {
+                    "reckless" -> {
                         event.damage += recklessEnchantment(enchant.value)
                     }
-                    OdysseyEnchantments.RELENTLESS -> {
+                    "relentless" -> {
                         relentlessEnchantment(defender, enchant.value)
                     }
-                    OdysseyEnchantments.SPOREFUL -> {
+                    "sporeful" -> {
                         sporefulEnchantment(defender, enchant.value)
                     }
-                    OdysseyEnchantments.SQUIDIFY -> {
+                    "squidify" -> {
                         squidifyEnchantment(defender, enchant.value)
                     }
-                    OdysseyEnchantments.VEILED_IN_SHADOW -> {
+                    "veiled_in_shadow" -> {
                         veiledInShadowEnchantment(defender, enchant.value)
                     }
                 }
@@ -161,21 +160,21 @@ object ArmorListeners : Listener, EnchantmentDataManager {
         }
         if (defender.equipment?.boots?.hasItemMeta() == true) {
             val boots = defender.equipment?.boots!!
-            for (enchant in boots.getOdysseyEnchantments()) {
-                when (enchant.key) {
-                    OdysseyEnchantments.BEASTLY -> {
+            for (enchant in boots.enchantments) {
+                when (enchant.key.getNameId()) {
+                    "beastly" -> {
                         event.damage -= beastlyEnchantment(defender, enchant.value)
                     }
-                    OdysseyEnchantments.RECKLESS -> {
+                    "reckless" -> {
                         event.damage += recklessEnchantment(enchant.value)
                     }
-                    OdysseyEnchantments.RELENTLESS -> {
+                    "relentless" -> {
                         relentlessEnchantment(defender, enchant.value)
                     }
-                    OdysseyEnchantments.ROOT_BOOTS -> {
+                    "root_boots" -> {
                         event.damage -= rootBootsDefenseHandler(defender, enchant.value)
                     }
-                    OdysseyEnchantments.VEILED_IN_SHADOW -> {
+                    "veiled_in_shadow" -> {
                         veiledInShadowEnchantment(defender, enchant.value)
                     }
                 }
@@ -198,15 +197,15 @@ object ArmorListeners : Listener, EnchantmentDataManager {
         // Start ifs
         if (attacker.equipment?.helmet?.hasItemMeta() == true) {
             val helmet = attacker.equipment?.helmet!!
-            for (enchant in helmet.getOdysseyEnchantments()) {
-                when (enchant.key) {
-                    OdysseyEnchantments.BRAWLER -> {
+            for (enchant in helmet.enchantments) {
+                when (enchant.key.getNameId()) {
+                    "brawler" -> {
                         event.damage += brawlerEnchantment(attacker, enchant.value)
                     }
-                    OdysseyEnchantments.MANDIBLEMANIA -> {
+                    "mandiblemania" -> {
                         mandiblemaniaAttackEnchantment(attacker, enemy, enchant.value)
                     }
-                    OdysseyEnchantments.OPTICALIZATION -> {
+                    "opticalization" -> {
                         opticalizationHitEnchantment(enemy, attacker, enchant.value)
                     }
                 }
@@ -214,12 +213,12 @@ object ArmorListeners : Listener, EnchantmentDataManager {
         }
         if (attacker.equipment?.chestplate?.hasItemMeta() == true) {
             val chestplate = attacker.equipment?.chestplate!!
-            for (enchant in chestplate.getOdysseyEnchantments()) {
-                when (enchant.key) {
-                    OdysseyEnchantments.BRAWLER -> {
+            for (enchant in chestplate.enchantments) {
+                when (enchant.key.getNameId()) {
+                    "brawler" -> {
                         event.damage += brawlerEnchantment(attacker, enchant.value)
                     }
-                    OdysseyEnchantments.VICIOUS_VIGOR -> {
+                    "vigor" -> {
                         event.damage += viciousVigorEnchantment(attacker, enchant.value)
                     }
                 }
@@ -227,9 +226,9 @@ object ArmorListeners : Listener, EnchantmentDataManager {
         }
         if (attacker.equipment?.leggings?.hasItemMeta() == true) {
             val leggings = attacker.equipment?.leggings!!
-            for (enchant in leggings.getOdysseyEnchantments()) {
-                when (enchant.key) {
-                    OdysseyEnchantments.BRAWLER -> {
+            for (enchant in leggings.enchantments) {
+                when (enchant.key.getNameId()) {
+                    "brawler" -> {
                         event.damage += brawlerEnchantment(attacker, enchant.value)
                     }
                 }
@@ -237,12 +236,12 @@ object ArmorListeners : Listener, EnchantmentDataManager {
         }
         if (attacker.equipment?.boots?.hasItemMeta() == true) {
             val boots = attacker.equipment?.boots!!
-            for (enchant in boots.getOdysseyEnchantments()) {
-                when (enchant.key) {
-                    OdysseyEnchantments.BRAWLER -> {
+            for (enchant in boots.enchantments) {
+                when (enchant.key.getNameId()) {
+                    "brawler" -> {
                         event.damage += brawlerEnchantment(attacker, enchant.value)
                     }
-                    OdysseyEnchantments.STATIC_SOCKS -> {
+                    "static_socks" -> {
                         event.damage += staticSocksAttackEnchantment(attacker, enchant.value)
                     }
                 }
@@ -257,9 +256,9 @@ object ArmorListeners : Listener, EnchantmentDataManager {
             val defender = event.entity as LivingEntity
             if (defender.equipment?.boots?.hasItemMeta() == true) {
                 val boots = defender.equipment?.boots!!
-                for (enchant in boots.getOdysseyEnchantments()) {
-                    when (enchant.key) {
-                        OdysseyEnchantments.DEVASTATING_DROP -> {
+                for (enchant in boots.enchantments) {
+                    when (enchant.key.getNameId()) {
+                        "devastating_drop" -> {
                             devastatingDrop(defender, event.damage, enchant.value)
                         }
                     }
@@ -289,9 +288,9 @@ object ArmorListeners : Listener, EnchantmentDataManager {
         val player = event.player
         if (player.equipment.helmet?.hasItemMeta() == true) {
             val helmet = player.equipment.helmet!!
-            for (enchant in helmet.getOdysseyEnchantments()) {
-                when (enchant.key) {
-                    OdysseyEnchantments.BREWFUL_BREATH -> {
+            for (enchant in helmet.enchantments) {
+                when (enchant.key.getNameId()) {
+                    "brewful_breath" -> {
                         brewfulBreathEnchantment(player, event.item, enchant.value)
                     }
                 }
@@ -299,12 +298,12 @@ object ArmorListeners : Listener, EnchantmentDataManager {
         }
         if (player.equipment.chestplate?.hasItemMeta() == true) {
             val chestplate = player.equipment.chestplate!!
-            for (enchant in chestplate.getOdysseyEnchantments()) {
-                when (enchant.key) {
-                    OdysseyEnchantments.FRUITFUL_FARE -> {
+            for (enchant in chestplate.enchantments) {
+                when (enchant.key.getNameId()) {
+                    "fruitful_fare" -> {
                         fruitfulFareEnchantment(player, event.item, enchant.value)
                     }
-                    OdysseyEnchantments.POTION_BARRIER -> {
+                    "potion_barrier" -> {
                         potionBarrierEnchantment(player, event.item, enchant.value)
                     }
                 }
@@ -322,33 +321,16 @@ object ArmorListeners : Listener, EnchantmentDataManager {
         val item = event.item!!
         if (player.equipment.helmet?.hasItemMeta() == true) {
             val helmet = player.equipment.helmet!!
-            for (enchant in helmet.getOdysseyEnchantments()) {
-                when (enchant.key) {
-                    OdysseyEnchantments.DREADFUL_SHRIEK -> {
-                        dreadfulShriekEnchantment(player, item, enchant.value)
-                    }
-                    OdysseyEnchantments.ILLUMINEYE -> {
-                        illumineyeSpyglassEnchantment(player, item, enchant.value)
-                    }
-                    OdysseyEnchantments.OPTICALIZATION -> {
-                        opticalizationSpyglassEnchantment(player, item)
-                    }
-                    OdysseyEnchantments.RAGING_ROAR -> {
-                        ragingRoarEnchantment(player, item, enchant.value)
-                    }
-                    OdysseyEnchantments.SSLITHER_SSIGHT -> {
-                        sslitherSsightSpyglassEnchantment(player, item, enchant.value)
-                    }
-                    OdysseyEnchantments.WAR_CRY -> {
-                        warCryEnchantment(player, item, enchant.value)
-                    }
+            for (enchant in helmet.enchantments) {
+                when (enchant.key.getNameId()) {
+                    // ALL REMOVED MOVED TO OWN
                 }
             }
         }
         if (player.equipment.chestplate?.hasItemMeta() == true) {
             val chestplate = player.equipment.chestplate
             for (enchant in chestplate!!.enchantments) {
-                when (enchant.key) {
+                when (enchant.key.getNameId()) {
                 }
             }
         }
@@ -363,12 +345,12 @@ object ArmorListeners : Listener, EnchantmentDataManager {
         val defender = event.entity as LivingEntity
         if (defender.equipment?.helmet?.hasItemMeta() == true) {
             val helmet = defender.equipment?.helmet!!
-            for (enchant in helmet.getOdysseyEnchantments()) {
-                when (enchant.key) {
-                    OdysseyEnchantments.CHITIN -> {
+            for (enchant in helmet.enchantments) {
+                when (enchant.key.getNameId()) {
+                    "chitin" -> {
                         copperChitinEnchantment(defender, helmet)
                     }
-                    OdysseyEnchantments.RECKLESS -> {
+                    "reckless" -> {
                         event.amount += recklessRegenEnchantment(enchant.value)
                     }
                 }
@@ -376,12 +358,12 @@ object ArmorListeners : Listener, EnchantmentDataManager {
         }
         if (defender.equipment?.chestplate?.hasItemMeta() == true) {
             val chestplate = defender.equipment?.chestplate!!
-            for (enchant in chestplate.getOdysseyEnchantments()) {
-                when (enchant.key) {
-                    OdysseyEnchantments.CHITIN -> {
+            for (enchant in chestplate.enchantments) {
+                when (enchant.key.getNameId()) {
+                    "chitin" -> {
                         copperChitinEnchantment(defender, chestplate)
                     }
-                    OdysseyEnchantments.RECKLESS -> {
+                    "reckless" -> {
                         event.amount += recklessRegenEnchantment(enchant.value)
                     }
                 }
@@ -389,12 +371,12 @@ object ArmorListeners : Listener, EnchantmentDataManager {
         }
         if (defender.equipment?.leggings?.hasItemMeta() == true) {
             val leggings = defender.equipment?.leggings!!
-            for (enchant in leggings.getOdysseyEnchantments()) {
-                when (enchant.key) {
-                    OdysseyEnchantments.CHITIN -> {
+            for (enchant in leggings.enchantments) {
+                when (enchant.key.getNameId()) {
+                    "chitin" -> {
                         copperChitinEnchantment(defender, leggings)
                     }
-                    OdysseyEnchantments.RECKLESS -> {
+                    "reckless" -> {
                         event.amount += recklessRegenEnchantment(enchant.value)
                     }
                 }
@@ -402,12 +384,12 @@ object ArmorListeners : Listener, EnchantmentDataManager {
         }
         if (defender.equipment?.boots?.hasItemMeta() == true) {
             val boots = defender.equipment?.boots!!
-            for (enchant in boots.getOdysseyEnchantments()) {
-                when (enchant.key) {
-                    OdysseyEnchantments.CHITIN -> {
+            for (enchant in boots.enchantments) {
+                when (enchant.key.getNameId()) {
+                    "chitin" -> {
                         copperChitinEnchantment(defender, boots)
                     }
-                    OdysseyEnchantments.RECKLESS -> {
+                    "reckless" -> {
                         event.amount += recklessRegenEnchantment(enchant.value)
                     }
                 }
@@ -435,9 +417,9 @@ object ArmorListeners : Listener, EnchantmentDataManager {
             val mount = event.vehicle as LivingEntity
             if (rider.equipment?.boots?.hasItemMeta() == true) {
                 val boots = rider.equipment?.boots!!
-                for (enchant in boots.getOdysseyEnchantments()) {
-                    when (enchant.key) {
-                        OdysseyEnchantments.SPEEDY_SPURS -> {
+                for (enchant in boots.enchantments) {
+                    when (enchant.key.getNameId()) {
+                        "speedy_spurs" -> {
                             speedySpursEnchantment(rider, mount, enchant.value)
                         }
                     }
@@ -452,10 +434,10 @@ object ArmorListeners : Listener, EnchantmentDataManager {
         val defender = event.entity
         if (defender.equipment?.boots?.hasItemMeta() == true) {
             val boots = defender.equipment?.boots!!
-            for (enchant in boots.getOdysseyEnchantments()) {
-                when (enchant.key) {
-                    OdysseyEnchantments.ROOT_BOOTS -> {
-                        event.acceleration.multiply(rootBootsKnockbackHandler(defender, enchant.value))
+            for (enchant in boots.enchantments) {
+                when (enchant.key.getNameId()) {
+                    "root_boots" -> {
+                        //TODO
                     }
                 }
             }
@@ -469,12 +451,12 @@ object ArmorListeners : Listener, EnchantmentDataManager {
         // Start of ifs
         if (sneaker.equipment.helmet?.hasItemMeta() == true) {
             val helmet = sneaker.equipment.helmet!!
-            for (enchant in helmet.getOdysseyEnchantments()) {
-                when (enchant.key) {
-                    OdysseyEnchantments.POLLEN_GUARD -> {
+            for (enchant in helmet.enchantments) {
+                when (enchant.key.getNameId()) {
+                    "pollen_gard"-> {
                         pollenGuardSneakEnchantment(sneaker, enchant.value, pollenMaxHeadPlayers, event.isSneaking)
                     }
-                    OdysseyEnchantments.SCULK_SENSITIVE -> {
+                    "sculk_sensitive" -> {
                         sculkSensitiveSneakEnchantment(sneaker, enchant.value, event.isSneaking)
                     }
                 }
@@ -482,9 +464,9 @@ object ArmorListeners : Listener, EnchantmentDataManager {
         }
         if (sneaker.equipment.chestplate?.hasItemMeta() == true) {
             val chestplate = sneaker.equipment.chestplate!!
-            for (enchant in chestplate.getOdysseyEnchantments()) {
-                when (enchant.key) {
-                    OdysseyEnchantments.POLLEN_GUARD -> {
+            for (enchant in chestplate.enchantments) {
+                when (enchant.key.getNameId()) {
+                    "pollen_gard" -> {
                         pollenGuardSneakEnchantment(sneaker, enchant.value, pollenMaxChestPlayers, event.isSneaking)
                     }
                 }
@@ -492,12 +474,12 @@ object ArmorListeners : Listener, EnchantmentDataManager {
         }
         if (sneaker.equipment.leggings?.hasItemMeta() == true) {
             val leggings = sneaker.equipment.leggings!!
-            for (enchant in leggings.getOdysseyEnchantments()) {
-                when (enchant.key) {
-                    OdysseyEnchantments.LEAP_FROG -> {
+            for (enchant in leggings.enchantments) {
+                when (enchant.key.getNameId()) {
+                    "leap_frog" -> {
                         leapFrogSneakEnchantment(sneaker, event.isSneaking)
                     }
-                    OdysseyEnchantments.POLLEN_GUARD -> {
+                    "pollen_gard" -> {
                         pollenGuardSneakEnchantment(sneaker, enchant.value, pollenMaxLegsPlayers, event.isSneaking)
                     }
                 }
@@ -505,22 +487,22 @@ object ArmorListeners : Listener, EnchantmentDataManager {
         }
         if (sneaker.equipment.boots?.hasItemMeta() == true) {
             val boots = sneaker.equipment.boots!!
-            for (enchant in boots.getOdysseyEnchantments()) {
-                when (enchant.key) {
-                    OdysseyEnchantments.POLLEN_GUARD -> {
+            for (enchant in boots.enchantments) {
+                when (enchant.key.getNameId()) {
+                    "pollen_gard" -> {
                         pollenGuardSneakEnchantment(sneaker, enchant.value, pollenMaxBootsPlayers, event.isSneaking)
                     }
-                    OdysseyEnchantments.ROOT_BOOTS -> {
+                    "root_boots" -> {
                         rootBootsSneakEnchantment(sneaker, enchant.value, event.isSneaking)
                     }
-                    OdysseyEnchantments.STATIC_SOCKS -> {
+                    "static_socks" -> {
                         staticSocksSneakEnchantment(sneaker, enchant.value)  // Trigger on one toggle only
                     }
                 }
             }
         }
         // After many charges -> when hit -> do static discharge
-        // Set timer -> if has not moved -> add is rooted
+        // Set timer -> if it has not moved -> add is rooted
     }
 
     // Function for jumping
@@ -529,9 +511,9 @@ object ArmorListeners : Listener, EnchantmentDataManager {
         val jumper = event.player
         if (jumper.equipment.leggings?.hasItemMeta() == true) {
             val leggings = jumper.equipment.leggings!!
-            for (enchant in leggings.getOdysseyEnchantments()) {
-                when (enchant.key) {
-                    OdysseyEnchantments.LEAP_FROG -> {
+            for (enchant in leggings.enchantments) {
+                when (enchant.key.getNameId()) {
+                    "leap_frog" -> {
                         leapFrogEnchantment(jumper, enchant.value)
                     }
                 }
@@ -539,9 +521,9 @@ object ArmorListeners : Listener, EnchantmentDataManager {
         }
         if (jumper.equipment.boots?.hasItemMeta() == true) {
             val boots = jumper.equipment.boots!!
-            for (enchant in boots.getOdysseyEnchantments()) {
-                when (enchant.key) {
-                    OdysseyEnchantments.LEAP_FROG -> {
+            for (enchant in boots.enchantments) {
+                when (enchant.key.getNameId()) {
+                    "leap_frog" -> {
                     }
                 }
             }

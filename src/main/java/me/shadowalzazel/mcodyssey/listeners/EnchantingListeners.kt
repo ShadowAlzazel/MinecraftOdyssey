@@ -82,6 +82,14 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
             }
             result.itemMeta = resultMeta
         }
+        // Check if over points max
+        val usedPoints = result.getUsedEnchantabilityPoints()
+        val maxPoints = result.getMaxEnchantabilityPoints()
+        if (usedPoints > maxPoints) {
+            event.result = null
+            viewers.forEach { it.sendBarMessage("The item is maxed out on enchantability points.") }
+            return
+        }
         // Update
         result.updateEnchantabilityPointsLore()
     }
@@ -263,6 +271,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         // Get Hint
         val hint = event.enchantmentHint
         item.updateEnchantabilityPointsLore(newEnchants)
+        event.item = item
     }
 
     private fun getChiseledBookshelvesBonus(event: EnchantItemEvent) {

@@ -72,7 +72,7 @@ interface ItemCreator : ExoticCreator, EnchantmentExtender, EnchantabilityPoints
             val pointCost = enchantment.enchantabilityCost(level)
             val costToolTip = createEnchantLoreComponent(enchantment, level, pointCost)
             val descriptionToolTip = enchantment.getDescriptionTooltip(level)
-            val fullLore = listOf(costToolTip, Component.text("")) + descriptionToolTip
+            val fullLore = listOf(costToolTip) + descriptionToolTip
             it.lore(fullLore)
             // Set name
             val bookName = Component.text(this.customName + " - ").color(SlotColors.ARCANE.color)

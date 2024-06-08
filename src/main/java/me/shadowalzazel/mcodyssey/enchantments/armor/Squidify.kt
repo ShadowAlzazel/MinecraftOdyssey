@@ -43,7 +43,7 @@ object Squidify : OdysseyEnchantment(
         val amount1 = 2 + (inputLevel * 2)
         val amount2 = inputLevel
         val text1 = "Getting hit applies Blindness 1 for $amount1=[2 + (level x 2)] seconds"
-        val text2 = "and Slowness 2 for $amount2=[level] seconds."
+        val text2 = "and Slowness 1 for $amount2=[level] seconds."
         return listOf(
             getGrayComponentText(text1),
             getGrayComponentText(text2)

@@ -1,13 +1,13 @@
 package me.shadowalzazel.mcodyssey.commands.admin
 
-import me.shadowalzazel.mcodyssey.enchantments.deprecated.EnchantSlotManager
+import me.shadowalzazel.mcodyssey.enchantments.api.EnchantabilityPointsManager
 import org.bukkit.Material
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-object EnchantWithOdyssey : CommandExecutor, EnchantSlotManager {
+object EnchantWithOdyssey : CommandExecutor, EnchantabilityPointsManager {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
         if (sender !is Player) return false
@@ -16,12 +16,13 @@ object EnchantWithOdyssey : CommandExecutor, EnchantSlotManager {
         if (sender.equipment.itemInMainHand.type == Material.AIR) return false
         // Get args
         val level = args[1].toInt()
-        val string = args[0]
-        val enchant = getOdysseyEnchantFromString(string) ?: return false
+        val name = args[0]
+        val enchant = getOdysseyEnchantmentFromString(name) ?: getMinecraftEnchantmentFromString(name)
+        if (enchant == null) return false
         // Passed Checks
         val item = sender.equipment.itemInMainHand
-        item.setOdysseyEnchantment(enchant, level, true)
-        item.createNewEnchantSlots()
+        item.addEnchantment(enchant, level)
+        item.updateEnchantabilityPointsLore()
         return true
     }
 }

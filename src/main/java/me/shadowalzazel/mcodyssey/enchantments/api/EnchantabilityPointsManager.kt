@@ -109,10 +109,10 @@ interface EnchantabilityPointsManager : EnchantmentsManager {
                 it.setEnchantmentGlintOverride(true)
             }
         }
-        itemMeta = newMeta
         // Header and add Lore
         newLore[seperatorIndex - 1] = createEnchantHeader(usedEnchantabilityPoints, maxEnchantabilityPoints)
-        lore(newLore)
+        newMeta.lore(newLore)
+        itemMeta = newMeta
     }
 
     // Create the lore component for item
