@@ -1,19 +1,20 @@
 package me.shadowalzazel.mcodyssey.tasks.enchantment_tasks
 
+import org.bukkit.damage.DamageSource
+import org.bukkit.damage.DamageType
 import org.bukkit.entity.LivingEntity
 import org.bukkit.scheduler.BukkitRunnable
-import org.bukkit.util.Vector
 
-class FrogFrightTask(
+@Suppress("UnstableApiUsage")
+class ConflagrateTask(
     private val victim: LivingEntity,
-    private val pullDirection: Vector,
-    private val level: Int = 1,
+    private val damage: Double
 ) : BukkitRunnable()
 {
     override fun run() {
         if (!victim.isDead) {
-            victim.velocity = pullDirection.clone().multiply(-1.1)
-            victim.damage(level * 1.0)
+            val source = DamageSource.builder(DamageType.ON_FIRE).build()
+            victim.damage(damage, source)
         }
         this.cancel()
     }

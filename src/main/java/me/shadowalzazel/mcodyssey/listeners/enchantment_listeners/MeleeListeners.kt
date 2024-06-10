@@ -10,14 +10,14 @@ import me.shadowalzazel.mcodyssey.constants.EntityTags.setIntTag
 import me.shadowalzazel.mcodyssey.effects.EffectsManager
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.deprecated.EnchantmentDataManager
-import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.ArcaneCellTask
-import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.FrogFrightTask
-import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.FrostyFuseTask
-import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.GravitySingularityTask
+import me.shadowalzazel.mcodyssey.items.Miscellaneous.getNameId
+import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.*
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.*
 import org.bukkit.attribute.Attribute
+import org.bukkit.damage.DamageSource
+import org.bukkit.damage.DamageType
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -29,21 +29,9 @@ import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
 import java.util.*
 import kotlin.math.log2
+import kotlin.math.pow
 
-object MeleeListeners : Listener, EffectsManager, EnchantmentDataManager {
-
-    // Internal cool downs for enchantments
-    private var arcaneCellCooldown = mutableMapOf<UUID, Long>()
-    private var backstabberCooldown = mutableMapOf<UUID, Long>()
-    private var buzzyBeesCooldown = mutableMapOf<UUID, Long>()
-    //private var decayingTouchCooldown = mutableMapOf<UUID, Long>()
-    private var explodingCooldown = mutableMapOf<UUID, Long>()
-    private var frostyFuseCooldown = mutableMapOf<UUID, Long>()
-    private var gravityWellCooldown = mutableMapOf<UUID, Long>()
-    private var guardingStrikeCooldown = mutableMapOf<UUID, Long>()
-    private var hemorrhageCooldown = mutableMapOf<UUID, Long>()
-    private var voidStrikeCooldown = mutableMapOf<UUID, Long>()
-    private var whirlwindCooldown = mutableMapOf<UUID, Long>()
+object MeleeListeners : Listener, EffectsManager {
 
     // Main function for enchantments relating to entity damage
     @EventHandler
@@ -57,103 +45,76 @@ object MeleeListeners : Listener, EffectsManager, EnchantmentDataManager {
         val weapon = attacker.equipment!!.itemInMainHand
         val power = if (attacker is Player) { attacker.attackCooldown.toDouble() } else { 1.0 }
         // Loop for all enchants
-        for (enchant in weapon.getOdysseyEnchantments()) {
-            when (enchant.key) {
-                OdysseyEnchantments.ARCANE_CELL -> {
-                    if (cooldownManager(attacker, "Arcane Cell", arcaneCellCooldown, 5.25)) {
-                        arcaneCellEnchantment(victim, enchant.value)
-                    }
+        for (enchant in weapon.enchantments) {
+            when (enchant.key.getNameId()) {
+                "arcane_cell" -> {
+                    arcaneCellEnchantment(victim, enchant.value)
                 }
-                OdysseyEnchantments.ASPHYXIATE -> {
+                "asphyxiate" -> {
                     event.damage += asphyxiateEnchantment(victim, enchant.value) * power
                 }
-                OdysseyEnchantments.BACKSTABBER -> {
-                    if (cooldownManager(attacker, "Backstabber", backstabberCooldown, 3.25)) {
-                        event.damage += backstabberEnchantment(attacker, victim, enchant.value) * power
-                    }
+                "backstabber" -> {
+                    event.damage += backstabberEnchantment(attacker, victim, enchant.value) * power
                 }
-                OdysseyEnchantments.BANE_OF_THE_ILLAGER -> {
-                    event.damage += baneOfTheIllagerEnchantment(victim, enchant.value) * power
+                "swap" -> {
+                    swapEnchantment(attacker, victim, enchant.value)
                 }
-                OdysseyEnchantments.BANE_OF_THE_SEA -> {
-                    event.damage += baneOfTheSeaEnchantment(attacker, victim, enchant.value)  * power
-                }
-                OdysseyEnchantments.BANE_OF_THE_SWINE -> {
-                    event.damage += baneOfTheSwineEnchantment(victim, enchant.value) * power
-                }
-                OdysseyEnchantments.BLITZ_SHIFT -> {
-                    blitzSwitchEnchantment(attacker, victim, enchant.value)
-                }
-                OdysseyEnchantments.BUDDING -> {
+                "budding" -> {
                     buddingEnchantment(victim, enchant.value) // MORE STACKS -> MORE INSTANCES
                 }
-                OdysseyEnchantments.BUZZY_BEES -> {
-                    if (cooldownManager(attacker, "Buzzy Bees", buzzyBeesCooldown, 4.25)) {
-                        buzzyBeesEnchantment(victim, enchant.value)
-                    }
+                "buzzy_bees" -> {
+                    buzzyBeesEnchantment(victim, enchant.value)
                 }
-                OdysseyEnchantments.COMMITTED -> {
+                "committed" -> {
                     event.damage += committedEnchantment(victim, enchant.value) * power
                 }
-                OdysseyEnchantments.CULL_THE_WEAK -> {
+                "cull_the_weak" -> {
                     event.damage += cullTheWeakEnchantment(victim, enchant.value)  * power
                 }
-                OdysseyEnchantments.DECAYING_TOUCH -> {
+                "decaying_touch" -> {
                     decayingTouchEnchantment(victim, enchant.value)
                 }
-                OdysseyEnchantments.DOUSE -> {
+                "douse" -> {
                     event.damage += douseEnchantment(victim, enchant.value) * power
                 }
-                OdysseyEnchantments.ECHO -> {
+                "echo" -> {
                     echoEnchantment(attacker, victim, enchant.value)
                 }
-                OdysseyEnchantments.FREEZING_ASPECT -> {
+                "freezing_aspect" -> {
                     freezingAspectEnchantment(victim, enchant.value)
                 }
-                OdysseyEnchantments.FROG_FRIGHT -> {
+                "frog_fright" -> {
                     frogFrightEnchantment(attacker, victim, enchant.value)
                 }
-                OdysseyEnchantments.FROSTY_FUSE -> {
-                    if (cooldownManager(attacker, "Frosty Fuse", frostyFuseCooldown, 5.0)) {
-                        frostyFuseEnchantment(victim, enchant.value)
-                    }
+                "frosty_fuse" -> {
+                    frostyFuseEnchantment(victim, enchant.value)
                 }
-                OdysseyEnchantments.GRAVITY_WELL -> {
-                    if (cooldownManager(attacker, "Gravity Well", gravityWellCooldown, 8.0)) {
-                        gravityWellEnchantment(attacker, victim, enchant.value)
-                    }
+                "gravity_well" -> {
+                    gravityWellEnchantment(attacker, victim, enchant.value)
                 }
-                OdysseyEnchantments.GUARDING_STRIKE -> {
-                    if (cooldownManager(attacker, "Guarding Strike", guardingStrikeCooldown, 4.0)) {
-                        guardingStrikeEnchantment(attacker, enchant.value)
-                    }
+                "guarding_strike" -> {
+                    guardingStrikeEnchantment(attacker, enchant.value)
                 }
-                OdysseyEnchantments.HEMORRHAGE -> {
-                    if (cooldownManager(attacker, "Hemorrhage", hemorrhageCooldown, 3.0)) {
-                        hemorrhageEnchantment(victim, enchant.value) // MORE STACKS -> MORE DAMAGE PER INSTANCE
-                    }
+                "hemorrhage" -> {
+                    hemorrhageEnchantment(victim, enchant.value) // MORE STACKS -> MORE DAMAGE PER INSTANCE
                 }
-                OdysseyEnchantments.ILLUCIDATION -> {
+                "illucidation" -> {
                     event.damage += illucidationEnchantment(victim, enchant.value, event.isCritical) * power
                 }
-                OdysseyEnchantments.RUPTURING_STRIKE -> {
+                "rupturing_strike" -> {
                     event.damage -= rupturingStrikeEnchantment(attacker, victim, event.damage, enchant.value)
                 }
-                OdysseyEnchantments.TAR_N_DIP -> {
-                    tarNDipEnchantment(victim, enchant.value)
+                "conflagrate" -> {
+                    conflagrateEnchantment(attacker, victim, enchant.value, event.damage)
                 }
-                OdysseyEnchantments.VITAL -> {
+                "vital" -> {
                     event.damage += vitalEnchantment(event.isCritical, enchant.value)
                 }
-                OdysseyEnchantments.VOID_STRIKE -> {
-                    if (cooldownManager(attacker, "Void Strike", voidStrikeCooldown, 0.45)) {
-                        event.damage += voidStrikeEnchantment(attacker, victim, enchant.value)
-                    }
+                "void_strike" -> {
+                    event.damage += voidStrikeEnchantment(attacker, victim, enchant.value)
                 }
-                OdysseyEnchantments.WHIRLWIND -> {
-                    if (cooldownManager(attacker, "Whirlwind", whirlwindCooldown, 3.0)) {
-                        whirlwindEnchantment(attacker, victim, event.damage, enchant.value)
-                    }
+                "whirlwind" -> {
+                    whirlwindEnchantment(attacker, victim, event.damage, enchant.value)
                 }
             }
         }
@@ -168,14 +129,12 @@ object MeleeListeners : Listener, EffectsManager, EnchantmentDataManager {
         val victim: LivingEntity = event.entity
         val weapon = killer.equipment?.itemInMainHand ?: return
         // Loop for all enchants
-        for (enchant in weapon.getOdysseyEnchantments()) {
-            when (enchant.key) {
-                OdysseyEnchantments.EXPLODING -> {
-                    if (cooldownManager(killer, "Exploding", explodingCooldown, 1.25)) {
-                        explodingEnchantment(victim, enchant.value)
-                    }
+        for (enchant in weapon.enchantments) {
+            when (enchant.key.getNameId()) {
+                "exploding" -> {
+                    explodingEnchantment(victim, enchant.value)
                 }
-                OdysseyEnchantments.FEARFUL_FINISHER -> {
+                "fearful_finisher" -> {
                     fearfulFinisherEnchantment(victim, enchant.value)
                 }
             }
@@ -188,39 +147,14 @@ object MeleeListeners : Listener, EffectsManager, EnchantmentDataManager {
         val attacker = event.hitBy as LivingEntity
         val hitWeapon = attacker.equipment?.itemInMainHand ?: return
         // Loop
-        for (enchant in hitWeapon.getOdysseyEnchantments()) {
-            when (enchant.key) {
-                OdysseyEnchantments.GUST -> {
-                    event.acceleration = gustEnchantment(event.acceleration, enchant.value)
+        for (enchant in hitWeapon.enchantments) {
+            when (enchant.key.getNameId()) {
+                "gust" -> {
+                    event.knockback = gustEnchantment(event.knockback, enchant.value)
                 }
             }
         }
     }
-
-    // Helper function for cooldown
-    private fun cooldownManager(attacker: LivingEntity, message: String, cooldownMap: MutableMap<UUID, Long>, timer: Double): Boolean {
-        if (!cooldownMap.containsKey(attacker.uniqueId)) {
-            cooldownMap[attacker.uniqueId] = 0L
-        }
-        // Cooldown Timer
-        val timeElapsed: Long = System.currentTimeMillis() - cooldownMap[attacker.uniqueId]!!
-        return if (timeElapsed > timer * 1000) {
-            cooldownMap[attacker.uniqueId] = System.currentTimeMillis()
-            true
-        } else {
-            val cooldownTime = timer - ((timeElapsed / 1) * 0.001)
-            val actionMessage = String.format("%s on Cooldown (Time Remaining: %.2f s)", message, cooldownTime)
-            attacker.sendActionBar(
-                Component.text(
-                    actionMessage,
-                    TextColor.color(155, 155, 155)
-                )
-            )
-            false
-        }
-    }
-
-    /*-----------------------------------------------------------------------------------------------*/
     /*-----------------------------------------------------------------------------------------------*/
 
     // -------------------------- ASPHYXIATE -------------------------------
@@ -228,8 +162,8 @@ object MeleeListeners : Listener, EffectsManager, EnchantmentDataManager {
         victim: LivingEntity,
         level: Int
     ): Double {
-        victim.remainingAir -= 20 * ((level * 2) + 3)
-        if (victim.remainingAir < 20) return 3.0
+        victim.remainingAir -= 20 * (level * 2)
+        if (victim.remainingAir < 20) return level * 1.0
         return 0.0
     }
 
@@ -269,39 +203,20 @@ object MeleeListeners : Listener, EffectsManager, EnchantmentDataManager {
         }
         return 0
     }
-    // ------------------------------- BANE_OF_THE_ILLAGER ------------------------------------
-    private fun baneOfTheIllagerEnchantment(
-        victim: LivingEntity,
-        level: Int
-    ): Double {
-        if (victim is Raider) {
-            return level.toDouble() * 2.5
-        }
-        return 0.0
-    }
-    // ------------------------------- BANE_OF_THE_SEA ------------------------------------
-    private fun baneOfTheSeaEnchantment(
+    // ------------------------------- CONFLAGRATE ------------------------------------
+    private fun conflagrateEnchantment(
         attacker: LivingEntity,
         victim: LivingEntity,
-        level: Int
-    ): Double {
-        if (victim.isInWaterOrRainOrBubbleColumn || victim is WaterMob || victim.isSwimming || attacker.isInWaterOrRainOrBubbleColumn) {
-            return level.toDouble() * 2.0
-        }
-        return 0.0
+        level: Int,
+        damage: Double,
+    ) {
+        val extraDamage = damage * (level * 0.2)
+        val task = ConflagrateTask(victim, extraDamage)
+        task.runTaskLater(Odyssey.instance, 30)
     }
-    // ------------------------------- BANE_OF_THE_SWINE ------------------------------------
-    private fun baneOfTheSwineEnchantment(
-        victim: LivingEntity,
-        level: Int
-    ): Double {
-        if (victim is PiglinAbstract || victim is Pig || victim is Hoglin) {
-            return level.toDouble() * 2.5
-        }
-        return 0.0
-    }
-    // ------------------------------- BLITZ_SWITCH -------------------------
-    private fun blitzSwitchEnchantment(
+
+    // ------------------------------- SWAP -------------------------
+    private fun swapEnchantment(
         attacker: LivingEntity,
         victim: LivingEntity,
         level: Int
@@ -376,19 +291,19 @@ object MeleeListeners : Listener, EffectsManager, EnchantmentDataManager {
             if (hasSlowness) { damage += 1.0 }
             if (hasWeakness) { damage += 1.0 }
             if (hasFatigue) { damage += 1.0 }
-            level * (1.0 + damage)
+            level * (damage)
         } else {
             0.0
         }
     }
     // ------------------------------- DECAYING_TOUCH ------------------------------------
     private fun decayingTouchEnchantment(victim: LivingEntity, level: Int) {
-       victim.addPotionEffect(PotionEffect(PotionEffectType.WITHER, (20 * (2 + (level * 2))), 0))
+       victim.addPotionEffect(PotionEffect(PotionEffectType.WITHER, (20 * (level * 4)), 0))
     }
     // ------------------------------- DOUSE ------------------------------------
     private fun douseEnchantment(victim: LivingEntity, level: Int): Double {
         victim.fireTicks = 0
-        if (victim is Blaze || victim is MagmaCube) {
+        if (victim is Blaze || victim is MagmaCube || victim.fireTicks > 0) {
             return (level * 2.5) + 2.5
         }
         return 0.0
@@ -423,29 +338,20 @@ object MeleeListeners : Listener, EffectsManager, EnchantmentDataManager {
         }
     }
     // ------------------------------- EXPLODING ------------------------------------
+    @Suppress("UnstableApiUsage")
     private fun explodingEnchantment(victim: LivingEntity, level: Int) {
-        val randomColors = listOf(Color.BLUE, Color.RED, Color.YELLOW, Color.FUCHSIA, Color.AQUA, Color.ORANGE)
-        with(victim.world) {
-            // Particles
-            spawnParticle(Particle.FLASH, victim.location, 2, 0.2, 0.2, 0.2)
-            spawnParticle(Particle.LAVA, victim.location, 25, 1.5, 1.0, 1.5)
-            // Fireball
-            (spawnEntity(victim.location, EntityType.FIREBALL) as Fireball).also {
-                it.setIsIncendiary(false)
-                it.yield = 0.0F
-                it.direction = Vector(0.0, -3.0, 0.0)
-            }
-            // Firework
-            (spawnEntity(victim.location, EntityType.FIREWORK_ROCKET) as Firework).also {
-                val newMeta = it.fireworkMeta
-                newMeta.power = level * 30
-                newMeta.addEffect(
-                    FireworkEffect.builder().with(FireworkEffect.Type.BALL_LARGE).withColor(randomColors.random())
-                        .withFade(randomColors.random()).trail(true).flicker(true).build()
-                )
-                it.fireworkMeta = newMeta
-                it.velocity = Vector(0.0, -3.0, 0.0)
-            }
+        val location = victim.location
+        // Effects
+        location.world.spawnParticle(Particle.EXPLOSION, location, 1, 0.0, 0.04, 0.0)
+        location.world.playSound(location, Sound.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 0.8F, 1.2F)
+        // Damage
+        val radius = level * 1.0
+        for (entity in location.getNearbyLivingEntities(radius)) {
+            // distance square
+            val distance = entity.location.distance(location)
+            val power = (maxOf(radius - distance, 0.0)).pow(2.0) + (maxOf(radius - distance, 0.0)).times(1) + (radius / 2)
+            val damageSource = DamageSource.builder(DamageType.EXPLOSION).build()
+            entity.damage(power, damageSource)
         }
     }
     // ------------------------------- FEARFUL_FINISHER ------------------------------------
@@ -453,26 +359,24 @@ object MeleeListeners : Listener, EffectsManager, EnchantmentDataManager {
         val killer = victim.killer ?: return
         val vector = killer.eyeLocation.direction.clone().normalize()
         vector.y = 0.0
-        vector.normalize().multiply((2 * level) + 2)
+        vector.normalize().multiply(level * 4)
         val newLocation = victim.location.clone().add(vector).toHighestLocation(HeightMap.MOTION_BLOCKING_NO_LEAVES)
         with(victim) {
             world.playSound(location, Sound.ENTITY_VEX_CHARGE, 2.5F, 0.5F)
             world.spawnParticle(Particle.WITCH, newLocation, 35, 0.05, 0.5, 0.05)
         }
-
         victim.getNearbyEntities(3.5, 2.0, 3.5).filterIsInstance<Creature>().forEach {
             it.world.spawnParticle(Particle.WITCH, it.location, 10, 0.05, 0.5, 0.05)
             it.pathfinder.stopPathfinding()
             it.pathfinder.moveTo(newLocation)
         }
-
     }
 
     // ------------------------------- FREEZING_ASPECT ------------------------------------
     private fun freezingAspectEnchantment(victim: LivingEntity, level: Int) {
         with(victim) {
             if (freezeTicks <= 50) {
-                addOdysseyEffect(EffectTags.FREEZING, 8 * 20, level * 1)
+                addOdysseyEffect(EffectTags.FREEZING, (level * 4) * 20, level)
                 world.spawnParticle(Particle.SNOWFLAKE, this@with.location, 30, 0.25, 0.5, 0.25)
             }
         }
@@ -482,10 +386,9 @@ object MeleeListeners : Listener, EffectsManager, EnchantmentDataManager {
         victim.also {
             it.velocity.multiply(0.9)
             val tongueLashVector = attacker.location.clone().subtract(it.location).toVector().normalize().multiply(1.1 + (level * 0.1))
-            val frogFrightTask = FrogFrightTask(victim, tongueLashVector.multiply(-1.0))
+            val frogFrightTask = FrogFrightTask(victim, tongueLashVector.multiply(-1.0), level)
             frogFrightTask.runTaskLater(Odyssey.instance, 9)
             it.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS, 3, 1))
-            it.damage(1.0)
         }
 
         // Particles
@@ -496,12 +399,12 @@ object MeleeListeners : Listener, EffectsManager, EnchantmentDataManager {
 
     }
     // ------------------------------- FROSTY_FUSE ------------------------------------
-    private fun frostyFuseEnchantment(victim: LivingEntity, enchantmentStrength: Int) {
+    private fun frostyFuseEnchantment(victim: LivingEntity, level: Int) {
         // Victim Effects
         with(victim) {
             if (!scoreboardTags.contains(EffectTags.FROSTY_FUSED)) {
                 addScoreboardTag(EffectTags.FROSTY_FUSED)
-                val task = FrostyFuseTask(victim, enchantmentStrength * 1, 5 * 4)
+                val task = FrostyFuseTask(victim, level * 1, 5 * 4)
                 task.runTaskTimer(Odyssey.instance, 5, 5)
             }
         }
@@ -521,7 +424,7 @@ object MeleeListeners : Listener, EffectsManager, EnchantmentDataManager {
             // Task
             addScoreboardTag(EffectTags.GRAVITY_WELLED)
             val modifier = (level * 1) + 1
-            val maxCount = ((level * 2) + 2) * 2
+            val maxCount = ((level * 2) + 1) * 2
             val task = GravitySingularityTask(victim, attacker, modifier, maxCount)
             task.runTaskTimer(Odyssey.instance, 0, 10)
         }
@@ -535,7 +438,7 @@ object MeleeListeners : Listener, EffectsManager, EnchantmentDataManager {
             // TODO: Add proper effect that adds raw armor
             val isCrouching = attacker is Player && attacker.isSneaking
             if (velocity.length() < 0.2 || isCrouching) {
-                addPotionEffect(PotionEffect(PotionEffectType.RESISTANCE, (3 + (level * 2)) * 20, 0))
+                addPotionEffect(PotionEffect(PotionEffectType.RESISTANCE, (level * 3) * 20, 0))
             }
             // Particles and Sounds
             world.spawnParticle(Particle.ENCHANTED_HIT, location, 35, 1.0, 0.5, 1.0)
@@ -559,7 +462,7 @@ object MeleeListeners : Listener, EffectsManager, EnchantmentDataManager {
         victim: LivingEntity,
         level: Int) {
         // Effects
-        victim.addOdysseyEffect(EffectTags.HEMORRHAGING, 9, level)
+        victim.addOdysseyEffect(EffectTags.HEMORRHAGING, 9 * 20, level)
         with(victim.world) {
             playSound(victim.location, Sound.BLOCK_NETHER_SPROUTS_PLACE, 2.5F, 0.9F)
             spawnParticle(Particle.CRIT, victim.location, 35, 1.0, 0.5, 1.0)
@@ -569,7 +472,7 @@ object MeleeListeners : Listener, EffectsManager, EnchantmentDataManager {
     private fun illucidationEnchantment(victim: LivingEntity, level: Int, isCrit: Boolean): Int {
         var illucidationDamage = 0
         if (victim.isGlowing) {
-            illucidationDamage += (level + 1)
+            illucidationDamage += (level * 1)
             if (isCrit) {
                 illucidationDamage * 2
                 victim.isGlowing = false
@@ -595,7 +498,7 @@ object MeleeListeners : Listener, EffectsManager, EnchantmentDataManager {
         with(victim) {
             if (scoreboardTags.contains(EffectTags.FULLY_RUPTURED)) {
                 removeScoreboardTag(EffectTags.FULLY_RUPTURED)
-                if (damage + 2 > level) {
+                if (damage > level) {
                     rupturingDamage += level
                     health -= minOf(health, rupturingDamage)
                 }
@@ -614,17 +517,7 @@ object MeleeListeners : Listener, EffectsManager, EnchantmentDataManager {
         }
         return rupturingDamage
     }
-    // ------------------------------- TAR_N_DIP ------------------------------------
-    private fun tarNDipEnchantment(
-        victim: LivingEntity,
-        level: Int) {
-        // Effects
-        with(victim) {
-            addOdysseyEffect(EffectTags.TARRED, 10 * 20, level * 1)
-            world.playSound(location, Sound.ENTITY_BLAZE_SHOOT, 2.5F, 1.5F)
-        }
-    }
-    // ------------------------------- DOUSE ------------------------------------
+    // ------------------------------- VITAL ------------------------------------
     private fun vitalEnchantment(isCrit: Boolean, level: Int): Double {
         if (isCrit) {
             return 1.0 * level

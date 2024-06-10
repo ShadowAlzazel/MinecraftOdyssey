@@ -5,15 +5,12 @@ import me.shadowalzazel.mcodyssey.constants.AttributeIDs
 import me.shadowalzazel.mcodyssey.constants.DataKeys
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
 import me.shadowalzazel.mcodyssey.enchantments.api.EnchantabilityPointsManager
-import me.shadowalzazel.mcodyssey.enchantments.api.EnchantmentExtender
-import me.shadowalzazel.mcodyssey.enchantments.api.EnchantmentsManager
 import me.shadowalzazel.mcodyssey.items.Exotics
 import me.shadowalzazel.mcodyssey.items.Ingredients
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
 import me.shadowalzazel.mcodyssey.items.Potions
 import me.shadowalzazel.mcodyssey.items.Potions.createPotionStack
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
-import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.MeleeListeners.addOdysseyEnchantment
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
@@ -27,7 +24,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.persistence.PersistentDataType
 
-interface ItemCreator : ExoticCreator, EnchantmentExtender, EnchantabilityPointsManager {
+interface ItemCreator : ExoticCreator, EnchantabilityPointsManager {
 
     fun OdysseyItem.createStack(amount: Int = 1): ItemStack {
         val itemStack = ItemStack(overrideMaterial, amount).also {
@@ -60,7 +57,7 @@ interface ItemCreator : ExoticCreator, EnchantmentExtender, EnchantabilityPoints
             it.displayName(fullName)
             it.lore(textLore)
         }
-        newBook.addOdysseyEnchantment(enchantment, level, true)
+        //newBook.addOdysseyEnchantment(enchantment, level, true)
         return newBook
     }
 

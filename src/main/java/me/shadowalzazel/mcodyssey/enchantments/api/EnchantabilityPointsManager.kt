@@ -1,9 +1,11 @@
 package me.shadowalzazel.mcodyssey.enchantments.api
 
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addTag
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getIntTag
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getStringTag
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasTag
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.removeTag
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags.setIntTag
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
@@ -15,7 +17,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 
-interface EnchantabilityPointsManager : EnchantmentsManager {
+interface EnchantabilityPointsManager : EnchantmentsManager, EnchantmentExtender {
 
     // !!!!!!!!!!!!!!!!
     // GILDED ENCHANTS ARE SLOTTED/IRREMOVABLE BUT DO NOT TAKE UP EVs??
@@ -48,16 +50,28 @@ interface EnchantabilityPointsManager : EnchantmentsManager {
     fun ItemStack.updateEnchantabilityPointsLore(
         newEnchants: MutableMap<Enchantment, Int>? = null,
         removedEnchants: MutableMap<Enchantment, Int>? = null,
-        resetLore: Boolean = false
+        resetLore: Boolean = true,
+        toggleToolTip: Boolean = false
     ) {
         val newLore = itemMeta.lore() ?: mutableListOf()
         val updatedEnchantments = newEnchants ?: this.enchantments
         // Temp Lore Index Holders
-        if (!newLore.contains(slotSeperator)) {
-            newLore.add(Component.text("Header Holder"))
-            newLore.add(slotSeperator)
+        if (!newLore.contains(loreSeperator)) {
+            newLore.add(0, Component.text("Header Holder"))
+            newLore.add(1, loreSeperator)
         }
-        // Remove
+        // Tool tip
+        val hasToolTip = this.hasTag(ItemDataTags.HAS_ENCHANT_TOOL_TIP)
+        if (toggleToolTip) {
+            if (hasToolTip) {
+                this.removeTag(ItemDataTags.HAS_ENCHANT_TOOL_TIP)
+            } else {
+                this.addTag(ItemDataTags.HAS_ENCHANT_TOOL_TIP)
+            }
+        }
+        // get gilded [WIP]
+
+        // Remove designated to be removed
         if (removedEnchants != null) {
             for (r in removedEnchants) {
                 val enchantment = r.key
@@ -66,23 +80,33 @@ interface EnchantabilityPointsManager : EnchantmentsManager {
                 newLore.remove(createEnchantLoreComponent(enchantment, level, pointCost))
             }
         }
-        // Then Add
-        val seperatorIndex = newLore.indexOf(slotSeperator)
-        for (u in 1..updatedEnchantments.size) {
-            val i = u + seperatorIndex
-            if (!newLore.indices.contains(i)) {
-                newLore.add(i, emptyEnchantSlot)
-            } else {
-                newLore[i] = emptyEnchantSlot
+        // Remove between
+        if (resetLore || removedEnchants != null) {
+            val startIndex = newLore.indexOf(loreSeperator)
+            var endIndex = newLore.indexOf(loreFooter)
+            if (endIndex == -1) {
+                newLore.add(startIndex + 1, loreFooter)
+                endIndex = newLore.indexOf(loreFooter)
             }
+            // Loop through range and set to empty
+            val emptyContent = startIndex + 1 == endIndex
+            if (!emptyContent) {
+                for (i in (startIndex + 1..< endIndex)) {
+                    if (!newLore.indices.contains(i)) {
+                        newLore.add(i, emptyEnchantSlot)
+                    }
+                    else {
+                        newLore[i] = emptyEnchantSlot
+                    }
+                }
+            }
+            newLore.removeAll{ it == emptyEnchantSlot }
         }
-        // get gilded
-        // WIP
-
-        // Get Item Enchantability Points
-        val maxEnchantabilityPoints = getMaxEnchantabilityPoints()
-        // Loop for all
+        val seperatorIndex = newLore.indexOf(loreSeperator)
+        // Enchantability Points and Tool Tips
+        var counter = 1
         var enchantmentCount = 0
+        val maxEnchantabilityPoints = getMaxEnchantabilityPoints()
         var usedEnchantabilityPoints = 0
         updatedEnchantments.forEach {
             val enchantment = it.key
@@ -90,7 +114,18 @@ interface EnchantabilityPointsManager : EnchantmentsManager {
             enchantmentCount += 1
             val pointCost = enchantment.enchantabilityCost(level)
             usedEnchantabilityPoints += pointCost
-            newLore[seperatorIndex + enchantmentCount] = createEnchantLoreComponent(enchantment, level, pointCost)
+            // Add Lore components
+            val enchantIndex = seperatorIndex + counter
+            if (!newLore.indices.contains(enchantIndex)) {
+                newLore.add(enchantIndex, emptyEnchantSlot)
+            }
+            newLore[enchantIndex] = createEnchantLoreComponent(enchantment, level, pointCost)
+            counter += 1
+            if (toggleToolTip && !hasToolTip) {
+                val description = enchantment.getDescriptionTooltip(level)
+                newLore.addAll(seperatorIndex + counter, description)
+                counter += description.size
+            }
         }
         // Engraving - Move To Bottom
         if (hasTag(ItemDataTags.IS_ENGRAVED)) {
@@ -109,8 +144,9 @@ interface EnchantabilityPointsManager : EnchantmentsManager {
                 it.setEnchantmentGlintOverride(true)
             }
         }
-        // Header and add Lore
+        // Header, Footer
         newLore[seperatorIndex - 1] = createEnchantHeader(usedEnchantabilityPoints, maxEnchantabilityPoints)
+        newLore.add(seperatorIndex + counter, loreFooter)
         newMeta.lore(newLore)
         itemMeta = newMeta
     }
@@ -130,9 +166,11 @@ interface EnchantabilityPointsManager : EnchantmentsManager {
 
     /*-----------------------------------------------------------------------------------------------*/
     // Components
-    val slotSeperator: TextComponent
-        //t() = Component.text(        "Enchantability Points: [00/00]"
-        get() = Component.text("-----------*-----------", SlotColors.GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+    val loreSeperator: TextComponent
+        get() = Component.text("-----------*-----------", SlotColors.DARK_GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+
+    val loreFooter: TextComponent
+        get() = Component.text("                       ", SlotColors.DARK_GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
 
     val emptyGildedSlot: TextComponent
         get() = Component.text("+ Empty Gilded Slot", SlotColors.GILDED.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)

@@ -64,7 +64,7 @@ object ItemDataTags {
     // Enchanting - NEW
 
     const val ENCHANTABILITY_POINTS: String = "odyssey.enchantability_points"
-
+    const val HAS_ENCHANT_TOOL_TIP: String = "odyssey.has_enchant_tool_tip"
 
     // Runes
     const val IS_RUNEWARE: String = "odyssey.is_runeware" // A finished runic vessel capable of holding multiple rune shards
