@@ -129,6 +129,7 @@ class Odyssey : JavaPlugin() {
             RunesherdListeners,
             EffectListeners,
             PetListener,
+            InventoryListeners,
             WorldEventsListener
         ).forEach {
             registerEventListeners(it)

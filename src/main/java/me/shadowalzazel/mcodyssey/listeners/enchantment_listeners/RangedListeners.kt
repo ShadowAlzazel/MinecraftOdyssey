@@ -757,7 +757,7 @@ object RangedListeners : Listener, EnchantmentDataManager {
     private fun singleOutEnchantmentHit(projectile: Entity, victim: LivingEntity): Double {
         val modifier = projectile.getIntTag(EntityTags.SHARPSHOOTER_MODIFIER) ?: return 0.0
         if (victim.location.world.getNearbyLivingEntities(victim.location, 16.0).isNotEmpty()) return 0.0
-        return (modifier * 2.0) + 1.0
+        return (modifier * 2.0)
     }
 
     // ------------------------------- SINGULARITY_SHOT ------------------------------------

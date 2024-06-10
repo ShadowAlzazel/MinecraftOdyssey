@@ -24,6 +24,7 @@ import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.event.inventory.PrepareSmithingEvent
 import org.bukkit.inventory.EnchantingInventory
 import org.bukkit.inventory.GrindstoneInventory
+import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.inventory.meta.Repairable
@@ -39,7 +40,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
     // Books with click events
     // when clicked on thing -> changes the nbt data of that book
     // sculk related, need sculk and echo shards to craft
-    // ARCANE BOOK (new gilded book)
+    // ARCANE BOOK
     // GILDED ENCHANTS ARE LIKE CURSES (not removable)
     // When all clicks, transform Book?
     // Polymerization -> Promotion and Replication Fixes
@@ -81,6 +82,14 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
                 resultMeta.repairCost = result.enchantments.size
             }
             result.itemMeta = resultMeta
+        }
+        // Check if over points max
+        val usedPoints = result.getUsedEnchantabilityPoints()
+        val maxPoints = result.getMaxEnchantabilityPoints()
+        if (usedPoints > maxPoints) {
+            event.result = null
+            viewers.forEach { it.sendBarMessage("The item is maxed out on enchantability points.") }
+            return
         }
         // Update
         result.updateEnchantabilityPointsLore()
@@ -170,6 +179,9 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         val result = inventory.result!!
         val resultEnchantKeys = result.enchantments.keys
         val removedEnchantments = item.enchantments.filter { it.key !in resultEnchantKeys }
+        var totalPoints = 0
+        removedEnchantments.forEach { totalPoints += it.key.enchantabilityCost(it.value) }
+
         // Sentries passed
         event.result = result.clone().also { it.updateEnchantabilityPointsLore(removedEnchants=removedEnchantments.toMutableMap()) }
     }
@@ -263,6 +275,8 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         // Get Hint
         val hint = event.enchantmentHint
         item.updateEnchantabilityPointsLore(newEnchants)
+        item.addItemFlags(ItemFlag.HIDE_ENCHANTS)
+        event.item = item
     }
 
     private fun getChiseledBookshelvesBonus(event: EnchantItemEvent) {
@@ -311,7 +325,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
             println("Bookshelf Enchant: ${rolled.key} with ${rolled.value}%")
         }
         println("Bonus Enchants: $bonusEnchants")
-        // Add to event list
+        // Add to events list
         for (enchant in bonusEnchants) {
             if (enchant.key !in event.enchantsToAdd.keys) {
                 event.enchantsToAdd[enchant.key] = enchant.value

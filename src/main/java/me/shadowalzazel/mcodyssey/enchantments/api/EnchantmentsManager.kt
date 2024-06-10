@@ -20,6 +20,10 @@ interface EnchantmentsManager {
         return maxOf((this.anvilCost / 2), 1) * level
     }
 
+    fun Enchantment.getNameId(): String {
+        return this.key.key
+    }
+
     fun ItemStack.hasOdysseyEnchants(): Boolean {
         return this.enchantments.any { it.key.isOdysseyEnchantment() }
     }
