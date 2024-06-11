@@ -76,7 +76,6 @@ object Miscellaneous : ItemCreator {
     // TOTEMS ARE FOUND -> More Potent / Effects can be spread
     // CHARMS ARE MADE -> Less Potent / Personal
 
-
     // Sniffer
     val ASPEN_SEED = OdysseyItem("aspen_seed", Material.WHEAT_SEEDS, "Aspen Seed", ItemModels.ASPEN_SEED)
     val MAPLE_SEED = OdysseyItem("maple_seed", Material.WHEAT_SEEDS, "Aspen Seed", ItemModels.MAPLE_SEED)

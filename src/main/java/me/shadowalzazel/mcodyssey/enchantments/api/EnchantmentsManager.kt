@@ -3,6 +3,8 @@ package me.shadowalzazel.mcodyssey.enchantments.api
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
 import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags
+import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addStringTag
 import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -32,8 +34,20 @@ interface EnchantmentsManager {
         return this.enchantments.keys.contains(enchantment)
     }
 
+    fun ItemStack.hasEnchantment(name: String): Boolean {
+        return this.enchantments.keys.contains(getNamedEnchantment(name))
+    }
+
     fun ItemStack.getOdysseyEnchantments(): Map<Enchantment, Int> {
         return this.enchantments.filter { it.key.isOdysseyEnchantment() }
+    }
+
+    // Full method for getting an enchantment via name
+    fun getNamedEnchantment(name: String): Enchantment? {
+        var enchantment = getOdysseyEnchantmentFromString(name)
+        if (enchantment != null) return enchantment
+        enchantment = getMinecraftEnchantmentFromString(name)
+        return enchantment
     }
 
     fun getOdysseyEnchantmentFromString(name: String): Enchantment? {
@@ -44,6 +58,12 @@ interface EnchantmentsManager {
     fun getMinecraftEnchantmentFromString(name: String): Enchantment? {
         val registry = RegistryAccess.registryAccess().getRegistry(RegistryKey.ENCHANTMENT)
         return registry.get(NamespacedKey.minecraft(name))
+    }
+
+    fun ItemStack.addGildedEnchant(enchantment: Enchantment, newLevel: Int) {
+        this.addStringTag(ItemDataTags.GILDED_ENCHANT, enchantment.getNameId())
+        this.removeEnchantment(enchantment)
+        this.addUnsafeEnchantment(enchantment, newLevel)
     }
 
 }

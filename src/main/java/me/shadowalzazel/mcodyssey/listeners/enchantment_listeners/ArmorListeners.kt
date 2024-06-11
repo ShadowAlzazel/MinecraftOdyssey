@@ -5,13 +5,13 @@ import com.destroystokyo.paper.event.player.PlayerJumpEvent
 import io.papermc.paper.entity.LookAnchor
 import io.papermc.paper.world.MoonPhase
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.commands.admin.GiveArcaneBook.getNameId
 import me.shadowalzazel.mcodyssey.constants.EffectTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags.getIntTag
 import me.shadowalzazel.mcodyssey.constants.EntityTags.removeTag
 import me.shadowalzazel.mcodyssey.constants.EntityTags.setIntTag
-import me.shadowalzazel.mcodyssey.listeners.AlchemyListener.addOdysseyEffect
+import me.shadowalzazel.mcodyssey.effects.EffectsManager
+import me.shadowalzazel.mcodyssey.enchantments.api.EnchantmentsManager
 import me.shadowalzazel.mcodyssey.listeners.utility.MoonwardPhase
 import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.SpeedySpursTask
 import org.bukkit.Material
@@ -40,7 +40,7 @@ import org.bukkit.potion.PotionEffectType
 import java.util.UUID
 import org.bukkit.inventory.meta.Damageable as Repairable
 
-object ArmorListeners : Listener {
+object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
 
     private val moonwardPhasePlayers = mutableListOf<UUID>()
     // Pollen
@@ -230,6 +230,9 @@ object ArmorListeners : Listener {
                 when (enchant.key.getNameId()) {
                     "brawler" -> {
                         event.damage += brawlerEnchantment(attacker, enchant.value)
+                    }
+                    "impetus" -> {
+                        event.damage += impetusEnchantment(attacker, enchant.value)
                     }
                 }
             }
@@ -530,7 +533,7 @@ object ArmorListeners : Listener {
         }
     }
 
-    private fun getRayTraceTarget(player: Player, maxRange: Int): Entity? {
+    private fun getRayTraceTarget(player: Player, maxRange: Int=100): Entity? {
         val result = player.rayTraceEntities(maxRange) ?: return null
         val target = result.hitEntity ?: return null
         val distance = player.eyeLocation.distance(target.location)
@@ -538,12 +541,8 @@ object ArmorListeners : Listener {
         return target
     }
 
-
-    /*-----------------------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------------------*/
     /*-----------------------------------------------------------------------------------------------*/
 
-    /*---------------------------------------------ANTIBONK------------------------------------------*/
     private fun antibonkEnchantment(
         isCrit: Boolean,
         damage: Double,
@@ -555,9 +554,6 @@ object ArmorListeners : Listener {
             damage
         }
     }
-
-
-    /*----------------------------------------BRAWLER----------------------------------------*/
     private fun brawlerEnchantment(
         defender: LivingEntity,
         level: Int
@@ -567,8 +563,6 @@ object ArmorListeners : Listener {
         }
         return 0.0
     }
-
-    // ------------------------------- BLACK_ROSE ------------------------------------
     private fun blackRoseEnchantment(
         attacker: LivingEntity,
         level: Int
@@ -576,24 +570,20 @@ object ArmorListeners : Listener {
         attacker.addPotionEffect(
             PotionEffect(
                 PotionEffectType.WITHER,
-                5 * 20,
-                level - 1
+                5 * 20 * level,
+                1
             )
         )
     }
-
-    // ------------------------------- BLURCISE ------------------------------------
     private fun blurciseEnchantment(
         defender: LivingEntity,
         level: Int
     ): Double {
-        if (defender.velocity.length() > 2.0) {
+        if (defender.velocity.length() > 1.8) {
             return level * 1.0
         }
         return 0.0
     }
-
-    /*----------------------------------------BRAWLER----------------------------------------*/
     private fun beastlyEnchantment(
         attacker: LivingEntity,
         level: Int
@@ -603,8 +593,6 @@ object ArmorListeners : Listener {
         }
         return 0.0
     }
-
-    // ------------------------------- BREWFUL_BREATH ------------------------------------
     private fun brewfulBreathEnchantment(
         player: Player,
         potion: ItemStack,
@@ -647,8 +635,6 @@ object ArmorListeners : Listener {
 
         player.setCooldown(potion.type, 20 * 6)
     }
-
-    // ------------------------------- COPPER_CHITIN ------------------------------------
     private fun copperChitinEnchantment(
         defender: LivingEntity,
         armor: ItemStack
@@ -661,8 +647,6 @@ object ArmorListeners : Listener {
         armor.itemMeta = armorMeta
         return
     }
-
-    // ------------------------------- COWARDICE ------------------------------------
     private fun cowardiceEnchantment(
         attacker: LivingEntity,
         defender: LivingEntity,
@@ -680,8 +664,6 @@ object ArmorListeners : Listener {
             defender.location.clone().subtract(attacker.location).toVector().normalize().multiply(1.6)
         }
     }
-
-    // ------------------------------- DEVASTATING_DROP ------------------------------------
     private fun devastatingDrop(
         dropper: LivingEntity,
         receivedDamage: Double,
@@ -693,8 +675,6 @@ object ArmorListeners : Listener {
             }
         }
     }
-
-    // ------------------------------- DREADFUL_SHRIEK ------------------------------------
     private fun dreadfulShriekEnchantment(
         player: Player,
         horn: ItemStack,
@@ -725,9 +705,6 @@ object ArmorListeners : Listener {
         player.world.playSound(player.location, Sound.ENTITY_FOX_AGGRO, 7.5F, 2.5F)
         player.setCooldown(horn.type, 20 * 6)
     }
-
-
-    // ------------------------------- FRUITFUL_FARE ------------------------------------
     private fun fruitfulFareEnchantment(
         player: Player,
         food: ItemStack,
@@ -764,8 +741,6 @@ object ArmorListeners : Listener {
             }
         }
     }
-
-    // ------------------------------- IGNORE_PAIN ------------------------------------
     private fun ignorePainEnchantment(
         defender: LivingEntity,
         level: Int) {
@@ -782,8 +757,6 @@ object ArmorListeners : Listener {
             )
         }
     }
-
-    // ------------------------------- ILLUMINEYE ------------------------------------
     private fun illumineyeEnchantment(
         attacker: LivingEntity,
         defender: LivingEntity,
@@ -797,7 +770,6 @@ object ArmorListeners : Listener {
             PotionEffect(PotionEffectType.GLOWING, (3 + (level * 2)) * 20, 0))
 
     }
-
     private fun illumineyeSpyglassEnchantment(
         player: Player,
         spyglass: ItemStack,
@@ -817,9 +789,15 @@ object ArmorListeners : Listener {
         }
         player.setCooldown(spyglass.type, 20 * 2)
     }
-
-    // ------------------------------- LEAP_FROG ------------------------------------
-
+    private fun impetusEnchantment(
+        wearer: LivingEntity,
+        level: Int
+    ): Double {
+        if (wearer.velocity.length() > 1.8) {
+            return level * 1.0
+        }
+        return 0.0
+    }
     private fun leapFrogSneakEnchantment(
         defender: LivingEntity,
         isSneak: Boolean
@@ -834,7 +812,6 @@ object ArmorListeners : Listener {
             }
         }
     }
-
     private fun leapFrogEnchantment(
         jumper: LivingEntity,
         level: Int
@@ -861,8 +838,6 @@ object ArmorListeners : Listener {
         }
 
     }
-
-    // ------------------------------ MANDIBLEMANIA ------------------------------------
     private fun mandiblemaniaAttackEnchantment(
         attacker: LivingEntity,
         enemy: LivingEntity,
@@ -882,9 +857,6 @@ object ArmorListeners : Listener {
             enemy.noDamageTicks = maxOf(enemy.noDamageTicks - (2 * level), 0)
         }
     }
-
-
-    // ------------------------------- MOLTEN_CORE ------------------------------------
     private fun moltenCoreEnchantment(
         defender: LivingEntity,
         attacker: LivingEntity,
@@ -908,8 +880,6 @@ object ArmorListeners : Listener {
             defender.saturation = minOf(defender.saturation + (0.5F * level)  , 20.0F)
         }
     }
-
-    // ------------------------------- MOONWARD ------------------------------------
     private fun moonwardEnchantment(event: PlayerItemDamageEvent) {
         if (!event.player.world.hasSkyLight()) return
         if (event.player.world.isDayTime) return
@@ -924,9 +894,6 @@ object ArmorListeners : Listener {
             moonwardPhase.runTaskTimer(Odyssey.instance, 10, 20)
         }
     }
-
-
-    // ------------------------------- OPTICALIZATION ------------------------------------
     private fun opticalizationSpyglassEnchantment(
         player: Player,
         spyglass: ItemStack) {
@@ -944,7 +911,6 @@ object ArmorListeners : Listener {
         }
         player.setCooldown(spyglass.type, 20 * 2)
     }
-
     private fun opticalizationHitEnchantment(
         defender: LivingEntity,
         attacker: LivingEntity,
@@ -969,9 +935,6 @@ object ArmorListeners : Listener {
         }
 
     }
-
-    // ------------------------------- POLLEN_GUARD ------------------------------------
-
     private fun pollenGuardSneakEnchantment(
         defender: LivingEntity,
         level: Int,
@@ -1008,8 +971,6 @@ object ArmorListeners : Listener {
             defender.setIntTag(EntityTags.POLLEN_GUARD_STACKS, pollenStacks)
         }
     }
-
-    // ------------------------------- POTION_BARRIER ------------------------------------
     private fun potionBarrierEnchantment(
         player: Player,
         potion: ItemStack,
@@ -1030,8 +991,6 @@ object ArmorListeners : Listener {
             playSound(player.location, Sound.ENTITY_WANDERING_TRADER_DRINK_POTION, 1.5F, 0.8F)
         }
     }
-
-    // ------------------------------- RAGING_ROAR -------------------------------
     private fun ragingRoarEnchantment(
         player: Player,
         horn: ItemStack,
@@ -1050,8 +1009,6 @@ object ArmorListeners : Listener {
         player.world.playSound(player.location, Sound.ENTITY_RAVAGER_ROAR, 7.5F, 1.5F)
         player.setCooldown(horn.type, 20 * 6)
     }
-
-    // ------------------------------- RECKLESS ------------------------------------
     private fun recklessEnchantment(level: Int): Double {
         return level * 0.5
     }
@@ -1059,9 +1016,6 @@ object ArmorListeners : Listener {
     private fun recklessRegenEnchantment(level: Int): Double {
         return level * 1.0
     }
-
-
-    // ------------------------------- RELENTLESS ------------------------------------
     private fun relentlessEnchantment(defender: LivingEntity, level: Int) {
         if (defender is HumanEntity) {
             defender.saturation = minOf(defender.saturation + (0.25F + (0.25F * level)), 20.0F)
@@ -1069,8 +1023,6 @@ object ArmorListeners : Listener {
             defender.health += (0.5)
         }
     }
-
-    // ------------------------------- ROOT_BOOTS -------------------------------
     private fun rootBootsKnockbackHandler(defender: LivingEntity, level: Int): Double {
         // Sentries
         if (defender.isSwimming) return 1.0
@@ -1091,7 +1043,6 @@ object ArmorListeners : Listener {
         }
         return maxOf((1.0 - (rootValue * blockMultiplier)), 0.0)
     }
-
     private fun rootBootsDefenseHandler(defender: LivingEntity, level: Int): Double {
         // Sentries
         if (defender.isSwimming) return 1.0
@@ -1108,7 +1059,6 @@ object ArmorListeners : Listener {
 
         return blockValue + shiftValue
     }
-
     private fun rootBootsSneakEnchantment(
         defender: LivingEntity,
         level: Int,
@@ -1126,8 +1076,6 @@ object ArmorListeners : Listener {
             defender.scoreboardTags.remove(EntityTags.ROOT_BOOTS_ROOTED)
         }
     }
-
-    // ------------------------------- SCULK_SENSITIVE -------------------------------
     private fun sculkSensitiveSneakEnchantment(
         sneaker: LivingEntity,
         level: Int,
@@ -1142,14 +1090,10 @@ object ArmorListeners : Listener {
             it.world.spawnParticle(Particle.VIBRATION, it.location, 2, vibration)
         }
     }
-
-    // ------------------------------- SPEEDY_SPURS ------------------------------------
     private fun speedySpursEnchantment(rider: LivingEntity, mount: LivingEntity, level: Int) {
         val someSpeedySpursTask = SpeedySpursTask(rider, mount, level)
         someSpeedySpursTask.runTaskTimer(Odyssey.instance, 0, 10 * 20)
     }
-
-    // ------------------------------- SPOREFUL ------------------------------------
     private fun sporefulEnchantment(defender: LivingEntity, level: Int) {
         // List effects
         defender.world.getNearbyLivingEntities(defender.location, level.toDouble() * 0.75)
@@ -1168,8 +1112,6 @@ object ArmorListeners : Listener {
             spawnParticle(Particle.FALLING_SPORE_BLOSSOM, defender.location, 45, 1.0, 0.5, 1.0)
         }
     }
-
-    // ------------------------------- SQUIDIFY ------------------------------------
     private fun squidifyEnchantment(defender: LivingEntity, level: Int) {
         defender.world.getNearbyLivingEntities(defender.location, level.toDouble() * 0.75)
             .forEach {
@@ -1192,8 +1134,6 @@ object ArmorListeners : Listener {
             spawnParticle(Particle.LARGE_SMOKE, defender.location, 85, 1.0, 0.5, 1.0)
         }
     }
-
-    // ------------------------------- SSLITHER_SSIGHT ------------------------------------
     private fun sslitherSsightSpyglassEnchantment(
         player: Player,
         spyglass: ItemStack,
@@ -1213,7 +1153,6 @@ object ArmorListeners : Listener {
 
         player.setCooldown(spyglass.type, 20 * 2)
     }
-
     private fun sslitherSsightEnchantment(
         attacker: LivingEntity,
         defender: LivingEntity,
@@ -1227,10 +1166,6 @@ object ArmorListeners : Listener {
             PotionEffect(PotionEffectType.SLOWNESS, (level) * 10, 5))
 
     }
-
-
-    // ------------------------------- STATIC_SOCKS ------------------------------------
-
     private fun staticSocksAttackEnchantment(
         attacker: LivingEntity,
         level: Int
@@ -1244,7 +1179,6 @@ object ArmorListeners : Listener {
         attacker.world.playSound(attacker.location, Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 1.5F, 4.5F)
         return minOf((charge / 2.0), level * 1.0)
     }
-
     private fun staticSocksSneakEnchantment(
         defender: LivingEntity,
         level: Int
@@ -1260,8 +1194,6 @@ object ArmorListeners : Listener {
             defender.setIntTag(EntityTags.STATIC_SOCKS_CHARGE, 0)
         }
     }
-
-    // ------------------------------- UNTOUCHABLE ------------------------------------
     private fun untouchableEnchantment(
         defender: LivingEntity
     ) {
@@ -1271,8 +1203,6 @@ object ArmorListeners : Listener {
             defender.noDamageTicks += 10 // Add 0.5 seconds more of immunity
         }
     }
-
-    // ------------------------------ VEILED IN SHADOW ---------------------------------
     private fun veiledInShadowEnchantment(
         defender: LivingEntity,
         level: Int) {
@@ -1282,8 +1212,6 @@ object ArmorListeners : Listener {
         defender.noDamageTicks += maxOf(minOf(shadowLevelBlock, shadowLevelSky), 0)
         // gain 15 ticks of immunity when in full darkness with lvl 5
     }
-
-    // ---------------------------------- VENGEFUL --------------------------------------
     private fun vengefulEnchantment(
         attacker: LivingEntity,
         level: Int) {
@@ -1291,8 +1219,6 @@ object ArmorListeners : Listener {
         attacker.addScoreboardTag(EntityTags.VENGEFUL_MODIFIER + level)
         // Add Particles Timer?
     }
-
-    // ------------------------------- VICIOUS VIGOR ------------------------------------
     private fun viciousVigorEnchantment(
         attacker: LivingEntity,
         level: Int): Double {
@@ -1301,8 +1227,6 @@ object ArmorListeners : Listener {
         }
         return 0.0
     }
-
-    // ------------------------------- WAR_CRY -------------------------------
     private fun warCryEnchantment(
         player: Player,
         horn: ItemStack,

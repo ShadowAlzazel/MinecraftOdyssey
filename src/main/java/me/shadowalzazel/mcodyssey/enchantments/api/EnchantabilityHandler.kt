@@ -16,8 +16,9 @@ import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.EnchantmentStorageMeta
 
-interface EnchantabilityPointsManager : EnchantmentsManager, EnchantmentExtender {
+interface EnchantabilityHandler : EnchantmentsManager, EnchantmentExtender {
 
     // !!!!!!!!!!!!!!!!
     // GILDED ENCHANTS ARE SLOTTED/IRREMOVABLE BUT DO NOT TAKE UP EVs??
@@ -54,8 +55,16 @@ interface EnchantabilityPointsManager : EnchantmentsManager, EnchantmentExtender
         toggleToolTip: Boolean = false
     ) {
         val newLore = itemMeta.lore() ?: mutableListOf()
-        val updatedEnchantments = newEnchants ?: this.enchantments
-        // Temp Lore Index Holders
+        // Enchantment assigner
+        val updatedEnchantments: MutableMap<Enchantment, Int>
+        if (newEnchants != null) {
+            updatedEnchantments = newEnchants
+        } else if (itemMeta is EnchantmentStorageMeta) {
+            updatedEnchantments = (itemMeta as EnchantmentStorageMeta).storedEnchants
+        } else {
+            updatedEnchantments = this.enchantments
+        }
+        // Create Header if it does not exist
         if (!newLore.contains(loreSeperator)) {
             newLore.add(0, Component.text("Header Holder"))
             newLore.add(1, loreSeperator)
@@ -80,7 +89,7 @@ interface EnchantabilityPointsManager : EnchantmentsManager, EnchantmentExtender
                 newLore.remove(createEnchantLoreComponent(enchantment, level, pointCost))
             }
         }
-        // Remove between
+        // Remove all lore between
         if (resetLore || removedEnchants != null) {
             val startIndex = newLore.indexOf(loreSeperator)
             var endIndex = newLore.indexOf(loreFooter)

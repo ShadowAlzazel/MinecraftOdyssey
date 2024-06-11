@@ -8,12 +8,8 @@ import me.shadowalzazel.mcodyssey.constants.EntityTags.getIntTag
 import me.shadowalzazel.mcodyssey.constants.EntityTags.removeTag
 import me.shadowalzazel.mcodyssey.constants.EntityTags.setIntTag
 import me.shadowalzazel.mcodyssey.effects.EffectsManager
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.enchantments.deprecated.EnchantmentDataManager
 import me.shadowalzazel.mcodyssey.items.Miscellaneous.getNameId
 import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.*
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.TextColor
 import org.bukkit.*
 import org.bukkit.attribute.Attribute
 import org.bukkit.damage.DamageSource
@@ -27,20 +23,26 @@ import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
-import java.util.*
 import kotlin.math.log2
 import kotlin.math.pow
 
 object MeleeListeners : Listener, EffectsManager {
 
     // Main function for enchantments relating to entity damage
+    @Suppress("UnstableApiUsage")
     @EventHandler
     fun mainMeleeDamageHandler(event: EntityDamageByEntityEvent) {
-        if (event.damager !is LivingEntity) { return }
-        if (event.entity !is LivingEntity) { return }
-        if (event.cause != EntityDamageEvent.DamageCause.ENTITY_ATTACK) { return }
-        val attacker = event.damager as LivingEntity
-        if (attacker.equipment?.itemInMainHand?.hasItemMeta() == false) { return }
+        if (event.entity !is LivingEntity) return
+        if (event.cause != EntityDamageEvent.DamageCause.ENTITY_ATTACK &&
+            event.cause != EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) return
+        val attacker = if (event.damager is LivingEntity) {
+            event.damager as LivingEntity
+        } else {
+            event.damageSource.causingEntity
+        }
+        println(event.damageSource)
+        if (attacker !is LivingEntity) return
+        if (attacker.equipment?.itemInMainHand?.hasItemMeta() == false) return
         val victim = event.entity as LivingEntity
         val weapon = attacker.equipment!!.itemInMainHand
         val power = if (attacker is Player) { attacker.attackCooldown.toDouble() } else { 1.0 }
@@ -101,6 +103,9 @@ object MeleeListeners : Listener, EffectsManager {
                 "illucidation" -> {
                     event.damage += illucidationEnchantment(victim, enchant.value, event.isCritical) * power
                 }
+                "pestilence" -> {
+                    pestilenceEnchantment(victim, enchant.value)
+                }
                 "rupturing_strike" -> {
                     event.damage -= rupturingStrikeEnchantment(attacker, victim, event.damage, enchant.value)
                 }
@@ -156,8 +161,6 @@ object MeleeListeners : Listener, EffectsManager {
         }
     }
     /*-----------------------------------------------------------------------------------------------*/
-
-    // -------------------------- ASPHYXIATE -------------------------------
     private fun asphyxiateEnchantment(
         victim: LivingEntity,
         level: Int
@@ -166,8 +169,6 @@ object MeleeListeners : Listener, EffectsManager {
         if (victim.remainingAir < 20) return level * 1.0
         return 0.0
     }
-
-    // ------------------------------- ARCANE_CELL ------------------------------------
     private fun arcaneCellEnchantment(victim: LivingEntity, level: Int) {
         if (victim.scoreboardTags.contains(EffectTags.ARCANE_JAILED)) return
         // Run
@@ -178,7 +179,6 @@ object MeleeListeners : Listener, EffectsManager {
             task.runTaskTimer(Odyssey.instance, 5, 5)
         }
     }
-    // ------------------------------- BACKSTABBER ------------------------------------
     private fun backstabberEnchantment(
         attacker: LivingEntity,
         victim: LivingEntity,
@@ -203,7 +203,6 @@ object MeleeListeners : Listener, EffectsManager {
         }
         return 0
     }
-    // ------------------------------- CONFLAGRATE ------------------------------------
     private fun conflagrateEnchantment(
         attacker: LivingEntity,
         victim: LivingEntity,
@@ -214,8 +213,6 @@ object MeleeListeners : Listener, EffectsManager {
         val task = ConflagrateTask(victim, extraDamage)
         task.runTaskLater(Odyssey.instance, 30)
     }
-
-    // ------------------------------- SWAP -------------------------
     private fun swapEnchantment(
         attacker: LivingEntity,
         victim: LivingEntity,
@@ -235,8 +232,6 @@ object MeleeListeners : Listener, EffectsManager {
     // Other enchant ideas
     // MAYBE DO NEXT TIME YOU SNEAK???? OR TOGGLE WITH
     // or do dmg based on distance?
-
-    // ------------------------------- BUDDING ------------------------------------
     private fun buddingEnchantment(
         victim: LivingEntity,
         level: Int) {
@@ -246,8 +241,6 @@ object MeleeListeners : Listener, EffectsManager {
             world.playSound(location, Sound.BLOCK_BIG_DRIPLEAF_TILT_UP, 2.5F, 0.9F)
         }
     }
-
-    // ------------------------------- BUZZY_BEES ------------------------------------
     private fun buzzyBeesEnchantment(
         victim: LivingEntity,
         level: Int) {
@@ -271,7 +264,6 @@ object MeleeListeners : Listener, EffectsManager {
             world.playSound(location, Sound.BLOCK_HONEY_BLOCK_FALL, 2.5F, 0.9F)
         }
     }
-    // ------------------------------- COMMITTED ------------------------------------
     private fun committedEnchantment(victim: LivingEntity, level: Int): Int {
         val maxHealth = victim.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value ?: 20.0
         return if (victim.health < maxHealth * 0.4) {
@@ -280,7 +272,6 @@ object MeleeListeners : Listener, EffectsManager {
             0
         }
     }
-    // ------------------------------- CULL_THE_WEAK ------------------------------------
     private fun cullTheWeakEnchantment(victim: LivingEntity, level: Int): Double {
         val hasSlowness = victim.hasPotionEffect(PotionEffectType.SLOWNESS)
         val hasWeakness = victim.hasPotionEffect(PotionEffectType.WEAKNESS)
@@ -296,11 +287,9 @@ object MeleeListeners : Listener, EffectsManager {
             0.0
         }
     }
-    // ------------------------------- DECAYING_TOUCH ------------------------------------
     private fun decayingTouchEnchantment(victim: LivingEntity, level: Int) {
        victim.addPotionEffect(PotionEffect(PotionEffectType.WITHER, (20 * (level * 4)), 0))
     }
-    // ------------------------------- DOUSE ------------------------------------
     private fun douseEnchantment(victim: LivingEntity, level: Int): Double {
         victim.fireTicks = 0
         if (victim is Blaze || victim is MagmaCube || victim.fireTicks > 0) {
@@ -308,7 +297,6 @@ object MeleeListeners : Listener, EffectsManager {
         }
         return 0.0
     }
-    // ------------------------------- ECHO ------------------------------------
     private fun echoEnchantment(attacker: LivingEntity, victim: LivingEntity, level: Int) {
         // Prevent recursive call
         if (victim.scoreboardTags.contains(EntityTags.ECHO_STRUCK)) {
@@ -337,7 +325,6 @@ object MeleeListeners : Listener, EffectsManager {
             }
         }
     }
-    // ------------------------------- EXPLODING ------------------------------------
     @Suppress("UnstableApiUsage")
     private fun explodingEnchantment(victim: LivingEntity, level: Int) {
         val location = victim.location
@@ -354,7 +341,6 @@ object MeleeListeners : Listener, EffectsManager {
             entity.damage(power, damageSource)
         }
     }
-    // ------------------------------- FEARFUL_FINISHER ------------------------------------
     private fun fearfulFinisherEnchantment(victim: LivingEntity, level: Int) {
         val killer = victim.killer ?: return
         val vector = killer.eyeLocation.direction.clone().normalize()
@@ -371,8 +357,6 @@ object MeleeListeners : Listener, EffectsManager {
             it.pathfinder.moveTo(newLocation)
         }
     }
-
-    // ------------------------------- FREEZING_ASPECT ------------------------------------
     private fun freezingAspectEnchantment(victim: LivingEntity, level: Int) {
         with(victim) {
             if (freezeTicks <= 50) {
@@ -381,7 +365,6 @@ object MeleeListeners : Listener, EffectsManager {
             }
         }
     }
-    // ------------------------------- FROG_FRIGHT ------------------------------------
     private fun frogFrightEnchantment(attacker: LivingEntity, victim: LivingEntity, level: Int) {
         victim.also {
             it.velocity.multiply(0.9)
@@ -398,7 +381,6 @@ object MeleeListeners : Listener, EffectsManager {
         }
 
     }
-    // ------------------------------- FROSTY_FUSE ------------------------------------
     private fun frostyFuseEnchantment(victim: LivingEntity, level: Int) {
         // Victim Effects
         with(victim) {
@@ -410,7 +392,6 @@ object MeleeListeners : Listener, EffectsManager {
         }
 
     }
-    // ------------------------------- GRAVITY_WELL ------------------------------------
     private fun gravityWellEnchantment(
         attacker: LivingEntity,
         victim: LivingEntity,
@@ -430,7 +411,6 @@ object MeleeListeners : Listener, EffectsManager {
         }
 
     }
-    // ------------------------------- GUARDING_STRIKE ------------------------------------
     private fun guardingStrikeEnchantment(
         attacker: LivingEntity,
         level: Int) {
@@ -447,7 +427,6 @@ object MeleeListeners : Listener, EffectsManager {
             world.playSound(location, Sound.BLOCK_DEEPSLATE_BREAK, 1.5F, 0.5F)
         }
     }
-    // ------------------------------- GUST ------------------------------------
     private fun gustEnchantment(
         vector: Vector,
         level: Int
@@ -457,7 +436,6 @@ object MeleeListeners : Listener, EffectsManager {
         val newVector = upVector.setX(0.0).setY(1.0).setZ(0.0).multiply(mag * level)
         return newVector
     }
-    // ------------------------------- HEMORRHAGE ------------------------------------
     private fun hemorrhageEnchantment(
         victim: LivingEntity,
         level: Int) {
@@ -468,7 +446,6 @@ object MeleeListeners : Listener, EffectsManager {
             spawnParticle(Particle.CRIT, victim.location, 35, 1.0, 0.5, 1.0)
         }
     }
-    // ------------------------------- ILLUCIDATION ------------------------------------
     private fun illucidationEnchantment(victim: LivingEntity, level: Int, isCrit: Boolean): Int {
         var illucidationDamage = 0
         if (victim.isGlowing) {
@@ -487,7 +464,29 @@ object MeleeListeners : Listener, EffectsManager {
         }
         return illucidationDamage
     }
-    // ------------------------------- RUPTURING_STRIKE ------------------------------------
+    @Suppress("UnstableApiUsage")
+    private fun pestilenceEnchantment(victim: LivingEntity, level: Int) {
+        if (!victim.hasPotionEffect(PotionEffectType.POISON)) return
+        val potionEffect = victim.getPotionEffect(PotionEffectType.POISON) ?: return
+        val location = victim.location
+        val color = Color.fromRGB(135, 163, 99)
+        // Particles
+        location.world.spawnParticle(Particle.EFFECT, location, 5, 0.01, 0.04, 0.01, color)
+        // Damage
+        val amplifier = potionEffect.amplifier
+        val efficiency = level * 0.2
+        val timeInTicks = (potionEffect.duration * efficiency).toInt()
+        for (entity in location.getNearbyLivingEntities(3.5)) {
+            // Apply poison to non poisoned enemies
+            if (!entity.hasPotionEffect(PotionEffectType.POISON)) {
+                entity.addPotionEffect(PotionEffect(PotionEffectType.POISON, timeInTicks, amplifier))
+            } else {
+                val damageSource = DamageSource.builder(DamageType.MAGIC).build()
+                val damage = ((timeInTicks / 20) * (0.1 * (amplifier + 1))) * (efficiency)
+                entity.damage(damage, damageSource)
+            }
+        }
+    }
     private fun rupturingStrikeEnchantment(attacker: LivingEntity, victim: LivingEntity, damage: Double, level: Int): Double {
         if (victim.isDead) return 0.0
         val fullCharge = if ((attacker is Player) && attacker.attackCooldown > 0.99) { true } else attacker !is Player
@@ -517,14 +516,12 @@ object MeleeListeners : Listener, EffectsManager {
         }
         return rupturingDamage
     }
-    // ------------------------------- VITAL ------------------------------------
     private fun vitalEnchantment(isCrit: Boolean, level: Int): Double {
         if (isCrit) {
             return 1.0 * level
         }
         return 0.0
     }
-    // ------------------------------- VOID_STRIKE ------------------------------------
     private fun voidStrikeEnchantment(
         attacker: LivingEntity,
         victim: LivingEntity,
@@ -557,11 +554,9 @@ object MeleeListeners : Listener, EffectsManager {
             playSound(location, Sound.BLOCK_AMETHYST_BLOCK_BREAK, 1.7F, 0.2F)
             playSound(location, Sound.ENTITY_ENDER_EYE_DEATH, 3.5F, 0.4F)
         }
-
         // Damage
         return voidDamage * 1.0
     }
-    // ------------------------------- WHIRLWIND ------------------------------------
     private fun whirlwindEnchantment(
         attacker: LivingEntity,
         victim: LivingEntity,
@@ -587,5 +582,5 @@ object MeleeListeners : Listener, EffectsManager {
                 .multiply(0.8 + (0.15 * level))
         }
     }
-
+    /*-----------------------------------------------------------------------------------------------*/
 }

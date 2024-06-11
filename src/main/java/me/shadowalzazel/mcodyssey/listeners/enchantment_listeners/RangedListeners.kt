@@ -8,8 +8,7 @@ import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags.getIntTag
 import me.shadowalzazel.mcodyssey.constants.EntityTags.removeTag
 import me.shadowalzazel.mcodyssey.constants.EntityTags.setIntTag
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.enchantments.deprecated.EnchantmentDataManager
+import me.shadowalzazel.mcodyssey.enchantments.api.EnchantmentsManager
 import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.*
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -34,10 +33,8 @@ import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.sin
 
+object RangedListeners : Listener, EnchantmentsManager {
 
-object RangedListeners : Listener, EnchantmentDataManager {
-
-    private val galewindCooldown = mutableMapOf<UUID, Long>()
     private val currentOverchargeTasks = mutableMapOf<UUID, OverchargeTask>()
 
     // Main function for enchantments relating to shooting bows
@@ -50,77 +47,75 @@ object RangedListeners : Listener, EnchantmentDataManager {
         val bow = event.bow ?: return
         // Priority is in the order !!
         // Loop for all enchants
-        for (enchant in bow.getOdysseyEnchantments()) {
-            when (enchant.key) {
-                OdysseyEnchantments.ALCHEMY_ARTILLERY -> {
+        for (enchant in bow.enchantments) {
+            when (enchant.key.getNameId()) {
+                "alchemy_artillery" -> {
                     alchemyArtilleryShoot(projectile, enchant.value)
                 }
-                OdysseyEnchantments.BALLISTICS -> {
+                "ballistics" -> {
                     ballisticsEnchantmentShoot(projectile, enchant.value)
                 }
-                OdysseyEnchantments.BOLA_SHOT -> {
+                "bola_shot" -> {
                     bolaShotEnchantmentShoot(projectile, enchant.value)
                 }
-                OdysseyEnchantments.BURST_BARRAGE -> {
+                "burst_barrage" -> {
                     burstBarrageEnchantmentShoot(projectile, shooter, enchant.value)
                 }
-                OdysseyEnchantments.CHAIN_REACTION -> {
+                "chain_reaction" -> {
                     chainReactionEnchantmentShoot(projectile, enchant.value)
                 }
-                OdysseyEnchantments.CLUSTER_SHOT -> {
+                "cluster_shot" -> {
                     clusterShotEnchantmentShoot(projectile, enchant.value)
                 }
-                OdysseyEnchantments.DEADEYE -> {
+                "deadeye" -> {
                     deadeyeEnchantmentShoot(projectile, enchant.value)
                 }
-                OdysseyEnchantments.DEATH_FROM_ABOVE -> {
+                "death_from_above" -> {
                     deathFromAboveEnchantmentShoot(projectile, enchant.value)
                 }
-                OdysseyEnchantments.DOUBLE_TAP -> {
+                "double_tap" -> {
                     doubleTapEnchantmentShoot(projectile, shooter)
                 }
-                OdysseyEnchantments.ENTANGLEMENT -> {
+                "entanglement" -> {
                     entanglementEnchantmentShoot(projectile, enchant.value)
                 }
-                OdysseyEnchantments.FAN_FIRE -> {
+                "fan_fire" -> {
                     fanFireEnchantmentShoot(projectile, shooter, enchant.value)
                 }
-                OdysseyEnchantments.LUCKY_DRAW -> {
+                "lucky_draw" -> {
                     event.setConsumeItem(!luckyDrawEnchantmentShoot(enchant.value))
                 }
-                OdysseyEnchantments.LUXPOSE -> {
+                "luxpose" -> {
                     luxposeEnchantmentShoot(projectile, enchant.value)
                 }
-                OdysseyEnchantments.GALE_WIND -> {
-                    if (cooldownManager(shooter, "Gale Wind", galewindCooldown, 3.0)) {
-                        galeWindEnchantmentShoot(shooter, enchant.value)
-                    }
+                "gale" -> {
+                    galeEnchantmentShoot(shooter, enchant.value)
                 }
-                OdysseyEnchantments.OVERCHARGE -> {
+                "overcharge" -> {
                     overchargeEnchantmentShoot(projectile, shooter, bow)
                 }
-                OdysseyEnchantments.PERPETUAL -> {
+                "perpetual" -> {
                     perpetualProjectileEnchantmentShoot(projectile, enchant.value)
                 }
-                OdysseyEnchantments.RICOCHET -> {
+                "ricochet" -> {
                     ricochetEnchantmentShoot(projectile, enchant.value)
                 }
-                OdysseyEnchantments.SHARPSHOOTER -> {
+                "sharpshooter" -> {
                     sharpshooterEnchantmentShoot(projectile, enchant.value)
                 }
-                OdysseyEnchantments.SINGLE_OUT -> {
+                "single_out" -> {
                     singleOutEnchantmentShoot(projectile, enchant.value)
                 }
-                OdysseyEnchantments.SINGULARITY_SHOT -> {
+                "singularity_shot" -> {
                     singularityShotEnchantmentShoot(projectile, enchant.value, shooter)
                 }
-                OdysseyEnchantments.SOUL_REND -> {
-                    soulRendEnchantmentShoot(projectile, enchant.value)
+                "rend" -> {
+                    rendEnchantmentShoot(projectile, enchant.value)
                 }
-                OdysseyEnchantments.TEMPORAL -> {
+                "temporal" -> {
                     temporalTorrentEnchantmentShoot(projectile, enchant.value)
                 }
-                OdysseyEnchantments.VULNEROCITY -> {
+                "vulnerocity" -> {
                     vulnerocityEnchantmentShoot(projectile, enchant.value)
                 }
             }
@@ -174,7 +169,6 @@ object RangedListeners : Listener, EnchantmentDataManager {
         }
     }
 
-
     // Main function for enchantments relating to projectile hits
     @EventHandler
     fun mainProjectileHitHandler(event: ProjectileHitEvent) {
@@ -210,21 +204,21 @@ object RangedListeners : Listener, EnchantmentDataManager {
     // Main function for enchantments relating to loading crossbows
     @EventHandler
     fun crossbowLoadingHandler(event: EntityLoadCrossbowEvent) {
-        val entity = event.entity
         if (event.crossbow.hasItemMeta()) {
+            return
+            /*
             val someCrossbow = event.crossbow
+
             for (enchant in someCrossbow.enchantments) {
                 // Continue if not OdysseyEnchant
                 //val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
-                /*
                 when (enchant.key) {
                     OdysseyEnchantments.ALCHEMY_ARTILLERY -> {
                         // Load More Damage
                     }
                 }
-
-                 */
             }
+             */
         }
     }
 
@@ -235,9 +229,9 @@ object RangedListeners : Listener, EnchantmentDataManager {
         if (event.bow.hasItemMeta()) {
             val bow = event.bow
             val player = event.player
-            for (enchant in bow.getOdysseyEnchantments()) {
-                when (enchant.key) {
-                    OdysseyEnchantments.OVERCHARGE -> {
+            for (enchant in bow.enchantments) {
+                when (enchant.key.getNameId()) {
+                    "overcharge" -> {
                         overchargeEnchantmentLoad(player, bow, enchant.value)
                     }
                 }
@@ -250,7 +244,7 @@ object RangedListeners : Listener, EnchantmentDataManager {
         if (event.offHandItem.type != Material.BOW && event.offHandItem.type != Material.CROSSBOW) return
         val offHand = event.offHandItem
         if (!offHand.hasItemMeta()) return
-        if (offHand.getOdysseyEnchantments().contains(OdysseyEnchantments.SOUL_REND)) {
+        if (offHand.hasEnchantment("rend")) {
             soulRendEnchantmentActivate(event.player)
         }
     }
@@ -275,7 +269,6 @@ object RangedListeners : Listener, EnchantmentDataManager {
             )
             false
         }
-
     }
 
     // Helper function to clone projectiles and their tags and to omit provided ones
@@ -616,7 +609,7 @@ object RangedListeners : Listener, EnchantmentDataManager {
 
 
     // ------------------------------- GALE_WIND ------------------------------------
-    private fun galeWindEnchantmentShoot(shooter: LivingEntity, level: Int) {
+    private fun galeEnchantmentShoot(shooter: LivingEntity, level: Int) {
         shooter.world.playSound(shooter.location, Sound.ENTITY_WARDEN_SONIC_CHARGE, 2.5F, 1.5F)
         val task = GaleWindTask(shooter, level)
         task.runTaskLater(Odyssey.instance, 6)
@@ -775,7 +768,7 @@ object RangedListeners : Listener, EnchantmentDataManager {
     }
 
     // ------------------------------- SOUL_REND ------------------------------------
-    private fun soulRendEnchantmentShoot(projectile: Entity, level: Int) {
+    private fun rendEnchantmentShoot(projectile: Entity, level: Int) {
         with(projectile) {
             addScoreboardTag(EntityTags.SOUL_REND_ARROW)
             setIntTag(EntityTags.SOUL_REND_MODIFIER, level)
