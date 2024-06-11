@@ -4,7 +4,7 @@ import me.shadowalzazel.mcodyssey.enchantments.api.SlotColors
 import me.shadowalzazel.mcodyssey.constants.AttributeIDs
 import me.shadowalzazel.mcodyssey.constants.DataKeys
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantment
-import me.shadowalzazel.mcodyssey.enchantments.api.EnchantabilityPointsManager
+import me.shadowalzazel.mcodyssey.enchantments.api.EnchantabilityHandler
 import me.shadowalzazel.mcodyssey.items.Exotics
 import me.shadowalzazel.mcodyssey.items.Ingredients
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
@@ -24,7 +24,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.persistence.PersistentDataType
 
-interface ItemCreator : ExoticCreator, EnchantabilityPointsManager {
+interface ItemCreator : ExoticCreator, EnchantabilityHandler {
 
     fun OdysseyItem.createStack(amount: Int = 1): ItemStack {
         val itemStack = ItemStack(overrideMaterial, amount).also {

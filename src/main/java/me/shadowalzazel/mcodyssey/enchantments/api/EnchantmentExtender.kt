@@ -71,16 +71,24 @@ interface EnchantmentExtender {
             "bane_of_arthropods" -> listOf(
                 "- Increase Melee Damage to arthropod mobs by ${2.5 * level}=[2.5 x level]",
                 "- Inflicts Slowness IV to an arthropod for around 1-${1 + (0.5 * level)}=[1 + 0.5 x level] seconds.")
+            "knockback" -> listOf(
+                "- The target is knock backed further by around ${1.6 + (2.6 * level)}=[1.6 + 2.6 x level] blocks.")
+            "sweeping_edge" -> listOf(
+                "- Increases damage dealt by a sweep attack to ${level}/${level + 1}=[level / (level + 1)]")
             "fire_aspect" -> listOf(
                 "- Set the target on fire for ${level * 4}=[level x 4] seconds.")
             "looting" -> listOf(
                 "- Increases the number of common drops by ${level}=[level].")
+            "silk_touch" -> listOf(
+                "- Causes blocks to drop themselves.")
+            "fortune" -> listOf(
+                "- Increases the number of drops on average by around ${(level + 1) / 2}=[(level + 1) / 2]")
             // Odyssey - ALL
             "moonpatch" -> listOf(
                 "- Regenerates $level=[level] durability per second",
                 "at night when the moon is visible.")
             "chitin" -> listOf(
-                "- Regenerate durability alongside health regeneration.")
+                "- Regenerate durability alongside satiation regeneration.")
             // Odyssey - Armor
             "antibonk" -> listOf(
                 "- Reduce critical hit damage by ${2.5 * level}=[2.5 x level].")
@@ -88,14 +96,13 @@ interface EnchantmentExtender {
                 "- Receive ${0.5 * level}=[0.5 x level] less damage when ${2 * level}=[2 x level]",
                 "or more enemies are within a 4 block radius.")
             "black_rose" -> listOf(
-                "- Applies Wither $level=[level] for 5 seconds to enemies", "that attacked the wearer.")
+                "- Applies Wither II for ${level * 5}=[level x 5] seconds to enemies",
+                "that attacked the wearer.")
             "blurcise" -> listOf(
                 "- Take $level=[level] reduced damage while moving.")
             "brawler" -> listOf(
                 "- Increase melee damage by ${0.5 * level}=[0.5 x level] when ${2 * level}=[2 x level]",
                 "or more enemies are within a 4 block radius.")
-            "brewful_breath" -> listOf(
-                "REMOVED")
             "bulwark" -> listOf(
                 "- Increase armor by ${2 * level}%=[2 x level].")
             "claw_climbing" -> listOf(
@@ -104,16 +111,16 @@ interface EnchantmentExtender {
                 "- Get knock backed further and get speed $level=[level] for 6 seconds.")
             "devastating_drop" -> listOf(
                 "- Converts fall damage to AOE damage at ${40 * level}%=[40 x level]")
-            "dreadful_shriek" -> listOf(
-                "REMOVED")
             "fruitful_fare" -> listOf(
                 "- Eating a fruit recovers $level=[level] Health. Adds a 3 second cooldown to the fruit.")
             "ignore_pain" -> listOf(
                 "- Decrease Invulnerable time when hit by ${level * 0.1}=[level x 0.1] seconds",
                 "but gain absorption for ${5 - level}=[5 - level] seconds.")
             "illumineye" -> listOf(
-                "- Taking damage by an entity within line of sight applies",
-                "glowing for ${3 + (level * 2)}=[3 + (level x 2)] seconds.")
+                "- Taking or dealing damage to an entity within line of sight applies",
+                "Glowing I for ${3 + (level * 2)}=[3 + (level x 2)] seconds.")
+            "impetus" -> listOf(
+                "- Increase damage while moving by ${level}=[level].")
             "leap_frog" -> listOf(
                 "- Increase jump height by ${level * 35}%=[level x 35]")
             "mandiblemania" -> listOf(
@@ -128,9 +135,8 @@ interface EnchantmentExtender {
             "pollen_guard" -> listOf(
                 "WIP/REWORK")
             "potion_barrier" -> listOf(
-                "REMOVED")
-            "raging_roar" -> listOf(
-                "REMOVED")
+                "- Drinking a potion grants a small absorption barrier.",
+                "- Negative effect timers are reduced by ${level * 0.25}%=[level x 0.25].")
             "reckless" -> listOf(
                 "- Regenerate $level=[level] more health from satiation",
                 "but take ${level * 0.5}=[level x 0.5] more damage.")
@@ -161,8 +167,6 @@ interface EnchantmentExtender {
                 "Reduce required light level by $level=[level].")
             "vigor" -> listOf(
                 "- Deal $level=[level] more damage when below 40% health.")
-            "warcry" -> listOf(
-                "REMOVED")
             // Odyssey - Melee
             "arcane_cell" -> listOf(
                 "- Create a circular zone with a radius of 5 for ${2 + (level * 2)}=[2 + (level x 2)] seconds;",
@@ -223,6 +227,9 @@ interface EnchantmentExtender {
             "illucidation" -> listOf(
                 "- Deal ${level}=[level] bonus damage to enemies that are glowing.",
                 "If the attack is a crit, it is doubled, but the glowing is removed.")
+            "pestilence" -> listOf(
+                "- Killing an enemy that is poisoned, spreads the effect at ${level * 20}%=[level x 20] efficiency.",
+                "- An enemy that is already poisoned takes damage based on ${level * 10}%=[level x 10] of the remaining time.")
             "rupturing_strike" -> listOf(
                 "- Every third attack against a target deals ${level}=[level] true damage.")
             "vengeful" -> listOf(

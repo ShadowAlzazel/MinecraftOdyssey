@@ -1,6 +1,5 @@
 package me.shadowalzazel.mcodyssey.listeners
 
-import me.shadowalzazel.mcodyssey.enchantments.deprecated.EnchantSlotManager
 import me.shadowalzazel.mcodyssey.enchantments.api.SlotColors
 import me.shadowalzazel.mcodyssey.constants.AttributeIDs
 import me.shadowalzazel.mcodyssey.constants.ItemModels
@@ -16,6 +15,7 @@ import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
+import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.PrepareSmithingEvent
@@ -25,7 +25,7 @@ import org.bukkit.inventory.meta.ArmorMeta
 import org.bukkit.inventory.meta.trim.ArmorTrim
 import org.bukkit.inventory.meta.trim.TrimMaterial
 
-object SmithingListeners : Listener, EnchantSlotManager {
+object SmithingListeners : Listener {
 
     /*-----------------------------------------------------------------------------------------------*/
     /*-----------------------------------------------------------------------------------------------*/
@@ -214,4 +214,15 @@ object SmithingListeners : Listener, EnchantSlotManager {
             event.result = recipe.result
         }
     }
+
+
+    private fun LivingEntity.sendBarMessage(reason: String, color: TextColor = SlotColors.ENCHANT.color) {
+        this.sendActionBar(
+            Component.text(
+                reason,
+                color
+            )
+        )
+    }
+
 }

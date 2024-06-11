@@ -69,5 +69,4 @@ object Equipment {
         lore = listOf(Component.text("This kunai has the ability to attack a linked target.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
 
-
 }

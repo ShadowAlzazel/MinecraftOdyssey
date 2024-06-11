@@ -11,6 +11,27 @@ import java.util.*
 
 interface AttributeManager {
 
+    fun LivingEntity.addGenericAttribute(
+        value: Double,
+        name: String,
+        id: UUID,
+        attribute: Attribute)
+    {
+        val modifier = AttributeModifier(id, name, value, AttributeModifier.Operation.ADD_NUMBER)
+        val mobAttribute = this.getAttribute(attribute) ?: return
+        if (!mobAttribute.modifiers.contains(modifier)) {
+            mobAttribute.addModifier(modifier)
+        }
+    }
+
+    fun LivingEntity.addScaleAttribute(
+        value: Double,
+        name: String = AttributeTags.MOB_SCALE,
+        id: UUID = AttributeIDs.RUNESHERD_SCALE_UUID)
+    {
+        this.addGenericAttribute(value, name, id, Attribute.GENERIC_SCALE)
+    }
+
      fun LivingEntity.addHealthAttribute(
         value: Double,
         name: String = AttributeTags.EXTRA_HEALTH_GENERIC,

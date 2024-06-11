@@ -1,7 +1,6 @@
 package me.shadowalzazel.mcodyssey.listeners.enchantment_listeners
 
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.enchantments.deprecated.EnchantmentDataManager
+import me.shadowalzazel.mcodyssey.enchantments.api.EnchantmentsManager
 import me.shadowalzazel.mcodyssey.items.Ingredients
 import org.bukkit.*
 import org.bukkit.entity.*
@@ -13,7 +12,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.util.Vector
 import java.util.*
 
-object MiscListeners : Listener, EnchantmentDataManager {
+object MiscListeners : Listener, EnchantmentsManager {
 
     private var voidJumpCooldown = mutableMapOf<UUID, Long>()
 
@@ -47,14 +46,14 @@ object MiscListeners : Listener, EnchantmentDataManager {
         else {
             event.player.inventory.itemInOffHand
         }
-        for (enchant in rod.getOdysseyEnchantments()) {
-            when (enchant.key) {
-                OdysseyEnchantments.BOMB_OB -> {
+        for (enchant in rod.enchantments) {
+            when (enchant.key.getNameId()) {
+                "bomb_ob" -> {
                     if (event.caught!! is LivingEntity) {
                         bombObEnchantment(event.caught!! as LivingEntity, enchant.value)
                     }
                 }
-                OdysseyEnchantments.YANK -> {
+                "yank" -> {
                     if (event.caught!! is LivingEntity) {
                         yankEnchantment(event.caught!! as LivingEntity, enchant.value)
                     }
@@ -73,9 +72,9 @@ object MiscListeners : Listener, EnchantmentDataManager {
         else {
             event.player.inventory.itemInOffHand
         }
-        for (enchant in rod.getOdysseyEnchantments()) {
-            when (enchant.key) {
-                OdysseyEnchantments.O_SHINY -> {
+        for (enchant in rod.enchantments) {
+            when (enchant.key.getNameId()) {
+                "scavenger" -> {
                     val item = event.caught as Item
 
                     val goodPulls = listOf(
@@ -95,7 +94,7 @@ object MiscListeners : Listener, EnchantmentDataManager {
                         item.itemStack = gems.random()
                     }
                 }
-                OdysseyEnchantments.WISE_BAIT -> {
+                "wisdom_of_the_deep" -> {
                     event.expToDrop *= (1 + (0.5 * enchant.value)).toInt()
                 }
             }
@@ -109,9 +108,9 @@ object MiscListeners : Listener, EnchantmentDataManager {
         else {
             event.player.inventory.itemInOffHand
         }
-        for (enchant in rod.getOdysseyEnchantments()) {
-            when (enchant.key) {
-                OdysseyEnchantments.LENGTHY_LINE -> {
+        for (enchant in rod.enchantments) {
+            when (enchant.key.getNameId()) {
+                "lengthy_line" -> {
                     println(event.hook.velocity)
                     event.hook.velocity = event.hook.velocity.multiply(1 + (0.5 * enchant.value))
                     event.hook.velocity
@@ -192,7 +191,7 @@ object MiscListeners : Listener, EnchantmentDataManager {
         if (player.equipment.chestplate != null && player.equipment.chestplate.hasItemMeta() && player.gameMode != GameMode.SPECTATOR) {
             val elytra = player.equipment.chestplate
             // Check if player has enchantment
-            if (elytra.hasOdysseyEnchantment(OdysseyEnchantments.VOID_JUMP)) {
+            if (elytra.hasEnchantment("void_jump")) {
                 // Check Speed
                 val speed = player.velocity.clone().length()
                 if (speed > 0.125) {
@@ -235,7 +234,7 @@ object MiscListeners : Listener, EnchantmentDataManager {
                 // Get vector
                 val elytra = equipment.chestplate
                 val enchantments = elytra.getOdysseyEnchantments()
-                val jumpLevel = enchantments[OdysseyEnchantments.VOID_JUMP] ?: 1
+                val jumpLevel = enchantments[getNamedEnchantment("void_jump")] ?: 1
                 val unitVector = velocity.clone().normalize()
                 val jumpLocation = location.clone().add(
                     unitVector.clone().multiply((jumpLevel * 5.0) + 5)

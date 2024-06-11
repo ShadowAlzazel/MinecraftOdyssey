@@ -63,7 +63,7 @@ internal interface RunesherdManager : AttributeManager {
 
     /*-----------------------------------------------------------------------------------------------*/
     // Find Attribute
-    private fun findRunesherdAttribute(name: String): Attribute? {
+    private fun getRunesherdAttribute(name: String): Attribute? {
         return when (name) {
             Runesherds.ASSAULT_RUNESHERD.itemName -> { Attribute.GENERIC_ATTACK_DAMAGE }
             Runesherds.GUARD_RUNESHERD.itemName -> { Attribute.GENERIC_ARMOR }
@@ -139,7 +139,7 @@ internal interface RunesherdManager : AttributeManager {
         // Find compatible runesherd
         val runesherdName = runesherd.getOdysseyTag() ?: return null
         val attributeName = "odyssey." + runesherdName + "_modifier"
-        val attributeType: Attribute = findRunesherdAttribute(runesherdName) ?: return null
+        val attributeType: Attribute = getRunesherdAttribute(runesherdName) ?: return null
         val attributeMap = runesherd.itemMeta.attributeModifiers?.get(attributeType) ?: return null
         val runesherdModifier = attributeMap.find { it.name == attributeName } ?: return null
         // Can not stack same runesherd

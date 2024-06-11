@@ -20,12 +20,12 @@ import me.shadowalzazel.mcodyssey.constants.ItemDataTags.setUUIDTag
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.BLUDGEON_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.CLEAVE_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.LACERATE_MAP
-import me.shadowalzazel.mcodyssey.constants.WeaponMaps.MAX_RANGE_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.MIN_RANGE_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.PIERCE_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.REACH_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.SWEEP_MAP
 import me.shadowalzazel.mcodyssey.tasks.weapon_tasks.*
+import me.shadowalzazel.mcodyssey.util.WeaponHelper
 import org.bukkit.*
 import org.bukkit.attribute.Attribute
 import org.bukkit.damage.DamageSource
@@ -82,7 +82,7 @@ import kotlin.math.pow
 // can tp if throw another
 // Offhand DeprecatedWeapon
 
-object WeaponListeners : Listener {
+object WeaponListeners : Listener, WeaponHelper {
 
     private val markedVoidTargets = mutableMapOf<UUID, Entity>()
     private val currentGrappleShotTasks = mutableMapOf<UUID, GrapplingHookShot>()
@@ -379,13 +379,13 @@ object WeaponListeners : Listener {
         attacker.world.playSound(victim.location, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 2.75F, 0.5F)
     }
 
-    private fun dualWieldHandler(player: Player, enemy: LivingEntity) {
+    private fun dualWieldHandler(player: Player, target: LivingEntity) {
         with(player.equipment) {
             val mainHand = itemInMainHand.clone()
             val offHand = itemInOffHand.clone()
             setItemInOffHand(mainHand)
             setItemInMainHand(offHand)
-            player.attack(enemy)
+            player.attack(target)
             setItemInMainHand(mainHand)
             setItemInOffHand(offHand)
         }
@@ -399,21 +399,12 @@ object WeaponListeners : Listener {
 
     private fun kunaiThrowableHandler(event: PlayerInteractEvent) {
         val player = event.player
-        val mainWeapon = player.equipment.itemInMainHand
-        // Get CD
-        if (player.getCooldown(mainWeapon.type) > 0) return
+        val weapon = player.equipment.itemInMainHand
+        if (player.getCooldown(weapon.type) > 0) return
         // Spawn Kunai
         (player.world.spawnEntity(player.eyeLocation, EntityType.SNOWBALL) as Snowball).also {
-            // Set Item
-            it.item = mainWeapon
-            // Tags
-            var damage = 1.0
-            val attackModifiers = mainWeapon.itemMeta.attributeModifiers?.get(Attribute.GENERIC_ATTACK_DAMAGE)
-            if (attackModifiers != null) {
-                for (modifier in attackModifiers) { // FIX LATER
-                    damage += modifier.amount
-                }
-            }
+            it.item = weapon
+            val damage = getWeaponAttack(weapon)
             it.setIntTag(EntityTags.THROWABLE_DAMAGE, damage.toInt())
             it.addScoreboardTag(EntityTags.THROWN_KUNAI)
             // Velocity
@@ -421,27 +412,18 @@ object WeaponListeners : Listener {
             it.shooter = player
             it.setHasLeftShooter(false)
         }
-        player.setCooldown(mainWeapon.type, 1 * 20)
-        mainWeapon.damage(1, player)
+        player.setCooldown(weapon.type, 1 * 20)
+        weapon.damage(1, player)
     }
 
     private fun chakramThrowableHandler(event: PlayerInteractEvent) {
         val player = event.player
-        val mainWeapon = player.equipment.itemInMainHand
-        // Get CD
-        if (player.getCooldown(mainWeapon.type) > 0) return
+        val weapon = player.equipment.itemInMainHand
+        if (player.getCooldown(weapon.type) > 0) return
         // Spawn Chakram
         val throwable = (player.world.spawnEntity(player.eyeLocation, EntityType.SNOWBALL) as Snowball).also {
-            // Set Item
-            it.item = mainWeapon
-            // Tags
-            var damage = 1.0
-            val attackModifiers = mainWeapon.itemMeta.attributeModifiers?.get(Attribute.GENERIC_ATTACK_DAMAGE)
-            if (attackModifiers != null) {
-                for (modifier in attackModifiers) { // FIX LATER
-                    damage += modifier.amount
-                }
-            }
+            it.item = weapon
+            val damage = getWeaponAttack(weapon)
             it.setIntTag(EntityTags.THROWABLE_DAMAGE, damage.toInt())
             it.addScoreboardTag(EntityTags.THROWN_CHAKRAM)
             // Velocity (MAYBE SPEED IS STORED IN COMPONENT??)
@@ -451,29 +433,20 @@ object WeaponListeners : Listener {
             it.setHasLeftShooter(false)
             it.boundingBox.expand(6.0)
         }
-        player.setCooldown(mainWeapon.type, 6 * 20)
+        player.setCooldown(weapon.type, 6 * 20)
         // Return Task
-        val task = ChakramReturn(player, throwable, mainWeapon)
+        val task = ChakramReturn(player, throwable, weapon)
         task.runTaskLater(Odyssey.instance, 15)
     }
 
     private fun shurikenThrowableHandler(event: PlayerInteractEvent) {
         val player = event.player
         val throwable = player.equipment.itemInMainHand
-        // Get CD
         if (player.getCooldown(throwable.type) > 0) return
         // Spawn Shuriken
         (player.world.spawnEntity(player.eyeLocation, EntityType.SNOWBALL) as Snowball).also {
-            // Set Item
             it.item = throwable
-            // Tags
-            var damage = 1.0
-            val attackModifiers = throwable.itemMeta.attributeModifiers?.get(Attribute.GENERIC_ATTACK_DAMAGE)
-            if (attackModifiers != null) {
-                for (modifier in attackModifiers) { // FIX LATER
-                    damage += modifier.amount
-                }
-            }
+            val damage = getWeaponAttack(throwable)
             it.setIntTag(EntityTags.THROWABLE_DAMAGE, damage.toInt())
             it.addScoreboardTag(EntityTags.THROWN_SHURIKEN)
             // Velocity
@@ -550,6 +523,7 @@ object WeaponListeners : Listener {
     }
 
     // For thrown kunai hitting target
+    @Suppress("UnstableApiUsage")
     private fun kunaiHitEntityHandler(event: ProjectileHitEvent) {
         val projectile: Projectile = event.entity
         if (projectile !is ThrowableProjectile) return
@@ -563,7 +537,9 @@ object WeaponListeners : Listener {
             victim.addScoreboardTag(EntityTags.THROWABLE_ATTACK_HIT)
             // Match same weapon
             if (thrower is HumanEntity && thrower.equipment.itemInMainHand.getOdysseyTag() == projectile.item.getOdysseyTag()) {
-                thrower.attack(victim) // TODO: Fix to apply
+                //thrower.attack(victim) // TODO: Fix to apply
+                victim.damage(damage * 1.0, createPlayerDamageSource(thrower))
+
             } else {
                 victim.damage(damage * 1.0, thrower as LivingEntity)
             }
@@ -586,7 +562,7 @@ object WeaponListeners : Listener {
             val thrower = projectile.shooter ?: return
             if (thrower !is LivingEntity) return
             target.addScoreboardTag(EntityTags.THROWABLE_ATTACK_HIT)
-            thrower.attack(target)
+            target.damage(damage * 1.0, createPlayerDamageSource(thrower))
             returnChakram = true
         }
         // If hit owner, reset Cooldown
