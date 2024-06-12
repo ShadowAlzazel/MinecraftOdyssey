@@ -3,7 +3,6 @@ package me.shadowalzazel.mcodyssey.listeners.enchantment_listeners
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent
 import com.destroystokyo.paper.event.player.PlayerJumpEvent
 import io.papermc.paper.entity.LookAnchor
-import io.papermc.paper.world.MoonPhase
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.constants.EffectTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags
@@ -12,7 +11,6 @@ import me.shadowalzazel.mcodyssey.constants.EntityTags.removeTag
 import me.shadowalzazel.mcodyssey.constants.EntityTags.setIntTag
 import me.shadowalzazel.mcodyssey.effects.EffectsManager
 import me.shadowalzazel.mcodyssey.enchantments.api.EnchantmentsManager
-import me.shadowalzazel.mcodyssey.listeners.utility.MoonwardPhase
 import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.SpeedySpursTask
 import org.bukkit.Material
 import org.bukkit.Particle
@@ -30,7 +28,6 @@ import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityRegainHealthEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerItemConsumeEvent
-import org.bukkit.event.player.PlayerItemDamageEvent
 import org.bukkit.event.player.PlayerToggleSneakEvent
 import org.bukkit.event.vehicle.VehicleEnterEvent
 import org.bukkit.inventory.ItemStack
@@ -42,7 +39,6 @@ import org.bukkit.inventory.meta.Damageable as Repairable
 
 object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
 
-    private val moonwardPhasePlayers = mutableListOf<UUID>()
     // Pollen
     private val pollenMaxHeadPlayers = mutableMapOf<UUID, Int>()
     private val pollenMaxChestPlayers = mutableMapOf<UUID, Int>()
@@ -351,7 +347,7 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
             for (enchant in helmet.enchantments) {
                 when (enchant.key.getNameId()) {
                     "chitin" -> {
-                        copperChitinEnchantment(defender, helmet)
+                        chitinEnchantment(defender, helmet)
                     }
                     "reckless" -> {
                         event.amount += recklessRegenEnchantment(enchant.value)
@@ -364,7 +360,7 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
             for (enchant in chestplate.enchantments) {
                 when (enchant.key.getNameId()) {
                     "chitin" -> {
-                        copperChitinEnchantment(defender, chestplate)
+                        chitinEnchantment(defender, chestplate)
                     }
                     "reckless" -> {
                         event.amount += recklessRegenEnchantment(enchant.value)
@@ -377,7 +373,7 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
             for (enchant in leggings.enchantments) {
                 when (enchant.key.getNameId()) {
                     "chitin" -> {
-                        copperChitinEnchantment(defender, leggings)
+                        chitinEnchantment(defender, leggings)
                     }
                     "reckless" -> {
                         event.amount += recklessRegenEnchantment(enchant.value)
@@ -390,7 +386,7 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
             for (enchant in boots.enchantments) {
                 when (enchant.key.getNameId()) {
                     "chitin" -> {
-                        copperChitinEnchantment(defender, boots)
+                        chitinEnchantment(defender, boots)
                     }
                     "reckless" -> {
                         event.amount += recklessRegenEnchantment(enchant.value)
@@ -398,18 +394,6 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
                 }
             }
         }
-    }
-
-    @EventHandler
-    fun itemDurabilityHandler(event: PlayerItemDamageEvent) {
-        if (!event.item.hasItemMeta()) return
-        /*
-        if (event.item.enchantments.containsKey(OdysseyEnchantments.MOONPATCH.toBukkit())) {
-            moonwardEnchantment(event)
-        }
-        // TODO: Moonpatch timer
-         */
-
     }
 
     // Function regarding vehicles and armor
@@ -559,7 +543,7 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
         level: Int
     ): Double {
         if (defender.location.getNearbyLivingEntities(4.0).size >= 2 * level) {
-            return level * 0.5
+            return level * 1.0
         }
         return 0.0
     }
@@ -589,7 +573,7 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
         level: Int
     ): Double {
         if (attacker.location.getNearbyLivingEntities(4.0).size >= 2 * level) {
-            return level * 0.5
+            return level * 1.0
         }
         return 0.0
     }
@@ -635,7 +619,7 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
 
         player.setCooldown(potion.type, 20 * 6)
     }
-    private fun copperChitinEnchantment(
+    private fun chitinEnchantment(
         defender: LivingEntity,
         armor: ItemStack
     ) {
@@ -878,20 +862,6 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
         val blockValid = (block.type in listOf(Material.LAVA, Material.MAGMA_BLOCK))
         if (blockValid) {
             defender.saturation = minOf(defender.saturation + (0.5F * level)  , 20.0F)
-        }
-    }
-    private fun moonwardEnchantment(event: PlayerItemDamageEvent) {
-        if (!event.player.world.hasSkyLight()) return
-        if (event.player.world.isDayTime) return
-        if (event.player.world.moonPhase == MoonPhase.NEW_MOON) return
-        if (event.player.location.block.lightFromSky < 8) return
-        //
-        event.damage = maxOf(event.damage - 1, 0)
-        // TODO: TO EXPENSIVE TO RUN EVERY TIME MOVE LATER
-        if (!moonwardPhasePlayers.contains(event.player.uniqueId)) {
-            moonwardPhasePlayers.add(event.player.uniqueId)
-            val moonwardPhase = MoonwardPhase(event.player)
-            moonwardPhase.runTaskTimer(Odyssey.instance, 10, 20)
         }
     }
     private fun opticalizationSpyglassEnchantment(

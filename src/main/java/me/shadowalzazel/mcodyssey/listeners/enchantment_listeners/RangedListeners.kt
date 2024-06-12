@@ -89,7 +89,7 @@ object RangedListeners : Listener, EnchantmentsManager {
                     luxposeEnchantmentShoot(projectile, enchant.value)
                 }
                 "gale" -> {
-                    galeEnchantmentShoot(shooter, enchant.value)
+                    galeEnchantmentShoot(shooter, projectile, enchant.value)
                 }
                 "overcharge" -> {
                     overchargeEnchantmentShoot(projectile, shooter, bow)
@@ -310,7 +310,6 @@ object RangedListeners : Listener, EnchantmentsManager {
 
     /*-----------------------------------------------------------------------------------------------*/
 
-    // ------------------------------- ALCHEMY_ARTILLERY ------------------------------------
     private fun alchemyArtilleryShoot(projectile: Entity, level: Int) {
         if (projectile is Arrow) {
             if (projectile.hasCustomEffects()) {
@@ -346,7 +345,6 @@ object RangedListeners : Listener, EnchantmentsManager {
 
     }
 
-    // ------------------------------- BALLISTICS ------------------------------------
     private fun ballisticsEnchantmentShoot(projectile: Entity, level: Int) {
         with(projectile) {
             addScoreboardTag(EntityTags.BALLISTICS_ARROW)
@@ -359,8 +357,6 @@ object RangedListeners : Listener, EnchantmentsManager {
         return modifier * 1.0
     }
 
-
-    // ------------------------------- BOLA_SHOT ------------------------------------
     private fun bolaShotEnchantmentShoot(projectile: Entity, level: Int) {
         with(projectile) {
             addScoreboardTag(EntityTags.BOLA_SHOT_ARROW)
@@ -376,11 +372,8 @@ object RangedListeners : Listener, EnchantmentsManager {
         victim.addPotionEffects(listOf(
             PotionEffect(PotionEffectType.SLOWNESS, 20 * (3 + modifier), 0),
             PotionEffect(PotionEffectType.MINING_FATIGUE, 20 * (3 + modifier), 0)))
-        // MAYBE ADD DELAYED TASK TO REMOVE COB WEBS?
-
     }
 
-    // ------------------------------- BURST_BARRAGE ------------------------------------
     private fun burstBarrageEnchantmentShoot(projectile: Entity, shooter: LivingEntity, level: Int) {
         if (!shooter.scoreboardTags.contains(EntityTags.IS_BURST_BARRAGING) && !projectile.scoreboardTags.contains(EntityTags.REPLICATED_ARROW) && projectile is Projectile)  {
             projectile.run {
@@ -403,7 +396,6 @@ object RangedListeners : Listener, EnchantmentsManager {
 
     }
 
-    // ------------------------------- CHAIN_REACTION ------------------------------------
     private fun chainReactionEnchantmentShoot(projectile: Entity, level: Int) {
         with(projectile) {
             addScoreboardTag(EntityTags.CHAIN_REACTION_ARROW)
@@ -453,7 +445,6 @@ object RangedListeners : Listener, EnchantmentsManager {
         }
     }
 
-    // ------------------------------- CLUSTER_SHOT ------------------------------------
     private fun clusterShotEnchantmentShoot(projectile: Entity, level: Int) {
         projectile.run {
             addScoreboardTag(EntityTags.CLUSTER_SHOT_ARROW)
@@ -493,7 +484,6 @@ object RangedListeners : Listener, EnchantmentsManager {
         }
     }
 
-    // ------------------------------- DEADEYE ------------------------------------
     private fun deadeyeEnchantmentShoot(projectile: Entity, level: Int) {
         with(projectile) {
             addScoreboardTag(EntityTags.DEADEYE_ARROW)
@@ -510,7 +500,6 @@ object RangedListeners : Listener, EnchantmentsManager {
         return 0.0
     }
 
-    // ------------------------------- DEATH_FROM_ABOVE ------------------------------------
     private fun deathFromAboveEnchantmentShoot(projectile: Entity, level: Int) {
         with(projectile) {
             addScoreboardTag(EntityTags.DEATH_FROM_ABOVE_ARROW)
@@ -527,8 +516,6 @@ object RangedListeners : Listener, EnchantmentsManager {
         return 0.0
     }
 
-
-    // ------------------------------- DOUBLE_TAP ------------------------------------
     private fun doubleTapEnchantmentShoot(projectile: Entity, shooter: LivingEntity) {
         if (projectile !is Projectile) return
         if (projectile.scoreboardTags.contains(EntityTags.DOUBLE_TAP_SHOT)) return
@@ -542,7 +529,6 @@ object RangedListeners : Listener, EnchantmentsManager {
 
     }
 
-    // ------------------------------- ENTANGLEMENT ------------------------------------
     // Quantum Entanglement does TP (legendary affix)
     private fun entanglementEnchantmentShoot(projectile: Entity, level: Int) {
         with(projectile) {
@@ -576,9 +562,6 @@ object RangedListeners : Listener, EnchantmentsManager {
         return modifier * 1.0
     }
 
-
-    // ------------------------------- FAN_FIRE ------------------------------------
-
     private fun fanFireEnchantmentShoot(projectile: Entity, shooter: LivingEntity, level: Int) {
         if (projectile !is Projectile) return
         if (projectile.scoreboardTags.contains(EntityTags.FAN_FIRE_SHOT)) return
@@ -606,22 +589,17 @@ object RangedListeners : Listener, EnchantmentsManager {
         }
     }
 
-
-
-    // ------------------------------- GALE_WIND ------------------------------------
-    private fun galeEnchantmentShoot(shooter: LivingEntity, level: Int) {
+    private fun galeEnchantmentShoot(shooter: LivingEntity, projectile: Entity, level: Int) {
+        if (projectile.velocity.length() <= 2.2) return
         shooter.world.playSound(shooter.location, Sound.ENTITY_WARDEN_SONIC_CHARGE, 2.5F, 1.5F)
         val task = GaleWindTask(shooter, level)
-        task.runTaskLater(Odyssey.instance, 6)
+        task.runTaskLater(Odyssey.instance, 5)
     }
 
-
-    // ------------------------------- LUCKY_DRAW ------------------------------------
     private fun luckyDrawEnchantmentShoot(enchantmentStrength: Int): Boolean {
         return (enchantmentStrength * 10) + 7 > (0..100).random()
     }
 
-    // ------------------------------- LUXPOSE ------------------------------------
     private fun luxposeEnchantmentShoot(projectile: Entity, level: Int) {
         with(projectile) {
             addScoreboardTag(EntityTags.LUXPOSE_ARROW)
@@ -635,8 +613,6 @@ object RangedListeners : Listener, EnchantmentsManager {
         return modifier * 1.0
     }
 
-
-    // ------------------------------- OVERCHARGE ------------------------------------
     private fun overchargeEnchantmentLoad(player: Player, bow: ItemStack, level: Int) {
         if (player.scoreboardTags.contains(EntityTags.OVERCHARGING)) return
         player.scoreboardTags.add(EntityTags.OVERCHARGING)
@@ -677,7 +653,6 @@ object RangedListeners : Listener, EnchantmentsManager {
         return 3.0 * modifier
     }
 
-    // ------------------------------- PERPETUAL_PROJECTILE ------------------------------------
     private fun perpetualProjectileEnchantmentShoot(projectile: Entity, level: Int) {
         projectile.run {
             addScoreboardTag(EntityTags.PERPETUAL_ARROW)
@@ -687,7 +662,6 @@ object RangedListeners : Listener, EnchantmentsManager {
         }
     }
 
-    // ------------------------------- RICOCHET ------------------------------------
     private fun ricochetEnchantmentShoot(projectile: Entity, level: Int) {
         with(projectile) {
             addScoreboardTag(EntityTags.RICOCHET_ARROW)
@@ -724,7 +698,6 @@ object RangedListeners : Listener, EnchantmentsManager {
         projectile.remove()
     }
 
-    // ------------------------------- SHARPSHOOTER ------------------------------------
     private fun sharpshooterEnchantmentShoot(projectile: Entity, level: Int) {
         with(projectile) {
             if (velocity.length() <= 2.6) return
@@ -739,7 +712,6 @@ object RangedListeners : Listener, EnchantmentsManager {
         return modifier * 0.5
     }
 
-    // ------------------------------- SINGLE_OUT ------------------------------------
     private fun singleOutEnchantmentShoot(projectile: Entity, level: Int) {
         with(projectile) {
             addScoreboardTag(EntityTags.SINGLE_OUT_ARROW)
@@ -753,7 +725,6 @@ object RangedListeners : Listener, EnchantmentsManager {
         return (modifier * 2.0)
     }
 
-    // ------------------------------- SINGULARITY_SHOT ------------------------------------
     private fun singularityShotEnchantmentShoot(projectile: Entity, level: Int, shooter: LivingEntity) {
         with(projectile) {
             // Task
@@ -767,7 +738,6 @@ object RangedListeners : Listener, EnchantmentsManager {
         }
     }
 
-    // ------------------------------- SOUL_REND ------------------------------------
     private fun rendEnchantmentShoot(projectile: Entity, level: Int) {
         with(projectile) {
             addScoreboardTag(EntityTags.SOUL_REND_ARROW)
@@ -799,7 +769,6 @@ object RangedListeners : Listener, EnchantmentsManager {
         }
     }
 
-    // ------------------------------- TEMPORAL_TORRENT ------------------------------------
     private fun temporalTorrentEnchantmentShoot(projectile: Entity, level: Int) {
         with(projectile) {
             if (projectile !is Projectile) return
@@ -811,9 +780,6 @@ object RangedListeners : Listener, EnchantmentsManager {
             task.runTaskTimer(Odyssey.instance, 0, 4) // Every 4 ticks / 0.2 secs
         }
     }
-
-
-    // ------------------------------- VULNEROCITY ------------------------------------
 
     private fun vulnerocityEnchantmentShoot(projectile: Entity, level: Int) {
         with(projectile) {

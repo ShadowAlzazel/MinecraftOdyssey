@@ -3,7 +3,7 @@ package me.shadowalzazel.mcodyssey.listeners
 import com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent
 import kotlinx.coroutines.*
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.alchemy.AlchemyManager
+import me.shadowalzazel.mcodyssey.alchemy.CustomEffectsListener
 import me.shadowalzazel.mcodyssey.alchemy.CauldronRecipes
 import me.shadowalzazel.mcodyssey.alchemy.base.AlchemyCauldronRecipe
 import me.shadowalzazel.mcodyssey.alchemy.utility.CauldronEventSynchro
@@ -39,7 +39,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.potion.PotionType
 
-object AlchemyListener : Listener, AlchemyManager, EffectsManager {
+object AlchemyListener : Listener, CustomEffectsListener, EffectsManager {
 
     /*-----------------------------------------------------------------------------------------------*/
     // Effects

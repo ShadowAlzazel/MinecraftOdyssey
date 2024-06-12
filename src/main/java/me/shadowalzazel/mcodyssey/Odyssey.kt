@@ -6,10 +6,8 @@ import me.shadowalzazel.mcodyssey.bosses.the_ambassador.AmbassadorListeners
 import me.shadowalzazel.mcodyssey.commands.admin.*
 import me.shadowalzazel.mcodyssey.commands.spells.PlaceFeatureArchaicSeed
 import me.shadowalzazel.mcodyssey.listeners.*
-import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.ArmorListeners
-import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.MeleeListeners
-import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.MiscListeners
-import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.RangedListeners
+import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.*
+import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.OtherListeners
 import me.shadowalzazel.mcodyssey.phenomenon.base.OdysseyPhenomenon
 import me.shadowalzazel.mcodyssey.recipes.RecipeManager
 import me.shadowalzazel.mcodyssey.recipes.brewing.BrewerMixes
@@ -113,8 +111,9 @@ class Odyssey : JavaPlugin() {
             HogRiderListeners,
             ArmorListeners,
             MeleeListeners,
-            MiscListeners,
+            OtherListeners,
             RangedListeners,
+            MiscListeners,
             ScoreboardTagListeners,
             LootListeners,
             FoodListeners,

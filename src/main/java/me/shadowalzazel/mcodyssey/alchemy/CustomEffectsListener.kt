@@ -28,7 +28,7 @@ import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionType
 
-interface AlchemyManager {
+interface CustomEffectsListener {
 
     /*-----------------------------------------------------------------------------------------------*/
     // Tags
