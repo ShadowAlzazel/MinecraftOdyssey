@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.listeners
 
-import me.shadowalzazel.mcodyssey.attributes.AttributeManager
-import me.shadowalzazel.mcodyssey.constants.AttributeIDs
+import me.shadowalzazel.mcodyssey.util.AttributeManager
+import me.shadowalzazel.mcodyssey.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.enchantments.api.EnchantabilityHandler
 import me.shadowalzazel.mcodyssey.items.creators.ToolCreator
@@ -13,8 +13,6 @@ import me.shadowalzazel.mcodyssey.util.MobEquipHelper
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Material
-import org.bukkit.attribute.Attribute
-import org.bukkit.attribute.AttributeModifier
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
@@ -148,11 +146,11 @@ object SpawningListeners : Listener, AttributeManager, MobEquipHelper, Enchantab
                 it.leggingsDropChance = 0.3F
                 it.bootsDropChance = 0.3F
             }
-            addHealthAttribute(45 + (20.0 * difficultyMod), id = AttributeIDs.ODYSSEY_GILDED_MOB_HEALTH_UUID)
+            addHealthAttribute(45 + (20.0 * difficultyMod), AttributeTags.ELITE_HEALTH)
             health += 45 + (20.0 * difficultyMod)
-            addAttackAttribute(3 + (1 * difficultyMod), id = AttributeIDs.ODYSSEY_GILDED_MOB_ATTACK_UUID)
-            addArmorAttribute(6 + (2 * difficultyMod), id = AttributeIDs.ODYSSEY_GILDED_MOB_ARMOR_UUID)
-            addSpeedAttribute(0.012 + (0.012 * difficultyMod), id = AttributeIDs.ODYSSEY_GILDED_MOB_SPEED_UUID)
+            addAttackAttribute(3 + (1 * difficultyMod), AttributeTags.ELITE_ATTACK_DAMAGE)
+            addArmorAttribute(6 + (2 * difficultyMod), AttributeTags.ELITE_ARMOR)
+            addSpeedAttribute(0.012 + (0.012 * difficultyMod), AttributeTags.ELITE_SPEED)
             addScaleAttribute(0.2)
             addScoreboardTag(EntityTags.ELITE_MOB)
             addPotionEffect(PotionEffect(PotionEffectType.RESISTANCE, 20 * 3600, 0))
@@ -276,20 +274,10 @@ object SpawningListeners : Listener, AttributeManager, MobEquipHelper, Enchantab
                     newMeta.trim = newTrim
                 }
             }
-            // Attributes
-            val healthModifier = AttributeModifier(
-                AttributeIDs.ODYSSEY_MOB_HEALTH_UUID,
-                "odyssey.mob_health",
-                (rank * 3.0) + 4.0,
-                AttributeModifier.Operation.ADD_NUMBER)
-            getAttribute(Attribute.GENERIC_MAX_HEALTH)?.addModifier(healthModifier)
-            health = getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value ?: health
-            val damageModifier = AttributeModifier(
-                AttributeIDs.ODYSSEY_MOB_DAMAGE_UUID,
-                "odyssey.mob_damage",
-                (rank * 2.0) + 1.0,
-                AttributeModifier.Operation.ADD_NUMBER)
-            getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)?.addModifier(damageModifier)
+            val bonusHealth = (rank * 3.0) + 4.0
+            val bonusDamage = (rank * 2.0) + 1.0
+            addHealthAttribute(bonusHealth)
+            addAttackAttribute(bonusDamage)
         }
     }
 

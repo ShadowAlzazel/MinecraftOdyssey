@@ -1,17 +1,16 @@
 package me.shadowalzazel.mcodyssey.items.creators
 
-import me.shadowalzazel.mcodyssey.attributes.AttributeManager
+import me.shadowalzazel.mcodyssey.util.AttributeManager
 import me.shadowalzazel.mcodyssey.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addStringTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addTag
 import me.shadowalzazel.mcodyssey.items.Exotics
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.inventory.ItemRarity
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
 
-interface ExoticCreator : AttributeManager {
+interface ExoticCreator : AttributeManager, DataTagManager {
 
     fun OdysseyItem.createExoticWeapon(): ItemStack {
         val item = this.newItemStack(1)
@@ -47,7 +46,7 @@ interface ExoticCreator : AttributeManager {
             // ADD TAG, BONUS PEIRCE
             addAttackDamageAttribute(9.0, AttributeTags.ITEM_BASE_ATTACK_DAMAGE)
             addEntityRangeAttribute(-0.1, AttributeTags.ITEM_BASE_ENTITY_RANGE)
-            setNewAttackSpeedAttribute(3.0, AttributeTags.ITEM_BASE_ATTACK_SPEED)
+            setNewAttackSpeedAttribute(3.0)
             setMaxDurability(1009)
         }
     }
@@ -57,7 +56,7 @@ interface ExoticCreator : AttributeManager {
             addStringTag(ItemDataTags.WEAPON_TYPE, "katana")
             addAttackDamageAttribute(12.0, AttributeTags.ITEM_BASE_ATTACK_DAMAGE)
             addEntityRangeAttribute(0.3, AttributeTags.ITEM_BASE_ENTITY_RANGE)
-            setNewAttackSpeedAttribute(1.7, AttributeTags.ITEM_BASE_ATTACK_SPEED)
+            setNewAttackSpeedAttribute(1.7)
             setMaxDurability(2111)
         }
     }
@@ -67,7 +66,7 @@ interface ExoticCreator : AttributeManager {
             addStringTag(ItemDataTags.WEAPON_TYPE, "claymore")
             addAttackDamageAttribute(21.0, AttributeTags.ITEM_BASE_ATTACK_DAMAGE)
             addEntityRangeAttribute(0.7, AttributeTags.ITEM_BASE_ENTITY_RANGE)
-            setNewAttackSpeedAttribute(0.8, AttributeTags.ITEM_BASE_ATTACK_SPEED)
+            setNewAttackSpeedAttribute(0.8)
             setMaxDurability(3109)
         }
     }
@@ -78,7 +77,7 @@ interface ExoticCreator : AttributeManager {
             addStringTag(ItemDataTags.MATERIAL_TYPE, "mithril") // MAYBE
             addAttackDamageAttribute(15.0, AttributeTags.ITEM_BASE_ATTACK_DAMAGE)
             addEntityRangeAttribute(0.3, AttributeTags.ITEM_BASE_ENTITY_RANGE)
-            setNewAttackSpeedAttribute(1.4, AttributeTags.ITEM_BASE_ATTACK_SPEED)
+            setNewAttackSpeedAttribute(1.4)
             setMaxDurability(2357)
         }
     }
@@ -88,7 +87,7 @@ interface ExoticCreator : AttributeManager {
             addStringTag(ItemDataTags.WEAPON_TYPE, "dagger")
             addAttackDamageAttribute(10.0, AttributeTags.ITEM_BASE_ATTACK_DAMAGE)
             addEntityRangeAttribute(-0.1, AttributeTags.ITEM_BASE_ENTITY_RANGE)
-            setNewAttackSpeedAttribute(3.0, AttributeTags.ITEM_BASE_ATTACK_SPEED)
+            setNewAttackSpeedAttribute(3.0)
             setMaxDurability(1019)
         }
     }
@@ -98,7 +97,7 @@ interface ExoticCreator : AttributeManager {
             addStringTag(ItemDataTags.WEAPON_TYPE, "longsword")
             addAttackDamageAttribute(14.0, AttributeTags.ITEM_BASE_ATTACK_DAMAGE)
             addEntityRangeAttribute(0.3, AttributeTags.ITEM_BASE_ENTITY_RANGE)
-            setNewAttackSpeedAttribute(1.5, AttributeTags.ITEM_BASE_ATTACK_SPEED)
+            setNewAttackSpeedAttribute(1.5)
             setMaxDurability(2797)
         }
     }

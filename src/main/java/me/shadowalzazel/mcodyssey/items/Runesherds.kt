@@ -1,8 +1,8 @@
 package me.shadowalzazel.mcodyssey.items
 
+import me.shadowalzazel.mcodyssey.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addTag
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import me.shadowalzazel.mcodyssey.rune_writing.RunesherdManager
 import me.shadowalzazel.mcodyssey.rune_writing.SpaceRuneManager
@@ -12,27 +12,23 @@ import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
-import org.bukkit.inventory.EquipmentSlot
+import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
 
+@Suppress("UnstableApiUsage")
 object Runesherds : RunesherdManager, SpaceRuneManager {
 
     private val GRAY = TextColor.color(170, 170, 170)
     private val RUNEVOID = TextColor.color(85, 67 ,129)
 
-    private val ARMOR_LIST = listOf(EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD)
-    private val ALL_LIST = listOf(EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.CHEST,
-        EquipmentSlot.HEAD, EquipmentSlot.OFF_HAND, EquipmentSlot.HAND)
-    private val WEAPON_LIST = listOf(EquipmentSlot.OFF_HAND, EquipmentSlot.HAND)
-
     fun OdysseyRunesherd.createPresetSherdStack(amount: Int = 1): ItemStack {
         val item = this.newItemStack(amount).also {
             it.addRunesherdTag()
         }
-        if (attribute != null && !affectedEquipment.isNullOrEmpty()) {
-            val runeName = "odyssey." + itemName + "_modifier"
-            val runeID = getIDForRunesherd(attribute)
-            item.addRuneModifier(attribute, value, runeName, runeID, affectedEquipment.random())
+        // Add a key that all runesherds share
+        if (attribute != null && slotGroup != null) {
+            val runeKey = AttributeTags.RUNESHERD_KEY
+            item.addGenericAttribute(value, runeKey, attribute, null, slotGroup)
         }
         return item
     }
@@ -41,12 +37,19 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         val item = this.newItemStack(amount).also {
             it.addRunesherdTag()
         }
-        if (attribute != null && !affectedEquipment.isNullOrEmpty()) {
+        // Add a key that all runesherds share
+        if (attribute != null && slotGroup != null) {
+            val runeKey = AttributeTags.RUNESHERD_KEY
+            item.addGenericAttribute(value, runeKey, attribute, null, slotGroup)
+        }
+        /*
+        if (attribute != null && !slotGroup.isNullOrEmpty()) {
             val runeName = "odyssey." + itemName + "_modifier"
-            val runeID = getIDForRunesherd(attribute)
+            val runeID = getRuneAttributeName(attribute)
             val newValue = value + (((0..100).random() / 100) * bonus) // Get an offset
             item.addRuneModifier(attribute, newValue, runeName, runeID, ALL_LIST.random())
         }
+         */
         return item
     }
 
@@ -127,7 +130,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         customModel = ItemModels.ASSAULT_RUNESHERD,
         attribute = Attribute.GENERIC_ATTACK_DAMAGE,
         value = 1.0,
-        affectedEquipment = listOf(EquipmentSlot.HAND)
+        slotGroup = EquipmentSlotGroup.MAINHAND
     )
 
     val GUARD_RUNESHERD = OdysseyRunesherd(
@@ -137,7 +140,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         customModel = ItemModels.GUARD_RUNESHERD,
         attribute = Attribute.GENERIC_ARMOR,
         value = 1.0,
-        affectedEquipment = ARMOR_LIST
+        slotGroup = EquipmentSlotGroup.ARMOR
     )
 
     val FINESSE_RUNESHERD = OdysseyRunesherd(
@@ -147,7 +150,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         customModel = ItemModels.FINESSE_RUNESHERD,
         attribute = Attribute.GENERIC_ATTACK_SPEED,
         value = 0.2,
-        affectedEquipment = listOf(EquipmentSlot.HAND)
+        slotGroup = EquipmentSlotGroup.MAINHAND
     )
 
     val SWIFT_RUNESHERD = OdysseyRunesherd(
@@ -157,7 +160,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         customModel = ItemModels.SWIFT_RUNESHERD,
         attribute = Attribute.GENERIC_MOVEMENT_SPEED,
         value = 0.03,
-        affectedEquipment = listOf(EquipmentSlot.FEET)
+        slotGroup = EquipmentSlotGroup.FEET
     )
 
     val VITALITY_RUNESHERD = OdysseyRunesherd(
@@ -167,7 +170,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         customModel = ItemModels.VITALITY_RUNESHERD,
         attribute = Attribute.GENERIC_MAX_HEALTH,
         value = 2.0,
-        affectedEquipment = listOf(EquipmentSlot.HEAD, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.FEET)
+        slotGroup = EquipmentSlotGroup.ARMOR
     )
 
     val STEADFAST_RUNESHERD = OdysseyRunesherd(
@@ -177,7 +180,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         customModel = ItemModels.STEADFAST_RUNESHERD,
         attribute = Attribute.GENERIC_KNOCKBACK_RESISTANCE,
         value = 0.2,
-        affectedEquipment = listOf(EquipmentSlot.LEGS, EquipmentSlot.FEET, EquipmentSlot.CHEST, EquipmentSlot.HEAD)
+        slotGroup = EquipmentSlotGroup.ARMOR
     )
 
     val FORCE_RUNESHERD = OdysseyRunesherd(
@@ -187,7 +190,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         customModel = ItemModels.FORCE_RUNESHERD,
         attribute = Attribute.GENERIC_ATTACK_KNOCKBACK,
         value = 0.5,
-        affectedEquipment = listOf(EquipmentSlot.HAND)
+        slotGroup = EquipmentSlotGroup.MAINHAND
     )
 
     val BREAK_RUNESHERD = OdysseyRunesherd(
@@ -197,7 +200,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         customModel = ItemModels.BREAK_RUNESHERD,
         attribute = Attribute.PLAYER_BLOCK_BREAK_SPEED,
         value = 0.5,
-        affectedEquipment = listOf(EquipmentSlot.HAND)
+        slotGroup = EquipmentSlotGroup.MAINHAND
     )
 
     val GRASP_RUNESHERD = OdysseyRunesherd(
@@ -207,7 +210,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         customModel = ItemModels.GRASP_RUNESHERD,
         attribute = Attribute.PLAYER_BLOCK_INTERACTION_RANGE,
         value = 1.0,
-        affectedEquipment = listOf(EquipmentSlot.HAND)
+        slotGroup = EquipmentSlotGroup.MAINHAND
     )
 
     val JUMP_RUNESHERD = OdysseyRunesherd(
@@ -217,10 +220,8 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         customModel = ItemModels.JUMP_RUNESHERD,
         attribute = Attribute.GENERIC_JUMP_STRENGTH,
         value = 0.3,
-        affectedEquipment = listOf(EquipmentSlot.LEGS)
+        slotGroup = EquipmentSlotGroup.LEGS
     )
-
-    // TODO: Step Size
 
     val GRAVITY_RUNESHERD = OdysseyRunesherd(
         itemName = "gravity_runesherd",
@@ -229,7 +230,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         customModel = ItemModels.GRAVITY_RUNESHERD,
         attribute = Attribute.GENERIC_GRAVITY,
         value = -0.01,
-        affectedEquipment = listOf(EquipmentSlot.HEAD)
+        slotGroup = EquipmentSlotGroup.ARMOR
     )
 
     val RANGE_RUNESHERD = OdysseyRunesherd(
@@ -239,7 +240,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         customModel = ItemModels.RANGE_RUNESHERD,
         attribute = Attribute.PLAYER_ENTITY_INTERACTION_RANGE,
         value = 0.5,
-        affectedEquipment = listOf(EquipmentSlot.HAND)
+        slotGroup = EquipmentSlotGroup.MAINHAND
     )
 
     val SIZE_RUNESHERD = OdysseyRunesherd(
@@ -249,7 +250,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         customModel = ItemModels.SIZE_RUNESHERD,
         attribute = Attribute.GENERIC_SCALE,
         value = 0.25,
-        affectedEquipment = listOf(EquipmentSlot.CHEST)
+        slotGroup = EquipmentSlotGroup.ARMOR
     )
 
     val runesherdRuinsList = listOf(

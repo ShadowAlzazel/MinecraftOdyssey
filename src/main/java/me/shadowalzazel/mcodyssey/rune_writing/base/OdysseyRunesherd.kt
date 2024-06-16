@@ -5,7 +5,9 @@ import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.inventory.EquipmentSlot
+import org.bukkit.inventory.EquipmentSlotGroup
 
+@Suppress("UnstableApiUsage")
 class OdysseyRunesherd(
     itemName: String,
     overrideMaterial: Material,
@@ -14,7 +16,7 @@ class OdysseyRunesherd(
     lore: List<Component>? = null,
     internal val attribute: Attribute? = null,
     internal val value: Double = 0.0,
-    internal val affectedEquipment: List<EquipmentSlot>? = null
+    internal val slotGroup: EquipmentSlotGroup? = null
 ) : OdysseyItem(
     itemName = itemName,
     overrideMaterial = overrideMaterial,

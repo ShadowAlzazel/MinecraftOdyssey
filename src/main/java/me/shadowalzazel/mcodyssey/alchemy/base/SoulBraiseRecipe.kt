@@ -1,9 +1,9 @@
 package me.shadowalzazel.mcodyssey.alchemy.base
 
 import me.shadowalzazel.mcodyssey.alchemy.utility.BraiseBase
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasOdysseyItemTag
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import me.shadowalzazel.mcodyssey.mobs.base.OdysseyMob
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Particle
@@ -18,7 +18,7 @@ open class SoulBraiseRecipe(
     private val mobSummon: OdysseyMob?,
     private val braiseIngredients: List<ItemStack>,
     private val braiseMaterial: Set<Material>,
-    private val braiseBase: BraiseBase) {
+    private val braiseBase: BraiseBase) : DataTagManager {
 
     fun validateRecipe(itemSet: Set<Item>, fireBlock: Block): Boolean {
         // Check items

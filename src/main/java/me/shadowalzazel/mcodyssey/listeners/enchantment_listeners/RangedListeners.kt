@@ -591,7 +591,7 @@ object RangedListeners : Listener, EnchantmentsManager {
 
     private fun galeEnchantmentShoot(shooter: LivingEntity, projectile: Entity, level: Int) {
         if (projectile.velocity.length() <= 2.2) return
-        shooter.world.playSound(shooter.location, Sound.ENTITY_WARDEN_SONIC_CHARGE, 2.5F, 1.5F)
+        shooter.world.playSound(shooter.location, Sound.ENTITY_WIND_CHARGE_WIND_BURST, 2.5F, 1.5F)
         val task = GaleWindTask(shooter, level)
         task.runTaskLater(Odyssey.instance, 5)
     }

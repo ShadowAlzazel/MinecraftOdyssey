@@ -2,11 +2,8 @@ package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.ARCHAIC_NAMESPACE
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addStringTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasTag
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
@@ -18,7 +15,7 @@ import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.entity.EntityDropItemEvent
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
 
-object SnifferListeners : Listener {
+object SnifferListeners : Listener, DataTagManager {
 
     // Drops based on humid, veg, weird
     // Rain
@@ -78,7 +75,7 @@ object SnifferListeners : Listener {
                     "none"
                 }
             }
-            addStringTag(ARCHAIC_NAMESPACE, namespaceSeed)
+            addStringTag(ItemDataTags.ARCHAIC_NAMESPACE, namespaceSeed)
         }
         event.itemDrop.itemStack = drop
         println(event.entity.type.toString() + " Drops " + event.itemDrop)

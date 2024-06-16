@@ -2,8 +2,8 @@ package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.constants.EntityTags
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.isThisItem
 import me.shadowalzazel.mcodyssey.tasks.mob_tasks.PiglinRallyTask
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.Material
 import org.bukkit.MusicInstrument
 import org.bukkit.Sound
@@ -21,7 +21,7 @@ import org.bukkit.inventory.meta.MusicInstrumentMeta
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object MobListeners : Listener{
+object MobListeners : Listener, DataTagManager {
 
     // Scarecrow Mob pumpkin and stand
     // weeping angels

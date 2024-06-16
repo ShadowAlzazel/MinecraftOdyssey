@@ -4,10 +4,9 @@ import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.alchemy.SoulBraiseRecipes
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasTag
 import me.shadowalzazel.mcodyssey.items.Ingredients
 import me.shadowalzazel.mcodyssey.listeners.utility.SculkFinderSynchro
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
@@ -22,7 +21,7 @@ import org.bukkit.event.entity.EntityCombustByBlockEvent
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.inventory.ItemStack
 
-object SoulBraisingListener : Listener {
+object SoulBraisingListener : Listener, DataTagManager {
 
     // Spirit Mobs,
     // HAVE IN-VIS AND GLOWING, are summoned to fight and other cool stuff.

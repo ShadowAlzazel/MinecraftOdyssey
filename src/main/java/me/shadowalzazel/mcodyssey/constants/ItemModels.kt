@@ -208,74 +208,40 @@ object ItemModels {
     const val KATANA_TEMPLATE: Int = 6905819
     const val KATANA_MOLD: Int = 6905819
 
-    // Swords [69057XX]
-    const val KATANA: Int = 6905744
-    const val CLAYMORE: Int = 6905745
-    const val DAGGER: Int = 6905746
-    const val RAPIER: Int = 6905747
-    const val CUTLASS: Int = 6905748
-    const val SABER: Int = 6905749
-    const val SICKLE: Int = 6905750
-    const val CHAKRAM: Int = 6905751
-    const val KUNAI: Int = 6905752
-    const val LONGSWORD: Int = 6905753
-
+    // Swords [*****XX]
+    const val KATANA: Int = 44
+    const val CLAYMORE: Int = 45
+    const val DAGGER: Int = 46
+    const val RAPIER: Int = 47
+    const val CUTLASS: Int = 48
+    const val SABER: Int = 49
+    const val SICKLE: Int = 50
+    const val CHAKRAM: Int = 51
+    const val KUNAI: Int = 52
+    const val LONGSWORD: Int = 53
     // Shovels
-    const val SPEAR: Int = 6905774
-    const val HALBERD: Int = 6905775
-    const val LANCE: Int = 6905776
-    const val NAGINATA: Int = 6905777 // CQ
-    const val PIKE: Int = 6905778 // Stationary
-
+    const val SPEAR: Int = 74
+    const val HALBERD: Int = 75
+    const val LANCE: Int = 76
+    const val NAGINATA: Int = 77 // CQ
+    const val PIKE: Int = 78 // Stationary
     // Pickaxe
-    const val WARHAMMER: Int = 6905802
-    const val MACE: Int = 6905803  // One-handed
-    const val MAUL: Int = 6905804  // Two-Handed
-    const val GUANDAO: Int = 6905805 // Lacerate, AVg speed
-    const val SCYTHE: Int = 6905806 // AOE
-
+    const val WARHAMMER: Int = 11
+    const val MACE: Int = 12  // One-handed
+    const val MAUL: Int = 13  // Two-Handed
+    const val GUANDAO: Int = 14 // Lacerate, AVg speed
+    const val SCYTHE: Int = 15 // AOE
     // Axe
-    const val BATTLE_AXE: Int = 6905784
-    const val LONG_AXE: Int = 6905785
-    const val POLEAXE: Int = 6905786
-    const val LABRYS: Int = 6905787
-
-    // Misc
-    const val BAMBOO_STAFF: Int = 6905793
-    const val BONE_STAFF: Int = 6905794
-    const val WOODEN_STAFF: Int = 6905795
-    const val BLAZE_ROD_STAFF: Int = 6905796
+    const val BATTLE_AXE: Int = 84
+    const val LONG_AXE: Int = 85
+    const val POLEAXE: Int = 86
+    const val LABRYS: Int = 87
 
     // Copper [69055XX]
-
-    // Soul Steel [69063XX]
-
-    // Soul Steel [69066XX] TODO !!! Conversion map for smithing
-    const val SOUL_STEEL_KATANA: Int = 6906644
-    const val SOUL_STEEL_CLAYMORE: Int = 6906645
-    const val SOUL_STEEL_DAGGER: Int = 6906646
-    const val SOUL_STEEL_RAPIER: Int = 6906647
-    const val SOUL_STEEL_CUTLASS: Int = 6906648
-    const val SOUL_STEEL_SABER: Int = 6906649
-    const val SOUL_STEEL_SICKLE: Int = 6906650
-    const val SOUL_STEEL_CHAKRAM: Int = 6906651
-
-    const val SOUL_STEEL_SPEAR: Int = 6906674
-    const val SOUL_STEEL_HALBERD: Int = 6906675
-    const val SOUL_STEEL_LANCE: Int = 6906676
-    const val SOUL_STEEL_NAGINATA: Int = 6906677
-    const val SOUL_STEEL_PIKE: Int = 6906678
-
-    const val SOUL_STEEL_WARHAMMER: Int = 6906702
-    const val SOUL_STEEL_MACE: Int = 6906703
-    const val SOUL_STEEL_MAUL: Int = 6906704
-    const val SOUL_STEEL_GUANDAO: Int = 6906705
-    const val SOUL_STEEL_SCYTHE: Int = 6906706
-
-    const val SOUL_STEEL_BATTLE_AXE: Int = 6906684
-    const val SOUL_STEEL_LONG_AXE: Int = 6906685
-    const val SOUL_STEEL_POLEAXE: Int = 6906686
-    const val SOUL_STEEL_LABRYS: Int = 6906687
+    // Soul Steel [69066XX]
+    const val SOUL_STEEL_MATERIAL: Int = 69066
+    // Soul Steel [69066XX]
+    const val NETHERITE_MATERIAL: Int = 69059
 
     // Special Crafted Weapons
     const val ZWEIHANDER: Int = 6905777

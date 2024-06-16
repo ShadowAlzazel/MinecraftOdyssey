@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.listeners
 
-import me.shadowalzazel.mcodyssey.attributes.AttributeManager
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getOdysseyTag
+import me.shadowalzazel.mcodyssey.util.AttributeManager
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.Material
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity
@@ -11,7 +11,7 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object PetListener : Listener, AttributeManager {
+object PetListener : Listener, AttributeManager, DataTagManager {
     @EventHandler
     fun eatingPetFoods(event: PlayerInteractAtEntityEvent) {
         if (event.rightClicked.type != EntityType.WOLF) return

@@ -13,7 +13,7 @@ object GetItemData : CommandExecutor {
         if (!sender.isOp) return false
         val item = sender.inventory.itemInMainHand
         if (!item.hasItemMeta()) return false
-        val itemByte = item.serializeAsBytes()
+        val itemByte = item.serializeAsBytes() // For yggdrasil
         val itemAsNMS = CraftItemStack.asNMSCopy(item)
         val itemComponents = itemAsNMS.components
         for (component in itemComponents) {

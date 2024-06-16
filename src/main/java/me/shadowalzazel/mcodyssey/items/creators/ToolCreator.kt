@@ -1,12 +1,12 @@
 package me.shadowalzazel.mcodyssey.items.creators
 
-import me.shadowalzazel.mcodyssey.attributes.AttributeManager
+import me.shadowalzazel.mcodyssey.util.AttributeManager
 import me.shadowalzazel.mcodyssey.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.constants.DataKeys
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addStringTag
 import me.shadowalzazel.mcodyssey.items.utility.ToolMaterial
 import me.shadowalzazel.mcodyssey.items.utility.ToolType
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
 import org.bukkit.persistence.PersistentDataType
 
-class ToolCreator : AttributeManager {
+class ToolCreator : AttributeManager, DataTagManager {
 
     private val otherTools = listOf(ToolType.SHURIKEN)
 
@@ -59,7 +59,7 @@ class ToolCreator : AttributeManager {
                 it.addEntityRangeAttribute(bonusRange, AttributeTags.ITEM_BASE_ENTITY_RANGE)
             }
             it.addAttackDamageAttribute(damage, AttributeTags.ITEM_BASE_ATTACK_DAMAGE)
-            it.setNewAttackSpeedAttribute(speed, AttributeTags.ITEM_BASE_ATTACK_SPEED)
+            it.setNewAttackSpeedAttribute(speed)
         }
         return itemStack
     }

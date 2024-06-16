@@ -1,9 +1,7 @@
 package me.shadowalzazel.mcodyssey.commands.spells
 
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.ARCHAIC_NAMESPACE
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getStringTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasTag
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.command.Command
@@ -11,12 +9,12 @@ import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-object PlaceFeatureArchaicSeed : CommandExecutor{
+object PlaceFeatureArchaicSeed : CommandExecutor, DataTagManager{
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
         if (sender !is Player) return false
-        if (sender.equipment?.itemInMainHand?.type != Material.WHEAT_SEEDS) return false
-        val archaicSeed = sender.equipment!!.itemInMainHand
+        if (sender.equipment.itemInMainHand.type != Material.WHEAT_SEEDS) return false
+        val archaicSeed = sender.equipment.itemInMainHand
         if (!archaicSeed.hasItemMeta()) return false
         if (!archaicSeed.hasTag(ItemDataTags.IS_ARCHAIC_SEED)) return false
         // Plant
@@ -34,8 +32,8 @@ object PlaceFeatureArchaicSeed : CommandExecutor{
         )
 
         // TEMP ON SNIFFER DIG SET NAMESPACE ON ITEM
-        val seedNamespace = if (archaicSeed.hasTag(ARCHAIC_NAMESPACE)) {
-            archaicSeed.getStringTag(ARCHAIC_NAMESPACE)
+        val seedNamespace = if (archaicSeed.hasTag(ItemDataTags.ARCHAIC_NAMESPACE)) {
+            archaicSeed.getStringTag(ItemDataTags.ARCHAIC_NAMESPACE)
         } else {
             seedNamespaces.random()
         }

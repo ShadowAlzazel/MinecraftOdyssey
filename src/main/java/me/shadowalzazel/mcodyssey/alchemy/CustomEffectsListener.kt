@@ -6,13 +6,8 @@ import me.shadowalzazel.mcodyssey.constants.EffectTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.setIntTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addStringTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getIntTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getStringTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasTag
 import me.shadowalzazel.mcodyssey.effects.EffectColors
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
@@ -28,7 +23,7 @@ import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionType
 
-interface CustomEffectsListener {
+interface CustomEffectsListener : DataTagManager {
 
     /*-----------------------------------------------------------------------------------------------*/
     // Tags

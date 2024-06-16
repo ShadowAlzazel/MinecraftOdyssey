@@ -8,15 +8,6 @@ import me.shadowalzazel.mcodyssey.constants.EntityTags.getIntTag
 import me.shadowalzazel.mcodyssey.constants.EntityTags.setIntTag
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getIntTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getOdysseyTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getStringTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getUUIDTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.removeTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.setIntTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.setUUIDTag
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.BLUDGEON_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.CLEAVE_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.LACERATE_MAP
@@ -26,6 +17,7 @@ import me.shadowalzazel.mcodyssey.constants.WeaponMaps.REACH_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.SWEEP_MAP
 import me.shadowalzazel.mcodyssey.tasks.weapon_tasks.*
 import me.shadowalzazel.mcodyssey.util.AttackHelper
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.*
 import org.bukkit.attribute.Attribute
 import org.bukkit.enchantments.Enchantment
@@ -79,7 +71,7 @@ import java.util.*
 // can tp if throw another
 // Offhand DeprecatedWeapon
 
-object WeaponListeners : Listener, AttackHelper {
+object WeaponListeners : Listener, AttackHelper, DataTagManager {
 
     private val markedVoidTargets = mutableMapOf<UUID, Entity>()
     private val currentGrappleShotTasks = mutableMapOf<UUID, GrapplingHookShot>()

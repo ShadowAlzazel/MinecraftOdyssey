@@ -2,13 +2,12 @@ package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.arcane.ArcaneEquipmentManager
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.ARCANE_RANGES
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getOdysseyTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasOdysseyItemTag
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerInteractEvent
-object ArcaneListeners: Listener, ArcaneEquipmentManager {
+object ArcaneListeners: Listener, ArcaneEquipmentManager, DataTagManager {
 
     @EventHandler(priority = EventPriority.LOW)
     fun mainWeaponInteractionHandler(event: PlayerInteractEvent) {

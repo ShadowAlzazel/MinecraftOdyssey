@@ -1,12 +1,9 @@
 package me.shadowalzazel.mcodyssey.occurrences.base
 
-import me.shadowalzazel.mcodyssey.constants.AttributeIDs
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.title.Title
 import org.bukkit.Particle
 import org.bukkit.Sound
-import org.bukkit.attribute.Attribute
-import org.bukkit.attribute.AttributeModifier
 import org.bukkit.entity.LivingEntity
 import org.bukkit.potion.PotionEffect
 
@@ -65,10 +62,7 @@ sealed class OccurrenceAction {
 
     private fun ChangeHealth.modifyMobHealth(someEntity: LivingEntity) {
         val oldHealth = someEntity.health
-        val mobHealthModifier = AttributeModifier(AttributeIDs.ODYSSEY_MOB_HEALTH_UUID, "odyssey_mob_health", addedHealth, AttributeModifier.Operation.ADD_NUMBER)
-        val healthAttribute = someEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH)
-        healthAttribute!!.addModifier(mobHealthModifier)
-        someEntity.health = oldHealth + addedHealth
+
     }
 
 }

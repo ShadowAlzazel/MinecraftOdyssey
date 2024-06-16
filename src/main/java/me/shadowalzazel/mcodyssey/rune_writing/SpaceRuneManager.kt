@@ -1,10 +1,8 @@
 package me.shadowalzazel.mcodyssey.rune_writing
 
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getIntTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.setIntTag
 import me.shadowalzazel.mcodyssey.rune_writing.base.SpaceRuneMatrix
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
@@ -13,7 +11,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.util.Vector
 import org.joml.Vector3d
 
-interface SpaceRuneManager {
+interface SpaceRuneManager : DataTagManager {
 
     fun teleportFromSpaceRuneMatrix(entity: Entity, spaceRune: SpaceRuneMatrix) {
         // MATH

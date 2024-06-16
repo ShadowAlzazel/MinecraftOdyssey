@@ -2,20 +2,17 @@ package me.shadowalzazel.mcodyssey.bosses.the_ambassador
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.bosses.base.OdysseyBoss
-import me.shadowalzazel.mcodyssey.constants.AttributeIDs
 import me.shadowalzazel.mcodyssey.constants.EffectTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.items.Exotics
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
-import me.shadowalzazel.mcodyssey.items.Miscellaneous.createArcaneBook
+import me.shadowalzazel.mcodyssey.listeners.PetListener.addArmorAttribute
+import me.shadowalzazel.mcodyssey.listeners.PetListener.addHealthAttribute
 import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.GravitySingularityTask
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.*
-import org.bukkit.attribute.Attribute
-import org.bukkit.attribute.AttributeModifier
 import org.bukkit.entity.*
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
@@ -125,10 +122,8 @@ class TheAmbassador(location: Location) : OdysseyBoss(
             equipment.boots = ItemStack(Material.DIAMOND_BOOTS)
             equipment.itemInMainHandDropChance = 100F
             // Health
-            val extraHealth = AttributeModifier(AttributeIDs.ODYSSEY_BOSS_HEALTH_UUID, "odyssey.boss_health", 930.0, AttributeModifier.Operation.ADD_NUMBER)
-            getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.addModifier(extraHealth)
-            val extraArmor = AttributeModifier(AttributeIDs.ODYSSEY_BOSS_ARMOR_UUID, "odyssey.boss_armor", 6.0, AttributeModifier.Operation.ADD_NUMBER)
-            getAttribute(Attribute.GENERIC_ARMOR)!!.addModifier(extraArmor)
+            addHealthAttribute(930.0, "boss.health")
+            addArmorAttribute(6.0, "boss.armor")
             health = 950.0
             // Add Kinetic Blaster
             clearActiveItem()
@@ -450,7 +445,7 @@ class TheAmbassador(location: Location) : OdysseyBoss(
         when (material) {
             Material.NETHER_STAR -> {
                 giftLikeness += 30
-                val gravityBook = Miscellaneous.ARCANE_BOOK.createArcaneBook(OdysseyEnchantments.GRAVITY_WELL, 1)
+                val gravityBook = ItemStack(Material.BOOK)
                 inventory.addItem(gravityBook)
             }
             Material.NETHERITE_INGOT -> {

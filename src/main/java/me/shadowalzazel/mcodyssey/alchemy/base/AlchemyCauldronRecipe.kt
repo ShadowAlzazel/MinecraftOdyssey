@@ -2,10 +2,9 @@ package me.shadowalzazel.mcodyssey.alchemy.base
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasTag
 import me.shadowalzazel.mcodyssey.items.Potions.createPotionStack
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -24,7 +23,7 @@ class AlchemyCauldronRecipe(
     private val isCombination: Boolean = false,
     private val comboEffectTypeList: List<PotionEffectType> = listOf(), // For Detecting Potion Combinations
     private val comboOdysseyEffectList: List<String> = listOf() // For Detecting Odyssey Effect Tags
-) {
+) : DataTagManager {
 
     // TODO: Do mini game
     // when hear ding, add chorus fruit for +10%

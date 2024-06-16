@@ -10,12 +10,8 @@ import me.shadowalzazel.mcodyssey.alchemy.utility.CauldronEventSynchro
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getIntTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasOdysseyItemTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.setIntTag
 import me.shadowalzazel.mcodyssey.effects.*
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.entity.Arrow
@@ -39,7 +35,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.potion.PotionType
 
-object AlchemyListener : Listener, CustomEffectsListener, EffectsManager {
+object AlchemyListener : Listener, CustomEffectsListener, EffectsManager, DataTagManager {
 
     /*-----------------------------------------------------------------------------------------------*/
     // Effects

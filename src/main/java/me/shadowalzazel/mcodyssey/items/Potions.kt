@@ -5,9 +5,6 @@ import me.shadowalzazel.mcodyssey.alchemy.base.OdysseyPotion
 import me.shadowalzazel.mcodyssey.constants.EffectTags
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.setIntTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addStringTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addTag
 import me.shadowalzazel.mcodyssey.effects.EffectColors
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor

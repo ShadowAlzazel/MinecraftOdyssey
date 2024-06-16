@@ -1,12 +1,12 @@
 package me.shadowalzazel.mcodyssey.recipes.creators
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getOdysseyTag
 import me.shadowalzazel.mcodyssey.items.Ingredients
 import me.shadowalzazel.mcodyssey.items.creators.ItemCreator
 import me.shadowalzazel.mcodyssey.items.creators.ToolCreator
 import me.shadowalzazel.mcodyssey.items.utility.ToolMaterial
 import me.shadowalzazel.mcodyssey.items.utility.ToolType
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.Recipe
@@ -16,7 +16,7 @@ import org.bukkit.inventory.RecipeChoice.MaterialChoice
 import org.bukkit.inventory.ShapedRecipe
 import org.bukkit.inventory.recipe.CraftingBookCategory
 
-class WeaponRecipeCreator : ItemCreator {
+class WeaponRecipeCreator : ItemCreator, DataTagManager {
 
     private val toolCreator = ToolCreator()
 

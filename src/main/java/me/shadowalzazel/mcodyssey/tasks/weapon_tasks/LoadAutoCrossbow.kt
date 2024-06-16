@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.tasks.weapon_tasks
 
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.removeTag
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.CrossbowMeta
@@ -11,7 +11,7 @@ class LoadAutoCrossbow(
     private val entity: LivingEntity,
     private val crossbow: ItemStack,
     private val loaded: MutableList<ItemStack>
-) : BukkitRunnable() {
+) : BukkitRunnable(), DataTagManager {
 
     override fun run() {
         if (entity.equipment!!.itemInMainHand == crossbow) {
