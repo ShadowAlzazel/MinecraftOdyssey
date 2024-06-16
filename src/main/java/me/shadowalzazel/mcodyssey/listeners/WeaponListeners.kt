@@ -8,15 +8,6 @@ import me.shadowalzazel.mcodyssey.constants.EntityTags.getIntTag
 import me.shadowalzazel.mcodyssey.constants.EntityTags.setIntTag
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getIntTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getOdysseyTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getStringTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getUUIDTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.removeTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.setIntTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.setUUIDTag
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.BLUDGEON_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.CLEAVE_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.LACERATE_MAP
@@ -25,11 +16,10 @@ import me.shadowalzazel.mcodyssey.constants.WeaponMaps.PIERCE_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.REACH_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.SWEEP_MAP
 import me.shadowalzazel.mcodyssey.tasks.weapon_tasks.*
-import me.shadowalzazel.mcodyssey.util.WeaponHelper
+import me.shadowalzazel.mcodyssey.util.AttackHelper
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.*
 import org.bukkit.attribute.Attribute
-import org.bukkit.damage.DamageSource
-import org.bukkit.damage.DamageType
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
@@ -45,7 +35,6 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.CrossbowMeta
 import org.bukkit.inventory.meta.PotionMeta
 import java.util.*
-import kotlin.math.pow
 
 // --------------------------------- NOTES --------------------------------
 // TODO: Mounted Bonus i.e. Cavalry Charges
@@ -82,7 +71,7 @@ import kotlin.math.pow
 // can tp if throw another
 // Offhand DeprecatedWeapon
 
-object WeaponListeners : Listener, WeaponHelper {
+object WeaponListeners : Listener, AttackHelper, DataTagManager {
 
     private val markedVoidTargets = mutableMapOf<UUID, Entity>()
     private val currentGrappleShotTasks = mutableMapOf<UUID, GrapplingHookShot>()
@@ -703,15 +692,7 @@ object WeaponListeners : Listener, WeaponHelper {
     private fun explosiveArrowHitHandler(event: ProjectileHitEvent) {
         val projectile = event.entity
         val location = projectile.location
-        location.world.spawnParticle(Particle.EXPLOSION, location, 1, 0.0, 0.04, 0.0)
-        location.world.playSound(location, Sound.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 0.8F, 1.2F)
-        for (entity in location.getNearbyLivingEntities(2.5)) {
-            // indirect distance square
-            val distance = entity.location.distance(location)
-            val power = (maxOf(2.5 - distance, 0.0)).pow(2.0) + (maxOf(2.5 - distance, 0.0)).times(1) + 1.25
-            val damageSource = DamageSource.builder(DamageType.EXPLOSION).build()
-            entity.damage(power, damageSource) // Create Damage Source
-        }
+        explosionHandler(location.getNearbyLivingEntities(2.0), location, 2.0)
     }
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -766,7 +747,6 @@ object WeaponListeners : Listener, WeaponHelper {
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-    // AUTO CROSSBOW
 
     private fun autoCrossbowHandler(event: EntityShootBowEvent) {
         val crossbow = event.bow ?: return
@@ -797,7 +777,6 @@ object WeaponListeners : Listener, WeaponHelper {
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-    // ALCHEMICAL BOLTER
 
     private var LOADED_ALCHEMICAL_AMMO = mutableMapOf<UUID, ItemStack?>() // CURRENTLY DOES NOT SAVE AFTER SERVER SHUTDOWN
 

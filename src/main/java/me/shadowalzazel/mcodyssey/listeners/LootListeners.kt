@@ -46,32 +46,32 @@ object LootListeners : Listener, ItemCreator {
             is Skeleton -> {
                 if (mobLootLogic.roll(2.5)) {
                     val rangedSet = OdysseyEnchantments.RANGED_SET.filter { enchant -> enchant !in OdysseyEnchantments.EXOTIC_LIST }
-                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBook(rangedSet.random(), 1)))
+                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBookStack(rangedSet.random(), 1)))
                     droppedItemSound(player)
                 }
             }
             is Husk -> {
                 if (mobLootLogic.roll(1.5)) {
-                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBook(OdysseyEnchantments.DECAYING_TOUCH, 1)))
+                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBookStack(OdysseyEnchantments.DECAY, 1)))
                     droppedItemSound(player)
                 }
             }
             is Drowned -> {
                 if (mobLootLogic.roll(1.5)) {
-                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBook(OdysseyEnchantments.BANE_OF_THE_SEA, 1)))
+                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBookStack(OdysseyEnchantments.BANE_OF_THE_SEA, 1)))
                     droppedItemSound(player)
                 }
             }
             is PigZombie -> {
                 if (mobLootLogic.roll(1.5)) {
-                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBook(OdysseyEnchantments.BANE_OF_THE_SWINE, 1)))
+                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBookStack(OdysseyEnchantments.BANE_OF_THE_SWINE, 1)))
                     droppedItemSound(player)
                 }
             }
             is Zombie -> {
                 if (mobLootLogic.roll(2.5)) {
                     val meleeSet = OdysseyEnchantments.MELEE_SET.filter { enchant -> enchant !in OdysseyEnchantments.EXOTIC_LIST }
-                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBook(meleeSet.random(), 1)))
+                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBookStack(meleeSet.random(), 1)))
                     droppedItemSound(player)
                 }
                 // TODO: Is Blood Moon
@@ -81,68 +81,68 @@ object LootListeners : Listener, ItemCreator {
             }
             is Witch -> {
                 if (mobLootLogic.roll(2.5)) {
-                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBook(OdysseyEnchantments.ALCHEMY_ARTILLERY, 1)))
+                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBookStack(OdysseyEnchantments.ALCHEMY_ARTILLERY, 1)))
                     droppedItemSound(player)
                 }
             }
             is Stray -> {
                 if (mobLootLogic.roll(1.5)) {
-                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBook(OdysseyEnchantments.FREEZING_ASPECT, 1)))
+                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBookStack(OdysseyEnchantments.FREEZING_ASPECT, 1)))
                     droppedItemSound(player)
                 }
             }
             is Creeper -> {
                 // If charged creeper kills catalyst, drop echo shard
                 if (mobLootLogic.roll(1.5)) {
-                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBook(OdysseyEnchantments.EXPLODING, 1)))
+                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBookStack(OdysseyEnchantments.EXPLODING, 1)))
                     droppedItemSound(player)
                 }
             }
             is Hoglin -> {
                 if (mobLootLogic.roll(1.5)) {
-                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBook(OdysseyEnchantments.HEMORRHAGE, 1)))
+                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBookStack(OdysseyEnchantments.HEMORRHAGE, 1)))
                     droppedItemSound(player)
                 }
             }
             is Vindicator -> {
                 if (mobLootLogic.roll(3.5)) {
-                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBook(OdysseyEnchantments.BANE_OF_THE_ILLAGER, 1)))
+                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBookStack(OdysseyEnchantments.BANE_OF_THE_ILLAGER, 1)))
                     droppedItemSound(player)
                 }
             }
             is Pillager -> {
                 if (mobLootLogic.roll(2.5)) {
-                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBook(OdysseyEnchantments.BURST_BARRAGE, 1)))
+                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBookStack(OdysseyEnchantments.BURST_BARRAGE, 1)))
                     droppedItemSound(player)
                 }
             }
             is Ravager -> {
                 if (mobLootLogic.roll(5.5)) {
-                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBook(OdysseyEnchantments.WHIRLWIND, 1)))
+                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBookStack(OdysseyEnchantments.WHIRLWIND, 1)))
                     droppedItemSound(player)
                 }
             }
             is Squid -> {
                 if (mobLootLogic.roll(3.5)) {
-                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBook(OdysseyEnchantments.SQUIDIFY, 1)))
+                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBookStack(OdysseyEnchantments.SQUIDIFY, 1)))
                     droppedItemSound(player)
                 }
             }
             is Shulker -> {
                 if (mobLootLogic.roll(2.5)) {
-                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBook(OdysseyEnchantments.VOID_STRIKE, 1))) // change
+                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBookStack(OdysseyEnchantments.VOID_STRIKE, 1))) // change
                     droppedItemSound(player)
                 }
             }
             is Endermite -> {
                 if (mobLootLogic.roll(3.5)) {
-                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBook(OdysseyEnchantments.VOID_STRIKE, 1)))
+                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBookStack(OdysseyEnchantments.VOID_STRIKE, 1)))
                     droppedItemSound(player)
                 }
             }
             is Enderman -> {
                 if (mobLootLogic.roll(2.5)) {
-                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBook(OdysseyEnchantments.VOID_JUMP, 1)))
+                    mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBookStack(OdysseyEnchantments.VOID_JUMP, 1)))
                     droppedItemSound(player)
                 }
             }
@@ -157,11 +157,11 @@ object LootListeners : Listener, ItemCreator {
             }
             is Warden -> {
                 mob.world.dropItem(mob.location, (Ingredients.WARDEN_ENTRAILS.newItemStack(1)))
-                mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBook(OdysseyEnchantments.SCULK_SENSITIVE, 1)))
+                mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBookStack(OdysseyEnchantments.SCULK_SENSITIVE, 1)))
                 droppedItemSound(player)
             }
             is Wither -> {
-                mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBook(OdysseyEnchantments.BLACK_ROSE, 1)))
+                mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBookStack(OdysseyEnchantments.BLACK_ROSE, 1)))
                 droppedItemSound(player)
             }
             is EnderDragon -> {

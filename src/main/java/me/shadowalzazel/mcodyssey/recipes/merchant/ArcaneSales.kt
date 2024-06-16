@@ -3,6 +3,7 @@ package me.shadowalzazel.mcodyssey.recipes.merchant
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
 import me.shadowalzazel.mcodyssey.items.creators.ItemCreator
+import me.shadowalzazel.mcodyssey.listeners.LootListeners.createArcaneBookStack
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.MerchantRecipe
@@ -28,7 +29,7 @@ object ArcaneSales : ItemCreator {
     fun createLowTierGildedEnchantTrade(): MerchantRecipe {
         val enchants = listOf(OdysseyEnchantments.EXPLODING, OdysseyEnchantments.ASPHYXIATE,
             OdysseyEnchantments.BANE_OF_THE_ILLAGER, OdysseyEnchantments.BACKSTABBER, OdysseyEnchantments.BALLISTICS)
-        return MerchantRecipe(Miscellaneous.ARCANE_BOOK.createArcaneBook(enchants.random(), 1), 1, 1, true).apply {
+        return MerchantRecipe(Miscellaneous.ARCANE_BOOK.createArcaneBookStack(enchants.random(), 1), 1, 1, true).apply {
             setIgnoreDiscounts(true)
             addIngredient(ItemStack(Material.EMERALD, (26..36).random()))
         }

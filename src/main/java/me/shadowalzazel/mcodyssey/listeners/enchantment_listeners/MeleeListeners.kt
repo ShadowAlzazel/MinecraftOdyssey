@@ -10,6 +10,7 @@ import me.shadowalzazel.mcodyssey.constants.EntityTags.setIntTag
 import me.shadowalzazel.mcodyssey.effects.EffectsManager
 import me.shadowalzazel.mcodyssey.items.Miscellaneous.getNameId
 import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.*
+import me.shadowalzazel.mcodyssey.util.AttackHelper
 import org.bukkit.*
 import org.bukkit.attribute.Attribute
 import org.bukkit.damage.DamageSource
@@ -23,10 +24,13 @@ import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
+import java.util.UUID
 import kotlin.math.log2
 import kotlin.math.pow
 
-object MeleeListeners : Listener, EffectsManager {
+object MeleeListeners : Listener, EffectsManager, AttackHelper {
+
+    private val recallTargets: MutableMap<UUID, LivingEntity> = mutableMapOf()
 
     // Main function for enchantments relating to entity damage
     @Suppress("UnstableApiUsage")
@@ -73,8 +77,8 @@ object MeleeListeners : Listener, EffectsManager {
                 "cull_the_weak" -> {
                     event.damage += cullTheWeakEnchantment(victim, enchant.value)  * power
                 }
-                "decaying_touch" -> {
-                    decayingTouchEnchantment(victim, enchant.value)
+                "decay" -> {
+                    decayEnchantment(victim, enchant.value)
                 }
                 "douse" -> {
                     event.damage += douseEnchantment(victim, enchant.value) * power
@@ -106,8 +110,11 @@ object MeleeListeners : Listener, EffectsManager {
                 "pestilence" -> {
                     pestilenceEnchantment(victim, enchant.value)
                 }
-                "rupturing_strike" -> {
-                    event.damage -= rupturingStrikeEnchantment(attacker, victim, event.damage, enchant.value)
+                "recall" -> {
+                    recallEnchantment(attacker, victim, event.damage, enchant.value)
+                }
+                "rupture" -> {
+                    event.damage -= ruptureEnchantment(attacker, victim, event.damage, enchant.value)
                 }
                 "conflagrate" -> {
                     conflagrateEnchantment(attacker, victim, enchant.value, event.damage)
@@ -287,12 +294,13 @@ object MeleeListeners : Listener, EffectsManager {
             0.0
         }
     }
-    private fun decayingTouchEnchantment(victim: LivingEntity, level: Int) {
+    private fun decayEnchantment(victim: LivingEntity, level: Int) {
        victim.addPotionEffect(PotionEffect(PotionEffectType.WITHER, (20 * (level * 4)), 0))
     }
     private fun douseEnchantment(victim: LivingEntity, level: Int): Double {
         victim.fireTicks = 0
         if (victim is Blaze || victim is MagmaCube || victim.fireTicks > 0) {
+            victim.fireTicks = 0
             return (level * 2.5) + 2.5
         }
         return 0.0
@@ -487,7 +495,26 @@ object MeleeListeners : Listener, EffectsManager {
             }
         }
     }
-    private fun rupturingStrikeEnchantment(attacker: LivingEntity, victim: LivingEntity, damage: Double, level: Int): Double {
+
+    @Suppress("UnstableApiUsage")
+    private fun recallEnchantment(attacker: LivingEntity, victim: LivingEntity, damage: Double, level: Int) {
+        val lastTarget = recallTargets[attacker.uniqueId]
+        if (lastTarget == null) {
+            recallTargets[attacker.uniqueId] = victim
+            return
+        }
+        else if (lastTarget != victim) {
+            val source = createPlayerDamageSource(attacker)
+            recallTargets[attacker.uniqueId] = victim // Prevent recursion
+            val recallDamage = damage * (level * 0.1)
+            victim.damage(recallDamage, source)
+        }
+        else if (lastTarget == victim) {
+            return
+        }
+    }
+
+    private fun ruptureEnchantment(attacker: LivingEntity, victim: LivingEntity, damage: Double, level: Int): Double {
         if (victim.isDead) return 0.0
         val fullCharge = if ((attacker is Player) && attacker.attackCooldown > 0.99) { true } else attacker !is Player
         // Prevent Spam
@@ -516,12 +543,14 @@ object MeleeListeners : Listener, EffectsManager {
         }
         return rupturingDamage
     }
+
     private fun vitalEnchantment(isCrit: Boolean, level: Int): Double {
         if (isCrit) {
             return 1.0 * level
         }
         return 0.0
     }
+
     private fun voidStrikeEnchantment(
         attacker: LivingEntity,
         victim: LivingEntity,
@@ -557,6 +586,7 @@ object MeleeListeners : Listener, EffectsManager {
         // Damage
         return voidDamage * 1.0
     }
+
     private fun whirlwindEnchantment(
         attacker: LivingEntity,
         victim: LivingEntity,

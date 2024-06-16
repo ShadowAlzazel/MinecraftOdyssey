@@ -16,8 +16,8 @@ object TrimMaterials {
     val JADE: TrimMaterial = RegistryAccess.registryAccess().getRegistry(RegistryKey.TRIM_MATERIAL).get(NamespacedKey(Odyssey.instance, "jade")) ?: TrimMaterial.IRON
     val RUBY: TrimMaterial = RegistryAccess.registryAccess().getRegistry(RegistryKey.TRIM_MATERIAL).get(NamespacedKey(Odyssey.instance, "ruby")) ?: TrimMaterial.IRON
     val SOUL_QUARTZ: TrimMaterial = RegistryAccess.registryAccess().getRegistry(RegistryKey.TRIM_MATERIAL).get(NamespacedKey(Odyssey.instance, "soulquartz")) ?: TrimMaterial.IRON
-    val SOUL_STEEL: TrimMaterial = RegistryAccess.registryAccess().getRegistry(RegistryKey.TRIM_MATERIAL).get(NamespacedKey(Odyssey.instance, "soulsteel")) ?: TrimMaterial.IRON
 
+    val SOUL_STEEL: TrimMaterial = RegistryAccess.registryAccess().getRegistry(RegistryKey.TRIM_MATERIAL).get(NamespacedKey(Odyssey.instance, "soulsteel")) ?: TrimMaterial.IRON
     val OBSIDIAN: TrimMaterial = RegistryAccess.registryAccess().getRegistry(RegistryKey.TRIM_MATERIAL).get(NamespacedKey(Odyssey.instance, "obsidian")) ?: TrimMaterial.IRON
     val MITHRIL: TrimMaterial = RegistryAccess.registryAccess().getRegistry(RegistryKey.TRIM_MATERIAL).get(NamespacedKey(Odyssey.instance, "mithril")) ?: TrimMaterial.IRON
     val SILVER: TrimMaterial = RegistryAccess.registryAccess().getRegistry(RegistryKey.TRIM_MATERIAL).get(NamespacedKey(Odyssey.instance, "silver")) ?: TrimMaterial.IRON

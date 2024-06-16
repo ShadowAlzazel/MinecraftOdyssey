@@ -1,7 +1,8 @@
+@file:Suppress("UnstableApiUsage")
+
 package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.constants.ItemModels
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasOdysseyItemTag
 import me.shadowalzazel.mcodyssey.items.Runesherds
 import me.shadowalzazel.mcodyssey.items.Runesherds.createLootSherdStack
 import me.shadowalzazel.mcodyssey.items.Runesherds.createRuneware
@@ -17,7 +18,7 @@ import org.bukkit.event.block.BlockDropItemEvent
 import org.bukkit.event.inventory.FurnaceSmeltEvent
 import org.bukkit.event.inventory.FurnaceStartSmeltEvent
 import org.bukkit.event.inventory.PrepareSmithingEvent
-import org.bukkit.inventory.EquipmentSlot
+import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
 
 object RunesherdListeners : Listener, RunesherdManager {
@@ -54,7 +55,7 @@ object RunesherdListeners : Listener, RunesherdManager {
         if (!runesherd.hasOdysseyItemTag()) return
 
         // Run
-        val item = addRunesherdToSmithingItem(runesherd, equipment) ?: return
+        val item = addRunesherdToItemStack(runesherd, equipment) ?: return
         item.also {
             it.amount = 1
         }
@@ -132,19 +133,12 @@ object RunesherdListeners : Listener, RunesherdManager {
             ItemModels.CLAY_KEY -> { Runesherds.GLAZED_RUNE_KEY.createRuneware(1) }
             else -> { Runesherds.GLAZED_RUNE_ORB.createRuneware(1) }
         }
-        // Transfer to offhand
-        val attributeMap = input.itemMeta.attributeModifiers ?: return
+        // Transfer attribute modifiers to runeware
+        val attributeModifiers = input.itemMeta.attributeModifiers ?: return
         val newList = mutableListOf<Pair<Attribute, AttributeModifier>>()
-        attributeMap.forEach { attributeKey, modifier ->
-            newList.add(
-                Pair(
-                    attributeKey,
-                    AttributeModifier(
-                        modifier.uniqueId,
-                        modifier.name,
-                        modifier.amount * 1.25, // Increase by 25%
-                        modifier.operation,
-                        EquipmentSlot.OFF_HAND)))
+        attributeModifiers.forEach { attributeKey, modifier ->
+            val newModifier = AttributeModifier(modifier.key, modifier.amount * 1.25, modifier.operation, EquipmentSlotGroup.HAND)
+            newList.add(Pair(attributeKey, newModifier))
         }
         runewareStack.itemMeta = runewareStack.itemMeta.also {
             for (pair in newList) { it.addAttributeModifier(pair.first, pair.second) }

@@ -4,12 +4,12 @@ import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addStringTag
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-interface EnchantmentsManager {
+interface EnchantmentsManager: DataTagManager {
 
     /*-----------------------------------------------------------------------------------------------*/
     // Helper Functions

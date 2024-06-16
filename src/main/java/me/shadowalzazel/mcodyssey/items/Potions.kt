@@ -1,13 +1,10 @@
 package me.shadowalzazel.mcodyssey.items
 
-import me.shadowalzazel.mcodyssey.alchemy.AlchemyManager
+import me.shadowalzazel.mcodyssey.alchemy.CustomEffectsListener
 import me.shadowalzazel.mcodyssey.alchemy.base.OdysseyPotion
 import me.shadowalzazel.mcodyssey.constants.EffectTags
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.setIntTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addStringTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addTag
 import me.shadowalzazel.mcodyssey.effects.EffectColors
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -20,7 +17,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.potion.PotionType
 
-object Potions : AlchemyManager {
+object Potions : CustomEffectsListener {
 
     fun OdysseyPotion.createPotionStack(): ItemStack {
         return newItemStack(1).apply {

@@ -1,22 +1,18 @@
+@file:Suppress("UnstableApiUsage")
+
 package me.shadowalzazel.mcodyssey.rune_writing
 
-import me.shadowalzazel.mcodyssey.attributes.AttributeManager
-import me.shadowalzazel.mcodyssey.constants.AttributeIDs
+import me.shadowalzazel.mcodyssey.util.AttributeManager
+import me.shadowalzazel.mcodyssey.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.setIntTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getIntTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getOdysseyTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasOdysseyItemTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasTag
 import me.shadowalzazel.mcodyssey.items.Runesherds
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
-import org.bukkit.inventory.EquipmentSlot
+import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
-import java.util.*
 
-internal interface RunesherdManager : AttributeManager {
+internal interface RunesherdManager : AttributeManager, DataTagManager {
 
     // MAYBE FOR MAKING HIGHER QUALITY RUNES
     // use pots
@@ -63,7 +59,7 @@ internal interface RunesherdManager : AttributeManager {
 
     /*-----------------------------------------------------------------------------------------------*/
     // Find Attribute
-    private fun getRunesherdAttribute(name: String): Attribute? {
+    private fun findRunesherdAttribute(name: String): Attribute? {
         return when (name) {
             Runesherds.ASSAULT_RUNESHERD.itemName -> { Attribute.GENERIC_ATTACK_DAMAGE }
             Runesherds.GUARD_RUNESHERD.itemName -> { Attribute.GENERIC_ARMOR }
@@ -84,24 +80,24 @@ internal interface RunesherdManager : AttributeManager {
     }
 
     // Used to get UUID from attribute held by runesherds
-    fun getIDForRunesherd(runesherdAttribute: Attribute): UUID {
-        return when(runesherdAttribute) {
-            Attribute.GENERIC_ATTACK_DAMAGE -> { AttributeIDs.RUNESHERD_ATTACK_DAMAGE_UUID }
-            Attribute.GENERIC_ARMOR -> { AttributeIDs.RUNESHERD_ARMOR_UUID }
-            Attribute.GENERIC_ATTACK_SPEED -> { AttributeIDs.RUNESHERD_ATTACK_SPEED_UUID }
-            Attribute.GENERIC_MOVEMENT_SPEED -> { AttributeIDs.RUNESHERD_MOVEMENT_SPEED_UUID }
-            Attribute.GENERIC_MAX_HEALTH -> { AttributeIDs.RUNESHERD_MAX_HEALTH_UUID }
-            Attribute.GENERIC_KNOCKBACK_RESISTANCE -> { AttributeIDs.RUNESHERD_KNOCKBACK_RESISTANCE_UUID }
-            Attribute.GENERIC_ATTACK_KNOCKBACK -> { AttributeIDs.RUNESHERD_ATTACK_KNOCKBACK_UUID }
-            Attribute.PLAYER_BLOCK_BREAK_SPEED -> { AttributeIDs.RUNESHERD_BLOCK_BREAK_SPEED_UUID }
-            Attribute.PLAYER_BLOCK_INTERACTION_RANGE -> { AttributeIDs.RUNESHERD_BLOCK_INTERACTION_RANGE_UUID }
-            Attribute.GENERIC_JUMP_STRENGTH -> { AttributeIDs.RUNESHERD_JUMP_STRENGTH_UUID }
-            Attribute.GENERIC_GRAVITY -> { AttributeIDs.RUNESHERD_GRAVITY_UUID }
-            Attribute.PLAYER_ENTITY_INTERACTION_RANGE -> { AttributeIDs.RUNESHERD_ENTITY_INTERACTION_RANGE_UUID }
-            Attribute.GENERIC_SCALE -> { AttributeIDs.RUNESHERD_SCALE_UUID }
-            Attribute.GENERIC_STEP_HEIGHT -> { AttributeIDs.RUNESHERD_STEP_HEIGHT_UUID }
-            Attribute.GENERIC_ARMOR_TOUGHNESS -> { AttributeIDs.RUNESHERD_ARMOR_TOUGHNESS_UUID }
-            else -> {  UUID.randomUUID() }
+    fun getRuneAttributeName(attribute: Attribute): String {
+        return when(attribute) {
+            Attribute.GENERIC_ATTACK_DAMAGE -> { AttributeTags.RUNE_ATTACK_DAMAGE }
+            Attribute.GENERIC_ARMOR -> { AttributeTags.RUNE_ARMOR }
+            Attribute.GENERIC_ATTACK_SPEED -> { AttributeTags.RUNE_ATTACK_SPEED }
+            Attribute.GENERIC_MOVEMENT_SPEED -> { AttributeTags.RUNE_MOVEMENT_SPEED }
+            Attribute.GENERIC_MAX_HEALTH -> { AttributeTags.RUNE_BONUS_HEALTH }
+            Attribute.GENERIC_KNOCKBACK_RESISTANCE -> { AttributeTags.RUNE_KNOCKBACK_RESISTANCE }
+            Attribute.GENERIC_ATTACK_KNOCKBACK -> { AttributeTags.RUNE_ATTACK_KNOCKBACK }
+            Attribute.PLAYER_BLOCK_BREAK_SPEED -> { AttributeTags.RUNE_BLOCK_BREAK_SPEED }
+            Attribute.PLAYER_BLOCK_INTERACTION_RANGE -> { AttributeTags.RUNE_BLOCK_REACH }
+            Attribute.GENERIC_JUMP_STRENGTH -> { AttributeTags.RUNE_JUMP_STRENGTH }
+            Attribute.GENERIC_GRAVITY -> { AttributeTags.RUNE_GRAVITY }
+            Attribute.PLAYER_ENTITY_INTERACTION_RANGE -> { AttributeTags.RUNE_ENTITY_REACH }
+            Attribute.GENERIC_SCALE -> { AttributeTags.RUNE_SCALE }
+            Attribute.GENERIC_STEP_HEIGHT -> { AttributeTags.RUNE_STEP_HEIGHT }
+            Attribute.GENERIC_ARMOR_TOUGHNESS -> { AttributeTags.RUNE_ARMOR_TOUGHNESS }
+            else -> {  "rune.generic" }
         }
     }
 
@@ -109,102 +105,97 @@ internal interface RunesherdManager : AttributeManager {
         attribute: Attribute,
         value: Double,
         name: String,
-        id: UUID,
-        slot: EquipmentSlot
+        slots: EquipmentSlotGroup
     ) {
         when(attribute) {
-            Attribute.GENERIC_ATTACK_DAMAGE -> { addAttackDamageAttribute(value, name, id, slot) }
-            Attribute.GENERIC_ARMOR -> { addArmorAttribute(value, name, id, slot) }
-            Attribute.GENERIC_ATTACK_SPEED -> { addAttackSpeedAttribute(value, name, id, slot) }
-            Attribute.GENERIC_MOVEMENT_SPEED -> { addMovementSpeedAttribute(value, name, id, slot) }
-            Attribute.GENERIC_MAX_HEALTH -> { addMaxHealthAttribute(value, name,  id, slot) }
-            Attribute.GENERIC_KNOCKBACK_RESISTANCE -> { addKnockbackResistanceAttribute(value, name, id, slot) }
-            Attribute.GENERIC_ATTACK_KNOCKBACK -> { addAttackKnockbackAttribute(value, name, id, slot) }
-            else -> { addGenericAttribute(value, name, id, slot, attribute) }
+            Attribute.GENERIC_ATTACK_DAMAGE -> { addAttackDamageAttribute(value, name, slots) }
+            Attribute.GENERIC_ARMOR -> { addArmorAttribute(value, name, slots) }
+            Attribute.GENERIC_ATTACK_SPEED -> { addAttackSpeedAttribute(value, name, slots) }
+            Attribute.GENERIC_MOVEMENT_SPEED -> { addMovementSpeedAttribute(value, name, slots) }
+            Attribute.GENERIC_MAX_HEALTH -> { addMaxHealthAttribute(value, name, slots) }
+            Attribute.GENERIC_KNOCKBACK_RESISTANCE -> { addKnockbackResistanceAttribute(value, name, slots) }
+            Attribute.GENERIC_ATTACK_KNOCKBACK -> { addAttackKnockbackAttribute(value, name, slots) }
+            else -> { addGenericAttribute(value, name, attribute, slotGroup = slots) }
         }
     }
 
     /*-----------------------------------------------------------------------------------------------*/
     // Add runesherd to item
-    fun addRunesherdToSmithingItem(runesherd: ItemStack, item: ItemStack): ItemStack? {
+    fun addRunesherdToItemStack(runesherd: ItemStack, item: ItemStack): ItemStack? {
         // Basic Checks
         if (!runesherd.hasRunesherdTag()) return null
         if (!runesherd.hasOdysseyItemTag()) return null
         // Runeware can have up to 3 runesherd augments
         val equipment = item.clone()
-        val equipIsRuneware = equipment.hasRunewareTag()
-        if (equipment.hasRuneAugmentTag() && !equipIsRuneware) return null
-        // More Checks
+        val itemIsRuneware = equipment.hasRunewareTag()
+        if (equipment.hasRuneAugmentTag() && !itemIsRuneware) return null
         if (!runesherd.itemMeta.hasAttributeModifiers()) return null
-        // Find compatible runesherd
-        val runesherdName = runesherd.getOdysseyTag() ?: return null
-        val attributeName = "odyssey." + runesherdName + "_modifier"
-        val attributeType: Attribute = getRunesherdAttribute(runesherdName) ?: return null
-        val attributeMap = runesherd.itemMeta.attributeModifiers?.get(attributeType) ?: return null
-        val runesherdModifier = attributeMap.find { it.name == attributeName } ?: return null
-        // Can not stack same runesherd
-        if (equipment.itemMeta.attributeModifiers != null && !equipIsRuneware) {
-            val itemAttributes = equipment.itemMeta.attributeModifiers!![attributeType]
+        val runesherdName = runesherd.getOdysseyTag() ?: return null // ItemName
+        // Get rune key
+        val runeKey = AttributeTags.RUNESHERD_KEY
+        val runeAttribute = findRunesherdAttribute(runesherdName) ?: return null
+        val runesherdAttributeModifiers = runesherd.itemMeta.attributeModifiers?.get(runeAttribute) ?: return null
+        val runesherdModifier = runesherdAttributeModifiers.find { it.name == runeKey } ?: return null
+        val attributeName = getRuneAttributeName(runeAttribute)
+        // Can not stack runesherd keys
+        if (equipment.itemMeta.attributeModifiers != null && !itemIsRuneware) {
+            val itemAttributes = equipment.itemMeta.attributeModifiers!![runeAttribute]
             if (itemAttributes.contains(runesherdModifier)) return null
         }
         // Get values for new modifier
         val runesherdValue = runesherdModifier.amount
         var previousValue = 0.0
-        //val attributeID = runesherdModifier.uniqueId
-        val attributeID = UUID.randomUUID()
-        // Check if runeware has
-        if (equipIsRuneware) {
+        // Add to runeware more
+        if (itemIsRuneware) {
             val runeCount = equipment.getRuneAugmentCount()
             if (runeCount >= 3) return null // CAN ONLY ADD 3
             // Find and remove attribute
-            val equipmentMap = equipment.itemMeta.attributeModifiers?.get(attributeType)
-            val matchingRune = equipmentMap?.find { it.name == attributeName }
-            if (matchingRune != null) {
+            val equipmentModifiers = equipment.itemMeta.attributeModifiers?.get(runeAttribute)
+            val matchingModifier = equipmentModifiers?.find { it.name == attributeName }
+            if (matchingModifier != null) {
                 // If found remove but add amount to current sherd value then Add in when
-                previousValue += matchingRune.amount
+                previousValue += matchingModifier.amount
                 equipment.itemMeta = equipment.itemMeta.also {
-                    it.removeAttributeModifier(attributeType, matchingRune)
+                    it.removeAttributeModifier(runeAttribute, matchingModifier)
                 }
             }
             equipment.setRuneAugmentCount(runeCount + 1)
         }
         // Check sherd slot type
-        val armorList = listOf(EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD)
-        val runeSlot = runesherdModifier.slot ?: EquipmentSlot.OFF_HAND
-        //val runesIsForArmor = runeSlot in armorList
-        val equipSlot = getMaterialEquipmentSlot(equipment.type)
-        val equipIsArmor = equipSlot in armorList
+        val armorList = listOf(EquipmentSlotGroup.FEET, EquipmentSlotGroup.LEGS, EquipmentSlotGroup.CHEST, EquipmentSlotGroup.HEAD)
+        val materialSlotGroup = getMaterialSlotGroup(equipment.type)
+        val itemIsArmor = materialSlotGroup in armorList
+        val runeSlotGroup = runesherdModifier.slotGroup
 
         // Creating new base
         // For base item stats FOR BASE VALUES
         if (equipment.itemMeta.attributeModifiers == null || !equipment.itemMeta.hasAttributeModifiers()) {
             // Check if armor
-            val randomUUID = UUID.randomUUID()
-            if (equipIsArmor) {
+            if (itemIsArmor) {
                 val baseValues = getBaseDataArmor(equipment.type) // Pair(armor, toughness)
-                equipment.addArmorAttribute(baseValues.first, "generic.armor", randomUUID, equipSlot)
+                equipment.addArmorAttribute(baseValues.first, "generic.armor", materialSlotGroup)
                 // Add toughness if can
                 if (baseValues.second > 0.0) {
-                    equipment.addArmorToughnessAttribute(baseValues.second, "generic.armor_toughness", randomUUID, equipSlot)
+                    equipment.addArmorToughnessAttribute(baseValues.second, "generic.armor_toughness", materialSlotGroup)
                 }
                 // CHeck if netherite to also add knockback resistance
                 if (baseValues.second >= 3.0) { // apparently 0.1 is 1
-                    equipment.addKnockbackResistanceAttribute(0.1, "generic.knockback_resistance", randomUUID, equipSlot)
+                    equipment.addKnockbackResistanceAttribute(0.1, "generic.knockback_resistance",  materialSlotGroup)
                 }
             } else {
                 val baseValues = getBaseDataTools(equipment.type) // Pair(damage, speed)
                 if (baseValues.second != 0.0) {
-                    equipment.addAttackDamageAttribute(baseValues.first, "generic.attack_damage", randomUUID)
-                    equipment.setNewAttackSpeedAttribute(baseValues.second, "generic.attack_speed", randomUUID)
+                    equipment.addAttackDamageAttribute(baseValues.first, "generic.attack_damage")
+                    equipment.setNewAttackSpeedAttribute(baseValues.second)
                 }
             }
         }
 
         // If not matches, 75% efficient
-        val matchingSlotMultiplier = if (runeSlot == equipSlot) {
+        val matchingSlotMultiplier = if (runeSlotGroup == materialSlotGroup) {
             1.0
         }
-        else if (equipIsRuneware) {
+        else if (itemIsRuneware) {
             1.0
         }
         else {
@@ -212,42 +203,43 @@ internal interface RunesherdManager : AttributeManager {
         }
         val totalValue = (runesherdValue * matchingSlotMultiplier) + previousValue
 
+        // Apply
         return equipment.apply {
-            addRuneModifier(attributeType, totalValue, attributeName, attributeID, equipSlot)
+            addRuneModifier(runeAttribute, totalValue, attributeName, materialSlotGroup)
             if (!equipment.hasRuneAugmentTag()) {
                 equipment.addRuneAugmentTag()
             }
         }
     }
 
-    private fun getMaterialEquipmentSlot(material: Material): EquipmentSlot {
+    private fun getMaterialSlotGroup(material: Material): EquipmentSlotGroup {
         return when (material) {
             Material.NETHERITE_SWORD, Material.DIAMOND_SWORD, Material.IRON_SWORD, Material.GOLDEN_SWORD, Material.STONE_SWORD, Material.WOODEN_SWORD,
             Material.NETHERITE_AXE, Material.DIAMOND_AXE, Material.IRON_AXE, Material.GOLDEN_AXE, Material.STONE_AXE, Material.WOODEN_AXE,
             Material.NETHERITE_PICKAXE, Material.DIAMOND_PICKAXE, Material.IRON_PICKAXE, Material.GOLDEN_PICKAXE, Material.STONE_PICKAXE, Material.WOODEN_PICKAXE,
             Material.NETHERITE_SHOVEL, Material.DIAMOND_SHOVEL, Material.IRON_SHOVEL, Material.GOLDEN_SHOVEL, Material.STONE_SHOVEL, Material.WOODEN_SHOVEL,
             Material.NETHERITE_HOE, Material.DIAMOND_HOE, Material.IRON_HOE, Material.GOLDEN_HOE, Material.STONE_HOE, Material.WOODEN_HOE -> {
-                EquipmentSlot.HAND
+                EquipmentSlotGroup.MAINHAND
             }
             Material.NETHERITE_LEGGINGS, Material.DIAMOND_LEGGINGS, Material.IRON_LEGGINGS, Material.CHAINMAIL_LEGGINGS, Material.GOLDEN_LEGGINGS, Material.LEATHER_LEGGINGS -> {
-                EquipmentSlot.LEGS
+                EquipmentSlotGroup.LEGS
             }
             Material.NETHERITE_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.IRON_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, Material.GOLDEN_CHESTPLATE, Material.LEATHER_CHESTPLATE,
             Material.ELYTRA -> {
-                EquipmentSlot.CHEST
+                EquipmentSlotGroup.CHEST
             }
             Material.NETHERITE_BOOTS, Material.DIAMOND_BOOTS, Material.IRON_BOOTS, Material.CHAINMAIL_BOOTS, Material.GOLDEN_BOOTS, Material.LEATHER_BOOTS -> {
-                EquipmentSlot.FEET
+                EquipmentSlotGroup.FEET
             }
             Material.NETHERITE_HELMET, Material.DIAMOND_HELMET, Material.IRON_HELMET, Material.CHAINMAIL_HELMET, Material.GOLDEN_HELMET, Material.LEATHER_HELMET,
             Material.TURTLE_HELMET, Material.CARVED_PUMPKIN -> {
-                EquipmentSlot.HEAD
+                EquipmentSlotGroup.HEAD
             }
             Material.BOW, Material.CROSSBOW -> {
-                EquipmentSlot.HAND
+                EquipmentSlotGroup.MAINHAND
             }
             else -> {
-                EquipmentSlot.OFF_HAND
+                EquipmentSlotGroup.OFFHAND
             }
         }
     }

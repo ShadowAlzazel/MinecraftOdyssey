@@ -14,7 +14,6 @@ object FishingListeners : Listener {
             PlayerFishEvent.State.BITE -> {
                 // START MINIGAME
                 // create class object for minigame
-
             }
             PlayerFishEvent.State.CAUGHT_FISH -> {
                 caughtFish(event)
@@ -26,10 +25,8 @@ object FishingListeners : Listener {
                 castLine(event)
             }
             else -> {
-
             }
         }
-
     }
 
     // When bob touches entity

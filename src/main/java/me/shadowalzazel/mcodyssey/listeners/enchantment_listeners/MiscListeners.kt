@@ -1,306 +1,81 @@
 package me.shadowalzazel.mcodyssey.listeners.enchantment_listeners
 
+import io.papermc.paper.world.MoonPhase
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.enchantments.api.EnchantmentsManager
-import me.shadowalzazel.mcodyssey.items.Ingredients
-import org.bukkit.*
-import org.bukkit.entity.*
+import me.shadowalzazel.mcodyssey.listeners.utility.MoonwardPhase
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.ProjectileLaunchEvent
-import org.bukkit.event.player.PlayerFishEvent
+import org.bukkit.event.entity.PlayerDeathEvent
+import org.bukkit.event.player.PlayerItemDamageEvent
 import org.bukkit.inventory.ItemStack
-import org.bukkit.util.Vector
 import java.util.*
 
 object MiscListeners : Listener, EnchantmentsManager {
 
-    private var voidJumpCooldown = mutableMapOf<UUID, Long>()
-
-    /*-----------------------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------------------*/
+    private val moonpatchPlayers = mutableListOf<UUID>()
 
     @EventHandler
-    fun fishingHandler(event: PlayerFishEvent) {
-        when(event.state) {
-            PlayerFishEvent.State.CAUGHT_FISH -> {
-                caughtFish(event)
-            }
-            PlayerFishEvent.State.CAUGHT_ENTITY -> {
-                caughtEntity(event)
-            }
-            PlayerFishEvent.State.FISHING -> {
-                castLine(event)
-            }
-            else -> {
-
+    fun itemDamageHandler(event: PlayerItemDamageEvent) {
+        if (!event.item.hasItemMeta()) return
+        if (!event.item.itemMeta.hasEnchants()) return
+        val item = event.item
+        for (enchant in item.enchantments) {
+            when(enchant.key.getNameId()) {
+                "moonpatch" -> {
+                    //moonpatchEnchantment(event)
+                }
+                "parasitic_curse" -> {
+                    parasiticCurseEnchantment(event, enchant.value)
+                }
             }
         }
 
     }
 
-    private fun caughtEntity(event: PlayerFishEvent) {
-        if (event.caught == null) { return }
-        val rod = if (event.player.inventory.itemInMainHand.type == Material.FISHING_ROD) {
-            event.player.inventory.itemInMainHand
-        }
-        else {
-            event.player.inventory.itemInOffHand
-        }
-        for (enchant in rod.enchantments) {
-            when (enchant.key.getNameId()) {
-                "bomb_ob" -> {
-                    if (event.caught!! is LivingEntity) {
-                        bombObEnchantment(event.caught!! as LivingEntity, enchant.value)
-                    }
-                }
-                "yank" -> {
-                    if (event.caught!! is LivingEntity) {
-                        yankEnchantment(event.caught!! as LivingEntity, enchant.value)
-                    }
-                }
+    @EventHandler
+    fun playerDeathHandler(event: PlayerDeathEvent) {
+        val recallItems = mutableListOf<ItemStack>()
+
+        for (item in event.drops) {
+            if (!item.hasItemMeta()) continue
+            if (!item.itemMeta.hasEnchants()) continue
+            // Check
+            if (item.hasEnchantment("fealty")) {
+                recallItems.add(item)
             }
         }
-    }
 
-    private fun caughtFish(event: PlayerFishEvent) {
-        if (event.caught == null) { return }
-        if (event.caught!!.type != EntityType.ITEM) { return }
-        //
-        val rod = if (event.player.inventory.itemInMainHand.type == Material.FISHING_ROD) {
-            event.player.inventory.itemInMainHand
+        if (recallItems.size <= 0) return
+        for (item in recallItems) {
+            event.drops.remove(item)
+            event.itemsToKeep.add(item)
         }
-        else {
-            event.player.inventory.itemInOffHand
-        }
-        for (enchant in rod.enchantments) {
-            when (enchant.key.getNameId()) {
-                "scavenger" -> {
-                    val item = event.caught as Item
-
-                    val goodPulls = listOf(
-                        Material.COD, Material.SALMON, Material.TROPICAL_FISH, Material.PUFFERFISH,
-                        Material.ENCHANTED_BOOK, Material.NAME_TAG, Material.NAUTILUS_SHELL, Material.SADDLE)
-
-                    val gems = listOf(
-                        ItemStack(Material.EMERALD, (1..(enchant.value)).random()),
-                        ItemStack(Material.DIAMOND, (1..(enchant.value)).random()),
-                        Ingredients.JADE.newItemStack((1..(enchant.value)).random()),
-                        Ingredients.RUBY.newItemStack((1..(enchant.value)).random()),
-                        Ingredients.KUNZITE.newItemStack((1..(enchant.value)).random()),
-                        Ingredients.ALEXANDRITE.newItemStack((1..(enchant.value)).random()),
-                    )
-                    //item.itemStack = gems.random()
-                    if (item.itemStack.type !in goodPulls) {
-                        item.itemStack = gems.random()
-                    }
-                }
-                "wisdom_of_the_deep" -> {
-                    event.expToDrop *= (1 + (0.5 * enchant.value)).toInt()
-                }
-            }
-        }
-    }
-
-    private fun castLine(event: PlayerFishEvent) {
-        val rod = if (event.player.inventory.itemInMainHand.type == Material.FISHING_ROD) {
-            event.player.inventory.itemInMainHand
-        }
-        else {
-            event.player.inventory.itemInOffHand
-        }
-        for (enchant in rod.enchantments) {
-            when (enchant.key.getNameId()) {
-                "lengthy_line" -> {
-                    println(event.hook.velocity)
-                    event.hook.velocity = event.hook.velocity.multiply(1 + (0.5 * enchant.value))
-                    event.hook.velocity
-                }
-            }
-        }
-    }
-
-    private fun bombObEnchantment(victim: LivingEntity, enchantmentStrength: Int) {
-        val randomColors = listOf(Color.GREEN, Color.LIME, Color.OLIVE, Color.AQUA, Color.BLUE)
-        with(victim.world) {
-            // Particles
-            spawnParticle(Particle.FLASH, victim.location, 2, 0.2, 0.2, 0.2)
-            spawnParticle(Particle.SCRAPE, victim.location, 25, 1.5, 1.0, 1.5)
-            // Fireball
-            (spawnEntity(victim.location, EntityType.FIREBALL) as Fireball).also {
-                it.setIsIncendiary(false)
-                it.yield = 0.0F
-                it.direction = Vector(0.0, -3.0, 0.0)
-            }
-            // Firework
-            (spawnEntity(victim.location, EntityType.FIREWORK_ROCKET) as Firework).also {
-                val newMeta = it.fireworkMeta
-                newMeta.power = enchantmentStrength * 30
-                newMeta.addEffect(
-                    FireworkEffect.builder().with(FireworkEffect.Type.BALL_LARGE).withColor(randomColors.random())
-                        .withFade(randomColors.random()).trail(true).flicker(true).build()
-                )
-                it.fireworkMeta = newMeta
-                it.velocity = Vector(0.0, -3.0, 0.0)
-                it.ticksToDetonate = 1
-            }
-        }
-    }
-
-    private fun yankEnchantment(victim: LivingEntity, enchantmentStrength: Int) {
-        println(victim.velocity)
-        victim.velocity = victim.velocity.multiply(1 + (0.35 * enchantmentStrength))
-        println(victim.velocity)
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-
-    // MIRROR_FORCE enchantment effects
-    /*
-    @EventHandler
-    fun mirrorForceEnchantment(event: ProjectileHitEvent) {
-        if (event.hitEntity != null) {
-            if (event.hitEntity is LivingEntity) {
-                val blockingEntity = event.hitEntity as LivingEntity
-                if (blockingEntity.equipment != null ) {
-                    if (blockingEntity.equipment!!.itemInOffHand.hasItemMeta() ) {
-                        val someShield = blockingEntity.equipment!!.itemInOffHand
-                        if (someShield.itemMeta.hasEnchant(OdysseyEnchantments.MIRROR_FORCE.toBukkit())) {
-                            if (blockingEntity.isHandRaised) {
-                                if (blockingEntity.handRaised == EquipmentSlot.OFF_HAND) {
-                                    println("Blocked!")
-                                    //cooldown is part of the factor
-                                    //event.entity.velocity = event.entity.location.subtract(blockingEntity.location).toVector()
-                                    event.entity.velocity.multiply(-2.0)
-                                    //direction
-                                    // Use normal
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+    private fun moonpatchEnchantment(event: PlayerItemDamageEvent) {
+        if (!event.player.world.hasSkyLight()) return
+        if (event.player.world.isDayTime) return
+        if (event.player.world.moonPhase == MoonPhase.NEW_MOON) return
+        if (event.player.location.block.lightFromSky < 8) return
+        event.damage = maxOf(event.damage - 1, 0)
+        // TODO: TO EXPENSIVE TO RUN EVERY TIME MOVE LATER
+        if (!moonpatchPlayers.contains(event.player.uniqueId)) {
+            moonpatchPlayers.add(event.player.uniqueId)
+            val moonwardPhase = MoonwardPhase(event.player)
+            moonwardPhase.runTaskTimer(Odyssey.instance, 10, 20)
         }
     }
 
-     */
-
-    // ---------------------------------------------- VOID_JUMP -------------------------------------------
-
-    private fun voidJumpConditionsMet(player: Player) : Boolean {
-        // Check if player has chestplate and not in spectator
-        if (player.equipment.chestplate != null && player.equipment.chestplate.hasItemMeta() && player.gameMode != GameMode.SPECTATOR) {
-            val elytra = player.equipment.chestplate
-            // Check if player has enchantment
-            if (elytra.hasEnchantment("void_jump")) {
-                // Check Speed
-                val speed = player.velocity.clone().length()
-                if (speed > 0.125) {
-                    if (player.gameMode != GameMode.SPECTATOR && !player.isDead) {
-                        return true
-                    }
-                }
-            }
-        }
-        return false
-    }
-
-    private fun voidJumpParticles(location: Location) {
-        with(location.world) {
-            spawnParticle(Particle.FLASH, location, 15, 0.0, 0.0, 0.0)
-            spawnParticle(Particle.SONIC_BOOM, location, 5, 0.0, 0.0, 0.0)
-            spawnParticle(Particle.PORTAL, location, 85, 1.5, 1.5, 1.5)
-            playSound(location, Sound.BLOCK_BEACON_DEACTIVATE, 2.5F, 2.5F)
-        }
-    }
-
-    @EventHandler
-    fun voidJumpHandler(event: ProjectileLaunchEvent) {
-        // Check if shot pearl and shooter is player
-        if (event.entity is EnderPearl && event.entity.shooter is Player) {
-            // Requirement Sentry
-            if (!voidJumpConditionsMet(event.entity.shooter as Player)) {
-                return
-            }
-            // Apply
-            with(event.entity.shooter as Player) {
-                // Cooldown
-                if (!voidJumpCooldown.containsKey(uniqueId)) { voidJumpCooldown[uniqueId] = 0L }
-                val timeElapsed: Long = System.currentTimeMillis() - voidJumpCooldown[uniqueId]!!
-                // Time sentry
-                if (timeElapsed < 1.0 * 1000) {
-                    return@voidJumpHandler
-                }
-                voidJumpCooldown[uniqueId] = System.currentTimeMillis()
-                // Get vector
-                val elytra = equipment.chestplate
-                val enchantments = elytra.getOdysseyEnchantments()
-                val jumpLevel = enchantments[getNamedEnchantment("void_jump")] ?: 1
-                val unitVector = velocity.clone().normalize()
-                val jumpLocation = location.clone().add(
-                    unitVector.clone().multiply((jumpLevel * 5.0) + 5)
-                )
-                // Apply teleport, new velocity, and particles
-                voidJumpParticles(location)
-                teleport(jumpLocation)
-                voidJumpParticles(jumpLocation)
-                velocity = unitVector.clone().multiply(1)
-                // Inventory
-                inventory.also {
-                    if (it.itemInMainHand.type == Material.ENDER_PEARL) {
-                        if (it.itemInMainHand.amount == 1) {
-                            it.setItemInMainHand(ItemStack(Material.AIR, 1))
-                        }
-                        else {
-                            it.setItemInMainHand(ItemStack(Material.ENDER_PEARL, it.itemInMainHand.amount - 1))
-                        }
-                    }
-                    else if (it.itemInOffHand.type == Material.ENDER_PEARL) {
-                        if (it.itemInOffHand.amount == 1) {
-                            it.setItemInOffHand(ItemStack(Material.AIR, 1))
-                        }
-                        else {
-                            it.setItemInOffHand(ItemStack(Material.ENDER_PEARL, it.itemInOffHand.amount - 1))
-                        }
-                    }
-                }
-            }
-            // Remove pearl
-            event.entity.remove()
-        }
+    private fun parasiticCurseEnchantment(event: PlayerItemDamageEvent, level: Int) {
+        val rolled = (level * 10 > (0..100).random())
+        if (!rolled) return
+        //val itemDamage = event.damage
+        event.damage = maxOf(event.damage - level, 0)
+        event.player.damage(1.0)
     }
 
 
-    // Temp main hand make for all later
-    /*
-    @EventHandler
-    fun hookShotEnchantment(event: ProjectileHitEvent) {
-        if (event.entity is FishHook) {
-            val someHook = event.entity as FishHook
-            if (someHook.shooter is LivingEntity) {
-                val someThrower = someHook.shooter as LivingEntity
-                if (someThrower.equipment != null) {
-                    if (someThrower.equipment!!.itemInMainHand.hasItemMeta()) {
-                        val someFishingRod = someThrower.equipment!!.itemInMainHand
-                        if (someFishingRod.getOdysseyEnchantments().contains(OdysseyEnchantments.VOID_JUMP)) {
-                            val hookFactor = someFishingRod.itemMeta.getEnchantLevel(OdysseyEnchantments.HOOK_SHOT.toBukkit())
-                            if (event.hitBlock != null) {
-                                val someBlock = event.hitBlock
-                                val someInvisibleStand: ArmorStand = someThrower.world.spawnEntity(someHook.location, EntityType.ARMOR_STAND) as ArmorStand
-                                someInvisibleStand.isVisible = false
-                                someInvisibleStand.setCanMove(false)
-                                someInvisibleStand.isMarker = true
-                                someHook.hookedEntity = someInvisibleStand
-                                someHook.setGravity(false)
-                                println("P")
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-     */
 
 }

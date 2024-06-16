@@ -2,7 +2,7 @@ package me.shadowalzazel.mcodyssey.recipes.brewing
 
 import io.papermc.paper.potion.PotionMix
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.alchemy.AlchemyManager
+import me.shadowalzazel.mcodyssey.alchemy.CustomEffectsListener
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
@@ -10,7 +10,7 @@ import org.bukkit.inventory.RecipeChoice
 import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.potion.PotionType
 
-object BrewerMixes : AlchemyManager {
+object BrewerMixes : CustomEffectsListener {
 
     fun getMixes(): List<PotionMix> {
         return listOf(

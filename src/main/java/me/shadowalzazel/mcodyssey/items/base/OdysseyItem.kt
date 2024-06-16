@@ -25,6 +25,7 @@ open class OdysseyItem(
             val meta = it.itemMeta
             meta.persistentDataContainer.set(DataKeys.ITEM_KEY, PersistentDataType.STRING, itemName) // Change for 1.20.5 to itemName component
             meta.displayName(Component.text(customName).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))
+            meta.setItemName(this.itemName)
             // Optional Variables
             if (customModel != null) { meta.setCustomModelData(customModel) }
             if (lore != null) { meta.lore(lore) }

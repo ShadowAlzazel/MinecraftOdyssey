@@ -1,12 +1,7 @@
 package me.shadowalzazel.mcodyssey.enchantments.api
 
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.addTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getIntTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.getStringTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.hasTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.removeTag
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags.setIntTag
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.TextColor
@@ -18,7 +13,7 @@ import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 
-interface EnchantabilityHandler : EnchantmentsManager, EnchantmentExtender {
+interface EnchantabilityHandler : EnchantmentsManager, EnchantmentExtender, DataTagManager {
 
     // !!!!!!!!!!!!!!!!
     // GILDED ENCHANTS ARE SLOTTED/IRREMOVABLE BUT DO NOT TAKE UP EVs??
