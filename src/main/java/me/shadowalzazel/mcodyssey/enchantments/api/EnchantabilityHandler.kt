@@ -26,11 +26,11 @@ interface EnchantabilityHandler : EnchantmentsManager, EnchantmentExtender, Data
     /*-----------------------------------------------------------------------------------------------*/
     // Extension Helper Functions
     fun ItemStack.getMaxEnchantabilityPoints(): Int {
-        return getIntTag(ItemDataTags.ENCHANTABILITY_POINTS) ?: getEnchantabilityDefault(this)
+        return itemEnchantabilityPoints(this)
     }
 
     fun ItemStack.setMaxEnchantabilityPoints(amount: Int) {
-        setIntTag(ItemDataTags.ENCHANTABILITY_POINTS, amount)
+        setIntTag(ItemDataTags.EXTRA_ENCHANTABILITY_POINTS, amount)
     }
 
     fun ItemStack.getUsedEnchantabilityPoints(): Int {
@@ -159,12 +159,16 @@ interface EnchantabilityHandler : EnchantmentsManager, EnchantmentExtender, Data
     fun createEnchantLoreComponent(enchantment: Enchantment, level: Int, pointCost: Int): Component {
         val color = if (enchantment.isCursed) {
             SlotColors.CURSED.color
-        } else {
+        }
+        else if (enchantment.maxLevel < level) {
+            SlotColors.SHINY.color
+        }
+        else {
             SlotColors.GRAY.color
         }
         return enchantment
-            .displayName(level).append(Component.text(" [$pointCost]").color(SlotColors.ENCHANT.color))
-            .color(color)
+            .displayName(level).color(color)
+            .append(Component.text(" [$pointCost]").color(SlotColors.ENCHANT.color))
             .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
     }
 
@@ -183,8 +187,11 @@ interface EnchantabilityHandler : EnchantmentsManager, EnchantmentExtender, Data
         get() = Component.text("+ Empty Enchant Slot", SlotColors.GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
 
     fun createEnchantHeader(used: Int = 0, total: Int = 0): TextComponent {
-        return Component.text("Enchantability Points: [$used/$total]", SlotColors.ENCHANT.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+        return Component.text("Enchantability Points: ", SlotColors.GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE).append(
+            Component.text("[$used/$total]", SlotColors.ENCHANT.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+        )
     }
+    //[$used/$total]
 
     /*-----------------------------------------------------------------------------------------------*/
     // Fail Message
@@ -199,19 +206,40 @@ interface EnchantabilityHandler : EnchantmentsManager, EnchantmentExtender, Data
 
     /*-----------------------------------------------------------------------------------------------*/
     // Point Default
-    fun getEnchantabilityDefault(item: ItemStack): Int {
+    fun itemEnchantabilityPoints(item: ItemStack): Int {
         // do: ALL variations
         // Make map of material type i.e. gold
         // And tool/armor type
-
-        val enchantabilityPoints = when(item.type) {
-            Material.DIAMOND_BOOTS -> 45
-            Material.DIAMOND_SWORD -> 40
-            Material.BOW -> 35
-            Material.CROSSBOW -> 30
-            else -> 30
+        val baseMaterialPoints = when(item.type) {
+            Material.NETHERITE_HELMET, Material.DIAMOND_HELMET, Material.IRON_HELMET, Material.CHAINMAIL_HELMET,
+            Material.GOLDEN_HELMET, Material.LEATHER_HELMET, Material.TURTLE_HELMET -> {
+                35
+            }
+            Material.NETHERITE_BOOTS, Material.DIAMOND_BOOTS, Material.IRON_BOOTS,
+            Material.CHAINMAIL_BOOTS, Material.GOLDEN_BOOTS, Material.LEATHER_BOOTS -> {
+                40
+            }
+            Material.NETHERITE_LEGGINGS, Material.DIAMOND_LEGGINGS, Material.IRON_LEGGINGS,
+            Material.CHAINMAIL_LEGGINGS, Material.GOLDEN_LEGGINGS, Material.LEATHER_LEGGINGS -> {
+                35
+            }
+            Material.NETHERITE_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.IRON_CHESTPLATE,
+            Material.CHAINMAIL_CHESTPLATE, Material.GOLDEN_CHESTPLATE, Material.LEATHER_CHESTPLATE,
+            Material.ELYTRA -> {
+                35
+            }
+            else -> 35
         }
-        return enchantabilityPoints
+        var bonusPoints = 0
+        if (item.getStringTag(ItemDataTags.MATERIAL_TYPE) == "mithril") {
+            bonusPoints += 7
+        }
+        val extraPoints = item.getIntTag(ItemDataTags.EXTRA_ENCHANTABILITY_POINTS) ?: 0
+        bonusPoints += extraPoints
+
+        return baseMaterialPoints + bonusPoints
+
+
     }
 
 }

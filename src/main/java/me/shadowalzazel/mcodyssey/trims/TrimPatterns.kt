@@ -6,7 +6,7 @@ import me.shadowalzazel.mcodyssey.Odyssey
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.meta.trim.TrimPattern
 
-object TrimPattern {
+object TrimPatterns {
 
     private val trimMaterialRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.TRIM_PATTERN)
 

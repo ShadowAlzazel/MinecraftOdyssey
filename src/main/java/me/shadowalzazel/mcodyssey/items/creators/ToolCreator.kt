@@ -25,7 +25,7 @@ class ToolCreator : AttributeManager, DataTagManager {
             "${material.itemOverridePre}_${type.itemOverrideSuf}"
         }
         val minecraftMaterial = Material.matchMaterial(minecraftItemKey) ?: return ItemStack(Material.AIR)
-        val itemStack = ItemStack(minecraftMaterial, amount).also {
+        val itemStack = ItemStack(minecraftMaterial, amount).apply {
             // Create Variables
             val model = (material.itemModelPre * 100) + (type.itemModelSuf)
             val itemName = "${material.itemName}_${type.itemName}"
@@ -41,25 +41,29 @@ class ToolCreator : AttributeManager, DataTagManager {
             else if (material == ToolMaterial.TITANIUM || material == ToolMaterial.ANODIZED_TITANIUM) {
                 speed *= 1.1
             }
+            //println("Setting [$itemName] properties.")
             // Assign variables (meta/components)
-            val meta = it.itemMeta
+            val meta = this.itemMeta
             // Tools with custom durability
             if (maxDurability != null && meta is Damageable) {
                 meta.setMaxDamage(maxDurability)
             }
-            meta.setItemName(itemName)
+            // Display
             meta.setCustomModelData(model)
-            meta.persistentDataContainer.set(DataKeys.ITEM_KEY, PersistentDataType.STRING, itemName) // Change for 1.20.5 to itemName component
             meta.displayName(Component.text(customName).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))
-            it.itemMeta = meta
-            it.addStringTag(ItemDataTags.WEAPON_TYPE, type.itemName)
-            it.addStringTag(ItemDataTags.MATERIAL_TYPE, material.itemName)
+            // item identifiers
+            meta.setItemName(itemName)
+            meta.persistentDataContainer.set(DataKeys.ITEM_KEY, PersistentDataType.STRING, itemName)
+            // Set meta
+            this.itemMeta = meta
+            this.addStringTag(ItemDataTags.WEAPON_TYPE, type.itemName)
+            this.addStringTag(ItemDataTags.MATERIAL_TYPE, material.itemName)
             // Assign Base attributes
+            this.addAttackDamageAttribute(damage, AttributeTags.ITEM_BASE_ATTACK_DAMAGE)
             if (bonusRange != null) {
-                it.addEntityRangeAttribute(bonusRange, AttributeTags.ITEM_BASE_ENTITY_RANGE)
+                this.addEntityRangeAttribute(bonusRange, AttributeTags.ITEM_BASE_ENTITY_RANGE)
             }
-            it.addAttackDamageAttribute(damage, AttributeTags.ITEM_BASE_ATTACK_DAMAGE)
-            it.setNewAttackSpeedAttribute(speed)
+            this.setNewAttackSpeedAttribute(speed)
         }
         return itemStack
     }

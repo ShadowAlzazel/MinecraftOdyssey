@@ -51,10 +51,10 @@ object AttributeTags {
 
 
     // Items - Weapons
-    const val ITEM_BASE_ATTACK_DAMAGE = "item.attack_damage"
-    const val ITEM_BASE_ATTACK_SPEED = "item.attack_speed"
+    const val ITEM_BASE_ATTACK_DAMAGE = "item.base_attack_damage"
+    const val ITEM_BASE_ATTACK_SPEED = "item.base_attack_speed"
     const val ITEM_RESET_ATTACK_SPEED = "item.reset_attack_speed"
-    const val ITEM_BASE_ENTITY_RANGE = "item.entity_range"
+    const val ITEM_BASE_ENTITY_RANGE = "item.base_entity_range"
 
 
 

@@ -14,7 +14,6 @@ object InventoryListeners : Listener {
         if (!item.hasItemMeta()) return
         val meta = item.itemMeta
         if (meta.hasEnchants()) {
-            println(event.click)
             toolTipHandler(event)
         }
     }
@@ -22,8 +21,9 @@ object InventoryListeners : Listener {
     private fun toolTipHandler(event: InventoryClickEvent) {
         if (event.click != ClickType.RIGHT) return
         val item = event.currentItem ?: return
+        if (!item.hasItemMeta()) return
+        if (!item.itemMeta.hasEnchants()) return
         item.updateEnchantabilityPointsLore(resetLore = true, toggleToolTip = true)
-
     }
 
 }

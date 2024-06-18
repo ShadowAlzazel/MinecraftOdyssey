@@ -232,7 +232,7 @@ object CauldronRecipes {
             ItemStack(Material.KELP, 2),
             ItemStack(Material.POPPED_CHORUS_FRUIT, 1)),
         isCombination = true,
-        comboEffectTypeList = listOf(
+        combinationEffects = listOf(
             PotionEffectType.NIGHT_VISION,
             PotionEffectType.WATER_BREATHING),
         viableFuel = soulFireFuels)
@@ -244,7 +244,7 @@ object CauldronRecipes {
             ItemStack(Material.RAW_GOLD, 2),
             ItemStack(Material.POPPED_CHORUS_FRUIT, 1)),
         isCombination = true,
-        comboEffectTypeList = listOf(
+        combinationEffects = listOf(
             PotionEffectType.HASTE,
             PotionEffectType.GLOWING),
         viableFuel = soulFireFuels)
@@ -256,7 +256,7 @@ object CauldronRecipes {
             ItemStack(Material.WEEPING_VINES, 2),
             ItemStack(Material.POPPED_CHORUS_FRUIT, 1)),
         isCombination = true,
-        comboEffectTypeList = listOf(
+        combinationEffects = listOf(
             PotionEffectType.NIGHT_VISION,
             PotionEffectType.FIRE_RESISTANCE),
         viableFuel = soulFireFuels)
@@ -269,7 +269,7 @@ object CauldronRecipes {
         specificIngredients = listOf(
             ItemStack(Material.POPPED_CHORUS_FRUIT, 2)),
         isCombination = true,
-        comboEffectTypeList = listOf(),
+        combinationEffects = listOf(),
         viableFuel = fireFuels)
 
     private val CUSTOM_CONCOCTION_3_RECIPE = AlchemyCauldronRecipe(
@@ -278,16 +278,16 @@ object CauldronRecipes {
         specificIngredients = listOf(
             ItemStack(Material.POPPED_CHORUS_FRUIT, 3)),
         isCombination = true,
-        comboEffectTypeList = listOf(),
+        combinationEffects = listOf(),
         viableFuel = fireFuels)
 
     private val CUSTOM_CONCOCTION_4_RECIPE = AlchemyCauldronRecipe(
         alchemyResult = Potions.CUSTOM_CONCOCTION,
         countedItems = 5,
         specificIngredients = listOf(
-            ItemStack(Material.POPPED_CHORUS_FRUIT, 4))  ,
+            ItemStack(Material.POPPED_CHORUS_FRUIT, 4)),
         isCombination = true,
-        comboEffectTypeList = listOf(),
+        combinationEffects = listOf(),
         viableFuel = fireFuels)
 
     private val CUSTOM_CONCOCTION_5_RECIPE = AlchemyCauldronRecipe(
@@ -296,7 +296,7 @@ object CauldronRecipes {
         specificIngredients = listOf(
             ItemStack(Material.POPPED_CHORUS_FRUIT, 5)),
         isCombination = true,
-        comboEffectTypeList = listOf(),
+        combinationEffects = listOf(),
         viableFuel = fireFuels)
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -304,9 +304,9 @@ object CauldronRecipes {
         alchemyResult = Potions.CUSTOM_CONCOCTION,
         countedItems = 2,
         specificIngredients = listOf(
-            ItemStack(Material.POPPED_CHORUS_FRUIT, 5)),
+            ItemStack(Material.HONEYCOMB, 1)),
         isCombination = true,
-        comboEffectTypeList = listOf(),
+        combinationEffects = listOf(),
         viableFuel = fireFuels)
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -338,6 +338,7 @@ object CauldronRecipes {
         CUSTOM_CONCOCTION_2_RECIPE,
         CUSTOM_CONCOCTION_3_RECIPE,
         CUSTOM_CONCOCTION_4_RECIPE,
-        CUSTOM_CONCOCTION_5_RECIPE
+        CUSTOM_CONCOCTION_5_RECIPE,
+        CUSTOM_FOOD_EFFECT_RECIPE,
     )
 }

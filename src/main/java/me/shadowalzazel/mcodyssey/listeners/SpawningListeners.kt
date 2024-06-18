@@ -1,53 +1,21 @@
 package me.shadowalzazel.mcodyssey.listeners
 
-import me.shadowalzazel.mcodyssey.util.AttributeManager
-import me.shadowalzazel.mcodyssey.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags
-import me.shadowalzazel.mcodyssey.enchantments.api.EnchantabilityHandler
-import me.shadowalzazel.mcodyssey.items.creators.ToolCreator
-import me.shadowalzazel.mcodyssey.items.utility.ToolMaterial
-import me.shadowalzazel.mcodyssey.items.utility.ToolType
 import me.shadowalzazel.mcodyssey.mobs.neutral.DubiousDealer
 import me.shadowalzazel.mcodyssey.recipes.merchant.ArcaneSales
-import me.shadowalzazel.mcodyssey.util.MobEquipHelper
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.TextColor
-import org.bukkit.Material
-import org.bukkit.enchantments.Enchantment
+import me.shadowalzazel.mcodyssey.util.MobCreationHelper
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.world.ChunkPopulateEvent
 import org.bukkit.generator.structure.Structure
-import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ArmorMeta
 import org.bukkit.inventory.meta.trim.ArmorTrim
 import org.bukkit.inventory.meta.trim.TrimMaterial
 import org.bukkit.inventory.meta.trim.TrimPattern
-import org.bukkit.potion.PotionEffect
-import org.bukkit.potion.PotionEffectType
-import java.util.Random
-import kotlin.math.absoluteValue
-import kotlin.math.pow
 
-object SpawningListeners : Listener, AttributeManager, MobEquipHelper, EnchantabilityHandler {
-
-    private val dangerPrefixes = setOf(
-        "Deadly",
-        "Magnificent",
-        "Terrorizing",
-        "Classic",
-        "Potent",
-        "Dominant",
-        "Forceful",
-        "Mighty",
-        "Great",
-        "Cruel",
-        "Dangerous",
-        "Savage",
-        "Lethal",
-        "Fatal")
+object SpawningListeners : Listener, MobCreationHelper {
 
     @EventHandler
     fun mobNaturalSpawningHandler(event: CreatureSpawnEvent) {
@@ -73,7 +41,11 @@ object SpawningListeners : Listener, AttributeManager, MobEquipHelper, Enchantab
                 val mobEx = if (event.entity is Zombie || event.entity is Skeleton) 25 else 0
                 val extraDif = getDifScale(event.entity) * 10
                 val rollElite = (20 + extraDif + mobEx > (0..1000).random())
-                if (rollElite) createEliteMob(event.entity)
+                // 2% For gilded mob
+                // 0.1% For a pack of shiny
+                if (rollElite) {
+                    createShinyMob(event.entity)
+                }
             }
         }
     }
@@ -92,88 +64,8 @@ object SpawningListeners : Listener, AttributeManager, MobEquipHelper, Enchantab
         }
     }
 
-    // 2% For gilded mob
-    // 0.1% For a pack of elites
-    private fun createEliteMob(mob: LivingEntity) {
-        if (mob is Creeper) return
-        // Difficulty
-        val difficultyMod = getDifScale(mob)
-        // Weapon
-        val weaponTypes = listOf(ToolType.SABER, ToolType.KATANA, ToolType.LONGSWORD, ToolType.POLEAXE, ToolType.WARHAMMER)
-        val materialType = ToolMaterial.IRON
-        val mainHand: ItemStack = when(mob.type) {
-            EntityType.SKELETON, EntityType.STRAY -> {
-                mob.equipment?.itemInMainHand ?: ItemStack(Material.BOW)
-            }
-            EntityType.ZOMBIE, EntityType.HUSK -> {
-                ToolCreator().createToolStack(materialType, weaponTypes.random())
-            }
-            else -> {
-                ToolCreator().createToolStack(materialType, weaponTypes.random())
-            }
-        }
-        // GET ENCHANTMENTS TO SWORD
-        val greaterEnchant: Pair<Enchantment, Int>
-        // Enchant randomly and get gilded
-        val weapon = mainHand.enchantWithLevels(30, false, Random())
-        weapon.apply {
-            val newEnchant = this.enchantments.entries.random()
-            greaterEnchant = Pair(newEnchant.key, newEnchant.value + 1)
-            addGildedEnchant(greaterEnchant.first, greaterEnchant.second)
-            updateEnchantabilityPointsLore()
-
-        }
-        // Naming
-        val enchantName = greaterEnchant.first.displayName(greaterEnchant.second).color(TextColor.color(85, 255, 255))
-        val conjunctions = listOf("with", "of", "master of", "joined with", "imbued by", "keeper of", "holder of")
-        val nameText = "${dangerPrefixes.random()} ${mob.name} ${conjunctions.random()} "
-        //val nameText = "${dangerPrefixes.random()} ${mob.name}"
-        val newName = Component.text(nameText).color(TextColor.color(85, 255, 255)).append(enchantName)
-        // Apply to Mob
-        val trim = createRandomArmorTrim()
-        mob.apply {
-            // Options
-            customName(newName)
-            isCustomNameVisible = true
-            canPickupItems = true
-            // Add Items
-            createTrimmedArmor(this, trim, "golden")
-            equipment?.also {
-                it.setItemInMainHand(weapon)
-                it.itemInMainHandDropChance = 0.85F // Change to difficulty
-                it.helmetDropChance = 0.3F
-                it.chestplateDropChance = 0.3F
-                it.leggingsDropChance = 0.3F
-                it.bootsDropChance = 0.3F
-            }
-            addHealthAttribute(45 + (20.0 * difficultyMod), AttributeTags.ELITE_HEALTH)
-            health += 45 + (20.0 * difficultyMod)
-            addAttackAttribute(3 + (1 * difficultyMod), AttributeTags.ELITE_ATTACK_DAMAGE)
-            addArmorAttribute(6 + (2 * difficultyMod), AttributeTags.ELITE_ARMOR)
-            addSpeedAttribute(0.012 + (0.012 * difficultyMod), AttributeTags.ELITE_SPEED)
-            addScaleAttribute(0.2)
-            addScoreboardTag(EntityTags.ELITE_MOB)
-            addPotionEffect(PotionEffect(PotionEffectType.RESISTANCE, 20 * 3600, 0))
-            // Persistent
-            if (mob.location.block.lightFromSky > 5) {
-                isPersistent = true
-            }
-        }
-        println("Spawned Elite Mob at: ${mob.location}")
-    }
 
     /*-----------------------------------------------------------------------------------------------*/
-    private fun getDifScale(entity: Entity): Double {
-        // Find the XY distance from zero
-        val distanceFromZero = entity.location.clone().let {
-            it.toBlockLocation()
-            it.y = 0.0
-            it.distance(it.clone().zero()).absoluteValue
-        }
-        // Formula
-        val scaleDist = 1.0 / 10000.0
-        return (scaleDist * distanceFromZero) + (scaleDist * distanceFromZero).pow(2)
-    }
 
     @EventHandler
     fun mobStructureSpawning(event: ChunkPopulateEvent) {

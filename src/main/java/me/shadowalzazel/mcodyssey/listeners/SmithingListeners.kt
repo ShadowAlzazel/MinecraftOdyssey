@@ -6,6 +6,7 @@ import me.shadowalzazel.mcodyssey.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
 import me.shadowalzazel.mcodyssey.trims.TrimMaterials
+import me.shadowalzazel.mcodyssey.trims.TrimPatterns
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -23,6 +24,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ArmorMeta
 import org.bukkit.inventory.meta.trim.ArmorTrim
 import org.bukkit.inventory.meta.trim.TrimMaterial
+import org.bukkit.inventory.meta.trim.TrimPattern
 
 object SmithingListeners : Listener, DataTagManager {
 
@@ -72,7 +74,7 @@ object SmithingListeners : Listener, DataTagManager {
 
         /*-----------------------------------------------------------------------------------------------*/
         // Soul Steel
-        if (result.type == Material.IRON_INGOT) {
+        else if (result.type == Material.IRON_INGOT) {
             event.result = ItemStack(Material.AIR)
             if (!addition.hasItemMeta()) return
             if (!addition.itemMeta.hasCustomModelData()) return
@@ -113,7 +115,7 @@ object SmithingListeners : Listener, DataTagManager {
         }
         /*-----------------------------------------------------------------------------------------------*/
         // Netherite
-        if (addition.type == Material.NETHERITE_INGOT && result.itemMeta.hasCustomModelData()) {
+        else if (addition.type == Material.NETHERITE_INGOT && result.itemMeta.hasCustomModelData()) {
             val item = event.inventory.result!!.clone()
             if (item.hasTag(ItemDataTags.NETHERITE_TOOL)) return
             // Get new model
@@ -143,35 +145,45 @@ object SmithingListeners : Listener, DataTagManager {
 
         /*-----------------------------------------------------------------------------------------------*/
         // Trims
-        if (result.itemMeta is ArmorMeta) {
-            val armorMeta = result.itemMeta as ArmorMeta
-            val trimIngredient = event.inventory.inputMineral ?: return
-            val trimPattern = (event.inventory.result!!.itemMeta as ArmorMeta).trim!!.pattern
-            val itemName = trimIngredient.getOdysseyTag()
-            // Get material
-            val newTrimMaterial: TrimMaterial
-            when(itemName) {
-                "alexandrite" -> { newTrimMaterial = TrimMaterials.ALEXANDRITE }
-                "kunzite" -> { newTrimMaterial = TrimMaterials.KUNZITE }
-                "jade" -> { newTrimMaterial = TrimMaterials.JADE }
-                "ruby" -> { newTrimMaterial = TrimMaterials.RUBY }
-                "soul_quartz" -> { newTrimMaterial = TrimMaterials.SOUL_QUARTZ }
-                "soul_steel_ingot" -> { newTrimMaterial = TrimMaterials.SOUL_STEEL }
-                "iridium_ingot" -> { newTrimMaterial = TrimMaterials.IRIDIUM }
-                "mithril_ingot" -> { newTrimMaterial = TrimMaterials.MITHRIL }
-                "titanium_ingot" -> { newTrimMaterial = TrimMaterials.TITANIUM }
-                "andonized_titanium_ingot" -> { newTrimMaterial = TrimMaterials.ANODIZED_TITANIUM }
-                "silver_ingot" -> { newTrimMaterial = TrimMaterials.SILVER }
-                "obsidian" -> { newTrimMaterial = TrimMaterials.OBSIDIAN }
-                else -> {
-                    return
-                }
+        else if (result.itemMeta is ArmorMeta) {
+            val resultMeta = result.itemMeta as ArmorMeta
+            // Get IDs
+            val trimMaterial = event.inventory.inputMineral ?: return
+            val trimTemplate = event.inventory.inputTemplate ?: return
+            val materialName = trimMaterial.getItemIdentifier()
+            val trimName = trimTemplate.getItemIdentifier()
+            // Get Trim Material
+            val customTrimMaterial: TrimMaterial? = when(materialName) {
+                "alexandrite" ->  TrimMaterials.ALEXANDRITE
+                "kunzite" -> TrimMaterials.KUNZITE
+                "jade" -> TrimMaterials.JADE
+                "ruby" -> TrimMaterials.RUBY
+                "soul_quartz" -> TrimMaterials.SOUL_QUARTZ
+                "soul_steel_ingot" -> TrimMaterials.SOUL_STEEL
+                "iridium_ingot" -> TrimMaterials.IRIDIUM
+                "mithril_ingot" -> TrimMaterials.MITHRIL
+                "titanium_ingot" -> TrimMaterials.TITANIUM
+                "andonized_titanium_ingot" -> TrimMaterials.ANODIZED_TITANIUM
+                "silver_ingot" -> TrimMaterials.SILVER
+                "obsidian" -> TrimMaterials.OBSIDIAN // DOES NOT WORK
+                else -> null
             }
+            // Get Trim Pattern
+            val customTrimPattern: TrimPattern? = when(trimName) {
+                "imperial" -> TrimPatterns.IMPERIAL
+                else -> null
+            }
+            // Final
+            val finalTrim = customTrimPattern ?: resultMeta.trim?.pattern
+            val finalMaterial = customTrimMaterial ?: resultMeta.trim?.material
+            if (finalMaterial == null) return
+            if (finalTrim == null) return
+
             // Apply new trim
-            val newTrim = ArmorTrim(newTrimMaterial, trimPattern)
-            armorMeta.trim = newTrim
+            val newTrim = ArmorTrim(finalMaterial, finalTrim)
+            resultMeta.trim = newTrim
             event.result = event.result!!.clone().apply {
-                itemMeta = armorMeta
+                itemMeta = resultMeta
             }
             return
         }

@@ -25,6 +25,7 @@ object ItemDataTags {
     const val IS_POTION_VIAL: String = "odyssey.is_vial" // Multiple charges of lesser potency
     const val IS_EXTENDED_PLUS: String = "odyssey.is_extended_plus"
     const val IS_UPGRADED_PLUS: String = "odyssey.is_upgraded_plus"
+    const val IS_LINGERING_STICKY: String = "odyssey.is_lingering_sticky"
 
     // Weapons
     const val AUTO_LOADER_LOADING: String = "odyssey.auto_loader_loading"
@@ -53,9 +54,10 @@ object ItemDataTags {
     const val ENCHANT_SLOTS: String = "odyssey.enchant_slots"
     const val IS_SLOTTED: String = "odyssey.is_slotted"
     const val GILDED_ENCHANT: String = "odyssey.gilded_enchant"
+    const val SHINY_ENCHANT: String = "odyssey.shiny_enchant"
     // Enchanting - NEW
 
-    const val ENCHANTABILITY_POINTS: String = "odyssey.enchantability_points"
+    const val EXTRA_ENCHANTABILITY_POINTS: String = "odyssey.enchantability_points"
     const val HAS_ENCHANT_TOOL_TIP: String = "odyssey.has_enchant_tool_tip"
 
     // Runes
