@@ -67,7 +67,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
             return
         }
         // CHANGE Anvil cost from being cringe mechanic
-        if (secondIsBook && second!!.itemMeta is EnchantmentStorageMeta && result.itemMeta is Repairable) {
+        else if (secondIsBook && second!!.itemMeta is EnchantmentStorageMeta && result.itemMeta is Repairable) {
             val booKMeta = second.itemMeta as EnchantmentStorageMeta
             val resultMeta = result.itemMeta as Repairable
             val storedEnchants = booKMeta.storedEnchants
@@ -79,10 +79,17 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
                 }
                 // Reset to prevent cringe
                 anvil.repairCost = bookPoints
-                resultMeta.repairCost = result.enchantments.size
             }
             result.itemMeta = resultMeta
         }
+        // CHANGE combine cost when combining enchantments
+        else if (result.itemMeta is Repairable && second?.hasItemMeta() == true) {
+            if (second.itemMeta.hasEnchants()) {
+                val resultPoints = result.getUsedEnchantabilityPoints()
+                anvil.repairCost = resultPoints
+            }
+        }
+
         // Check if over points max
         val usedPoints = result.getUsedEnchantabilityPoints()
         val maxPoints = result.getMaxEnchantabilityPoints()
@@ -92,7 +99,9 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
             return
         }
         // Update
-        result.updateEnchantabilityPointsLore()
+        if (result.hasItemMeta() && result.itemMeta.hasEnchants()) {
+            result.updateEnchantabilityPointsLore()
+        }
     }
 
     /*-----------------------------------------------------------------------------------------------*/

@@ -12,11 +12,11 @@ class DateTimeSyncer(val odyssey: Odyssey) : BukkitRunnable() {
         currentTime = odyssey.overworld.time // Set day time
         val thisDay = getDay()
         val worldEventManager = odyssey.worldEventManager
-        println("Checked Day: $currentDay")
-        println("This Day: $thisDay")
+        //println("Checked Day: $currentDay")
+        //println("This Day: $thisDay")
         // Create a new Day
         if (thisDay != currentDay) { // New Day called once
-            println("NEW DAY!")
+            //println("NEW DAY!")
             worldEventManager.runOnNewDay(odyssey.overworld)
             currentDay = thisDay
             // Roll for event

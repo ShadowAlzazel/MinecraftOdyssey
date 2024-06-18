@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.items
 
-import me.shadowalzazel.mcodyssey.alchemy.CustomEffectsListener
+import me.shadowalzazel.mcodyssey.alchemy.PotionEffectsManager
 import me.shadowalzazel.mcodyssey.alchemy.base.OdysseyPotion
 import me.shadowalzazel.mcodyssey.constants.EffectTags
 import me.shadowalzazel.mcodyssey.constants.ItemModels
@@ -17,7 +17,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.potion.PotionType
 
-object Potions : CustomEffectsListener {
+object Potions : PotionEffectsManager {
 
     fun OdysseyPotion.createPotionStack(): ItemStack {
         return newItemStack(1).apply {
@@ -31,6 +31,7 @@ object Potions : CustomEffectsListener {
                     potionMeta.basePotionType = PotionType.MUNDANE
                 }
             }
+            potionMeta.setMaxStackSize(8)
             itemMeta = potionMeta
             if (isOdysseyEffect) {
                 potionMeta.basePotionType = PotionType.MUNDANE

@@ -64,7 +64,7 @@ class Odyssey : JavaPlugin() {
         val datapackManager = DatapackManager(this)
 
         // Need to find the main world for others
-        logger.info("Finding Datapack World...")
+        logger.info("Finding Main World...")
         for (world in server.worlds) {
             overworld = world
             try {
@@ -151,7 +151,7 @@ class Odyssey : JavaPlugin() {
         // Starting World Date
         logger.info("Initializing World Events...")
         dateTimeSyncer.currentDay = 0 //dateTimeSyncer.getDay()
-        dateTimeSyncer.runTaskTimer(this, 20, 20 * 10) // Run every 200 ticks = 10 secs
+        //dateTimeSyncer.runTaskTimer(this, 20, 20 * 10) // Run every 200 ticks = 10 secs
 
         // Hello World!
         val timeElapsed = (System.currentTimeMillis() - timerStart).div(1000.0)

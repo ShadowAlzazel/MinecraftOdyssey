@@ -115,7 +115,7 @@ internal interface RunesherdManager : AttributeManager, DataTagManager {
             Attribute.GENERIC_MAX_HEALTH -> { addMaxHealthAttribute(value, name, slots) }
             Attribute.GENERIC_KNOCKBACK_RESISTANCE -> { addKnockbackResistanceAttribute(value, name, slots) }
             Attribute.GENERIC_ATTACK_KNOCKBACK -> { addAttackKnockbackAttribute(value, name, slots) }
-            else -> { addGenericAttribute(value, name, attribute, slotGroup = slots) }
+            else -> { setGenericAttribute(value, name, attribute, slotGroup = slots) }
         }
     }
 
@@ -162,25 +162,26 @@ internal interface RunesherdManager : AttributeManager, DataTagManager {
             equipment.setRuneAugmentCount(runeCount + 1)
         }
         // Check sherd slot type
-        val armorList = listOf(EquipmentSlotGroup.FEET, EquipmentSlotGroup.LEGS, EquipmentSlotGroup.CHEST, EquipmentSlotGroup.HEAD)
-        val materialSlotGroup = getMaterialSlotGroup(equipment.type)
-        val itemIsArmor = materialSlotGroup in armorList
-        val runeSlotGroup = runesherdModifier.slotGroup
-
+        val itemGroups = getMaterialSlotGroups(equipment.type)
+        val runeGroup = runesherdModifier.slotGroup
+        val runeMatches = runeGroup in itemGroups
+        val mainGroup = itemGroups[0] // First in list
         // Creating new base
+        val itemIsArmor = itemGroups.contains(EquipmentSlotGroup.ARMOR)
         // For base item stats FOR BASE VALUES
         if (equipment.itemMeta.attributeModifiers == null || !equipment.itemMeta.hasAttributeModifiers()) {
             // Check if armor
             if (itemIsArmor) {
+
                 val baseValues = getBaseDataArmor(equipment.type) // Pair(armor, toughness)
-                equipment.addArmorAttribute(baseValues.first, "generic.armor", materialSlotGroup)
+                equipment.addArmorAttribute(baseValues.first, "generic.armor", mainGroup)
                 // Add toughness if can
                 if (baseValues.second > 0.0) {
-                    equipment.addArmorToughnessAttribute(baseValues.second, "generic.armor_toughness", materialSlotGroup)
+                    equipment.addArmorToughnessAttribute(baseValues.second, "generic.armor_toughness", mainGroup)
                 }
                 // CHeck if netherite to also add knockback resistance
                 if (baseValues.second >= 3.0) { // apparently 0.1 is 1
-                    equipment.addKnockbackResistanceAttribute(0.1, "generic.knockback_resistance",  materialSlotGroup)
+                    equipment.addKnockbackResistanceAttribute(0.1, "generic.knockback_resistance",  mainGroup)
                 }
             } else {
                 val baseValues = getBaseDataTools(equipment.type) // Pair(damage, speed)
@@ -190,58 +191,62 @@ internal interface RunesherdManager : AttributeManager, DataTagManager {
                 }
             }
         }
-
-        // If not matches, 75% efficient
-        val matchingSlotMultiplier = if (runeSlotGroup == materialSlotGroup) {
+        // If Matching
+        val matchingSlotMultiplier = if (runeMatches) {
             1.0
-        }
-        else if (itemIsRuneware) {
+        } else if (itemIsRuneware) {
             1.0
-        }
-        else {
+        } else {
             0.75
         }
         val totalValue = (runesherdValue * matchingSlotMultiplier) + previousValue
-
+        // Get final group
+        val finalGroup = if (itemIsRuneware) {
+            EquipmentSlotGroup.HAND
+        } else {
+            mainGroup // Converts the runesherd to the armor (removing ANY) kind of nerfing it
+        }
         // Apply
         return equipment.apply {
-            addRuneModifier(runeAttribute, totalValue, attributeName, materialSlotGroup)
+            addRuneModifier(runeAttribute, totalValue, attributeName, finalGroup)
             if (!equipment.hasRuneAugmentTag()) {
                 equipment.addRuneAugmentTag()
             }
         }
     }
 
-    private fun getMaterialSlotGroup(material: Material): EquipmentSlotGroup {
-        return when (material) {
+    private fun getMaterialSlotGroups(material: Material): List<EquipmentSlotGroup> {
+        val slotGroups = when (material) {
             Material.NETHERITE_SWORD, Material.DIAMOND_SWORD, Material.IRON_SWORD, Material.GOLDEN_SWORD, Material.STONE_SWORD, Material.WOODEN_SWORD,
             Material.NETHERITE_AXE, Material.DIAMOND_AXE, Material.IRON_AXE, Material.GOLDEN_AXE, Material.STONE_AXE, Material.WOODEN_AXE,
             Material.NETHERITE_PICKAXE, Material.DIAMOND_PICKAXE, Material.IRON_PICKAXE, Material.GOLDEN_PICKAXE, Material.STONE_PICKAXE, Material.WOODEN_PICKAXE,
             Material.NETHERITE_SHOVEL, Material.DIAMOND_SHOVEL, Material.IRON_SHOVEL, Material.GOLDEN_SHOVEL, Material.STONE_SHOVEL, Material.WOODEN_SHOVEL,
-            Material.NETHERITE_HOE, Material.DIAMOND_HOE, Material.IRON_HOE, Material.GOLDEN_HOE, Material.STONE_HOE, Material.WOODEN_HOE -> {
-                EquipmentSlotGroup.MAINHAND
+            Material.NETHERITE_HOE, Material.DIAMOND_HOE, Material.IRON_HOE, Material.GOLDEN_HOE, Material.STONE_HOE, Material.WOODEN_HOE,
+            Material.MACE, Material.TRIDENT, Material.FISHING_ROD -> {
+                listOf(EquipmentSlotGroup.MAINHAND, EquipmentSlotGroup.HAND)
             }
             Material.NETHERITE_LEGGINGS, Material.DIAMOND_LEGGINGS, Material.IRON_LEGGINGS, Material.CHAINMAIL_LEGGINGS, Material.GOLDEN_LEGGINGS, Material.LEATHER_LEGGINGS -> {
-                EquipmentSlotGroup.LEGS
+                listOf(EquipmentSlotGroup.LEGS, EquipmentSlotGroup.ARMOR, EquipmentSlotGroup.BODY)
             }
             Material.NETHERITE_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.IRON_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, Material.GOLDEN_CHESTPLATE, Material.LEATHER_CHESTPLATE,
             Material.ELYTRA -> {
-                EquipmentSlotGroup.CHEST
+                listOf(EquipmentSlotGroup.CHEST, EquipmentSlotGroup.ARMOR, EquipmentSlotGroup.BODY)
             }
             Material.NETHERITE_BOOTS, Material.DIAMOND_BOOTS, Material.IRON_BOOTS, Material.CHAINMAIL_BOOTS, Material.GOLDEN_BOOTS, Material.LEATHER_BOOTS -> {
-                EquipmentSlotGroup.FEET
+                listOf(EquipmentSlotGroup.FEET, EquipmentSlotGroup.ARMOR, EquipmentSlotGroup.BODY)
             }
             Material.NETHERITE_HELMET, Material.DIAMOND_HELMET, Material.IRON_HELMET, Material.CHAINMAIL_HELMET, Material.GOLDEN_HELMET, Material.LEATHER_HELMET,
             Material.TURTLE_HELMET, Material.CARVED_PUMPKIN -> {
-                EquipmentSlotGroup.HEAD
+                listOf(EquipmentSlotGroup.HEAD, EquipmentSlotGroup.ARMOR, EquipmentSlotGroup.BODY)
             }
             Material.BOW, Material.CROSSBOW -> {
-                EquipmentSlotGroup.MAINHAND
+                listOf(EquipmentSlotGroup.MAINHAND, EquipmentSlotGroup.HAND)
             }
             else -> {
-                EquipmentSlotGroup.OFFHAND
+                listOf(EquipmentSlotGroup.OFFHAND)
             }
         }
+        return slotGroups + listOf(EquipmentSlotGroup.ANY)
     }
 
     // FOR ARMOR (Armor, Toughness)

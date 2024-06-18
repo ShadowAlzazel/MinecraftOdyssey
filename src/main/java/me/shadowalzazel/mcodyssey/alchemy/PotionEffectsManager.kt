@@ -1,7 +1,6 @@
 package me.shadowalzazel.mcodyssey.alchemy
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.enchantments.api.SlotColors
 import me.shadowalzazel.mcodyssey.constants.EffectTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.constants.ItemModels
@@ -23,7 +22,7 @@ import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionType
 
-interface CustomEffectsListener : DataTagManager {
+interface PotionEffectsManager : DataTagManager {
 
     /*-----------------------------------------------------------------------------------------------*/
     // Tags
@@ -100,7 +99,7 @@ interface CustomEffectsListener : DataTagManager {
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-    // TODO: TIPPED ARROWS
+    // TIPPED ARROWS
 
 
 
@@ -217,9 +216,9 @@ interface CustomEffectsListener : DataTagManager {
     /*-----------------------------------------------------------------------------------------------*/
     // Potion Creators
     fun createPotionVialStack(potion: ItemStack): ItemStack {
-        val meta = (potion.itemMeta as PotionMeta).clone()
+        val vial = potion.clone()
+        val meta = (vial.itemMeta as PotionMeta)
         if (meta.basePotionType == null) return potion
-        meta.setMaxStackSize(64)
         // Do net Detect Water
         if (meta.basePotionType != PotionType.WATER) {
             val newEffects = mutableListOf<PotionEffect>()
@@ -241,31 +240,13 @@ interface CustomEffectsListener : DataTagManager {
         // Meta Apply
         meta.setCustomModelData(ItemModels.VIAL_CHARGE_1)
         meta.basePotionType = PotionType.THICK
-        return potion.clone().apply {
-            itemMeta = meta
-            addTag(ItemDataTags.IS_POTION_VIAL)
-            amount = 5
-            //setIntTag(ItemDataTags.POTION_CHARGES_LEFT, 5)
-            //createPotionVialLore()
-        }
+        meta.setMaxStackSize(64)
+        vial.itemMeta = meta
+        // Return
+        vial.addTag(ItemDataTags.IS_POTION_VIAL)
+        vial.amount = 4
+        return vial
         // TODO: For Odyssey Effects
-    }
-
-    fun ItemStack.createPotionVialLore() {
-        val charges = getIntTag(ItemDataTags.POTION_CHARGES_LEFT) ?: return
-        if (!hasTag(ItemDataTags.IS_POTION_VIAL)) return
-        val meta = itemMeta as PotionMeta
-        val newLore = meta.lore() ?: mutableListOf()
-        val text = "Uses Left: [$charges/5]"
-        val component = Component.text(text, SlotColors.GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-        newLore.add(component)
-    }
-
-    fun createModeledPotion(material: Material, item: ItemStack, model: Int? = null): ItemStack {
-        return ItemStack(material, 1).apply {
-            itemMeta = item.itemMeta as PotionMeta
-            if (model != null) { itemMeta.setCustomModelData(model) }
-        }
     }
 
     fun createOdysseyLingeringPotion(item: ItemStack): ItemStack {

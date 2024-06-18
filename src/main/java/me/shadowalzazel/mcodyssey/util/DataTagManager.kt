@@ -22,6 +22,15 @@ interface DataTagManager {
         return itemMeta.persistentDataContainer[DataKeys.ITEM_KEY, PersistentDataType.STRING]
     }
 
+    // Tries to get Odyssey Tag, then item name
+    fun ItemStack.getItemIdentifier(): String? {
+        return getOdysseyTag() ?: if (itemMeta.hasItemName()) {
+            itemMeta.itemName
+        } else {
+            null
+        }
+    }
+
     fun ItemStack.isThisItem(tag: String): Boolean {
         return this.getOdysseyTag() == tag
     }

@@ -41,7 +41,7 @@ class GravitySingularityTask (
                 //TODO:  INCLUDE FALLING AND MOVING
                 if (!it.scoreboardTags.contains(EntityTags.MOVING_SINGULARITY) && it != attacker) {
                     it.teleport(singularityLocation.clone().add((-3..3).random() * 0.08, 0.1, (-3..3).random() * 0.08))
-                    it.damage(0.5 * modifier, attacker)
+                    it.damage(0.5 * modifier)
                 }
             }
             // Timer

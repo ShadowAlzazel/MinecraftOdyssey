@@ -29,9 +29,19 @@ interface EnchantmentExtender {
         return description
     }
 
+    private fun Double.format(digits: Int) = "%.${digits}f".format(this)
+
     private fun getToolTipText(name: String, level: Int): List<String> {
         return when(name) {
             // Vanilla
+            "curse_of_vanishing" -> listOf(
+                "- Item disappears on death.")
+            "curse_of_binding" -> listOf(
+                "- Item cannot be removed from armor slots.")
+            "lure" -> listOf(
+                "- Decreases wait time for something to appear by ${level * 5}=[level x 5] seconds.")
+            "luck_of_the_sea" -> listOf(
+                "- Increases the chance of treasure catches by around ${level * 2.1}%=[level x 2.1].")
             "mending" -> listOf(
                 "- Repairs the item using experience.")
             "unbreaking" -> listOf(
@@ -72,17 +82,49 @@ interface EnchantmentExtender {
                 "- Increase Melee Damage to arthropod mobs by ${2.5 * level}=[2.5 x level]",
                 "- Inflicts Slowness IV to an arthropod for around 1-${1 + (0.5 * level)}=[1 + 0.5 x level] seconds.")
             "knockback" -> listOf(
-                "- The target is knock backed further by around ${1.6 + (2.6 * level)}=[1.6 + 2.6 x level] blocks.")
+                "- The target is knock backed further by around ${(1.6 + (2.6 * level)).format(2)}=[1.6 + 2.6 x level] blocks.")
             "sweeping_edge" -> listOf(
                 "- Increases damage dealt by a sweep attack to ${level}/${level + 1}=[level / (level + 1)]")
             "fire_aspect" -> listOf(
                 "- Set the target on fire for ${level * 4}=[level x 4] seconds.")
             "looting" -> listOf(
-                "- Increases the number of common drops by ${level}=[level].")
+                "- Increases the max number of common drops by ${level}=[level].",
+                "- Increases the chance of rare loot by ${level}%=[level].")
             "silk_touch" -> listOf(
                 "- Causes blocks to drop themselves.")
             "fortune" -> listOf(
-                "- Increases the number of drops on average by around ${(level + 1) / 2}=[(level + 1) / 2]")
+                "- Increases the number of drops on average by around ${(level + 1) / 2}=[(level + 1) / 2].")
+            "efficiency" -> listOf(
+                "- Increases mining speed when using the correct tool by ${(level * 1.0).pow(2)}=[level ^ 2].")
+            "riptide" -> listOf(
+                "- Throwing a trident in the rain or in the water launches the player",
+                "for ${6 * level + 3}=[3 + (level x 6)] blocks.")
+            "channeling" -> listOf(
+                "- Throwing a trident summons a lightning bolt during a lightning storm.")
+            "loyalty" -> listOf(
+                "- Trident returns after being thrown")
+            "impaling" -> listOf(
+                "- Increase trident damage to aquatic mobs by ${2.5 * level}=[2.5 x level]")
+            "breach" -> listOf(
+                "- Reduce armor effectiveness on hit by ${level * 15}%=[level x 15].")
+            "density" -> listOf(
+                "- Increase damage dealt per block fallen by ${level * 0.5}=[level x 0.5].")
+            "wind_burst" -> listOf(
+                "- Launches the player upward on a smash attack for ${level * 8}=[level x 8] blocks.")
+            "piercing" -> listOf(
+                "- Projectiles can pass through a max of ${level + 1}=[level + 1] entities.")
+            "multishot" -> listOf(
+                "- Fires 3 arrows at the same time.")
+            "quick_charge" -> listOf(
+                "- Decrease crossbow charging time by ${0.25 * level}=[level x 0.25] seconds.")
+            "infinity" -> listOf(
+                "- Standard arrows are not consumed.")
+            "flame" -> listOf(
+                "- Arrows are ignited and deal fire damage.")
+            "punch" -> listOf(
+                "- Increase arrow knockback by ${level * 3}=[level x 3] blocks.")
+            "power" -> listOf(
+                "- Increase arrow damage by ${25 + level * 25}%=[25 + (level x 25)].")
             // Odyssey - Armor
             "analyze" -> listOf(
                 "- Increase experience gained by ${level * 10}%=[level x 10].")
@@ -178,17 +220,19 @@ interface EnchantmentExtender {
                 "- Deal ${3 + (level * 3)}=[3 + (level x 3)] damage against targets",
                 "that are looking away from you or while you are invisible.")
             "bane_of_the_illager" -> listOf(
-                "- Increase Melee Damage to raider mobs by ${2.5 * level}=[2.5 x level]")
+                "- Increase Melee Damage to illagers by ${2.5 * level}=[2.5 x level]")
             "bane_of_the_sea" -> listOf(
                 "- Increase Melee Damage to ocean mobs by ${2.5 * level}=[2.5 x level]")
             "bane_of_the_swine" -> listOf(
-                "- Increase Melee Damage to raider piglin by ${2.5 * level}=[2.5 x level]")
+                "- Increase Melee Damage to piglins by ${2.5 * level}=[2.5 x level]")
             "swap" -> listOf(
                 "- Directly attacking a target swaps location.")
             "budding" -> listOf(
                 "- Applies Budding ${level}=[level] for 12 seconds.")
             "buzzy_bees" -> listOf(
                 "- Summons an angered bee to attack most recent target.")
+            "cleave" -> listOf(
+                "- Deals ${level}=[level] item damage to armor.")
             "committed" -> listOf(
                 "- Increase damage against enemies with less than 40% health by ${1 + level}=[1 + level].")
             "cull_the_weak" -> listOf(
@@ -281,7 +325,7 @@ interface EnchantmentExtender {
                 "- Projectiles deal ${level}=[level] more damage to glowing targets.")
             "overcharge" -> listOf(
                 "- Holding a fully drown applies a charge to a max of ${level}=[level].",
-                "Each charge increase damage by ${level * 3}=[level x 3] and velocity.")
+                "Each charge increase damage by ${level}=[level] and velocity.")
             "perpetual" -> listOf(
                 "- Projectiles ignore gravity for ${10 + (level * 5)}=[10 + (level x 5)] seconds.")
             "rain_of_arrows" -> listOf(
@@ -301,7 +345,7 @@ interface EnchantmentExtender {
                 "- On item hand swap, damage all marked enemies based on how many",
                 "arrows they have in them multiplied by ${level}=[level].")
             "steady_aim" -> listOf(
-                "- Reduce bow sway while standing still.")
+                "- Reduce bow sway and increase accuracy while standing still.")
             "temporal" -> listOf(
                 "- Shot projectiles have speed reduced by ${level * 10}%=[level x 10].",
                 "After a ${level * 0.2}=[level x 0.2] second delay, the speed is",
@@ -317,7 +361,7 @@ interface EnchantmentExtender {
             "o_shiny" -> listOf(
                 "- The item glistens when hold or worn.")
             "encumbering_curse" -> listOf(
-                "- Increase gravity by ${level * 10}$=[level x 10].")
+                "- Increase gravity by ${level * 10}%=[level x 10].")
             "parasitic_curse" -> listOf(
                 "- When the item takes damage, instead have a ${level * 10}%=[level x 10] chance",
                 "to damage the user instead.")

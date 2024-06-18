@@ -109,6 +109,9 @@ object RangedListeners : Listener, EnchantmentsManager {
                 "singularity_shot" -> {
                     singularityShotEnchantmentShoot(projectile, enchant.value, shooter)
                 }
+                "steady_aim" -> {
+                    steadyAim(projectile, enchant.value, shooter)
+                }
                 "rend" -> {
                     rendEnchantmentShoot(projectile, enchant.value)
                 }
@@ -735,6 +738,15 @@ object RangedListeners : Listener, EnchantmentsManager {
             val singularityShotTask = GravitySingularityTask(projectile, shooter, modifier, maxCount)
             singularityShotTask.runTaskTimer(Odyssey.instance, 0, 10)
             velocity.multiply(1.0 - (0.1 * modifier))
+        }
+    }
+
+    private fun steadyAim(projectile: Entity, level: Int, shooter: LivingEntity) {
+        with(projectile) {
+            val eyeDirection = shooter.eyeLocation.direction.clone().multiply(level * 0.825)
+            val speed = velocity.length()
+            val aimVector = eyeDirection.add(velocity).normalize().multiply(speed)
+            velocity = aimVector
         }
     }
 

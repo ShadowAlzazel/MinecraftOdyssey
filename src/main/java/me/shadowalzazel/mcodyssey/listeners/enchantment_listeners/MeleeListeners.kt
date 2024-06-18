@@ -44,7 +44,6 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
         } else {
             event.damageSource.causingEntity
         }
-        println(event.damageSource)
         if (attacker !is LivingEntity) return
         if (attacker.equipment?.itemInMainHand?.hasItemMeta() == false) return
         val victim = event.entity as LivingEntity
@@ -70,6 +69,9 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
                 }
                 "buzzy_bees" -> {
                     buzzyBeesEnchantment(victim, enchant.value)
+                }
+                "cleave" -> {
+                    cleaveEnchantment(victim, enchant.value)
                 }
                 "committed" -> {
                     event.damage += committedEnchantment(victim, enchant.value) * power
@@ -220,6 +222,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
         val task = ConflagrateTask(victim, extraDamage)
         task.runTaskLater(Odyssey.instance, 30)
     }
+
     private fun swapEnchantment(
         attacker: LivingEntity,
         victim: LivingEntity,
@@ -248,6 +251,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
             world.playSound(location, Sound.BLOCK_BIG_DRIPLEAF_TILT_UP, 2.5F, 0.9F)
         }
     }
+
     private fun buzzyBeesEnchantment(
         victim: LivingEntity,
         level: Int) {
@@ -271,6 +275,34 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
             world.playSound(location, Sound.BLOCK_HONEY_BLOCK_FALL, 2.5F, 0.9F)
         }
     }
+
+    private fun cleaveEnchantment(victim: LivingEntity, level: Int) {
+        val equipment = victim.equipment ?: return
+        val ranNum = (1..4).random()
+        when(ranNum) {
+            1 -> {
+                if (equipment.chestplate.hasItemMeta()) {
+                    equipment.chestplate.damage(level, victim)
+                }
+            }
+            2 -> {
+                if (equipment.leggings.hasItemMeta()) {
+                    equipment.leggings.damage(level, victim)
+                }
+            }
+            3 -> {
+                if (equipment.helmet.hasItemMeta()) {
+                    equipment.helmet.damage(level, victim)
+                }
+            }
+            4 -> {
+                if (equipment.chestplate.hasItemMeta()) {
+                    equipment.chestplate.damage(level, victim)
+                }
+            }
+        }
+    }
+
     private fun committedEnchantment(victim: LivingEntity, level: Int): Int {
         val maxHealth = victim.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value ?: 20.0
         return if (victim.health < maxHealth * 0.4) {
@@ -279,6 +311,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
             0
         }
     }
+
     private fun cullTheWeakEnchantment(victim: LivingEntity, level: Int): Double {
         val hasSlowness = victim.hasPotionEffect(PotionEffectType.SLOWNESS)
         val hasWeakness = victim.hasPotionEffect(PotionEffectType.WEAKNESS)
@@ -294,9 +327,11 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
             0.0
         }
     }
+
     private fun decayEnchantment(victim: LivingEntity, level: Int) {
        victim.addPotionEffect(PotionEffect(PotionEffectType.WITHER, (20 * (level * 4)), 0))
     }
+
     private fun douseEnchantment(victim: LivingEntity, level: Int): Double {
         victim.fireTicks = 0
         if (victim is Blaze || victim is MagmaCube || victim.fireTicks > 0) {
@@ -305,6 +340,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
         }
         return 0.0
     }
+
     private fun echoEnchantment(attacker: LivingEntity, victim: LivingEntity, level: Int) {
         // Prevent recursive call
         if (victim.scoreboardTags.contains(EntityTags.ECHO_STRUCK)) {
@@ -333,6 +369,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
             }
         }
     }
+
     @Suppress("UnstableApiUsage")
     private fun explodingEnchantment(victim: LivingEntity, level: Int) {
         val location = victim.location
@@ -349,6 +386,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
             entity.damage(power, damageSource)
         }
     }
+
     private fun fearfulFinisherEnchantment(victim: LivingEntity, level: Int) {
         val killer = victim.killer ?: return
         val vector = killer.eyeLocation.direction.clone().normalize()
@@ -365,6 +403,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
             it.pathfinder.moveTo(newLocation)
         }
     }
+
     private fun freezingAspectEnchantment(victim: LivingEntity, level: Int) {
         with(victim) {
             if (freezeTicks <= 50) {
@@ -373,6 +412,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
             }
         }
     }
+
     private fun frogFrightEnchantment(attacker: LivingEntity, victim: LivingEntity, level: Int) {
         victim.also {
             it.velocity.multiply(0.9)
@@ -478,8 +518,9 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
         val potionEffect = victim.getPotionEffect(PotionEffectType.POISON) ?: return
         val location = victim.location
         val color = Color.fromRGB(135, 163, 99)
+        val particle = Particle.ENTITY_EFFECT
         // Particles
-        location.world.spawnParticle(Particle.EFFECT, location, 5, 0.01, 0.04, 0.01, color)
+        location.world.spawnParticle(particle, location, 5, 0.01, 0.04, 0.01, color)
         // Damage
         val amplifier = potionEffect.amplifier
         val efficiency = level * 0.2

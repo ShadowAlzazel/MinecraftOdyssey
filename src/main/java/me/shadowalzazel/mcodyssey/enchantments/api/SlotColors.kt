@@ -11,6 +11,7 @@ enum class SlotColors(val color: TextColor) {
     ARCANE(TextColor.color(207, 187, 255)),
     AMETHYST(TextColor.color(141, 109, 209)),
     CURSED(TextColor.color(255, 85, 85)),
-    SOUL(TextColor.color(94, 210, 215))
+    SOUL(TextColor.color(94, 210, 215)),
+    SHINY(TextColor.color(191, 255, 255))
 
 }

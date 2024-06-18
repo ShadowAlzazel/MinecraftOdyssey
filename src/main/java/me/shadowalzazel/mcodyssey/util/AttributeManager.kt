@@ -8,10 +8,11 @@ import org.bukkit.attribute.AttributeModifier
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
+
 @Suppress("UnstableApiUsage")
 interface AttributeManager {
 
-    fun LivingEntity.addGenericAttribute(
+    fun LivingEntity.setAttributeModifier(
         value: Double,
         name: String,
         attribute: Attribute,
@@ -31,125 +32,62 @@ interface AttributeManager {
         value: Double,
         name: String = AttributeTags.MOB_SCALE)
     {
-        this.addGenericAttribute(value, name, Attribute.GENERIC_SCALE)
+        this.setAttributeModifier(value, name, Attribute.GENERIC_SCALE)
     }
 
      fun LivingEntity.addHealthAttribute(
         value: Double,
         name: String = AttributeTags.EXTRA_HEALTH_GENERIC)
     {
-        this.addGenericAttribute(value, name, Attribute.GENERIC_MAX_HEALTH)
+        this.setAttributeModifier(value, name, Attribute.GENERIC_MAX_HEALTH)
     }
 
     fun LivingEntity.addAttackAttribute(
         value: Double,
         name: String = AttributeTags.EXTRA_ATTACK_GENERIC)
     {
-        this.addGenericAttribute(value, name, Attribute.GENERIC_ATTACK_DAMAGE)
+        this.setAttributeModifier(value, name, Attribute.GENERIC_ATTACK_DAMAGE)
     }
 
     fun LivingEntity.addArmorAttribute(
         value: Double,
         name: String = AttributeTags.EXTRA_ARMOR_GENERIC)
     {
-        this.addGenericAttribute(value, name, Attribute.GENERIC_ARMOR)
+        this.setAttributeModifier(value, name, Attribute.GENERIC_ARMOR)
     }
 
     fun LivingEntity.addSpeedAttribute(
         value: Double,
         name: String = AttributeTags.EXTRA_SPEED_GENERIC)
     {
-        this.addGenericAttribute(value, name, Attribute.GENERIC_MOVEMENT_SPEED)
+        this.setAttributeModifier(value, name, Attribute.GENERIC_MOVEMENT_SPEED)
     }
 
     /*-----------------------------------------------------------------------------------------------*/
     // Items
 
-    fun ItemStack.addGenericAttribute(
+    fun ItemStack.setGenericAttribute(
         value: Double,
         name: String,
         attribute: Attribute,
         id: NamespacedKey? = null,
         slotGroup: EquipmentSlotGroup? = null)
     {
-        val nameKey = id ?: NamespacedKey(Odyssey.instance, name)
+        val nameKey = id ?: NamespacedKey(Odyssey.instance, name) // CURRENTLY CHECKING AGAINST KEY~!!!!!
         val slots = slotGroup ?: EquipmentSlotGroup.ANY
-        val modifier = AttributeModifier(nameKey, value, AttributeModifier.Operation.ADD_NUMBER, slots)
-        itemMeta = itemMeta.also {
-            it.addAttributeModifier(attribute, modifier)
+        val newModifier = AttributeModifier(nameKey, value, AttributeModifier.Operation.ADD_NUMBER, slots)
+        itemMeta = itemMeta.also { meta ->
+            // Check if already has named modifier to remove
+            val attributeModifiers = meta.getAttributeModifiers(attribute)
+            //println("Modifiers for [${meta.itemName}] [${meta.attributeModifiers}]")
+            //println("Adding [$attribute]")
+            if (attributeModifiers != null) {
+                if (attributeModifiers.contains(newModifier)) {
+                    meta.removeAttributeModifier(attribute, newModifier)
+                }
+            }
+            meta.addAttributeModifier(attribute, newModifier)
         }
-    }
-
-    fun ItemStack.addEntityRangeAttribute(
-        value: Double,
-        name: String,
-        slots: EquipmentSlotGroup = EquipmentSlotGroup.MAINHAND)
-    {
-        this.addGenericAttribute(value, name, Attribute.PLAYER_ENTITY_INTERACTION_RANGE, slotGroup = slots)
-    }
-
-    fun ItemStack.addAttackDamageAttribute(
-        value: Double,
-        name: String,
-        slots: EquipmentSlotGroup = EquipmentSlotGroup.MAINHAND)
-    {
-        this.addGenericAttribute(value, name, Attribute.GENERIC_ATTACK_DAMAGE, slotGroup = slots)
-    }
-
-    fun ItemStack.addArmorAttribute(
-        value: Double,
-        name: String,
-        slots: EquipmentSlotGroup = EquipmentSlotGroup.MAINHAND)
-    {
-        this.addGenericAttribute(value, name, Attribute.GENERIC_ARMOR, slotGroup = slots)
-    }
-
-    fun ItemStack.addArmorToughnessAttribute(
-        value: Double,
-        name: String,
-        slots: EquipmentSlotGroup = EquipmentSlotGroup.MAINHAND)
-    {
-        this.addGenericAttribute(value, name, Attribute.GENERIC_ARMOR_TOUGHNESS, slotGroup = slots)
-    }
-
-    fun ItemStack.addAttackSpeedAttribute(
-        value: Double,
-        name: String,
-        slots: EquipmentSlotGroup = EquipmentSlotGroup.MAINHAND)
-    {
-        this.addGenericAttribute(value, name, Attribute.GENERIC_ATTACK_SPEED, slotGroup = slots)
-    }
-
-    fun ItemStack.addMovementSpeedAttribute(
-        value: Double,
-        name: String,
-        slots: EquipmentSlotGroup = EquipmentSlotGroup.FEET)
-    {
-        this.addGenericAttribute(value, name, Attribute.GENERIC_MOVEMENT_SPEED, slotGroup = slots)
-    }
-
-    fun ItemStack.addMaxHealthAttribute(
-        value: Double,
-        name: String,
-        slots: EquipmentSlotGroup = EquipmentSlotGroup.ARMOR)
-    {
-        this.addGenericAttribute(value, name, Attribute.GENERIC_MAX_HEALTH, slotGroup = slots)
-    }
-
-    fun ItemStack.addKnockbackResistanceAttribute(
-        value: Double,
-        name: String,
-        slots: EquipmentSlotGroup = EquipmentSlotGroup.ARMOR)
-    {
-        this.addGenericAttribute(value, name, Attribute.GENERIC_KNOCKBACK_RESISTANCE, slotGroup = slots)
-    }
-
-    fun ItemStack.addAttackKnockbackAttribute(
-        value: Double,
-        name: String,
-        slots: EquipmentSlotGroup = EquipmentSlotGroup.MAINHAND)
-    {
-        this.addGenericAttribute(value, name, Attribute.GENERIC_ATTACK_KNOCKBACK, slotGroup = slots)
     }
 
     // Used when creating a custom weapon
@@ -168,5 +106,77 @@ interface AttributeManager {
         }
     }
 
+    fun ItemStack.addAttackDamageAttribute(
+        value: Double,
+        name: String,
+        slots: EquipmentSlotGroup = EquipmentSlotGroup.MAINHAND)
+    {
+        this.setGenericAttribute(value, name, Attribute.GENERIC_ATTACK_DAMAGE, slotGroup = slots)
+    }
+
+    fun ItemStack.addAttackSpeedAttribute(
+        value: Double,
+        name: String,
+        slots: EquipmentSlotGroup = EquipmentSlotGroup.MAINHAND)
+    {
+        this.setGenericAttribute(value, name, Attribute.GENERIC_ATTACK_SPEED, slotGroup = slots)
+    }
+
+
+    fun ItemStack.addEntityRangeAttribute(
+        value: Double,
+        name: String,
+        slots: EquipmentSlotGroup = EquipmentSlotGroup.MAINHAND)
+    {
+        this.setGenericAttribute(value, name, Attribute.PLAYER_ENTITY_INTERACTION_RANGE, slotGroup = slots)
+    }
+
+    fun ItemStack.addArmorAttribute(
+        value: Double,
+        name: String,
+        slots: EquipmentSlotGroup = EquipmentSlotGroup.MAINHAND)
+    {
+        this.setGenericAttribute(value, name, Attribute.GENERIC_ARMOR, slotGroup = slots)
+    }
+
+    fun ItemStack.addArmorToughnessAttribute(
+        value: Double,
+        name: String,
+        slots: EquipmentSlotGroup = EquipmentSlotGroup.MAINHAND)
+    {
+        this.setGenericAttribute(value, name, Attribute.GENERIC_ARMOR_TOUGHNESS, slotGroup = slots)
+    }
+
+    fun ItemStack.addMovementSpeedAttribute(
+        value: Double,
+        name: String,
+        slots: EquipmentSlotGroup = EquipmentSlotGroup.FEET)
+    {
+        this.setGenericAttribute(value, name, Attribute.GENERIC_MOVEMENT_SPEED, slotGroup = slots)
+    }
+
+    fun ItemStack.addMaxHealthAttribute(
+        value: Double,
+        name: String,
+        slots: EquipmentSlotGroup = EquipmentSlotGroup.ARMOR)
+    {
+        this.setGenericAttribute(value, name, Attribute.GENERIC_MAX_HEALTH, slotGroup = slots)
+    }
+
+    fun ItemStack.addKnockbackResistanceAttribute(
+        value: Double,
+        name: String,
+        slots: EquipmentSlotGroup = EquipmentSlotGroup.ARMOR)
+    {
+        this.setGenericAttribute(value, name, Attribute.GENERIC_KNOCKBACK_RESISTANCE, slotGroup = slots)
+    }
+
+    fun ItemStack.addAttackKnockbackAttribute(
+        value: Double,
+        name: String,
+        slots: EquipmentSlotGroup = EquipmentSlotGroup.MAINHAND)
+    {
+        this.setGenericAttribute(value, name, Attribute.GENERIC_ATTACK_KNOCKBACK, slotGroup = slots)
+    }
 
 }
