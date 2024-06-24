@@ -19,12 +19,9 @@ class FreezingTask(private val freezingVictim: LivingEntity, private val freezeF
             // Particles
             with(it.world) {
                 val freezingBlock = Material.BLUE_ICE.createBlockData()
-                val freezingDust = Material.LAPIS_BLOCK.createBlockData()
-                val someLocation = it.location.clone().add(0.0, 0.5, 0.0)
-                spawnParticle(Particle.BLOCK, someLocation, 20, 0.95, 0.8, 0.95, freezingBlock)
-                spawnParticle(Particle.FALLING_DUST, someLocation, 20, 0.75, 0.25, 0.75, freezingDust)
-                spawnParticle(Particle.ITEM_SNOWBALL, someLocation, 20, 0.5, 1.0, 0.5)
-                spawnParticle(Particle.FALLING_DRIPSTONE_WATER, someLocation, 20, 0.5, 1.0, 0.5)
+                val location = it.location.clone().add(0.0, 0.5, 0.0)
+                spawnParticle(Particle.BLOCK, location, 10, 0.05, 0.2, 0.05, freezingBlock)
+                spawnParticle(Particle.SNOWFLAKE, location, 5, 0.05, 0.05, 0.05)
             }
 
             // Damage

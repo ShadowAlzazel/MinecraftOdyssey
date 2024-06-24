@@ -51,8 +51,8 @@ interface ItemCreator : ExoticCreator, EnchantabilityHandler {
             val fullLore = listOf(costToolTip) + descriptionToolTip
             it.lore(fullLore)
             // Set name
-            val bookName = Component.text(this.customName + " - ").color(SlotColors.ARCANE.color)
-            val fullName = bookName.append(enchantment.displayName(level).color(SlotColors.ARCANE.color))
+            val bookName = Component.text(this.customName + ": ")
+            val fullName = bookName.append(enchantment.displayName(level))
             it.displayName(fullName)
             it.addStoredEnchant(enchantment, level, true)
             it.addItemFlags(ItemFlag.HIDE_STORED_ENCHANTS)

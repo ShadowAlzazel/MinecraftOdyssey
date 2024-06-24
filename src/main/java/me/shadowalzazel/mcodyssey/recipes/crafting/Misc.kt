@@ -24,14 +24,16 @@ class Misc {
             fragmentedRodsRecipe(),
             clayKeyRecipe(),
 
-            prismaticBookRecipe(),
+            blankTomeRecipe(),
             bundleRecipe(),
             enigmaticOmamoriRecipe(),
             irradiatedFruitRecipe(),
             soulCatalystRecipe(),
-            soulSteelUpgradeTemplateRecipe(),
             soulSpiceRecipe(),
             silverIngotRecipe(),
+
+            soulSteelUpgradeTemplateRecipe(),
+            imperialArmorTrimRecipe(),
 
             rocketCreator.blazingRocketsRecipe(1, "one"),
             rocketCreator.blazingRocketsRecipe(2, "two"),
@@ -104,12 +106,12 @@ class Misc {
     }
 
     // Misc
-    private fun prismaticBookRecipe(): ShapedRecipe {
-        val result = Miscellaneous.PRISMATIC_BOOK.newItemStack(1)
-        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "prismatic_book"), result).apply {
+    private fun blankTomeRecipe(): ShapedRecipe {
+        val result = Miscellaneous.BLANK_TOME.newItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "blank_tome"), result).apply {
             shape(" C ", "ABA", " C ")
             setIngredient('A', Material.AMETHYST_SHARD)
-            setIngredient('B', Material.ENCHANTED_BOOK)
+            setIngredient('B', Material.BOOK)
             setIngredient('C', Material.PRISMARINE_CRYSTALS)
         }
         return recipe
@@ -117,7 +119,7 @@ class Misc {
 
     private fun bundleRecipe(): ShapedRecipe {
         val result = ItemStack(Material.BUNDLE, 1)
-        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "bundle_crafting"), result).apply {
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "bundle"), result).apply {
             shape(" S ", "RFR", " R ")
             setIngredient('F', Material.RABBIT_FOOT)
             setIngredient('S', Material.STRING)
@@ -191,11 +193,12 @@ class Misc {
         return recipe
     }
 
+    /*-----------------------------------------------------------------------------------------------*/
     private fun soulSteelUpgradeTemplateRecipe(): ShapedRecipe {
         val result = Equipment.SOUL_STEEL_UPGRADE_TEMPLATE.newItemStack(1)
         val soulCrystal = Ingredients.SOUL_QUARTZ.newItemStack(1)
         val ectoplasm = Ingredients.ECTOPLASM.newItemStack(1)
-        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "soul_steel_upgrade_template_crafting"), result).apply {
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "soul_steel_upgrade_template"), result).apply {
             shape("SES", "SCS", "SSS")
             setIngredient('C', RecipeChoice.ExactChoice(soulCrystal))
             setIngredient('E', RecipeChoice.ExactChoice(ectoplasm))
@@ -205,5 +208,16 @@ class Misc {
         return recipe
     }
 
-
+    private fun imperialArmorTrimRecipe(): ShapedRecipe {
+        val result = Equipment.IMPERIAL_ARMOR_TRIM_SMITHING_TEMPLATE.newItemStack(2)
+        val trim = Equipment.IMPERIAL_ARMOR_TRIM_SMITHING_TEMPLATE.newItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "imperial_armor_trim_recipe"), result).apply {
+            shape("SES", "SCS", "SSS")
+            setIngredient('C', RecipeChoice.ExactChoice(trim))
+            setIngredient('E', Material.TUFF)
+            setIngredient('S', Material.DIAMOND)
+            category = CraftingBookCategory.MISC
+        }
+        return recipe
+    }
 }

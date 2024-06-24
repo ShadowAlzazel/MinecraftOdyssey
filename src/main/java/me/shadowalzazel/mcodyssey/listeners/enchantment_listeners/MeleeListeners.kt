@@ -112,8 +112,8 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
                 "pestilence" -> {
                     pestilenceEnchantment(victim, enchant.value)
                 }
-                "recall" -> {
-                    recallEnchantment(attacker, victim, event.damage, enchant.value)
+                "invocative" -> {
+                    invocativeEnchantment(attacker, victim, event.damage, enchant.value)
                 }
                 "rupture" -> {
                     event.damage -= ruptureEnchantment(attacker, victim, event.damage, enchant.value)
@@ -176,8 +176,10 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
     ): Double {
         victim.remainingAir -= 20 * (level * 2)
         if (victim.remainingAir < 20) return level * 1.0
+        victim.world.spawnParticle(Particle.BUBBLE_POP, victim.location, 10, 0.25, 0.25, 0.25)
         return 0.0
     }
+
     private fun arcaneCellEnchantment(victim: LivingEntity, level: Int) {
         if (victim.scoreboardTags.contains(EffectTags.ARCANE_JAILED)) return
         // Run
@@ -188,6 +190,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
             task.runTaskTimer(Odyssey.instance, 5, 5)
         }
     }
+
     private fun backstabberEnchantment(
         attacker: LivingEntity,
         victim: LivingEntity,
@@ -196,22 +199,20 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
         val victimTarget = victim.getTargetEntity(4)
         val isInvisible = attacker.isInvisible || attacker.hasPotionEffect(PotionEffectType.INVISIBILITY)
         // Looking more than 90-deg (1.57-rads) away from attacker
-        val isNotTarget = victimTarget != attacker || victim.eyeLocation.direction.angle(attacker.eyeLocation.direction) > 1.5708
+        val isNotTarget = victim.eyeLocation.direction.angle(attacker.eyeLocation.direction) > 1.5708
 
-        if (isInvisible || isNotTarget) {
+        if ((isInvisible && victimTarget != attacker) || isNotTarget) {
             // Particles and sounds
             with(victim.world) {
-                spawnParticle(Particle.CRIT, victim.location, 25, 0.5, 0.5, 0.5)
-                spawnParticle(Particle.WARPED_SPORE, victim.location, 25, 0.5, 0.5, 0.5)
-                spawnParticle(Particle.ELECTRIC_SPARK, victim.location, 15, 0.5, 0.5, 0.5)
-                spawnParticle(Particle.CRIT, victim.location, 15, 0.5, 0.5, 0.5)
+                spawnParticle(Particle.CRIMSON_SPORE, victim.location, 15, 0.25, 0.25, 0.25)
                 playSound(victim.location, Sound.BLOCK_HONEY_BLOCK_FALL, 2.5F, 0.9F)
             }
             // Damage
-            return (3 + (level * 3))
+            return (2 + (level * 2))
         }
         return 0
     }
+
     private fun conflagrateEnchantment(
         attacker: LivingEntity,
         victim: LivingEntity,
@@ -239,6 +240,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
         }
         victim.teleport(attackerLocation)
     }
+
     // Other enchant ideas
     // MAYBE DO NEXT TIME YOU SNEAK???? OR TOGGLE WITH
     // or do dmg based on distance?
@@ -306,6 +308,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
     private fun committedEnchantment(victim: LivingEntity, level: Int): Int {
         val maxHealth = victim.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value ?: 20.0
         return if (victim.health < maxHealth * 0.4) {
+            victim.world.spawnParticle(Particle.TRIAL_SPAWNER_DETECTION, victim.location, 10, 0.25, 0.25, 0.25)
             level + 1
         } else {
             0
@@ -316,8 +319,8 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
         val hasSlowness = victim.hasPotionEffect(PotionEffectType.SLOWNESS)
         val hasWeakness = victim.hasPotionEffect(PotionEffectType.WEAKNESS)
         val hasFatigue = victim.hasPotionEffect(PotionEffectType.MINING_FATIGUE)
-
         return if (hasSlowness || hasWeakness || hasFatigue) {
+            victim.world.spawnParticle(Particle.TRIAL_SPAWNER_DETECTION_OMINOUS, victim.location, 10, 0.25, 0.25, 0.25)
             var damage = 0.0
             if (hasSlowness) { damage += 1.0 }
             if (hasWeakness) { damage += 1.0 }
@@ -408,7 +411,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
         with(victim) {
             if (freezeTicks <= 50) {
                 addOdysseyEffect(EffectTags.FREEZING, (level * 4) * 20, level)
-                world.spawnParticle(Particle.SNOWFLAKE, this@with.location, 30, 0.25, 0.5, 0.25)
+                world.spawnParticle(Particle.SNOWFLAKE, this@with.location, 5, 0.05, 0.05, 0.05)
             }
         }
     }
@@ -416,10 +419,10 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
     private fun frogFrightEnchantment(attacker: LivingEntity, victim: LivingEntity, level: Int) {
         victim.also {
             it.velocity.multiply(0.9)
-            val tongueLashVector = attacker.location.clone().subtract(it.location).toVector().normalize().multiply(1.1 + (level * 0.1))
-            val frogFrightTask = FrogFrightTask(victim, tongueLashVector.multiply(-1.0), level)
+            val pullVector = attacker.location.clone().subtract(it.location).toVector().normalize().multiply(1.1 + (level * 0.1))
+            val frogFrightTask = FrogFrightTask(victim, pullVector.multiply(-1.0), level)
             frogFrightTask.runTaskLater(Odyssey.instance, 9)
-            it.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS, 3, 1))
+            it.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS, 5, 1))
         }
 
         // Particles
@@ -475,6 +478,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
             world.playSound(location, Sound.BLOCK_DEEPSLATE_BREAK, 1.5F, 0.5F)
         }
     }
+
     private fun gustEnchantment(
         vector: Vector,
         level: Int
@@ -484,6 +488,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
         val newVector = upVector.setX(0.0).setY(1.0).setZ(0.0).multiply(mag * level)
         return newVector
     }
+
     private fun hemorrhageEnchantment(
         victim: LivingEntity,
         level: Int) {
@@ -494,6 +499,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
             spawnParticle(Particle.CRIT, victim.location, 35, 1.0, 0.5, 1.0)
         }
     }
+
     private fun illucidationEnchantment(victim: LivingEntity, level: Int, isCrit: Boolean): Int {
         var illucidationDamage = 0
         if (victim.isGlowing) {
@@ -507,11 +513,12 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
             }
             with(victim.world) {
                 playSound(victim.location, Sound.BLOCK_AMETHYST_CLUSTER_PLACE, 2.5F, 1.5F)
-                spawnParticle(Particle.ELECTRIC_SPARK, victim.location, 55, 1.0, 0.5, 1.0)
+                spawnParticle(Particle.END_ROD, victim.location, 55, 1.0, 0.5, 1.0)
             }
         }
         return illucidationDamage
     }
+
     @Suppress("UnstableApiUsage")
     private fun pestilenceEnchantment(victim: LivingEntity, level: Int) {
         if (!victim.hasPotionEffect(PotionEffectType.POISON)) return
@@ -520,7 +527,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
         val color = Color.fromRGB(135, 163, 99)
         val particle = Particle.ENTITY_EFFECT
         // Particles
-        location.world.spawnParticle(particle, location, 5, 0.01, 0.04, 0.01, color)
+        location.world.spawnParticle(particle, location, 10, 0.02, 0.1, 0.02, color)
         // Damage
         val amplifier = potionEffect.amplifier
         val efficiency = level * 0.2
@@ -538,7 +545,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
     }
 
     @Suppress("UnstableApiUsage")
-    private fun recallEnchantment(attacker: LivingEntity, victim: LivingEntity, damage: Double, level: Int) {
+    private fun invocativeEnchantment(attacker: LivingEntity, victim: LivingEntity, damage: Double, level: Int) {
         val lastTarget = recallTargets[attacker.uniqueId]
         if (lastTarget == null) {
             recallTargets[attacker.uniqueId] = victim
@@ -549,6 +556,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
             recallTargets[attacker.uniqueId] = victim // Prevent recursion
             val recallDamage = damage * (level * 0.1)
             victim.damage(recallDamage, source)
+            victim.world.spawnParticle(Particle.TRIAL_SPAWNER_DETECTION_OMINOUS, victim.location, 25, 1.0, 0.5, 1.0)
         }
         else if (lastTarget == victim) {
             return
@@ -570,9 +578,8 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
                     health -= minOf(health, rupturingDamage)
                 }
                 world.playSound(victim.location, Sound.ITEM_CROSSBOW_QUICK_CHARGE_2, 2.5F, 1.7F)
-                world.spawnParticle(Particle.CRIT, victim.location, 25, 1.0, 0.5, 1.0)
-                val blockData = Material.QUARTZ_BRICKS.createBlockData()
-                world.spawnParticle(Particle.BLOCK, victim.location, 25, 0.95, 0.8, 0.95, blockData)
+                val blockData = Material.TUFF_BRICKS.createBlockData()
+                world.spawnParticle(Particle.BLOCK, victim.location, 15, 0.45, 0.8, 0.45, blockData)
             }
             else if (scoreboardTags.contains(EffectTags.PARTLY_RUPTURED)) {
                 removeScoreboardTag(EffectTags.PARTLY_RUPTURED)

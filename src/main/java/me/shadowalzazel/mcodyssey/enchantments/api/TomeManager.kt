@@ -3,6 +3,7 @@ package me.shadowalzazel.mcodyssey.enchantments.api
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Material
+import org.bukkit.Sound
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.LivingEntity
@@ -120,7 +121,7 @@ internal interface TomeManager : EnchantabilityHandler {
         // Create new book
         val imitatedBook = ItemStack(Material.ENCHANTED_BOOK, 1)
         val newMeta = imitatedBook.itemMeta as EnchantmentStorageMeta
-        newMeta.addStoredEnchant(randomEnchant.first, 1, false)
+        newMeta.addStoredEnchant(randomEnchant.first, randomEnchant.second, false)
         imitatedBook.itemMeta = newMeta
         return imitatedBook
     }
@@ -150,6 +151,12 @@ internal interface TomeManager : EnchantabilityHandler {
             viewers.forEach { it.sendBarMessage("This item needs to be enchanted to use this tome.") }
             return null
         }
+        return ItemStack(Material.BOOK, 1)
+    }
+
+    fun tomeOfAvaricePostEffect(item: ItemStack, viewers: List<HumanEntity>) {
+        val meta = item.itemMeta
+        val hasStoredEnchants = meta is EnchantmentStorageMeta && meta.storedEnchants.isNotEmpty()
         // Get Enchant to Upgrade if available
         val allEnchants = if (hasStoredEnchants) {
             val storedMeta = item.itemMeta as EnchantmentStorageMeta
@@ -159,10 +166,14 @@ internal interface TomeManager : EnchantabilityHandler {
         }
         var totalLevels = 0
         for (enchant in allEnchants) {
-            totalLevels += enchant.second // TODO!!
-            viewers.forEach { if (it is Player) it.giveExp(totalLevels * 100) } //IDk?
+            totalLevels += enchant.second
+            viewers.forEach {
+                if (it is Player) {
+                    it.giveExp(totalLevels * 50)
+                    it.playSound(it.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.5F, 0.9F)
+                }
+            }
         }
-        return ItemStack(Material.BOOK, 1)
     }
 
     // Adds all enchants at no cost
@@ -204,8 +215,13 @@ internal interface TomeManager : EnchantabilityHandler {
             return null
         }
         // Add if poss
-        item.addEnchantments(itemEnchants.toMap())
-        item.updateEnchantabilityPointsLore()
+        if (itemIsBook) {
+            item.addEnchantments(itemEnchants.toMap())
+        }
+        else {
+            item.addEnchantments(itemEnchants.toMap())
+            item.updateEnchantabilityPointsLore()
+        }
         return item
     }
 

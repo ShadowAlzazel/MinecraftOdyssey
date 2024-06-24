@@ -463,7 +463,7 @@ class TheAmbassador(location: Location) : OdysseyBoss(
             }
             Material.AMETHYST_SHARD -> {
                 giftLikeness += 2
-                inventory.addItem(Miscellaneous.PRISMATIC_BOOK.newItemStack(maxOf(extraValue - 1, 1)))
+                inventory.addItem(Miscellaneous.BLANK_TOME.newItemStack(maxOf(extraValue - 1, 1)))
             }
             Material.AMETHYST_BLOCK -> {
                 giftLikeness += 8

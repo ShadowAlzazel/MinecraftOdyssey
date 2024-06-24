@@ -14,8 +14,10 @@ object Equipment {
     // TODO: Work with tome of polymerization and Volumes
 
     // Templates
-    val SOUL_STEEL_UPGRADE_TEMPLATE = OdysseyItem("soul_steel_upgrade_template", Material.COPPER_INGOT, "Soul Steel Upgrade Template", ItemModels.SOUL_STEEL_UPGRADE_TEMPLATE,
+    val SOUL_STEEL_UPGRADE_TEMPLATE = OdysseyItem("soul_steel_upgrade_template", Material.PAPER, "Soul Steel Upgrade Template", ItemModels.SOUL_STEEL_UPGRADE_TEMPLATE,
         lore = listOf(Component.text("A Smithing Template used to upgrade Iron tools into Soul Steel.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+
+    val IMPERIAL_ARMOR_TRIM_SMITHING_TEMPLATE = OdysseyItem("imperial_armor_trim_smithing_template", Material.PAPER, "Smithing Template", ItemModels.IMPERIAL_ARMOR_TRIM_SMITHING_TEMPLATE)
 
     // Weapon Molds
     // WIP [Molds - Katana/Weapons]

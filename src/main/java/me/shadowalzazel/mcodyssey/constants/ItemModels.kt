@@ -34,7 +34,6 @@ object ItemModels {
     // Books
     const val ARCANE_BOOK: Int = 6905501 // Different display for odyssey enchantment
     const val GILDED_BOOK: Int = 6905502 // Powerful permanent enchants
-    const val PRISMATIC_BOOK: Int = 6905503 // Converts to Tomes
 
     // Volumes (books with multiple enchants)
     const val VOLUME_OF_BLUNTING: Int = 6905520
@@ -45,19 +44,20 @@ object ItemModels {
     const val VOLUME_OF_HELMETS: Int = 6905525
 
     // Tomes
+    const val BLANK_TOME: Int = 6906000 // Converts to Tomes
     const val TOME_OF_DISCHARGE: Int = 6906067 // Removes 1 specific enchant
     const val TOME_OF_PROMOTION: Int = 6906068 // increases the level of 1 enchant
     const val TOME_OF_REPLICATION: Int = 6906069 // Copies a book
-    const val TOME_OF_HARMONY: Int = 6906070 // Lowers combine/repair cost
-    const val TOME_OF_BANISHMENT: Int = 6906071 // Destroys as slot (and the enchant if applicable, NOT WITH GILDED)
-    const val TOME_OF_EMBRACE: Int = 6906072 // Adds a slot
-    const val TOME_OF_EXPENDITURE: Int = 6906073 // Destroys item but extracts 1 enchantment
-    const val TOME_OF_INFUSION: Int = 6906074
-    const val TOME_OF_EUPHONY: Int = 6906075
+    const val TOME_OF_HARMONY: Int = 6906070 // ???
+    const val TOME_OF_BANISHMENT: Int = 6906071 // NOT USED
+    const val TOME_OF_EMBRACE: Int = 6906072  // NOT USED
+    const val TOME_OF_EXPENDITURE: Int = 6906073 // Destroys item but chooses 1 enchantment
+    const val TOME_OF_INFUSION: Int = 6906074 // ???
+    const val TOME_OF_EUPHONY: Int = 6906075 // ???
     const val TOME_OF_AVARICE: Int = 6906076 // Destroys Item but gives a lot of XP
     const val TOME_OF_POLYMERIZATION: Int = 6906077 // Adds enchants for no XP cost
-    const val TOME_OF_EXTRACTION: Int = 6906078
-    const val TOME_OF_IMITATION: Int = 6906079 // Copies 1 enchant at minimum level
+    const val TOME_OF_EXTRACTION: Int = 6906078 // Removes one enchantment and coverts it to a book
+    const val TOME_OF_IMITATION: Int = 6906079 // Copies 1 enchant from a book
 
     // Runesherds
     const val ASSAULT_RUNESHERD: Int = 6901453 // Attack Damage
@@ -147,9 +147,12 @@ object ItemModels {
     // Soul Steel
     const val SOUL_CATALYST: Int = 6906617
     const val SOUL_STEEL_HELMET: Int = 6906645
-    const val SOUL_STEEL_UPGRADE_TEMPLATE: Int = 6906646
     const val ENIGMATIC_OMAMORI: Int = 6906649
     const val SOUL_STEEL_INGOT: Int = 6906618
+
+    // Smithing Templates
+    const val SOUL_STEEL_UPGRADE_TEMPLATE: Int = 6906502
+    const val IMPERIAL_ARMOR_TRIM_SMITHING_TEMPLATE: Int = 6906503
 
     // Ingots
     const val SILVER_INGOT: Int = 6906619
@@ -230,7 +233,8 @@ object ItemModels {
     const val MACE: Int = 12  // One-handed
     const val MAUL: Int = 13  // Two-Handed
     const val GUANDAO: Int = 14 // Lacerate, AVg speed
-    const val SCYTHE: Int = 15 // AOE
+    // Hoe
+    const val SCYTHE: Int = 92 // AOE
     // Axe
     const val BATTLE_AXE: Int = 84
     const val LONG_AXE: Int = 85

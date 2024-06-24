@@ -4,6 +4,7 @@ import me.shadowalzazel.mcodyssey.mobs.hostile.PreacherOfTheAbyss
 import me.shadowalzazel.mcodyssey.mobs.hostile.Ruined
 import me.shadowalzazel.mcodyssey.mobs.hostile.Savage
 import me.shadowalzazel.mcodyssey.mobs.hostile.Vanguard
+import me.shadowalzazel.mcodyssey.mobs.neutral.DubiousDealer
 import me.shadowalzazel.mcodyssey.mobs.passive.TreasurePig
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -42,6 +43,9 @@ object SummonMob : CommandExecutor {
             }
             "treasure_pig" -> {
                 TreasurePig.createMob(world, location)
+            }
+            "dubious_dealer" -> {
+                DubiousDealer.createMob(world, location)
             }
         }
 

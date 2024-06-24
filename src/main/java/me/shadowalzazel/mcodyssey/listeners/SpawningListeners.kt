@@ -2,12 +2,12 @@ package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.mobs.neutral.DubiousDealer
-import me.shadowalzazel.mcodyssey.recipes.merchant.ArcaneSales
 import me.shadowalzazel.mcodyssey.util.MobCreationHelper
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.CreatureSpawnEvent
+import org.bukkit.event.entity.EntitySpawnEvent
 import org.bukkit.event.world.ChunkPopulateEvent
 import org.bukkit.generator.structure.Structure
 import org.bukkit.inventory.meta.ArmorMeta
@@ -19,16 +19,11 @@ object SpawningListeners : Listener, MobCreationHelper {
 
     @EventHandler
     fun mobNaturalSpawningHandler(event: CreatureSpawnEvent) {
-        if (event.spawnReason != CreatureSpawnEvent.SpawnReason.NATURAL) { return }
+        if (event.spawnReason != CreatureSpawnEvent.SpawnReason.NATURAL) return
         when(event.entity.type) {
             EntityType.WANDERING_TRADER -> {
                 if (3 >= (1..10).random()) {
                     DubiousDealer.createMob(event.location.world, event.location)
-                }
-                else {
-                    (event.entity as WanderingTrader).apply {
-                        setRecipe(recipeCount - 1, ArcaneSales.createArcaneBookTrade())
-                    }
                 }
             }
             else -> {
@@ -49,6 +44,14 @@ object SpawningListeners : Listener, MobCreationHelper {
             }
         }
     }
+
+    fun spawningStructureHandler(event: EntitySpawnEvent) {
+        println("Location: [${event.location} Entity: [${event.entity}]")
+        println(event.eventName)
+        return
+    }
+
+    /*-----------------------------------------------------------------------------------------------*/
 
     private fun checkStructure(mob: LivingEntity) {
         val structures = mob.location.chunk.structures
