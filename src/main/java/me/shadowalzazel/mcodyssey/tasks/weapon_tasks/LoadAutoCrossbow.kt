@@ -15,7 +15,8 @@ class LoadAutoCrossbow(
 
     override fun run() {
         if (entity.equipment!!.itemInMainHand == crossbow) {
-            val meta = (crossbow.itemMeta).clone() as CrossbowMeta
+            val meta = crossbow.itemMeta as CrossbowMeta
+            meta.setChargedProjectiles(mutableListOf())
             for (item in loaded) {
                 meta.addChargedProjectile(item)
             }

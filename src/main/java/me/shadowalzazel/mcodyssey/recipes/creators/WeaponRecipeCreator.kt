@@ -1,24 +1,86 @@
 package me.shadowalzazel.mcodyssey.recipes.creators
 
 import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.items.Ingredients
 import me.shadowalzazel.mcodyssey.items.creators.ItemCreator
 import me.shadowalzazel.mcodyssey.items.creators.ToolCreator
 import me.shadowalzazel.mcodyssey.items.utility.ToolMaterial
 import me.shadowalzazel.mcodyssey.items.utility.ToolType
 import me.shadowalzazel.mcodyssey.util.DataTagManager
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
-import org.bukkit.inventory.Recipe
-import org.bukkit.inventory.RecipeChoice
+import org.bukkit.inventory.*
 import org.bukkit.inventory.RecipeChoice.ExactChoice
 import org.bukkit.inventory.RecipeChoice.MaterialChoice
-import org.bukkit.inventory.ShapedRecipe
 import org.bukkit.inventory.recipe.CraftingBookCategory
 
 class WeaponRecipeCreator : ItemCreator, DataTagManager {
 
     private val toolCreator = ToolCreator()
+
+    // Exact Choices
+    private fun silverChoices(): ExactChoice {
+        val exactItem = Ingredients.SILVER_INGOT.newItemStack(1)
+        val dataItem = ItemStack(Material.IRON_INGOT).apply {
+            val meta = itemMeta
+            meta.setCustomModelData(ItemModels.SILVER_INGOT)
+            val itemName = Component.text("silver_ingot")
+            meta.itemName(itemName)
+            val name = Component.text("Silver Ingot")
+                .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false)
+            meta.displayName(name)
+            itemMeta = meta
+        }
+        return ExactChoice(exactItem, dataItem)
+    }
+
+    private fun titaniumChoices(): ExactChoice {
+        val exactItem = Ingredients.TITANIUM_INGOT.newItemStack(1)
+        val dataItem = ItemStack(Material.IRON_INGOT).apply {
+            val meta = itemMeta
+            meta.setCustomModelData(ItemModels.TITANIUM_INGOT)
+            val itemName = Component.text("titanium_ingot")
+            meta.itemName(itemName)
+            val name = Component.text("Titanium Ingot")
+                .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false)
+            meta.displayName(name)
+            itemMeta = meta
+        }
+        return ExactChoice(exactItem, dataItem)
+    }
+
+    private fun iridiumChoices(): ExactChoice {
+        val exactItem = Ingredients.IRIDIUM_INGOT.newItemStack(1)
+        val dataItem = ItemStack(Material.IRON_INGOT).apply {
+            val meta = itemMeta
+            meta.setCustomModelData(ItemModels.IRIDIUM_INGOT)
+            val itemName = Component.text("iridium_ingot")
+            meta.itemName(itemName)
+            val name = Component.text("Iridium Ingot")
+                .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false)
+            meta.displayName(name)
+            itemMeta = meta
+        }
+        return ExactChoice(exactItem, dataItem)
+    }
+
+    private fun mithrilChoices(): ExactChoice {
+        val exactItem = Ingredients.MITHRIL_INGOT.newItemStack(1)
+        val dataItem = ItemStack(Material.IRON_INGOT).apply {
+            val meta = itemMeta
+            meta.setCustomModelData(ItemModels.MITHRIL_INGOT)
+            val itemName = Component.text("mithril_ingot")
+            meta.itemName(itemName)
+            val name = Component.text("Mithril Ingot")
+                .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false)
+            meta.displayName(name)
+            itemMeta = meta
+        }
+        return ExactChoice(exactItem, dataItem)
+    }
 
     // Const
     private val WOOD_CHOICES: MaterialChoice = MaterialChoice(Material.ACACIA_PLANKS, Material.BIRCH_PLANKS, Material.DARK_OAK_PLANKS,
@@ -134,7 +196,7 @@ class WeaponRecipeCreator : ItemCreator, DataTagManager {
             '|' to MaterialChoice(Material.STICK)
         ),
         "silver" to mapOf(
-            'X' to ExactChoice(Ingredients.SILVER_INGOT.newItemStack(1)),
+            'X' to silverChoices(),
             '|' to MaterialChoice(Material.STICK)
         ),
         "soul_steel" to mapOf(
@@ -142,7 +204,7 @@ class WeaponRecipeCreator : ItemCreator, DataTagManager {
             '|' to MaterialChoice(Material.STICK)
         ),
         "titanium" to mapOf(
-            'X' to ExactChoice(Ingredients.TITANIUM_INGOT.newItemStack(1)),
+            'X' to titaniumChoices(),
             '|' to MaterialChoice(Material.STICK)
         ),
         "anodized_titanium" to mapOf(
@@ -150,11 +212,11 @@ class WeaponRecipeCreator : ItemCreator, DataTagManager {
             '|' to MaterialChoice(Material.STICK)
         ),
         "iridium" to mapOf(
-            'X' to ExactChoice(Ingredients.IRIDIUM_INGOT.newItemStack(1)),
+            'X' to iridiumChoices(),
             '|' to MaterialChoice(Material.STICK)
         ),
         "mithril" to mapOf(
-            'X' to ExactChoice(Ingredients.MITHRIL_INGOT.newItemStack(1)),
+            'X' to mithrilChoices(),
             '|' to MaterialChoice(Material.STICK)
         ),
     )
@@ -228,8 +290,8 @@ class WeaponRecipeCreator : ItemCreator, DataTagManager {
             }
         }
         //
-
         return recipes
     }
+
 
 }

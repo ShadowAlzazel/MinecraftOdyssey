@@ -22,6 +22,7 @@ import org.bukkit.event.enchantment.EnchantItemEvent
 import org.bukkit.event.enchantment.PrepareItemEnchantEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.event.inventory.PrepareSmithingEvent
+import org.bukkit.event.inventory.SmithItemEvent
 import org.bukkit.inventory.EnchantingInventory
 import org.bukkit.inventory.GrindstoneInventory
 import org.bukkit.inventory.ItemFlag
@@ -128,23 +129,15 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         val hasItem = hasBook || hasEquipment
         // Check for [TOME] + [EQUIPMENT] + [CRYSTALS]
         if (hasCrystals && hasItem) {
-            val eventResult = when(template.itemMeta.customModelData) {
-                ItemModels.TOME_OF_AVARICE -> tomeOfAvariceOnItem(equipment, event.viewers)  // TODO: FIX!!
-                ItemModels.TOME_OF_BANISHMENT -> tomeOfBanishmentOnItem(equipment, event.viewers)
-                ItemModels.TOME_OF_DISCHARGE -> tomeOfDischargeOnItem(equipment, event.viewers)
-                ItemModels.TOME_OF_EMBRACE -> tomeOfEmbraceOnItem(equipment, event.viewers)
-                ItemModels.TOME_OF_EXPENDITURE -> tomeOfExpenditureOnItem(equipment, event.viewers)
-                ItemModels.TOME_OF_HARMONY -> tomeOfHarmonyOnItem(equipment)
-                ItemModels.TOME_OF_POLYMERIZATION -> tomeOfPolymerizationOnItem(template, equipment, event.viewers)
-                ItemModels.TOME_OF_PROMOTION -> tomeOfPromotionOnItem(equipment, event.viewers)
-                ItemModels.TOME_OF_IMITATION -> {
-                    val result = tomeOfImitationOnItem(equipment, event.viewers) // TODO: Not consume extra book
-                    result
-                }
-                ItemModels.TOME_OF_REPLICATION -> {
-                    val result = tomeOfReplicationOnItem(equipment, event.viewers)
-                    result
-                }
+            val eventResult = when(template.getItemIdentifier()) {
+                "tome_of_avarice" -> tomeOfAvariceOnItem(equipment, event.viewers)
+                "tome_of_discharge" -> tomeOfDischargeOnItem(equipment, event.viewers)
+                "tome_of_expenditure" -> tomeOfExpenditureOnItem(equipment, event.viewers)
+                "tome_of_harmony" -> tomeOfHarmonyOnItem(equipment)
+                "tome_of_polymerization" -> tomeOfPolymerizationOnItem(template, equipment, event.viewers)
+                "tome_of_promotion" -> tomeOfPromotionOnItem(equipment, event.viewers)
+                "tome_of_imitation" -> tomeOfImitationOnItem(equipment, event.viewers)
+                "tome_of_replication" -> tomeOfReplicationOnItem(equipment, event.viewers)
                 else -> {
                     null
                 }
@@ -154,12 +147,50 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         }
     }
 
+    @EventHandler(priority = EventPriority.HIGH)
+    fun smithingDoneHandler(event: SmithItemEvent) {
+        val smithingInventory = event.inventory
+        if (smithingInventory.result == null) return
+        val template = smithingInventory.inputTemplate ?: return
+        val mineral = smithingInventory.inputMineral ?: return
+        val equipment = smithingInventory.inputEquipment ?: return
+        val result = smithingInventory.result ?: return
+        val player = event.whoClicked
+
+        val hasCrystals = (mineral.type == Material.PRISMARINE_CRYSTALS)
+        val isTome = (template.type == Material.ENCHANTED_BOOK)
+        // When for tomes
+        if (hasCrystals && isTome) {
+            when(template.getItemIdentifier()) {
+                "tome_of_avarice" -> {
+                    tomeOfAvaricePostEffect(equipment, event.viewers)
+                }
+                "tome_of_imitation" -> {
+                    val overflow = player.inventory.addItem(equipment.clone())
+                    if (overflow.isNotEmpty()) {
+                        player.world.dropItem(player.location, overflow[0]!!)
+                    }
+                }
+                "tome_of_replication" -> {
+                    val overflow = player.inventory.addItem(equipment.clone())
+                    if (overflow.isNotEmpty()) {
+                        player.world.dropItem(player.location, overflow[0]!!)
+                    }
+                }
+            }
+        }
+
+
+    }
+
+
+
     /*-----------------------------------------------------------------------------------------------*/
     @EventHandler
     fun enchantPrepareHandler(event: PrepareItemEnchantEvent) {
-        println(event.offers)
-        println(event.enchantmentBonus)
-        println(event)
+        //println(event.offers)
+        //println(event.enchantmentBonus)
+        //println(event)
     }
 
     @EventHandler
@@ -176,7 +207,6 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         }
     }
 
-
     /*-----------------------------------------------------------------------------------------------*/
     @EventHandler
     fun grindstoneHandler(event: PrepareResultEvent) {
@@ -190,9 +220,8 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         val removedEnchantments = item.enchantments.filter { it.key !in resultEnchantKeys }
         var totalPoints = 0
         removedEnchantments.forEach { totalPoints += it.key.enchantabilityCost(it.value) }
-
         // Sentries passed
-        event.result = result.clone().also { it.updateEnchantabilityPointsLore(removedEnchants=removedEnchantments.toMutableMap()) }
+        event.result = result.clone().also { it.updateEnchantabilityPointsLore() }
     }
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -216,7 +245,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
             ItemModels.VOLUME_OF_HELMETS -> {
                 event.item.enchantments.filter { it.key.canEnchantItem(ItemStack(Material.WOODEN_PICKAXE, 1)) }
             }
-            ItemModels.PRISMATIC_BOOK -> {
+            ItemModels.BLANK_TOME -> {
                 enchantingTomeHandler(event)
             }
         }
@@ -228,40 +257,30 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         val tierCost: Int
         // Scale of Tomes
         when ((0..40).random() + minOf(enchanterLevel, 100)) {
-            in 0..10 -> {
-                tierCost = 0
-                randomTome = listOf(Miscellaneous.TOME_OF_BANISHMENT).random()
-            }
-            in 11..30 -> {
+            in -30..15 -> {
                 tierCost = 1
-                randomTome = listOf(Miscellaneous.TOME_OF_DISCHARGE, Miscellaneous.TOME_OF_EMBRACE).random()
+                randomTome = listOf(Miscellaneous.TOME_OF_DISCHARGE, Miscellaneous.TOME_OF_PROMOTION).random()
+            }
+            in 15..30 -> {
+                tierCost = 2
+                randomTome = listOf(Miscellaneous.TOME_OF_IMITATION, Miscellaneous.TOME_OF_EXPENDITURE).random()
             }
             in 31..60 -> {
-                tierCost = 2
-                randomTome = listOf(Miscellaneous.TOME_OF_PROMOTION, Miscellaneous.TOME_OF_IMITATION).random()
-            }
-            in 61..100 -> {
                 tierCost = 3
-                randomTome = listOf(Miscellaneous.TOME_OF_EXPENDITURE, Miscellaneous.TOME_OF_HARMONY).random()
-            }
-            in 101..200 -> {
-                tierCost = 4
-                randomTome = listOf(Miscellaneous.TOME_OF_AVARICE).random()
+                randomTome = listOf(Miscellaneous.TOME_OF_AVARICE, Miscellaneous.TOME_OF_POLYMERIZATION).random()
             }
             else -> {
                 tierCost = 0
-                randomTome = listOf(Miscellaneous.TOME_OF_BANISHMENT).random()
+                randomTome = listOf(Miscellaneous.TOME_OF_HARMONY).random()
             }
         }
         // Particles and sounds
         with(event.enchantBlock.world) {
             val enchantLocation = event.enchantBlock.location.clone().toCenterLocation()
-            spawnParticle(Particle.CRIT, enchantLocation, 125, 0.5, 0.5, 0.5)
-            spawnParticle(Particle.HAPPY_VILLAGER, enchantLocation, 65, 0.5, 0.5, 0.5)
-            spawnParticle(Particle.ELECTRIC_SPARK, enchantLocation, 65, 0.5, 0.5, 0.5)
+            spawnParticle(Particle.CRIT, enchantLocation, 75, 0.5, 0.5, 0.5)
+            spawnParticle(Particle.HAPPY_VILLAGER, enchantLocation, 35, 0.5, 0.5, 0.5)
             playSound(enchantLocation, Sound.BLOCK_ENCHANTMENT_TABLE_USE, 2.5F, 0.9F)
             playSound(enchantLocation, Sound.BLOCK_AMETHYST_BLOCK_CHIME, 2.5F, 1.3F)
-            playSound(enchantLocation, Sound.ENTITY_ARROW_HIT_PLAYER, 2.5F, 1.6F)
         }
         // Set advancement from datapack
         val advancement = event.enchanter.server.getAdvancement(NamespacedKey.fromString("odyssey:odyssey/enchant_a_tome")!!)
@@ -286,6 +305,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         item.updateEnchantabilityPointsLore(newEnchants)
         item.addItemFlags(ItemFlag.HIDE_ENCHANTS)
         event.item = item
+        event.inventory
     }
 
     private fun getChiseledBookshelvesBonus(event: EnchantItemEvent) {
@@ -331,9 +351,9 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
             if (rolled.value >= (1..100).random()) {
                 bonusEnchants[rolled.key] = rolled.value.floorDiv(100) + 1
             }
-            println("Bookshelf Enchant: ${rolled.key} with ${rolled.value}%")
+            //println("Bookshelf Enchant: ${rolled.key} with ${rolled.value}%")
         }
-        println("Bonus Enchants: $bonusEnchants")
+        //println("Bonus Enchants: $bonusEnchants")
         // Add to events list
         for (enchant in bonusEnchants) {
             if (enchant.key !in event.enchantsToAdd.keys) {

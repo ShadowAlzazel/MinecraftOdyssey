@@ -15,6 +15,7 @@ import me.shadowalzazel.mcodyssey.constants.WeaponMaps.MIN_RANGE_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.PIERCE_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.REACH_MAP
 import me.shadowalzazel.mcodyssey.constants.WeaponMaps.SWEEP_MAP
+import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.RangedListeners.hasEnchantment
 import me.shadowalzazel.mcodyssey.tasks.weapon_tasks.*
 import me.shadowalzazel.mcodyssey.util.AttackHelper
 import me.shadowalzazel.mcodyssey.util.DataTagManager
@@ -33,7 +34,6 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerSwapHandItemsEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.CrossbowMeta
-import org.bukkit.inventory.meta.PotionMeta
 import java.util.*
 
 // --------------------------------- NOTES --------------------------------
@@ -425,7 +425,9 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
         player.setCooldown(weapon.type, 6 * 20)
         // Return Task
         val task = ChakramReturn(player, throwable, weapon)
+        val deleteTask = ProjectileDelete(throwable)
         task.runTaskLater(Odyssey.instance, 15)
+        deleteTask.runTaskLater(Odyssey.instance, 20 * 10)
     }
 
     private fun shurikenThrowableHandler(event: PlayerInteractEvent) {
@@ -603,6 +605,8 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
             it.setGravity(false)
             it.shooter = thrower
             it.setHasLeftShooter(false)
+            val deleteTask = ProjectileDelete(it)
+            deleteTask.runTaskLater(Odyssey.instance, 20 * 10)
         }
     }
 
@@ -641,25 +645,19 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
         }
 
         // Match
-        if (bow.hasItemMeta() && bow.itemMeta.hasCustomModelData()) {
-            when(bow.itemMeta.customModelData) {
-                ItemModels.AUTO_CROSSBOW -> {
+        if (bow.hasItemMeta()) {
+            when(bow.getItemIdentifier()) {
+                "auto_crossbow" -> {
                     autoCrossbowHandler(event)
                 }
-                ItemModels.ALCHEMICAL_BOLTER -> {
+                "alchemical_bolter" -> {
                     alchemicalBolterShootHandler(event)
                 }
-                ItemModels.GRAPPLING_HOOK -> {
+                "grappling_hook" -> {
                     grapplingHookShootHandler(event)
                 }
             }
         }
-        /*
-        println("------------------------")
-        println("Crossbow: ${event.bow}.")
-        println("Arrow: ${event.projectile}.")
-        println("Consumes: ${event.shouldConsumeItem()}")
-         */
     }
 
     // Event for detecting when entity loads a crossbow
@@ -752,21 +750,22 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
         val crossbow = event.bow ?: return
         // Offhand
         val offhand = event.entity.equipment?.itemInOffHand ?: return
-        //if (!offhand.hasItemMeta()) return
         // Auto Crossbow
         if (crossbow.itemMeta is CrossbowMeta) {
             // Check if match
             val crossbowMeta = crossbow.itemMeta as CrossbowMeta
-            if (crossbowMeta.chargedProjectiles.isEmpty()) return
-            val projectileMeta = crossbowMeta.chargedProjectiles[0].itemMeta
+            val item = event.consumable ?: return
+            val itemMeta = item.itemMeta
             val loadedItems = mutableListOf<ItemStack>()
-            for (item in crossbowMeta.chargedProjectiles) {
-                loadedItems.add(item.clone())
-            }
             // Matches
-            val isArrow = offhand.type == crossbowMeta.chargedProjectiles[0].type && projectileMeta !is PotionMeta && offhand.type != Material.FIREWORK_ROCKET
-            if (offhand.itemMeta == projectileMeta || isArrow) {
+            val matchingArrows = offhand.type == Material.ARROW && item.type == Material.ARROW
+            if (offhand.itemMeta == itemMeta || matchingArrows) {
                 if (!crossbow.hasTag(ItemDataTags.AUTO_LOADER_LOADING)) {
+                    loadedItems.add(item)
+                    if (crossbow.hasEnchantment(Enchantment.MULTISHOT)) {
+                        loadedItems.add(item.clone())
+                        loadedItems.add(item.clone())
+                    }
                     offhand.subtract(1)
                     val task = LoadAutoCrossbow(event.entity, crossbow, loadedItems)
                     task.runTaskLater(Odyssey.instance, 1)

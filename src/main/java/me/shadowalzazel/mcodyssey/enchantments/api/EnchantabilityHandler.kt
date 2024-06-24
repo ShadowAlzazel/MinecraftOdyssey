@@ -105,6 +105,10 @@ interface EnchantabilityHandler : EnchantmentsManager, EnchantmentExtender, Data
                 }
             }
             newLore.removeAll{ it == emptyEnchantSlot }
+            // Remove Spam
+            val finalIndex = newLore.indexOf(loreFooter)
+            newLore.removeAll { it == loreFooter }
+            newLore.add(finalIndex, loreFooter)
         }
         val seperatorIndex = newLore.indexOf(loreSeperator)
         // Enchantability Points and Tool Tips

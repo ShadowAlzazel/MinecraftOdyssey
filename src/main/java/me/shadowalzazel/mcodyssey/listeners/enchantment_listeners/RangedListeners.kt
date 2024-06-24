@@ -55,6 +55,9 @@ object RangedListeners : Listener, EnchantmentsManager {
                 "ballistics" -> {
                     ballisticsEnchantmentShoot(projectile, enchant.value)
                 }
+                "ambush" -> {
+                    ambushEnchantmentShoot(projectile, enchant.value)
+                }
                 "bola_shot" -> {
                     bolaShotEnchantmentShoot(projectile, enchant.value)
                 }
@@ -138,6 +141,9 @@ object RangedListeners : Listener, EnchantmentsManager {
         // TODO: Maybe sort in priority the tags
         for (tag in projectile.scoreboardTags) {
             when (tag) {
+                EntityTags.AMBUSH_ARROW -> {
+                    event.damage += ambushEnchantmentHit(projectile, victim)
+                }
                 EntityTags.BALLISTICS_ARROW -> {
                     event.damage += ballisticsEnchantmentHit(projectile)
                 }
@@ -346,6 +352,21 @@ object RangedListeners : Listener, EnchantmentsManager {
             projectile.velocity.multiply(1 + (0.1 * level))
         }
 
+    }
+
+    private fun ambushEnchantmentShoot(projectile: Entity, level: Int) {
+        with(projectile) {
+            addScoreboardTag(EntityTags.AMBUSH_ARROW)
+            setIntTag(EntityTags.AMBUSH_MODIFIER, level)
+        }
+    }
+
+    private fun ambushEnchantmentHit(projectile: Projectile, victim: LivingEntity): Double {
+        if (victim.scoreboardTags.contains(EntityTags.AMBUSH_MARKED)) return 0.0
+        val modifier = projectile.getIntTag(EntityTags.AMBUSH_MODIFIER) ?: return 0.0
+        victim.world.spawnParticle(Particle.VAULT_CONNECTION, victim.location, 10, 0.15, 0.15, 0.15)
+        victim.addScoreboardTag(EntityTags.AMBUSH_MARKED)
+        return modifier * 2.0
     }
 
     private fun ballisticsEnchantmentShoot(projectile: Entity, level: Int) {

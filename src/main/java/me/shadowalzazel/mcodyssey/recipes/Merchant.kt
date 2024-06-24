@@ -18,13 +18,12 @@ class Merchant {
     /*-----------------------------------------------------------------------------------------------*/
 
     fun createHourglassTradeRecipe(): MerchantRecipe {
-        val someResult = ItemStack(Material.HONEYCOMB)
-        val someTrade = MerchantRecipe(someResult, 1, 20, true).apply {
+        val result = ItemStack(Material.HONEYCOMB)
+        val trade = MerchantRecipe(result, 1, 20, true).apply {
             setIgnoreDiscounts(true)
             addIngredient(Miscellaneous.PRIMO_GEM.newItemStack(15))
         }
-
-        return someTrade
+        return trade
     }
 
 }

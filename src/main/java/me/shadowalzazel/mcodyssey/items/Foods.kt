@@ -43,6 +43,6 @@ object Foods {
     val DOG_SIZZLE_CRISP = OdysseyItem("dog_sizzle_crisp", Material.COOKED_BEEF, "Dog Spinach", ItemModels.DOG_SIZZLE_CRISP,
         lore = listOf(Component.text("Keeps your furry companions safe from fire.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
-    val DOG_MILK_BONE = OdysseyItem("dog_milk_bone", Material.COOKED_BEEF, "Dog Milk Bone", ItemModels.DOG_SIZZLE_CRISP,
+    val DOG_MILK_BONE = OdysseyItem("dog_milk_bone", Material.COOKED_BEEF, "Dog Milk Bone", ItemModels.DOG_MILK_BONE,
         lore = listOf(Component.text("Makes your furry companion an absolute unit.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 }

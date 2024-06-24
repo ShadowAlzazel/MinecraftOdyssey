@@ -175,7 +175,7 @@ interface EnchantmentExtender {
             "heartened" -> listOf(
                 "- Increase max health by ${level * 10}$=[level x 10].")
             "potion_barrier" -> listOf(
-                "- Drinking a potion grants a small absorption barrier.",
+                "- Drinking a potion grants resistance for 10 seconds.",
                 "- Negative effect timers are reduced by ${level * 0.25}%=[level x 0.25].")
             "reckless" -> listOf(
                 "- Regenerate $level=[level] more health from satiation",
@@ -217,7 +217,7 @@ interface EnchantmentExtender {
                 "- Reduce target breath by ${2 * level}=[2 x level] seconds.",
                 "- Deal $level=[level] damage to enemies without air.")
             "backstabber" -> listOf(
-                "- Deal ${3 + (level * 3)}=[3 + (level x 3)] damage against targets",
+                "- Deal ${2 + (level * 2)}=[2 + (level x 2)] damage against targets",
                 "that are looking away from you or while you are invisible.")
             "bane_of_the_illager" -> listOf(
                 "- Increase Melee Damage to illagers by ${2.5 * level}=[2.5 x level]")
@@ -292,6 +292,8 @@ interface EnchantmentExtender {
                 "- Potion effect projectiles have their effect timers increased",
                 "by ${0.2 * level}=[0.2 x level]%. These projectiles also have their",
                 "speed increased by ${0.1 * level}%=[0.1 x level]")
+            "ambush" -> listOf(
+                "- The first projectile to hit an enemy deals${level * 2}=[level x 2] more damage.")
             "ballistics" -> listOf(
                 "- Crossbow projectiles deal $level=[level] more damage.")
             "bola_shot" -> listOf(

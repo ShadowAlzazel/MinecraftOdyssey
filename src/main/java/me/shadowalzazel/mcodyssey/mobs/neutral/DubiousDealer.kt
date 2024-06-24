@@ -4,7 +4,6 @@ import me.shadowalzazel.mcodyssey.constants.MobTags
 import me.shadowalzazel.mcodyssey.mobs.base.OdysseyMob
 import me.shadowalzazel.mcodyssey.recipes.merchant.ArcaneSales
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.World
@@ -20,17 +19,15 @@ object DubiousDealer : OdysseyMob("Dubious Dealer", MobTags.DUBIOUS_DEALER, Enti
         return (super.createMob(world, location) as WanderingTrader).apply {
             // Effects
             addPotionEffects(listOf(
-                PotionEffect(PotionEffectType.SPEED, 99999, 2),
-                PotionEffect(PotionEffectType.HASTE, 99999, 8)
+                PotionEffect(PotionEffectType.SPEED, 99999, 2)
             ))
             // Miscellaneous
             health = 40.0
-            canPickupItems = true
+            canPickupItems = false
             clearActiveItem()
-            customName(Component.text(this@DubiousDealer.displayName, TextColor.color(220, 116, 175)))
+            customName(Component.text(this@DubiousDealer.displayName))
             // Add Items
             equipment.also {
-                // TODO: Custom Models
                 it.helmet = ItemStack(Material.CHAINMAIL_HELMET, 1)
                 it.chestplate = ItemStack(Material.CHAINMAIL_CHESTPLATE, 1)
                 it.leggings = ItemStack(Material.CHAINMAIL_LEGGINGS, 1)
@@ -40,13 +37,13 @@ object DubiousDealer : OdysseyMob("Dubious Dealer", MobTags.DUBIOUS_DEALER, Enti
                 it.leggingsDropChance = 0F
                 it.bootsDropChance = 0F
             }
-            // TODO!! Recipe
-            setRecipe(1, ArcaneSales.createArcaneBookTrade())
-            setRecipe(2, ArcaneSales.createLowTierTomeTrade())
-            setRecipe(3, ArcaneSales.createLowTierTomeTrade())
-            setRecipe(4, ArcaneSales.createLowTierTomeTrade())
-            setRecipe(5, ArcaneSales.createLowTierGildedEnchantTrade())
-            setRecipe(6, ArcaneSales.createLowTierGildedEnchantTrade())
+            // Add Recipes
+            recipes.add(ArcaneSales.prismaticBookTrade())
+            recipes.add(ArcaneSales.lowTierTomeTrade())
+            recipes.add(ArcaneSales.lowTierTomeTrade())
+            recipes.add(ArcaneSales.midTierTomeTrade())
+            recipes.add(ArcaneSales.lowLevelArcaneBookTrade())
+            recipes.add(ArcaneSales.lowLevelArcaneBookTrade())
         }
     }
 

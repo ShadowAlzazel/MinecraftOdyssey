@@ -170,14 +170,15 @@ object SmithingListeners : Listener, DataTagManager {
             }
             // Get Trim Pattern
             val customTrimPattern: TrimPattern? = when(trimName) {
-                "imperial" -> TrimPatterns.IMPERIAL
+                "imperial_armor_trim_smithing_template" -> TrimPatterns.IMPERIAL
                 else -> null
             }
-            // Final
+            // Get Trim
             val finalTrim = customTrimPattern ?: resultMeta.trim?.pattern
-            val finalMaterial = customTrimMaterial ?: resultMeta.trim?.material
-            if (finalMaterial == null) return
             if (finalTrim == null) return
+            // Get material
+            val finalMaterial = customTrimMaterial ?: (trimMap(trimMaterial) ?: resultMeta.trim?.material)
+            if (finalMaterial == null) return
 
             // Apply new trim
             val newTrim = ArmorTrim(finalMaterial, finalTrim)
@@ -197,6 +198,24 @@ object SmithingListeners : Listener, DataTagManager {
             event.result = recipe.result
         }
     }
+
+
+    private fun trimMap(item: ItemStack): TrimMaterial? {
+        return when(item.type) {
+            Material.DIAMOND -> TrimMaterial.DIAMOND
+            Material.AMETHYST_SHARD -> TrimMaterial.AMETHYST
+            Material.IRON_INGOT -> TrimMaterial.IRON
+            Material.EMERALD -> TrimMaterial.EMERALD
+            Material.GOLD_INGOT -> TrimMaterial.GOLD
+            Material.COPPER_INGOT -> TrimMaterial.COPPER
+            Material.LAPIS_LAZULI -> TrimMaterial.LAPIS
+            Material.NETHERITE_INGOT -> TrimMaterial.NETHERITE
+            Material.QUARTZ -> TrimMaterial.QUARTZ
+            Material.REDSTONE -> TrimMaterial.REDSTONE
+            else -> null
+        }
+    }
+
 
     /*-----------------------------------------------------------------------------------------------*/
     private fun weaponModelMap(weaponType: String): Int {

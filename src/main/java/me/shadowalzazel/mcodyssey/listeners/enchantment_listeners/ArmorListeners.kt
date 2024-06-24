@@ -950,14 +950,14 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
         if (!potion.hasItemMeta()) { return }
 
         // Effects
-        player.addOdysseyEffect(EffectTags.BARRIER, (4 + (level * 4)) * 20)
+        //player.addOdysseyEffect(EffectTags.BARRIER, (4 + (level * 4)) * 20)
+        player.addPotionEffect(PotionEffect(PotionEffectType.RESISTANCE, 10 * 20, 0))
+        val itemCooldown = (maxOf(1, 8 - (level * 2))) * 20
         player.setCooldown(potion.type, (2 + (level * 2)) * 20)
         // Particles
         with(player.world) {
-            spawnParticle(Particle.ELECTRIC_SPARK, player.location, 35, 0.5, 0.5, 0.5)
-            spawnParticle(Particle.COMPOSTER, player.location, 35, 0.5, 0.5, 0.5)
+            spawnParticle(Particle.DAMAGE_INDICATOR, player.location, 15, 0.5, 0.5, 0.5)
             playSound(player.location, Sound.ITEM_SHIELD_BLOCK, 1.5F, 0.5F)
-            playSound(player.location, Sound.BLOCK_DEEPSLATE_BREAK, 1.5F, 0.5F)
             playSound(player.location, Sound.ENTITY_WANDERING_TRADER_DRINK_POTION, 1.5F, 0.8F)
         }
     }

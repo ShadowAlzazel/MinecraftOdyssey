@@ -54,6 +54,7 @@ object EntityTags {
     const val BLOOD_MOON_MOB: String = "odyssey.blood_moon_mob"
 
     // ARROWS
+    const val AMBUSH_ARROW: String = "odyssey.ambush_arrow"
     const val BALLISTICS_ARROW: String = "odyssey.ballistics_arrow"
     const val DEADEYE_ARROW: String = "odyssey.deadeye_arrow"
     const val DEATH_FROM_ABOVE_ARROW: String = "odyssey.death_from_above_arrow"
@@ -76,6 +77,7 @@ object EntityTags {
     const val REPLICATED_BURST_ARROW: String = "odyssey.replicated_burst_arrow"
 
     // ARROW UTILITY
+    const val AMBUSH_MODIFIER: String = "odyssey.ambush_modifier"
     const val BALLISTICS_MODIFIER: String = "odyssey.ballistics_modifier"
     const val BOLA_SHOT_MODIFIER: String = "odyssey.bola_shot_modifier"
     const val DEADEYE_MODIFIER: String = "odyssey.deadeye_modifier"
@@ -130,6 +132,7 @@ object EntityTags {
     const val VOID_TOUCHED: String = "odyssey.void_touched"
     const val VOID_STRUCK_BY: String = "odyssey.void_struck_by"
     const val VOID_STRIKE_MODIFIER: String = "odyssey.void_strike_modifier"
+    const val AMBUSH_MARKED: String = "odyssey.ambush_marked"
 
     // WEAPONS
     const val COMBOED: String = "odyssey.comboed"
