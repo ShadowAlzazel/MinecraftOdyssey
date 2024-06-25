@@ -11,11 +11,14 @@ object Equipment {
 
     private val GRAY = TextColor.color(170, 170, 170)
 
-    // TODO: Work with tome of polymerization and Volumes
-
     // Templates
     val SOUL_STEEL_UPGRADE_TEMPLATE = OdysseyItem("soul_steel_upgrade_template", Material.PAPER, "Soul Steel Upgrade Template", ItemModels.SOUL_STEEL_UPGRADE_TEMPLATE,
         lore = listOf(Component.text("A Smithing Template used to upgrade Iron tools into Soul Steel.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+    val TITANIUM_UPGRADE_TEMPLATE = OdysseyItem("titanium_upgrade_template", Material.PAPER, "Titanium Upgrade Template", ItemModels.TITANIUM_UPGRADE_TEMPLATE,
+        lore = listOf(Component.text("A Smithing Template used to upgrade Iron tools into Titanium.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+    val IRIDIUM_UPGRADE_TEMPLATE = OdysseyItem("iridium_upgrade_template", Material.PAPER, "Iridium Upgrade Template", ItemModels.IRIDIUM_UPGRADE_TEMPLATE,
+        lore = listOf(Component.text("A Smithing Template used to upgrade Diamond tools into Iridium.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+
 
     val IMPERIAL_ARMOR_TRIM_SMITHING_TEMPLATE = OdysseyItem("imperial_armor_trim_smithing_template", Material.PAPER, "Smithing Template", ItemModels.IMPERIAL_ARMOR_TRIM_SMITHING_TEMPLATE)
 
@@ -44,9 +47,15 @@ object Equipment {
         lore = listOf(Component.text("An arcane blade that slices enemies in front.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         maxDamage = 217, maxStackSize = 1
     )
-    val ARCANE_SCEPTER  = OdysseyItem("arcane_scepter", Material.STICK, "Arcane Scepter", ItemModels.ARCANE_SCEPTER,
+    val ARCANE_SCEPTER = OdysseyItem("arcane_scepter", Material.STICK, "Arcane Scepter", ItemModels.ARCANE_SCEPTER,
         lore = listOf(Component.text("A scepter that launches a homing projectile", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         maxDamage = 217, maxStackSize = 1
+    )
+
+    // Grapples
+    val GRAPPLING_HOOK_MK1 = OdysseyItem("grappling_hook_mk1", Material.CROSSBOW, "Grappling Hook Mk.1", ItemModels.GRAPPLING_HOOK_MK1,
+        lore = listOf(Component.text("Launch an arrow that will grapple on hit.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
+        maxDamage = 53
     )
 
     // Misc

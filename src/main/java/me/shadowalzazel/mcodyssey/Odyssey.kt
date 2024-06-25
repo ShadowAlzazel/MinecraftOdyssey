@@ -13,13 +13,18 @@ import me.shadowalzazel.mcodyssey.recipes.RecipeManager
 import me.shadowalzazel.mcodyssey.recipes.brewing.BrewerMixes
 import me.shadowalzazel.mcodyssey.world_events.DailyWorldEventManager
 import me.shadowalzazel.mcodyssey.world_events.DateTimeSyncer
+import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
+import org.bukkit.NamespacedKey
+import org.bukkit.ServerLinks
 import org.bukkit.World
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 import java.io.FileNotFoundException
+import java.net.URI
 
+@Suppress("UnstableApiUsage")
 class Odyssey : JavaPlugin() {
 
     // Managers
@@ -29,6 +34,7 @@ class Odyssey : JavaPlugin() {
 
     // Overworld
     lateinit var overworld: World
+    lateinit var edge: World
 
     // Phenomenon Stuff
     var isSolarPhenomenonActive: Boolean = false
@@ -85,6 +91,10 @@ class Odyssey : JavaPlugin() {
             server.pluginManager.disablePlugin(this)
             return
         }
+        // Set Edge
+        val foundEdge = server.getWorld(NamespacedKey(instance, "edge"))!!
+        edge = foundEdge
+
         // Enable Enchants
         logger.info("Enabling Enchantments...")
 
@@ -153,6 +163,19 @@ class Odyssey : JavaPlugin() {
         logger.info("Initializing World Events...")
         dateTimeSyncer.currentDay = 0 //dateTimeSyncer.getDay()
         //dateTimeSyncer.runTaskTimer(this, 20, 20 * 10) // Run every 200 ticks = 10 secs
+
+        // Wiki
+        val wikiLink = "https://minecraftodyssey.fandom.com/wiki/MinecraftOdyssey_Wiki"
+        val wikiLinkDisplay = Component.text("Odyssey Wiki")
+        server.serverLinks.addLink(wikiLinkDisplay, URI(wikiLink))
+        // Map [VailCraft]
+        val mapLink = "http://map.vailcraft.net:25563/#world:0:0:0:2250:0:0:0:0:perspective"
+        val mapLinkDisplay = Component.text("Map")
+        server.serverLinks.addLink(mapLinkDisplay, URI(mapLink))
+        // Github
+        val pluginLink = "https://github.com/ShadowAlzazel/MinecraftOdyssey"
+        val pluginLinkDisplay = Component.text("Github - Odyssey Plugin")
+        server.serverLinks.addLink(pluginLinkDisplay, URI(pluginLink))
 
         // Hello World!
         val timeElapsed = (System.currentTimeMillis() - timerStart).div(1000.0)

@@ -176,53 +176,46 @@ internal interface TomeManager : EnchantabilityHandler {
         }
     }
 
-    // Adds all enchants at no cost
-    fun tomeOfPolymerizationOnItem(book: ItemStack, item: ItemStack, viewers: List<HumanEntity>): ItemStack? {
+    // Adds enchants from one item to another
+    fun tomeOfPolymerizationOnItem(book: ItemStack, item: ItemStack, other: ItemStack, viewers: List<HumanEntity>): ItemStack? {
         // Check book is enchantment storage
-        val bookMeta = book.itemMeta
-        val hasStoredEnchants = bookMeta is EnchantmentStorageMeta && bookMeta.storedEnchants.isNotEmpty()
-        if (!hasStoredEnchants) {
-            viewers.forEach { it.sendBarMessage("This tome needs to have at least one enchantment stored!") }
-            return null
-        }
-        bookMeta as EnchantmentStorageMeta
-        // Get Item Enchants
-        val itemIsBook = item.itemMeta is EnchantmentStorageMeta
-        val itemEnchants = if (itemIsBook) {
+        val meta = item.itemMeta
+        val hasStoredEnchants = meta is EnchantmentStorageMeta && meta.storedEnchants.isNotEmpty()
+        // Get Enchant to Upgrade if available
+        val itemEnchants = if (hasStoredEnchants) {
             val storedMeta = item.itemMeta as EnchantmentStorageMeta
-            storedMeta.enchants.toMutableMap()
+            storedMeta.storedEnchants
         } else {
-            item.enchantments.toMutableMap()
+            item.enchantments
         }
-        // Create new map of combined enchants
-        val combinedEnchants = mutableMapOf<Enchantment, Int>()
-        val oldEnchants = itemEnchants.keys
-        for (enchant in bookMeta.storedEnchants) {
-            if (enchant.key !in oldEnchants) {
-                combinedEnchants[enchant.key] = enchant.value
+        val otherEnchants = other.enchantments
+        if (otherEnchants.isEmpty()) return null
+        // Loop other
+        for (enchant in otherEnchants) {
+            val enchantment = enchant.key
+            if (!enchantment.canEnchantItem(item)) continue
+            // Conflict
+            val hasConflict = itemEnchants.any { it.key.conflictsWith(enchantment) }
+            if (hasConflict) continue
+            // Is In List
+            val otherLevel = minOf(enchantment.maxLevel, enchant.value)
+            if (enchantment in itemEnchants.keys) {
+                val itemLevel = itemEnchants[enchantment]!!
+                itemEnchants[enchantment] = maxOf(otherLevel, itemLevel)
+            } else {
+                itemEnchants[enchantment] = otherLevel
             }
-            combinedEnchants[enchant.key] = maxOf(enchant.value, itemEnchants[enchant.key]!!)
         }
-        // Get enchantability
-        val maxEnchantabilityPoints = item.getMaxEnchantabilityPoints()
-        var usedEnchantabilityPoints = 0
-        for (enchant in combinedEnchants) {
-            usedEnchantabilityPoints += enchant.key.enchantabilityCost(enchant.value)
-        }
-        // Can not pass max!
-        if (maxEnchantabilityPoints < usedEnchantabilityPoints) {
-            viewers.forEach { it.sendBarMessage("This item does not have enough points to add all enchantments!") }
+        val result = item.clone()
+        result.addEnchantments(itemEnchants)
+        // Check max
+        val maxEnchantabilityPoints = result.getMaxEnchantabilityPoints()
+        val usedEnchantabilityPoints = result.getUsedEnchantabilityPoints()
+        if (usedEnchantabilityPoints > maxEnchantabilityPoints) {
+            viewers.forEach { it.sendBarMessage("There are too many enchantments to be applied!") }
             return null
         }
-        // Add if poss
-        if (itemIsBook) {
-            item.addEnchantments(itemEnchants.toMap())
-        }
-        else {
-            item.addEnchantments(itemEnchants.toMap())
-            item.updateEnchantabilityPointsLore()
-        }
-        return item
+        return result
     }
 
     @Deprecated(message = "No more slots")

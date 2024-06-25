@@ -3,16 +3,19 @@ package me.shadowalzazel.mcodyssey.recipes.crafting
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.items.Equipment
 import me.shadowalzazel.mcodyssey.items.creators.ItemCreator
+import me.shadowalzazel.mcodyssey.recipes.ChoiceManager
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.Recipe
 import org.bukkit.inventory.ShapedRecipe
 import org.bukkit.inventory.recipe.CraftingBookCategory
 
-class Equipment : ItemCreator {
+class Equipment : ItemCreator, ChoiceManager {
 
     fun getRecipes(): List<Recipe> {
         return listOf(
+            grapplingHookMk1Recipe(),
+
             warpingWandRecipe(),
             explosiveArrowRecipe(),
             hornedHelmetRecipe(),
@@ -20,6 +23,19 @@ class Equipment : ItemCreator {
             arcaneBladeRecipe(),
             arcaneScepterRecipe(),
         )
+    }
+
+    private fun grapplingHookMk1Recipe(): ShapedRecipe {
+        val result = Equipment.GRAPPLING_HOOK_MK1.newItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "grappling_hook_mk1"), result).apply {
+            shape(" X ", "STS", " L ")
+            setIngredient('X', titaniumChoices())
+            setIngredient('S', Material.STRING)
+            setIngredient('T', Material.TRIPWIRE_HOOK)
+            setIngredient('L', Material.STICK)
+            category = CraftingBookCategory.EQUIPMENT
+        }
+        return recipe
     }
 
     /*-----------------------------------------------------------------------------------------------*/

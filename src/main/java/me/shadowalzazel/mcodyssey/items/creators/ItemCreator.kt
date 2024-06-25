@@ -29,7 +29,7 @@ interface ItemCreator : ExoticCreator, EnchantabilityHandler {
             meta.setCustomModelData(customModel)
             meta.persistentDataContainer.set(DataKeys.ITEM_KEY, PersistentDataType.STRING, itemName) // Change for 1.20.5 to itemName component
             meta.displayName(Component.text(customName).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))
-            meta.setItemName(this.itemName)
+            meta.itemName(Component.text(this.itemName))
             // Optional Variables
             if (lore != null) {
                 meta.lore(lore)
@@ -52,8 +52,8 @@ interface ItemCreator : ExoticCreator, EnchantabilityHandler {
             it.lore(fullLore)
             // Set name
             val bookName = Component.text(this.customName + ": ")
-            val fullName = bookName.append(enchantment.displayName(level))
-            it.displayName(fullName)
+            val fullName = bookName.append(enchantment.displayName(level).color(bookName.color())).color(bookName.color())
+            it.displayName(fullName.decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))
             it.addStoredEnchant(enchantment, level, true)
             it.addItemFlags(ItemFlag.HIDE_STORED_ENCHANTS)
         }

@@ -5,6 +5,7 @@ import me.shadowalzazel.mcodyssey.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.constants.DataKeys
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
 import me.shadowalzazel.mcodyssey.items.utility.ToolMaterial
+import me.shadowalzazel.mcodyssey.items.utility.ToolMiningManager
 import me.shadowalzazel.mcodyssey.items.utility.ToolType
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import net.kyori.adventure.text.Component
@@ -14,7 +15,8 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
 import org.bukkit.persistence.PersistentDataType
 
-class ToolCreator : AttributeManager, DataTagManager {
+@Suppress("UnstableApiUsage")
+class ToolCreator : AttributeManager, DataTagManager, ToolMiningManager {
 
     private val otherTools = listOf(ToolType.SHURIKEN)
 
@@ -48,15 +50,24 @@ class ToolCreator : AttributeManager, DataTagManager {
             if (maxDurability != null && meta is Damageable) {
                 meta.setMaxDamage(maxDurability)
             }
+            // Tools with mining ToolComponent
+            val mineableTags = getTypeMineableTags(type.itemName)
+            if (mineableTags != null) {
+                val newToolComponent = createMiningToolComponent(meta.tool, material.itemName, mineableTags)
+                if (newToolComponent != null) {
+                    newToolComponent.damagePerBlock = 1
+                    meta.setTool(newToolComponent)
+                }
+            }
             // Display
             meta.setCustomModelData(model)
             meta.displayName(Component.text(customName).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))
             // item identifiers
-            meta.setItemName(itemName)
+            meta.itemName(Component.text(itemName))
             meta.persistentDataContainer.set(DataKeys.ITEM_KEY, PersistentDataType.STRING, itemName)
             // Set meta
             this.itemMeta = meta
-            this.addStringTag(ItemDataTags.WEAPON_TYPE, type.itemName)
+            this.addStringTag(ItemDataTags.TOOL_TYPE, type.itemName)
             this.addStringTag(ItemDataTags.MATERIAL_TYPE, material.itemName)
             // Assign Base attributes
             this.addAttackDamageAttribute(damage, AttributeTags.ITEM_BASE_ATTACK_DAMAGE)

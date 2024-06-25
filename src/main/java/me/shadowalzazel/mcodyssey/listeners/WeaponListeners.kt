@@ -71,6 +71,7 @@ import java.util.*
 // can tp if throw another
 // Offhand DeprecatedWeapon
 
+@Suppress("UnstableApiUsage")
 object WeaponListeners : Listener, AttackHelper, DataTagManager {
 
     private val markedVoidTargets = mutableMapOf<UUID, Entity>()
@@ -93,17 +94,12 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
         val offHandWeapon = player.equipment.itemInOffHand
         val model = mainWeapon.itemMeta.customModelData
         // Get weapon type
-        val mainWeaponType = mainWeapon.getStringTag(ItemDataTags.WEAPON_TYPE)
+        val mainWeaponType = mainWeapon.getStringTag(ItemDataTags.TOOL_TYPE)
         val mainWeaponMaterial = mainWeapon.getStringTag(ItemDataTags.MATERIAL_TYPE)
         // Sweep damage should not? call other bonuses?
         if (event.cause == EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) {
             val bonusSweepDamage = SWEEP_MAP[mainWeaponType] ?: 0.0
             event.damage += bonusSweepDamage
-        }
-        // Prevent Recursive AOE calls
-        if (victim.scoreboardTags.contains(EntityTags.MELEE_AOE_HIT)) {
-            victim.scoreboardTags.remove(EntityTags.MELEE_AOE_HIT)
-            return
         }
         // For throwable weapon damage
         val wasThrowable = victim.scoreboardTags.contains(EntityTags.THROWABLE_ATTACK_HIT)
@@ -121,6 +117,13 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
             }  */
         }
         if (event.damage > 1.0 && !wasThrowable) { event.damage -= 1.0 } // Reduce Weapon Damage by 1 to match attribute display
+        // For bonus damage maps
+        weaponBonusStatsHandler(event, mainWeaponType)
+        // Prevent Recursive AOE calls
+        if (victim.scoreboardTags.contains(EntityTags.HIT_BY_AOE_SWEEP)) {
+            victim.scoreboardTags.remove(EntityTags.HIT_BY_AOE_SWEEP)
+            return
+        }
         // Conditions
         val twoHanded = offHandWeapon.type == Material.AIR
         val shieldInOff = offHandWeapon.type == Material.SHIELD
@@ -128,24 +131,37 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
         val isSneaking = player.isSneaking
         val isCrit = event.isCritical
         val fullAttack = player.attackCooldown > 0.99
-        // For bonus damage maps
-        weaponBonusStatsHandler(event, mainWeaponType)
         // Get bonus/special effects
+        // ??? If Crouching more damage
         println("Start Damage: ${event.damage}")
         when(mainWeaponType) {
             "sickle" -> {
-                victim.shieldBlockingDelay = 20
-                // SWEEP
+                val rads = (100 * Math.PI) / 180
+                // Always hits in a circle around player
+                doWeaponAOESweep(player, victim, event.damage, rads, 2.0)
+            }
+            "dagger" -> {
+                val rads = (80 * Math.PI) / 180
+                // Always hits in a circle around player
+                doWeaponAOESweep(player, victim, event.damage, rads, 1.75)
             }
             "katana" -> {
-                val sayaInOff = offHandWeapon.hasTag("saya") // TEMP
-                if (isCrit && twoHanded) {
+                //val sayaInOff = offHandWeapon.hasTag("saya") // TEMP
+                if (isCrit) {
                     event.damage += 3
                 }
-                // SWEEP
+                if (twoHanded) {
+                    val rads = (80 * Math.PI) / 180
+                    // Hits enemies near contact
+                    doWeaponAOESweep(player, victim, event.damage * 0.75, rads)
+                }
             }
             "claymore" -> {
-                // SWEEP
+                if (isSneaking) {
+                    val rads = (90 * Math.PI) / 180
+                    // Hits enemies near contact
+                    doWeaponAOESweep(player, victim, event.damage, rads)
+                }
             }
             "saber" -> {
                 if (isMounted) {
@@ -153,10 +169,19 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
                 }
             }
             "scythe" -> {
-                // SWEEP
+                val rads = (120 * Math.PI) / 180
+                // Always hits in a cone
+                doWeaponAOESweep(player, victim, event.damage, rads, 4.0)
             }
             "chakram" -> {
-                // SWEEP
+                val rads = (175 * Math.PI) / 180
+                // Always hits in a circle around player
+                doWeaponAOESweep(player, victim, event.damage, rads, 1.75)
+            }
+            "poleaxe" -> {
+                val rads = (25 * Math.PI) / 180
+                // Hits enemies near contact
+                doWeaponAOESweep(player, victim, event.damage, rads)
             }
             "warhammer" -> {
                 if (twoHanded) {
@@ -278,7 +303,7 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
         // Sentries
         if (!mainWeapon.hasItemMeta()) return
         if (!mainWeapon.itemMeta!!.hasCustomModelData()) return
-        val weaponType = mainWeapon.getStringTag(ItemDataTags.WEAPON_TYPE) ?: return
+        val weaponType = mainWeapon.getStringTag(ItemDataTags.TOOL_TYPE) ?: return
         val reach = REACH_MAP[weaponType] ?: return
         if (reach < 4.0) return // Get reach for weapons exceeding range
         // Old reach function
@@ -296,9 +321,9 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
         val player = event.player
         val mainWeapon = player.equipment.itemInMainHand
         val offHandWeapon = player.equipment.itemInOffHand
-        val fullAttack = player.attackCooldown > 0.9
+        //val fullAttack = player.attackCooldown > 0.9
         // Offhand Dual Weldable
-        when(val offWeaponType = offHandWeapon.getStringTag(ItemDataTags.WEAPON_TYPE)) {
+        when(val offWeaponType = offHandWeapon.getStringTag(ItemDataTags.TOOL_TYPE)) {
             "dagger", "sickle", "chakram", "cutlass" -> {
                 val entity = getRayTraceTarget(player, offWeaponType)
                 if (entity is LivingEntity) { // Attack with offhand
@@ -309,7 +334,7 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
             }
         }
         // Throwable
-        when(val mainWeaponType = mainWeapon.getStringTag(ItemDataTags.WEAPON_TYPE)) {
+        when(mainWeapon.getStringTag(ItemDataTags.TOOL_TYPE)) {
             "kunai" -> { //model == ItemModels.VOID_LINKED_KUNAI
                 kunaiThrowableHandler(event)
             }
@@ -336,36 +361,6 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
         println("Trace Distance: $closestDistance")
         if (reach < closestDistance) { return null }
         return target
-    }
-
-    // TODO: If Crouching more damage
-    // Function for critical hits that sweep
-    private fun weaponSweep(victim: LivingEntity, attacker: LivingEntity, radius: Double, damage: Double) {
-        val midpoint = attacker.location.clone().set(
-            ((victim.location.x + attacker.location.x) / 2),
-            ((victim.location.y + attacker.location.y) / 2),
-            ((victim.location.z + attacker.location.z) / 2)
-        )
-
-        victim.scoreboardTags.add(EntityTags.MELEE_AOE_HIT)
-        val enemyList = midpoint.getNearbyEntities(radius, radius, radius).filter {
-            it != victim && it != attacker
-        }
-        for (entity in enemyList) {
-            if (entity is LivingEntity && !entity.scoreboardTags.contains(EntityTags.MELEE_AOE_HIT)) {
-                entity.scoreboardTags.add(EntityTags.MELEE_AOE_HIT)
-                entity.damage(damage, attacker)
-                entity.world.spawnParticle(
-                    Particle.SWEEP_ATTACK,
-                    entity.location.clone().add(0.0, 1.75, 0.0),
-                    1,
-                    0.05,
-                    0.03,
-                    0.05
-                )
-            }
-        }
-        attacker.world.playSound(victim.location, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 2.75F, 0.5F)
     }
 
     private fun dualWieldHandler(player: Player, target: LivingEntity) {
@@ -401,7 +396,7 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
             it.shooter = player
             it.setHasLeftShooter(false)
         }
-        player.setCooldown(weapon.type, 1 * 20)
+        player.setCooldown(weapon.type, (1 * 20) + 10)
         weapon.damage(1, player)
     }
 
@@ -451,7 +446,7 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
 
     /*-----------------------------------------------------------------------------------------------*/
     @EventHandler(priority = EventPriority.LOWEST)
-    fun weaponHandSwapHandler(event: PlayerSwapHandItemsEvent) {
+    fun voidKunaiHandler(event: PlayerSwapHandItemsEvent) {
         if (!event.mainHandItem.hasItemMeta()) return
         val mainHand = event.mainHandItem
         if (!mainHand.itemMeta.hasCustomModelData()) return
@@ -561,6 +556,9 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
             if (target is HumanEntity) {
                 target.setCooldown(projectile.item.type, 0)
             }
+            event.isCancelled = true
+            projectile.remove()
+            return
         }
         else {
             target.addScoreboardTag(EntityTags.THROWABLE_ATTACK_HIT)
@@ -583,7 +581,7 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
         if (projectile.shooter !is LivingEntity) return
         // Prevent multi bounce
         if (projectile.scoreboardTags.contains(EntityTags.CHAKRAM_HAS_BOUNCED)) return
-        val block = event.hitBlock ?: return
+        //val block = event.hitBlock ?: return
         // Check Damage
         val damage = projectile.getIntTag(EntityTags.THROWABLE_DAMAGE) ?: return
         // Respawn
@@ -653,7 +651,7 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
                 "alchemical_bolter" -> {
                     alchemicalBolterShootHandler(event)
                 }
-                "grappling_hook" -> {
+                "grappling_hook_mk1" -> {
                     grapplingHookShootHandler(event)
                 }
             }
@@ -686,7 +684,6 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
         }
     }
 
-    @Suppress("UnstableApiUsage")
     private fun explosiveArrowHitHandler(event: ProjectileHitEvent) {
         val projectile = event.entity
         val location = projectile.location
@@ -695,7 +692,7 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
 
     /*-----------------------------------------------------------------------------------------------*/
     // GRAPPLING HOOK (cross hook)
-    private fun grapplingHookShootHandler(event: EntityShootBowEvent) {
+    private fun grapplingHookShootHandler(event: EntityShootBowEvent, power: Double = 0.2) {
         println("CALLED SHOOT")
         if (event.entity.scoreboardTags.contains(EntityTags.HAS_SHOT_GRAPPLE)) {
             event.entity.removeScoreboardTag(EntityTags.HAS_SHOT_GRAPPLE)
@@ -738,10 +735,15 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
         if (currentGrapplePullTasks[hookerId] != null) {
             currentGrapplePullTasks[hookerId]?.cancel()
         }
+        // Max distance for pull
+        val maxPullDistance = 50 // Get From Tags later
+        val distance = projectile.location.distance(hooker.location)
+        if (distance > maxPullDistance) return
+
         hooker.addScoreboardTag(EntityTags.IS_GRAPPLING)
         currentGrapplePullTasks[hookerId] = task
         task.runTaskTimer(Odyssey.instance, 1, 1)
-        println("FINISHED PULL")
+        println("FINISHED PULL CALL")
     }
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -753,7 +755,7 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
         // Auto Crossbow
         if (crossbow.itemMeta is CrossbowMeta) {
             // Check if match
-            val crossbowMeta = crossbow.itemMeta as CrossbowMeta
+            //val crossbowMeta = crossbow.itemMeta as CrossbowMeta
             val item = event.consumable ?: return
             val itemMeta = item.itemMeta
             val loadedItems = mutableListOf<ItemStack>()

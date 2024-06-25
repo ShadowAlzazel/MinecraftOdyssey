@@ -1,7 +1,9 @@
 package me.shadowalzazel.mcodyssey.listeners
 
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.mobs.neutral.DubiousDealer
+import me.shadowalzazel.mcodyssey.structures.StructureManager
 import me.shadowalzazel.mcodyssey.util.MobCreationHelper
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
@@ -15,7 +17,7 @@ import org.bukkit.inventory.meta.trim.ArmorTrim
 import org.bukkit.inventory.meta.trim.TrimMaterial
 import org.bukkit.inventory.meta.trim.TrimPattern
 
-object SpawningListeners : Listener, MobCreationHelper {
+object SpawningListeners : Listener, MobCreationHelper, StructureManager {
 
     @EventHandler
     fun mobNaturalSpawningHandler(event: CreatureSpawnEvent) {
@@ -30,16 +32,17 @@ object SpawningListeners : Listener, MobCreationHelper {
                 if (event.entity !is Enemy) return
                 // Surface Spawns for now -> fix for mob farms
                 if (event.entity is Guardian) return
-                checkStructure(event.entity)
+                structureTagHandler(event.entity)
                 if (event.entity.location.block.lightFromSky < 1) return
                 // Roll Elite - Base 2%
                 val mobEx = if (event.entity is Zombie || event.entity is Skeleton) 25 else 0
-                val extraDif = getDifScale(event.entity) * 10
+                val extraDif = getScaledDifficulty(event.entity) * 10
                 val rollElite = (20 + extraDif + mobEx > (0..1000).random())
-                // 2% For gilded mob
+                // 2% For Elite Mob
                 // 0.1% For a pack of shiny
                 if (rollElite) {
-                    createShinyMob(event.entity)
+                    val inEdge = event.entity.location.world == Odyssey.instance.edge
+                    createShinyMob(event.entity, inEdge)
                 }
             }
         }
@@ -53,15 +56,12 @@ object SpawningListeners : Listener, MobCreationHelper {
 
     /*-----------------------------------------------------------------------------------------------*/
 
-    private fun checkStructure(mob: LivingEntity) {
-        val structures = mob.location.chunk.structures
-        if (structures.isEmpty()) return
-        val inside = structures.filter { mob.boundingBox.overlaps(it.boundingBox) }
-        if (inside.isEmpty()) return
+    private fun structureTagHandler(mob: LivingEntity) {
+        val boundedStructures = getBoundedStructures(mob) ?: return
         // Check if inside
-        for (struct in inside) {
+        for (struct in boundedStructures) {
             // Is Mesa
-            if (struct.structure == Structure.MINESHAFT || struct.structure == Structure.MINESHAFT_MESA) {
+            if (struct == Structure.MINESHAFT || struct == Structure.MINESHAFT_MESA) {
                 mob.addScoreboardTag(EntityTags.IN_MINESHAFT)
             }
         }

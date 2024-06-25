@@ -153,6 +153,8 @@ object ItemModels {
     // Smithing Templates
     const val SOUL_STEEL_UPGRADE_TEMPLATE: Int = 6906502
     const val IMPERIAL_ARMOR_TRIM_SMITHING_TEMPLATE: Int = 6906503
+    const val TITANIUM_UPGRADE_TEMPLATE: Int = 6906504
+    const val IRIDIUM_UPGRADE_TEMPLATE: Int = 6906505
 
     // Ingots
     const val SILVER_INGOT: Int = 6906619
@@ -195,6 +197,7 @@ object ItemModels {
 
     // Crossbows
     const val GRAPPLING_HOOK: Int = 6905530
+    const val GRAPPLING_HOOK_MK1: Int = 6905530
 
     const val COMPACT_CROSSBOW: Int = 6905535
     const val AUTO_CROSSBOW: Int = 6905536
@@ -210,6 +213,13 @@ object ItemModels {
     // Templates (NOT USED)
     const val KATANA_TEMPLATE: Int = 6905819
     const val KATANA_MOLD: Int = 6905819
+
+    // Base
+    const val SWORD: Int = 5
+    const val PICKAXE: Int = 6
+    const val AXE: Int = 7
+    const val SHOVEL: Int = 8
+    const val HOE: Int = 9
 
     // Swords [*****XX]
     const val KATANA: Int = 44
@@ -241,9 +251,12 @@ object ItemModels {
     const val POLEAXE: Int = 86
     const val LABRYS: Int = 87
 
+
     // Copper [69055XX]
     // Soul Steel [69066XX]
-    const val SOUL_STEEL_MATERIAL: Int = 69066
+    const val SOUL_STEEL_MATERIAL_PRE: Int = 69066
+    const val TITANIUM_MATERIAL_PRE: Int = 69068
+    const val IRIDIUM_MATERIAL_PRE: Int = 69071
     // Soul Steel [69066XX]
     const val NETHERITE_MATERIAL: Int = 69059
 

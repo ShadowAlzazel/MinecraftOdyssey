@@ -236,7 +236,7 @@ interface EnchantabilityHandler : EnchantmentsManager, EnchantmentExtender, Data
         }
         var bonusPoints = 0
         if (item.getStringTag(ItemDataTags.MATERIAL_TYPE) == "mithril") {
-            bonusPoints += 7
+            bonusPoints += 5
         }
         val extraPoints = item.getIntTag(ItemDataTags.EXTRA_ENCHANTABILITY_POINTS) ?: 0
         bonusPoints += extraPoints

@@ -42,7 +42,7 @@ interface ExoticCreator : AttributeManager, DataTagManager {
 
     private fun createKnightBreaker(item: ItemStack) {
         item.apply {
-            addStringTag(ItemDataTags.WEAPON_TYPE, "dagger")
+            addStringTag(ItemDataTags.TOOL_TYPE, "dagger")
             // ADD TAG, BONUS PEIRCE
             addAttackDamageAttribute(9.0, AttributeTags.ITEM_BASE_ATTACK_DAMAGE)
             addEntityRangeAttribute(-0.1, AttributeTags.ITEM_BASE_ENTITY_RANGE)
@@ -53,7 +53,7 @@ interface ExoticCreator : AttributeManager, DataTagManager {
 
     private fun createShogunLightning(item: ItemStack) {
         item.apply {
-            addStringTag(ItemDataTags.WEAPON_TYPE, "katana")
+            addStringTag(ItemDataTags.TOOL_TYPE, "katana")
             addAttackDamageAttribute(12.0, AttributeTags.ITEM_BASE_ATTACK_DAMAGE)
             addEntityRangeAttribute(0.3, AttributeTags.ITEM_BASE_ENTITY_RANGE)
             setNewAttackSpeedAttribute(1.7)
@@ -63,7 +63,7 @@ interface ExoticCreator : AttributeManager, DataTagManager {
 
     private fun createAbzuBlade(item: ItemStack) {
         item.apply {
-            addStringTag(ItemDataTags.WEAPON_TYPE, "claymore")
+            addStringTag(ItemDataTags.TOOL_TYPE, "claymore")
             addAttackDamageAttribute(21.0, AttributeTags.ITEM_BASE_ATTACK_DAMAGE)
             addEntityRangeAttribute(0.7, AttributeTags.ITEM_BASE_ENTITY_RANGE)
             setNewAttackSpeedAttribute(0.8)
@@ -73,7 +73,7 @@ interface ExoticCreator : AttributeManager, DataTagManager {
 
     private fun createExcalibur(item: ItemStack) {
         item.apply {
-            addStringTag(ItemDataTags.WEAPON_TYPE, "longsword")
+            addStringTag(ItemDataTags.TOOL_TYPE, "longsword")
             addStringTag(ItemDataTags.MATERIAL_TYPE, "mithril") // MAYBE
             addAttackDamageAttribute(15.0, AttributeTags.ITEM_BASE_ATTACK_DAMAGE)
             addEntityRangeAttribute(0.3, AttributeTags.ITEM_BASE_ENTITY_RANGE)
@@ -84,7 +84,7 @@ interface ExoticCreator : AttributeManager, DataTagManager {
 
     private fun createFrostFang(item: ItemStack) {
         item.apply {
-            addStringTag(ItemDataTags.WEAPON_TYPE, "dagger")
+            addStringTag(ItemDataTags.TOOL_TYPE, "dagger")
             addAttackDamageAttribute(10.0, AttributeTags.ITEM_BASE_ATTACK_DAMAGE)
             addEntityRangeAttribute(-0.1, AttributeTags.ITEM_BASE_ENTITY_RANGE)
             setNewAttackSpeedAttribute(3.0)
@@ -94,7 +94,7 @@ interface ExoticCreator : AttributeManager, DataTagManager {
 
     private fun createElucidator(item: ItemStack) {
         item.apply {
-            addStringTag(ItemDataTags.WEAPON_TYPE, "longsword")
+            addStringTag(ItemDataTags.TOOL_TYPE, "longsword")
             addAttackDamageAttribute(14.0, AttributeTags.ITEM_BASE_ATTACK_DAMAGE)
             addEntityRangeAttribute(0.3, AttributeTags.ITEM_BASE_ENTITY_RANGE)
             setNewAttackSpeedAttribute(1.5)
