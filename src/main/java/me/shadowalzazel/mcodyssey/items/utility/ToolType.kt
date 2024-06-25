@@ -9,6 +9,12 @@ enum class ToolType(
     val itemOverrideSuf: String,  // for finding the item id
     val bonusRange: Double? = null
 ) {
+    // Vanilla
+    SWORD("sword", "Sword", 3.0, 1.6, 5, "sword"),
+    PICKAXE("pickaxe", "Pickaxe", 1.0, 1.2, 6, "pickaxe"),
+    AXE("axe", "Axe", 5.0, 1.0, 7, "axe"),
+    SHOVEL("shovel", "Shovel", 1.5, 1.0, 8, "shovel"),
+    HOE("hoe", "Hoe", 0.0, 1.6, 9, "hoe"),
 
     // Sword overrides
     KATANA("katana", "Katana", 3.0, 1.7, 44, "sword", 0.2),

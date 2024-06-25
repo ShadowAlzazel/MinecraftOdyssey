@@ -9,6 +9,7 @@ import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import me.shadowalzazel.mcodyssey.items.creators.ItemCreator
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
+import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.Particle
@@ -56,6 +57,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         val viewers = event.viewers
         val result = event.result ?: return
         val anvil = event.inventory
+        val resultIsRepairable = result.itemMeta is Repairable
         // Create Variables to detect conditions
         val firstHasOdysseyEnchantments = first.hasOdysseyEnchants()
         val secondHasOdysseyEnchantments = second?.hasOdysseyEnchants() == true
@@ -80,15 +82,27 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
                 }
                 // Reset to prevent cringe
                 anvil.repairCost = bookPoints
+                resultMeta.repairCost = result.enchantments.size + 1
             }
             result.itemMeta = resultMeta
         }
         // CHANGE combine cost when combining enchantments
-        else if (result.itemMeta is Repairable && second?.hasItemMeta() == true) {
+        else if (resultIsRepairable && second?.hasItemMeta() == true) {
             if (second.itemMeta.hasEnchants()) {
-                val resultPoints = result.getUsedEnchantabilityPoints()
-                anvil.repairCost = resultPoints
+                val itemPoints = first.getUsedEnchantabilityPoints()
+                val newPoints = result.getUsedEnchantabilityPoints()
+                val pointDiff = minOf(1, newPoints - itemPoints)
+                val cost = pointDiff + result.enchantments.size
+                anvil.repairCost = cost
+                val resultMeta = result.itemMeta as Repairable
+                resultMeta.repairCost = cost
             }
+        }
+        else if (resultIsRepairable) {
+            val cost = result.enchantments.size + 1
+            anvil.repairCost = cost
+            val resultMeta = result.itemMeta as Repairable
+            resultMeta.repairCost = cost
         }
 
         // Check if over points max
@@ -134,7 +148,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
                 "tome_of_discharge" -> tomeOfDischargeOnItem(equipment, event.viewers)
                 "tome_of_expenditure" -> tomeOfExpenditureOnItem(equipment, event.viewers)
                 "tome_of_harmony" -> tomeOfHarmonyOnItem(equipment)
-                "tome_of_polymerization" -> tomeOfPolymerizationOnItem(template, equipment, event.viewers)
+                //"tome_of_polymerization" -> tomeOfPolymerizationOnItem(template, equipment, event.viewers)
                 "tome_of_promotion" -> tomeOfPromotionOnItem(equipment, event.viewers)
                 "tome_of_imitation" -> tomeOfImitationOnItem(equipment, event.viewers)
                 "tome_of_replication" -> tomeOfReplicationOnItem(equipment, event.viewers)
@@ -183,8 +197,6 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
 
     }
 
-
-
     /*-----------------------------------------------------------------------------------------------*/
     @EventHandler
     fun enchantPrepareHandler(event: PrepareItemEnchantEvent) {
@@ -213,15 +225,34 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         if (event.inventory !is GrindstoneInventory) return
         val inventory: GrindstoneInventory = event.inventory as GrindstoneInventory
         if (inventory.result == null) return
-        if (inventory.upperItem?.enchantments == null && inventory.lowerItem?.enchantments == null) return
-        val item = inventory.upperItem ?: inventory.lowerItem!!
-        val result = inventory.result!!
-        val resultEnchantKeys = result.enchantments.keys
-        val removedEnchantments = item.enchantments.filter { it.key !in resultEnchantKeys }
-        var totalPoints = 0
-        removedEnchantments.forEach { totalPoints += it.key.enchantabilityCost(it.value) }
-        // Sentries passed
-        event.result = result.clone().also { it.updateEnchantabilityPointsLore() }
+        val item = inventory.upperItem ?: inventory.lowerItem ?: return
+        val result = inventory.result ?: return
+        // Change for book
+        if (result.type == Material.BOOK) {
+            val itemName = item.getItemIdentifier()
+            if (itemName == "arcane_book") {
+                val clone = result.clone()
+                val newMeta = clone.itemMeta
+                val newName = Component.text("Arcane Book").decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                newMeta.displayName(null)
+                newMeta.displayName(newName)
+                newMeta.lore(null)
+                newMeta.removeItemFlags(ItemFlag.HIDE_STORED_ENCHANTS)
+                clone.itemMeta = newMeta
+                event.result = clone
+                println("CLONE")
+            }
+        }
+        else {
+            /*
+            val resultEnchantKeys = result.enchantments.keys
+            val removedEnchantments = item.enchantments.filter { it.key !in resultEnchantKeys }
+            var totalPoints = 0
+            removedEnchantments.forEach { totalPoints += it.key.enchantabilityCost(it.value) }
+             */
+            // Sentries passed
+            event.result = result.clone().also { it.updateEnchantabilityPointsLore() }
+        }
     }
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -255,19 +286,20 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         val randomTome: OdysseyItem
         val enchanterLevel = maxOf(1, event.enchanter.level)
         val tierCost: Int
+        val tableCost = event.expLevelCost
         // Scale of Tomes
-        when ((0..40).random() + minOf(enchanterLevel, 100)) {
-            in -30..15 -> {
+        when ((0..tableCost).random() + minOf(enchanterLevel, 100)) {
+            in 0..20 -> {
                 tierCost = 1
                 randomTome = listOf(Miscellaneous.TOME_OF_DISCHARGE, Miscellaneous.TOME_OF_PROMOTION).random()
             }
-            in 15..30 -> {
+            in 26..50 -> {
                 tierCost = 2
                 randomTome = listOf(Miscellaneous.TOME_OF_IMITATION, Miscellaneous.TOME_OF_EXPENDITURE).random()
             }
-            in 31..60 -> {
+            in 51..80 -> {
                 tierCost = 3
-                randomTome = listOf(Miscellaneous.TOME_OF_AVARICE, Miscellaneous.TOME_OF_POLYMERIZATION).random()
+                randomTome = listOf(Miscellaneous.TOME_OF_AVARICE, Miscellaneous.TOME_OF_HARMONY).random()
             }
             else -> {
                 tierCost = 0

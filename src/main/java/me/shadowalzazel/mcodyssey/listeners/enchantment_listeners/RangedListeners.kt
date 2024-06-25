@@ -40,9 +40,9 @@ object RangedListeners : Listener, EnchantmentsManager {
     // Main function for enchantments relating to shooting bows
     @EventHandler
     fun mainBowShotHandler(event: EntityShootBowEvent) {
-        if (event.bow?.hasItemMeta() == false) { return }
+        if (event.bow?.hasItemMeta() == false) return
         val projectile = event.projectile
-        if (projectile.scoreboardTags.contains(EntityTags.REPLICATED_ARROW)) { return }
+        if (projectile.scoreboardTags.contains(EntityTags.REPLICATED_ARROW)) return
         val shooter = event.entity
         val bow = event.bow ?: return
         // Priority is in the order !!

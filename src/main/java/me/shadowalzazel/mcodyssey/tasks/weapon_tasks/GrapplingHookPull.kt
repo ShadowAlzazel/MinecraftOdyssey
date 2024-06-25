@@ -11,7 +11,7 @@ class GrapplingHookPull(
     private val hooker: LivingEntity,
     private val hook: Projectile,
     private val grapplingHook: ItemStack,
-    private val power: Double = 0.4,
+    private val power: Double = 0.2,
     private val maxClose: Double = 2.0
 ) : BukkitRunnable() {
 

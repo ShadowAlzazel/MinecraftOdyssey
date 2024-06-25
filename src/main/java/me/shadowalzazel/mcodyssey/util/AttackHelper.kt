@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.util
 
+import me.shadowalzazel.mcodyssey.constants.EntityTags
 import org.bukkit.Location
 import org.bukkit.Particle
 import org.bukkit.Sound
@@ -12,7 +13,34 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
 import kotlin.math.pow
 
+
 interface AttackHelper {
+
+    @Suppress("UnstableApiUsage")
+    fun doWeaponAOESweep(attacker: LivingEntity, victim: LivingEntity, damage: Double, angle: Double, radius: Double? = null) {
+        val sweepRadius = radius ?: attacker.location.distance(victim.location)
+        val targets = attacker.getNearbyEntities(sweepRadius, sweepRadius, sweepRadius).filter {
+            it != victim && it != attacker && it is LivingEntity
+        }
+        val originDirection = victim.location.subtract(attacker.location).toVector()
+        victim.scoreboardTags.add(EntityTags.HIT_BY_AOE_SWEEP)
+        for (entity in targets) {
+            if (entity.scoreboardTags.contains(EntityTags.HIT_BY_AOE_SWEEP)) continue
+            if (entity !is LivingEntity) continue
+            // Get attack angle
+            val directionVector = entity.location.subtract(attacker.location).toVector()
+            val attackAngle = originDirection.angle(directionVector)
+            // Make sure to follow angle
+            if (attackAngle > angle) continue
+            entity.addScoreboardTag(EntityTags.HIT_BY_AOE_SWEEP)
+            // Source
+            val damageSource = createPlayerDamageSource(attacker)
+            entity.damage(damage, damageSource)
+            entity.world.spawnParticle(Particle.SWEEP_ATTACK, entity.location, 1, 0.0, 0.0, 0.0)
+        }
+        attacker.world.spawnParticle(Particle.RAID_OMEN, attacker.location, 8, 0.1, 0.1, 0.1)
+        attacker.world.playSound(victim.location, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1.75F, 0.5F)
+    }
 
     fun getWeaponAttack(item: ItemStack): Double {
         var damage = 0.0
@@ -29,7 +57,7 @@ interface AttackHelper {
     }
 
     @Suppress("UnstableApiUsage")
-    fun createPlayerDamageSource(player: Entity, projectile: Entity? = null): DamageSource {
+    fun createPlayerDamageSource(player: Entity, projectile: Entity? = null, type: DamageType = DamageType.PLAYER_ATTACK): DamageSource {
         val sourceBuilder = DamageSource.builder(DamageType.PLAYER_ATTACK)
         sourceBuilder.withCausingEntity(player)
         if (projectile != null) {

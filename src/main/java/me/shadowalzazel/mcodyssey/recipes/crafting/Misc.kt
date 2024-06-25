@@ -33,6 +33,8 @@ class Misc {
             silverIngotRecipe(),
 
             soulSteelUpgradeTemplateRecipe(),
+            titaniumUpgradeTemplateRecipe(),
+            iridiumUpgradeTemplateRecipe(),
             imperialArmorTrimRecipe(),
 
             rocketCreator.blazingRocketsRecipe(1, "one"),
@@ -203,6 +205,30 @@ class Misc {
             setIngredient('C', RecipeChoice.ExactChoice(soulCrystal))
             setIngredient('E', RecipeChoice.ExactChoice(ectoplasm))
             setIngredient('S', Material.SOUL_SAND)
+            category = CraftingBookCategory.MISC
+        }
+        return recipe
+    }
+
+    private fun titaniumUpgradeTemplateRecipe(): ShapedRecipe {
+        val result = Equipment.TITANIUM_UPGRADE_TEMPLATE.newItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "titanium_upgrade_template"), result).apply {
+            shape("SES", "SCS", "SSS")
+            setIngredient('C', Material.IRON_INGOT)
+            setIngredient('E', Material.FLINT)
+            setIngredient('S', Material.TUFF)
+            category = CraftingBookCategory.MISC
+        }
+        return recipe
+    }
+
+    private fun iridiumUpgradeTemplateRecipe(): ShapedRecipe {
+        val result = Equipment.IRIDIUM_UPGRADE_TEMPLATE.newItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "iridium_upgrade_template"), result).apply {
+            shape("SES", "SCS", "SSS")
+            setIngredient('C', Material.BREEZE_ROD)
+            setIngredient('E', Material.AMETHYST_SHARD)
+            setIngredient('S', Material.OBSIDIAN)
             category = CraftingBookCategory.MISC
         }
         return recipe

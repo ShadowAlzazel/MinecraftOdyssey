@@ -13,7 +13,6 @@ import org.bukkit.World
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Stray
-import org.bukkit.entity.Zombie
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 

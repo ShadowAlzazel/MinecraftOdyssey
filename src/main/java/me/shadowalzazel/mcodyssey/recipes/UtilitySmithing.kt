@@ -13,7 +13,7 @@ class UtilitySmithing { // USE THIS CLASS TO CREATE RECIPE WHICH ARE AVAILABLE T
         return listOf(
             bookCombining(),
             bookSmithing(),
-            soulSteelUpgrading(),
+            toolUpgrading(),
             engraving(),
             runesherdAugmenting(),
             customTrimming()
@@ -63,14 +63,15 @@ class UtilitySmithing { // USE THIS CLASS TO CREATE RECIPE WHICH ARE AVAILABLE T
 
     /*-----------------------------------------------------------------------------------------------*/
     // Soul Steel Template + Item + Soul Steel Ingot
-    private fun soulSteelUpgrading(): SmithingTransformRecipe {
-        val result = Ingredients.SOUL_STEEL_INGOT.newItemStack(1)
-        val template = RecipeChoice.ExactChoice(Equipment.SOUL_STEEL_UPGRADE_TEMPLATE.newItemStack(1))
-        val ingot = RecipeChoice.ExactChoice(Ingredients.SOUL_STEEL_INGOT.newItemStack(1))
-
+    private fun toolUpgrading(): SmithingTransformRecipe {
+        //val result = Ingredients.SOUL_STEEL_INGOT.newItemStack(1)
+        //val template = RecipeChoice.ExactChoice(Equipment.SOUL_STEEL_UPGRADE_TEMPLATE.newItemStack(1))
+        //val ingot = RecipeChoice.ExactChoice(Ingredients.SOUL_STEEL_INGOT.newItemStack(1))
+        val template = RecipeChoice.MaterialChoice(Material.PAPER)
+        val addition = RecipeChoice.MaterialChoice(Material.IRON_INGOT)
         return SmithingTransformRecipe(
-            NamespacedKey(Odyssey.instance, "soul_steel_upgrading"),
-            result,
+            NamespacedKey(Odyssey.instance, "tool_upgrading"),
+            ItemStack(Material.IRON_INGOT),
             template,
             RecipeChoice.MaterialChoice(
                 Material.IRON_SWORD,
@@ -82,8 +83,17 @@ class UtilitySmithing { // USE THIS CLASS TO CREATE RECIPE WHICH ARE AVAILABLE T
                 Material.IRON_LEGGINGS,
                 Material.IRON_CHESTPLATE,
                 Material.IRON_HELMET,
+                Material.DIAMOND_SWORD,
+                Material.DIAMOND_AXE,
+                Material.DIAMOND_PICKAXE,
+                Material.DIAMOND_SHOVEL,
+                Material.DIAMOND_HOE,
+                Material.DIAMOND_BOOTS,
+                Material.DIAMOND_LEGGINGS,
+                Material.DIAMOND_CHESTPLATE,
+                Material.DIAMOND_HELMET,
             ),
-            ingot
+            addition
         )
     }
 

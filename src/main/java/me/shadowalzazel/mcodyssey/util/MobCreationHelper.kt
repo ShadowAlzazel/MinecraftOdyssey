@@ -29,7 +29,7 @@ import kotlin.math.pow
 
 interface MobCreationHelper: AttributeManager, EnchantabilityHandler {
 
-    fun getDifScale(entity: Entity): Double {
+    fun getScaledDifficulty(entity: Entity): Double {
         // Find the XY distance from zero
         val distanceFromZero = entity.location.clone().let {
             it.toBlockLocation()
@@ -41,11 +41,11 @@ interface MobCreationHelper: AttributeManager, EnchantabilityHandler {
         return (scaleDist * distanceFromZero) + (scaleDist * distanceFromZero).pow(2)
     }
 
-    fun createShinyMob(mob: LivingEntity) {
+    fun createShinyMob(mob: LivingEntity, enchantedArmor: Boolean) {
         if (mob is Creeper) return
         val shinyColor = SlotColors.SHINY.color
         // Difficulty
-        val difficultyMod = getDifScale(mob)
+        val difficultyMod = getScaledDifficulty(mob)
         // Weapon
         val weaponTypes = listOf(ToolType.SABER, ToolType.KATANA, ToolType.LONGSWORD, ToolType.POLEAXE, ToolType.WARHAMMER)
         val materialType = ToolMaterial.IRON
@@ -64,6 +64,10 @@ interface MobCreationHelper: AttributeManager, EnchantabilityHandler {
         val greaterEnchant: Pair<Enchantment, Int>
         // Enchant randomly and get gilded
         val weapon = mainHand.enchantWithLevels(30, false, Random())
+        // Prevent Empty Collection
+        if (weapon.enchantments.isEmpty()) {
+            return
+        }
         weapon.apply {
             val newEnchant = this.enchantments.entries.random()
             greaterEnchant = Pair(newEnchant.key, newEnchant.value + 1)
@@ -86,7 +90,7 @@ interface MobCreationHelper: AttributeManager, EnchantabilityHandler {
             isCustomNameVisible = true
             canPickupItems = true
             // Add Items
-            createTrimmedArmor(this, trim, "golden")
+            createTrimmedArmor(this, trim, "iron", enchantedArmor)
             equipment?.also {
                 it.setItemInMainHand(weapon)
                 it.itemInMainHandDropChance = 0.85F // Change to difficulty
@@ -128,7 +132,7 @@ interface MobCreationHelper: AttributeManager, EnchantabilityHandler {
             "Lethal",
             "Fatal")
 
-    fun createTrimmedArmor(entity: LivingEntity, trim: ArmorTrim, type: String, randomEnchants: Boolean = true) {
+    fun createTrimmedArmor(entity: LivingEntity, trim: ArmorTrim, type: String, randomEnchants: Boolean = false) {
         // Create armors from type
         val helmet = ItemStack(Material.IRON_HELMET)
         val chestplate = ItemStack(Material.IRON_CHESTPLATE)
@@ -139,7 +143,8 @@ interface MobCreationHelper: AttributeManager, EnchantabilityHandler {
         if (randomEnchants) {
             val randomSeed = Random()
             for (armor in armorList) {
-                armor.enchantWithLevels(30, false, randomSeed)
+                val copy = armor.enchantWithLevels(30, false, randomSeed)
+                armor.itemMeta = copy.itemMeta
             }
         }
         // Trim

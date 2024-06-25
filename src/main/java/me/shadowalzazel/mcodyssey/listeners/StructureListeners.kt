@@ -4,35 +4,33 @@ import com.destroystokyo.paper.event.player.PlayerTeleportEndGatewayEvent
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.constants.EntityTags
+import me.shadowalzazel.mcodyssey.structures.StructureManager
 import org.bukkit.HeightMap
 import org.bukkit.NamespacedKey
+import org.bukkit.World
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.util.Vector
 
-object StructureListeners : Listener {
+object StructureListeners : Listener, StructureManager {
 
     @EventHandler
     fun obeliskTeleportHandler(event: PlayerTeleportEndGatewayEvent) {
         if (event.cause != PlayerTeleportEvent.TeleportCause.END_GATEWAY) return
         val player = event.player
-        val structures = player.location.chunk.structures
-        if (structures.isEmpty()) return
-        val inside = structures.filter { player.boundingBox.overlaps(it.boundingBox) }
-        if (inside.isEmpty()) return
+        val boundedStructures = getBoundedStructures(player) ?: return
         // Get from registry
         val structureRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.STRUCTURE)
         val obelisk = structureRegistry.get(NamespacedKey(Odyssey.instance, "obelisk")) ?: return
         // Get dimension
-        val edge = player.server.getWorld(NamespacedKey(Odyssey.instance, "edge")) ?: return
+        val edge = Odyssey.instance.edge
         val overworld = Odyssey.instance.overworld
         // Check if inside
         var obeliskTp = false
-        for (struct in inside) {
+        for (struct in boundedStructures) {
             // Is Mesa
-            if (struct.structure == obelisk) {
+            if (struct == obelisk) {
                 obeliskTp = true
                 break
             }
@@ -41,21 +39,22 @@ object StructureListeners : Listener {
         val offset = Vector((-3..3).random(), 0, (-3..3).random())
         val location = player.location.clone()
         // Teleport
-        when (player.world) {
+        val newWorld: World = when (player.world) {
             edge -> {
-                location.world = overworld
+                overworld
             }
             overworld -> {
-                location.world = edge
+                edge
             }
             else -> {
-                location.world = overworld
+                overworld
             }
         }
         // Final
+        location.world = newWorld
         location.add(offset)
         //val final = location.toHighestLocation(HeightMap.WORLD_SURFACE)
-        val final = location.toHighestLocation(HeightMap.WORLD_SURFACE_WG)
+        val final = location.toHighestLocation(HeightMap.MOTION_BLOCKING).toLocation(newWorld)
         event.to = final
         //println(event.to)
         player.teleport(event.to)

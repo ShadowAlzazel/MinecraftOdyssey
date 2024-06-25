@@ -35,11 +35,13 @@ object ItemDataTags {
     const val ENGRAVED_BY: String = "odyssey.engraved_by"
 
     // Weapon Types
-    const val WEAPON_TYPE: String = "odyssey.weapon_type" // Key for string type
+    const val TOOL_TYPE: String = "odyssey.weapon_type" // Key for string type
     const val MATERIAL_TYPE: String = "odyssey.material_type"  // Key for string type
 
     // Tool Materials
     const val SOUL_STEEL_TOOL: String = "odyssey.soul_steel_tool"
+    const val TITANIUM_TOOL: String = "odyssey.soul_steel_tool"
+    const val IRIDIUM_TOOL: String = "odyssey.soul_steel_tool"
     const val NETHERITE_TOOL: String = "odyssey.netherite_tool"
 
     // Equipment Classifications

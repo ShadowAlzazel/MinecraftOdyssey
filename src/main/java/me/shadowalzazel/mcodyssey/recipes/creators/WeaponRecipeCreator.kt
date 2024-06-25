@@ -1,93 +1,24 @@
 package me.shadowalzazel.mcodyssey.recipes.creators
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.constants.ItemModels
-import me.shadowalzazel.mcodyssey.items.Ingredients
 import me.shadowalzazel.mcodyssey.items.creators.ItemCreator
 import me.shadowalzazel.mcodyssey.items.creators.ToolCreator
 import me.shadowalzazel.mcodyssey.items.utility.ToolMaterial
 import me.shadowalzazel.mcodyssey.items.utility.ToolType
+import me.shadowalzazel.mcodyssey.recipes.ChoiceManager
 import me.shadowalzazel.mcodyssey.util.DataTagManager
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.*
-import org.bukkit.inventory.RecipeChoice.ExactChoice
 import org.bukkit.inventory.RecipeChoice.MaterialChoice
 import org.bukkit.inventory.recipe.CraftingBookCategory
 
-class WeaponRecipeCreator : ItemCreator, DataTagManager {
+class WeaponRecipeCreator : ItemCreator, DataTagManager, ChoiceManager {
 
     private val toolCreator = ToolCreator()
 
-    // Exact Choices
-    private fun silverChoices(): ExactChoice {
-        val exactItem = Ingredients.SILVER_INGOT.newItemStack(1)
-        val dataItem = ItemStack(Material.IRON_INGOT).apply {
-            val meta = itemMeta
-            meta.setCustomModelData(ItemModels.SILVER_INGOT)
-            val itemName = Component.text("silver_ingot")
-            meta.itemName(itemName)
-            val name = Component.text("Silver Ingot")
-                .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false)
-            meta.displayName(name)
-            itemMeta = meta
-        }
-        return ExactChoice(exactItem, dataItem)
-    }
-
-    private fun titaniumChoices(): ExactChoice {
-        val exactItem = Ingredients.TITANIUM_INGOT.newItemStack(1)
-        val dataItem = ItemStack(Material.IRON_INGOT).apply {
-            val meta = itemMeta
-            meta.setCustomModelData(ItemModels.TITANIUM_INGOT)
-            val itemName = Component.text("titanium_ingot")
-            meta.itemName(itemName)
-            val name = Component.text("Titanium Ingot")
-                .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false)
-            meta.displayName(name)
-            itemMeta = meta
-        }
-        return ExactChoice(exactItem, dataItem)
-    }
-
-    private fun iridiumChoices(): ExactChoice {
-        val exactItem = Ingredients.IRIDIUM_INGOT.newItemStack(1)
-        val dataItem = ItemStack(Material.IRON_INGOT).apply {
-            val meta = itemMeta
-            meta.setCustomModelData(ItemModels.IRIDIUM_INGOT)
-            val itemName = Component.text("iridium_ingot")
-            meta.itemName(itemName)
-            val name = Component.text("Iridium Ingot")
-                .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false)
-            meta.displayName(name)
-            itemMeta = meta
-        }
-        return ExactChoice(exactItem, dataItem)
-    }
-
-    private fun mithrilChoices(): ExactChoice {
-        val exactItem = Ingredients.MITHRIL_INGOT.newItemStack(1)
-        val dataItem = ItemStack(Material.IRON_INGOT).apply {
-            val meta = itemMeta
-            meta.setCustomModelData(ItemModels.MITHRIL_INGOT)
-            val itemName = Component.text("mithril_ingot")
-            meta.itemName(itemName)
-            val name = Component.text("Mithril Ingot")
-                .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false)
-            meta.displayName(name)
-            itemMeta = meta
-        }
-        return ExactChoice(exactItem, dataItem)
-    }
-
-    // Const
-    private val WOOD_CHOICES: MaterialChoice = MaterialChoice(Material.ACACIA_PLANKS, Material.BIRCH_PLANKS, Material.DARK_OAK_PLANKS,
-        Material.OAK_PLANKS, Material.SPRUCE_PLANKS, Material.JUNGLE_PLANKS)
-
     // Patterns
-    private val toolPatterns = mapOf(
+    private val weaponPatterns = mapOf(
         // Other Overrides
         "shuriken" to listOf(
             " X ",
@@ -163,66 +94,8 @@ class WeaponRecipeCreator : ItemCreator, DataTagManager {
             "|  ")
     )
 
-    // Keys
-    private val materialKeys = mapOf<String, Map<Char, RecipeChoice>>(
-        // Minecraft
-        "wooden" to mapOf(
-            'X' to WOOD_CHOICES,
-            '|' to MaterialChoice(Material.STICK)
-        ),
-        "stone" to mapOf(
-            'X' to MaterialChoice(Material.COBBLESTONE),
-            '|' to MaterialChoice(Material.STICK)
-        ),
-        "golden" to mapOf(
-            'X' to MaterialChoice(Material.GOLD_INGOT),
-            '|' to MaterialChoice(Material.STICK)
-        ),
-        "iron" to mapOf(
-            'X' to MaterialChoice(Material.IRON_INGOT),
-            '|' to MaterialChoice(Material.STICK)
-        ),
-        "diamond" to mapOf(
-            'X' to MaterialChoice(Material.DIAMOND),
-            '|' to MaterialChoice(Material.STICK)
-        ),
-        "netherite" to mapOf(
-            'X' to MaterialChoice(Material.NETHERITE_INGOT),
-            '|' to MaterialChoice(Material.STICK)
-        ),
-        // Odyssey
-        "copper" to mapOf(
-            'X' to MaterialChoice(Material.COPPER_INGOT),
-            '|' to MaterialChoice(Material.STICK)
-        ),
-        "silver" to mapOf(
-            'X' to silverChoices(),
-            '|' to MaterialChoice(Material.STICK)
-        ),
-        "soul_steel" to mapOf(
-            'X' to ExactChoice(Ingredients.SOUL_STEEL_INGOT.newItemStack(1)),
-            '|' to MaterialChoice(Material.STICK)
-        ),
-        "titanium" to mapOf(
-            'X' to titaniumChoices(),
-            '|' to MaterialChoice(Material.STICK)
-        ),
-        "anodized_titanium" to mapOf(
-            'X' to ExactChoice(Ingredients.ANODIZED_TITANIUM_INGOT.newItemStack(1)),
-            '|' to MaterialChoice(Material.STICK)
-        ),
-        "iridium" to mapOf(
-            'X' to iridiumChoices(),
-            '|' to MaterialChoice(Material.STICK)
-        ),
-        "mithril" to mapOf(
-            'X' to mithrilChoices(),
-            '|' to MaterialChoice(Material.STICK)
-        ),
-    )
-
     // Complementary Keys
-    private val toolKeys = mapOf(
+    private val weaponSpecialMaterialKeys = mapOf(
         "shuriken" to mapOf(
             'C' to MaterialChoice(Material.IRON_NUGGET)
         ),
@@ -253,15 +126,15 @@ class WeaponRecipeCreator : ItemCreator, DataTagManager {
         val amount = if (type == ToolType.SHURIKEN) { 16 } else { 1 } // MOVE TO DICT LATER
         val result = toolCreator.createToolStack(material, type, amount)
         // Create name variables
-        val itemName = result.getOdysseyTag()!!
+        val itemName = result.getItemIdentifier()!!
         val resultKey = NamespacedKey(Odyssey.instance, itemName)
         // Get Pattern/Shape
-        val pattern = toolPatterns[type.itemName]!!
+        val pattern = weaponPatterns[type.itemName]!!
         // Create Recipe keys and ingredients
         val ingredientMap = materialKeys[material.itemName]!!.toMutableMap()
-        val toolMap = toolKeys[type.itemName]
-        if (toolMap != null) {
-            ingredientMap.putAll(toolMap)
+        val extraIngredientMap = weaponSpecialMaterialKeys[type.itemName]
+        if (extraIngredientMap != null) {
+            ingredientMap.putAll(extraIngredientMap)
         }
         // Assemble recipe
         val recipe = ShapedRecipe(resultKey, result).apply {
@@ -281,17 +154,17 @@ class WeaponRecipeCreator : ItemCreator, DataTagManager {
     fun generateWeaponRecipes(): List<Recipe> {
         val recipes = mutableListOf<Recipe>()
         // Get entries from enums
-        val toolTypeEntries = ToolType.entries.toList()
+        val baseTools = listOf(ToolType.SWORD, ToolType.PICKAXE, ToolType.AXE, ToolType.SHOVEL, ToolType.HOE)
+        val weaponTypeEntries = ToolType.entries.toMutableList()
+        weaponTypeEntries.removeAll(baseTools)
         val toolMaterialEntries = ToolMaterial.entries.toList()
         // Iterator For model type weapons
         for (mat in toolMaterialEntries) {
-            for (type in toolTypeEntries) {
+            for (type in weaponTypeEntries) {
                 recipes.add(createWeaponRecipe(mat, type))
             }
         }
-        //
         return recipes
     }
-
 
 }

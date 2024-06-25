@@ -18,6 +18,8 @@ class Weapons {
         )
     }
 
+
+
     private fun compactCrossbowRecipe(): ShapedRecipe {
         val result = Equipment.COMPACT_CROSSBOW.newItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "compact_crossbow"), result).apply {
@@ -34,10 +36,10 @@ class Weapons {
     private fun autoCrossbowRecipe(): ShapedRecipe {
         val result = Equipment.AUTO_CROSSBOW.newItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "auto_crossbow"), result).apply {
-            shape("NBN", "STS", "CBC")
+            shape("NHN", "SBS", "CBC")
             setIngredient('N', Material.NETHERITE_INGOT)
             setIngredient('B', Material.BLAZE_ROD)
-            setIngredient('T', Material.TRIPWIRE_HOOK)
+            setIngredient('H', Material.HEAVY_CORE)
             setIngredient('S', Material.STRING)
             setIngredient('C', Material.COPPER_INGOT)
             category = CraftingBookCategory.EQUIPMENT

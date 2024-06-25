@@ -157,7 +157,7 @@ object DragonListeners : Listener {
         battle.enderDragon!!.phase = EnderDragon.Phase.CHARGE_PLAYER
 
         val eye = (event.entity.world.spawnEntity(event.entity.location.clone().add(0.0, 2.0, 0.0), EntityType.ITEM_DISPLAY) as ItemDisplay).apply {
-            itemStack = ItemStack(Material.ENDER_EYE, 1)
+            setItemStack(ItemStack(Material.ENDER_EYE, 1))
             glowColorOverride = Color.FUCHSIA
             isGlowing = true
             viewRange = 100F
