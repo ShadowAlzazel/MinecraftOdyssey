@@ -247,6 +247,8 @@ interface EnchantmentExtender {
                 "- Deal bonus damage to enemies that are on fire, or susceptible to water.")
             "echo" -> listOf(
                 "- Attacking has a ${20 * level}%=[20 x level] chance to attack again. (Can not re-apply).")
+            "expedite" -> listOf(
+                "- Increase base mining speed by ${level * 10}%=[level x 10].")
             "exploding" -> listOf(
                 "- Killing an enemy creates an explosion that damages enemies",
                 "for a maximum of ${(level * 1.0).pow(2)}=[level ^ 2] at the center.")
@@ -273,9 +275,13 @@ interface EnchantmentExtender {
                 "If the attack is a crit, it is doubled, but the glowing is removed.")
             "invocative" -> listOf(
                 "- Attacking a target damages the previous attacked target for ${level * 10}%=[level x 10] of the damage.")
+            "metabolic" -> listOf(
+                "- Have a ${level * 10}%=[level x 10] chance to regain food levels when breaking a block.")
             "pestilence" -> listOf(
                 "- Killing an enemy that is poisoned, spreads the effect at ${level * 20}%=[level x 20] efficiency.",
                 "- An enemy that is already poisoned takes damage based on ${level * 10}%=[level x 10] of the remaining time.")
+            "pluck_pocket" -> listOf(
+                "- Items that are mined are directly added to the players inventory.")
             "rupture" -> listOf(
                 "- Every third attack against a target deals ${level}=[level] true damage.")
             "vengeful" -> listOf(
@@ -293,7 +299,7 @@ interface EnchantmentExtender {
                 "by ${0.2 * level}=[0.2 x level]%. These projectiles also have their",
                 "speed increased by ${0.1 * level}%=[0.1 x level]")
             "ambush" -> listOf(
-                "- The first projectile to hit an enemy deals${level * 2}=[level x 2] more damage.")
+                "- The first projectile to hit an enemy deals ${level * 2}=[level x 2] more damage.")
             "ballistics" -> listOf(
                 "- Crossbow projectiles deal $level=[level] more damage.")
             "bola_shot" -> listOf(
@@ -359,7 +365,7 @@ interface EnchantmentExtender {
                 "- Regenerates $level=[level] durability per second",
                 "at night when the moon is visible.")
             "chitin" -> listOf(
-                "- Regenerate durability alongside satiation regeneration.")
+                "- Regenerate durability when the holder regenerates.")
             "o_shiny" -> listOf(
                 "- The item glistens when hold or worn.")
             "encumbering_curse" -> listOf(

@@ -1,7 +1,9 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags
+import me.shadowalzazel.mcodyssey.items.utility.ToolMaterial
 import me.shadowalzazel.mcodyssey.mobs.neutral.DubiousDealer
 import me.shadowalzazel.mcodyssey.structures.StructureManager
 import me.shadowalzazel.mcodyssey.util.MobCreationHelper
@@ -32,17 +34,28 @@ object SpawningListeners : Listener, MobCreationHelper, StructureManager {
                 if (event.entity !is Enemy) return
                 // Surface Spawns for now -> fix for mob farms
                 if (event.entity is Guardian) return
-                structureTagHandler(event.entity)
-                if (event.entity.location.block.lightFromSky < 1) return
+                val mob =   event.entity
+                structureTagHandler(mob)
+                if (mob.location.block.lightFromSky < 1) return
+                val inEdge = mob.location.world == Odyssey.instance.edge
                 // Roll Elite - Base 2%
-                val mobEx = if (event.entity is Zombie || event.entity is Skeleton) 25 else 0
-                val extraDif = getScaledDifficulty(event.entity) * 10
-                val rollElite = (20 + extraDif + mobEx > (0..1000).random())
+                val elitePreferenceBonus = if (mob is Zombie || mob is Skeleton) 25 else 0
+                val extraDif = getScaledDifficulty(mob) * 10
+                var eliteSpawnBonus = 20 + extraDif + elitePreferenceBonus
+                if (inEdge) {
+                    eliteSpawnBonus += 20
+                }
+                val rolledElite = (eliteSpawnBonus > (0..1000).random())
                 // 2% For Elite Mob
                 // 0.1% For a pack of shiny
-                if (rollElite) {
-                    val inEdge = event.entity.location.world == Odyssey.instance.edge
-                    createShinyMob(event.entity, inEdge)
+                if (rolledElite) {
+                    val materialInEdge = if (inEdge) ToolMaterial.DIAMOND else ToolMaterial.IRON
+                    createShinyMob(mob, inEdge, materialInEdge)
+                }
+                else if (inEdge) {
+                    mob.addAttackAttribute(2.0 + (0..2).random(), AttributeTags.MOB_EDGE_ATTACK_BONUS)
+                    mob.addAttackAttribute(15.0, AttributeTags.MOB_EDGE_HEALTH_BONUS)
+                    mob.heal(15.0)
                 }
             }
         }

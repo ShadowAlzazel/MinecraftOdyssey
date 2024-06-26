@@ -346,9 +346,6 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
             val helmet = defender.equipment?.helmet!!
             for (enchant in helmet.enchantments) {
                 when (enchant.key.getNameId()) {
-                    "chitin" -> {
-                        chitinEnchantment(defender, helmet)
-                    }
                     "reckless" -> {
                         event.amount += recklessRegenEnchantment(enchant.value)
                     }
@@ -359,9 +356,6 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
             val chestplate = defender.equipment?.chestplate!!
             for (enchant in chestplate.enchantments) {
                 when (enchant.key.getNameId()) {
-                    "chitin" -> {
-                        chitinEnchantment(defender, chestplate)
-                    }
                     "reckless" -> {
                         event.amount += recklessRegenEnchantment(enchant.value)
                     }
@@ -372,9 +366,6 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
             val leggings = defender.equipment?.leggings!!
             for (enchant in leggings.enchantments) {
                 when (enchant.key.getNameId()) {
-                    "chitin" -> {
-                        chitinEnchantment(defender, leggings)
-                    }
                     "reckless" -> {
                         event.amount += recklessRegenEnchantment(enchant.value)
                     }
@@ -385,9 +376,6 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
             val boots = defender.equipment?.boots!!
             for (enchant in boots.enchantments) {
                 when (enchant.key.getNameId()) {
-                    "chitin" -> {
-                        chitinEnchantment(defender, boots)
-                    }
                     "reckless" -> {
                         event.amount += recklessRegenEnchantment(enchant.value)
                     }
@@ -619,18 +607,7 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
 
         player.setCooldown(potion.type, 20 * 6)
     }
-    private fun chitinEnchantment(
-        defender: LivingEntity,
-        armor: ItemStack
-    ) {
-        if (defender.health <= 0.0) return
-        val armorMeta = armor.itemMeta
-        if (armorMeta !is Repairable) return
-        if (!armorMeta.hasDamage()) return
-        armorMeta.damage -= 1
-        armor.itemMeta = armorMeta
-        return
-    }
+
     private fun cowardiceEnchantment(
         attacker: LivingEntity,
         defender: LivingEntity,

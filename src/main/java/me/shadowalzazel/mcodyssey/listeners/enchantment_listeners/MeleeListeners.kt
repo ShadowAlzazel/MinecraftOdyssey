@@ -18,6 +18,8 @@ import org.bukkit.damage.DamageType
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.block.BlockBreakEvent
+import org.bukkit.event.block.BlockDropItemEvent
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityDeathEvent
@@ -169,6 +171,67 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
             }
         }
     }
+
+    @EventHandler
+    fun mainBLockDropHandler(event: BlockDropItemEvent) {
+        if (event.items.isEmpty()) return
+        val player = event.player
+        if (!player.inventory.itemInMainHand.hasItemMeta()) return
+        if (!player.inventory.itemInMainHand.itemMeta.hasEnchants()) return
+        val hand = player.inventory.itemInMainHand
+        // Loop
+        for (enchant in hand.enchantments) {
+            when (enchant.key.getNameId()) {
+                "pluck_pocket" -> {
+                    pluckPocketEnchantment(event)
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    fun mainBlockBreakHandler(event: BlockBreakEvent) {
+        if (!event.isDropItems) return
+        val player = event.player
+        if (!player.inventory.itemInMainHand.hasItemMeta()) return
+        if (!player.inventory.itemInMainHand.itemMeta.hasEnchants()) return
+        val hand = player.inventory.itemInMainHand
+        // Loop
+        for (enchant in hand.enchantments) {
+            when (enchant.key.getNameId()) {
+                "metabolic" -> {
+                    metabolicEnchantment(event, enchant.value)
+                }
+            }
+        }
+
+    }
+
+    private fun metabolicEnchantment(event: BlockBreakEvent, level: Int) {
+        if (level < (0..9).random()) return
+
+        val player = event.player
+        if (player.foodLevel < 20) {
+            player.foodLevel = minOf(player.foodLevel + (0..1).random(), 20)
+        }
+        else {
+            player.saturation = minOf(player.saturation + 0.5F, 20F)
+        }
+    }
+
+    private fun pluckPocketEnchantment(event: BlockDropItemEvent) {
+        val items = event.items
+        val player = event.player
+        for (drop in items) {
+            val overflow = player.inventory.addItem(drop.itemStack.clone())
+            // Empty -> Success
+            if (overflow.isEmpty()) {
+                drop.remove()
+            }
+        }
+    }
+
+
     /*-----------------------------------------------------------------------------------------------*/
     private fun asphyxiateEnchantment(
         victim: LivingEntity,
