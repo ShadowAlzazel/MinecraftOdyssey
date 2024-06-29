@@ -126,7 +126,7 @@ interface EnchantmentExtender {
             "power" -> listOf(
                 "- Increase arrow damage by ${25 + level * 25}%=[25 + (level x 25)].")
             // Odyssey - Armor
-            "analyze" -> listOf(
+            "analysis" -> listOf(
                 "- Increase experience gained by ${level * 10}%=[level x 10].")
             "antibonk" -> listOf(
                 "- Reduce critical hit damage by ${2.5 * level}=[2.5 x level].")
