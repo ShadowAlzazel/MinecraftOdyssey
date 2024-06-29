@@ -4,11 +4,14 @@ import io.papermc.paper.world.MoonPhase
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.enchantments.api.EnchantmentsManager
 import me.shadowalzazel.mcodyssey.listeners.utility.MoonwardPhase
+import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityRegainHealthEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerItemDamageEvent
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.Damageable
 import java.util.*
 
 object MiscListeners : Listener, EnchantmentsManager {
@@ -32,6 +35,45 @@ object MiscListeners : Listener, EnchantmentsManager {
         }
 
     }
+
+    @EventHandler
+    private fun healthRegenHandler(event: EntityRegainHealthEvent) {
+        if (event.entity !is LivingEntity) return
+        val entity = event.entity as LivingEntity
+        val equipment = entity.equipment ?: return
+
+        with(equipment) {
+            if (itemInMainHand.hasEnchantment("chitin")) {
+                chitinEnchantment(itemInMainHand, event.amount)
+            }
+            if (itemInOffHand.hasEnchantment("chitin")) {
+                chitinEnchantment(itemInOffHand, event.amount)
+            }
+            if (helmet != null && helmet.hasEnchantment("chitin")) {
+                chitinEnchantment(helmet, event.amount)
+            }
+            if (chestplate != null && chestplate.hasEnchantment("chitin")) {
+                chitinEnchantment(chestplate, event.amount)
+            }
+            if (leggings != null && leggings.hasEnchantment("chitin")) {
+                chitinEnchantment(leggings, event.amount)
+            }
+            if (boots != null && boots.hasEnchantment("chitin")) {
+                chitinEnchantment(boots, event.amount)
+            }
+        }
+
+    }
+
+    private fun chitinEnchantment(item: ItemStack, amount: Double) {
+        val meta = item.itemMeta
+        if (meta !is Damageable) return
+        if (!meta.hasDamage()) return
+        meta.damage = maxOf(meta.damage - (2 * amount).toInt(), 0)
+        item.itemMeta = meta
+        return
+    }
+
 
     @EventHandler
     fun playerDeathHandler(event: PlayerDeathEvent) {

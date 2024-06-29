@@ -59,18 +59,8 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         val anvil = event.inventory
         val resultIsRepairable = result.itemMeta is Repairable
         // Create Variables to detect conditions
-        val firstHasOdysseyEnchantments = first.hasOdysseyEnchants()
-        val secondHasOdysseyEnchantments = second?.hasOdysseyEnchants() == true
-        val firstIsBook = first.type == Material.ENCHANTED_BOOK
-        val firstBookIsOdyssey = firstHasOdysseyEnchantments && firstIsBook
-        val secondIsBook = second?.type == Material.ENCHANTED_BOOK
-        val secondBookIsOdyssey = secondHasOdysseyEnchantments && secondIsBook
-        // Skip Event if just two Enchanted Books
-        if (!firstBookIsOdyssey && !secondBookIsOdyssey && (firstIsBook && secondIsBook)) {
-            return
-        }
         // CHANGE Anvil cost from being cringe mechanic
-        else if (secondIsBook && second!!.itemMeta is EnchantmentStorageMeta && result.itemMeta is Repairable) {
+        if (second != null && second.itemMeta is EnchantmentStorageMeta && result.itemMeta is Repairable) {
             val booKMeta = second.itemMeta as EnchantmentStorageMeta
             val resultMeta = result.itemMeta as Repairable
             val storedEnchants = booKMeta.storedEnchants
@@ -98,13 +88,12 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
                 resultMeta.repairCost = cost
             }
         }
-        else if (resultIsRepairable) {
+        else if (resultIsRepairable && second != null) {
             val cost = result.enchantments.size + 1
             anvil.repairCost = cost
             val resultMeta = result.itemMeta as Repairable
             resultMeta.repairCost = cost
         }
-
         // Check if over points max
         val usedPoints = result.getUsedEnchantabilityPoints()
         val maxPoints = result.getMaxEnchantabilityPoints()
@@ -334,7 +323,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         // TODO: ADD SAFETY to not go over point limit
         // Get Hint
         val hint = event.enchantmentHint
-        item.updateEnchantabilityPointsLore(newEnchants)
+        item.updateEnchantabilityPointsLore(newEnchants, toggleToolTip = true)
         item.addItemFlags(ItemFlag.HIDE_ENCHANTS)
         event.item = item
         event.inventory
