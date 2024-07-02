@@ -136,7 +136,9 @@ internal interface RunesherdManager : AttributeManager, DataTagManager {
         val runeAttribute = findRunesherdAttribute(runesherdName) ?: return null
         val runesherdAttributeModifiers = runesherd.itemMeta.attributeModifiers?.get(runeAttribute) ?: return null
         val runesherdModifier = runesherdAttributeModifiers.find { it.name == runeKey } ?: return null
-        val attributeName = getRuneAttributeName(runeAttribute)
+        val runeAttributeName = getRuneAttributeName(runeAttribute)
+        val genericName = getMaterialRuneName(equipment.type) // Prohibits MULTI RUNEWARES!!
+        val fullAttributeName = "${runeAttributeName}.${genericName}"
         // Can not stack runesherd keys
         if (equipment.itemMeta.attributeModifiers != null && !itemIsRuneware) {
             val itemAttributes = equipment.itemMeta.attributeModifiers!![runeAttribute]
@@ -151,7 +153,7 @@ internal interface RunesherdManager : AttributeManager, DataTagManager {
             if (runeCount >= 3) return null // CAN ONLY ADD 3
             // Find and remove attribute
             val equipmentModifiers = equipment.itemMeta.attributeModifiers?.get(runeAttribute)
-            val matchingModifier = equipmentModifiers?.find { it.name == attributeName }
+            val matchingModifier = equipmentModifiers?.find { it.name == fullAttributeName }
             if (matchingModifier != null) {
                 // If found remove but add amount to current sherd value then Add in when
                 previousValue += matchingModifier.amount
@@ -172,21 +174,20 @@ internal interface RunesherdManager : AttributeManager, DataTagManager {
         if (equipment.itemMeta.attributeModifiers == null || !equipment.itemMeta.hasAttributeModifiers()) {
             // Check if armor
             if (itemIsArmor) {
-
                 val baseValues = getBaseDataArmor(equipment.type) // Pair(armor, toughness)
-                equipment.addArmorAttribute(baseValues.first, "generic.armor", mainGroup)
+                equipment.addArmorAttribute(baseValues.first, "generic.armor.$genericName", mainGroup)
                 // Add toughness if can
                 if (baseValues.second > 0.0) {
-                    equipment.addArmorToughnessAttribute(baseValues.second, "generic.armor_toughness", mainGroup)
+                    equipment.addArmorToughnessAttribute(baseValues.second, "generic.armor_toughness.$genericName", mainGroup)
                 }
                 // CHeck if netherite to also add knockback resistance
                 if (baseValues.second >= 3.0) { // apparently 0.1 is 1
-                    equipment.addKnockbackResistanceAttribute(0.1, "generic.knockback_resistance",  mainGroup)
+                    equipment.addKnockbackResistanceAttribute(0.1, "generic.knockback_resistance.$genericName",  mainGroup)
                 }
             } else {
                 val baseValues = getBaseDataTools(equipment.type) // Pair(damage, speed)
                 if (baseValues.second != 0.0) {
-                    equipment.addAttackDamageAttribute(baseValues.first, "generic.attack_damage")
+                    equipment.addAttackDamageAttribute(baseValues.first, "generic.attack_damage.$genericName")
                     equipment.setNewAttackSpeedAttribute(baseValues.second)
                 }
             }
@@ -208,7 +209,7 @@ internal interface RunesherdManager : AttributeManager, DataTagManager {
         }
         // Apply
         return equipment.apply {
-            addRuneModifier(runeAttribute, totalValue, attributeName, finalGroup)
+            addRuneModifier(runeAttribute, totalValue, fullAttributeName, finalGroup)
             if (!equipment.hasRuneAugmentTag()) {
                 equipment.addRuneAugmentTag()
             }
@@ -248,6 +249,43 @@ internal interface RunesherdManager : AttributeManager, DataTagManager {
         }
         return slotGroups + listOf(EquipmentSlotGroup.ANY)
     }
+
+    private fun getMaterialRuneName(material: Material): String {
+        return when (material) {
+            Material.NETHERITE_SWORD, Material.DIAMOND_SWORD, Material.IRON_SWORD, Material.GOLDEN_SWORD, Material.STONE_SWORD, Material.WOODEN_SWORD,
+            Material.NETHERITE_AXE, Material.DIAMOND_AXE, Material.IRON_AXE, Material.GOLDEN_AXE, Material.STONE_AXE, Material.WOODEN_AXE,
+            Material.NETHERITE_PICKAXE, Material.DIAMOND_PICKAXE, Material.IRON_PICKAXE, Material.GOLDEN_PICKAXE, Material.STONE_PICKAXE, Material.WOODEN_PICKAXE,
+            Material.NETHERITE_SHOVEL, Material.DIAMOND_SHOVEL, Material.IRON_SHOVEL, Material.GOLDEN_SHOVEL, Material.STONE_SHOVEL, Material.WOODEN_SHOVEL,
+            Material.NETHERITE_HOE, Material.DIAMOND_HOE, Material.IRON_HOE, Material.GOLDEN_HOE, Material.STONE_HOE, Material.WOODEN_HOE,
+            Material.MACE, Material.TRIDENT, Material.FISHING_ROD -> {
+                "mainhand"
+            }
+            Material.NETHERITE_LEGGINGS, Material.DIAMOND_LEGGINGS, Material.IRON_LEGGINGS, Material.CHAINMAIL_LEGGINGS, Material.GOLDEN_LEGGINGS, Material.LEATHER_LEGGINGS -> {
+                "legs"
+            }
+            Material.NETHERITE_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.IRON_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, Material.GOLDEN_CHESTPLATE, Material.LEATHER_CHESTPLATE,
+            Material.ELYTRA -> {
+                "chest"
+            }
+            Material.NETHERITE_BOOTS, Material.DIAMOND_BOOTS, Material.IRON_BOOTS, Material.CHAINMAIL_BOOTS, Material.GOLDEN_BOOTS, Material.LEATHER_BOOTS -> {
+                "feet"
+            }
+            Material.NETHERITE_HELMET, Material.DIAMOND_HELMET, Material.IRON_HELMET, Material.CHAINMAIL_HELMET, Material.GOLDEN_HELMET, Material.LEATHER_HELMET,
+            Material.TURTLE_HELMET, Material.CARVED_PUMPKIN -> {
+                "head"
+            }
+            Material.BOW, Material.CROSSBOW -> {
+                "mainhand"
+            }
+            Material.BRICK, Material.CLAY_BALL -> {
+                "any"
+            }
+            else -> {
+                "offhand"
+            }
+        }
+    }
+
 
     // FOR ARMOR (Armor, Toughness)
     // FOR TOOLS (Damage, Attack speed)

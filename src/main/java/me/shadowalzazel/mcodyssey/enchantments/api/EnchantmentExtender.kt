@@ -134,8 +134,9 @@ interface EnchantmentExtender {
                 "- Receive ${level}=[level] less damage when ${2 * level}=[2 x level]",
                 "or more enemies are within a 4 block radius.")
             "black_rose" -> listOf(
-                "- Applies Wither II for ${level * 5}=[level x 5] seconds to enemies",
-                "that attacked the wearer.")
+                "- Applies Wither II for ${level * 4}=[level x 4] seconds to enemies",
+                "that attacked the wearer.",
+                "- While below ${level * 20}%=[level x 20] health, projectiles miss the wearer.")
             "blurcise" -> listOf(
                 "- Take $level=[level] reduced damage while moving.")
             "brawler" -> listOf(
@@ -181,7 +182,7 @@ interface EnchantmentExtender {
                 "- Regenerate $level=[level] more health from satiation",
                 "but take ${level * 0.5}=[level x 0.5] more damage.")
             "relentless" -> listOf(
-                "- When damaged, gain ${0.25 * (level * 0.25)}=[0.25 + (level x 0.25)] saturation")
+                "- When damaged, gain ${0.25 + (level * 0.25)}=[0.25 + (level x 0.25)] saturation")
             "root_boots" -> listOf(
                 "- Reduce knockback by ${30 * level}%=[30 x level] when standing still.")
             "sculk_sensitive" -> listOf(

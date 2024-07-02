@@ -6,6 +6,7 @@ import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.api.EnchantabilityHandler
 import me.shadowalzazel.mcodyssey.enchantments.api.SlotColors
 import me.shadowalzazel.mcodyssey.items.creators.ToolCreator
+import me.shadowalzazel.mcodyssey.items.creators.WeaponCreator
 import me.shadowalzazel.mcodyssey.items.utility.ToolMaterial
 import me.shadowalzazel.mcodyssey.items.utility.ToolType
 import me.shadowalzazel.mcodyssey.trims.TrimMaterials
@@ -41,7 +42,55 @@ interface MobCreationHelper: AttributeManager, EnchantabilityHandler {
         return (scaleDist * distanceFromZero) + (scaleDist * distanceFromZero).pow(2)
     }
 
-    fun createShinyMob(mob: LivingEntity, enchantedArmor: Boolean, materialType: ToolMaterial = ToolMaterial.SILVER) {
+    fun createArmoredMob(
+        mob: LivingEntity,
+        newWeapon: Boolean = false,
+        weaponMaterial: ToolMaterial = ToolMaterial.IRON,
+        armorMaterial: String? = null,
+        trim: ArmorTrim? = null,
+        enchantedArmor: Boolean = false)
+       {
+        // Weapon
+        val weaponList = listOf(
+            ToolType.SABER, ToolType.KATANA, ToolType.LONGSWORD, ToolType.CUTLASS, ToolType.CLAYMORE, // 1 Hand
+            ToolType.POLEAXE, ToolType.LONGAXE,
+            ToolType.WARHAMMER,  ToolType.SCYTHE, ToolType.SPEAR, ToolType.HALBERD,
+            ToolType.DAGGER, ToolType.SICKLE, ToolType.CHAKRAM) // Double
+        val weaponType = weaponList.random()
+        // Override with new weapon
+        val mainHand: ItemStack = if (newWeapon) {
+            WeaponCreator.toolCreator.createToolStack(weaponMaterial, weaponType)
+        } else {
+            mob.equipment?.itemInMainHand ?: ToolCreator().createToolStack(weaponMaterial, weaponType)
+        }
+        val weapon = mainHand.enchantWithLevels(20, false, Random())
+        mob.apply {
+            val armorType = armorMaterial ?: weaponMaterial.itemName
+            createTrimmedArmor(this, trim, armorType, enchantedArmor)
+            equipment?.also {
+                it.setItemInMainHand(weapon)
+                it.itemInMainHandDropChance = 0.15F // Change to difficulty
+                val dualWieldTypes = listOf(ToolType.DAGGER, ToolType.SICKLE, ToolType.CHAKRAM)
+                if (weaponType in dualWieldTypes) {
+                    it.setItemInOffHand(weapon.clone())
+                    it.itemInOffHandDropChance = 0.15F // Change to difficulty
+                }
+                it.helmetDropChance = 0.0F
+                it.chestplateDropChance = 0.0F
+                it.leggingsDropChance = 0.0F
+                it.bootsDropChance = 0.0F
+            }
+        }
+    }
+
+    // VANGUARD
+
+
+    fun createShinyMob(
+        mob: LivingEntity,
+        enchantedArmor: Boolean,
+        materialType: ToolMaterial = ToolMaterial.SILVER,
+        newWeapon: Boolean = false) {
         if (mob is Creeper) return
         val shinyColor = SlotColors.SHINY.color
         // Difficulty
@@ -50,19 +99,25 @@ interface MobCreationHelper: AttributeManager, EnchantabilityHandler {
         val weaponList = listOf(
             ToolType.SABER, ToolType.KATANA, ToolType.LONGSWORD, ToolType.CUTLASS, ToolType.CLAYMORE, // 1 Hand
             ToolType.POLEAXE, ToolType.LONGAXE,
-            ToolType.WARHAMMER,  ToolType.SCYTHE,
+            ToolType.WARHAMMER,  ToolType.SCYTHE, ToolType.SPEAR, ToolType.HALBERD,
             ToolType.DAGGER, ToolType.SICKLE, ToolType.CHAKRAM) // Double
         val weaponType = weaponList.random()
+        // Override with new weapon
+        val mainHand: ItemStack = if (newWeapon) {
+            WeaponCreator.toolCreator.createToolStack(materialType, weaponType)
+        } else {
+            when(mob.type) {
+                EntityType.SKELETON, EntityType.STRAY, EntityType.BOGGED -> {
+                    mob.equipment?.itemInMainHand ?: ItemStack(Material.BOW)
+                }
 
-        val mainHand: ItemStack = when(mob.type) {
-            EntityType.SKELETON, EntityType.STRAY, EntityType.BOGGED -> {
-                mob.equipment?.itemInMainHand ?: ItemStack(Material.BOW)
-            }
-            EntityType.ZOMBIE, EntityType.HUSK -> {
-                ToolCreator().createToolStack(materialType, weaponType)
-            }
-            else -> {
-                ToolCreator().createToolStack(materialType, weaponType)
+                EntityType.ZOMBIE, EntityType.HUSK -> {
+                    WeaponCreator.toolCreator.createToolStack(materialType, weaponType)
+                }
+
+                else -> {
+                    WeaponCreator.toolCreator.createToolStack(materialType, weaponType)
+                }
             }
         }
         // GET ENCHANTMENTS TO SWORD
@@ -149,31 +204,55 @@ interface MobCreationHelper: AttributeManager, EnchantabilityHandler {
             "Glistening",
             "Sparkling")
 
-    fun createTrimmedArmor(entity: LivingEntity, trim: ArmorTrim, type: String, randomEnchants: Boolean = false) {
+    fun createTrimmedArmor(entity: LivingEntity, trim: ArmorTrim?, type: String, enchantArmor: Boolean = false) {
         // Create armors from type
-        val helmet = if (type == "diamond") {
-            ItemStack(Material.DIAMOND_HELMET)
-        } else {
-            ItemStack(Material.IRON_HELMET)
+        val helmet = when (type) {
+            "diamond" -> {
+                ItemStack(Material.DIAMOND_HELMET)
+            }
+            "chainmail" -> {
+                ItemStack(Material.CHAINMAIL_HELMET)
+            }
+            else -> {
+                ItemStack(Material.IRON_HELMET)
+            }
         }
-        val chestplate = if (type == "diamond") {
-            ItemStack(Material.DIAMOND_CHESTPLATE)
-        } else {
-            ItemStack(Material.IRON_CHESTPLATE)
+        val chestplate = when (type) {
+            "diamond" -> {
+                ItemStack(Material.DIAMOND_CHESTPLATE)
+            }
+            "chainmail" -> {
+                ItemStack(Material.CHAINMAIL_CHESTPLATE)
+            }
+            else -> {
+                ItemStack(Material.IRON_CHESTPLATE)
+            }
         }
-        val leggings = if (type == "diamond") {
-            ItemStack(Material.DIAMOND_LEGGINGS)
-        } else {
-            ItemStack(Material.IRON_LEGGINGS)
+        val leggings = when (type) {
+            "diamond" -> {
+                ItemStack(Material.DIAMOND_LEGGINGS)
+            }
+            "chainmail" -> {
+                ItemStack(Material.CHAINMAIL_LEGGINGS)
+            }
+            else -> {
+                ItemStack(Material.IRON_LEGGINGS)
+            }
         }
-        val boots = if (type == "diamond") {
-            ItemStack(Material.DIAMOND_BOOTS)
-        } else {
-            ItemStack(Material.IRON_BOOTS)
+        val boots = when (type) {
+            "diamond" -> {
+                ItemStack(Material.DIAMOND_BOOTS)
+            }
+            "chainmail" -> {
+                ItemStack(Material.CHAINMAIL_BOOTS)
+            }
+            else -> {
+                ItemStack(Material.IRON_BOOTS)
+            }
         }
         val armorList = listOf(helmet, chestplate, leggings, boots)
         // Enchant Armors
-        if (randomEnchants) {
+        if (enchantArmor) {
             val randomSeed = Random()
             for (armor in armorList) {
                 val copy = armor.enchantWithLevels(30, false, randomSeed)
@@ -181,10 +260,12 @@ interface MobCreationHelper: AttributeManager, EnchantabilityHandler {
             }
         }
         // Trim
-        for (armor in armorList) {
-            val meta = armor.itemMeta as ArmorMeta
-            meta.trim = trim
-            armor.itemMeta = meta
+        if (trim != null) {
+            for (armor in armorList) {
+                val meta = armor.itemMeta as ArmorMeta
+                meta.trim = trim
+                armor.itemMeta = meta
+            }
         }
 
         // Apply

@@ -53,6 +53,9 @@ object EntityTags {
     const val ELITE_MOB: String = "odyssey.elite_mob"
     const val BLOOD_MOON_MOB: String = "odyssey.blood_moon_mob"
 
+    const val TRIAL_ELITE: String = "odyssey.trial_elite"
+    const val GIANT_MOB: String = "odyssey.giant"
+
     // ARROWS
     const val AMBUSH_ARROW: String = "odyssey.ambush_arrow"
     const val BALLISTICS_ARROW: String = "odyssey.ballistics_arrow"

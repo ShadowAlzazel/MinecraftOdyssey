@@ -166,6 +166,8 @@ object ItemModels {
 
     const val SILVER_NUGGET: Int = 6906619
 
+    const val SHADOW_TRIAL_KEY: Int = 6906707
+
     const val NECRONOMICON_BOOK: Int = 6905066
 
     // Unused/Misc

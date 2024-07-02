@@ -11,6 +11,7 @@ import me.shadowalzazel.mcodyssey.constants.EntityTags.removeTag
 import me.shadowalzazel.mcodyssey.constants.EntityTags.setIntTag
 import me.shadowalzazel.mcodyssey.effects.EffectsManager
 import me.shadowalzazel.mcodyssey.enchantments.api.EnchantmentsManager
+import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.ArmorListeners.getNameId
 import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.SpeedySpursTask
 import org.bukkit.Material
 import org.bukkit.Particle
@@ -26,6 +27,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityRegainHealthEvent
+import org.bukkit.event.entity.ProjectileHitEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerItemConsumeEvent
 import org.bukkit.event.player.PlayerToggleSneakEvent
@@ -48,9 +50,9 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
     // Main function for enchantments relating to entity damage for armor
     @EventHandler
     fun mainArmorDefenderHandler(event: EntityDamageByEntityEvent) {
-        if (event.damager !is LivingEntity) { return }
-        if (event.entity !is LivingEntity) { return }
-        if (event.cause != EntityDamageEvent.DamageCause.ENTITY_ATTACK) { return }
+        if (event.damager !is LivingEntity) return
+        if (event.entity !is LivingEntity) return
+        if (event.cause != EntityDamageEvent.DamageCause.ENTITY_ATTACK) return
         // Make thorns bug new enchant apply ranged effects
         val enemy = event.damager as LivingEntity
         val defender = event.entity as LivingEntity
@@ -179,6 +181,23 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
         // Check
         if (event.damage < 0.0) {
             event.damage = 0.0
+        }
+    }
+
+    @EventHandler
+    fun mainArmorProjectileHandler(event: ProjectileHitEvent) {
+        if (event.hitEntity == null) return
+        val defender = event.hitEntity ?: return
+        if (defender !is LivingEntity) return
+        if (defender.equipment?.chestplate?.hasItemMeta() == true) {
+            val chestplate = defender.equipment?.chestplate!!
+            for (enchant in chestplate.enchantments) {
+                when (enchant.key.getNameId()) {
+                    "black_rose" -> {
+                        blackRoseProjectileEnchantment(event, defender, enchant.value)
+                    }
+                }
+            }
         }
     }
 
@@ -526,6 +545,7 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
             damage
         }
     }
+
     private fun brawlerEnchantment(
         defender: LivingEntity,
         level: Int
@@ -535,6 +555,7 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
         }
         return 0.0
     }
+
     private fun blackRoseEnchantment(
         attacker: LivingEntity,
         level: Int
@@ -542,11 +563,25 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
         attacker.addPotionEffect(
             PotionEffect(
                 PotionEffectType.WITHER,
-                5 * 20 * level,
+                (4 * level) * 20,
                 1
             )
         )
     }
+
+    private fun blackRoseProjectileEnchantment(
+        event: ProjectileHitEvent,
+        defender: LivingEntity,
+        level: Int
+    ) {
+        val maxHealth = defender.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value ?: return
+        val currentHealth = defender.health
+        val percentHealth = currentHealth / maxHealth
+        if (percentHealth < (0.2 * level)) {
+            event.isCancelled = true
+        }
+    }
+
     private fun blurciseEnchantment(
         defender: LivingEntity,
         level: Int
@@ -556,6 +591,7 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
         }
         return 0.0
     }
+
     private fun beastlyEnchantment(
         attacker: LivingEntity,
         level: Int
@@ -565,6 +601,7 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
         }
         return 0.0
     }
+
     private fun brewfulBreathEnchantment(
         player: Player,
         potion: ItemStack,

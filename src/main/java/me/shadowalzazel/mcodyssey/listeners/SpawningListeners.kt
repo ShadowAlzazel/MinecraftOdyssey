@@ -1,23 +1,34 @@
 package me.shadowalzazel.mcodyssey.listeners
 
+import io.papermc.paper.registry.RegistryAccess
+import io.papermc.paper.registry.RegistryKey
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags
+import me.shadowalzazel.mcodyssey.items.creators.ToolCreator
+import me.shadowalzazel.mcodyssey.items.creators.WeaponCreator
 import me.shadowalzazel.mcodyssey.items.utility.ToolMaterial
+import me.shadowalzazel.mcodyssey.items.utility.ToolType
 import me.shadowalzazel.mcodyssey.mobs.neutral.DubiousDealer
 import me.shadowalzazel.mcodyssey.structures.StructureManager
+import me.shadowalzazel.mcodyssey.trims.TrimMaterials
+import me.shadowalzazel.mcodyssey.trims.TrimPatterns
 import me.shadowalzazel.mcodyssey.util.MobCreationHelper
+import org.bukkit.Material
+import org.bukkit.NamespacedKey
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.CreatureSpawnEvent
-import org.bukkit.event.entity.EntitySpawnEvent
 import org.bukkit.event.world.ChunkPopulateEvent
 import org.bukkit.generator.structure.Structure
+import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ArmorMeta
 import org.bukkit.inventory.meta.trim.ArmorTrim
 import org.bukkit.inventory.meta.trim.TrimMaterial
 import org.bukkit.inventory.meta.trim.TrimPattern
+import java.util.*
 
 object SpawningListeners : Listener, MobCreationHelper, StructureManager {
 
@@ -34,7 +45,7 @@ object SpawningListeners : Listener, MobCreationHelper, StructureManager {
                 if (event.entity !is Enemy) return
                 // Surface Spawns for now -> fix for mob farms
                 if (event.entity is Guardian) return
-                val mob =   event.entity
+                val mob = event.entity
                 structureTagHandler(mob)
                 if (mob.location.block.lightFromSky < 1) return
                 val inEdge = mob.location.world == Odyssey.instance.edge
@@ -53,17 +64,74 @@ object SpawningListeners : Listener, MobCreationHelper, StructureManager {
                     createShinyMob(mob, inEdge, materialInEdge)
                 }
                 else if (inEdge) {
-                    mob.addAttackAttribute(2.0 + (0..2).random(), AttributeTags.MOB_EDGE_ATTACK_BONUS)
-                    mob.addAttackAttribute(15.0, AttributeTags.MOB_EDGE_HEALTH_BONUS)
+                    mob.addAttackAttribute(2.0 + (1..4).random(), AttributeTags.MOB_EDGE_ATTACK_BONUS)
+                    mob.addHealthAttribute(15.0, AttributeTags.MOB_EDGE_HEALTH_BONUS)
                     mob.heal(15.0)
                 }
             }
         }
     }
 
-    fun spawningStructureHandler(event: EntitySpawnEvent) {
-        println("Location: [${event.location} Entity: [${event.entity}]")
-        println(event.eventName)
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    fun shadowChamberSpawning(event: CreatureSpawnEvent) {
+        val boundedStructures = getBoundedStructures(event.entity) ?: return
+        // Get from registry
+        val structureRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.STRUCTURE)
+        val shadowChambers = structureRegistry.get(NamespacedKey(Odyssey.instance, "shadow_chambers")) ?: return
+        //println(event.spawnReason) // -> DEFAULT
+        if (shadowChambers !in boundedStructures) return
+        val mob = event.entity
+        // Create shiny if trial elite
+        if (mob.scoreboardTags.contains("odyssey.trial_elite")) {
+            createShinyMob(mob, true, ToolMaterial.DIAMOND, true)
+        }
+        // Giant Spider,
+        if (mob.scoreboardTags.contains("odyssey.giant")) {
+            mob.apply {
+                addHealthAttribute(40.0, AttributeTags.MOB_HEALTH)
+                health += 40.0
+                addAttackAttribute(10.0, AttributeTags.MOB_ATTACK_DAMAGE)
+                addScaleAttribute(0.7, AttributeTags.MOB_SCALE)
+            }
+        }
+        // Vanguard
+        if (mob.scoreboardTags.contains("odyssey.vanguard")) {
+            val mainWeapon = WeaponCreator.toolCreator.createToolStack(ToolMaterial.SILVER, ToolType.HALBERD)
+            val mainHand = mainWeapon.enchantWithLevels(25, false, Random())
+            val offHand = ItemStack(Material.SHIELD)
+            mob.equipment?.apply {
+                setItemInOffHand(offHand)
+                setItemInMainHand(mainHand)
+            }
+            val goldTrim = ArmorTrim(TrimMaterial.GOLD,
+                listOf(TrimPatterns.IMPERIAL).random())
+            createArmoredMob(mob, false, ToolMaterial.SILVER, "iron", goldTrim, true)
+            mob.apply {
+                addHealthAttribute(20.0, AttributeTags.MOB_HEALTH)
+                health += 30.0
+                addAttackAttribute(9.0, AttributeTags.MOB_ATTACK_DAMAGE)
+                addScaleAttribute(0.1, AttributeTags.MOB_SCALE)
+            }
+        }
+        // Basic Mob
+        val basicMob = mob.scoreboardTags.isEmpty()
+        if (basicMob) {
+            val shadowTrim = ArmorTrim(TrimMaterials.OBSIDIAN,
+                listOf(TrimPatterns.IMPERIAL, TrimPattern.FLOW, TrimPattern.SILENCE).random())
+            createArmoredMob(mob, true, ToolMaterial.IRON, "chainmail", shadowTrim)
+            mob.addAttackAttribute(2.0, AttributeTags.MOB_ATTACK_DAMAGE)
+        }
+        // All Shadow Chamber Mobs
+        mob.apply {
+            addHealthAttribute(20.0, AttributeTags.SHADOW_CHAMBERS_HEALTH_BONUS)
+            health += 20.0
+            addAttackAttribute(4.0, AttributeTags.SHADOW_CHAMBERS_ATTACK_BONUS)
+            addArmorAttribute(2.0, AttributeTags.SHADOW_CHAMBERS_ARMOR_BONUS)
+        }
+
+        //println("Location: [${event.location} Entity: [${event.entity}]")
+        //println("Tags: ${event.entity.scoreboardTags}")
         return
     }
 
@@ -79,7 +147,6 @@ object SpawningListeners : Listener, MobCreationHelper, StructureManager {
             }
         }
     }
-
 
     /*-----------------------------------------------------------------------------------------------*/
 

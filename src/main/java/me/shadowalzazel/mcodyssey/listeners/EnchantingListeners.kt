@@ -277,16 +277,16 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         val tierCost: Int
         val tableCost = event.expLevelCost
         // Scale of Tomes
-        when ((0..tableCost).random() + minOf(enchanterLevel, 100)) {
-            in 0..20 -> {
+        when (event.whichButton()) {
+            0 -> {
                 tierCost = 1
                 randomTome = listOf(Miscellaneous.TOME_OF_DISCHARGE, Miscellaneous.TOME_OF_PROMOTION).random()
             }
-            in 26..50 -> {
+            1 -> {
                 tierCost = 2
                 randomTome = listOf(Miscellaneous.TOME_OF_IMITATION, Miscellaneous.TOME_OF_EXPENDITURE).random()
             }
-            in 51..80 -> {
+            2 -> {
                 tierCost = 3
                 randomTome = listOf(Miscellaneous.TOME_OF_AVARICE, Miscellaneous.TOME_OF_HARMONY).random()
             }
@@ -310,7 +310,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         }
         // Set tome and XP
         (event.inventory as EnchantingInventory).item = randomTome.newItemStack(1)
-        event.enchanter.level -= minOf(tierCost + 1, event.enchanter.level)
+        event.enchanter.level -= minOf(tierCost, event.enchanter.level)
         event.isCancelled = true
     }
 

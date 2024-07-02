@@ -718,7 +718,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
         // Damage Calculation
         val whirlDamage = damage * ((level * 3) * 0.1)
         nearbyEntities.forEach {
-            it.damage(whirlDamage, attacker)
+            it.damage(whirlDamage)
             it.velocity = it.location.clone().subtract(attacker.location).toVector().normalize()
                 .multiply(0.8 + (0.15 * level))
         }

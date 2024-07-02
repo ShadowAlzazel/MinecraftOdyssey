@@ -176,7 +176,10 @@ class UtilitySmithing { // USE THIS CLASS TO CREATE RECIPE WHICH ARE AVAILABLE T
             Material.VEX_ARMOR_TRIM_SMITHING_TEMPLATE,
             Material.WARD_ARMOR_TRIM_SMITHING_TEMPLATE,
             Material.WAYFINDER_ARMOR_TRIM_SMITHING_TEMPLATE,
-            Material.WILD_ARMOR_TRIM_SMITHING_TEMPLATE
+            Material.WILD_ARMOR_TRIM_SMITHING_TEMPLATE,
+            Material.FLOW_ARMOR_TRIM_SMITHING_TEMPLATE,
+            Material.BOLT_ARMOR_TRIM_SMITHING_TEMPLATE,
+            Material.PAPER
         )
 
         val armor = RecipeChoice.MaterialChoice(
@@ -191,8 +194,16 @@ class UtilitySmithing { // USE THIS CLASS TO CREATE RECIPE WHICH ARE AVAILABLE T
             template,
             armor,
             RecipeChoice.MaterialChoice(
+                Material.IRON_INGOT,
+                Material.GOLD_INGOT,
+                Material.REDSTONE,
+                Material.DIAMOND,
                 Material.EMERALD,
+                Material.AMETHYST_SHARD,
+                Material.NETHERITE_INGOT,
+                Material.LAPIS_LAZULI,
                 Material.QUARTZ,
+                Material.COPPER_INGOT,
                 Material.OBSIDIAN
             )
         )

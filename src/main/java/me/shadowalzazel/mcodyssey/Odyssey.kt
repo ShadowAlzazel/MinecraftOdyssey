@@ -11,6 +11,7 @@ import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.OtherListeners
 import me.shadowalzazel.mcodyssey.phenomenon.base.OdysseyPhenomenon
 import me.shadowalzazel.mcodyssey.recipes.RecipeManager
 import me.shadowalzazel.mcodyssey.recipes.brewing.BrewerMixes
+import me.shadowalzazel.mcodyssey.structures.StructureDetector
 import me.shadowalzazel.mcodyssey.world_events.DailyWorldEventManager
 import me.shadowalzazel.mcodyssey.world_events.DateTimeSyncer
 import net.kyori.adventure.text.Component
@@ -31,6 +32,7 @@ class Odyssey : JavaPlugin() {
     val bossManager: BossManager
     val worldEventManager: DailyWorldEventManager
     val dateTimeSyncer: DateTimeSyncer
+    val structureDetector: StructureDetector
 
     // Overworld
     lateinit var overworld: World
@@ -52,6 +54,7 @@ class Odyssey : JavaPlugin() {
         bossManager = BossManager(this)
         worldEventManager = DailyWorldEventManager(this)
         dateTimeSyncer = DateTimeSyncer(this)
+        structureDetector = StructureDetector(this)
     }
 
     private fun registerEventListeners(listener: Listener) {
@@ -163,6 +166,7 @@ class Odyssey : JavaPlugin() {
         logger.info("Initializing World Events...")
         dateTimeSyncer.currentDay = 0 //dateTimeSyncer.getDay()
         //dateTimeSyncer.runTaskTimer(this, 20, 20 * 10) // Run every 200 ticks = 10 secs
+        structureDetector.runTaskTimer(this, 20L, 20 * 10)
 
         // Wiki
         val wikiLink = "https://minecraftodyssey.fandom.com/wiki/MinecraftOdyssey_Wiki"
