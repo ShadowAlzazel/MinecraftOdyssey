@@ -1,8 +1,6 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.items.Miscellaneous
-import me.shadowalzazel.mcodyssey.items.Runesherds
 import me.shadowalzazel.mcodyssey.rune_writing.SpaceRuneManager
 import org.bukkit.Particle
 import org.bukkit.Sound
@@ -17,13 +15,12 @@ object ItemListeners : Listener, SpaceRuneManager {
     @EventHandler
     fun itemUseOnDropHandler(event: PlayerDropItemEvent) {
         if (!event.itemDrop.itemStack.hasOdysseyItemTag()) return
-
         // For all Item on Drop Uses
-        when (event.itemDrop.itemStack.getOdysseyTag()) {
-            Miscellaneous.SOUL_SPICE.itemName -> {
+        when (event.itemDrop.itemStack.getItemIdentifier()) {
+            "soul_spice" -> {
                 soulSpiceItemHandler(event)
             }
-            Runesherds.SPACERUNE_TABLET.itemName -> {
+            "spacerune_tablet" -> {
                 spaceRuneItemHandler(event)
             }
             else -> {
@@ -31,6 +28,8 @@ object ItemListeners : Listener, SpaceRuneManager {
             }
         }
     }
+
+    /*-----------------------------------------------------------------------------------------------*/
 
     private fun soulSpiceItemHandler(event: PlayerDropItemEvent) {
         val item = event.itemDrop
@@ -65,7 +64,6 @@ object ItemListeners : Listener, SpaceRuneManager {
         if (!item.hasTag(ItemDataTags.IS_SPACERUNE)) return
         // Run TP
         spaceRuneTabletTeleport(player, item)
-
         event.isCancelled = true
     }
 

@@ -283,14 +283,16 @@ object RangedListeners : Listener, EnchantmentsManager {
     // Helper function to clone projectiles and their tags and to omit provided ones
     internal fun Projectile.cloneAndTag(projectile: Projectile, omitList: List<String> = listOf()) {
         // CAN HAVE SET SHOOT ON to launch event again but need to fix bugs
-        if (this is AbstractArrow) {
+        if (this is AbstractArrow && projectile is AbstractArrow) {
+            itemStack = projectile.itemStack
             isPersistent = false
             fireTicks = projectile.fireTicks
             pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
 
         }
-        if (this is Arrow) {
-            for (effect in (projectile as Arrow).customEffects) {
+        if (this is Arrow && projectile is Arrow) {
+            itemStack = projectile.itemStack
+            for (effect in projectile.customEffects) {
                 addCustomEffect(effect, true)
             }
             basePotionType = projectile.basePotionType

@@ -129,18 +129,18 @@ interface EnchantmentExtender {
             "analysis" -> listOf(
                 "- Increase experience gained by ${level * 10}%=[level x 10].")
             "antibonk" -> listOf(
-                "- Reduce critical hit damage by ${2.5 * level}=[2.5 x level].")
+                "- Reduce critical hit damage by ${level * 10}%=[level x 10].")
             "beastly" -> listOf(
-                "- Receive ${level}=[level] less damage when ${2 * level}=[2 x level]",
-                "or more enemies are within a 4 block radius.")
+                "- Increase health regeneration amount by ${25 + (25 * level)}%")
             "black_rose" -> listOf(
-                "- Applies Wither II for ${level * 5}=[level x 5] seconds to enemies",
-                "that attacked the wearer.")
+                "- Applies Wither II for ${level * 4}=[level x 4] seconds to enemies",
+                "that attacked the wearer.",
+                "- While below ${level * 20}%=[level x 20] health, projectiles miss the wearer.")
             "blurcise" -> listOf(
-                "- Take $level=[level] reduced damage while moving.")
+                "- While moving, take ${level * 10}%=[level x 10] reduced damage.")
             "brawler" -> listOf(
-                "- Increase melee damage by ${level}=[level] when ${2 * level}=[2 x level]",
-                "or more enemies are within a 4 block radius.")
+                "- When surrounded (by 3 or more enemies within a 6 block radius),",
+                "take ${3 + level * 3}%=[3 + (level x 3)] reduced damage.")
             "bulwark" -> listOf(
                 "- Increase armor by ${2 * level}%=[2 x level].")
             "claw_climbing" -> listOf(
@@ -158,14 +158,14 @@ interface EnchantmentExtender {
                 "- Taking or dealing damage to an entity within line of sight applies",
                 "Glowing I for ${3 + (level * 2)}=[3 + (level x 2)] seconds.")
             "impetus" -> listOf(
-                "- Increase damage while moving by ${level}=[level].")
+                "- While moving, deal ${5 + level * 5}%=[5 + (level x 5)] increased damage.")
             "leap_frog" -> listOf(
                 "- Increase jump height by ${level * 35}%=[level x 35]")
             "mandiblemania" -> listOf(
                 "- Getting damaged by an entity or attacking an entity at a lower eye elevation",
                 "decreases their immunity time by ${level * 0.1}=[level x 0.1] seconds.")
             "molten_core" -> listOf(
-                "- Enemies that attack the wearer are set on fire for ${2 * level}=[2 x level] seconds;",
+                "- Enemies that attack the wearer are set on fire for ${4 * level}=[4 x level] seconds;",
                 "This effect is doubled when on fire or on lava.")
             "opticalization" -> listOf(
                 "- Getting damaged by an entity or attacking an entity within",
@@ -173,15 +173,15 @@ interface EnchantmentExtender {
             "pollen_guard" -> listOf(
                 "WIP/REWORK")
             "heartened" -> listOf(
-                "- Increase max health by ${level * 10}$=[level x 10].")
+                "- Increase max health by ${level * 10}%=[level x 10].")
             "potion_barrier" -> listOf(
                 "- Drinking a potion grants resistance for 10 seconds.",
-                "- Negative effect timers are reduced by ${level * 0.25}%=[level x 0.25].")
+                "- Negative effect timers are reduced by ${level * 25}%=[level x 25].")
             "reckless" -> listOf(
-                "- Regenerate $level=[level] more health from satiation",
-                "but take ${level * 0.5}=[level x 0.5] more damage.")
+                "- When surrounded (by 3 or more enemies within a 6 block radius),",
+                "deal ${level * 5}%=[level x 5] increased damage.")
             "relentless" -> listOf(
-                "- When damaged, gain ${0.25 * (level * 0.25)}=[0.25 + (level x 0.25)] saturation")
+                "- While below 40% health, take ${level * 5}%=[level x 5] reduced damage.")
             "root_boots" -> listOf(
                 "- Reduce knockback by ${30 * level}%=[30 x level] when standing still.")
             "sculk_sensitive" -> listOf(
@@ -201,12 +201,12 @@ interface EnchantmentExtender {
                 "- Gain a static charge every time you sneak maxed at ${level * 2}=[level x 2].",
                 "Attacking an entity discharges all stacks for $level=[level] damage.")
             "untouchable" -> listOf(
-                "- Increase invulnerable time to 1 second.")
+                "- Increase invulnerable time by 0.5 seconds.")
             "veiled_in_shadow" -> listOf(
                 "- Gain invulnerable time negatively proportional to light level.",
                 "Reduce required light level by $level=[level].")
             "vigor" -> listOf(
-                "- Deal $level=[level] more damage when below 40% health.")
+                "- While below 60% health, deal ${level * 10}%=[level x 10] increased damage.")
             // Odyssey - Melee
             "agile" -> listOf(
                 "- Increase attack speed by ${level * 5}%=[level x 5].")

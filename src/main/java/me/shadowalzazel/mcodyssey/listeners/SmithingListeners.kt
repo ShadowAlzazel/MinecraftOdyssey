@@ -35,17 +35,17 @@ object SmithingListeners : Listener, DataTagManager, ToolMiningManager {
     @Suppress("UnstableApiUsage")
     @EventHandler
     fun smithingHandler(event: PrepareSmithingEvent) {
-        val recipe = event.inventory.recipe ?: return
+        val recipe = event.inventory.recipe
         // Avoid Conflict with enchanting tomes
-        if (recipe.result.type == Material.ENCHANTED_BOOK) return
+        if (recipe?.result?.type == Material.ENCHANTED_BOOK) return
         // Assign vars to non null values
         val equipment = event.inventory.inputEquipment ?: return
-        val result = event.result ?: return
+        val result = event.result
         val addition = event.inventory.inputMineral ?: return
 
         /*-----------------------------------------------------------------------------------------------*/
         // Engraving
-        if (result.type == Material.AMETHYST_SHARD && addition.type == Material.AMETHYST_SHARD) {
+        if (result?.type == Material.AMETHYST_SHARD && addition.type == Material.AMETHYST_SHARD) {
             val isEngraved = equipment.hasTag(ItemDataTags.IS_ENGRAVED)
             if (isEngraved) {
                 event.viewers.forEach { it.sendBarMessage("This Item Is Already Engraved!") }
@@ -73,10 +73,9 @@ object SmithingListeners : Listener, DataTagManager, ToolMiningManager {
             }
             return
         }
-
         /*-----------------------------------------------------------------------------------------------*/
-        // Soul Steel
-        else if (result.type == Material.IRON_INGOT) {
+        // Custom Upgrades
+        else if (result?.type == Material.IRON_INGOT) {
             event.result = ItemStack(Material.AIR)
             if (!addition.hasItemMeta()) return
             if (!addition.itemMeta.hasCustomModelData()) return
@@ -102,6 +101,7 @@ object SmithingListeners : Listener, DataTagManager, ToolMiningManager {
                     upgradeModel(item, ItemModels.SOUL_STEEL_MATERIAL_PRE)
                     upgradeDamage(item, 1.0)
                     // Misc Upgrades
+                    setStackItemName(item)
                     val newMeta = item.itemMeta as Damageable
                     newMeta.setMaxDamage(666)
                     item.itemMeta = newMeta
@@ -120,6 +120,7 @@ object SmithingListeners : Listener, DataTagManager, ToolMiningManager {
                     upgradeDamage(item, 1.0)
                     modifyAttackSpeed(item, 1.1)
                     // Misc Upgrades
+                    setStackItemName(item)
                     val newMeta = item.itemMeta as Damageable
                     newMeta.setMaxDamage(1002)
                     item.itemMeta = newMeta
@@ -138,8 +139,43 @@ object SmithingListeners : Listener, DataTagManager, ToolMiningManager {
                     upgradeDamage(item, 1.0)
                     modifyAttackSpeed(item, 0.9)
                     // Misc Upgrades
+                    setStackItemName(item)
                     val newMeta = item.itemMeta as Damageable
                     newMeta.setMaxDamage(3178)
+                    item.itemMeta = newMeta
+                    // Change minecraft material
+                    val newType = when(item.type) {
+                        Material.DIAMOND_SWORD -> Material.IRON_SWORD
+                        Material.DIAMOND_PICKAXE -> Material.IRON_PICKAXE
+                        Material.DIAMOND_AXE -> Material.IRON_AXE
+                        Material.DIAMOND_SHOVEL -> Material.IRON_SHOVEL
+                        Material.DIAMOND_HOE -> Material.IRON_HOE
+                        else -> null
+                    }
+                    if (newType != null) {
+                        val newItem = ItemStack(newType)
+                        newItem.itemMeta = item.itemMeta
+                        event.result = newItem
+                    }
+                    else {
+                        event.result = item
+                    }
+                }
+                "mithril_ingot" -> {
+                    if (templateName != "mithril_upgrade_template") return
+                    if (equipment.hasTag(ItemDataTags.MITHRIL_TOOL)) return
+                    if (!isDiamond(equipment.type)) return
+                    // Apply
+                    val item = equipment.clone()
+                    item.addTag(ItemDataTags.MITHRIL_TOOL)
+                    item.addStringTag(ItemDataTags.MATERIAL_TYPE, "mithril")
+                    // Get new model
+                    upgradeModel(item, ItemModels.MITHRIL_MATERIAL_PRE)
+                    upgradeDamage(item, 2.0)
+                    // Misc Upgrades
+                    setStackItemName(item)
+                    val newMeta = item.itemMeta as Damageable
+                    newMeta.setMaxDamage(1789)
                     item.itemMeta = newMeta
                     // Change minecraft material
                     val newType = when(item.type) {
@@ -181,7 +217,7 @@ object SmithingListeners : Listener, DataTagManager, ToolMiningManager {
         }
         /*-----------------------------------------------------------------------------------------------*/
         // Netherite
-        else if (addition.type == Material.NETHERITE_INGOT && result.itemMeta.hasCustomModelData()) {
+        else if (addition.type == Material.NETHERITE_INGOT && result?.itemMeta?.hasCustomModelData() == true) {
             val item = event.inventory.result!!.clone()
             if (item.hasTag(ItemDataTags.NETHERITE_TOOL)) return
             // Get new model
@@ -197,6 +233,7 @@ object SmithingListeners : Listener, DataTagManager, ToolMiningManager {
             val nameKey = NamespacedKey(Odyssey.instance, AttributeTags.ITEM_BASE_ATTACK_DAMAGE)
             // meta
             item.addTag(ItemDataTags.NETHERITE_TOOL)
+            setStackItemName(item)
             val newMeta = item.itemMeta
             newMeta.also {
                 it.setCustomModelData(newModel)
@@ -208,19 +245,31 @@ object SmithingListeners : Listener, DataTagManager, ToolMiningManager {
             event.result = item
             return
         }
-
         /*-----------------------------------------------------------------------------------------------*/
         // Trims
-        else if (result.itemMeta is ArmorMeta) {
-            val resultMeta = result.itemMeta as ArmorMeta
+        else if (equipment.itemMeta is ArmorMeta) {
+            val armorMeta = (equipment.itemMeta as ArmorMeta).clone()
             // Get IDs
             val trimMaterial = event.inventory.inputMineral ?: return
             val trimTemplate = event.inventory.inputTemplate ?: return
+            if (trimMaterial.type == Material.NETHERITE_INGOT) return // Fix netherite upgrade bug
             val materialName = trimMaterial.getItemIdentifier()
-            val trimName = trimTemplate.getItemIdentifier()
+            val patternName = trimTemplate.getItemIdentifier()
+            // Get meta
+            val resultMeta = if (event.result?.hasItemMeta() == true) event.result?.itemMeta else null
+            // Get Trim Pattern
+            val finalPattern: TrimPattern? = when (patternName) {
+                "imperial_armor_trim_smithing_template" -> TrimPatterns.IMPERIAL
+                else -> null
+            } ?: if (resultMeta is ArmorMeta) {
+                resultMeta.trim?.pattern
+            } else {
+                null
+            }
+            if (finalPattern == null) return
             // Get Trim Material
-            val customTrimMaterial: TrimMaterial? = when(materialName) {
-                "alexandrite" ->  TrimMaterials.ALEXANDRITE
+            val finalMaterial: TrimMaterial? = when (materialName) {
+                "alexandrite" -> TrimMaterials.ALEXANDRITE
                 "kunzite" -> TrimMaterials.KUNZITE
                 "jade" -> TrimMaterials.JADE
                 "ruby" -> TrimMaterials.RUBY
@@ -233,33 +282,43 @@ object SmithingListeners : Listener, DataTagManager, ToolMiningManager {
                 "silver_ingot" -> TrimMaterials.SILVER
                 "obsidian" -> TrimMaterials.OBSIDIAN // DOES NOT WORK
                 else -> null
+            } ?: if (resultMeta is ArmorMeta) {
+                resultMeta.trim?.material
             }
-            // Get Trim Pattern
-            val customTrimPattern: TrimPattern? = when(trimName) {
-                "imperial_armor_trim_smithing_template" -> TrimPatterns.IMPERIAL
-                else -> null
+            else {
+                when(trimMaterial.type) {
+                    Material.IRON_INGOT -> TrimMaterial.IRON
+                    Material.GOLD_INGOT -> TrimMaterial.GOLD
+                    Material.REDSTONE -> TrimMaterial.REDSTONE
+                    Material.DIAMOND -> TrimMaterial.DIAMOND
+                    Material.EMERALD -> TrimMaterial.EMERALD
+                    Material.AMETHYST_SHARD -> TrimMaterial.AMETHYST
+                    Material.NETHERITE_INGOT -> TrimMaterial.NETHERITE
+                    Material.LAPIS_LAZULI -> TrimMaterial.LAPIS
+                    Material.QUARTZ -> TrimMaterial.QUARTZ
+                    Material.COPPER_INGOT -> TrimMaterial.COPPER
+                    Material.OBSIDIAN -> TrimMaterials.OBSIDIAN
+                    else -> null
+                }
             }
-            // Get Trim
-            val finalTrim = customTrimPattern ?: resultMeta.trim?.pattern
-            if (finalTrim == null) return
-            // Get material
-            val finalMaterial = customTrimMaterial ?: (trimMap(trimMaterial) ?: resultMeta.trim?.material)
             if (finalMaterial == null) return
 
             // Apply new trim
-            val newTrim = ArmorTrim(finalMaterial, finalTrim)
-            resultMeta.trim = newTrim
-            event.result = event.result!!.clone().apply {
-                itemMeta = resultMeta
-            }
+            val newTrim = ArmorTrim(finalMaterial, finalPattern)
+            armorMeta.trim = newTrim
+            val armorResult = equipment.clone()
+            armorResult.itemMeta = armorMeta
+            event.result = armorResult
+            event.inventory.result = armorResult
             return
         }
         /*-----------------------------------------------------------------------------------------------*/
         // CURRENTLY DOES MC DOES NOT COPY RESULT NBT
-        if (!result.itemMeta.hasCustomModelData()) {
+        if (result?.itemMeta?.hasCustomModelData() != true) {
             // Check Recipes
-            if (!recipe.result.hasItemMeta()) { return }
-            if (!recipe.result.itemMeta.hasCustomModelData()) { return }
+            if (recipe == null) return
+            if (!recipe.result.hasItemMeta()) return
+            if (!recipe.result.itemMeta.hasCustomModelData()) return
             event.inventory.result = recipe.result
             event.result = recipe.result
         }
@@ -388,6 +447,14 @@ object SmithingListeners : Listener, DataTagManager, ToolMiningManager {
             Material.IRON_SWORD, Material.IRON_PICKAXE, Material.IRON_AXE, Material.IRON_SHOVEL, Material.IRON_HOE -> true
             else -> false
         }
+    }
+
+    private fun setStackItemName(item: ItemStack) {
+        val weaponType = item.getStringTag(ItemDataTags.TOOL_TYPE) ?: materialTypeMap(item.type)
+        val newName = "${item.getStringTag(ItemDataTags.MATERIAL_TYPE)}_$weaponType"
+        val newMeta = item.itemMeta
+        newMeta.itemName(Component.text(newName))
+        item.itemMeta = newMeta
     }
 
     /*-----------------------------------------------------------------------------------------------*/

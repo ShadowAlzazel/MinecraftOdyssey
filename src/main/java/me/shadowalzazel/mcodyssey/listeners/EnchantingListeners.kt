@@ -126,12 +126,12 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
             event.result = ItemStack(Material.AIR)
         }
         // Variables
-        val hasCrystals = (mineral.type == Material.PRISMARINE_CRYSTALS)
+        val hasLapis = (mineral.type == Material.LAPIS_LAZULI)
         val hasEquipment = equipment.type != Material.ENCHANTED_BOOK && equipment.type != Material.BOOK
         val hasBook = equipment.type == Material.ENCHANTED_BOOK
         val hasItem = hasBook || hasEquipment
-        // Check for [TOME] + [EQUIPMENT] + [CRYSTALS]
-        if (hasCrystals && hasItem) {
+        // Check for [TOME] + [EQUIPMENT] + [LAPIS]
+        if (hasLapis && hasItem) {
             val eventResult = when(template.getItemIdentifier()) {
                 "tome_of_avarice" -> tomeOfAvariceOnItem(equipment, event.viewers)
                 "tome_of_discharge" -> tomeOfDischargeOnItem(equipment, event.viewers)
@@ -160,10 +160,10 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         val result = smithingInventory.result ?: return
         val player = event.whoClicked
 
-        val hasCrystals = (mineral.type == Material.PRISMARINE_CRYSTALS)
+        val hasLapis = (mineral.type == Material.LAPIS_LAZULI)
         val isTome = (template.type == Material.ENCHANTED_BOOK)
         // When for tomes
-        if (hasCrystals && isTome) {
+        if (hasLapis && isTome) {
             when(template.getItemIdentifier()) {
                 "tome_of_avarice" -> {
                     tomeOfAvaricePostEffect(equipment, event.viewers)
@@ -277,16 +277,16 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         val tierCost: Int
         val tableCost = event.expLevelCost
         // Scale of Tomes
-        when ((0..tableCost).random() + minOf(enchanterLevel, 100)) {
-            in 0..20 -> {
+        when (event.whichButton()) {
+            0 -> {
                 tierCost = 1
                 randomTome = listOf(Miscellaneous.TOME_OF_DISCHARGE, Miscellaneous.TOME_OF_PROMOTION).random()
             }
-            in 26..50 -> {
+            1 -> {
                 tierCost = 2
                 randomTome = listOf(Miscellaneous.TOME_OF_IMITATION, Miscellaneous.TOME_OF_EXPENDITURE).random()
             }
-            in 51..80 -> {
+            2 -> {
                 tierCost = 3
                 randomTome = listOf(Miscellaneous.TOME_OF_AVARICE, Miscellaneous.TOME_OF_HARMONY).random()
             }
@@ -310,7 +310,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         }
         // Set tome and XP
         (event.inventory as EnchantingInventory).item = randomTome.newItemStack(1)
-        event.enchanter.level -= minOf(tierCost + 1, event.enchanter.level)
+        event.enchanter.level -= minOf(tierCost, event.enchanter.level)
         event.isCancelled = true
     }
 
@@ -320,7 +320,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         getChiseledBookshelvesBonus(event)
         val item = event.item
         val newEnchants = event.enchantsToAdd
-        // TODO: ADD SAFETY to not go over point limit
+        // Can get OVER-MAXED ITEMS if lucky
         // Get Hint
         val hint = event.enchantmentHint
         item.updateEnchantabilityPointsLore(newEnchants, toggleToolTip = true)
@@ -370,7 +370,10 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         for (rolled in shelfEnchantsMap) {
             // MAYBE add - negative modifier per unique enchants? OR positive bonus
             if (rolled.value >= (1..100).random()) {
-                bonusEnchants[rolled.key] = rolled.value.floorDiv(100) + 1
+                val enchantment = rolled.key
+                val level = enchantment.maxLevel
+                bonusEnchants[rolled.key] = level
+                //bonusEnchants[rolled.key] = rolled.value.floorDiv(100) + 1
             }
             //println("Bookshelf Enchant: ${rolled.key} with ${rolled.value}%")
         }

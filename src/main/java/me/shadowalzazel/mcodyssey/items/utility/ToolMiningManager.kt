@@ -27,6 +27,9 @@ interface ToolMiningManager {
             "titanium", "anodized_titanium" -> {
                 9.0F
             }
+            "mithril" -> {
+                10.0F
+            }
             else -> {
                 null
             }

@@ -3,11 +3,9 @@ package me.shadowalzazel.mcodyssey.items.creators
 import me.shadowalzazel.mcodyssey.enchantments.api.SlotColors
 import me.shadowalzazel.mcodyssey.constants.DataKeys
 import me.shadowalzazel.mcodyssey.enchantments.api.EnchantabilityHandler
-import me.shadowalzazel.mcodyssey.items.Exotics
-import me.shadowalzazel.mcodyssey.items.Ingredients
-import me.shadowalzazel.mcodyssey.items.Miscellaneous
-import me.shadowalzazel.mcodyssey.items.Potions
+import me.shadowalzazel.mcodyssey.items.*
 import me.shadowalzazel.mcodyssey.items.Potions.createPotionStack
+import me.shadowalzazel.mcodyssey.items.Runesherds.createPresetSherdStack
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -126,6 +124,7 @@ interface ItemCreator : ExoticCreator, EnchantabilityHandler {
             "excalibur" -> Exotics.EXCALIBUR.createExoticWeapon()
             "frost_fang" -> Exotics.FROST_FANG.createExoticWeapon()
             "elucidator" -> Exotics.ELUCIDATOR.createExoticWeapon()
+            "guard_runesherd" -> Runesherds.GUARD_RUNESHERD.createPresetSherdStack(amount)
             else -> null
         }
     }

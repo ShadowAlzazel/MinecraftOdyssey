@@ -13,6 +13,7 @@ import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockDropItemEvent
 import org.bukkit.event.inventory.FurnaceSmeltEvent
@@ -20,6 +21,7 @@ import org.bukkit.event.inventory.FurnaceStartSmeltEvent
 import org.bukkit.event.inventory.PrepareSmithingEvent
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
+import kotlin.math.E
 
 object RunesherdListeners : Listener, RunesherdManager {
 
@@ -151,7 +153,7 @@ object RunesherdListeners : Listener, RunesherdManager {
 
 
     // For Changing unknown runesherd to Runesherd drop
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     fun changeRunicRuinLootTable(event: BlockDropItemEvent) {
         if (event.block.type != Material.SUSPICIOUS_GRAVEL
             && event.block.type != Material.SUSPICIOUS_SAND) return

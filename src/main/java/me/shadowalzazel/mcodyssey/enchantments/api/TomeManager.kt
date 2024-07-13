@@ -77,7 +77,7 @@ internal interface TomeManager : EnchantabilityHandler {
         val maxEnchantabilityPoints = item.getMaxEnchantabilityPoints()
         val usedEnchantabilityPoints = item.getUsedEnchantabilityPoints()
         val potentialNewPoints = usedEnchantabilityPoints - getEnchantabilityCost(enchantToUpgrade) + getEnchantabilityCost(enchantToUpgrade, checkedMaxLevel)
-        if (potentialNewPoints > maxEnchantabilityPoints) {
+        if (potentialNewPoints > maxEnchantabilityPoints && !hasStoredEnchants) {
             viewers.forEach { it.sendBarMessage("The enchantment ${enchantToUpgrade.first.key} would be to expensive!") }
             return null
         }
