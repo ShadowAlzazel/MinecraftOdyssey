@@ -155,6 +155,7 @@ object ItemModels {
     const val IMPERIAL_ARMOR_TRIM_SMITHING_TEMPLATE: Int = 6906503
     const val TITANIUM_UPGRADE_TEMPLATE: Int = 6906504
     const val IRIDIUM_UPGRADE_TEMPLATE: Int = 6906505
+    const val MITHRIL_UPGRADE_TEMPLATE: Int = 6906506
 
     // Ingots
     const val SILVER_INGOT: Int = 6906619
@@ -259,6 +260,7 @@ object ItemModels {
     const val SOUL_STEEL_MATERIAL_PRE: Int = 69066
     const val TITANIUM_MATERIAL_PRE: Int = 69068
     const val IRIDIUM_MATERIAL_PRE: Int = 69071
+    const val MITHRIL_MATERIAL_PRE: Int = 69076
     // Soul Steel [69066XX]
     const val NETHERITE_MATERIAL: Int = 69059
 

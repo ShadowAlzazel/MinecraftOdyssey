@@ -161,6 +161,40 @@ object SmithingListeners : Listener, DataTagManager, ToolMiningManager {
                         event.result = item
                     }
                 }
+                "mithril_ingot" -> {
+                    if (templateName != "mithril_upgrade_template") return
+                    if (equipment.hasTag(ItemDataTags.MITHRIL_TOOL)) return
+                    if (!isDiamond(equipment.type)) return
+                    // Apply
+                    val item = equipment.clone()
+                    item.addTag(ItemDataTags.MITHRIL_TOOL)
+                    item.addStringTag(ItemDataTags.MATERIAL_TYPE, "mithril")
+                    // Get new model
+                    upgradeModel(item, ItemModels.MITHRIL_MATERIAL_PRE)
+                    upgradeDamage(item, 2.0)
+                    // Misc Upgrades
+                    setStackItemName(item)
+                    val newMeta = item.itemMeta as Damageable
+                    newMeta.setMaxDamage(1789)
+                    item.itemMeta = newMeta
+                    // Change minecraft material
+                    val newType = when(item.type) {
+                        Material.DIAMOND_SWORD -> Material.IRON_SWORD
+                        Material.DIAMOND_PICKAXE -> Material.IRON_PICKAXE
+                        Material.DIAMOND_AXE -> Material.IRON_AXE
+                        Material.DIAMOND_SHOVEL -> Material.IRON_SHOVEL
+                        Material.DIAMOND_HOE -> Material.IRON_HOE
+                        else -> null
+                    }
+                    if (newType != null) {
+                        val newItem = ItemStack(newType)
+                        newItem.itemMeta = item.itemMeta
+                        event.result = newItem
+                    }
+                    else {
+                        event.result = item
+                    }
+                }
             }
             // set mining
             // Tools with mining ToolComponent
@@ -211,7 +245,6 @@ object SmithingListeners : Listener, DataTagManager, ToolMiningManager {
             event.result = item
             return
         }
-
         /*-----------------------------------------------------------------------------------------------*/
         // Trims
         else if (equipment.itemMeta is ArmorMeta) {
@@ -219,6 +252,7 @@ object SmithingListeners : Listener, DataTagManager, ToolMiningManager {
             // Get IDs
             val trimMaterial = event.inventory.inputMineral ?: return
             val trimTemplate = event.inventory.inputTemplate ?: return
+            if (trimMaterial.type == Material.NETHERITE_INGOT) return // Fix netherite upgrade bug
             val materialName = trimMaterial.getItemIdentifier()
             val patternName = trimTemplate.getItemIdentifier()
             // Get meta

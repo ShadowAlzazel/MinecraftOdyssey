@@ -18,6 +18,8 @@ object Equipment {
         lore = listOf(Component.text("A Smithing Template used to upgrade Iron tools into Titanium.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
     val IRIDIUM_UPGRADE_TEMPLATE = OdysseyItem("iridium_upgrade_template", Material.PAPER, "Iridium Upgrade Template", ItemModels.IRIDIUM_UPGRADE_TEMPLATE,
         lore = listOf(Component.text("A Smithing Template used to upgrade Diamond tools into Iridium.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+    val MITHRIL_UPGRADE_TEMPLATE = OdysseyItem("mithril_upgrade_template", Material.PAPER, "Mithril Upgrade Template", ItemModels.MITHRIL_UPGRADE_TEMPLATE,
+        lore = listOf(Component.text("A Smithing Template used to upgrade Diamond tools into Mithril.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
 
     val IMPERIAL_ARMOR_TRIM_SMITHING_TEMPLATE = OdysseyItem("imperial_armor_trim_smithing_template", Material.PAPER, "Smithing Template", ItemModels.IMPERIAL_ARMOR_TRIM_SMITHING_TEMPLATE)

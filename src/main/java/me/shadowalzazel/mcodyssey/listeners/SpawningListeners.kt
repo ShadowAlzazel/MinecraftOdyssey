@@ -120,14 +120,17 @@ object SpawningListeners : Listener, MobCreationHelper, StructureManager {
             val shadowTrim = ArmorTrim(TrimMaterials.OBSIDIAN,
                 listOf(TrimPatterns.IMPERIAL, TrimPattern.FLOW, TrimPattern.SILENCE).random())
             createArmoredMob(mob, true, ToolMaterial.IRON, "chainmail", shadowTrim)
-            mob.addAttackAttribute(2.0, AttributeTags.MOB_ATTACK_DAMAGE)
+            mob.addAttackAttribute(4.0, AttributeTags.MOB_ATTACK_DAMAGE)
+            mob.addAttackAttribute(10.0, AttributeTags.MOB_HEALTH)
+            mob.heal(10.0)
         }
         // All Shadow Chamber Mobs
         mob.apply {
-            addHealthAttribute(20.0, AttributeTags.SHADOW_CHAMBERS_HEALTH_BONUS)
-            health += 20.0
-            addAttackAttribute(4.0, AttributeTags.SHADOW_CHAMBERS_ATTACK_BONUS)
+            addHealthAttribute(15.0, AttributeTags.SHADOW_CHAMBERS_HEALTH_BONUS)
+            health += 15.0
+            addAttackAttribute(2.0, AttributeTags.SHADOW_CHAMBERS_ATTACK_BONUS)
             addArmorAttribute(2.0, AttributeTags.SHADOW_CHAMBERS_ARMOR_BONUS)
+            addSpeedAttribute(0.02, AttributeTags.SHADOW_CHAMBERS_SPEED_BONUS)
         }
 
         //println("Location: [${event.location} Entity: [${event.entity}]")

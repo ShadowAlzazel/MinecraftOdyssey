@@ -4,14 +4,15 @@ import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.items.*
 import me.shadowalzazel.mcodyssey.items.Equipment
 import me.shadowalzazel.mcodyssey.items.Runesherds.createRuneware
-import me.shadowalzazel.mcodyssey.listeners.EnchantingListeners.createStack
+import me.shadowalzazel.mcodyssey.items.creators.ItemCreator
+import me.shadowalzazel.mcodyssey.recipes.ChoiceManager
 import me.shadowalzazel.mcodyssey.recipes.creators.BlazingRocketsCreator
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.*
 import org.bukkit.inventory.recipe.CraftingBookCategory
 
-class Misc {
+class Misc : ChoiceManager, ItemCreator {
 
     fun getRecipes(): List<Recipe> {
         val rocketCreator = BlazingRocketsCreator()
@@ -36,6 +37,7 @@ class Misc {
             titaniumUpgradeTemplateRecipe(),
             iridiumUpgradeTemplateRecipe(),
             imperialArmorTrimRecipe(),
+            mithrilUpgradeTemplateRecipe(),
 
             rocketCreator.blazingRocketsRecipe(1, "one"),
             rocketCreator.blazingRocketsRecipe(2, "two"),
@@ -229,6 +231,18 @@ class Misc {
             setIngredient('C', Material.BREEZE_ROD)
             setIngredient('E', Material.AMETHYST_SHARD)
             setIngredient('S', Material.OBSIDIAN)
+            category = CraftingBookCategory.MISC
+        }
+        return recipe
+    }
+
+    private fun mithrilUpgradeTemplateRecipe(): ShapedRecipe {
+        val result = Equipment.MITHRIL_UPGRADE_TEMPLATE.newItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "mithril_upgrade_template"), result).apply {
+            shape("SES", "SCS", "SSS")
+            setIngredient('C', silverChoices())
+            setIngredient('E', Material.DIAMOND)
+            setIngredient('S', Material.COBBLED_DEEPSLATE)
             category = CraftingBookCategory.MISC
         }
         return recipe

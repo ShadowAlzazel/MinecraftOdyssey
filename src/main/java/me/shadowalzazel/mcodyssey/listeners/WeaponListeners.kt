@@ -281,7 +281,7 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
         event.damage -= trueDamage
         // Lacerate + Bludgeon
         val bonusDamage = attackPower * (laceratingDamage + bludgeoningDamage)
-        println("Bonus Damage: $bonusDamage")
+        //println("Bonus Damage: $bonusDamage")
         event.damage += bonusDamage
     }
 
@@ -358,7 +358,7 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
         else {
             player.eyeLocation.distance(target.location)
         }
-        println("Trace Distance: $closestDistance")
+        //println("Trace Distance: $closestDistance")
         if (reach < closestDistance) { return null }
         return target
     }
@@ -402,7 +402,17 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
 
     private fun chakramThrowableHandler(event: PlayerInteractEvent) {
         val player = event.player
-        val weapon = player.equipment.itemInMainHand
+        val mainWeapon = player.equipment.itemInMainHand // Is chakram
+        chakramWeaponThrown(mainWeapon, player)
+        // Check if dual wielding chakram
+        val offhand = player.equipment.itemInOffHand
+        if (offhand.getStringTag(ItemDataTags.TOOL_TYPE) == "chakram") {
+            chakramWeaponThrown(offhand, player)
+        }
+
+    }
+
+    private fun chakramWeaponThrown(weapon: ItemStack, player: Player) {
         if (player.getCooldown(weapon.type) > 0) return
         // Spawn Chakram
         val throwable = (player.world.spawnEntity(player.eyeLocation, EntityType.SNOWBALL) as Snowball).also {
@@ -415,15 +425,16 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
             it.setGravity(false)
             it.shooter = player
             it.setHasLeftShooter(false)
-            it.boundingBox.expand(6.0)
         }
-        player.setCooldown(weapon.type, 6 * 20)
+        player.setCooldown(weapon.type, 3 * 20)
         // Return Task
         val task = ChakramReturn(player, throwable, weapon)
+        weapon.damage(1, player)
         val deleteTask = ProjectileDelete(throwable)
         task.runTaskLater(Odyssey.instance, 15)
         deleteTask.runTaskLater(Odyssey.instance, 20 * 10)
     }
+
 
     private fun shurikenThrowableHandler(event: PlayerInteractEvent) {
         val player = event.player

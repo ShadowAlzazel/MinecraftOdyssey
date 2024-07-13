@@ -8,6 +8,8 @@ import me.shadowalzazel.mcodyssey.tasks.dragon_tasks.DragonLightningStormTask
 import me.shadowalzazel.mcodyssey.tasks.dragon_tasks.LightningCloudTask
 import me.shadowalzazel.mcodyssey.tasks.dragon_tasks.LightningEyeTask
 import org.bukkit.*
+import org.bukkit.damage.DamageSource
+import org.bukkit.damage.DamageType
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -17,17 +19,34 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
+import kotlin.math.pow
 
 object DragonListeners : Listener {
 
     @EventHandler
     fun dragonPhaseHandler(event: EnderDragonChangePhaseEvent) {
+        val dragon = event.entity
+
         when(event.currentPhase) {
             EnderDragon.Phase.LEAVE_PORTAL -> {
                 event.newPhase = EnderDragon.Phase.CHARGE_PLAYER
                 return
             }
-            else ->{
+            else -> {
+                // Target
+                val surface = event.entity.location.clone().toHighestLocation(HeightMap.MOTION_BLOCKING)
+                val dragonLocation = event.entity.location.clone()
+                val target = surface.getNearbyLivingEntities(30.0).find { it is Player }
+                if (target != null) {
+                    val destination = target.location.clone()
+                    val vector = destination.clone().subtract(dragonLocation).toVector().normalize().multiply(2.3)
+                    (dragon.world.spawnEntity(dragonLocation, EntityType.DRAGON_FIREBALL) as DragonFireball).apply {
+                        velocity = vector
+                        shooter = dragon
+                        addScoreboardTag(EntityTags.DRAGON_BOMB)
+                        setHasLeftShooter(false)
+                    }
+                }
             }
         }
 
@@ -52,13 +71,17 @@ object DragonListeners : Listener {
             }
             EnderDragon.Phase.STRAFING -> {
                 val ground = event.entity.location.clone().toHighestLocation(HeightMap.MOTION_BLOCKING)
-                ground.getNearbyEntities(14.0, 16.0, 14.0).forEach {
-                    if (it is Player) {
-                        it.world.spawnEntity(it.location.clone(), EntityType.LIGHTNING_BOLT)
-                        it.damage(3.0, event.entity)
-                        it.world.spawnParticle(Particle.SONIC_BOOM, ground, 1, 0.0, 0.0, 0.0)
-                        it.world.spawnParticle(Particle.ELECTRIC_SPARK, ground, 25, 0.4, 0.1, 0.5)
-
+                val origin = event.entity.location.clone()
+                ground.getNearbyEntities(20.0, 16.0, 20.0).forEach { player ->
+                    if (player is Player) {
+                        val destination = player.location.clone()
+                        val vector = destination.clone().subtract(origin).toVector().normalize().multiply(2.3)
+                        (player.world.spawnEntity(origin, EntityType.DRAGON_FIREBALL) as DragonFireball).apply {
+                            velocity = vector
+                            shooter = dragon
+                            addScoreboardTag(EntityTags.DRAGON_BOMB)
+                            setHasLeftShooter(false)
+                        }
                     }
                 }
                 with(ground.world) {
@@ -104,9 +127,20 @@ object DragonListeners : Listener {
     @EventHandler
     fun dragonShootHandler(event: EnderDragonShootFireballEvent) {
         val fireball = event.fireball
-        fireball.teleport(fireball.location.clone().add(0.0, -2.0, 0.0))
+        fireball.velocity.multiply(1.2)
         if (6 > (1..10).random()) {
             event.fireball.addScoreboardTag(EntityTags.DRAGON_BOMB)
+            event.entity.launchProjectile(fireball.javaClass, fireball.velocity).apply {
+                addScoreboardTag(EntityTags.DRAGON_BOMB)
+                shooter = fireball.shooter
+                setHasLeftShooter(false)
+                velocity.multiply(1.13)
+            }
+            event.entity.launchProjectile(fireball.javaClass, fireball.velocity).apply {
+                addScoreboardTag(EntityTags.DRAGON_BOMB)
+                setHasLeftShooter(false)
+                velocity.multiply(0.8)
+            }
         }
         else {
             event.entity.world.playSound(event.fireball.location, Sound.ENTITY_BLAZE_SHOOT, 24F, 0.6F)
@@ -115,13 +149,11 @@ object DragonListeners : Listener {
         }
     }
 
+    @Suppress("UnstableApiUsage")
     @EventHandler
     fun dragonFireballHandler(event: EnderDragonFireballHitEvent) {
-        if (event.targets.contains(event.entity.shooter)) {
-            event.isCancelled
-            return
-        }
-        if (event.entity.scoreboardTags.contains(EntityTags.DRAGON_BOMB)) {
+        val fireball = event.entity
+        if (fireball.scoreboardTags.contains(EntityTags.DRAGON_BOMB)) {
             // Fireball
             with(event.entity.world) {
                 // Particles
@@ -139,6 +171,15 @@ object DragonListeners : Listener {
                     it.ticksToDetonate = 1
                 }
             }
+            // Damage
+            val radius = 6.5
+            for (entity in fireball.location.getNearbyLivingEntities(radius)) {
+                val distance = entity.location.distance(fireball.location)
+                val power = (maxOf(radius - distance, 0.0)).pow(1.5) + (maxOf(radius - distance, 0.0)).times(1) + (radius / 2)
+                val damageSource = DamageSource.builder(DamageType.MAGIC).build()
+                entity.damage(power + 3.0, damageSource)
+            }
+
         }
         if (event.entity.scoreboardTags.contains(EntityTags.LIGHTNING_BALL)) {
             event.areaEffectCloud.particle = Particle.ELECTRIC_SPARK

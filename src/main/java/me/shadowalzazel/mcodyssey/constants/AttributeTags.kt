@@ -21,6 +21,7 @@ object AttributeTags {
     const val SHADOW_CHAMBERS_HEALTH_BONUS = "mob.shadow_chambers.health_bonus"
     const val SHADOW_CHAMBERS_ARMOR_BONUS = "mob.shadow_chambers.armor_bonus"
     const val SHADOW_CHAMBERS_ATTACK_BONUS = "mob.shadow_chambers.attack_bonus"
+    const val SHADOW_CHAMBERS_SPEED_BONUS = "mob.shadow_chambers.speed_bonus"
 
     // Players
     const val PLAYER_GENERIC_HEALTH = "player.generic_health"

@@ -31,7 +31,7 @@ class UtilitySmithing { // USE THIS CLASS TO CREATE RECIPE WHICH ARE AVAILABLE T
             result,
             template,
             RecipeChoice.MaterialChoice(Material.ENCHANTED_BOOK),
-            RecipeChoice.MaterialChoice(Material.PRISMARINE_CRYSTALS, Material.GOLD_NUGGET)
+            RecipeChoice.MaterialChoice(Material.PRISMARINE_CRYSTALS, Material.LAPIS_LAZULI)
         )
     }
 
@@ -57,7 +57,7 @@ class UtilitySmithing { // USE THIS CLASS TO CREATE RECIPE WHICH ARE AVAILABLE T
                 Material.ELYTRA, Material.SHIELD, Material.BOW, Material.CROSSBOW, Material.TRIDENT, Material.FISHING_ROD,
                 Material.SUNFLOWER
             ),
-            RecipeChoice.MaterialChoice(Material.PRISMARINE_CRYSTALS, Material.GOLD_NUGGET)
+            RecipeChoice.MaterialChoice(Material.PRISMARINE_CRYSTALS, Material.LAPIS_LAZULI)
         )
     }
 
