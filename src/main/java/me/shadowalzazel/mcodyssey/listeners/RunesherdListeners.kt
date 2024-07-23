@@ -2,6 +2,7 @@
 
 package me.shadowalzazel.mcodyssey.listeners
 
+import me.shadowalzazel.mcodyssey.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.items.Runesherds
 import me.shadowalzazel.mcodyssey.items.Runesherds.createLootSherdStack
@@ -9,19 +10,23 @@ import me.shadowalzazel.mcodyssey.items.Runesherds.createRuneware
 import me.shadowalzazel.mcodyssey.items.Runesherds.createPresetSherdStack
 import me.shadowalzazel.mcodyssey.items.Runesherds.runesherdRuinsList
 import me.shadowalzazel.mcodyssey.rune_writing.RunesherdManager
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
+import org.bukkit.NamespacedKey
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockDropItemEvent
+import org.bukkit.event.inventory.CraftItemEvent
 import org.bukkit.event.inventory.FurnaceSmeltEvent
 import org.bukkit.event.inventory.FurnaceStartSmeltEvent
+import org.bukkit.event.inventory.PrepareItemCraftEvent
 import org.bukkit.event.inventory.PrepareSmithingEvent
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
-import kotlin.math.E
 
 object RunesherdListeners : Listener, RunesherdManager {
 
@@ -32,7 +37,7 @@ object RunesherdListeners : Listener, RunesherdManager {
         val mineral = event.inventory.inputMineral ?: return
         val equipment = event.inventory.inputEquipment?.clone() ?: return
         val template = event.inventory.inputTemplate ?: return
-        val runesherd = if (template.type == Material.BRICK) {
+        val runesherd = if (template.hasRunesherdTag() || template.getRuneIdentifier() != null) {
             template
         } else {
             return
@@ -41,7 +46,7 @@ object RunesherdListeners : Listener, RunesherdManager {
         val result = event.result ?: return
         // Check types
         if (mineral.type != Material.DIAMOND) return
-        if (template.type != Material.BRICK) return
+        //if (template.type != Material.BRICK || template.type !=) return
         if (recipe.result.type != Material.BRICK) return
         // Check meta
         if (!runesherd.itemMeta.hasCustomModelData()) {
@@ -52,10 +57,6 @@ object RunesherdListeners : Listener, RunesherdManager {
         if (result.type == Material.BRICK) {
             event.result = ItemStack(Material.AIR)
         }
-        // Checks
-        if (!runesherd.hasRunesherdTag()) return
-        if (!runesherd.hasOdysseyItemTag()) return
-
         // Run
         val item = addRunesherdToItemStack(runesherd, equipment) ?: return
         item.also {
@@ -66,7 +67,6 @@ object RunesherdListeners : Listener, RunesherdManager {
         return
     }
 
-    @Suppress("UnstableApiUsage")
     @EventHandler
     fun runewareKilnFiringHandler(event: FurnaceStartSmeltEvent) {
         // Get matching
@@ -105,8 +105,6 @@ object RunesherdListeners : Listener, RunesherdManager {
             event.totalCookTime += 20 * 20
         }
          */
-        println("Cooking Time: ${event.totalCookTime}")
-
     }
 
     @EventHandler
@@ -169,6 +167,65 @@ object RunesherdListeners : Listener, RunesherdManager {
         else {
             item.itemStack = runesherdRuinsList.random().createLootSherdStack(1) // Do more random slots
         }
+        // Advancement
+        val advancement = event.player.server.getAdvancement(NamespacedKey.fromString("odyssey:odyssey/dig_runesherd")!!)
+        if (advancement != null) {
+            event.player.getAdvancementProgress(advancement).awardCriteria("requirement")
+        }
     }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    private fun craftRunesherd(event: CraftItemEvent) {
+        if (event.recipe.result.type != Material.CLAY_BALL) return
+        val runesherd = event.inventory.matrix[4] ?: return
+        if (!runesherd.hasItemMeta()) return
+        if (!runesherd.hasRunesherdTag()) return
+        if (runesherd.hasRunewareTag()) return // No cloning runeware
+        if (!runesherd.itemMeta.hasCustomModelData()) return
+        // Result Checks
+        val result = event.inventory.result ?: return
+        if (!result.hasRunesherdTag()) return
+        // Add to inventory
+        val player = event.whoClicked
+        val clone = runesherd.clone()
+        clone.amount = 1
+        val overflow = player.inventory.addItem(clone)
+        if (overflow.isNotEmpty()) {
+            player.world.dropItem(player.location, overflow[0]!!)
+        }
+
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    private fun prepareCraftRunesherd(event: PrepareItemCraftEvent) {
+        if (event.recipe == null) return
+        if (event.recipe?.result?.type != Material.CLAY_BALL) return
+        val runesherd = event.inventory.matrix[4] ?: return
+        if (runesherd.type == Material.CLAY_BALL) return // No Cloning clones
+        if (!runesherd.hasItemMeta()) return
+        if (!runesherd.hasRunesherdTag()) return
+        if (runesherd.hasRunewareTag()) return // No cloning runeware
+        if (!runesherd.itemMeta.hasCustomModelData()) return
+        // Passed basic checks
+        val modifiers = runesherd.itemMeta.attributeModifiers ?: return
+        val runeName = runesherd.getRuneIdentifier() ?: "rune.generic"
+        val runeAttribute = findRunesherdAttribute(runeName) ?: return
+        val runeAttributeModifiers = modifiers.get(runeAttribute) ?: return
+        val runeKey = AttributeTags.RUNESHERD_KEY
+        val runeModifier = runeAttributeModifiers.find { it.name == runeKey } ?: return
+        // Add to result
+        val result = event.inventory.result ?: return
+        val resultMeta = result.itemMeta
+        resultMeta.addAttributeModifier(runeAttribute, runeModifier)
+        resultMeta.displayName(Component.text("Runepeice"))
+        resultMeta.setCustomModelData(runesherd.itemMeta.customModelData)
+        result.itemMeta = resultMeta
+        result.addRunesherdTag()
+        result.addRuneIdentifier(runeName)
+        event.inventory.result = result
+
+    }
+
+
 
 }

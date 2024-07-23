@@ -152,7 +152,7 @@ interface EnchantmentExtender {
             "fruitful_fare" -> listOf(
                 "- Eating a fruit recovers $level=[level] Health. Adds a 3 second cooldown to the fruit.")
             "ignore_pain" -> listOf(
-                "- Decrease Invulnerable time when hit by ${level * 0.1}=[level x 0.1] seconds",
+                "- Decrease Invulnerable time when hit by ${(level * 0.1).format(2)}=[level x 0.1] seconds",
                 "but gain absorption for ${5 - level}=[5 - level] seconds.")
             "illumineye" -> listOf(
                 "- Taking or dealing damage to an entity within line of sight applies",

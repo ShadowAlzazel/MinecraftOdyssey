@@ -18,8 +18,6 @@ class Weapons {
         )
     }
 
-
-
     private fun compactCrossbowRecipe(): ShapedRecipe {
         val result = Equipment.COMPACT_CROSSBOW.newItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "compact_crossbow"), result).apply {

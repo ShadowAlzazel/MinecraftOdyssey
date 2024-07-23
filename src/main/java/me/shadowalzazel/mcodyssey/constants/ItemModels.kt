@@ -259,6 +259,7 @@ object ItemModels {
     // Soul Steel [69066XX]
     const val SOUL_STEEL_MATERIAL_PRE: Int = 69066
     const val TITANIUM_MATERIAL_PRE: Int = 69068
+    const val ANODIZED_TITANIUM_MATERIAL_PRE: Int = 69070
     const val IRIDIUM_MATERIAL_PRE: Int = 69071
     const val MITHRIL_MATERIAL_PRE: Int = 69076
     // Soul Steel [69066XX]

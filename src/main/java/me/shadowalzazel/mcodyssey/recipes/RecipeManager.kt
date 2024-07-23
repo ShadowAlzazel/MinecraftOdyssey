@@ -4,6 +4,7 @@ import me.shadowalzazel.mcodyssey.recipes.crafting.*
 import me.shadowalzazel.mcodyssey.recipes.creators.ToolRecipeCreator
 import me.shadowalzazel.mcodyssey.recipes.creators.WeaponRecipeCreator
 import me.shadowalzazel.mcodyssey.recipes.smelting.Kiln
+import me.shadowalzazel.mcodyssey.recipes.smelting.Tempering
 import org.bukkit.inventory.Recipe
 
 class RecipeManager {
@@ -17,9 +18,11 @@ class RecipeManager {
             addAll(Weapons().getRecipes())
             addAll(Equipment().getRecipes())
             addAll(Kiln().getRecipes())
+            addAll(Tempering().getRecipes())
             addAll(UtilitySmithing().getRecipes())
             addAll(ToolRecipeCreator().generateToolRecipes())
             addAll(WeaponRecipeCreator().generateWeaponRecipes())
+            addAll(Utility().getRecipes())
         }
         return recipeList
     }

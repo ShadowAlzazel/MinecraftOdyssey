@@ -133,7 +133,7 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
         val fullAttack = player.attackCooldown > 0.99
         // Get bonus/special effects
         // ??? If Crouching more damage
-        println("Start Damage: ${event.damage}")
+        //println("Start Damage: ${event.damage}")
         when(mainWeaponType) {
             "sickle" -> {
                 val rads = (100 * Math.PI) / 180
@@ -252,8 +252,8 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
         event.damage = maxOf(0.0, event.damage)
         //println("Cooldown Charge: " + player.attackCooldown)
         //println("Cooldown Period: " + player.cooldownPeriod)
-        println("Event Damage: ${event.damage}")
-        println("Final Damage: ${event.finalDamage}")
+        //println("Event Damage: ${event.damage}")
+        //println("Final Damage: ${event.finalDamage}")
     }
 
     // Bonus stats handler

@@ -320,6 +320,8 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
     private fun buzzyBeesEnchantment(
         victim: LivingEntity,
         level: Int) {
+        if (victim.health < 4) return
+        if (victim.scoreboardTags.contains(EffectTags.HONEYED)) return
         // Spawn Bee if not low
         with(victim) {
             if (!isDead) {
@@ -328,15 +330,14 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
                         listOf(
                             PotionEffect(PotionEffectType.SPEED, 10 * 20, level - 1),
                             PotionEffect(PotionEffectType.STRENGTH, 10 * 20, level - 1),
-                            PotionEffect(PotionEffectType.HASTE, 10 * 20, 0),
-                            PotionEffect(PotionEffectType.ABSORPTION, 10 * 20, level - 1)
+                            PotionEffect(PotionEffectType.HASTE, 10 * 20, 0)
                         )
                     )
                     it.target = this@with
+                    it.isPersistent = false
                 }
             }
-            val seconds = (3 * level) + 3
-            victim.addOdysseyEffect(EffectTags.HONEYED, seconds * 20, level)
+            victim.addOdysseyEffect(EffectTags.HONEYED, 6 * 20, level)
             world.playSound(location, Sound.BLOCK_HONEY_BLOCK_FALL, 2.5F, 0.9F)
         }
     }
@@ -400,7 +401,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
 
     private fun douseEnchantment(victim: LivingEntity, level: Int): Double {
         victim.fireTicks = 0
-        if (victim is Blaze || victim is MagmaCube || victim.fireTicks > 0) {
+        if (victim is Blaze || victim is MagmaCube || victim is Enderman || victim.fireTicks > 0) {
             victim.fireTicks = 0
             return (level * 2.5) + 2.5
         }
@@ -673,6 +674,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
             victim.setIntTag(EntityTags.VOID_STRUCK_BY, attacker.entityId)
         }
         else if (voidStruckBy != attacker.entityId) {
+            victim.setIntTag(EntityTags.VOID_STRUCK_BY, attacker.entityId)
             return 0.0
         }
         // Get modifier and set voidDamage

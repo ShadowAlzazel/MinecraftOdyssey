@@ -14,6 +14,7 @@ import me.shadowalzazel.mcodyssey.effects.*
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.Color
 import org.bukkit.Material
+import org.bukkit.NamespacedKey
 import org.bukkit.entity.Arrow
 import org.bukkit.entity.Item
 import org.bukkit.entity.LivingEntity
@@ -245,6 +246,14 @@ object AlchemyListener : Listener, PotionEffectsManager, EffectsManager, DataTag
         val allItems = entitiesInside.all { it is Item }
         if (!allItems) return
         val itemList = entitiesInside.filterIsInstance<Item>().toMutableSet()
+        // Advancement
+        val players = event.block.location.getNearbyPlayers(5.0)
+        players.forEach {
+            val advancement = it.server.getAdvancement(NamespacedKey.fromString("odyssey:odyssey/cauldron_alchemy")!!)
+            if (advancement != null) {
+                it.getAdvancementProgress(advancement).awardCriteria("requirement")
+            }
+        }
         // Run new async
         asyncCauldronHandler(itemList, blockUnderneath.type)
     }

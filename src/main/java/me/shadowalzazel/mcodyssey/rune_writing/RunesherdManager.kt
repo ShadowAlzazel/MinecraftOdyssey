@@ -5,7 +5,6 @@ package me.shadowalzazel.mcodyssey.rune_writing
 import me.shadowalzazel.mcodyssey.util.AttributeManager
 import me.shadowalzazel.mcodyssey.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.items.Runesherds
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
@@ -31,6 +30,18 @@ internal interface RunesherdManager : AttributeManager, DataTagManager {
 
     fun ItemStack.hasRunesherdTag(): Boolean {
         return hasTag(ItemDataTags.IS_RUNESHERD)
+    }
+
+    fun ItemStack.addRuneIdentifier(name: String) {
+        addStringTag(ItemDataTags.RUNE_IDENTIFIER, name)
+    }
+
+    fun ItemStack.getRuneIdentifier(): String? {
+        val runeName = getStringTag(ItemDataTags.RUNE_IDENTIFIER)
+        if (runeName != null) return runeName
+        val itemIdentifier = getItemIdentifier()
+        if (itemIdentifier != null) return itemIdentifier
+        return null
     }
 
     fun ItemStack.addRuneAugmentTag() {
@@ -59,45 +70,44 @@ internal interface RunesherdManager : AttributeManager, DataTagManager {
 
     /*-----------------------------------------------------------------------------------------------*/
     // Find Attribute
-    private fun findRunesherdAttribute(name: String): Attribute? {
+    fun findRunesherdAttribute(name: String): Attribute? {
         return when (name) {
-            Runesherds.ASSAULT_RUNESHERD.itemName -> { Attribute.GENERIC_ATTACK_DAMAGE }
-            Runesherds.GUARD_RUNESHERD.itemName -> { Attribute.GENERIC_ARMOR }
-            Runesherds.FINESSE_RUNESHERD.itemName -> { Attribute.GENERIC_ATTACK_SPEED }
-            Runesherds.SWIFT_RUNESHERD.itemName -> { Attribute.GENERIC_MOVEMENT_SPEED }
-            Runesherds.VITALITY_RUNESHERD.itemName -> { Attribute.GENERIC_MAX_HEALTH }
-            Runesherds.STEADFAST_RUNESHERD.itemName -> { Attribute.GENERIC_KNOCKBACK_RESISTANCE }
-            Runesherds.FORCE_RUNESHERD.itemName -> { Attribute.GENERIC_ATTACK_KNOCKBACK }
-            Runesherds.BREAK_RUNESHERD.itemName -> { Attribute.PLAYER_BLOCK_BREAK_SPEED }
-            Runesherds.GRASP_RUNESHERD.itemName -> { Attribute.PLAYER_BLOCK_INTERACTION_RANGE }
-            Runesherds.JUMP_RUNESHERD.itemName -> { Attribute.GENERIC_JUMP_STRENGTH }
-            Runesherds.GRAVITY_RUNESHERD.itemName -> { Attribute.GENERIC_GRAVITY }
-            Runesherds.RANGE_RUNESHERD.itemName -> { Attribute.PLAYER_ENTITY_INTERACTION_RANGE }
-            Runesherds.SIZE_RUNESHERD.itemName -> { Attribute.GENERIC_SCALE }
-            // TODO: Step height/toughness
-            else -> { null }
+            "assault_runesherd", "assault_rune" -> Attribute.GENERIC_ATTACK_DAMAGE
+            "guard_runesherd", "guard_rune" -> Attribute.GENERIC_ARMOR
+            "finesse_runesherd", "finesse_rune" -> Attribute.GENERIC_ATTACK_SPEED
+            "swift_runesherd", "swift_rune" -> Attribute.GENERIC_MOVEMENT_SPEED
+            "vitality_runesherd", "vitality_rune" -> Attribute.GENERIC_MAX_HEALTH
+            "steadfast_runesherd", "steadfast_rune" -> Attribute.GENERIC_KNOCKBACK_RESISTANCE
+            "force_runesherd", "force_rune" -> Attribute.GENERIC_ATTACK_KNOCKBACK
+            "break_runesherd", "break_rune" -> Attribute.PLAYER_BLOCK_BREAK_SPEED
+            "grasp_runesherd", "grasp_rune" -> Attribute.PLAYER_BLOCK_INTERACTION_RANGE
+            "jump_runesherd", "jump_rune" -> Attribute.GENERIC_JUMP_STRENGTH
+            "gravity_runesherd", "gravity_rune" -> Attribute.GENERIC_GRAVITY
+            "range_runesherd", "range_rune" -> Attribute.PLAYER_ENTITY_INTERACTION_RANGE
+            "size_runesherd", "size_rune" -> Attribute.GENERIC_SCALE
+            else -> null
         }
     }
 
     // Used to get UUID from attribute held by runesherds
     fun getRuneAttributeName(attribute: Attribute): String {
         return when(attribute) {
-            Attribute.GENERIC_ATTACK_DAMAGE -> { AttributeTags.RUNE_ATTACK_DAMAGE }
-            Attribute.GENERIC_ARMOR -> { AttributeTags.RUNE_ARMOR }
-            Attribute.GENERIC_ATTACK_SPEED -> { AttributeTags.RUNE_ATTACK_SPEED }
-            Attribute.GENERIC_MOVEMENT_SPEED -> { AttributeTags.RUNE_MOVEMENT_SPEED }
-            Attribute.GENERIC_MAX_HEALTH -> { AttributeTags.RUNE_BONUS_HEALTH }
-            Attribute.GENERIC_KNOCKBACK_RESISTANCE -> { AttributeTags.RUNE_KNOCKBACK_RESISTANCE }
-            Attribute.GENERIC_ATTACK_KNOCKBACK -> { AttributeTags.RUNE_ATTACK_KNOCKBACK }
-            Attribute.PLAYER_BLOCK_BREAK_SPEED -> { AttributeTags.RUNE_BLOCK_BREAK_SPEED }
-            Attribute.PLAYER_BLOCK_INTERACTION_RANGE -> { AttributeTags.RUNE_BLOCK_REACH }
-            Attribute.GENERIC_JUMP_STRENGTH -> { AttributeTags.RUNE_JUMP_STRENGTH }
-            Attribute.GENERIC_GRAVITY -> { AttributeTags.RUNE_GRAVITY }
-            Attribute.PLAYER_ENTITY_INTERACTION_RANGE -> { AttributeTags.RUNE_ENTITY_REACH }
-            Attribute.GENERIC_SCALE -> { AttributeTags.RUNE_SCALE }
-            Attribute.GENERIC_STEP_HEIGHT -> { AttributeTags.RUNE_STEP_HEIGHT }
-            Attribute.GENERIC_ARMOR_TOUGHNESS -> { AttributeTags.RUNE_ARMOR_TOUGHNESS }
-            else -> {  "rune.generic" }
+            Attribute.GENERIC_ATTACK_DAMAGE ->  AttributeTags.RUNE_ATTACK_DAMAGE
+            Attribute.GENERIC_ARMOR ->  AttributeTags.RUNE_ARMOR
+            Attribute.GENERIC_ATTACK_SPEED ->  AttributeTags.RUNE_ATTACK_SPEED
+            Attribute.GENERIC_MOVEMENT_SPEED ->  AttributeTags.RUNE_MOVEMENT_SPEED
+            Attribute.GENERIC_MAX_HEALTH ->  AttributeTags.RUNE_BONUS_HEALTH
+            Attribute.GENERIC_KNOCKBACK_RESISTANCE ->  AttributeTags.RUNE_KNOCKBACK_RESISTANCE
+            Attribute.GENERIC_ATTACK_KNOCKBACK ->  AttributeTags.RUNE_ATTACK_KNOCKBACK
+            Attribute.PLAYER_BLOCK_BREAK_SPEED ->  AttributeTags.RUNE_BLOCK_BREAK_SPEED
+            Attribute.PLAYER_BLOCK_INTERACTION_RANGE ->  AttributeTags.RUNE_BLOCK_REACH
+            Attribute.GENERIC_JUMP_STRENGTH ->  AttributeTags.RUNE_JUMP_STRENGTH
+            Attribute.GENERIC_GRAVITY ->  AttributeTags.RUNE_GRAVITY
+            Attribute.PLAYER_ENTITY_INTERACTION_RANGE ->  AttributeTags.RUNE_ENTITY_REACH
+            Attribute.GENERIC_SCALE ->  AttributeTags.RUNE_SCALE
+            Attribute.GENERIC_STEP_HEIGHT ->  AttributeTags.RUNE_STEP_HEIGHT
+            Attribute.GENERIC_ARMOR_TOUGHNESS ->  AttributeTags.RUNE_ARMOR_TOUGHNESS
+            else -> "rune.generic"
         }
     }
 
@@ -108,14 +118,14 @@ internal interface RunesherdManager : AttributeManager, DataTagManager {
         slots: EquipmentSlotGroup
     ) {
         when(attribute) {
-            Attribute.GENERIC_ATTACK_DAMAGE -> { addAttackDamageAttribute(value, name, slots) }
-            Attribute.GENERIC_ARMOR -> { addArmorAttribute(value, name, slots) }
-            Attribute.GENERIC_ATTACK_SPEED -> { addAttackSpeedAttribute(value, name, slots) }
-            Attribute.GENERIC_MOVEMENT_SPEED -> { addMovementSpeedAttribute(value, name, slots) }
-            Attribute.GENERIC_MAX_HEALTH -> { addMaxHealthAttribute(value, name, slots) }
-            Attribute.GENERIC_KNOCKBACK_RESISTANCE -> { addKnockbackResistanceAttribute(value, name, slots) }
-            Attribute.GENERIC_ATTACK_KNOCKBACK -> { addAttackKnockbackAttribute(value, name, slots) }
-            else -> { setGenericAttribute(value, name, attribute, slotGroup = slots) }
+            Attribute.GENERIC_ATTACK_DAMAGE -> addAttackDamageAttribute(value, name, slots)
+            Attribute.GENERIC_ARMOR -> addArmorAttribute(value, name, slots)
+            Attribute.GENERIC_ATTACK_SPEED -> addAttackSpeedAttribute(value, name, slots)
+            Attribute.GENERIC_MOVEMENT_SPEED -> addMovementSpeedAttribute(value, name, slots)
+            Attribute.GENERIC_MAX_HEALTH -> addMaxHealthAttribute(value, name, slots)
+            Attribute.GENERIC_KNOCKBACK_RESISTANCE -> addKnockbackResistanceAttribute(value, name, slots)
+            Attribute.GENERIC_ATTACK_KNOCKBACK -> addAttackKnockbackAttribute(value, name, slots)
+            else -> setGenericAttribute(value, name, attribute, slotGroup = slots)
         }
     }
 
@@ -124,21 +134,20 @@ internal interface RunesherdManager : AttributeManager, DataTagManager {
     fun addRunesherdToItemStack(runesherd: ItemStack, item: ItemStack): ItemStack? {
         // Basic Checks
         if (!runesherd.hasRunesherdTag()) return null
-        if (!runesherd.hasOdysseyItemTag()) return null
         // Runeware can have up to 3 runesherd augments
         val equipment = item.clone()
         val itemIsRuneware = equipment.hasRunewareTag()
         if (equipment.hasRuneAugmentTag() && !itemIsRuneware) return null
         if (!runesherd.itemMeta.hasAttributeModifiers()) return null
-        val runesherdName = runesherd.getOdysseyTag() ?: return null // ItemName
+        val runeName = runesherd.getRuneIdentifier() ?: return null // ItemName
         // Get rune key
         val runeKey = AttributeTags.RUNESHERD_KEY
-        val runeAttribute = findRunesherdAttribute(runesherdName) ?: return null
+        val runeAttribute = findRunesherdAttribute(runeName) ?: return null
         val runesherdAttributeModifiers = runesherd.itemMeta.attributeModifiers?.get(runeAttribute) ?: return null
         val runesherdModifier = runesherdAttributeModifiers.find { it.name == runeKey } ?: return null
         val runeAttributeName = getRuneAttributeName(runeAttribute)
-        val genericName = getMaterialRuneName(equipment.type) // Prohibits MULTI RUNEWARES!!
-        val fullAttributeName = "${runeAttributeName}.${genericName}"
+        val slotNameExtension = getMaterialSlotName(equipment.type) // Prohibits MULTI runeware!!???
+        val fullAttributeName = "${runeAttributeName}.${slotNameExtension}"
         // Can not stack runesherd keys
         if (equipment.itemMeta.attributeModifiers != null && !itemIsRuneware) {
             val itemAttributes = equipment.itemMeta.attributeModifiers!![runeAttribute]
@@ -175,19 +184,19 @@ internal interface RunesherdManager : AttributeManager, DataTagManager {
             // Check if armor
             if (itemIsArmor) {
                 val baseValues = getBaseDataArmor(equipment.type) // Pair(armor, toughness)
-                equipment.addArmorAttribute(baseValues.first, "generic.armor.$genericName", mainGroup)
+                equipment.addArmorAttribute(baseValues.first, "generic.armor.$slotNameExtension", mainGroup)
                 // Add toughness if can
                 if (baseValues.second > 0.0) {
-                    equipment.addArmorToughnessAttribute(baseValues.second, "generic.armor_toughness.$genericName", mainGroup)
+                    equipment.addArmorToughnessAttribute(baseValues.second, "generic.armor_toughness.$slotNameExtension", mainGroup)
                 }
                 // CHeck if netherite to also add knockback resistance
                 if (baseValues.second >= 3.0) { // apparently 0.1 is 1
-                    equipment.addKnockbackResistanceAttribute(0.1, "generic.knockback_resistance.$genericName",  mainGroup)
+                    equipment.addKnockbackResistanceAttribute(0.1, "generic.knockback_resistance.$slotNameExtension",  mainGroup)
                 }
             } else {
                 val baseValues = getBaseDataTools(equipment.type) // Pair(damage, speed)
                 if (baseValues.second != 0.0) {
-                    equipment.addAttackDamageAttribute(baseValues.first, "generic.attack_damage.$genericName")
+                    equipment.addAttackDamageAttribute(baseValues.first, "generic.attack_damage.$slotNameExtension")
                     equipment.setNewAttackSpeedAttribute(baseValues.second)
                 }
             }
@@ -250,7 +259,7 @@ internal interface RunesherdManager : AttributeManager, DataTagManager {
         return slotGroups + listOf(EquipmentSlotGroup.ANY)
     }
 
-    private fun getMaterialRuneName(material: Material): String {
+    private fun getMaterialSlotName(material: Material): String {
         return when (material) {
             Material.NETHERITE_SWORD, Material.DIAMOND_SWORD, Material.IRON_SWORD, Material.GOLDEN_SWORD, Material.STONE_SWORD, Material.WOODEN_SWORD,
             Material.NETHERITE_AXE, Material.DIAMOND_AXE, Material.IRON_AXE, Material.GOLDEN_AXE, Material.STONE_AXE, Material.WOODEN_AXE,

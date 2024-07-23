@@ -68,6 +68,7 @@ object ItemDataTags {
     const val RUNEWARE_AUGMENT_COUNT: String = "odyssey.runeware_augment_count"
     const val IS_RUNESHERD: String = "odyssey.is_runesherd"
     const val HAS_RUNE_AUGMENT: String = "odyssey.has_rune_augment"
+    const val RUNE_IDENTIFIER: String = "odyssey.rune_identifier"
     const val IS_SPACERUNE: String = "odyssey.is_spacerune"
 
     // Compasses

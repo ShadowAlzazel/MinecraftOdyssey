@@ -21,6 +21,9 @@ interface ToolMiningManager {
 
    fun createMiningToolComponent(base: ToolComponent, toolMaterial: String, miningTags: Tag<Material>): ToolComponent? {
         val speed = when(toolMaterial) {
+            "copper" -> {
+                4.5F // Fix later
+            }
             "iridium" -> {
                 8.5F
             }

@@ -160,10 +160,10 @@ interface MobCreationHelper: AttributeManager, EnchantabilityHandler {
                     it.setItemInOffHand(weapon.clone())
                     it.itemInOffHandDropChance = 0.5F // Change to difficulty
                 }
-                it.helmetDropChance = 0.3F
-                it.chestplateDropChance = 0.3F
-                it.leggingsDropChance = 0.3F
-                it.bootsDropChance = 0.3F
+                it.helmetDropChance = 0.125F
+                it.chestplateDropChance = 0.125F
+                it.leggingsDropChance = 0.125F
+                it.bootsDropChance = 0.125F
             }
             addHealthAttribute(45 + (20.0 * difficultyMod), AttributeTags.ELITE_HEALTH)
             health += 45 + (20.0 * difficultyMod)

@@ -187,12 +187,6 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-    @EventHandler
-    fun enchantPrepareHandler(event: PrepareItemEnchantEvent) {
-        //println(event.offers)
-        //println(event.enchantmentBonus)
-        //println(event)
-    }
 
     @EventHandler
     fun enchantingTableHandler(event: EnchantItemEvent) {
@@ -229,7 +223,6 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
                 newMeta.removeItemFlags(ItemFlag.HIDE_STORED_ENCHANTS)
                 clone.itemMeta = newMeta
                 event.result = clone
-                println("CLONE")
             }
         }
         else {

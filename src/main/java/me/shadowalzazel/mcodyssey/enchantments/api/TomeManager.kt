@@ -3,6 +3,7 @@ package me.shadowalzazel.mcodyssey.enchantments.api
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Material
+import org.bukkit.NamespacedKey
 import org.bukkit.Sound
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.HumanEntity
@@ -33,6 +34,17 @@ internal interface TomeManager : EnchantabilityHandler {
             item.removeEnchantment(enchantToRemove.first)
         }
         val removedEnchantsMap = mutableMapOf(enchantToRemove.first to enchantToRemove.second)
+        // Advancement
+        if (enchantToRemove.first.isCursed) {
+            viewers.forEach {
+                if (it is Player) {
+                    val advancement = it.server.getAdvancement(NamespacedKey.fromString("odyssey:odyssey/discharge_a_curse")!!)
+                    if (advancement != null) {
+                        it.getAdvancementProgress(advancement).awardCriteria("requirement")
+                    }
+                }
+            }
+        }
         item.updateEnchantabilityPointsLore(removedEnchants=removedEnchantsMap)
         return item
     }
@@ -61,7 +73,7 @@ internal interface TomeManager : EnchantabilityHandler {
         // Get Enchant to Upgrade if available
         val availableEnchants = if (hasStoredEnchants) {
             val storedMeta = item.itemMeta as EnchantmentStorageMeta
-            storedMeta.enchants.toList().filter { it.second < it.first.maxLevel }
+            storedMeta.storedEnchants.toList().filter { it.second < it.first.maxLevel }
         } else {
             item.enchantments.toList().filter { it.second < it.first.maxLevel }
         }
@@ -88,12 +100,24 @@ internal interface TomeManager : EnchantabilityHandler {
             storedMeta.removeStoredEnchant(enchantToUpgrade.first)
             storedMeta.addStoredEnchant(enchantToUpgrade.first, checkedMaxLevel, false)
             item.itemMeta = storedMeta
+            // Set advancement from datapack
         } else {
             // Remove and re-add
             item.removeEnchantment(enchantToUpgrade.first)
             item.addEnchantment(enchantToUpgrade.first, checkedMaxLevel)
+            item.updateEnchantabilityPointsLore()
         }
-        item.updateEnchantabilityPointsLore()
+        // Advancement
+        if (checkedMaxLevel >= enchantToUpgrade.first.maxLevel) {
+            viewers.forEach {
+                if (it is Player) {
+                    val advancement = it.server.getAdvancement(NamespacedKey.fromString("odyssey:odyssey/use_promotion_tome")!!)
+                    if (advancement != null) {
+                        it.getAdvancementProgress(advancement).awardCriteria("requirement")
+                    }
+                }
+            }
+        }
         return item
     }
 
@@ -123,6 +147,17 @@ internal interface TomeManager : EnchantabilityHandler {
         val newMeta = imitatedBook.itemMeta as EnchantmentStorageMeta
         newMeta.addStoredEnchant(randomEnchant.first, randomEnchant.second, false)
         imitatedBook.itemMeta = newMeta
+        // Advancement
+        if (randomEnchant.second >= randomEnchant.first.maxLevel) {
+            viewers.forEach {
+                if (it is Player) {
+                    val advancement = it.server.getAdvancement(NamespacedKey.fromString("odyssey:odyssey/use_imitation_tome")!!)
+                    if (advancement != null) {
+                        it.getAdvancementProgress(advancement).awardCriteria("requirement")
+                    }
+                }
+            }
+        }
         return imitatedBook
     }
 

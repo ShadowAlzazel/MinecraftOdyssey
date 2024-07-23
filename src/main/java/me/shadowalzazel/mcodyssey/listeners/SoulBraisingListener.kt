@@ -7,14 +7,12 @@ import me.shadowalzazel.mcodyssey.constants.ItemDataTags
 import me.shadowalzazel.mcodyssey.items.Ingredients
 import me.shadowalzazel.mcodyssey.listeners.utility.SculkFinderSynchro
 import me.shadowalzazel.mcodyssey.util.DataTagManager
-import org.bukkit.Material
-import org.bukkit.Particle
-import org.bukkit.Sound
-import org.bukkit.World
+import org.bukkit.*
 import org.bukkit.block.Biome
 import org.bukkit.entity.Entity
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Item
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityCombustByBlockEvent
@@ -52,6 +50,18 @@ object SoulBraisingListener : Listener, DataTagManager {
                 val resultEntity = recipe.braiseSuccessHandler(item.itemStack.amount, event.combuster!!.location)
                 // Check if compass
                 compassChecker(stackClone, resultEntity)
+                // Advancement
+                if (recipe == SoulBraiseRecipes.SOUL_STEEL_RECIPE) {
+                    val players = event.entity.location.getNearbyPlayers(5.0)
+                    players.forEach {
+                        if (it is Player) {
+                            val advancement = it.server.getAdvancement(NamespacedKey.fromString("odyssey:odyssey/convert_soul_steel")!!)
+                            if (advancement != null) {
+                                it.getAdvancementProgress(advancement).awardCriteria("requirement")
+                            }
+                        }
+                    }
+                }
                 break
             }
         }

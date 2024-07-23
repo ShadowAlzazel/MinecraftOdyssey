@@ -16,9 +16,12 @@ import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
+import org.bukkit.entity.Item
 import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.inventory.FurnaceSmeltEvent
 import org.bukkit.event.inventory.PrepareSmithingEvent
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
@@ -104,6 +107,16 @@ object SmithingListeners : Listener, DataTagManager, ToolMiningManager {
                     setStackItemName(item)
                     val newMeta = item.itemMeta as Damageable
                     newMeta.setMaxDamage(666)
+                    // Advancement
+                    event.viewers.forEach {
+                        if (it is Player) {
+                            val advancement = it.server.getAdvancement(NamespacedKey.fromString("odyssey:odyssey/smith_soul_steel")!!)
+                            if (advancement != null) {
+                                it.getAdvancementProgress(advancement).awardCriteria("requirement")
+                            }
+                        }
+                    }
+                    // Final
                     item.itemMeta = newMeta
                     event.result = item
                 }
@@ -123,6 +136,16 @@ object SmithingListeners : Listener, DataTagManager, ToolMiningManager {
                     setStackItemName(item)
                     val newMeta = item.itemMeta as Damageable
                     newMeta.setMaxDamage(1002)
+                    // Advancement
+                    event.viewers.forEach {
+                        if (it is Player) {
+                            val advancement = it.server.getAdvancement(NamespacedKey.fromString("odyssey:odyssey/smith_titanium")!!)
+                            if (advancement != null) {
+                                it.getAdvancementProgress(advancement).awardCriteria("requirement")
+                            }
+                        }
+                    }
+                    // Final
                     item.itemMeta = newMeta
                     event.result = item
                 }
@@ -143,6 +166,16 @@ object SmithingListeners : Listener, DataTagManager, ToolMiningManager {
                     val newMeta = item.itemMeta as Damageable
                     newMeta.setMaxDamage(3178)
                     item.itemMeta = newMeta
+                    // Advancement
+                    event.viewers.forEach {
+                        if (it is Player) {
+                            val advancement = it.server.getAdvancement(NamespacedKey.fromString("odyssey:odyssey/smith_iridium")!!)
+                            if (advancement != null) {
+                                it.getAdvancementProgress(advancement).awardCriteria("requirement")
+                            }
+                        }
+                    }
+                    // Final
                     // Change minecraft material
                     val newType = when(item.type) {
                         Material.DIAMOND_SWORD -> Material.IRON_SWORD
@@ -177,6 +210,16 @@ object SmithingListeners : Listener, DataTagManager, ToolMiningManager {
                     val newMeta = item.itemMeta as Damageable
                     newMeta.setMaxDamage(1789)
                     item.itemMeta = newMeta
+                    // Advancement
+                    event.viewers.forEach {
+                        if (it is Player) {
+                            val advancement = it.server.getAdvancement(NamespacedKey.fromString("odyssey:odyssey/smith_mithril")!!)
+                            if (advancement != null) {
+                                it.getAdvancementProgress(advancement).awardCriteria("requirement")
+                            }
+                        }
+                    }
+                    // Final
                     // Change minecraft material
                     val newType = when(item.type) {
                         Material.DIAMOND_SWORD -> Material.IRON_SWORD
@@ -278,7 +321,7 @@ object SmithingListeners : Listener, DataTagManager, ToolMiningManager {
                 "iridium_ingot" -> TrimMaterials.IRIDIUM
                 "mithril_ingot" -> TrimMaterials.MITHRIL
                 "titanium_ingot" -> TrimMaterials.TITANIUM
-                "andonized_titanium_ingot" -> TrimMaterials.ANODIZED_TITANIUM
+                "anodized_titanium_ingot" -> TrimMaterials.ANODIZED_TITANIUM
                 "silver_ingot" -> TrimMaterials.SILVER
                 "obsidian" -> TrimMaterials.OBSIDIAN // DOES NOT WORK
                 else -> null
@@ -362,6 +405,20 @@ object SmithingListeners : Listener, DataTagManager, ToolMiningManager {
             it.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, newModifier)
         }
         item.itemMeta = newMeta
+    }
+
+    @EventHandler
+    fun furnaceFinishTemperItem(event: FurnaceSmeltEvent) {
+        // Get matching vars
+        if (event.block.type != Material.BLAST_FURNACE) return
+        val input = event.source
+        if (!input.hasItemMeta()) return
+        val itemMeta = input.itemMeta
+        if (!itemMeta.hasCustomModelData()) return
+        if (input.getStringTag(ItemDataTags.MATERIAL_TYPE) != "titanium") return
+        val result = input.clone()
+        upgradeModel(result, ItemModels.ANODIZED_TITANIUM_MATERIAL_PRE)
+        event.result = result
     }
 
     private fun upgradeModel(item: ItemStack, newModelPre: Int) {
