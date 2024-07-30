@@ -22,7 +22,8 @@ object Equipment {
         lore = listOf(Component.text("A Smithing Template used to upgrade Diamond tools into Mithril.", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
 
-    val IMPERIAL_ARMOR_TRIM_SMITHING_TEMPLATE = OdysseyItem("imperial_armor_trim_smithing_template", Material.PAPER, "Smithing Template", ItemModels.IMPERIAL_ARMOR_TRIM_SMITHING_TEMPLATE)
+    val IMPERIAL_ARMOR_TRIM_SMITHING_TEMPLATE = OdysseyItem("imperial_armor_trim_smithing_template", Material.PAPER, "Smithing Template", ItemModels.IMPERIAL_ARMOR_TRIM_SMITHING_TEMPLATE,
+        lore = listOf(Component.text("Imperial Armor Trim", GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
     // Weapon Molds
     // WIP [Molds - Katana/Weapons]

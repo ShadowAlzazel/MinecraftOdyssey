@@ -54,10 +54,10 @@ object StructureListeners : Listener, StructureManager {
         location.world = newWorld
         location.add(offset)
         //val final = location.toHighestLocation(HeightMap.WORLD_SURFACE)
-        val final = location.toHighestLocation(HeightMap.MOTION_BLOCKING).toLocation(newWorld)
+        val final = location.toHighestLocation(HeightMap.WORLD_SURFACE).toLocation(newWorld)
         event.to = final
         //println(event.to)
-        player.teleport(event.to)
+        player.teleport(final)
         event.isCancelled = true
         return
     }

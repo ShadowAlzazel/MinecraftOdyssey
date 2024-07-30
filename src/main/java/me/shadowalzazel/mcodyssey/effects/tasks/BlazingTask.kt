@@ -17,7 +17,7 @@ class BlazingTask(private val victim: LivingEntity, private val amplifier: Int, 
             // Check if in water or not ablaze
             if (EffectTags.ABLAZE !in it.scoreboardTags) { this.cancel() }
             if (it.isInWaterOrRainOrBubbleColumn ) {
-                it.scoreboardTags.remove(EffectTags.ABLAZE)
+                it.removeScoreboardTag(EffectTags.ABLAZE)
                 this.cancel()
             }
 
@@ -39,7 +39,7 @@ class BlazingTask(private val victim: LivingEntity, private val amplifier: Int, 
             // Every 1 sec
             val timeElapsed = System.currentTimeMillis() - cooldown
             if (maxCount < counter || it.health <= 0.0 || timeElapsed > maxCount * 1000) {
-                it.scoreboardTags.remove(EffectTags.ABLAZE)
+                it.removeScoreboardTag(EffectTags.ABLAZE)
                 this.cancel()
             }
         }

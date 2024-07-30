@@ -17,7 +17,7 @@ object SoulBraiseRecipes {
         braiseMaterial = setOf(Material.SCULK),
         BraiseBase.PLUS)
 
-    private val SOUL_STEEL_RECIPE = SoulBraiseRecipe(
+    val SOUL_STEEL_RECIPE = SoulBraiseRecipe(
         itemResult = Ingredients.SOUL_STEEL_INGOT,
         mobSummon = null,
         braiseIngredients = listOf(ItemStack(Material.RAW_IRON, 1)),

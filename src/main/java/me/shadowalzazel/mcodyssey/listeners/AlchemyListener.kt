@@ -14,6 +14,7 @@ import me.shadowalzazel.mcodyssey.effects.*
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.Color
 import org.bukkit.Material
+import org.bukkit.NamespacedKey
 import org.bukkit.entity.Arrow
 import org.bukkit.entity.Item
 import org.bukkit.entity.LivingEntity
@@ -245,12 +246,19 @@ object AlchemyListener : Listener, PotionEffectsManager, EffectsManager, DataTag
         val allItems = entitiesInside.all { it is Item }
         if (!allItems) return
         val itemList = entitiesInside.filterIsInstance<Item>().toMutableSet()
+        // Advancement
+        val players = event.block.location.getNearbyPlayers(5.0)
+        players.forEach {
+            val advancement = it.server.getAdvancement(NamespacedKey.fromString("odyssey:odyssey/cauldron_alchemy")!!)
+            if (advancement != null) {
+                it.getAdvancementProgress(advancement).awardCriteria("requirement")
+            }
+        }
         // Run new async
         asyncCauldronHandler(itemList, blockUnderneath.type)
     }
     
     /*-----------------------------------------------------------------------------------------------*/
-    // TODO: Fix bug if multiple types, converts all
 
     // Sea Crystals -> Vials
     // Popped Chorus Fruit -> Concoctions
@@ -313,7 +321,6 @@ object AlchemyListener : Listener, PotionEffectsManager, EffectsManager, DataTag
             // --------------------------------------------------
             // For Odyssey Effects
             if (hasOdysseyEffects) {
-                println("0")
                 result = if (resultMaterial == Material.LINGERING_POTION) {
                     createOdysseyLingeringPotion(item)
                 } else {
@@ -322,7 +329,6 @@ object AlchemyListener : Listener, PotionEffectsManager, EffectsManager, DataTag
             }
             // For custom effects -> Lingering/Splash [copies item]
             else if (hasCustomEffects && !isUpgradePlus) {
-                println("3")
                 result = if (resultMaterial == Material.LINGERING_POTION) {
                     makeCustomLingeringPotion(item)
                 } else {
@@ -331,12 +337,10 @@ object AlchemyListener : Listener, PotionEffectsManager, EffectsManager, DataTag
             }
             // For standard brewing [copies result]
             else if (isBasePotion && !isUpgradePlus) {
-                println("1")
                 result = makeModeledPotion(resultMaterial, result, resultModel)
             }
             // For keeping models  [copies result]
             else if (hasCustomModel && !isUpgradePlus) {
-                println("2")
                 result = makeModeledPotion(resultMaterial, result, itemMeta.customModelData)
             }
 
@@ -373,7 +377,7 @@ object AlchemyListener : Listener, PotionEffectsManager, EffectsManager, DataTag
     }
 
 
-    // (TODO: Fix for all: odyssey effects, custom effects,
+    // Fix for all: odyssey effects, custom effects,
     private fun makeExtendedPlusPotion(potion: ItemStack): ItemStack {
         if (potion.itemMeta !is PotionMeta) return potion
         if (potion.hasTag(ItemDataTags.IS_EXTENDED_PLUS)) return potion

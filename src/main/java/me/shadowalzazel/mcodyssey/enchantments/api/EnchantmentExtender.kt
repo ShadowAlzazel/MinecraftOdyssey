@@ -131,7 +131,7 @@ interface EnchantmentExtender {
             "antibonk" -> listOf(
                 "- Reduce critical hit damage by ${level * 10}%=[level x 10].")
             "beastly" -> listOf(
-                "- Increase health regeneration amount by ${25 + (25 * level)}%")
+                "- Increase health regeneration amount by ${(20 * level)}%")
             "black_rose" -> listOf(
                 "- Applies Wither II for ${level * 4}=[level x 4] seconds to enemies",
                 "that attacked the wearer.",
@@ -152,7 +152,7 @@ interface EnchantmentExtender {
             "fruitful_fare" -> listOf(
                 "- Eating a fruit recovers $level=[level] Health. Adds a 3 second cooldown to the fruit.")
             "ignore_pain" -> listOf(
-                "- Decrease Invulnerable time when hit by ${level * 0.1}=[level x 0.1] seconds",
+                "- Decrease Invulnerable time when hit by ${(level * 0.1).format(2)}=[level x 0.1] seconds",
                 "but gain absorption for ${5 - level}=[5 - level] seconds.")
             "illumineye" -> listOf(
                 "- Taking or dealing damage to an entity within line of sight applies",
@@ -269,12 +269,12 @@ interface EnchantmentExtender {
             "gust" -> listOf(
                 "- Targets are knocked-up for ${level * 100}%=[level x 100] force.")
             "hemorrhage" -> listOf(
-                "- Applies ${level}=[level] stacks of Hemorrhage to the target for 9 seconds.")
+                "- Applies ${level}=[level] stacks of bleeding DoT to the target for 9 seconds.")
             "illucidation" -> listOf(
                 "- Deal ${level}=[level] bonus damage to enemies that are glowing.",
                 "If the attack is a crit, it is doubled, but the glowing is removed.")
             "invocative" -> listOf(
-                "- Attacking a target damages the previous attacked target for ${level * 10}%=[level x 10] of the damage.")
+                "- Increase damage to a new target by ${level * 10}%=[level x 10] of your previous attack.")
             "metabolic" -> listOf(
                 "- Have a ${level * 10}%=[level x 10] chance to regain food levels when breaking a block.")
             "pestilence" -> listOf(
@@ -328,7 +328,7 @@ interface EnchantmentExtender {
             "gale" -> listOf(
                 "- After a 0.25 second delay, the shooter is blown in the facing direction.")
             "lucky_draw" -> listOf(
-                "- There is a${7 + (10 * level)}=[7 + (level x 10)]% chance to not consume ammo.")
+                "- There is a ${7 + (10 * level)}=[7 + (level x 10)]% chance to not consume ammo.")
             "luxpose" -> listOf(
                 "- Projectiles deal ${level}=[level] more damage to glowing targets.")
             "overcharge" -> listOf(

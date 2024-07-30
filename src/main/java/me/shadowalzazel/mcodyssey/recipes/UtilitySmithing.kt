@@ -133,7 +133,7 @@ class UtilitySmithing { // USE THIS CLASS TO CREATE RECIPE WHICH ARE AVAILABLE T
 
     private fun runesherdAugmenting(): SmithingTransformRecipe {
         val result = ItemStack(Material.BRICK)
-        val template = RecipeChoice.MaterialChoice(Material.BRICK)
+        val template = RecipeChoice.MaterialChoice(Material.BRICK, Material.CLAY_BALL)
 
         return SmithingTransformRecipe(
             NamespacedKey(Odyssey.instance, "runesherd_augmenting"),

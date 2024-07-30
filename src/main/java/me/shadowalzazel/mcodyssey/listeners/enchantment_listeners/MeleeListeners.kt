@@ -46,6 +46,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
         } else {
             event.damageSource.causingEntity
         }
+        if (event.damage <= 0.0) return // Prevent going through shields
         if (attacker !is LivingEntity) return
         if (attacker.equipment?.itemInMainHand?.hasItemMeta() == false) return
         val victim = event.entity as LivingEntity
@@ -118,21 +119,25 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
                     invocativeEnchantment(attacker, victim, event.damage, enchant.value)
                 }
                 "rupture" -> {
-                    event.damage -= ruptureEnchantment(attacker, victim, event.damage, enchant.value)
+                    ruptureEnchantment(attacker, victim, event.damage, enchant.value)
                 }
                 "conflagrate" -> {
                     conflagrateEnchantment(attacker, victim, enchant.value, event.damage)
                 }
                 "vital" -> {
-                    event.damage += vitalEnchantment(event.isCritical, enchant.value)
+                    event.damage += vitalEnchantment(event.isCritical, enchant.value) * power
                 }
                 "void_strike" -> {
-                    event.damage += voidStrikeEnchantment(attacker, victim, enchant.value)
+                    event.damage += voidStrikeEnchantment(attacker, victim, enchant.value) * power
                 }
                 "whirlwind" -> {
                     whirlwindEnchantment(attacker, victim, event.damage, enchant.value)
                 }
             }
+        }
+        // Check
+        if (event.damage < 0.0) {
+            event.damage = 0.0
         }
     }
 
@@ -148,7 +153,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
         for (enchant in weapon.enchantments) {
             when (enchant.key.getNameId()) {
                 "exploding" -> {
-                    explodingEnchantment(victim, enchant.value)
+                    explodingEnchantment(killer, victim, enchant.value)
                 }
                 "fearful_finisher" -> {
                     fearfulFinisherEnchantment(victim, enchant.value)
@@ -262,9 +267,9 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
         val victimTarget = victim.getTargetEntity(4)
         val isInvisible = attacker.isInvisible || attacker.hasPotionEffect(PotionEffectType.INVISIBILITY)
         // Looking more than 90-deg (1.57-rads) away from attacker
-        val isNotTarget = victim.eyeLocation.direction.angle(attacker.eyeLocation.direction) > 1.5708
-
-        if ((isInvisible && victimTarget != attacker) || isNotTarget) {
+        // parallel angles mean looking same direction -> behind
+        val behindTarget = attacker.eyeLocation.direction.angle(victim.eyeLocation.direction) < 1.5708
+        if ((isInvisible && victimTarget != attacker) || behindTarget) {
             // Particles and sounds
             with(victim.world) {
                 spawnParticle(Particle.CRIMSON_SPORE, victim.location, 15, 0.25, 0.25, 0.25)
@@ -320,6 +325,8 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
     private fun buzzyBeesEnchantment(
         victim: LivingEntity,
         level: Int) {
+        if (victim.health < 4) return
+        if (victim.scoreboardTags.contains(EffectTags.HONEYED)) return
         // Spawn Bee if not low
         with(victim) {
             if (!isDead) {
@@ -328,43 +335,31 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
                         listOf(
                             PotionEffect(PotionEffectType.SPEED, 10 * 20, level - 1),
                             PotionEffect(PotionEffectType.STRENGTH, 10 * 20, level - 1),
-                            PotionEffect(PotionEffectType.HASTE, 10 * 20, 0),
-                            PotionEffect(PotionEffectType.ABSORPTION, 10 * 20, level - 1)
+                            PotionEffect(PotionEffectType.HASTE, 10 * 20, 0)
                         )
                     )
                     it.target = this@with
+                    it.isPersistent = false
                 }
             }
-            val seconds = (3 * level) + 3
-            victim.addOdysseyEffect(EffectTags.HONEYED, seconds * 20, level)
+            victim.addOdysseyEffect(EffectTags.HONEYED, 6 * 20, level)
             world.playSound(location, Sound.BLOCK_HONEY_BLOCK_FALL, 2.5F, 0.9F)
         }
     }
 
     private fun cleaveEnchantment(victim: LivingEntity, level: Int) {
         val equipment = victim.equipment ?: return
-        val ranNum = (1..4).random()
-        when(ranNum) {
-            1 -> {
-                if (equipment.chestplate.hasItemMeta()) {
-                    equipment.chestplate.damage(level, victim)
-                }
-            }
-            2 -> {
-                if (equipment.leggings.hasItemMeta()) {
-                    equipment.leggings.damage(level, victim)
-                }
-            }
-            3 -> {
-                if (equipment.helmet.hasItemMeta()) {
-                    equipment.helmet.damage(level, victim)
-                }
-            }
-            4 -> {
-                if (equipment.chestplate.hasItemMeta()) {
-                    equipment.chestplate.damage(level, victim)
-                }
-            }
+        if (equipment.chestplate.hasItemMeta()) {
+            equipment.chestplate.damage(level, victim)
+        }
+        if (equipment.leggings.hasItemMeta()) {
+            equipment.leggings.damage(level, victim)
+        }
+        if (equipment.helmet.hasItemMeta()) {
+            equipment.helmet.damage(level, victim)
+        }
+        if (equipment.chestplate.hasItemMeta()) {
+            equipment.chestplate.damage(level, victim)
         }
     }
 
@@ -400,7 +395,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
 
     private fun douseEnchantment(victim: LivingEntity, level: Int): Double {
         victim.fireTicks = 0
-        if (victim is Blaze || victim is MagmaCube || victim.fireTicks > 0) {
+        if (victim is Blaze || victim is MagmaCube || victim is Enderman || victim.fireTicks > 0) {
             victim.fireTicks = 0
             return (level * 2.5) + 2.5
         }
@@ -437,7 +432,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
     }
 
     @Suppress("UnstableApiUsage")
-    private fun explodingEnchantment(victim: LivingEntity, level: Int) {
+    private fun explodingEnchantment(killer: LivingEntity, victim: LivingEntity, level: Int) {
         val location = victim.location
         // Effects
         location.world.spawnParticle(Particle.EXPLOSION, location, 1, 0.0, 0.04, 0.0)
@@ -445,11 +440,12 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
         // Damage
         val radius = level * 1.0
         for (entity in location.getNearbyLivingEntities(radius)) {
+            if (entity == killer) return
             // distance square
             val distance = entity.location.distance(location)
             val power = (maxOf(radius - distance, 0.0)).pow(2.0) + (maxOf(radius - distance, 0.0)).times(1) + (radius / 2)
             val damageSource = DamageSource.builder(DamageType.EXPLOSION).build()
-            entity.damage(power, damageSource)
+            entity.damage(power + 1.0, damageSource)
         }
     }
 
@@ -631,7 +627,6 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
         val fullCharge = if ((attacker is Player) && attacker.attackCooldown > 0.99) { true } else attacker !is Player
         // Prevent Spam
         if (!fullCharge) return 0.0
-
         var rupturingDamage = 0.0
         with(victim) {
             if (scoreboardTags.contains(EffectTags.FULLY_RUPTURED)) {
@@ -673,6 +668,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
             victim.setIntTag(EntityTags.VOID_STRUCK_BY, attacker.entityId)
         }
         else if (voidStruckBy != attacker.entityId) {
+            victim.setIntTag(EntityTags.VOID_STRUCK_BY, attacker.entityId)
             return 0.0
         }
         // Get modifier and set voidDamage

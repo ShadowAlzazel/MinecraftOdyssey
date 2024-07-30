@@ -15,15 +15,12 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta
 
 interface EnchantabilityHandler : EnchantmentsManager, EnchantmentExtender, DataTagManager {
 
-    // !!!!!!!!!!!!!!!!
-    // GILDED ENCHANTS ARE SLOTTED/IRREMOVABLE BUT DO NOT TAKE UP EVs??
-
+    /*-----------------------------------------------------------------------------------------------*/
     fun getEnchantabilityCost(enchant: Pair<Enchantment, Int>, override: Int? = null): Int {
         val level = override ?: enchant.second
         return enchant.first.enchantabilityCost(level)
     }
 
-    /*-----------------------------------------------------------------------------------------------*/
     // Extension Helper Functions
     fun ItemStack.getMaxEnchantabilityPoints(): Int {
         return itemEnchantabilityPoints(this)
@@ -74,6 +71,7 @@ interface EnchantabilityHandler : EnchantmentsManager, EnchantmentExtender, Data
             }
         }
         // get gilded [WIP]
+        // Gilded enchantments do not take up any Enchantability-points
 
         // Remove designated to be removed
         if (removedEnchants != null) {
@@ -159,6 +157,68 @@ interface EnchantabilityHandler : EnchantmentsManager, EnchantmentExtender, Data
         itemMeta = newMeta
     }
 
+    fun ItemStack.updateStoredEnchantabilityLore(
+        toggleToolTip: Boolean = true) {
+        // Checks
+        val storedMeta = itemMeta
+        if (storedMeta !is EnchantmentStorageMeta) return
+        // Enchantments
+        val updatedEnchantments: MutableMap<Enchantment, Int> = storedMeta.storedEnchants
+        if (updatedEnchantments.isEmpty()) return
+        // Tool tip
+        val hasToolTip = this.hasTag(ItemDataTags.HAS_ENCHANT_TOOL_TIP)
+        // Points Lore
+        val startIndex = 0
+        var counter = 0
+        var enchantmentCount = 0
+        val newLore = mutableListOf<Component>()
+        updatedEnchantments.forEach {
+            val enchantment = it.key
+            val level = it.value
+            enchantmentCount += 1
+            val pointCost = enchantment.enchantabilityCost(level)
+            // Add Lore components
+            val enchantIndex = counter + startIndex
+            if (!newLore.indices.contains(enchantIndex)) {
+                newLore.add(enchantIndex, emptyEnchantSlot)
+            }
+            newLore[enchantIndex] = createEnchantLoreComponent(enchantment, level, pointCost)
+            counter += 1
+            if (toggleToolTip && !hasToolTip) {
+                val description = enchantment.getDescriptionTooltip(level)
+                newLore.addAll(startIndex + counter, description)
+                counter += description.size
+            }
+        }
+        newLore.add(Component.text(""))
+        storedMeta.lore(newLore)
+        // Update Lore Flags
+        storedMeta.addItemFlags(ItemFlag.HIDE_STORED_ENCHANTS)
+        itemMeta = storedMeta
+        // Final Tool Tip
+        if (toggleToolTip) {
+            if (hasToolTip) {
+                this.removeTag(ItemDataTags.HAS_ENCHANT_TOOL_TIP)
+            } else {
+                this.addTag(ItemDataTags.HAS_ENCHANT_TOOL_TIP)
+            }
+        }
+    }
+
+    fun ItemStack.updatePoints(
+        resetLore: Boolean = true,
+        toggleToolTip: Boolean = true) {
+        if (this.type == Material.ENCHANTED_BOOK) {
+            this.updateStoredEnchantabilityLore(toggleToolTip)
+        }
+        else {
+            this.updateEnchantabilityPointsLore(
+                null, null, resetLore, toggleToolTip
+            )
+        }
+    }
+
+
     // Create the lore component for item
     fun createEnchantLoreComponent(enchantment: Enchantment, level: Int, pointCost: Int): Component {
         val color = if (enchantment.isCursed) {
@@ -242,8 +302,6 @@ interface EnchantabilityHandler : EnchantmentsManager, EnchantmentExtender, Data
         bonusPoints += extraPoints
 
         return baseMaterialPoints + bonusPoints
-
-
     }
 
 }

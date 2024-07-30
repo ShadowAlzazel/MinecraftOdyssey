@@ -138,7 +138,7 @@ object RangedListeners : Listener, EnchantmentsManager {
         val shooter: LivingEntity = projectile.shooter as LivingEntity
         val victim: LivingEntity = event.entity as LivingEntity
         // Loop over arrow projectile tags
-        // TODO: Maybe sort in priority the tags
+        // Maybe sort in priority the tags OR in order
         for (tag in projectile.scoreboardTags) {
             when (tag) {
                 EntityTags.AMBUSH_ARROW -> {

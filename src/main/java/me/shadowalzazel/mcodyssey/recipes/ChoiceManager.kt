@@ -40,6 +40,36 @@ interface ChoiceManager {
         return RecipeChoice.ExactChoice(exactItem, dataItem)
     }
 
+    fun heatedTitaniumChoices(): RecipeChoice.ExactChoice {
+        val exactItem = Ingredients.HEATED_TITANIUM_INGOT.newItemStack(1)
+        val dataItem = ItemStack(Material.IRON_INGOT).apply {
+            val meta = itemMeta
+            meta.setCustomModelData(ItemModels.HEATED_TITANIUM_INGOT)
+            val itemName = Component.text("heated_titanium_ingot")
+            meta.itemName(itemName)
+            val name = Component.text("Heated Titanium Ingot")
+                .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false)
+            meta.displayName(name)
+            itemMeta = meta
+        }
+        return RecipeChoice.ExactChoice(exactItem, dataItem)
+    }
+
+    fun anodizedTitaniumChoices(): RecipeChoice.ExactChoice {
+        val exactItem = Ingredients.ANODIZED_TITANIUM_INGOT.newItemStack(1)
+        val dataItem = ItemStack(Material.IRON_INGOT).apply {
+            val meta = itemMeta
+            meta.setCustomModelData(ItemModels.ANODIZED_TITANIUM_INGOT)
+            val itemName = Component.text("anodized_titanium_ingot")
+            meta.itemName(itemName)
+            val name = Component.text("Anodized Titanium Ingot")
+                .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false)
+            meta.displayName(name)
+            itemMeta = meta
+        }
+        return RecipeChoice.ExactChoice(exactItem, dataItem)
+    }
+
     fun iridiumChoices(): RecipeChoice.ExactChoice {
         val exactItem = Ingredients.IRIDIUM_INGOT.newItemStack(1)
         val dataItem = ItemStack(Material.IRON_INGOT).apply {

@@ -75,7 +75,7 @@ object MiscListeners : Listener, EnchantmentsManager {
             400
         }
         val repairAmount = maxDurability * 0.01 * amount
-        meta.damage = maxOf(meta.damage - 1 + (repairAmount).toInt(), 0)
+        meta.damage = maxOf(meta.damage - 1 - (repairAmount).toInt(), 0)
         item.itemMeta = meta
         return
     }

@@ -52,8 +52,8 @@ interface MobCreationHelper: AttributeManager, EnchantabilityHandler {
        {
         // Weapon
         val weaponList = listOf(
-            ToolType.SABER, ToolType.KATANA, ToolType.LONGSWORD, ToolType.CUTLASS, ToolType.CLAYMORE, // 1 Hand
-            ToolType.POLEAXE, ToolType.LONGAXE,
+            ToolType.SABER, ToolType.KATANA, ToolType.LONGSWORD, ToolType.CUTLASS, ToolType.CLAYMORE, ToolType.RAPIER, // 1 Hand
+            ToolType.POLEAXE, ToolType.LONGAXE, ToolType.GLAIVE,
             ToolType.WARHAMMER,  ToolType.SCYTHE, ToolType.SPEAR, ToolType.HALBERD,
             ToolType.DAGGER, ToolType.SICKLE, ToolType.CHAKRAM) // Double
         val weaponType = weaponList.random()
@@ -97,8 +97,8 @@ interface MobCreationHelper: AttributeManager, EnchantabilityHandler {
         val difficultyMod = getScaledDifficulty(mob)
         // Weapon
         val weaponList = listOf(
-            ToolType.SABER, ToolType.KATANA, ToolType.LONGSWORD, ToolType.CUTLASS, ToolType.CLAYMORE, // 1 Hand
-            ToolType.POLEAXE, ToolType.LONGAXE,
+            ToolType.SABER, ToolType.KATANA, ToolType.LONGSWORD, ToolType.CUTLASS, ToolType.CLAYMORE, ToolType.RAPIER, // 1 Hand
+            ToolType.POLEAXE, ToolType.LONGAXE, ToolType.GLAIVE,
             ToolType.WARHAMMER,  ToolType.SCYTHE, ToolType.SPEAR, ToolType.HALBERD,
             ToolType.DAGGER, ToolType.SICKLE, ToolType.CHAKRAM) // Double
         val weaponType = weaponList.random()
@@ -160,10 +160,10 @@ interface MobCreationHelper: AttributeManager, EnchantabilityHandler {
                     it.setItemInOffHand(weapon.clone())
                     it.itemInOffHandDropChance = 0.5F // Change to difficulty
                 }
-                it.helmetDropChance = 0.3F
-                it.chestplateDropChance = 0.3F
-                it.leggingsDropChance = 0.3F
-                it.bootsDropChance = 0.3F
+                it.helmetDropChance = 0.125F
+                it.chestplateDropChance = 0.125F
+                it.leggingsDropChance = 0.125F
+                it.bootsDropChance = 0.125F
             }
             addHealthAttribute(45 + (20.0 * difficultyMod), AttributeTags.ELITE_HEALTH)
             health += 45 + (20.0 * difficultyMod)

@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import com.destroystokyo.paper.event.inventory.PrepareResultEvent
+import me.shadowalzazel.mcodyssey.commands.admin.GiveWeapon.updatePoints
 import me.shadowalzazel.mcodyssey.enchantments.api.TomeManager
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.enchantments.api.SlotColors
@@ -103,8 +104,8 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
             return
         }
         // Update
-        if (result.hasItemMeta() && result.itemMeta.hasEnchants()) {
-            result.updateEnchantabilityPointsLore()
+        if (result.hasItemMeta()) {
+            result.updatePoints()
         }
     }
 
@@ -187,12 +188,6 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-    @EventHandler
-    fun enchantPrepareHandler(event: PrepareItemEnchantEvent) {
-        //println(event.offers)
-        //println(event.enchantmentBonus)
-        //println(event)
-    }
 
     @EventHandler
     fun enchantingTableHandler(event: EnchantItemEvent) {
@@ -229,7 +224,6 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
                 newMeta.removeItemFlags(ItemFlag.HIDE_STORED_ENCHANTS)
                 clone.itemMeta = newMeta
                 event.result = clone
-                println("CLONE")
             }
         }
         else {
@@ -240,7 +234,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
             removedEnchantments.forEach { totalPoints += it.key.enchantabilityCost(it.value) }
              */
             // Sentries passed
-            event.result = result.clone().also { it.updateEnchantabilityPointsLore() }
+            event.result = result.clone().also { it.updatePoints() }
         }
     }
 
