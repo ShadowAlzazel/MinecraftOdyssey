@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import com.destroystokyo.paper.event.inventory.PrepareResultEvent
+import me.shadowalzazel.mcodyssey.commands.admin.GiveWeapon.updatePoints
 import me.shadowalzazel.mcodyssey.enchantments.api.TomeManager
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.enchantments.api.SlotColors
@@ -103,8 +104,8 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
             return
         }
         // Update
-        if (result.hasItemMeta() && result.itemMeta.hasEnchants()) {
-            result.updateEnchantabilityPointsLore()
+        if (result.hasItemMeta()) {
+            result.updatePoints()
         }
     }
 
@@ -233,7 +234,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
             removedEnchantments.forEach { totalPoints += it.key.enchantabilityCost(it.value) }
              */
             // Sentries passed
-            event.result = result.clone().also { it.updateEnchantabilityPointsLore() }
+            event.result = result.clone().also { it.updatePoints() }
         }
     }
 

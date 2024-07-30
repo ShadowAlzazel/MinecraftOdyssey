@@ -82,6 +82,10 @@ class WeaponRecipeCreator : ItemCreator, DataTagManager, ChoiceManager {
             "XXX",
             " |X",
             "|  "),
+        "glaive" to listOf(
+            " XX",
+            " |X",
+            "|  "),
         // Pickaxe Overrides
         "warhammer" to listOf(
             " X ",

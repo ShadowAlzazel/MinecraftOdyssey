@@ -85,6 +85,7 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
         if (event.entity !is LivingEntity) return
         if (event.cause != EntityDamageEvent.DamageCause.ENTITY_ATTACK &&
             event.cause != EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) return
+        if (event.damage <= 0.0) return // Prevent going through shields
         val player = event.damager as Player
         val victim = event.entity as LivingEntity
         // Further checks
@@ -183,6 +184,11 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
                 // Hits enemies near contact
                 doWeaponAOESweep(player, victim, event.damage, rads)
             }
+            "glaive" -> {
+                val rads = (65 * Math.PI) / 180
+                // Hits enemies near contact
+                doWeaponAOESweep(player, victim, event.damage, rads)
+            }
             "warhammer" -> {
                 if (twoHanded) {
                     victim.shieldBlockingDelay = 60
@@ -240,7 +246,6 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
                 //println("Source loc: ${event.damageSource.sourceLocation}")
                 //println("Eye loc: ${player.eyeLocation}")
                 val closestDistance = minOf(player.eyeLocation.distance(victim.location), player.eyeLocation.distance(victim.eyeLocation))
-                println("Distance: $closestDistance")
                 if (closestDistance < minRange) {
                     val rangePower = 1 - ((minRange - closestDistance) / minRange)
                     event.damage *= rangePower
@@ -464,7 +469,7 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
         val player = event.player
         // Kunai MOVE TO FUN LATER
         if (mainHand.itemMeta.customModelData == ItemModels.VOID_LINKED_KUNAI) {
-            println("Void Swap Target: ${markedVoidTargets[player.uniqueId]?.uniqueId}")
+            //println("Void Swap Target: ${markedVoidTargets[player.uniqueId]?.uniqueId}")
             val target = markedVoidTargets[player.uniqueId] ?: return
             // Create task to run AFTER event
             val voidLinkedChunk = target.chunk // First fire load
@@ -534,7 +539,7 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
             victim.addScoreboardTag(EntityTags.THROWABLE_ATTACK_HIT)
             // Match same weapon
             if (thrower is HumanEntity && thrower.equipment.itemInMainHand.getOdysseyTag() == projectile.item.getOdysseyTag()) {
-                //thrower.attack(victim) // TODO: Fix to apply
+                //thrower.attack(victim)
                 victim.damage(damage * 1.0, createPlayerDamageSource(thrower))
 
             } else {

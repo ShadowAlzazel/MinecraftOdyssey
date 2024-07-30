@@ -176,21 +176,6 @@ object LootListeners : Listener, ItemCreator {
 
     }
 
-    fun blockDrops(event: BlockDropItemEvent) {
-        when(event.block.type) {
-            Material.AMETHYST_CLUSTER, Material.LARGE_AMETHYST_BUD -> {
-                event.items.forEach {
-                    if (it.itemStack.type == Material.AMETHYST_SHARD) {
-                        it.world.dropItem(it.location, (Foods.CRYSTAL_CANDY.newItemStack((0..2).random())))
-                    }
-                }
-            }
-            else -> {
-
-            }
-        }
-    }
-
     private fun droppedItemSound(player: Player) {
         with(player) {
             playSound(location, Sound.BLOCK_AMETHYST_BLOCK_CHIME, 1.5F, 0.9F)

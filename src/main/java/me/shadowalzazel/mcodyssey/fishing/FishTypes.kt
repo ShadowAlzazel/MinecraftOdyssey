@@ -11,8 +11,8 @@ enum class FishTypes(
     val item: OdysseyItem) {
 
 
-    BLUEGILL(listOf(Biome.RIVER), 600..12000, 65, Foods.BLUEGILL),
-    RAINBOW_TROUT(listOf(Biome.RIVER), 600..12000, 65, Foods.RAINBOW_TROUT)
+    //BLUEGILL(listOf(Biome.RIVER), 600..12000, 65, Foods.BLUEGILL),
+   // RAINBOW_TROUT(listOf(Biome.RIVER), 600..12000, 65, Foods.RAINBOW_TROUT)
 
 
 }

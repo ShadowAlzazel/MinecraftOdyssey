@@ -259,7 +259,6 @@ object AlchemyListener : Listener, PotionEffectsManager, EffectsManager, DataTag
     }
     
     /*-----------------------------------------------------------------------------------------------*/
-    // TODO: Fix bug if multiple types, converts all
 
     // Sea Crystals -> Vials
     // Popped Chorus Fruit -> Concoctions
@@ -322,7 +321,6 @@ object AlchemyListener : Listener, PotionEffectsManager, EffectsManager, DataTag
             // --------------------------------------------------
             // For Odyssey Effects
             if (hasOdysseyEffects) {
-                println("0")
                 result = if (resultMaterial == Material.LINGERING_POTION) {
                     createOdysseyLingeringPotion(item)
                 } else {
@@ -331,7 +329,6 @@ object AlchemyListener : Listener, PotionEffectsManager, EffectsManager, DataTag
             }
             // For custom effects -> Lingering/Splash [copies item]
             else if (hasCustomEffects && !isUpgradePlus) {
-                println("3")
                 result = if (resultMaterial == Material.LINGERING_POTION) {
                     makeCustomLingeringPotion(item)
                 } else {
@@ -340,12 +337,10 @@ object AlchemyListener : Listener, PotionEffectsManager, EffectsManager, DataTag
             }
             // For standard brewing [copies result]
             else if (isBasePotion && !isUpgradePlus) {
-                println("1")
                 result = makeModeledPotion(resultMaterial, result, resultModel)
             }
             // For keeping models  [copies result]
             else if (hasCustomModel && !isUpgradePlus) {
-                println("2")
                 result = makeModeledPotion(resultMaterial, result, itemMeta.customModelData)
             }
 
@@ -382,7 +377,7 @@ object AlchemyListener : Listener, PotionEffectsManager, EffectsManager, DataTag
     }
 
 
-    // (TODO: Fix for all: odyssey effects, custom effects,
+    // Fix for all: odyssey effects, custom effects,
     private fun makeExtendedPlusPotion(potion: ItemStack): ItemStack {
         if (potion.itemMeta !is PotionMeta) return potion
         if (potion.hasTag(ItemDataTags.IS_EXTENDED_PLUS)) return potion

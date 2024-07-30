@@ -415,7 +415,6 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
             for (enchant in boots.enchantments) {
                 when (enchant.key.getNameId()) {
                     "root_boots" -> {
-                        //TODO
                     }
                 }
             }
@@ -513,7 +512,7 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
         amount: Double,
         level: Int,
     ): Double {
-        return amount * (0.25 + (level * 0.25))
+        return amount * (level * 0.20)
     }
 
     private fun brawlerEnchantment(
@@ -558,7 +557,7 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
         level: Int,
         amount: Double,
     ): Double {
-        if (defender.velocity.length() > 1.8) {
+        if (defender.velocity.length() > 1.2) {
             return amount * (level * 0.1)
         }
         return 0.0
@@ -698,11 +697,10 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
         if (!attacker.hasLineOfSight(defender)) return
         if (!defender.hasLineOfSight(attacker)) return
         if (!defender.hasLineOfSight(attacker.eyeLocation)) return
-        val angle = attacker.eyeLocation.direction.angle(defender.eyeLocation.direction)
-        if (angle < 1.74533) return
+        // val angle = attacker.eyeLocation.direction.angle(defender.eyeLocation.direction)
+        //if (angle < 1.74533) return
         attacker.addPotionEffect(
             PotionEffect(PotionEffectType.GLOWING, (3 + (level * 2)) * 20, 0))
-
     }
 
     private fun impetusEnchantment(
@@ -710,7 +708,7 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
         level: Int,
         amount: Double
     ): Double {
-        if (wearer.velocity.length() > 1.8) {
+        if (wearer.velocity.length() > 1.2) {
             return amount * (0.05 + (level * 0.05))
         }
         return 0.0
@@ -1002,12 +1000,15 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
         if (!attacker.hasLineOfSight(defender)) return
         if (!defender.hasLineOfSight(attacker)) return
         if (!defender.hasLineOfSight(attacker.eyeLocation)) return
-        val angle = attacker.eyeLocation.direction.angle(defender.eyeLocation.direction)
-        if (angle < 1.74533) return
-        attacker.addPotionEffect(
-            PotionEffect(PotionEffectType.SLOWNESS, (level) * 10, 5))
-
+        //val angle = attacker.eyeLocation.direction.angle(defender.eyeLocation.direction)
+        //if (angle < 1.74533) return
+        // Looking more than 90-deg (1.57-rads) away from attacker
+        // parallel angles mean looking same direction -> behind
+        val inFrontOfTarget = attacker.eyeLocation.direction.angle(defender.eyeLocation.direction) > 1.5708
+        if (!inFrontOfTarget) return
+        attacker.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS, (level) * 10, 6))
     }
+
     private fun staticSocksAttackEnchantment(
         attacker: LivingEntity,
         level: Int
@@ -1021,6 +1022,7 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
         attacker.world.playSound(attacker.location, Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 1.5F, 4.5F)
         return minOf((charge / 2.0), level * 1.0)
     }
+
     private fun staticSocksSneakEnchantment(
         defender: LivingEntity,
         level: Int
@@ -1036,6 +1038,7 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
             defender.setIntTag(EntityTags.STATIC_SOCKS_CHARGE, 0)
         }
     }
+
     private fun untouchableEnchantment(
         defender: LivingEntity
     ) {
@@ -1045,6 +1048,7 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
             defender.noDamageTicks += 10 // Add 0.5 seconds more of immunity
         }
     }
+
     private fun veiledInShadowEnchantment(
         defender: LivingEntity,
         level: Int) {

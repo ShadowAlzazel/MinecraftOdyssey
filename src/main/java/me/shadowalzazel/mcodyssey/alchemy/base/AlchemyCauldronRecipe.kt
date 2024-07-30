@@ -25,7 +25,7 @@ class AlchemyCauldronRecipe(
     private val comboOdysseyEffectList: List<String> = listOf() // For Detecting Odyssey Effect Tags
 ) : DataTagManager {
 
-    // TODO: Do mini game
+    // ??? Do mini-game
     // when hear ding, add chorus fruit for +10%
 
     // Validate the Cauldron Recipe

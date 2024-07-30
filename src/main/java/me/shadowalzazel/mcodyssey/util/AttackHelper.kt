@@ -28,8 +28,8 @@ interface AttackHelper {
             if (entity.scoreboardTags.contains(EntityTags.HIT_BY_AOE_SWEEP)) continue
             if (entity !is LivingEntity) continue
             // Get attack angle
-            val directionVector = entity.location.subtract(attacker.location).toVector()
-            val attackAngle = originDirection.angle(directionVector)
+            val entityDirection = entity.location.subtract(attacker.location).toVector()
+            val attackAngle = originDirection.angle(entityDirection)
             // Make sure to follow angle
             if (attackAngle > angle) continue
             entity.addScoreboardTag(EntityTags.HIT_BY_AOE_SWEEP)

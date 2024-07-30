@@ -91,36 +91,31 @@ object ItemModels {
 
     // Unknown Runesherd
     const val UNKNOWN_RUNESHERD: Int = 6905632
-    //
+    // Space runes
     const val SPACERUNE_TABLET: Int = 6905635
 
     // Food
-    const val GREEN_APPLE: Int = 6904511
-    const val CANDY_APPLE: Int = 6904512
-    const val SUGARY_BREAD: Int = 6904710
-    const val FRENCH_TOAST: Int = 6904711
-    const val APPLE_COOKIE: Int = 6905040
-    const val BEETROOT_COOKIE: Int = 6905041
-    const val PUMPKIN_COOKIE: Int = 6905042
-    const val HONEY_COOKIE: Int = 6905043
-    const val BERRY_COOKIE: Int = 6905044
-    const val GLOW_BERRY_COOKIE: Int = 6905045
-    const val MELON_COOKIE: Int = 6905046
-    const val SUGAR_COOKIE: Int = 6905047
-    const val GOLDEN_COOKIE: Int = 6905048
-    const val CHORUS_FRUIT_COOKIE: Int = 6905049
-    const val CRYSTAL_CANDY: Int = 6905868
-    const val BACON: Int = 6908047
-    const val SALMON_ROLL: Int = 6908048
-    const val FISH_N_CHIPS: Int = 6908049
-    const val COFFEE: Int = 6908050
-    const val FRUIT_BOWL: Int = 6908051
-    const val SPIDER_EYE_BOBA: Int = 6908052
-    const val STRAWBERRY_TART: Int = 6908053 // 14/24
+    const val GREEN_APPLE: Int = 6908052
+    const val BACON: Int = 6908052
+    const val BERRY_TART: Int = 6908053 // 14/24
     const val CHOCOLATE_MOCHI: Int = 6908054 // 14/24
-    const val SHOYU_RAMEN: Int = 6908055
-    const val RAINBOW_TROUT: Int = 6908121
-    const val BLUEGILL: Int = 6908122
+    const val COFFEE: Int = 6908055
+    const val CRYSTAL_CANDY: Int = 6908056
+    const val FISH_N_CHIPS: Int = 6908057
+    const val FRENCH_TOAST: Int = 6908058
+    const val FRUIT_BOWL: Int = 6908059
+    const val SALMON_ROLL: Int = 6908060
+    const val SALMON_NIGIRI: Int = 6908061
+    const val SHOYU_RAMEN: Int = 6908062
+    const val SPIDER_EYE_BOBA: Int = 6908063
+    const val EARL_LILY_BOBA_TEA: Int = 6908064
+    const val BRISKET: Int = 6908065 // Cooked and Normal
+    const val COOKED_BRISKET: Int = 6908065 // Cooked and Normal
+    const val OOLONG_ORCHID_BOBA_TEA: Int = 6908066
+    const val MATCHA_MELON_BOBA_TEA: Int = 6908067
+    const val THAI_TULIP_BOBA_TEA: Int = 6908068
+    const val ALLIUM_JADE_BOBA_TEA: Int = 6908069
+    const val CORNFLOWER_CEYLON_BOBA_TEA: Int = 6908070
 
     // Dog
     const val DOG_SPINACH: Int = 6908123
@@ -252,7 +247,7 @@ object ItemModels {
     const val BATTLE_AXE: Int = 84
     const val LONG_AXE: Int = 85
     const val POLEAXE: Int = 86
-    const val LABRYS: Int = 87
+    const val GLAIVE: Int = 87
 
 
     // Copper [69055XX]

@@ -467,6 +467,7 @@ object SmithingListeners : Listener, DataTagManager, ToolMiningManager {
             "poleaxe" -> ItemModels.POLEAXE
             "warhammer" -> ItemModels.WARHAMMER
             "scythe" -> ItemModels.SCYTHE
+            "glaive" -> ItemModels.GLAIVE
             else -> 0
         }
     }

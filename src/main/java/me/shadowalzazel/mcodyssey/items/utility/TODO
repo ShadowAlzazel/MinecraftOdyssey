@@ -9,7 +9,7 @@
 // HALBERD - Bladed Pole Arm
 // KATANA
 // LONGAXE - Two-handed
-// MACE - Long
+// MACE***[REDACTED] Vanilla Feature
 // RAPIER - Piercing
 // SABER -
 // SCYTHE -
@@ -38,7 +38,7 @@ SOUL_STEEL(4.0, "Soul Steel"),
 IRIDIUM(5.0, "Iridium"),
 // [Way more durability], [-10% speed (block, attack)], [boom immune]
 SILVER(3.0, "Silver"),
-// [+2 Dmg against monster], [=durability to iron]
+// [+1 Runesherd slot], [=durability to iron]
 WITHERGLINT(4.0, "Wither Glint"),
 // [+10% Damage Life Steal, applies withering to user], wither rose + (silver)
 // []

@@ -18,7 +18,7 @@ object AssetListeners : Listener {
         // TEST
         //val resourcePackLink = "https://www.dropbox.com/s/6hob8iad499vz95/odyssey-resource-pack-test.zip?dl=1"
         // Put hash into resource-pack-sha1 WITHIN server.properties
-        val resourcePackHash = "66778f86d990f5072acf25a416398b77bb37c865"
+        val resourcePackHash = "4274bb16d48bf95aac016801b78a147ee0106730"
         // Prevent double loading screen
         val serverPackHash = joiningPlayer.server.resourcePackHash
         if (serverPackHash == resourcePackHash && joiningPlayer.server.isResourcePackRequired) return
