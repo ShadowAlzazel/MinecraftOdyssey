@@ -40,8 +40,7 @@ object AlchemyListener : Listener, PotionEffectsManager, EffectsManager, DataTag
 
     /*-----------------------------------------------------------------------------------------------*/
     // Effects
-    // TODO: Reapply effects again
-    // TODO: Vials Can Be thrown farther
+    // Reapply effects again
 
     // Main Consumption Handler
     @EventHandler
@@ -51,9 +50,6 @@ object AlchemyListener : Listener, PotionEffectsManager, EffectsManager, DataTag
         when(event.item.type) {
             Material.POTION -> {
                 potionDrinkHandler(event)
-            }
-            Material.SPLASH_POTION, Material.LINGERING_POTION -> {
-                potionConsumeSplashHandler(event)
             }
             else -> {
                 return
@@ -72,12 +68,6 @@ object AlchemyListener : Listener, PotionEffectsManager, EffectsManager, DataTag
         if (potion.hasTag(ItemDataTags.IS_POTION_VIAL)) {
             event.projectile.velocity = event.projectile.velocity.multiply(2.0)
         }
-    }
-
-    // USELESS DOES NOT RUN
-    private fun potionConsumeSplashHandler(event: PlayerItemConsumeEvent) {
-        val item = event.item
-        // Check charges fpr vial
     }
 
     private fun potionDrinkHandler(event: PlayerItemConsumeEvent) {

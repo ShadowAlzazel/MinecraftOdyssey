@@ -13,6 +13,7 @@ import org.bukkit.damage.DamageType
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.entity.EnderDragonChangePhaseEvent
 import org.bukkit.event.entity.ExplosionPrimeEvent
 import org.bukkit.inventory.ItemStack
@@ -120,9 +121,13 @@ object DragonListeners : Listener {
             else -> {
             }
         }
-
-
     }
+
+    @EventHandler
+    fun dragonRespawn(event: CreatureSpawnEvent) {
+        if (event.entityType != EntityType.ENDER_DRAGON) return
+    }
+
 
     @EventHandler
     fun dragonShootHandler(event: EnderDragonShootFireballEvent) {

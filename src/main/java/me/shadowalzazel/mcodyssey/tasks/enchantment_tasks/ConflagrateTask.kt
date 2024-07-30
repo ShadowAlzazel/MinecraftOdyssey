@@ -18,8 +18,9 @@ class ConflagrateTask(
             val source = DamageSource.builder(DamageType.ON_FIRE).build()
             victim.damage(damage, source)
             with(victim.world) {
-                spawnParticle(Particle.FLAME, victim.location, 10, 0.25, 0.25, 0.25)
-                playSound(victim.location, Sound.BLOCK_FURNACE_FIRE_CRACKLE, 2.5F, 0.9F)
+                spawnParticle(Particle.FLAME, victim.location, 20, 0.22, 0.22, 0.22)
+                spawnParticle(Particle.LAVA, victim.location, 10, 0.12, 0.32, 0.12)
+                playSound(victim.location, Sound.BLOCK_FURNACE_FIRE_CRACKLE, 3.5F, 0.9F)
             }
         }
         this.cancel()

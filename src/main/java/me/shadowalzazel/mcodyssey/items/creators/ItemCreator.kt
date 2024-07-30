@@ -1,6 +1,5 @@
 package me.shadowalzazel.mcodyssey.items.creators
 
-import me.shadowalzazel.mcodyssey.enchantments.api.SlotColors
 import me.shadowalzazel.mcodyssey.constants.DataKeys
 import me.shadowalzazel.mcodyssey.enchantments.api.EnchantabilityHandler
 import me.shadowalzazel.mcodyssey.items.*

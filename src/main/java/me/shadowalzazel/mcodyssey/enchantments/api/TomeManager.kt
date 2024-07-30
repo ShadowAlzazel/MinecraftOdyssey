@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.enchantments.api
 
+import me.shadowalzazel.mcodyssey.util.CustomColors
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Material
@@ -261,7 +262,7 @@ internal interface TomeManager : EnchantabilityHandler {
 
     /*-----------------------------------------------------------------------------------------------*/
     // Fail Message
-    private fun LivingEntity.sendBarMessage(reason: String, color: TextColor = SlotColors.ENCHANT.color) {
+    private fun LivingEntity.sendBarMessage(reason: String, color: TextColor = CustomColors.ENCHANT.color) {
         this.sendActionBar(
             Component.text(
                 reason,

@@ -4,7 +4,6 @@ import me.shadowalzazel.mcodyssey.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.enchantments.api.EnchantabilityHandler
-import me.shadowalzazel.mcodyssey.enchantments.api.SlotColors
 import me.shadowalzazel.mcodyssey.items.creators.ToolCreator
 import me.shadowalzazel.mcodyssey.items.creators.WeaponCreator
 import me.shadowalzazel.mcodyssey.items.utility.ToolMaterial
@@ -92,7 +91,7 @@ interface MobCreationHelper: AttributeManager, EnchantabilityHandler {
         materialType: ToolMaterial = ToolMaterial.SILVER,
         newWeapon: Boolean = false) {
         if (mob is Creeper) return
-        val shinyColor = SlotColors.SHINY.color
+        val shinyColor = CustomColors.SHINY.color
         // Difficulty
         val difficultyMod = getScaledDifficulty(mob)
         // Weapon

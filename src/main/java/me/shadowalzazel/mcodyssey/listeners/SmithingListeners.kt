@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.enchantments.api.SlotColors
+import me.shadowalzazel.mcodyssey.util.CustomColors
 import me.shadowalzazel.mcodyssey.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
@@ -16,7 +16,6 @@ import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
-import org.bukkit.entity.Item
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -69,7 +68,7 @@ object SmithingListeners : Listener, DataTagManager, ToolMiningManager {
                 }
                 for (engraver in event.viewers) {
                     it.addStringTag(ItemDataTags.ENGRAVED_BY, engraver.name)
-                    val engraving = Component.text("$pretext by ${engraver.name}", SlotColors.AMETHYST.color, TextDecoration.ITALIC)
+                    val engraving = Component.text("$pretext by ${engraver.name}", CustomColors.AMETHYST.color, TextDecoration.ITALIC)
                     newLore.add(engraving)
                 }
                 it.lore(newLore)
@@ -535,7 +534,7 @@ object SmithingListeners : Listener, DataTagManager, ToolMiningManager {
 
 
     /*-----------------------------------------------------------------------------------------------*/
-    private fun LivingEntity.sendBarMessage(reason: String, color: TextColor = SlotColors.ENCHANT.color) {
+    private fun LivingEntity.sendBarMessage(reason: String, color: TextColor = CustomColors.ENCHANT.color) {
         this.sendActionBar(
             Component.text(
                 reason,

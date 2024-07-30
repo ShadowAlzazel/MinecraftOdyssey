@@ -512,7 +512,7 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
         amount: Double,
         level: Int,
     ): Double {
-        return amount * (level * 0.20)
+        return amount * (level * 0.25)
     }
 
     private fun brawlerEnchantment(
@@ -1065,7 +1065,7 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
         amount: Double): Double {
         val maxHealth = attacker.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value ?: return 0.0
         val currentHealthPercent = attacker.health / maxHealth
-        if (currentHealthPercent <= 0.6) {
+        if (currentHealthPercent <= 0.80) {
             return amount * (level * 0.1)
         }
         return 0.0

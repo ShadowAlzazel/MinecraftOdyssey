@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.inventory.meta.EnchantmentStorageMeta
 
 object InventoryListeners : Listener, EnchantabilityHandler {
 
@@ -20,7 +21,15 @@ object InventoryListeners : Listener, EnchantabilityHandler {
         if (event.click != ClickType.RIGHT) return
         val item = event.currentItem ?: return
         if (!item.hasItemMeta() && item.type != Material.ENCHANTED_BOOK) return
-        item.updatePoints(resetLore = true, toggleToolTip = true)
+        // Check if Enchanted Item
+        if (item.itemMeta.hasEnchants()) {
+            item.updatePoints(resetLore = true, toggleToolTip = true)
+            return
+        }
+        if (item.itemMeta is EnchantmentStorageMeta) {
+            item.updatePoints(resetLore = true, toggleToolTip = true)
+            return
+        }
     }
 
 }
