@@ -64,9 +64,6 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
                 "backstabber" -> {
                     event.damage += backstabberEnchantment(attacker, victim, enchant.value) * power
                 }
-                "swap" -> {
-                    swapEnchantment(attacker, victim, enchant.value)
-                }
                 "budding" -> {
                     buddingEnchantment(victim, enchant.value) // MORE STACKS -> MORE INSTANCES
                 }
@@ -78,6 +75,9 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
                 }
                 "committed" -> {
                     event.damage += committedEnchantment(victim, enchant.value) * power
+                }
+                "conflagrate" -> {
+                    conflagrateEnchantment(attacker, victim, enchant.value, event.damage)
                 }
                 "cull_the_weak" -> {
                     event.damage += cullTheWeakEnchantment(victim, enchant.value)  * power
@@ -112,17 +112,20 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
                 "illucidation" -> {
                     event.damage += illucidationEnchantment(victim, enchant.value, event.isCritical) * power
                 }
-                "pestilence" -> {
-                    pestilenceEnchantment(victim, enchant.value)
-                }
                 "invocative" -> {
                     invocativeEnchantment(attacker, victim, event.damage, enchant.value)
+                }
+                "magic_touch" -> {
+                    event.damage -= magicTouchEnchantment(attacker, victim, event.damage, enchant.value)
+                }
+                "pestilence" -> {
+                    pestilenceEnchantment(attacker, victim, enchant.value)
                 }
                 "rupture" -> {
                     ruptureEnchantment(attacker, victim, event.damage, enchant.value)
                 }
-                "conflagrate" -> {
-                    conflagrateEnchantment(attacker, victim, enchant.value, event.damage)
+                "swap" -> {
+                    swapEnchantment(attacker, victim, enchant.value)
                 }
                 "vital" -> {
                     event.damage += vitalEnchantment(event.isCritical, enchant.value) * power
@@ -243,8 +246,8 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
         level: Int
     ): Double {
         victim.remainingAir -= 20 * (level * 2)
-        if (victim.remainingAir < 20) return level * 1.0
         victim.world.spawnParticle(Particle.BUBBLE_POP, victim.location, 10, 0.25, 0.25, 0.25)
+        if (victim.remainingAir < 20) return level * 1.0
         return 0.0
     }
 
@@ -361,6 +364,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
         if (equipment.chestplate.hasItemMeta()) {
             equipment.chestplate.damage(level, victim)
         }
+        victim.shieldBlockingDelay += level * 20
     }
 
     private fun committedEnchantment(victim: LivingEntity, level: Int): Int {
@@ -394,11 +398,11 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
     }
 
     private fun douseEnchantment(victim: LivingEntity, level: Int): Double {
-        victim.fireTicks = 0
         if (victim is Blaze || victim is MagmaCube || victim is Enderman || victim.fireTicks > 0) {
             victim.fireTicks = 0
             return (level * 2.5) + 2.5
         }
+        victim.fireTicks = 0
         return 0.0
     }
 
@@ -491,6 +495,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
         }
 
     }
+
     private fun frostyFuseEnchantment(victim: LivingEntity, level: Int) {
         // Victim Effects
         with(victim) {
@@ -502,39 +507,35 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
         }
 
     }
+
     private fun gravityWellEnchantment(
         attacker: LivingEntity,
         victim: LivingEntity,
         level: Int
     ) {
-        // Victim Effects
-        with(victim) {
-            // Particles
-            world.playSound(location, Sound.BLOCK_RESPAWN_ANCHOR_CHARGE, 1.75F, 0.3F)
-            world.spawnParticle(Particle.WHITE_ASH, location, 55, 1.0, 0.5, 1.0)
-            // Task
-            addScoreboardTag(EffectTags.GRAVITY_WELLED)
-            val modifier = (level * 1) + 1
-            val maxCount = ((level * 2) + 1) * 2
-            val task = GravitySingularityTask(victim, attacker, modifier, maxCount)
-            task.runTaskTimer(Odyssey.instance, 0, 10)
-        }
-
+        // Particles
+        victim.world.playSound(victim.location, Sound.BLOCK_RESPAWN_ANCHOR_CHARGE, 1.75F, 0.3F)
+        victim.world.spawnParticle(Particle.WHITE_ASH, victim.location, 55, 1.0, 0.5, 1.0)
+        // Task
+        victim.addScoreboardTag(EffectTags.GRAVITY_WELLED)
+        val modifier = (level * 1) + 1
+        val maxCount = ((level * 2) + 1) * 2
+        val task = GravitySingularityTask(victim, attacker, modifier, maxCount)
+        task.runTaskTimer(Odyssey.instance, 0, 10)
     }
+
     private fun guardingStrikeEnchantment(
         attacker: LivingEntity,
         level: Int) {
         with(attacker) {
-            // TODO: Add proper effect that adds raw armor
             val isCrouching = attacker is Player && attacker.isSneaking
-            if (velocity.length() < 0.2 || isCrouching) {
-                addPotionEffect(PotionEffect(PotionEffectType.RESISTANCE, (level * 3) * 20, 0))
+            if (velocity.length() < 0.3 || isCrouching) {
+                addPotionEffect(PotionEffect(PotionEffectType.RESISTANCE, (level * 4) * 20, 0))
+                // Particles and Sounds
+                world.spawnParticle(Particle.ENCHANTED_HIT, location, 35, 1.0, 0.5, 1.0)
+                world.playSound(location, Sound.ENTITY_IRON_GOLEM_ATTACK, 1.5F, 0.5F)
+                world.playSound(location, Sound.BLOCK_DEEPSLATE_BREAK, 1.5F, 0.5F)
             }
-            // Particles and Sounds
-            world.spawnParticle(Particle.ENCHANTED_HIT, location, 35, 1.0, 0.5, 1.0)
-            world.spawnParticle(Particle.ELECTRIC_SPARK, location, 35, 1.0, 0.5, 1.0)
-            world.playSound(location, Sound.ENTITY_IRON_GOLEM_ATTACK, 1.5F, 0.5F)
-            world.playSound(location, Sound.BLOCK_DEEPSLATE_BREAK, 1.5F, 0.5F)
         }
     }
 
@@ -579,7 +580,17 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
     }
 
     @Suppress("UnstableApiUsage")
-    private fun pestilenceEnchantment(victim: LivingEntity, level: Int) {
+    private fun magicTouchEnchantment(attacker: LivingEntity, victim: LivingEntity, damage: Double, level: Int): Double {
+        val potency = 0.1 * level
+        val damageSource = DamageSource.builder(DamageType.MAGIC).build()
+        val magicDamage = damage * potency
+        victim.damage(magicDamage, damageSource)
+        return magicDamage
+    }
+
+    // PLAGUE BRINGER
+    @Suppress("UnstableApiUsage")
+    private fun plagueBringerEnchantment(victim: LivingEntity, level: Int) {
         if (!victim.hasPotionEffect(PotionEffectType.POISON)) return
         val potionEffect = victim.getPotionEffect(PotionEffectType.POISON) ?: return
         val location = victim.location
@@ -600,6 +611,28 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
                 val damage = ((timeInTicks / 20) * (0.1 * (amplifier + 1))) * (efficiency)
                 entity.damage(damage, damageSource)
             }
+        }
+    }
+
+    private fun pestilenceEnchantment(attacker: LivingEntity, victim: LivingEntity, level: Int) {
+        if (victim.activePotionEffects.isEmpty()) return
+        val potionEffects = victim.activePotionEffects
+        val location = victim.location
+        val particle = Particle.ENTITY_EFFECT
+        val potency = level * 0.2
+        val spreadingEffects = mutableListOf<PotionEffect>()
+        // Per Effect
+        for (effect in potionEffects) {
+            val color = effect.type.color
+            location.world.spawnParticle(particle, location, 13, 0.03, 0.1, 0.03, color)
+            val amplifier = effect.amplifier
+            val timeInTicks = (effect.duration * potency).toInt()
+            spreadingEffects.add(PotionEffect(effect.type, timeInTicks, amplifier))
+        }
+        // All Nearby Entities
+        val nearbyEntities = location.getNearbyLivingEntities(4.0).filter { it != attacker}
+        for (entity in nearbyEntities) {
+            entity.addPotionEffects(spreadingEffects)
         }
     }
 
@@ -676,7 +709,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
         victim.setIntTag(EntityTags.VOID_STRIKE_MODIFIER, modifier + 1)
         val voidDamage = modifier * level
         // Reset void strike modifier
-        if (modifier > 13) {
+        if (modifier > 10) {
             victim.setIntTag(EntityTags.VOID_STRIKE_MODIFIER, 0)
             victim.removeTag(EntityTags.VOID_STRUCK_BY)
         }
@@ -706,17 +739,17 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
         }
         // Particles
         with(attacker.world) {
-            spawnParticle(Particle.EXPLOSION, attacker.location, 10, 1.25, 0.75, 1.25)
+            spawnParticle(Particle.GUST, attacker.location, 10, 0.04, 0.04, 0.04)
             playSound(attacker.location, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1.2F, 0.7F)
-            playSound(attacker.location, Sound.ITEM_SHIELD_BLOCK, 1.2F, 0.6F)
-            playSound(attacker.location, Sound.ITEM_TRIDENT_RIPTIDE_3, 1.2F, 0.6F)
+            playSound(attacker.location, Sound.ENTITY_WIND_CHARGE_THROW, 1.2F, 0.6F)
         }
         // Damage Calculation
-        val whirlDamage = damage * ((level * 3) * 0.1)
+        val whirlDamage = damage * (level * 0.3)
         nearbyEntities.forEach {
             it.damage(whirlDamage)
-            it.velocity = it.location.clone().subtract(attacker.location).toVector().normalize()
-                .multiply(0.8 + (0.15 * level))
+            val speed = 0.8 + (0.2 * level)
+            val direction = it.location.clone().subtract(attacker.location).toVector().normalize()
+            it.velocity = direction.multiply(speed)
         }
     }
     /*-----------------------------------------------------------------------------------------------*/

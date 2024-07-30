@@ -3,6 +3,7 @@ package me.shadowalzazel.mcodyssey.items
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import me.shadowalzazel.mcodyssey.items.creators.ItemCreator
+import me.shadowalzazel.mcodyssey.util.CustomColors
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
@@ -10,7 +11,7 @@ import org.bukkit.Material
 
 object Miscellaneous : ItemCreator {
 
-    private val LORE_GRAY = TextColor.color(85, 85, 85)
+    private val LORE_GRAY = CustomColors.DARK_GRAY.color
 
     val TOTEM_OF_VEXING = OdysseyItem("totem_of_vexing", Material.PAPER, "Totem of Vexing", ItemModels.TOTEM_OF_VEXING)
     val IRRADIATED_FRUIT = OdysseyItem("irradiated_fruit", Material.APPLE, "Irradiated Fruit", ItemModels.IRRADIATED_FRUIT)

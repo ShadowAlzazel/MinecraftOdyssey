@@ -1,10 +1,9 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import com.destroystokyo.paper.event.inventory.PrepareResultEvent
-import me.shadowalzazel.mcodyssey.commands.admin.GiveWeapon.updatePoints
 import me.shadowalzazel.mcodyssey.enchantments.api.TomeManager
 import me.shadowalzazel.mcodyssey.constants.ItemModels
-import me.shadowalzazel.mcodyssey.enchantments.api.SlotColors
+import me.shadowalzazel.mcodyssey.util.CustomColors
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import me.shadowalzazel.mcodyssey.items.creators.ItemCreator
@@ -21,7 +20,6 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.enchantment.EnchantItemEvent
-import org.bukkit.event.enchantment.PrepareItemEnchantEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.event.inventory.PrepareSmithingEvent
 import org.bukkit.event.inventory.SmithItemEvent
@@ -382,7 +380,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
 
     /*-----------------------------------------------------------------------------------------------*/
     // Bar Message
-    private fun LivingEntity.sendBarMessage(reason: String, color: TextColor = SlotColors.ENCHANT.color) {
+    private fun LivingEntity.sendBarMessage(reason: String, color: TextColor = CustomColors.ENCHANT.color) {
         this.sendActionBar(
             Component.text(
                 reason,

@@ -2,6 +2,7 @@ package me.shadowalzazel.mcodyssey.enchantments.api
 
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
 import me.shadowalzazel.mcodyssey.util.DataTagManager
+import me.shadowalzazel.mcodyssey.util.CustomColors
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.TextColor
@@ -136,7 +137,7 @@ interface EnchantabilityHandler : EnchantmentsManager, EnchantmentExtender, Data
         // Engraving - Move To Bottom
         if (hasTag(ItemDataTags.IS_ENGRAVED)) {
             val engraver = getStringTag(ItemDataTags.ENGRAVED_BY)!!
-            val engraving = Component.text("Created by $engraver", SlotColors.AMETHYST.color, TextDecoration.ITALIC)
+            val engraving = Component.text("Created by $engraver", CustomColors.AMETHYST.color, TextDecoration.ITALIC)
             newLore.remove(engraving)
             newLore.add(engraving)
         }
@@ -222,44 +223,43 @@ interface EnchantabilityHandler : EnchantmentsManager, EnchantmentExtender, Data
     // Create the lore component for item
     fun createEnchantLoreComponent(enchantment: Enchantment, level: Int, pointCost: Int): Component {
         val color = if (enchantment.isCursed) {
-            SlotColors.CURSED.color
+            CustomColors.CURSED.color
         }
         else if (enchantment.maxLevel < level) {
-            SlotColors.SHINY.color
+            CustomColors.SHINY.color
         }
         else {
-            SlotColors.GRAY.color
+            CustomColors.GRAY.color
         }
         return enchantment
             .displayName(level).color(color)
-            .append(Component.text(" [$pointCost]").color(SlotColors.ENCHANT.color))
+            .append(Component.text(" [$pointCost]").color(CustomColors.ENCHANT.color))
             .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
     }
 
     /*-----------------------------------------------------------------------------------------------*/
     // Components
     val loreSeperator: TextComponent
-        get() = Component.text("-----------*-----------", SlotColors.DARK_GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+        get() = Component.text("-----------*-----------", CustomColors.DARK_GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
 
     val loreFooter: TextComponent
-        get() = Component.text("                       ", SlotColors.DARK_GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+        get() = Component.text("                       ", CustomColors.DARK_GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
 
     val emptyGildedSlot: TextComponent
-        get() = Component.text("+ Empty Gilded Slot", SlotColors.GILDED.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+        get() = Component.text("+ Empty Gilded Slot", CustomColors.GILDED.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
 
     val emptyEnchantSlot: TextComponent
-        get() = Component.text("+ Empty Enchant Slot", SlotColors.GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+        get() = Component.text("+ Empty Enchant Slot", CustomColors.GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
 
     fun createEnchantHeader(used: Int = 0, total: Int = 0): TextComponent {
-        return Component.text("Enchantability Points: ", SlotColors.GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE).append(
-            Component.text("[$used/$total]", SlotColors.ENCHANT.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+        return Component.text("Enchantability Points: ", CustomColors.GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE).append(
+            Component.text("[$used/$total]", CustomColors.ENCHANT.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
         )
     }
-    //[$used/$total]
 
     /*-----------------------------------------------------------------------------------------------*/
     // Fail Message
-    private fun LivingEntity.sendBarMessage(reason: String, color: TextColor = SlotColors.ENCHANT.color) {
+    private fun LivingEntity.sendBarMessage(reason: String, color: TextColor = CustomColors.ENCHANT.color) {
         this.sendActionBar(
             Component.text(
                 reason,

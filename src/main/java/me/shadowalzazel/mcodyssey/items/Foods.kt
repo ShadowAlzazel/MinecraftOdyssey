@@ -3,14 +3,14 @@ package me.shadowalzazel.mcodyssey.items
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
 import me.shadowalzazel.mcodyssey.items.utility.OdysseyFood
+import me.shadowalzazel.mcodyssey.util.CustomColors
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 
 object Foods {
 
-    private val GRAY = TextColor.color(170, 170, 170)
+    private val GRAY = CustomColors.GRAY.color
 
     val GREEN_APPLE = OdysseyFood("green_apple", Material.APPLE, "Green Apple", 5.5F, 3, 1.6F, ItemModels.GREEN_APPLE)
     val BACON = OdysseyFood("bacon", Material.COOKED_PORKCHOP, "Bacon", 8.0F, 3, 1.2F, ItemModels.BACON)

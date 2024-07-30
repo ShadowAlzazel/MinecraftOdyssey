@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.enchantments.api
 
+import me.shadowalzazel.mcodyssey.util.CustomColors
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.TextDecoration
@@ -14,7 +15,7 @@ interface EnchantmentExtender {
         return Component
             .text(text)
             .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-            .color(SlotColors.DARK_GRAY.color)
+            .color(CustomColors.DARK_GRAY.color)
     }
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -131,7 +132,7 @@ interface EnchantmentExtender {
             "antibonk" -> listOf(
                 "- Reduce critical hit damage by ${level * 10}%=[level x 10].")
             "beastly" -> listOf(
-                "- Increase health regeneration amount by ${(20 * level)}%")
+                "- Increase health regeneration amount by ${(25 * level)}%")
             "black_rose" -> listOf(
                 "- Applies Wither II for ${level * 4}=[level x 4] seconds to enemies",
                 "that attacked the wearer.",
@@ -206,7 +207,7 @@ interface EnchantmentExtender {
                 "- Gain invulnerable time negatively proportional to light level.",
                 "Reduce required light level by $level=[level].")
             "vigor" -> listOf(
-                "- While below 60% health, deal ${level * 10}%=[level x 10] increased damage.")
+                "- Deal ${level * 10}%=[level x 10] increased damage while below 80% health.")
             // Odyssey - Melee
             "agile" -> listOf(
                 "- Increase attack speed by ${level * 5}%=[level x 5].")
@@ -232,7 +233,8 @@ interface EnchantmentExtender {
             "buzzy_bees" -> listOf(
                 "- Summons an angered bee to attack most recent target.")
             "cleave" -> listOf(
-                "- Deals ${level}=[level] item damage to armor.")
+                "- Deals ${level}=[level] item damage to armor.",
+                "- Shield disables last for ${level}=[level] more seconds.")
             "committed" -> listOf(
                 "- Increase damage against enemies with less than 40% health by ${1 + level}=[1 + level].")
             "cull_the_weak" -> listOf(
@@ -265,7 +267,7 @@ interface EnchantmentExtender {
             "gravity_well" -> listOf(
                 "- TODO ")
             "guarding_strike" -> listOf(
-                "- Attacking while sneaking applies Resistance I for ${level * 3}=[level x 3] seconds.")
+                "- Attacking while sneaking applies Resistance I for ${level * 4}=[level x 4] seconds.")
             "gust" -> listOf(
                 "- Targets are knocked-up for ${level * 100}%=[level x 100] force.")
             "hemorrhage" -> listOf(
@@ -275,11 +277,13 @@ interface EnchantmentExtender {
                 "If the attack is a crit, it is doubled, but the glowing is removed.")
             "invocative" -> listOf(
                 "- Increase damage to a new target by ${level * 10}%=[level x 10] of your previous attack.")
+            "magic_touch" -> listOf(
+                "- ${level * 10}%=[level x 10] of damage is converted to magic type damage.")
             "metabolic" -> listOf(
                 "- Have a ${level * 10}%=[level x 10] chance to regain food levels when breaking a block.")
             "pestilence" -> listOf(
-                "- Killing an enemy that is poisoned, spreads the effect at ${level * 20}%=[level x 20] efficiency.",
-                "- An enemy that is already poisoned takes damage based on ${level * 10}%=[level x 10] of the remaining time.")
+                "- Killing an enemy that is afflicted by a potion effect, spreads the effect",
+                "at ${level * 20}%=[level x 20] potency within a 4 block radius.")
             "pluck_pocket" -> listOf(
                 "- Items that are mined are directly added to the players inventory.")
             "rupture" -> listOf(
