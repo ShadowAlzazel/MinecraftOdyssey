@@ -1065,8 +1065,8 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
         amount: Double): Double {
         val maxHealth = attacker.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value ?: return 0.0
         val currentHealthPercent = attacker.health / maxHealth
-        if (currentHealthPercent <= 0.80) {
-            return amount * (level * 0.1)
+        if (currentHealthPercent >= 0.25) {
+            return amount * (level * 0.15)
         }
         return 0.0
     }

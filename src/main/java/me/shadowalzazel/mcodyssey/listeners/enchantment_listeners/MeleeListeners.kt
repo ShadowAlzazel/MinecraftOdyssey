@@ -447,9 +447,9 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
             if (entity == killer) return
             // distance square
             val distance = entity.location.distance(location)
-            val power = (maxOf(radius - distance, 0.0)).pow(2.0) + (maxOf(radius - distance, 0.0)).times(1) + (radius / 2)
+            val power = (maxOf(radius - distance, 0.1 * level)).pow(2.0) + (maxOf(radius - distance, 0.1 * level)).times(1) + (radius / 2)
             val damageSource = DamageSource.builder(DamageType.EXPLOSION).build()
-            entity.damage(power + 1.0, damageSource)
+            entity.damage(power + level, damageSource)
         }
     }
 
@@ -530,7 +530,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
         with(attacker) {
             val isCrouching = attacker is Player && attacker.isSneaking
             if (velocity.length() < 0.3 || isCrouching) {
-                addPotionEffect(PotionEffect(PotionEffectType.RESISTANCE, (level * 4) * 20, 0))
+                addPotionEffect(PotionEffect(PotionEffectType.RESISTANCE, (level * 5) * 20, 0))
                 // Particles and Sounds
                 world.spawnParticle(Particle.ENCHANTED_HIT, location, 35, 1.0, 0.5, 1.0)
                 world.playSound(location, Sound.ENTITY_IRON_GOLEM_ATTACK, 1.5F, 0.5F)
@@ -585,6 +585,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
         val damageSource = DamageSource.builder(DamageType.MAGIC).build()
         val magicDamage = damage * potency
         victim.damage(magicDamage, damageSource)
+        victim.world.spawnParticle(Particle.WITCH, victim.location, 10, 0.25, 0.25, 0.25)
         return magicDamage
     }
 

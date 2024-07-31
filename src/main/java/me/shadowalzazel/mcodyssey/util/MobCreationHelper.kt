@@ -82,9 +82,6 @@ interface MobCreationHelper: AttributeManager, EnchantabilityHandler {
         }
     }
 
-    // VANGUARD
-
-
     fun createShinyMob(
         mob: LivingEntity,
         enchantedArmor: Boolean,
@@ -134,7 +131,7 @@ interface MobCreationHelper: AttributeManager, EnchantabilityHandler {
             addShinyEnchant(greaterEnchant.first, greaterEnchant.second)
             val enchantment = OdysseyEnchantments.O_SHINY
             addEnchantment(enchantment, 1)
-            updateEnchantabilityPointsLore()
+            updateEnchantabilityPoints()
         }
         // Naming
         val enchantName = greaterEnchant.first.displayName(greaterEnchant.second).color(shinyColor)
@@ -177,7 +174,7 @@ interface MobCreationHelper: AttributeManager, EnchantabilityHandler {
                 isPersistent = true
             }
         }
-        println("Spawned Elite Shiny Mob at: ${mob.location}")
+        //println("Spawned Elite Shiny Mob at: ${mob.location}")
     }
 
     val dangerPrefixes: Set<String>

@@ -46,7 +46,7 @@ internal interface TomeManager : EnchantabilityHandler {
                 }
             }
         }
-        item.updateEnchantabilityPointsLore(removedEnchants=removedEnchantsMap)
+        item.updateEnchantabilityPoints(removedEnchants=removedEnchantsMap)
         return item
     }
 
@@ -60,7 +60,7 @@ internal interface TomeManager : EnchantabilityHandler {
         if (meta !is Repairable) return null
         meta.repairCost = 1
         item.itemMeta = meta
-        item.updateEnchantabilityPointsLore()
+        item.updateEnchantabilityPoints()
         return item
     }
 
@@ -106,7 +106,7 @@ internal interface TomeManager : EnchantabilityHandler {
             // Remove and re-add
             item.removeEnchantment(enchantToUpgrade.first)
             item.addEnchantment(enchantToUpgrade.first, checkedMaxLevel)
-            item.updateEnchantabilityPointsLore()
+            item.updateEnchantabilityPoints()
         }
         // Advancement
         if (checkedMaxLevel >= enchantToUpgrade.first.maxLevel) {
