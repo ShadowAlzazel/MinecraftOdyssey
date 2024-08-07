@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import com.destroystokyo.paper.event.inventory.PrepareResultEvent
-import me.shadowalzazel.mcodyssey.enchantments.api.TomeManager
+import me.shadowalzazel.mcodyssey.enchantments.utility.TomeManager
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.util.CustomColors
 import me.shadowalzazel.mcodyssey.items.Miscellaneous
@@ -25,10 +25,10 @@ import org.bukkit.event.inventory.PrepareSmithingEvent
 import org.bukkit.event.inventory.SmithItemEvent
 import org.bukkit.inventory.EnchantingInventory
 import org.bukkit.inventory.GrindstoneInventory
-import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.inventory.meta.Repairable
+import java.util.*
 
 object EnchantingListeners : Listener, TomeManager, ItemCreator {
 
@@ -36,15 +36,17 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
     // BOOK that stores EXP points
     // can be read to take points
     // like mending steal away points and is 1st priority
-    // PRISMATIC TOME (new tome book) converts to Tomes
+
     // MINI GAME
     // Books with click events
     // when clicked on thing -> changes the nbt data of that book
-    // sculk related, need sculk and echo shards to craft
-    // ARCANE BOOK
-    // GILDED ENCHANTS ARE LIKE CURSES (not removable)
     // When all clicks, transform Book?
-    // Polymerization -> Promotion and Replication Fixes
+
+    // TOME OF INFUSION?
+    // sculk related, need sculk and echo shards to craft
+
+    // GILDED ENCHANTS ARE LIKE CURSES (not removable)
+
 
     /*-----------------------------------------------------------------------------------------------*/
     @EventHandler
@@ -70,7 +72,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
                     bookPoints += getEnchantabilityCost(Pair(e.key, e.value))
                 }
                 // Reset to prevent cringe
-                anvil.repairCost = bookPoints
+                anvil.repairCost = bookPoints // Current Anvil Cost
                 resultMeta.repairCost = result.enchantments.size + 1
             }
             result.itemMeta = resultMeta
@@ -82,21 +84,25 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
                 val newPoints = result.getUsedEnchantabilityPoints()
                 val pointDiff = minOf(1, newPoints - itemPoints)
                 val cost = pointDiff + result.enchantments.size
-                anvil.repairCost = cost
                 val resultMeta = result.itemMeta as Repairable
+                // Set Mew Combine Cost
+                anvil.repairCost = cost
                 resultMeta.repairCost = cost
+                result.itemMeta = resultMeta
             }
         }
         else if (resultIsRepairable && second != null) {
-            val cost = result.enchantments.size + 1
-            anvil.repairCost = cost
             val resultMeta = result.itemMeta as Repairable
+            val cost = result.enchantments.size + 1
+            // New Cost
+            anvil.repairCost = cost
             resultMeta.repairCost = cost
+            result.itemMeta = resultMeta
         }
         // Check if over points max
         val usedPoints = result.getUsedEnchantabilityPoints()
         val maxPoints = result.getMaxEnchantabilityPoints()
-        if (usedPoints > maxPoints) {
+        if (usedPoints > maxPoints && result.type != Material.ENCHANTED_BOOK) {
             event.result = null
             viewers.forEach { it.sendBarMessage("The item is maxed out on enchantability points.") }
             return
@@ -105,6 +111,31 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         if (result.hasItemMeta()) {
             result.updatePoints()
         }
+        // IF empty name
+        if (second == null) {
+            anvil.repairCost = 1
+        }
+    }
+
+    /*-----------------------------------------------------------------------------------------------*/
+    @EventHandler
+    fun grindstoneHandler(event: PrepareResultEvent) {
+        if (event.inventory !is GrindstoneInventory) return
+        val inventory: GrindstoneInventory = event.inventory as GrindstoneInventory
+        if (inventory.result == null) return
+        val item = inventory.upperItem ?: inventory.lowerItem ?: return
+        val result = inventory.result ?: return
+        // Change name for arcane book
+        if (result.type == Material.BOOK) {
+            val itemName = item.getItemIdentifier()
+            if (itemName == "arcane_book") {
+                val newMeta = result.itemMeta
+                val newName = Component.text("Arcane Book").decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                newMeta.displayName(newName)
+                result.itemMeta = newMeta
+            }
+        }
+        event.result = result.clone().also { it.updatePoints() }
     }
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -131,7 +162,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         val hasItem = hasBook || hasEquipment
         // Check for [TOME] + [EQUIPMENT] + [LAPIS]
         if (hasLapis && hasItem) {
-            val eventResult = when(template.getItemIdentifier()) {
+            val result = when(template.getItemIdentifier()) {
                 "tome_of_avarice" -> tomeOfAvariceOnItem(equipment, event.viewers)
                 "tome_of_discharge" -> tomeOfDischargeOnItem(equipment, event.viewers)
                 "tome_of_expenditure" -> tomeOfExpenditureOnItem(equipment, event.viewers)
@@ -145,7 +176,8 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
                 }
             }
             // Change result to air if null result
-            event.result = eventResult ?: ItemStack(Material.AIR)
+            result?.updatePoints()
+            event.result = result ?: ItemStack(Material.AIR)
         }
     }
 
@@ -156,7 +188,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         val template = smithingInventory.inputTemplate ?: return
         val mineral = smithingInventory.inputMineral ?: return
         val equipment = smithingInventory.inputEquipment ?: return
-        val result = smithingInventory.result ?: return
+        //val result = smithingInventory.result ?: return
         val player = event.whoClicked
 
         val hasLapis = (mineral.type == Material.LAPIS_LAZULI)
@@ -194,6 +226,12 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
                 if (event.item.itemMeta.hasCustomModelData()) {
                     enchantingBookHandler(event)
                 }
+                else {
+                    // Update Points
+                    val book = event.item
+                    book.updatePoints(resetLore = true, toggleToolTip = true, newEnchants = event.enchantsToAdd)
+                    event.item = book
+                }
             }
             else -> {
                 enchantingItemHandler(event)
@@ -201,40 +239,6 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         }
     }
 
-    /*-----------------------------------------------------------------------------------------------*/
-    @EventHandler
-    fun grindstoneHandler(event: PrepareResultEvent) {
-        if (event.inventory !is GrindstoneInventory) return
-        val inventory: GrindstoneInventory = event.inventory as GrindstoneInventory
-        if (inventory.result == null) return
-        val item = inventory.upperItem ?: inventory.lowerItem ?: return
-        val result = inventory.result ?: return
-        // Change for book
-        if (result.type == Material.BOOK) {
-            val itemName = item.getItemIdentifier()
-            if (itemName == "arcane_book") {
-                val clone = result.clone()
-                val newMeta = clone.itemMeta
-                val newName = Component.text("Arcane Book").decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-                newMeta.displayName(null)
-                newMeta.displayName(newName)
-                newMeta.lore(null)
-                newMeta.removeItemFlags(ItemFlag.HIDE_STORED_ENCHANTS)
-                clone.itemMeta = newMeta
-                event.result = clone
-            }
-        }
-        else {
-            /*
-            val resultEnchantKeys = result.enchantments.keys
-            val removedEnchantments = item.enchantments.filter { it.key !in resultEnchantKeys }
-            var totalPoints = 0
-            removedEnchantments.forEach { totalPoints += it.key.enchantabilityCost(it.value) }
-             */
-            // Sentries passed
-            event.result = result.clone().also { it.updatePoints() }
-        }
-    }
 
     /*-----------------------------------------------------------------------------------------------*/
     private fun enchantingBookHandler(event: EnchantItemEvent) {
@@ -260,14 +264,17 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
             ItemModels.BLANK_TOME -> {
                 enchantingTomeHandler(event)
             }
+            ItemModels.ARCANE_BOOK -> {
+                arcaneBookHandler(event)
+            }
         }
     }
 
     private fun enchantingTomeHandler(event: EnchantItemEvent) {
         val randomTome: OdysseyItem
-        val enchanterLevel = maxOf(1, event.enchanter.level)
+        //val enchanterLevel = maxOf(1, event.enchanter.level)
         val tierCost: Int
-        val tableCost = event.expLevelCost
+        //val tableCost = event.expLevelCost
         // Scale of Tomes
         when (event.whichButton()) {
             0 -> {
@@ -306,22 +313,38 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         event.isCancelled = true
     }
 
+
+    private fun arcaneBookHandler(event: EnchantItemEvent) {
+        // Create more enchants to add
+        addChiseledBookshelfBonus(event)
+        val book = event.item
+        val newEnchants = event.enchantsToAdd
+        val hint = event.enchantmentHint
+        val tableCost = event.expLevelCost
+        // Create a copy of enchantments
+        val arcaneBonusEnchants = (book.clone().enchantWithLevels(tableCost, false, Random()).itemMeta as EnchantmentStorageMeta).storedEnchants
+        for (enchant in arcaneBonusEnchants) {
+            if (enchant.key.conflictsWith(hint)) continue
+            if (enchant.key == hint) continue
+            newEnchants[enchant.key] = enchant.value
+        }
+        // update
+        book.updatePoints(resetLore = true, toggleToolTip = true, newEnchants = newEnchants) // Not full trigger since its passed as a book
+        event.item = book
+    }
+
     /*-----------------------------------------------------------------------------------------------*/
     private fun enchantingItemHandler(event: EnchantItemEvent) {
         // Create more enchants to add
-        getChiseledBookshelvesBonus(event)
+        addChiseledBookshelfBonus(event)
         val item = event.item
         val newEnchants = event.enchantsToAdd
         // Can get OVER-MAXED ITEMS if lucky
-        // Get Hint
-        val hint = event.enchantmentHint
-        item.updateEnchantabilityPointsLore(newEnchants, toggleToolTip = true)
-        item.addItemFlags(ItemFlag.HIDE_ENCHANTS)
+        item.updateEnchantabilityPoints(newEnchants, toggleToolTip = true)
         event.item = item
-        event.inventory
     }
 
-    private fun getChiseledBookshelvesBonus(event: EnchantItemEvent) {
+    private fun addChiseledBookshelfBonus(event: EnchantItemEvent) {
         // (Enchant, % chance)
         val shelfEnchantsMap = mutableMapOf<Enchantment, Int>()
         // Pairs of x,z offsets

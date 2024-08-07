@@ -5,10 +5,10 @@ import me.shadowalzazel.mcodyssey.bosses.hog_rider.HogRiderListeners
 import me.shadowalzazel.mcodyssey.bosses.the_ambassador.AmbassadorListeners
 import me.shadowalzazel.mcodyssey.commands.admin.*
 import me.shadowalzazel.mcodyssey.commands.spells.PlaceFeatureArchaicSeed
+import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.listeners.*
 import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.*
 import me.shadowalzazel.mcodyssey.listeners.enchantment_listeners.OtherListeners
-import me.shadowalzazel.mcodyssey.phenomenon.base.OdysseyPhenomenon
 import me.shadowalzazel.mcodyssey.recipes.RecipeManager
 import me.shadowalzazel.mcodyssey.recipes.brewing.BrewerMixes
 import me.shadowalzazel.mcodyssey.structures.StructureDetector
@@ -17,7 +17,7 @@ import me.shadowalzazel.mcodyssey.world_events.DateTimeSyncer
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.NamespacedKey
-import org.bukkit.ServerLinks
+import org.bukkit.Registry
 import org.bukkit.World
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
@@ -37,13 +37,6 @@ class Odyssey : JavaPlugin() {
     // Overworld
     lateinit var overworld: World
     lateinit var edge: World
-
-    // Phenomenon Stuff
-    var isSolarPhenomenonActive: Boolean = false
-    var isLunarPhenomenonActive: Boolean = false
-    var currentLunarPhenomenon: OdysseyPhenomenon? = null
-    var currentSolarPhenomenon: OdysseyPhenomenon? = null
-    var playersRequiredForLuck: Int = 99
 
     companion object {
         lateinit var instance : Odyssey
@@ -100,6 +93,13 @@ class Odyssey : JavaPlugin() {
 
         // Enable Enchants
         logger.info("Enabling Enchantments...")
+        /*
+        println(OdysseyEnchantments.meleeSet)
+        OdysseyEnchantments.meleeSet.forEach {
+            println(it)
+        }
+
+         */
 
         // Register Recipes
         logger.info("Registering Recipes...")

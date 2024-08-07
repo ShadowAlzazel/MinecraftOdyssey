@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.enchantments.api
+package me.shadowalzazel.mcodyssey.enchantments.utility
 
 import me.shadowalzazel.mcodyssey.util.CustomColors
 import net.kyori.adventure.text.Component
@@ -207,7 +207,7 @@ interface EnchantmentExtender {
                 "- Gain invulnerable time negatively proportional to light level.",
                 "Reduce required light level by $level=[level].")
             "vigor" -> listOf(
-                "- Deal ${level * 10}%=[level x 10] increased damage while below 80% health.")
+                "- Deal ${level * 15}%=[level x 15] increased damage while above 25% health.")
             // Odyssey - Melee
             "agile" -> listOf(
                 "- Increase attack speed by ${level * 5}%=[level x 5].")
@@ -267,7 +267,7 @@ interface EnchantmentExtender {
             "gravity_well" -> listOf(
                 "- TODO ")
             "guarding_strike" -> listOf(
-                "- Attacking while sneaking applies Resistance I for ${level * 4}=[level x 4] seconds.")
+                "- Attacking while sneaking applies Resistance I for ${level * 5}=[level x 5] seconds.")
             "gust" -> listOf(
                 "- Targets are knocked-up for ${level * 100}%=[level x 100] force.")
             "hemorrhage" -> listOf(
@@ -278,7 +278,7 @@ interface EnchantmentExtender {
             "invocative" -> listOf(
                 "- Increase damage to a new target by ${level * 10}%=[level x 10] of your previous attack.")
             "magic_touch" -> listOf(
-                "- ${level * 10}%=[level x 10] of damage is converted to magic type damage.")
+                "- Convert ${level * 10}%=[level x 10] of melee damage into magic type damage.")
             "metabolic" -> listOf(
                 "- Have a ${level * 10}%=[level x 10] chance to regain food levels when breaking a block.")
             "pestilence" -> listOf(

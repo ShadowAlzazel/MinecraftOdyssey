@@ -1,7 +1,5 @@
 package me.shadowalzazel.mcodyssey.mobs.hostile
 
-import me.shadowalzazel.mcodyssey.constants.MobTags
-
 import me.shadowalzazel.mcodyssey.items.creators.WeaponCreator
 import me.shadowalzazel.mcodyssey.items.utility.ToolMaterial
 import me.shadowalzazel.mcodyssey.items.utility.ToolType
@@ -16,7 +14,7 @@ import org.bukkit.entity.Stray
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object Ruined : OdysseyMob("Ruined", MobTags.RUINED, EntityType.STRAY, 30.0) {
+object Ruined : OdysseyMob("Ruined", "ruined", EntityType.STRAY, 30.0) {
 
     override fun createMob(world: World, location: Location): Stray {
         val entity = (super.createMob(world, location) as Stray).apply {

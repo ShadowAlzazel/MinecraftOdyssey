@@ -13,6 +13,10 @@ object NightEvents {
 
     val BLOOD_MOON = BloodMoon()
 
+    //  livingVillagers.forEach {
+    //            if ((it as Villager).profession == Villager.Profession.FARMER) {
+    //                counter += 1
+    //            }
 
     val eventList = listOf(BLOOD_MOON)
 

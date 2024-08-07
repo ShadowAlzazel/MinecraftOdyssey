@@ -1,6 +1,5 @@
 package me.shadowalzazel.mcodyssey.mobs.neutral
 
-import me.shadowalzazel.mcodyssey.constants.MobTags
 import me.shadowalzazel.mcodyssey.mobs.base.OdysseyMob
 import me.shadowalzazel.mcodyssey.recipes.merchant.ArcaneSales
 import net.kyori.adventure.text.Component
@@ -13,7 +12,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object DubiousDealer : OdysseyMob("Dubious Dealer", MobTags.DUBIOUS_DEALER, EntityType.WANDERING_TRADER, 40.0) {
+object DubiousDealer : OdysseyMob("Dubious Dealer", "dubious_dealer", EntityType.WANDERING_TRADER, 40.0) {
 
     override fun createMob(world: World, location: Location): WanderingTrader {
         return (super.createMob(world, location) as WanderingTrader).apply {

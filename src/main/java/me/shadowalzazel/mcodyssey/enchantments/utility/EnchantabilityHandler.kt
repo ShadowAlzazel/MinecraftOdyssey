@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.enchantments.api
+package me.shadowalzazel.mcodyssey.enchantments.utility
 
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
 import me.shadowalzazel.mcodyssey.util.DataTagManager
@@ -41,7 +41,7 @@ interface EnchantabilityHandler : EnchantmentsManager, EnchantmentExtender, Data
 
     /*-----------------------------------------------------------------------------------------------*/
     // Mains
-    fun ItemStack.updateEnchantabilityPointsLore(
+    fun ItemStack.updateEnchantabilityPoints(
         newEnchants: MutableMap<Enchantment, Int>? = null,
         removedEnchants: MutableMap<Enchantment, Int>? = null,
         resetLore: Boolean = true,
@@ -158,14 +158,14 @@ interface EnchantabilityHandler : EnchantmentsManager, EnchantmentExtender, Data
         itemMeta = newMeta
     }
 
-    fun ItemStack.updateStoredEnchantabilityLore(
-        toggleToolTip: Boolean = true) {
+    fun ItemStack.updateStoredEnchantmentPoints(
+        toggleToolTip: Boolean = true,
+        newEnchants: MutableMap<Enchantment, Int>? = null) {
         // Checks
-        val storedMeta = itemMeta
-        if (storedMeta !is EnchantmentStorageMeta) return
+        val bookMeta = itemMeta
         // Enchantments
-        val updatedEnchantments: MutableMap<Enchantment, Int> = storedMeta.storedEnchants
-        if (updatedEnchantments.isEmpty()) return
+        // Get from newEnchants or from StorageMeta
+        val updatedEnchantments: MutableMap<Enchantment, Int> = newEnchants ?: if (bookMeta is EnchantmentStorageMeta) bookMeta.storedEnchants else mutableMapOf()
         // Tool tip
         val hasToolTip = this.hasTag(ItemDataTags.HAS_ENCHANT_TOOL_TIP)
         // Points Lore
@@ -191,11 +191,13 @@ interface EnchantabilityHandler : EnchantmentsManager, EnchantmentExtender, Data
                 counter += description.size
             }
         }
-        newLore.add(Component.text(""))
-        storedMeta.lore(newLore)
+        if (updatedEnchantments.isNotEmpty()) {
+            newLore.add(Component.text(""))
+        }
+        bookMeta.lore(newLore)
         // Update Lore Flags
-        storedMeta.addItemFlags(ItemFlag.HIDE_STORED_ENCHANTS)
-        itemMeta = storedMeta
+        bookMeta.addItemFlags(ItemFlag.HIDE_STORED_ENCHANTS)
+        itemMeta = bookMeta
         // Final Tool Tip
         if (toggleToolTip) {
             if (hasToolTip) {
@@ -208,13 +210,14 @@ interface EnchantabilityHandler : EnchantmentsManager, EnchantmentExtender, Data
 
     fun ItemStack.updatePoints(
         resetLore: Boolean = true,
-        toggleToolTip: Boolean = true) {
-        if (this.type == Material.ENCHANTED_BOOK) {
-            this.updateStoredEnchantabilityLore(toggleToolTip)
+        toggleToolTip: Boolean = true,
+        newEnchants: MutableMap<Enchantment, Int>? = null) {
+        if (this.type == Material.ENCHANTED_BOOK || this.type == Material.BOOK) {
+            this.updateStoredEnchantmentPoints(toggleToolTip, newEnchants)
         }
         else {
-            this.updateEnchantabilityPointsLore(
-                null, null, resetLore, toggleToolTip
+            this.updateEnchantabilityPoints(
+                newEnchants, null, resetLore, toggleToolTip
             )
         }
     }

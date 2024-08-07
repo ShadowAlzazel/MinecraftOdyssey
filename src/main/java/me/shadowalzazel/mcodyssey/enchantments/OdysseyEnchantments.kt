@@ -3,17 +3,26 @@ package me.shadowalzazel.mcodyssey.enchantments
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.enchantments.api.EnchantmentsManager
+import me.shadowalzazel.mcodyssey.enchantments.utility.EnchantmentsManager
+import me.shadowalzazel.mcodyssey.util.RegistryTagManager
 import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
 
 @Suppress("MemberVisibilityCanBePrivate")
-object OdysseyEnchantments : EnchantmentsManager {
+object OdysseyEnchantments : EnchantmentsManager, RegistryTagManager {
 
     private val enchantmentRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.ENCHANTMENT)
     private val getRegisteredEnchant: (String) -> (Enchantment) = {
         enchantmentRegistry.get(NamespacedKey(Odyssey.instance, it))!!
     }
+
+    // TEST!!!
+    //val odysseyKey = NamespacedKey("odyssey", "non_table/melee")
+    //val typedKey = TypedKey.create(RegistryKey.ENCHANTMENT, odysseyKey)
+    //val tagKey = TagKey.create(RegistryKey.ENCHANTMENT, odysseyKey)
+    //val keySet = RegistrySet.keySet(RegistryKey.ENCHANTMENT, typedKey)
+    //val melSet = enchantmentRegistry.getTag(tagKey)
+    //val meleeSet = getRegistryTag("treasure", RegistryKey.ENCHANTMENT)
 
     // Armor
     val ANALYSIS: Enchantment = getRegisteredEnchant("analysis")

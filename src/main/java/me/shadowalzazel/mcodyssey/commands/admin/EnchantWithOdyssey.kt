@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.commands.admin
 
-import me.shadowalzazel.mcodyssey.enchantments.api.EnchantabilityHandler
+import me.shadowalzazel.mcodyssey.enchantments.utility.EnchantabilityHandler
 import org.bukkit.Material
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -22,7 +22,7 @@ object EnchantWithOdyssey : CommandExecutor, EnchantabilityHandler {
         // Passed Checks
         val item = sender.equipment.itemInMainHand
         item.addEnchantment(enchant, level)
-        item.updateEnchantabilityPointsLore()
+        item.updateEnchantabilityPoints()
         return true
     }
 }

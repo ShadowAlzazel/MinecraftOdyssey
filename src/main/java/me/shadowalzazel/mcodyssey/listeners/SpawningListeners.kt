@@ -8,6 +8,11 @@ import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.items.creators.WeaponCreator
 import me.shadowalzazel.mcodyssey.items.utility.ToolMaterial
 import me.shadowalzazel.mcodyssey.items.utility.ToolType
+import me.shadowalzazel.mcodyssey.mobs.hostile.Vanguard.addAttackAttribute
+import me.shadowalzazel.mcodyssey.mobs.hostile.Vanguard.addHealthAttribute
+import me.shadowalzazel.mcodyssey.mobs.hostile.Vanguard.addScaleAttribute
+import me.shadowalzazel.mcodyssey.mobs.hostile.Vanguard.addStepAttribute
+import me.shadowalzazel.mcodyssey.mobs.hostile.Vanguard.updateEnchantabilityPoints
 import me.shadowalzazel.mcodyssey.mobs.neutral.DubiousDealer
 import me.shadowalzazel.mcodyssey.structures.StructureManager
 import me.shadowalzazel.mcodyssey.trims.TrimMaterials
@@ -15,6 +20,7 @@ import me.shadowalzazel.mcodyssey.trims.TrimPatterns
 import me.shadowalzazel.mcodyssey.util.MobCreationHelper
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -96,21 +102,38 @@ object SpawningListeners : Listener, MobCreationHelper, StructureManager {
         }
         // Vanguard
         if (mob.scoreboardTags.contains("odyssey.vanguard")) {
-            val mainWeapon = WeaponCreator.toolCreator.createToolStack(ToolMaterial.DIAMOND, ToolType.HALBERD)
-            val mainHand = mainWeapon.enchantWithLevels(25, false, Random())
-            val offHand = ItemStack(Material.SHIELD)
-            mob.equipment?.apply {
-                setItemInOffHand(offHand)
-                setItemInMainHand(mainHand)
+            // Weapon
+            val mainHand = WeaponCreator.toolCreator.createToolStack(ToolMaterial.IRON, ToolType.POLEAXE)
+            val weapon = mainHand.clone()
+            // Add Enchantments
+            val enchantItem = ItemStack(Material.NETHERITE_SWORD).enchantWithLevels(30, false, Random())
+            val swordEnchants = enchantItem.enchantments
+            weapon.apply {
+                addUnsafeEnchantment(Enchantment.BREACH, 4)
+                addUnsafeEnchantment(Enchantment.KNOCKBACK, 3)
+                for (enchant in swordEnchants) {
+                    if (enchant.key.canEnchantItem(weapon)) {
+                        addEnchantment(enchant.key, enchant.value)
+                    }
+                }
+                updateEnchantabilityPoints()
             }
-            val darkTrim = ArmorTrim(TrimMaterials.OBSIDIAN,
-                listOf(TrimPatterns.IMPERIAL).random())
-            createArmoredMob(mob, false, ToolMaterial.DIAMOND, "iron", darkTrim, true)
+            val offHand = ItemStack(Material.SHIELD)
+            val silverTrim = ArmorTrim(
+                TrimMaterials.SILVER,
+                listOf(TrimPatterns.IMPERIAL).random()
+            )
+            createArmoredMob(mob, false, ToolMaterial.IRON, "iron", silverTrim, true)
             mob.apply {
-                addHealthAttribute(20.0, AttributeTags.MOB_HEALTH)
-                mob.heal(30.0)
-                addAttackAttribute(9.0, AttributeTags.MOB_ATTACK_DAMAGE)
+                addHealthAttribute(25.0, AttributeTags.MOB_HEALTH)
+                heal(25.0)
+                addAttackAttribute(10.0, AttributeTags.MOB_ATTACK_DAMAGE)
                 addScaleAttribute(0.1, AttributeTags.MOB_SCALE)
+                equipment?.also {
+                    it.setItemInOffHand(offHand)
+                    it.setItemInMainHand(weapon)
+                    it.itemInMainHandDropChance = 0.05F // Change to difficulty
+                }
             }
         }
         // Basic Mob
@@ -119,7 +142,7 @@ object SpawningListeners : Listener, MobCreationHelper, StructureManager {
             val shadowTrim = ArmorTrim(TrimMaterials.OBSIDIAN,
                 listOf(TrimPatterns.IMPERIAL, TrimPattern.FLOW, TrimPattern.SILENCE).random())
             createArmoredMob(mob, true, ToolMaterial.IRON, "chainmail", shadowTrim)
-            mob.addAttackAttribute(4.0, AttributeTags.MOB_ATTACK_DAMAGE)
+            mob.addAttackAttribute(5.0, AttributeTags.MOB_ATTACK_DAMAGE)
             mob.addAttackAttribute(15.0, AttributeTags.MOB_HEALTH)
             mob.addArmorAttribute(2.0, AttributeTags.MOB_ARMOR)
             mob.heal(15.0)
@@ -128,9 +151,10 @@ object SpawningListeners : Listener, MobCreationHelper, StructureManager {
         mob.apply {
             addHealthAttribute(15.0, AttributeTags.SHADOW_CHAMBERS_HEALTH_BONUS)
             health += 15.0
-            addAttackAttribute(2.0, AttributeTags.SHADOW_CHAMBERS_ATTACK_BONUS)
+            addAttackAttribute(3.0, AttributeTags.SHADOW_CHAMBERS_ATTACK_BONUS)
             addArmorAttribute(2.0, AttributeTags.SHADOW_CHAMBERS_ARMOR_BONUS)
-            addSpeedAttribute(0.02, AttributeTags.SHADOW_CHAMBERS_SPEED_BONUS)
+            addSpeedAttribute(0.0325, AttributeTags.SHADOW_CHAMBERS_SPEED_BONUS)
+            addStepAttribute(0.5, AttributeTags.SHADOW_CHAMBERS_STEP_HEIGHT)
             addScoreboardTag(EntityTags.SHADOW_MOB)
         }
 

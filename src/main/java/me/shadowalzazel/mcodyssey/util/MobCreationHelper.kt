@@ -3,7 +3,7 @@ package me.shadowalzazel.mcodyssey.util
 import me.shadowalzazel.mcodyssey.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.constants.EntityTags
 import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.enchantments.api.EnchantabilityHandler
+import me.shadowalzazel.mcodyssey.enchantments.utility.EnchantabilityHandler
 import me.shadowalzazel.mcodyssey.items.creators.ToolCreator
 import me.shadowalzazel.mcodyssey.items.creators.WeaponCreator
 import me.shadowalzazel.mcodyssey.items.utility.ToolMaterial
@@ -82,9 +82,6 @@ interface MobCreationHelper: AttributeManager, EnchantabilityHandler {
         }
     }
 
-    // VANGUARD
-
-
     fun createShinyMob(
         mob: LivingEntity,
         enchantedArmor: Boolean,
@@ -134,7 +131,7 @@ interface MobCreationHelper: AttributeManager, EnchantabilityHandler {
             addShinyEnchant(greaterEnchant.first, greaterEnchant.second)
             val enchantment = OdysseyEnchantments.O_SHINY
             addEnchantment(enchantment, 1)
-            updateEnchantabilityPointsLore()
+            updateEnchantabilityPoints()
         }
         // Naming
         val enchantName = greaterEnchant.first.displayName(greaterEnchant.second).color(shinyColor)
@@ -153,23 +150,24 @@ interface MobCreationHelper: AttributeManager, EnchantabilityHandler {
             createTrimmedArmor(this, trim, materialType.itemName, enchantedArmor)
             equipment?.also {
                 it.setItemInMainHand(weapon)
-                it.itemInMainHandDropChance = 0.5F // Change to difficulty
+                it.itemInMainHandDropChance = 0.35F // Change to difficulty
                 val dualWieldTypes = listOf(ToolType.DAGGER, ToolType.SICKLE, ToolType.CHAKRAM)
                 if (weaponType in dualWieldTypes) {
                     it.setItemInOffHand(weapon.clone())
-                    it.itemInOffHandDropChance = 0.5F // Change to difficulty
+                    it.itemInOffHandDropChance = 0.15F // Change to difficulty
                 }
-                it.helmetDropChance = 0.125F
-                it.chestplateDropChance = 0.125F
-                it.leggingsDropChance = 0.125F
-                it.bootsDropChance = 0.125F
+                it.helmetDropChance = 0.075F
+                it.chestplateDropChance = 0.075F
+                it.leggingsDropChance = 0.075F
+                it.bootsDropChance = 0.075F
             }
-            addHealthAttribute(45 + (20.0 * difficultyMod), AttributeTags.ELITE_HEALTH)
-            health += 45 + (20.0 * difficultyMod)
-            addAttackAttribute(3 + (1 * difficultyMod), AttributeTags.ELITE_ATTACK_DAMAGE)
+            addHealthAttribute(25.0 + (15.0 * difficultyMod), AttributeTags.ELITE_HEALTH)
+            health += 25.0 + (15.0 * difficultyMod)
+            addAttackAttribute(9 + (1.25 * difficultyMod), AttributeTags.ELITE_ATTACK_DAMAGE)
             addArmorAttribute(4 + (2 * difficultyMod), AttributeTags.ELITE_ARMOR)
-            addSpeedAttribute(0.012 + (0.012 * difficultyMod), AttributeTags.ELITE_SPEED)
+            addSpeedAttribute(0.015 + (0.015 * difficultyMod), AttributeTags.ELITE_SPEED)
             addScaleAttribute(0.2)
+            addStepAttribute(2.0, AttributeTags.ELITE_STEP_HEIGHT)
             addScoreboardTag(EntityTags.ELITE_MOB)
             addPotionEffect(PotionEffect(PotionEffectType.RESISTANCE, 20 * 3600, 0))
             // Persistent
@@ -177,7 +175,7 @@ interface MobCreationHelper: AttributeManager, EnchantabilityHandler {
                 isPersistent = true
             }
         }
-        println("Spawned Elite Shiny Mob at: ${mob.location}")
+        //println("Spawned Elite Shiny Mob at: ${mob.location}")
     }
 
     val dangerPrefixes: Set<String>

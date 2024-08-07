@@ -14,6 +14,7 @@ object AttributeTags {
     const val ELITE_ARMOR = "mob.elite.armor"
     const val ELITE_SPEED = "mob.elite.speed"
     const val ELITE_ATTACK_DAMAGE = "mob.elite.attack_damage"
+    const val ELITE_STEP_HEIGHT = "mob.elite.step_height"
 
     // Edge Bonus
     const val MOB_EDGE_HEALTH_BONUS = "mob.edge.health_bonus"
@@ -23,6 +24,7 @@ object AttributeTags {
     const val SHADOW_CHAMBERS_ARMOR_BONUS = "mob.shadow_chambers.armor_bonus"
     const val SHADOW_CHAMBERS_ATTACK_BONUS = "mob.shadow_chambers.attack_bonus"
     const val SHADOW_CHAMBERS_SPEED_BONUS = "mob.shadow_chambers.speed_bonus"
+    const val SHADOW_CHAMBERS_STEP_HEIGHT = "mob.shadow_chambers.step_height"
 
     // Players
     const val PLAYER_GENERIC_HEALTH = "player.generic_health"

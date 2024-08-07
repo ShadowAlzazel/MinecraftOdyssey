@@ -20,6 +20,8 @@ object EntityTags {
     // SNIFFERS
     const val CAN_DIG_BIOME_SEEDS: String = "odyssey.can_dig_biome_seeds"
 
+    // MOBS
+
     // AREA_EFFECT_CLOUD
     const val FREEZING_CLOUD: String = "odyssey.freezing_cloud"
     const val DECAYING_CLOUD: String = "odyssey.decaying_cloud"
