@@ -2,7 +2,7 @@ package me.shadowalzazel.mcodyssey.listeners.enchantment_listeners
 
 import io.papermc.paper.world.MoonPhase
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.enchantments.api.EnchantmentsManager
+import me.shadowalzazel.mcodyssey.enchantments.utility.EnchantmentsManager
 import me.shadowalzazel.mcodyssey.listeners.utility.MoonwardPhase
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler

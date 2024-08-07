@@ -29,7 +29,6 @@ open class DailyWorldEvent(
         } else {
             failedTrigger(world)
         }
-        println("Did Trigger")
     }
 
     // Handled after triggered
@@ -80,7 +79,7 @@ open class DailyWorldEvent(
     open fun persistentActionHandler(world: World) {
         val players = world.players
         for (p in players) {
-            println("${p.name} has been Detected!!")
+            //println("${p.name} has been Detected!!")
         }
 
     }

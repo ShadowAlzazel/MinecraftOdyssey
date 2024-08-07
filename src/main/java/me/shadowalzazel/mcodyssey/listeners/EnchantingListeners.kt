@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.listeners
 
 import com.destroystokyo.paper.event.inventory.PrepareResultEvent
-import me.shadowalzazel.mcodyssey.enchantments.api.TomeManager
+import me.shadowalzazel.mcodyssey.enchantments.utility.TomeManager
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.util.CustomColors
 import me.shadowalzazel.mcodyssey.items.Miscellaneous

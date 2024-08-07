@@ -35,14 +35,9 @@ object ScoreboardTagListeners : Listener {
                 }
                 EffectTags.ASPHYXIATE -> {
                     remove = false
-                    if (event.damager is LivingEntity) { (event.damager as LivingEntity).damage(2.0) }
                 }
                 EffectTags.MIASMA -> {
                     remove = false
-                    if (event.damager is LivingEntity) {
-                        (event.damager as LivingEntity).damage(2.0)
-                        (event.damager as LivingEntity).addPotionEffect(PotionEffect(PotionEffectType.POISON, 20 * 10, 0)) // TODO: Maybe make proper effect
-                    }
                 }
                 else -> {
                     remove = false

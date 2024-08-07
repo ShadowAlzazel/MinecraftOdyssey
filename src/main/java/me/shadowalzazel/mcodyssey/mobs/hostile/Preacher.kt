@@ -1,6 +1,5 @@
 package me.shadowalzazel.mcodyssey.mobs.hostile
 
-import me.shadowalzazel.mcodyssey.constants.MobTags
 import me.shadowalzazel.mcodyssey.items.creators.WeaponCreator
 import me.shadowalzazel.mcodyssey.items.utility.ToolMaterial
 import me.shadowalzazel.mcodyssey.items.utility.ToolType
@@ -16,7 +15,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object PreacherOfTheAbyss : OdysseyMob("Preacher of the Abyss", MobTags.PREACHER_OF_THE_ABYSS, EntityType.WITHER_SKELETON, 130.0) {
+object Preacher : OdysseyMob("Preacher", "preacher", EntityType.WITHER_SKELETON, 130.0) {
 
     override fun createMob(world: World, location: Location): WitherSkeleton {
         return (super.createMob(world, location) as WitherSkeleton).apply {
@@ -30,7 +29,7 @@ object PreacherOfTheAbyss : OdysseyMob("Preacher of the Abyss", MobTags.PREACHER
             // Miscellaneous
             canPickupItems = true
             clearActiveItem()
-            customName(Component.text(this@PreacherOfTheAbyss.displayName, TextColor.color(40, 6, 25)))
+            customName(Component.text(this@Preacher.displayName, TextColor.color(40, 6, 25)))
             // Add Items /
             val weapon = WeaponCreator.toolCreator.createToolStack(ToolMaterial.NETHERITE, ToolType.CLAYMORE) // ADD SLOTS AND ENCHANTS
             equipment.also {

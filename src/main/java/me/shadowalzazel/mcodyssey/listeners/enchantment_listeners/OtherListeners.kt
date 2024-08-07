@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.listeners.enchantment_listeners
 
-import me.shadowalzazel.mcodyssey.enchantments.api.EnchantmentsManager
+import me.shadowalzazel.mcodyssey.enchantments.utility.EnchantmentsManager
 import me.shadowalzazel.mcodyssey.items.Ingredients
 import me.shadowalzazel.mcodyssey.util.AttackHelper
 import org.bukkit.*

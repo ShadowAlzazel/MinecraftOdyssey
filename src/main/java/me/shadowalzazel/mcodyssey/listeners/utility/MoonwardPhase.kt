@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.listeners.utility
 
 import io.papermc.paper.world.MoonPhase
-import me.shadowalzazel.mcodyssey.enchantments.api.EnchantmentsManager
+import me.shadowalzazel.mcodyssey.enchantments.utility.EnchantmentsManager
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
 

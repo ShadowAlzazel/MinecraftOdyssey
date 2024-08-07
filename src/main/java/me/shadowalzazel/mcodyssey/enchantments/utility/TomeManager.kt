@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.enchantments.api
+package me.shadowalzazel.mcodyssey.enchantments.utility
 
 import me.shadowalzazel.mcodyssey.util.CustomColors
 import net.kyori.adventure.text.Component

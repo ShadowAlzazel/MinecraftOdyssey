@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.enchantments.api
+package me.shadowalzazel.mcodyssey.enchantments.utility
 
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
 import me.shadowalzazel.mcodyssey.util.DataTagManager

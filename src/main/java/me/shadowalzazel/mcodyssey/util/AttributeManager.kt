@@ -63,6 +63,13 @@ interface AttributeManager {
         this.setAttributeModifier(value, name, Attribute.GENERIC_MOVEMENT_SPEED)
     }
 
+    fun LivingEntity.addStepAttribute(
+        value: Double,
+        name: String = "generic.extra_step_height")
+    {
+        this.setAttributeModifier(value, name, Attribute.GENERIC_STEP_HEIGHT)
+    }
+
     /*-----------------------------------------------------------------------------------------------*/
     // Items
 

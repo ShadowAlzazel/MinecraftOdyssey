@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.items.creators
 
 import me.shadowalzazel.mcodyssey.constants.DataKeys
-import me.shadowalzazel.mcodyssey.enchantments.api.EnchantabilityHandler
+import me.shadowalzazel.mcodyssey.enchantments.utility.EnchantabilityHandler
 import me.shadowalzazel.mcodyssey.items.*
 import me.shadowalzazel.mcodyssey.items.Potions.createPotionStack
 import me.shadowalzazel.mcodyssey.items.Runesherds.createPresetSherdStack

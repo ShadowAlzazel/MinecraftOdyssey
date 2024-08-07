@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.commands.admin
 
-import me.shadowalzazel.mcodyssey.mobs.hostile.PreacherOfTheAbyss
+import me.shadowalzazel.mcodyssey.mobs.hostile.Preacher
 import me.shadowalzazel.mcodyssey.mobs.hostile.Ruined
 import me.shadowalzazel.mcodyssey.mobs.hostile.Savage
 import me.shadowalzazel.mcodyssey.mobs.hostile.Vanguard
@@ -36,7 +36,7 @@ object SummonMob : CommandExecutor {
                 Vanguard.createKnight(world, location)
             }
             "preacher" -> {
-                PreacherOfTheAbyss.createMob(world, location)
+                Preacher.createMob(world, location)
             }
             "ruined" -> {
                 Ruined.createMob(world, location)

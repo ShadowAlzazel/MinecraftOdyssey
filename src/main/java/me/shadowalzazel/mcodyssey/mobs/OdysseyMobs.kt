@@ -15,7 +15,7 @@ object OdysseyMobs {
     val TREASURE_PIG = TreasurePig
     val VANGUARD = Vanguard
     val WANDERING_SOUL = WanderingSoul
-    val PREACHER_OF_THE_ABYSS = PreacherOfTheAbyss
+    val PREACHER_OF_THE_ABYSS = Preacher
 
     val ROTTING_SUMMON = RottingSummon
 

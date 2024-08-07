@@ -247,6 +247,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
     ): Double {
         victim.remainingAir -= 20 * (level * 2)
         victim.world.spawnParticle(Particle.BUBBLE_POP, victim.location, 10, 0.25, 0.25, 0.25)
+        victim.velocity = victim.velocity.multiply(0.0)
         if (victim.remainingAir < 20) return level * 1.0
         return 0.0
     }

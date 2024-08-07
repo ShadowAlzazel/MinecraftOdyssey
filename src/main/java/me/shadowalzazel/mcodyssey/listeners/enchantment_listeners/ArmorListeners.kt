@@ -9,7 +9,7 @@ import me.shadowalzazel.mcodyssey.constants.EntityTags.getIntTag
 import me.shadowalzazel.mcodyssey.constants.EntityTags.removeTag
 import me.shadowalzazel.mcodyssey.constants.EntityTags.setIntTag
 import me.shadowalzazel.mcodyssey.effects.EffectsManager
-import me.shadowalzazel.mcodyssey.enchantments.api.EnchantmentsManager
+import me.shadowalzazel.mcodyssey.enchantments.utility.EnchantmentsManager
 import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.SpeedySpursTask
 import org.bukkit.Material
 import org.bukkit.Particle
@@ -761,9 +761,16 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
         enemy: LivingEntity,
         level: Int
     ) {
-       if (enemy.eyeLocation.y < attacker.eyeLocation.y) {
-           enemy.noDamageTicks = maxOf(enemy.noDamageTicks - (2 * level), 0)
-       }
+        if (!attacker.hasLineOfSight(enemy)) return
+        if (!enemy.hasLineOfSight(attacker)) return
+        if (!enemy.hasLineOfSight(attacker.eyeLocation)) return
+        //val angle = attacker.eyeLocation.direction.angle(defender.eyeLocation.direction)
+        //if (angle < 1.74533) return
+        // Looking more than 90-deg (1.57-rads) away from attacker
+        // parallel angles mean looking same direction -> behind
+        val inFrontOfTarget = attacker.eyeLocation.direction.angle(enemy.eyeLocation.direction) > 1.5708
+        if (!inFrontOfTarget) return
+        enemy.noDamageTicks = maxOf(enemy.noDamageTicks - (2 * level), 0)
     }
 
     private fun mandiblemaniaDefendEnchantment(
@@ -843,8 +850,7 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
         }
         // Set item max
         dict[defender.uniqueId] = level
-        val maxStacks = ((pollenMaxHeadPlayers[defender.uniqueId] ?: 0) + (pollenMaxChestPlayers[defender.uniqueId] ?: 0)
-                + (pollenMaxLegsPlayers[defender.uniqueId] ?: 0) + (pollenMaxBootsPlayers[defender.uniqueId] ?: 0))
+        val maxStacks = 0
         if (pollenStacks < maxStacks) {
             pollenStacks += 1
             defender.setIntTag(EntityTags.POLLEN_GUARD_STACKS, pollenStacks)

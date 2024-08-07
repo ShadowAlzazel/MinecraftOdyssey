@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.enchantments.api
+package me.shadowalzazel.mcodyssey.enchantments.utility
 
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
