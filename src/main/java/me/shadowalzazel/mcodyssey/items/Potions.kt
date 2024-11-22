@@ -175,17 +175,6 @@ object Potions : PotionEffectsManager {
         odysseyEffectAmplifier = 1,
         potionColor = EffectColors.FREEZING.itemColor())
 
-    val FLASK_OF_TAR = OdysseyPotion( // 3:00
-        name = "flask_of_tar",
-        material = Material.POTION,
-        customName = "Flask o' Tar",
-        customModel = ItemModels.CONICAL_BOTTLE,
-        isOdysseyEffect = true,
-        odysseyEffectTag = EffectTags.TARRED,
-        odysseyEffectTimeInTicks = 3 * 60 * 20,
-        odysseyEffectAmplifier = 1,
-        potionColor = EffectColors.TARRED.itemColor())
-
     val FLASK_OF_ABLAZE = OdysseyPotion( // 0:30
         name = "flask_of_ablaze",
         material = Material.POTION,

@@ -88,7 +88,7 @@ class Odyssey : JavaPlugin() {
             return
         }
         // Set Edge
-        val foundEdge = server.getWorld(NamespacedKey(instance, "edge"))!!
+        val foundEdge = server.getWorld(NamespacedKey(instance, "edge")) ?: server.worlds.first()
         edge = foundEdge
 
         // Enable Enchants
@@ -98,7 +98,6 @@ class Odyssey : JavaPlugin() {
         OdysseyEnchantments.meleeSet.forEach {
             println(it)
         }
-
          */
 
         // Register Recipes

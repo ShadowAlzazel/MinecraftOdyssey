@@ -37,9 +37,9 @@ import org.bukkit.inventory.meta.CrossbowMeta
 import java.util.*
 
 // --------------------------------- NOTES --------------------------------
-// TODO: Mounted Bonus i.e. Cavalry Charges
+// Mounted Bonus i.e. Cavalry Charges
 // Add Armor Stats through Lore
-// TODO: Scepter -> checks if offhand is a tome of _enchantment_, does spell.
+// Scepter -> checks if offhand is a tome of _enchantment_, does spell.
 // Can craft weapons without recipe, but with recipe, it is greater quality
 // DeprecatedWeapon that can ignore I-frames
 // RUNE STONES vs ENCHANTMENTS
@@ -179,6 +179,11 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
                 // Always hits in a circle around player
                 doWeaponAOESweep(player, victim, event.damage, rads, 1.75)
             }
+            "zweihander" -> {
+                val rads = (170 * Math.PI) / 180
+                // Always hits in a circle around player
+                doWeaponAOESweep(player, victim, event.damage, rads, 3.0)
+            }
             "poleaxe" -> {
                 val rads = (25 * Math.PI) / 180
                 // Hits enemies near contact
@@ -269,7 +274,7 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
         if (victim.isDead) return
         if (victim !is LivingEntity) return
         // Get victim attributes
-        val armor = victim.getAttribute(Attribute.GENERIC_ARMOR)?.value ?: 0.0
+        val armor = victim.getAttribute(Attribute.ARMOR)?.value ?: 0.0
         val health = victim.health
         // Get bonuses from maps
         val bludgeoningDamage = BLUDGEON_MAP[weapon]?.let { minOf(it, armor.div(2))} ?: 0.0 // Dmg = x < armor / 2

@@ -32,42 +32,42 @@ interface AttributeManager {
         value: Double,
         name: String = AttributeTags.MOB_SCALE)
     {
-        this.setAttributeModifier(value, name, Attribute.GENERIC_SCALE)
+        this.setAttributeModifier(value, name, Attribute.SCALE)
     }
 
      fun LivingEntity.addHealthAttribute(
         value: Double,
         name: String = AttributeTags.EXTRA_HEALTH_GENERIC)
     {
-        this.setAttributeModifier(value, name, Attribute.GENERIC_MAX_HEALTH)
+        this.setAttributeModifier(value, name, Attribute.MAX_HEALTH)
     }
 
     fun LivingEntity.addAttackAttribute(
         value: Double,
         name: String = AttributeTags.EXTRA_ATTACK_GENERIC)
     {
-        this.setAttributeModifier(value, name, Attribute.GENERIC_ATTACK_DAMAGE)
+        this.setAttributeModifier(value, name, Attribute.ATTACK_DAMAGE)
     }
 
     fun LivingEntity.addArmorAttribute(
         value: Double,
         name: String = AttributeTags.EXTRA_ARMOR_GENERIC)
     {
-        this.setAttributeModifier(value, name, Attribute.GENERIC_ARMOR)
+        this.setAttributeModifier(value, name, Attribute.ARMOR)
     }
 
     fun LivingEntity.addSpeedAttribute(
         value: Double,
         name: String = AttributeTags.EXTRA_SPEED_GENERIC)
     {
-        this.setAttributeModifier(value, name, Attribute.GENERIC_MOVEMENT_SPEED)
+        this.setAttributeModifier(value, name, Attribute.MOVEMENT_SPEED)
     }
 
     fun LivingEntity.addStepAttribute(
         value: Double,
         name: String = "generic.extra_step_height")
     {
-        this.setAttributeModifier(value, name, Attribute.GENERIC_STEP_HEIGHT)
+        this.setAttributeModifier(value, name, Attribute.STEP_HEIGHT)
     }
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -108,8 +108,8 @@ interface AttributeManager {
         val resetModifier = AttributeModifier(resetKey, -4.0, AttributeModifier.Operation.ADD_NUMBER, slots)
         val speedModifier = AttributeModifier(speedKey, speed, AttributeModifier.Operation.ADD_NUMBER, slots)
         itemMeta = itemMeta.also {
-            it.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, resetModifier)
-            it.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, speedModifier)
+            it.addAttributeModifier(Attribute.ATTACK_SPEED, resetModifier)
+            it.addAttributeModifier(Attribute.ATTACK_DAMAGE, speedModifier)
         }
     }
 
@@ -118,7 +118,7 @@ interface AttributeManager {
         name: String,
         slots: EquipmentSlotGroup = EquipmentSlotGroup.MAINHAND)
     {
-        this.setGenericAttribute(value, name, Attribute.GENERIC_ATTACK_DAMAGE, slotGroup = slots)
+        this.setGenericAttribute(value, name, Attribute.ATTACK_DAMAGE, slotGroup = slots)
     }
 
     fun ItemStack.addAttackSpeedAttribute(
@@ -126,7 +126,7 @@ interface AttributeManager {
         name: String,
         slots: EquipmentSlotGroup = EquipmentSlotGroup.MAINHAND)
     {
-        this.setGenericAttribute(value, name, Attribute.GENERIC_ATTACK_SPEED, slotGroup = slots)
+        this.setGenericAttribute(value, name, Attribute.ATTACK_SPEED, slotGroup = slots)
     }
 
 
@@ -135,7 +135,7 @@ interface AttributeManager {
         name: String,
         slots: EquipmentSlotGroup = EquipmentSlotGroup.MAINHAND)
     {
-        this.setGenericAttribute(value, name, Attribute.PLAYER_ENTITY_INTERACTION_RANGE, slotGroup = slots)
+        this.setGenericAttribute(value, name, Attribute.ENTITY_INTERACTION_RANGE, slotGroup = slots)
     }
 
     fun ItemStack.addArmorAttribute(
@@ -143,7 +143,7 @@ interface AttributeManager {
         name: String,
         slots: EquipmentSlotGroup = EquipmentSlotGroup.MAINHAND)
     {
-        this.setGenericAttribute(value, name, Attribute.GENERIC_ARMOR, slotGroup = slots)
+        this.setGenericAttribute(value, name, Attribute.ARMOR, slotGroup = slots)
     }
 
     fun ItemStack.addArmorToughnessAttribute(
@@ -151,7 +151,7 @@ interface AttributeManager {
         name: String,
         slots: EquipmentSlotGroup = EquipmentSlotGroup.MAINHAND)
     {
-        this.setGenericAttribute(value, name, Attribute.GENERIC_ARMOR_TOUGHNESS, slotGroup = slots)
+        this.setGenericAttribute(value, name, Attribute.ARMOR_TOUGHNESS, slotGroup = slots)
     }
 
     fun ItemStack.addMovementSpeedAttribute(
@@ -159,7 +159,7 @@ interface AttributeManager {
         name: String,
         slots: EquipmentSlotGroup = EquipmentSlotGroup.FEET)
     {
-        this.setGenericAttribute(value, name, Attribute.GENERIC_MOVEMENT_SPEED, slotGroup = slots)
+        this.setGenericAttribute(value, name, Attribute.MOVEMENT_SPEED, slotGroup = slots)
     }
 
     fun ItemStack.addMaxHealthAttribute(
@@ -167,7 +167,7 @@ interface AttributeManager {
         name: String,
         slots: EquipmentSlotGroup = EquipmentSlotGroup.ARMOR)
     {
-        this.setGenericAttribute(value, name, Attribute.GENERIC_MAX_HEALTH, slotGroup = slots)
+        this.setGenericAttribute(value, name, Attribute.MAX_HEALTH, slotGroup = slots)
     }
 
     fun ItemStack.addKnockbackResistanceAttribute(
@@ -175,7 +175,7 @@ interface AttributeManager {
         name: String,
         slots: EquipmentSlotGroup = EquipmentSlotGroup.ARMOR)
     {
-        this.setGenericAttribute(value, name, Attribute.GENERIC_KNOCKBACK_RESISTANCE, slotGroup = slots)
+        this.setGenericAttribute(value, name, Attribute.KNOCKBACK_RESISTANCE, slotGroup = slots)
     }
 
     fun ItemStack.addAttackKnockbackAttribute(
@@ -183,7 +183,7 @@ interface AttributeManager {
         name: String,
         slots: EquipmentSlotGroup = EquipmentSlotGroup.MAINHAND)
     {
-        this.setGenericAttribute(value, name, Attribute.GENERIC_ATTACK_KNOCKBACK, slotGroup = slots)
+        this.setGenericAttribute(value, name, Attribute.ATTACK_KNOCKBACK, slotGroup = slots)
     }
 
 }

@@ -139,15 +139,6 @@ object CauldronRecipes {
             Potions.CRYSTALLINE_POTION.createPotionStack()),
         viableFuel = soulFireFuels)
 
-    private val FLASK_OF_TAR_RECIPE = AlchemyCauldronRecipe(
-        alchemyResult = Potions.FLASK_OF_TAR,
-        countedItems = 3,
-        specificIngredients = listOf(
-            ItemStack(Material.CHARCOAL, 2),
-            ItemStack(Material.NETHERRACK, 2),
-            Potions.CRYSTALLINE_POTION.createPotionStack()),
-        viableFuel = soulFireFuels)
-
     private val FLASK_OF_ABLAZE_RECIPE = AlchemyCauldronRecipe(
         alchemyResult = Potions.FLASK_OF_ABLAZE,
         countedItems = 4,
@@ -324,7 +315,6 @@ object CauldronRecipes {
         POTION_OF_WHIZ_RECIPE,
         FLASK_OF_ROT_RECIPE,
         FLASK_OF_FROST_RECIPE,
-        FLASK_OF_TAR_RECIPE,
         FLASK_OF_ABLAZE_RECIPE,
         FLASK_OF_IRRADIATION_RECIPE,
         FLASK_OF_CORROSION_RECIPE,

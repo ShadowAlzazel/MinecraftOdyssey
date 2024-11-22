@@ -219,7 +219,12 @@ object ItemModels {
     const val SHOVEL: Int = 8
     const val HOE: Int = 9
 
-    // Swords [*****XX]
+    // Pickaxe
+    const val WARHAMMER: Int = 11
+    const val MACE: Int = 12  // One-handed
+    const val MAUL: Int = 13  // Two-Handed
+    const val GUANDAO: Int = 14 // Lacerate, AVg speed
+    // Swords
     const val KATANA: Int = 44
     const val CLAYMORE: Int = 45
     const val DAGGER: Int = 46
@@ -230,24 +235,23 @@ object ItemModels {
     const val CHAKRAM: Int = 51
     const val KUNAI: Int = 52
     const val LONGSWORD: Int = 53
+    const val ARM_BLADE: Int = 54
+    const val ZWEIHANDER: Int = 55
     // Shovels
     const val SPEAR: Int = 74
     const val HALBERD: Int = 75
     const val LANCE: Int = 76
     const val NAGINATA: Int = 77 // CQ
     const val PIKE: Int = 78 // Stationary
-    // Pickaxe
-    const val WARHAMMER: Int = 11
-    const val MACE: Int = 12  // One-handed
-    const val MAUL: Int = 13  // Two-Handed
-    const val GUANDAO: Int = 14 // Lacerate, AVg speed
-    // Hoe
-    const val SCYTHE: Int = 92 // AOE
     // Axe
     const val BATTLE_AXE: Int = 84
     const val LONG_AXE: Int = 85
     const val POLEAXE: Int = 86
     const val GLAIVE: Int = 87
+    const val BATTLESAW: Int = 87
+    // Hoe
+    const val SCYTHE: Int = 92 // AOE
+
 
 
     // Copper [69055XX]
@@ -261,7 +265,6 @@ object ItemModels {
     const val NETHERITE_MATERIAL: Int = 69059
 
     // Special Crafted Weapons
-    const val ZWEIHANDER: Int = 6905777
     const val VOID_LINKED_KUNAI: Int = 6905778
 
     // EXOTICS

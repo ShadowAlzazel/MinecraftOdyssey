@@ -72,19 +72,19 @@ internal interface RunesherdManager : AttributeManager, DataTagManager {
     // Find Attribute
     fun findRunesherdAttribute(name: String): Attribute? {
         return when (name) {
-            "assault_runesherd", "assault_rune" -> Attribute.GENERIC_ATTACK_DAMAGE
-            "guard_runesherd", "guard_rune" -> Attribute.GENERIC_ARMOR
-            "finesse_runesherd", "finesse_rune" -> Attribute.GENERIC_ATTACK_SPEED
-            "swift_runesherd", "swift_rune" -> Attribute.GENERIC_MOVEMENT_SPEED
-            "vitality_runesherd", "vitality_rune" -> Attribute.GENERIC_MAX_HEALTH
-            "steadfast_runesherd", "steadfast_rune" -> Attribute.GENERIC_KNOCKBACK_RESISTANCE
-            "force_runesherd", "force_rune" -> Attribute.GENERIC_ATTACK_KNOCKBACK
-            "break_runesherd", "break_rune" -> Attribute.PLAYER_BLOCK_BREAK_SPEED
-            "grasp_runesherd", "grasp_rune" -> Attribute.PLAYER_BLOCK_INTERACTION_RANGE
-            "jump_runesherd", "jump_rune" -> Attribute.GENERIC_JUMP_STRENGTH
-            "gravity_runesherd", "gravity_rune" -> Attribute.GENERIC_GRAVITY
-            "range_runesherd", "range_rune" -> Attribute.PLAYER_ENTITY_INTERACTION_RANGE
-            "size_runesherd", "size_rune" -> Attribute.GENERIC_SCALE
+            "assault_runesherd", "assault_rune" -> Attribute.ATTACK_DAMAGE
+            "guard_runesherd", "guard_rune" -> Attribute.ARMOR
+            "finesse_runesherd", "finesse_rune" -> Attribute.ATTACK_SPEED
+            "swift_runesherd", "swift_rune" -> Attribute.MOVEMENT_SPEED
+            "vitality_runesherd", "vitality_rune" -> Attribute.MAX_HEALTH
+            "steadfast_runesherd", "steadfast_rune" -> Attribute.KNOCKBACK_RESISTANCE
+            "force_runesherd", "force_rune" -> Attribute.ATTACK_KNOCKBACK
+            "break_runesherd", "break_rune" -> Attribute.BLOCK_BREAK_SPEED
+            "grasp_runesherd", "grasp_rune" -> Attribute.BLOCK_INTERACTION_RANGE
+            "jump_runesherd", "jump_rune" -> Attribute.JUMP_STRENGTH
+            "gravity_runesherd", "gravity_rune" -> Attribute.GRAVITY
+            "range_runesherd", "range_rune" -> Attribute.ENTITY_INTERACTION_RANGE
+            "size_runesherd", "size_rune" -> Attribute.SCALE
             else -> null
         }
     }
@@ -92,21 +92,21 @@ internal interface RunesherdManager : AttributeManager, DataTagManager {
     // Used to get UUID from attribute held by runesherds
     fun getRuneAttributeName(attribute: Attribute): String {
         return when(attribute) {
-            Attribute.GENERIC_ATTACK_DAMAGE ->  AttributeTags.RUNE_ATTACK_DAMAGE
-            Attribute.GENERIC_ARMOR ->  AttributeTags.RUNE_ARMOR
-            Attribute.GENERIC_ATTACK_SPEED ->  AttributeTags.RUNE_ATTACK_SPEED
-            Attribute.GENERIC_MOVEMENT_SPEED ->  AttributeTags.RUNE_MOVEMENT_SPEED
-            Attribute.GENERIC_MAX_HEALTH ->  AttributeTags.RUNE_BONUS_HEALTH
-            Attribute.GENERIC_KNOCKBACK_RESISTANCE ->  AttributeTags.RUNE_KNOCKBACK_RESISTANCE
-            Attribute.GENERIC_ATTACK_KNOCKBACK ->  AttributeTags.RUNE_ATTACK_KNOCKBACK
-            Attribute.PLAYER_BLOCK_BREAK_SPEED ->  AttributeTags.RUNE_BLOCK_BREAK_SPEED
-            Attribute.PLAYER_BLOCK_INTERACTION_RANGE ->  AttributeTags.RUNE_BLOCK_REACH
-            Attribute.GENERIC_JUMP_STRENGTH ->  AttributeTags.RUNE_JUMP_STRENGTH
-            Attribute.GENERIC_GRAVITY ->  AttributeTags.RUNE_GRAVITY
-            Attribute.PLAYER_ENTITY_INTERACTION_RANGE ->  AttributeTags.RUNE_ENTITY_REACH
-            Attribute.GENERIC_SCALE ->  AttributeTags.RUNE_SCALE
-            Attribute.GENERIC_STEP_HEIGHT ->  AttributeTags.RUNE_STEP_HEIGHT
-            Attribute.GENERIC_ARMOR_TOUGHNESS ->  AttributeTags.RUNE_ARMOR_TOUGHNESS
+            Attribute.ATTACK_DAMAGE ->  AttributeTags.RUNE_ATTACK_DAMAGE
+            Attribute.ARMOR ->  AttributeTags.RUNE_ARMOR
+            Attribute.ATTACK_SPEED ->  AttributeTags.RUNE_ATTACK_SPEED
+            Attribute.MOVEMENT_SPEED ->  AttributeTags.RUNE_MOVEMENT_SPEED
+            Attribute.MAX_HEALTH ->  AttributeTags.RUNE_BONUS_HEALTH
+            Attribute.KNOCKBACK_RESISTANCE ->  AttributeTags.RUNE_KNOCKBACK_RESISTANCE
+            Attribute.ATTACK_KNOCKBACK ->  AttributeTags.RUNE_ATTACK_KNOCKBACK
+            Attribute.BLOCK_BREAK_SPEED ->  AttributeTags.RUNE_BLOCK_BREAK_SPEED
+            Attribute.BLOCK_INTERACTION_RANGE ->  AttributeTags.RUNE_BLOCK_REACH
+            Attribute.JUMP_STRENGTH ->  AttributeTags.RUNE_JUMP_STRENGTH
+            Attribute.GRAVITY ->  AttributeTags.RUNE_GRAVITY
+            Attribute.ENTITY_INTERACTION_RANGE ->  AttributeTags.RUNE_ENTITY_REACH
+            Attribute.SCALE ->  AttributeTags.RUNE_SCALE
+            Attribute.STEP_HEIGHT ->  AttributeTags.RUNE_STEP_HEIGHT
+            Attribute.ARMOR_TOUGHNESS ->  AttributeTags.RUNE_ARMOR_TOUGHNESS
             else -> "rune.generic"
         }
     }
@@ -118,13 +118,13 @@ internal interface RunesherdManager : AttributeManager, DataTagManager {
         slots: EquipmentSlotGroup
     ) {
         when(attribute) {
-            Attribute.GENERIC_ATTACK_DAMAGE -> addAttackDamageAttribute(value, name, slots)
-            Attribute.GENERIC_ARMOR -> addArmorAttribute(value, name, slots)
-            Attribute.GENERIC_ATTACK_SPEED -> addAttackSpeedAttribute(value, name, slots)
-            Attribute.GENERIC_MOVEMENT_SPEED -> addMovementSpeedAttribute(value, name, slots)
-            Attribute.GENERIC_MAX_HEALTH -> addMaxHealthAttribute(value, name, slots)
-            Attribute.GENERIC_KNOCKBACK_RESISTANCE -> addKnockbackResistanceAttribute(value, name, slots)
-            Attribute.GENERIC_ATTACK_KNOCKBACK -> addAttackKnockbackAttribute(value, name, slots)
+            Attribute.ATTACK_DAMAGE -> addAttackDamageAttribute(value, name, slots)
+            Attribute.ARMOR -> addArmorAttribute(value, name, slots)
+            Attribute.ATTACK_SPEED -> addAttackSpeedAttribute(value, name, slots)
+            Attribute.MOVEMENT_SPEED -> addMovementSpeedAttribute(value, name, slots)
+            Attribute.MAX_HEALTH -> addMaxHealthAttribute(value, name, slots)
+            Attribute.KNOCKBACK_RESISTANCE -> addKnockbackResistanceAttribute(value, name, slots)
+            Attribute.ATTACK_KNOCKBACK -> addAttackKnockbackAttribute(value, name, slots)
             else -> setGenericAttribute(value, name, attribute, slotGroup = slots)
         }
     }

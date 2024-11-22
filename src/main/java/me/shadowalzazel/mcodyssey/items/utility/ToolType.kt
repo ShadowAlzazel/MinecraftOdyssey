@@ -27,6 +27,8 @@ enum class ToolType(
     CHAKRAM("chakram", "Chakram", 1.5, 2.5, 51, "sword", -0.3),
     KUNAI("kunai", "Kunai", 1.0, 2.5, 52, "sword"),
     LONGSWORD("longsword", "Longsword", 4.0, 1.5, 53, "sword", 0.3),
+    ARM_BLADE("arm_blade", "Arm Blade", 2.0, 3.0, 54, "sword", -0.3),
+    ZWEIHANDER("zweihander", "Zweihander", 7.0, 0.7, 55, "sword", 0.8),
     // Shovel Overrides
     SPEAR("spear", "Spear", 3.0, 1.2, 74, "shovel", 2.0),
     HALBERD("halberd", "Halberd", 5.0, 0.9, 75, "shovel",3.0),
@@ -35,6 +37,7 @@ enum class ToolType(
     LONGAXE("longaxe", "Longaxe", 6.0, 0.8, 85, "axe", 0.5),
     POLEAXE("poleaxe", "Poleaxe", 4.0, 1.1, 86, "axe", 1.0),
     GLAIVE("glaive", "Glaive", 4.0, 1.3, 87, "axe", 1.0),
+    BATTLESAW("battlesaw", "Battlesaw", 5.0, 1.0, 88, "axe", 1.0),
     // Pickaxe Overrides
     WARHAMMER("warhammer", "Warhammer", 4.0, 1.4, 11, "pickaxe"),
     // Hoe Overrides
