@@ -78,10 +78,10 @@ object WeaponMaps {
         "halberd" to 1.0,
         "poleaxe" to 2.0,
     )
-
     val SWEEP_MAP = mapOf(
         "katana" to 2.0,
         "claymore" to 4.0,
+        "zweihander" to 4.0,
         "saber" to 2.0,
         "longsword" to 2.0,
         "scythe" to 5.0,

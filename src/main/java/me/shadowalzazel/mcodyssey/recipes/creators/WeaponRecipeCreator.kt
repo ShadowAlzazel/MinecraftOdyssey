@@ -60,6 +60,13 @@ class WeaponRecipeCreator : ItemCreator, DataTagManager, ChoiceManager {
             "  X",
             " X ",
             "|  "),
+        "arm_blade" to listOf(
+            " X ",
+            "XCX"),
+        "zweihander" to listOf(
+            "X X",
+            " X ",
+            "C X"),
         // Shovel Overrides
         "spear" to listOf(
             "  X",
@@ -85,6 +92,10 @@ class WeaponRecipeCreator : ItemCreator, DataTagManager, ChoiceManager {
         "glaive" to listOf(
             " XX",
             " |X",
+            "|  "),
+        "battlesaw" to listOf(
+            "|CX",
+            "|XX",
             "|  "),
         // Pickaxe Overrides
         "warhammer" to listOf(
@@ -120,6 +131,15 @@ class WeaponRecipeCreator : ItemCreator, DataTagManager, ChoiceManager {
         ),
         "lance" to mapOf(
             'C' to MaterialChoice(Material.RABBIT_HIDE)
+        ),
+        "arm_blade" to mapOf(
+            'C' to MaterialChoice(Material.RABBIT_HIDE)
+        ),
+        "zweihander" to mapOf(
+            'C' to MaterialChoice(Material.BREEZE_ROD)
+        ),
+        "battlesaw" to mapOf(
+            'C' to MaterialChoice(Material.HEAVY_CORE)
         ),
         "scythe" to mapOf(
             'C' to MaterialChoice(Material.COPPER_INGOT)

@@ -18,7 +18,6 @@ import org.bukkit.potion.PotionEffectType
 object ScoreboardTagListeners : Listener {
 
     // Main Function regarding effects and tags
-    // TODO: Fix
     @EventHandler
     fun mainTagAndEffectHandler(event: EntityDamageByEntityEvent) {
         if (event.entity !is LivingEntity) {
@@ -33,9 +32,6 @@ object ScoreboardTagListeners : Listener {
                 EntityTags.MARKED_FOR_VENGEANCE -> {
                     event.damage += 4
                 }
-                EffectTags.ASPHYXIATE -> {
-                    remove = false
-                }
                 EffectTags.MIASMA -> {
                     remove = false
                 }
@@ -47,32 +43,6 @@ object ScoreboardTagListeners : Listener {
         }
         // Remove tags
         tagsToRemove.forEach { event.entity.scoreboardTags.remove(it) }
-    }
-
-    @EventHandler
-    fun mainTagAndEffectDeathHandler(event: EntityDeathEvent) {
-        val someVictim = event.entity
-        someVictim.scoreboardTags.forEach {
-            when (it) {
-                EffectTags.ACCURSED -> {
-                    if (someVictim.type == EntityType.VILLAGER) {
-                        (someVictim as Villager).zombify()
-                        someVictim.scoreboardTags.remove(it)
-                    }
-                    else if (someVictim.type == EntityType.PLAYER) {
-                        (someVictim.world.spawnEntity(someVictim.location, EntityType.ZOMBIE) as Zombie).apply {
-                            setShouldBurnInDay(false)
-                            canPickupItems = true
-                            isPersistent = true
-                            customName(Component.text("Accursed Poltergeist", TextColor.color(137, 24, 40)))
-                            isCustomNameVisible = true
-                            addPotionEffect(PotionEffect(PotionEffectType.HEALTH_BOOST, 20 * 9999, 4))
-                        }
-                        someVictim.scoreboardTags.remove(it)
-                    }
-                }
-            }
-        }
     }
 
 }

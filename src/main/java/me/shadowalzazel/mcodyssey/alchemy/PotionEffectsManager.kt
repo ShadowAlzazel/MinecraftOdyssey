@@ -129,10 +129,6 @@ interface PotionEffectsManager : DataTagManager {
                 Component.text("Rotting $numeral ${createTimeString(timeInTicks / 20)}", color)
                     .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
             }
-            EffectTags.TARRED -> {
-                Component.text("Tarred $numeral ${createTimeString(timeInTicks / 20)}", color)
-                    .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-            }
             EffectTags.ABLAZE -> {
                 Component.text("Blazing $numeral ${createTimeString(timeInTicks / 20)}", color)
                     .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
@@ -174,9 +170,6 @@ interface PotionEffectsManager : DataTagManager {
             }
             EffectTags.BUDDING -> {
                 EffectColors.ROTTING.color
-            }
-            EffectTags.TARRED -> {
-                EffectColors.TARRED.color
             }
             EffectTags.ABLAZE -> {
                 EffectColors.ABLAZE.color
@@ -290,9 +283,6 @@ interface PotionEffectsManager : DataTagManager {
             }
             EffectTags.BUDDING -> {
                 cloudTag = EntityTags.DECAYING_CLOUD
-            }
-            EffectTags.TARRED -> {
-                cloudTag = EntityTags.TARRED_CLOUD
             }
             EffectTags.ABLAZE -> {
                 cloudTag = EntityTags.BLAZING_CLOUD

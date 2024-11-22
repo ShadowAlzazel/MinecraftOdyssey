@@ -38,13 +38,13 @@ interface AttackHelper {
             entity.damage(damage, damageSource)
             entity.world.spawnParticle(Particle.SWEEP_ATTACK, entity.location, 1, 0.0, 0.0, 0.0)
         }
-        attacker.world.spawnParticle(Particle.RAID_OMEN, attacker.location, 8, 0.1, 0.1, 0.1)
+        attacker.world.spawnParticle(Particle.ENCHANTED_HIT, attacker.location, 12, 0.1, 0.1, 0.1)
         attacker.world.playSound(victim.location, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1.75F, 0.5F)
     }
 
     fun getWeaponAttack(item: ItemStack): Double {
         var damage = 0.0
-        val attackModifiers = item.itemMeta.attributeModifiers?.get(Attribute.GENERIC_ATTACK_DAMAGE)
+        val attackModifiers = item.itemMeta.attributeModifiers?.get(Attribute.ATTACK_DAMAGE)
         if (attackModifiers != null) {
             for (modifier in attackModifiers) { // FIX LATER
                 damage += modifier.amount

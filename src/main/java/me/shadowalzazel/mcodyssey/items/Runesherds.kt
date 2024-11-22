@@ -128,7 +128,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         overrideMaterial = Material.BRICK,
         customName = "Assault Runesherd",
         customModel = ItemModels.ASSAULT_RUNESHERD,
-        attribute = Attribute.GENERIC_ATTACK_DAMAGE,
+        attribute = Attribute.ATTACK_DAMAGE,
         value = 1.0,
         slotGroup = EquipmentSlotGroup.MAINHAND
     )
@@ -138,7 +138,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         overrideMaterial = Material.BRICK,
         customName = "Guard Runesherd",
         customModel = ItemModels.GUARD_RUNESHERD,
-        attribute = Attribute.GENERIC_ARMOR,
+        attribute = Attribute.ARMOR,
         value = 1.0,
         slotGroup = EquipmentSlotGroup.ARMOR
     )
@@ -148,7 +148,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         overrideMaterial = Material.BRICK,
         customName = "Finesse Runesherd",
         customModel = ItemModels.FINESSE_RUNESHERD,
-        attribute = Attribute.GENERIC_ATTACK_SPEED,
+        attribute = Attribute.ATTACK_SPEED,
         value = 0.2,
         slotGroup = EquipmentSlotGroup.MAINHAND
     )
@@ -158,7 +158,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         overrideMaterial = Material.BRICK,
         customName = "Swift Runesherd",
         customModel = ItemModels.SWIFT_RUNESHERD,
-        attribute = Attribute.GENERIC_MOVEMENT_SPEED,
+        attribute = Attribute.MOVEMENT_SPEED,
         value = 0.03,
         slotGroup = EquipmentSlotGroup.FEET
     )
@@ -168,7 +168,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         overrideMaterial = Material.BRICK,
         customName = "Vitality Runesherd",
         customModel = ItemModels.VITALITY_RUNESHERD,
-        attribute = Attribute.GENERIC_MAX_HEALTH,
+        attribute = Attribute.MAX_HEALTH,
         value = 2.0,
         slotGroup = EquipmentSlotGroup.ARMOR
     )
@@ -178,7 +178,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         overrideMaterial = Material.BRICK,
         customName = "Steadfast Runesherd",
         customModel = ItemModels.STEADFAST_RUNESHERD,
-        attribute = Attribute.GENERIC_KNOCKBACK_RESISTANCE,
+        attribute = Attribute.KNOCKBACK_RESISTANCE,
         value = 0.2,
         slotGroup = EquipmentSlotGroup.ARMOR
     )
@@ -188,7 +188,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         overrideMaterial = Material.BRICK,
         customName = "Force Runesherd",
         customModel = ItemModels.FORCE_RUNESHERD,
-        attribute = Attribute.GENERIC_ATTACK_KNOCKBACK,
+        attribute = Attribute.ATTACK_KNOCKBACK,
         value = 0.5,
         slotGroup = EquipmentSlotGroup.MAINHAND
     )
@@ -198,7 +198,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         overrideMaterial = Material.BRICK,
         customName = "Break Runesherd",
         customModel = ItemModels.BREAK_RUNESHERD,
-        attribute = Attribute.PLAYER_BLOCK_BREAK_SPEED,
+        attribute = Attribute.BLOCK_BREAK_SPEED,
         value = 0.5,
         slotGroup = EquipmentSlotGroup.MAINHAND
     )
@@ -208,7 +208,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         overrideMaterial = Material.BRICK,
         customName = "Grasp Runesherd",
         customModel = ItemModels.GRASP_RUNESHERD,
-        attribute = Attribute.PLAYER_BLOCK_INTERACTION_RANGE,
+        attribute = Attribute.BLOCK_INTERACTION_RANGE,
         value = 1.0,
         slotGroup = EquipmentSlotGroup.MAINHAND
     )
@@ -218,7 +218,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         overrideMaterial = Material.BRICK,
         customName = "Jump Runesherd",
         customModel = ItemModels.JUMP_RUNESHERD,
-        attribute = Attribute.GENERIC_JUMP_STRENGTH,
+        attribute = Attribute.JUMP_STRENGTH,
         value = 0.3,
         slotGroup = EquipmentSlotGroup.LEGS
     )
@@ -228,7 +228,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         overrideMaterial = Material.BRICK,
         customName = "Gravity Runesherd",
         customModel = ItemModels.GRAVITY_RUNESHERD,
-        attribute = Attribute.GENERIC_GRAVITY,
+        attribute = Attribute.GRAVITY,
         value = -0.01,
         slotGroup = EquipmentSlotGroup.ARMOR
     )
@@ -238,7 +238,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         overrideMaterial = Material.BRICK,
         customName = "Range Runesherd",
         customModel = ItemModels.RANGE_RUNESHERD,
-        attribute = Attribute.PLAYER_ENTITY_INTERACTION_RANGE,
+        attribute = Attribute.ENTITY_INTERACTION_RANGE,
         value = 0.5,
         slotGroup = EquipmentSlotGroup.MAINHAND
     )
@@ -248,7 +248,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         overrideMaterial = Material.BRICK,
         customName = "Size Runesherd",
         customModel = ItemModels.SIZE_RUNESHERD,
-        attribute = Attribute.GENERIC_SCALE,
+        attribute = Attribute.SCALE,
         value = 0.25,
         slotGroup = EquipmentSlotGroup.ARMOR
     )

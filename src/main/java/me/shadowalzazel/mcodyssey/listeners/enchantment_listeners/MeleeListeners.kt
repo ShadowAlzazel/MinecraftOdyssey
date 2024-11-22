@@ -369,7 +369,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
     }
 
     private fun committedEnchantment(victim: LivingEntity, level: Int): Int {
-        val maxHealth = victim.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value ?: 20.0
+        val maxHealth = victim.getAttribute(Attribute.MAX_HEALTH)?.value ?: 20.0
         return if (victim.health < maxHealth * 0.4) {
             victim.world.spawnParticle(Particle.TRIAL_SPAWNER_DETECTION, victim.location, 10, 0.25, 0.25, 0.25)
             level + 1
@@ -465,6 +465,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
             world.spawnParticle(Particle.WITCH, newLocation, 35, 0.05, 0.5, 0.05)
         }
         victim.getNearbyEntities(3.5, 2.0, 3.5).filterIsInstance<Creature>().forEach {
+            it.noDamageTicks -= (level * 0.1).toInt()
             it.world.spawnParticle(Particle.WITCH, it.location, 10, 0.05, 0.5, 0.05)
             it.pathfinder.stopPathfinding()
             it.pathfinder.moveTo(newLocation)

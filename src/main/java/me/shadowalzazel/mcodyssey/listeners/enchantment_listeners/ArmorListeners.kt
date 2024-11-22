@@ -67,9 +67,6 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
                     "illumineye" -> {
                         illumineyeEnchantment(enemy, defender, enchant.value)
                     }
-                    "mandiblemania" -> {
-                        mandiblemaniaDefendEnchantment(defender, enemy, enchant.value)
-                    }
                     "opticalization" -> {
                         opticalizationHitEnchantment(defender, enemy, enchant.value)
                     }
@@ -197,9 +194,6 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
             val helmet = attacker.equipment?.helmet!!
             for (enchant in helmet.enchantments) {
                 when (enchant.key.getNameId()) {
-                    "mandiblemania" -> {
-                        mandiblemaniaAttackEnchantment(attacker, enemy, enchant.value)
-                    }
                     "opticalization" -> {
                         opticalizationHitEnchantment(enemy, attacker, enchant.value)
                     }
@@ -293,6 +287,9 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
                 when (enchant.key.getNameId()) {
                     "brewful_breath" -> {
                         brewfulBreathEnchantment(player, event.item, enchant.value)
+                    }
+                    "mandiblemania" -> {
+                        mandiblemaniaEnchantment(player, enchant.value)
                     }
                 }
             }
@@ -544,7 +541,7 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
         defender: LivingEntity,
         level: Int
     ) {
-        val maxHealth = defender.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value ?: return
+        val maxHealth = defender.getAttribute(Attribute.MAX_HEALTH)?.value ?: return
         val currentHealth = defender.health
         val percentHealth = currentHealth / maxHealth
         if (percentHealth < (0.2 * level)) {
@@ -655,8 +652,8 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
         if (food.type in fareList) {
             // Check Health
             val currentHealth = player.health
-            if (player.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value < currentHealth + (1 + level)) {
-                player.health = player.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value
+            if (player.getAttribute(Attribute.MAX_HEALTH)!!.value < currentHealth + (1 + level)) {
+                player.health = player.getAttribute(Attribute.MAX_HEALTH)!!.value
             } else {
                 player.health += (1 + level)
             }
@@ -756,31 +753,11 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
 
     }
 
-    private fun mandiblemaniaAttackEnchantment(
-        attacker: LivingEntity,
-        enemy: LivingEntity,
+    private fun mandiblemaniaEnchantment(
+        entity: LivingEntity,
         level: Int
     ) {
-        if (!attacker.hasLineOfSight(enemy)) return
-        if (!enemy.hasLineOfSight(attacker)) return
-        if (!enemy.hasLineOfSight(attacker.eyeLocation)) return
-        //val angle = attacker.eyeLocation.direction.angle(defender.eyeLocation.direction)
-        //if (angle < 1.74533) return
-        // Looking more than 90-deg (1.57-rads) away from attacker
-        // parallel angles mean looking same direction -> behind
-        val inFrontOfTarget = attacker.eyeLocation.direction.angle(enemy.eyeLocation.direction) > 1.5708
-        if (!inFrontOfTarget) return
-        enemy.noDamageTicks = maxOf(enemy.noDamageTicks - (2 * level), 0)
-    }
-
-    private fun mandiblemaniaDefendEnchantment(
-        defender: LivingEntity,
-        enemy: LivingEntity,
-        level: Int
-    ) {
-        if (enemy.eyeLocation.y < defender.eyeLocation.y) {
-            enemy.noDamageTicks = maxOf(enemy.noDamageTicks - (2 * level), 0)
-        }
+        entity.noDamageTicks += (level * 0.1).toInt()
     }
 
     private fun moltenCoreEnchantment(
@@ -894,7 +871,7 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
         defender: LivingEntity,
         level: Int,
         amount: Double): Double {
-        val maxHealth = defender.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value ?: return 0.0
+        val maxHealth = defender.getAttribute(Attribute.MAX_HEALTH)?.value ?: return 0.0
         val currentHealthPercent = defender.health / maxHealth
         if (currentHealthPercent <= 0.4) {
             return amount * (level * 0.05)
@@ -1069,7 +1046,7 @@ object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
         attacker: LivingEntity,
         level: Int,
         amount: Double): Double {
-        val maxHealth = attacker.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value ?: return 0.0
+        val maxHealth = attacker.getAttribute(Attribute.MAX_HEALTH)?.value ?: return 0.0
         val currentHealthPercent = attacker.health / maxHealth
         if (currentHealthPercent >= 0.25) {
             return amount * (level * 0.15)

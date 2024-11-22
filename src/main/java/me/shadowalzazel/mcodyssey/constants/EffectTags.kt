@@ -1,45 +1,35 @@
 package me.shadowalzazel.mcodyssey.constants
 
 object EffectTags {
+
     // For Custom Status Effects and Potion Effects
-
     const val NO_EFFECT: String = "odyssey.no_effect"
-
-    const val DOUSED: String = "odyssey.doused" //
 
     // TYPES
     const val FREEZING: String = "odyssey.freezing" // Freeze Ticks + Slow
-    const val BUDDING: String = "odyssey.rotting" // give Hunger, do damage, stacking, spores,
-    const val TARRED: String = "odyssey.tarred" //
+    const val BUDDING: String = "odyssey.budding" // Independent Stackable Damage over time
     const val ABLAZE: String = "odyssey.ablaze" // More damage Fire ticks
-    const val MIASMA: String = "odyssey.miasma" // TODO: Prevent Hunger Regen
-    const val HONEYED: String = "odyssey.honeyed" // Slow, and bees attacks you
-    const val HEMORRHAGING: String = "odyssey.hemorrhaging" // Stacking damage
-    const val IRRADIATED: String = "odyssey.irradiated" // TODO: Prevent Healing (use entityHealthEvent?)   // Irradiates enemies (Poison + Can not heal)
-    const val CORRODING: String = "odyssey.corroding" // Armor Takes damage per 5 ticks
-    const val ACCURSED: String = "odyssey.accursed" // The next source of damage you take will be increased by 33.3%
-    const val SOUL_DAMAGE: String = "odyssey.soul_damage" // ? No effect
-    const val ASPHYXIATE: String = "odyssey.asphyxiate" // TODO: Give negative breath -> IF not negative ticks then make timed effect that sets max to 0
-    const val SHIMMER: String = "odyssey.shimmer" // TODO: ?
-
+    const val MIASMA: String = "odyssey.miasma" // Reduce maximum health
+    const val HONEYED: String = "odyssey.honeyed" // Slowed and reduced jump velocity
+    const val HEMORRHAGING: String = "odyssey.hemorrhaging" // Damage over time that increases damage based on how much the entity has been hit
+    const val IRRADIATED: String = "odyssey.irradiated" // Reduces Healing effectiveness by 15/30/45%
+    const val CORRODING: String = "odyssey.corroding" // Armor Effectiveness is reduced by 15/30/45%
+    const val ACCURSED: String = "odyssey.accursed" // The next source of damage you take will be increased by 30%
+    const val SOUL_DAMAGE: String = "odyssey.soul_damage" // No effect
+    const val SHIMMER: String = "odyssey.shimmer" // No effect
+    const val VULNERABLE: String = "odyssey.vulnerable" // Reduce immunity time by 0.5 seconds
     const val BARRIER: String = "odyssey.barrier" // Reduce damage
 
     // Crowd Control
-    const val ROOTED: String = "odyssey.rooted" // TODO: Can not jump (use entityJumpEvent?)
-    const val TETHERED: String = "odyssey.tethered" // TODO: Can not teleport away
-    const val SHATTERED: String = "odyssey.shattered" // TODO: Have less armor (temp -2.0 armor value on player stats) flat
+    const val ROOTED: String = "odyssey.rooted" // Can not jump (use entityJumpEvent?)
+    const val TETHERED: String = "odyssey.tethered" // Can not teleport away
+    const val SHATTERED: String = "odyssey.shattered" // Have less armor (temp -2.0 armor value on player stats) flat
     const val HARDEN: String = "odyssey.harden" // Have more armor (temp 2.0) flat
-    const val GROUNDED: String = "odyssey.grounded" // TODO: Can not fly away SHEAR ENCHANT
-    const val JAILED: String = "odyssey.jailed"
-
+    const val GROUNDED: String = "odyssey.grounded" // Can not fly away SHEAR ENCHANT
     const val CHARMED: String = "odyssey.charmed" // Attracted to a location
     const val FEARED: String = "odyssey.feared" // Set entity goal away
     const val POLYMORPHED: String = "odyssey.polymorphed" // Change to display entity thingy
     const val INSPIRED: String = "odyssey.inspired" // Support Mechanic ???
-    const val INFECTED: String = "odyssey.infected" // TODO: Upon death, turn into a zombie
-
-
-    const val VULNERABLE: String = "odyssey.vulnerable" // TODO: Set I-frames to 0 ticks
 
     // Special Effects
     const val ARCANE_JAILED: String = "odyssey.arcane_jailed"

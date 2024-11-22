@@ -11,12 +11,12 @@ class BarrierTask(private val entity: LivingEntity, private val maxCount: Int) :
 
     override fun run() {
         if (EffectTags.BARRIER !in entity.scoreboardTags) this.cancel()
-        entity.world.spawnParticle(Particle.END_ROD, entity.location, 10, 0.1, 0.4, 0.1)
+        entity.world.spawnParticle(Particle.END_ROD, entity.location, 4, 0.1, 0.1, 0.1)
         // Timer
         val timeElapsed = System.currentTimeMillis() - timer
         counter += 1
         if (maxCount < counter || timeElapsed > (maxCount / 2) * 1000) {
-            entity.scoreboardTags.remove(EffectTags.BARRIER)
+            entity.removeScoreboardTag(EffectTags.BARRIER)
             this.cancel()
         }
     }

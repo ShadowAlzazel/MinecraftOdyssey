@@ -5,15 +5,15 @@
  */
 
 group = "me.shadowalzazel"
-version = "0.12-BETA-1.21"
+version = "0.15-BETA-1.21.3"
 description = "A server side expansion pack for a new minecraft adventure!"
 
 plugins {
     `java-library`
     `maven-publish`
-    kotlin("jvm") version "1.9.23"
+    kotlin("jvm") version "2.0.20"
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("io.papermc.paperweight.userdev") version "1.7.1" // Check for new versions at https://plugins.gradle.org/plugin/io.papermc.paperweight.userdev
+    id("io.papermc.paperweight.userdev") version "1.7.5" // Check for new versions at https://plugins.gradle.org/plugin/io.papermc.paperweight.userdev
 }
 
 java {
@@ -27,14 +27,14 @@ kotlin {
 repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
-    maven("https://oss.sonatype.org/content/groups/public/")
+    //maven("https://oss.sonatype.org/content/groups/public/")
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1-Beta")
-    implementation(kotlin("stdlib-jdk8"))
-    paperweight.paperDevBundle("1.21-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.3-R0.1-SNAPSHOT")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
+    //implementation(kotlin("stdlib-jdk21"))
+    paperweight.paperDevBundle("1.21.3-R0.1-SNAPSHOT")
     //api(org.jetbrains.kotlin.kotlin.stdlib.jdk8)
     //api(org.jetbrains.kotlinx.kotlinx.coroutines.core)
     //api(org.jetbrains.kotlinx.kotlinx.serialization.json)

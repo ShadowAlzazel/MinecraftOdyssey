@@ -28,7 +28,7 @@ class OdysseyFood(
         val foodComponent = item.itemMeta.food
         foodComponent.saturation = this.saturation
         foodComponent.nutrition = this.nutrition
-        foodComponent.eatSeconds = eatTime
+        //foodComponent.eatSeconds = eatTime
         val meta = item.itemMeta
         meta.setFood(foodComponent)
         meta.setMaxStackSize(64)

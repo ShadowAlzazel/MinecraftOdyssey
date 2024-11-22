@@ -267,7 +267,7 @@ object SmithingListeners : Listener, DataTagManager, ToolMiningManager {
             val weaponModel = weaponModelMap(weaponType)
             val newModel = (ItemModels.NETHERITE_MATERIAL * 100) + (weaponModel)
             // Get Damage
-            val oldDamageModifier = item.itemMeta.getAttributeModifiers(Attribute.GENERIC_ATTACK_DAMAGE)?.first {
+            val oldDamageModifier = item.itemMeta.getAttributeModifiers(Attribute.ATTACK_DAMAGE)?.first {
                 it.name == AttributeTags.ITEM_BASE_ATTACK_DAMAGE
             } ?: return
             val newDamage = oldDamageModifier.amount + 1.0
@@ -279,9 +279,9 @@ object SmithingListeners : Listener, DataTagManager, ToolMiningManager {
             val newMeta = item.itemMeta
             newMeta.also {
                 it.setCustomModelData(newModel)
-                it.removeAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, oldDamageModifier)
+                it.removeAttributeModifier(Attribute.ATTACK_DAMAGE, oldDamageModifier)
                 val newModifier = AttributeModifier(nameKey, newDamage, AttributeModifier.Operation.ADD_NUMBER, slots)
-                it.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, newModifier)
+                it.addAttributeModifier(Attribute.ATTACK_DAMAGE, newModifier)
             }
             item.itemMeta = newMeta
             event.result = item
@@ -372,7 +372,7 @@ object SmithingListeners : Listener, DataTagManager, ToolMiningManager {
     @Suppress("UnstableApiUsage")
     private fun upgradeDamage(item: ItemStack, bonus: Double = 1.0) {
         // Get Damage
-        val oldDamageModifier = item.itemMeta.getAttributeModifiers(Attribute.GENERIC_ATTACK_DAMAGE)?.first {
+        val oldDamageModifier = item.itemMeta.getAttributeModifiers(Attribute.ATTACK_DAMAGE)?.first {
             it.name == AttributeTags.ITEM_BASE_ATTACK_DAMAGE
         } ?: return
         val newDamage = oldDamageModifier.amount + bonus
@@ -381,16 +381,16 @@ object SmithingListeners : Listener, DataTagManager, ToolMiningManager {
         val newMeta = item.itemMeta
         // Set Damage
         newMeta.also {
-            it.removeAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, oldDamageModifier)
+            it.removeAttributeModifier(Attribute.ATTACK_DAMAGE, oldDamageModifier)
             val newModifier = AttributeModifier(nameKey, newDamage, AttributeModifier.Operation.ADD_NUMBER, slots)
-            it.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, newModifier)
+            it.addAttributeModifier(Attribute.ATTACK_DAMAGE, newModifier)
         }
         item.itemMeta = newMeta
     }
 
     private fun modifyAttackSpeed(item: ItemStack, speed: Double = 1.0) {
         // Get Damage
-        val oldDamageModifier = item.itemMeta.getAttributeModifiers(Attribute.GENERIC_ATTACK_SPEED)?.first {
+        val oldDamageModifier = item.itemMeta.getAttributeModifiers(Attribute.ATTACK_SPEED)?.first {
             it.name == AttributeTags.ITEM_BASE_ATTACK_SPEED
         } ?: return
         val newSpeed = oldDamageModifier.amount * speed
@@ -399,9 +399,9 @@ object SmithingListeners : Listener, DataTagManager, ToolMiningManager {
         val newMeta = item.itemMeta
         // Set Damage
         newMeta.also {
-            it.removeAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, oldDamageModifier)
+            it.removeAttributeModifier(Attribute.ATTACK_SPEED, oldDamageModifier)
             val newModifier = AttributeModifier(nameKey, newSpeed, AttributeModifier.Operation.ADD_NUMBER, slots)
-            it.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, newModifier)
+            it.addAttributeModifier(Attribute.ATTACK_SPEED, newModifier)
         }
         item.itemMeta = newMeta
     }
@@ -459,14 +459,17 @@ object SmithingListeners : Listener, DataTagManager, ToolMiningManager {
             "chakram" -> ItemModels.CHAKRAM
             "kunai" -> ItemModels.KUNAI
             "longsword" -> ItemModels.LONGSWORD
+            "arm_blade" -> ItemModels.ARM_BLADE
+            "zweihander" -> ItemModels.ZWEIHANDER
             "spear" -> ItemModels.SPEAR
             "halberd" -> ItemModels.HALBERD
             "lance" -> ItemModels.LANCE
             "longaxe" -> ItemModels.LONG_AXE
             "poleaxe" -> ItemModels.POLEAXE
+            "glaive" -> ItemModels.POLEAXE
+            "battlesaw" -> ItemModels.BATTLESAW
             "warhammer" -> ItemModels.WARHAMMER
             "scythe" -> ItemModels.SCYTHE
-            "glaive" -> ItemModels.GLAIVE
             else -> 0
         }
     }

@@ -3,6 +3,7 @@ package me.shadowalzazel.mcodyssey.structures
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
 import me.shadowalzazel.mcodyssey.Odyssey
+import net.kyori.adventure.key.Key
 import org.bukkit.NamespacedKey
 import org.bukkit.generator.structure.Structure
 import org.bukkit.potion.PotionEffect
@@ -15,7 +16,8 @@ class StructureDetector(val odyssey: Odyssey) : BukkitRunnable(), StructureManag
 
     init {
         val structureRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.STRUCTURE)
-        shadowChambers = structureRegistry.get(NamespacedKey(Odyssey.instance, "shadow_chambers"))!!
+        val defaultStructure = structureRegistry.get(Key.key("mineshaft"))!!
+        shadowChambers = structureRegistry.get(NamespacedKey(Odyssey.instance, "shadow_chambers")) ?: defaultStructure
     }
 
     override fun run() {

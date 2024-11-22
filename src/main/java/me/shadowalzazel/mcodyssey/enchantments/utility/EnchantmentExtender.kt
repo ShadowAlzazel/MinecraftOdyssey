@@ -163,8 +163,7 @@ interface EnchantmentExtender {
             "leap_frog" -> listOf(
                 "- Increase jump height by ${level * 35}%=[level x 35]")
             "mandiblemania" -> listOf(
-                "- Getting damaged by an entity or attacking an entity at a lower eye elevation",
-                "decreases their immunity time by ${level * 0.1}=[level x 0.1] seconds.")
+                "- Consuming food increases immunity time by ${level * 0.1}=[level x 0.1] seconds.")
             "molten_core" -> listOf(
                 "- Enemies that attack the wearer are set on fire for ${4 * level}=[4 x level] seconds;",
                 "This effect is doubled when on fire or on lava.")
@@ -255,7 +254,8 @@ interface EnchantmentExtender {
                 "- Killing an enemy creates an explosion that damages enemies",
                 "for a maximum of ${(level * 1.0).pow(2)}=[level ^ 2] at the center.")
             "fearful_finisher" -> listOf(
-                "- Killing an enemy causes nearby enemies to flee for ${level * 4}=[level x 4] blocks.")
+                "- Killing an enemy causes nearby enemies to flee for ${level * 4}=[level x 4] blocks.",
+                "- Nearby enemies also have their immunity time reduced by ${level * 0.1}=[level x 0.1] seconds.")
             "freezing_aspect" -> listOf(
                 "- Applies Freezing I for ${level * 4}=[level x 4] seconds.")
             "frog_fright" -> listOf(
