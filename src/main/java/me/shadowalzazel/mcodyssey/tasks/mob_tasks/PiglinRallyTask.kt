@@ -1,7 +1,7 @@
  package me.shadowalzazel.mcodyssey.tasks.mob_tasks
 
  import me.shadowalzazel.mcodyssey.constants.EntityTags
- import me.shadowalzazel.mcodyssey.listeners.SpawningListeners
+ import me.shadowalzazel.mcodyssey.common.listeners.SpawningListeners
  import org.bukkit.entity.PiglinBrute
  import org.bukkit.scheduler.BukkitRunnable
 

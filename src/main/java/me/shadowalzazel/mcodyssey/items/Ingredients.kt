@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.items
 
 import me.shadowalzazel.mcodyssey.constants.ItemModels
-import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
+import me.shadowalzazel.mcodyssey.common.items.OdysseyItem
 import org.bukkit.Material
 
 object Ingredients {

@@ -5,8 +5,8 @@ import me.shadowalzazel.mcodyssey.items.creators.WeaponCreator
 import me.shadowalzazel.mcodyssey.items.utility.ToolMaterial
 import me.shadowalzazel.mcodyssey.items.utility.ToolType
 import me.shadowalzazel.mcodyssey.mobs.base.OdysseyMob
-import me.shadowalzazel.mcodyssey.trims.TrimMaterials
-import me.shadowalzazel.mcodyssey.trims.TrimPatterns
+import me.shadowalzazel.mcodyssey.common.trims.TrimMaterials
+import me.shadowalzazel.mcodyssey.common.trims.TrimPatterns
 import net.kyori.adventure.text.Component
 import org.bukkit.Location
 import org.bukkit.Material
