@@ -1,7 +1,6 @@
 package me.shadowalzazel.mcodyssey.bosses.hog_rider
 
 import me.shadowalzazel.mcodyssey.bosses.base.OdysseyBoss
-import me.shadowalzazel.mcodyssey.enchantments.OdysseyEnchantments
 import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.text.Component
 import org.bukkit.*

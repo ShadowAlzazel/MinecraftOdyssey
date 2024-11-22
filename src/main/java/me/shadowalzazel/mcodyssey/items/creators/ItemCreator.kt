@@ -1,11 +1,11 @@
 package me.shadowalzazel.mcodyssey.items.creators
 
 import me.shadowalzazel.mcodyssey.constants.DataKeys
-import me.shadowalzazel.mcodyssey.enchantments.utility.EnchantabilityHandler
+import me.shadowalzazel.mcodyssey.util.EnchantabilityHandler
 import me.shadowalzazel.mcodyssey.items.*
 import me.shadowalzazel.mcodyssey.items.Potions.createPotionStack
 import me.shadowalzazel.mcodyssey.items.Runesherds.createPresetSherdStack
-import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
+import me.shadowalzazel.mcodyssey.common.items.OdysseyItem
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration

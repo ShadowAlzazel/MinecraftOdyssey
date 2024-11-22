@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.items.utility
 
-import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
+import me.shadowalzazel.mcodyssey.common.items.OdysseyItem
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack

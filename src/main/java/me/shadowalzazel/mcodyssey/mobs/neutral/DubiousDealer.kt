@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.mobs.neutral
 
 import me.shadowalzazel.mcodyssey.mobs.base.OdysseyMob
-import me.shadowalzazel.mcodyssey.recipes.merchant.ArcaneSales
+import me.shadowalzazel.mcodyssey.datagen.recipes.merchant.ArcaneSales
 import net.kyori.adventure.text.Component
 import org.bukkit.Location
 import org.bukkit.Material

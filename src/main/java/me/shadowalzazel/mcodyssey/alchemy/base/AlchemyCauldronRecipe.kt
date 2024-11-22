@@ -3,7 +3,7 @@ package me.shadowalzazel.mcodyssey.alchemy.base
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
 import me.shadowalzazel.mcodyssey.items.Potions.createPotionStack
-import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
+import me.shadowalzazel.mcodyssey.common.items.OdysseyItem
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.Color
 import org.bukkit.Material

@@ -3,10 +3,10 @@ package me.shadowalzazel.mcodyssey.items
 import me.shadowalzazel.mcodyssey.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.constants.ItemModels
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
-import me.shadowalzazel.mcodyssey.rune_writing.RunesherdManager
-import me.shadowalzazel.mcodyssey.rune_writing.SpaceRuneManager
-import me.shadowalzazel.mcodyssey.rune_writing.base.OdysseyRunesherd
+import me.shadowalzazel.mcodyssey.common.items.OdysseyItem
+import me.shadowalzazel.mcodyssey.util.RunesherdManager
+import me.shadowalzazel.mcodyssey.util.SpaceRuneManager
+import me.shadowalzazel.mcodyssey.common.items.OdysseyRunesherd
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration

@@ -4,7 +4,7 @@ import me.shadowalzazel.mcodyssey.util.AttributeManager
 import me.shadowalzazel.mcodyssey.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.constants.ItemDataTags
 import me.shadowalzazel.mcodyssey.items.Exotics
-import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
+import me.shadowalzazel.mcodyssey.common.items.OdysseyItem
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.inventory.ItemRarity
 import org.bukkit.inventory.ItemStack

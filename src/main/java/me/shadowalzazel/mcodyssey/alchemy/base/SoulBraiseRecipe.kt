@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.alchemy.base
 
 import me.shadowalzazel.mcodyssey.alchemy.utility.BraiseBase
-import me.shadowalzazel.mcodyssey.items.base.OdysseyItem
+import me.shadowalzazel.mcodyssey.common.items.OdysseyItem
 import me.shadowalzazel.mcodyssey.mobs.base.OdysseyMob
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.Location
