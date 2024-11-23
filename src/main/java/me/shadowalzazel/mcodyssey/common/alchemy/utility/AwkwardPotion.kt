@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.alchemy.utility
+package me.shadowalzazel.mcodyssey.common.alchemy.utility
 
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack

@@ -2,7 +2,7 @@ package me.shadowalzazel.mcodyssey.datagen.items
 
 import me.shadowalzazel.mcodyssey.util.AttributeManager
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
-import me.shadowalzazel.mcodyssey.util.constants.DataKeys
+import me.shadowalzazel.mcodyssey.util.DataKeys
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
 import me.shadowalzazel.mcodyssey.util.ToolMiningManager
@@ -29,7 +29,6 @@ class ToolCreator : AttributeManager, DataTagManager, ToolMiningManager {
         val minecraftMaterial = Material.matchMaterial(minecraftItemKey) ?: return ItemStack(Material.AIR)
         val itemStack = ItemStack(minecraftMaterial, amount).apply {
             // Create Variables
-            val model = (material.itemModelPre * 100) + (type.itemModelSuf)
             val itemName = "${material.itemName}_${type.itemName}"
             val customName = "${material.customName} ${type.customName}"
             val damage = material.attackDamage + type.baseDamage
@@ -60,7 +59,8 @@ class ToolCreator : AttributeManager, DataTagManager, ToolMiningManager {
                 }
             }
             // Display
-            meta.setCustomModelData(model)
+            meta.itemModel = DataKeys.newKey(itemName)
+            //meta.setCustomModelData(model)
             meta.displayName(Component.text(customName).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))
             // item identifiers
             meta.itemName(Component.text(itemName))

@@ -4,13 +4,12 @@ import java.io.File
 import java.io.FileNotFoundException
 
 
-class DatapackManager(val odyssey: Odyssey) {
+class OdysseyDatapack(val odyssey: Odyssey) {
 
     /*
     private val hasTerralith: Boolean = odyssey.overworld.isBedWorks
     private val hasIncendium: Boolean = odyssey.overworld.isBedWorks
     val hasContinents: Boolean = odyssey.overworld.isBedWorks
-
      */
 
     fun findOdysseyDatapack(): Boolean {

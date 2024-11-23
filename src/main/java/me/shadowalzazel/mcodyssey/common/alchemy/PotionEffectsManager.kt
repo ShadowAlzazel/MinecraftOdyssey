@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.alchemy
+package me.shadowalzazel.mcodyssey.common.alchemy
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.util.constants.EffectTags

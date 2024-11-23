@@ -1,7 +1,7 @@
-package me.shadowalzazel.mcodyssey.alchemy
+package me.shadowalzazel.mcodyssey.common.alchemy
 
-import me.shadowalzazel.mcodyssey.alchemy.base.AlchemyCauldronRecipe
-import me.shadowalzazel.mcodyssey.alchemy.utility.AwkwardPotion
+import me.shadowalzazel.mcodyssey.common.alchemy.base.AlchemyCauldronRecipe
+import me.shadowalzazel.mcodyssey.common.alchemy.utility.AwkwardPotion
 import me.shadowalzazel.mcodyssey.common.items.custom.Ingredients
 import me.shadowalzazel.mcodyssey.common.items.custom.Potions
 import me.shadowalzazel.mcodyssey.common.items.custom.Potions.createPotionStack

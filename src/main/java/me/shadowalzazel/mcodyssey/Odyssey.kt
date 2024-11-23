@@ -61,7 +61,7 @@ class Odyssey : JavaPlugin() {
         saveConfig()
 
         // Asset Loader
-        val datapackManager = DatapackManager(this)
+        val datapackManager = OdysseyDatapack(this)
 
         // Need to find the main world for others
         logger.info("Finding Main World...")
@@ -111,7 +111,7 @@ class Odyssey : JavaPlugin() {
         // Register Events
         logger.info("Registering Events...")
         listOf(
-            AssetListeners,
+            OdysseyAssets,
             ArcaneListeners,
             SmithingListeners,
             AlchemyListener,

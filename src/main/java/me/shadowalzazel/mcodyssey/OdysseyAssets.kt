@@ -10,7 +10,10 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 
-object AssetListeners : Listener {
+// -------------------- READ THIS --------------------------
+// Put hash into resource-pack-sha1 WITHIN server.properties
+
+object OdysseyAssets : Listener {
 
     private fun resourcePackHandler(joiningPlayer: Player) {
         // PROD
