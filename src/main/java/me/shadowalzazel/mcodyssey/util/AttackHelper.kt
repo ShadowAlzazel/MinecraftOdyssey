@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.util
 
-import me.shadowalzazel.mcodyssey.constants.EntityTags
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import org.bukkit.Location
 import org.bukkit.Particle
 import org.bukkit.Sound

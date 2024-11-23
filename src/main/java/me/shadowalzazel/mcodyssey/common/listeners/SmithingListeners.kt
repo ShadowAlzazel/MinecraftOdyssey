@@ -1,11 +1,11 @@
 package me.shadowalzazel.mcodyssey.common.listeners
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.util.CustomColors
-import me.shadowalzazel.mcodyssey.constants.AttributeTags
-import me.shadowalzazel.mcodyssey.constants.ItemModels
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.items.utility.ToolMiningManager
+import me.shadowalzazel.mcodyssey.util.constants.CustomColors
+import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
+import me.shadowalzazel.mcodyssey.util.constants.ItemModels
+import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
+import me.shadowalzazel.mcodyssey.util.ToolMiningManager
 import me.shadowalzazel.mcodyssey.common.trims.TrimMaterials
 import me.shadowalzazel.mcodyssey.common.trims.TrimPatterns
 import me.shadowalzazel.mcodyssey.util.DataTagManager

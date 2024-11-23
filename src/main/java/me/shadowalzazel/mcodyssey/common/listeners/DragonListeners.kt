@@ -3,7 +3,7 @@ package me.shadowalzazel.mcodyssey.common.listeners
 import com.destroystokyo.paper.event.entity.EnderDragonFireballHitEvent
 import com.destroystokyo.paper.event.entity.EnderDragonShootFireballEvent
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.constants.EntityTags
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.tasks.dragon_tasks.DragonLightningStormTask
 import me.shadowalzazel.mcodyssey.tasks.dragon_tasks.LightningCloudTask
 import me.shadowalzazel.mcodyssey.tasks.dragon_tasks.LightningEyeTask

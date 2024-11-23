@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.datagen.recipes.smelting
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.items.Ingredients
+import me.shadowalzazel.mcodyssey.common.items.custom.Ingredients
 import me.shadowalzazel.mcodyssey.datagen.recipes.ChoiceManager
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.BlastingRecipe

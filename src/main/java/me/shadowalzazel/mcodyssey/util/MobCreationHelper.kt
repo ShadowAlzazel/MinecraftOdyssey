@@ -1,13 +1,14 @@
 package me.shadowalzazel.mcodyssey.util
 
-import me.shadowalzazel.mcodyssey.constants.AttributeTags
-import me.shadowalzazel.mcodyssey.constants.EntityTags
+import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.common.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.items.creators.ToolCreator
-import me.shadowalzazel.mcodyssey.items.creators.WeaponCreator
-import me.shadowalzazel.mcodyssey.items.utility.ToolMaterial
-import me.shadowalzazel.mcodyssey.items.utility.ToolType
+import me.shadowalzazel.mcodyssey.datagen.items.ToolCreator
+import me.shadowalzazel.mcodyssey.datagen.items.WeaponCreator
+import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
+import me.shadowalzazel.mcodyssey.common.items.ToolType
 import me.shadowalzazel.mcodyssey.common.trims.TrimMaterials
+import me.shadowalzazel.mcodyssey.util.constants.CustomColors
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment

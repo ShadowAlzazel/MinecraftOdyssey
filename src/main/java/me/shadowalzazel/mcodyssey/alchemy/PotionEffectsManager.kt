@@ -1,11 +1,11 @@
 package me.shadowalzazel.mcodyssey.alchemy
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.constants.EffectTags
-import me.shadowalzazel.mcodyssey.constants.EntityTags
-import me.shadowalzazel.mcodyssey.constants.ItemModels
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.effects.EffectColors
+import me.shadowalzazel.mcodyssey.util.constants.EffectTags
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags
+import me.shadowalzazel.mcodyssey.util.constants.ItemModels
+import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
+import me.shadowalzazel.mcodyssey.common.effects.EffectColors
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor

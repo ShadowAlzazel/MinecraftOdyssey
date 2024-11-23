@@ -1,10 +1,10 @@
 package me.shadowalzazel.mcodyssey.datagen.recipes.creators
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.items.creators.ItemCreator
-import me.shadowalzazel.mcodyssey.items.creators.ToolCreator
-import me.shadowalzazel.mcodyssey.items.utility.ToolMaterial
-import me.shadowalzazel.mcodyssey.items.utility.ToolType
+import me.shadowalzazel.mcodyssey.datagen.items.ItemCreator
+import me.shadowalzazel.mcodyssey.datagen.items.ToolCreator
+import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
+import me.shadowalzazel.mcodyssey.common.items.ToolType
 import me.shadowalzazel.mcodyssey.datagen.recipes.ChoiceManager
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.Material

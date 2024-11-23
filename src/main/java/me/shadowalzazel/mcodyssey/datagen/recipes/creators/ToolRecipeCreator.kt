@@ -1,10 +1,10 @@
 package me.shadowalzazel.mcodyssey.datagen.recipes.creators
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.items.creators.ItemCreator
-import me.shadowalzazel.mcodyssey.items.creators.ToolCreator
-import me.shadowalzazel.mcodyssey.items.utility.ToolMaterial
-import me.shadowalzazel.mcodyssey.items.utility.ToolType
+import me.shadowalzazel.mcodyssey.datagen.items.ItemCreator
+import me.shadowalzazel.mcodyssey.datagen.items.ToolCreator
+import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
+import me.shadowalzazel.mcodyssey.common.items.ToolType
 import me.shadowalzazel.mcodyssey.datagen.recipes.ChoiceManager
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.NamespacedKey
@@ -68,7 +68,8 @@ class ToolRecipeCreator : ItemCreator, DataTagManager, ChoiceManager {
         val recipes = mutableListOf<Recipe>()
         // Get Base Tools
         val baseTools = listOf(ToolType.SWORD, ToolType.PICKAXE, ToolType.AXE, ToolType.SHOVEL, ToolType.HOE)
-        val baseMaterials = listOf(ToolMaterial.WOODEN, ToolMaterial.GOLDEN, ToolMaterial.STONE,
+        val baseMaterials = listOf(
+            ToolMaterial.WOODEN, ToolMaterial.GOLDEN, ToolMaterial.STONE,
             ToolMaterial.IRON, ToolMaterial.DIAMOND, ToolMaterial.NETHERITE)
         val toolMaterialEntries = ToolMaterial.entries.toMutableList()
         toolMaterialEntries.removeAll(baseMaterials)

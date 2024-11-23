@@ -2,7 +2,7 @@ package me.shadowalzazel.mcodyssey.bosses.the_ambassador
 
 import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.constants.EntityTags
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity

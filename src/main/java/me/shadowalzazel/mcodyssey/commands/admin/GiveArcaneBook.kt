@@ -1,8 +1,8 @@
 package me.shadowalzazel.mcodyssey.commands.admin
 
 import me.shadowalzazel.mcodyssey.util.EnchantmentsManager
-import me.shadowalzazel.mcodyssey.items.Miscellaneous
-import me.shadowalzazel.mcodyssey.items.creators.ItemCreator
+import me.shadowalzazel.mcodyssey.common.items.custom.Miscellaneous
+import me.shadowalzazel.mcodyssey.datagen.items.ItemCreator
 import org.bukkit.command.BlockCommandSender
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor

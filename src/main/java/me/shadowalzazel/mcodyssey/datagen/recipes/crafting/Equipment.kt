@@ -1,8 +1,8 @@
 package me.shadowalzazel.mcodyssey.datagen.recipes.crafting
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.items.Equipment
-import me.shadowalzazel.mcodyssey.items.creators.ItemCreator
+import me.shadowalzazel.mcodyssey.common.items.custom.Equipment
+import me.shadowalzazel.mcodyssey.datagen.items.ItemCreator
 import me.shadowalzazel.mcodyssey.datagen.recipes.ChoiceManager
 import org.bukkit.Material
 import org.bukkit.NamespacedKey

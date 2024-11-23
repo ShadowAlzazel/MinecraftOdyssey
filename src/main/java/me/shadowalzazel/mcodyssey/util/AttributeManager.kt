@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.util
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.constants.AttributeTags
+import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import org.bukkit.NamespacedKey
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier

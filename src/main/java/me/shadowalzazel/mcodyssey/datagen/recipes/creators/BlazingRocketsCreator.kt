@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.datagen.recipes.creators
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.items.Miscellaneous
+import me.shadowalzazel.mcodyssey.common.items.custom.Miscellaneous
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.RecipeChoice

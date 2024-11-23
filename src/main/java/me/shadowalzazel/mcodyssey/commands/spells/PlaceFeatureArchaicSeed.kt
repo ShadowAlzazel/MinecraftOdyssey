@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.commands.spells
 
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags
+import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.Material
 import org.bukkit.Particle

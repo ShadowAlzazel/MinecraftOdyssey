@@ -1,8 +1,8 @@
 package me.shadowalzazel.mcodyssey.datagen.recipes.smelting
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.items.Runesherds
-import me.shadowalzazel.mcodyssey.items.Runesherds.createRuneware
+import me.shadowalzazel.mcodyssey.common.items.custom.Runesherds
+import me.shadowalzazel.mcodyssey.common.items.custom.Runesherds.createRuneware
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.BlastingRecipe

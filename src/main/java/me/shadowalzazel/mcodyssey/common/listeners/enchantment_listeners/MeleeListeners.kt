@@ -2,13 +2,13 @@ package me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners
 
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.constants.EffectTags
-import me.shadowalzazel.mcodyssey.constants.EntityTags
-import me.shadowalzazel.mcodyssey.constants.EntityTags.getIntTag
-import me.shadowalzazel.mcodyssey.constants.EntityTags.removeTag
-import me.shadowalzazel.mcodyssey.constants.EntityTags.setIntTag
-import me.shadowalzazel.mcodyssey.effects.EffectsManager
-import me.shadowalzazel.mcodyssey.items.Miscellaneous.getNameId
+import me.shadowalzazel.mcodyssey.util.constants.EffectTags
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags.getIntTag
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags.removeTag
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags.setIntTag
+import me.shadowalzazel.mcodyssey.common.effects.EffectsManager
+import me.shadowalzazel.mcodyssey.common.items.custom.Miscellaneous.getNameId
 import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.*
 import me.shadowalzazel.mcodyssey.util.AttackHelper
 import org.bukkit.*

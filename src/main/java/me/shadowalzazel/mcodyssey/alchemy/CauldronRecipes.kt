@@ -2,9 +2,9 @@ package me.shadowalzazel.mcodyssey.alchemy
 
 import me.shadowalzazel.mcodyssey.alchemy.base.AlchemyCauldronRecipe
 import me.shadowalzazel.mcodyssey.alchemy.utility.AwkwardPotion
-import me.shadowalzazel.mcodyssey.items.Ingredients
-import me.shadowalzazel.mcodyssey.items.Potions
-import me.shadowalzazel.mcodyssey.items.Potions.createPotionStack
+import me.shadowalzazel.mcodyssey.common.items.custom.Ingredients
+import me.shadowalzazel.mcodyssey.common.items.custom.Potions
+import me.shadowalzazel.mcodyssey.common.items.custom.Potions.createPotionStack
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffectType

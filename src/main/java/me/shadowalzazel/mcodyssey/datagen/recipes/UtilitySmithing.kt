@@ -1,8 +1,6 @@
 package me.shadowalzazel.mcodyssey.datagen.recipes
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.items.Equipment
-import me.shadowalzazel.mcodyssey.items.Ingredients
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.*

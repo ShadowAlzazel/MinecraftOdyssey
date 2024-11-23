@@ -1,10 +1,12 @@
 package me.shadowalzazel.mcodyssey.datagen.recipes.crafting
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.items.*
-import me.shadowalzazel.mcodyssey.items.Equipment
-import me.shadowalzazel.mcodyssey.items.Runesherds.createRuneware
-import me.shadowalzazel.mcodyssey.items.creators.ItemCreator
+import me.shadowalzazel.mcodyssey.common.items.custom.Equipment
+import me.shadowalzazel.mcodyssey.common.items.custom.Ingredients
+import me.shadowalzazel.mcodyssey.common.items.custom.Miscellaneous
+import me.shadowalzazel.mcodyssey.common.items.custom.Runesherds
+import me.shadowalzazel.mcodyssey.common.items.custom.Runesherds.createRuneware
+import me.shadowalzazel.mcodyssey.datagen.items.ItemCreator
 import me.shadowalzazel.mcodyssey.datagen.recipes.ChoiceManager
 import me.shadowalzazel.mcodyssey.datagen.recipes.creators.BlazingRocketsCreator
 import org.bukkit.Material

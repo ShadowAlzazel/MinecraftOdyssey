@@ -1,10 +1,10 @@
 package me.shadowalzazel.mcodyssey.common.listeners
 
-import me.shadowalzazel.mcodyssey.constants.EntityTags
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.common.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.items.Ingredients
-import me.shadowalzazel.mcodyssey.items.Miscellaneous
-import me.shadowalzazel.mcodyssey.items.creators.ItemCreator
+import me.shadowalzazel.mcodyssey.common.items.custom.Ingredients
+import me.shadowalzazel.mcodyssey.common.items.custom.Miscellaneous
+import me.shadowalzazel.mcodyssey.datagen.items.ItemCreator
 import me.shadowalzazel.mcodyssey.common.listeners.utility.LootLogic
 import org.bukkit.Particle
 import org.bukkit.Sound

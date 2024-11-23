@@ -1,8 +1,8 @@
 package me.shadowalzazel.mcodyssey.common.listeners
 
-import me.shadowalzazel.mcodyssey.constants.EntityTags
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.items.Miscellaneous
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags
+import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
+import me.shadowalzazel.mcodyssey.common.items.custom.Miscellaneous
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.Material
 import org.bukkit.Particle

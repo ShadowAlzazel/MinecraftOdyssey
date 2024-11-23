@@ -1,9 +1,9 @@
 package me.shadowalzazel.mcodyssey.common.listeners
 
-import me.shadowalzazel.mcodyssey.constants.EffectTags
-import me.shadowalzazel.mcodyssey.constants.EntityTags
-import me.shadowalzazel.mcodyssey.constants.EntityTags.getIntTag
-import me.shadowalzazel.mcodyssey.constants.EntityTags.setIntTag
+import me.shadowalzazel.mcodyssey.util.constants.EffectTags
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags.getIntTag
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags.setIntTag
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

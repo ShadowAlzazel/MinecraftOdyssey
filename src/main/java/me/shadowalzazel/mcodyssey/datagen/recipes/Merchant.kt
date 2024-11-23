@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.datagen.recipes
 
 
-import me.shadowalzazel.mcodyssey.items.Miscellaneous
+import me.shadowalzazel.mcodyssey.common.items.custom.Miscellaneous
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.MerchantRecipe

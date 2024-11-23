@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.commands.admin
 
-import me.shadowalzazel.mcodyssey.items.Runesherds
-import me.shadowalzazel.mcodyssey.items.Runesherds.createSpaceRuneTablet
+import me.shadowalzazel.mcodyssey.common.items.custom.Runesherds
+import me.shadowalzazel.mcodyssey.common.items.custom.Runesherds.createSpaceRuneTablet
 import me.shadowalzazel.mcodyssey.util.SpaceRuneManager
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor

@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.common.listeners
 
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags
+import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import me.shadowalzazel.mcodyssey.util.SpaceRuneManager
 import org.bukkit.Particle
 import org.bukkit.Sound

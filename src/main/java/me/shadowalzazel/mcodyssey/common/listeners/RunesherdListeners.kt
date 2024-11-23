@@ -2,13 +2,13 @@
 
 package me.shadowalzazel.mcodyssey.common.listeners
 
-import me.shadowalzazel.mcodyssey.constants.AttributeTags
-import me.shadowalzazel.mcodyssey.constants.ItemModels
-import me.shadowalzazel.mcodyssey.items.Runesherds
-import me.shadowalzazel.mcodyssey.items.Runesherds.createLootSherdStack
-import me.shadowalzazel.mcodyssey.items.Runesherds.createRuneware
-import me.shadowalzazel.mcodyssey.items.Runesherds.createPresetSherdStack
-import me.shadowalzazel.mcodyssey.items.Runesherds.runesherdRuinsList
+import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
+import me.shadowalzazel.mcodyssey.util.constants.ItemModels
+import me.shadowalzazel.mcodyssey.common.items.custom.Runesherds
+import me.shadowalzazel.mcodyssey.common.items.custom.Runesherds.createLootSherdStack
+import me.shadowalzazel.mcodyssey.common.items.custom.Runesherds.createRuneware
+import me.shadowalzazel.mcodyssey.common.items.custom.Runesherds.createPresetSherdStack
+import me.shadowalzazel.mcodyssey.common.items.custom.Runesherds.runesherdRuinsList
 import me.shadowalzazel.mcodyssey.util.RunesherdManager
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
