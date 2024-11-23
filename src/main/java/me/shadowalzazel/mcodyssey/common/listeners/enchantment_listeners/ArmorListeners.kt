@@ -4,11 +4,11 @@ import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent
 import com.destroystokyo.paper.event.player.PlayerJumpEvent
 import io.papermc.paper.entity.LookAnchor
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.constants.EntityTags
-import me.shadowalzazel.mcodyssey.constants.EntityTags.getIntTag
-import me.shadowalzazel.mcodyssey.constants.EntityTags.removeTag
-import me.shadowalzazel.mcodyssey.constants.EntityTags.setIntTag
-import me.shadowalzazel.mcodyssey.effects.EffectsManager
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags.getIntTag
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags.removeTag
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags.setIntTag
+import me.shadowalzazel.mcodyssey.common.effects.EffectsManager
 import me.shadowalzazel.mcodyssey.util.EnchantmentsManager
 import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.SpeedySpursTask
 import org.bukkit.Material

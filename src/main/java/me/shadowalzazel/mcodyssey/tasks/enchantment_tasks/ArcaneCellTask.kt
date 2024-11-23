@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.tasks.enchantment_tasks
 
-import me.shadowalzazel.mcodyssey.constants.EffectTags
+import me.shadowalzazel.mcodyssey.util.constants.EffectTags
 import org.bukkit.*
 import org.bukkit.entity.LivingEntity
 import org.bukkit.scheduler.BukkitRunnable

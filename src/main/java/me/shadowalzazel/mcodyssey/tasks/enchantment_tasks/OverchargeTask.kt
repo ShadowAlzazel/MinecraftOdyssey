@@ -1,9 +1,9 @@
 package me.shadowalzazel.mcodyssey.tasks.enchantment_tasks
 
-import me.shadowalzazel.mcodyssey.constants.EntityTags
-import me.shadowalzazel.mcodyssey.constants.EntityTags.getIntTag
-import me.shadowalzazel.mcodyssey.constants.EntityTags.removeTag
-import me.shadowalzazel.mcodyssey.constants.EntityTags.setIntTag
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags.getIntTag
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags.removeTag
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags.setIntTag
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.Player

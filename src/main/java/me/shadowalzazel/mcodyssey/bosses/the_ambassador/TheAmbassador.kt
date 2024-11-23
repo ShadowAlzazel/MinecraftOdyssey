@@ -2,10 +2,10 @@ package me.shadowalzazel.mcodyssey.bosses.the_ambassador
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.bosses.base.OdysseyBoss
-import me.shadowalzazel.mcodyssey.constants.EffectTags
-import me.shadowalzazel.mcodyssey.constants.EntityTags
-import me.shadowalzazel.mcodyssey.items.Exotics
-import me.shadowalzazel.mcodyssey.items.Miscellaneous
+import me.shadowalzazel.mcodyssey.util.constants.EffectTags
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags
+import me.shadowalzazel.mcodyssey.common.items.custom.Exotics
+import me.shadowalzazel.mcodyssey.common.items.custom.Miscellaneous
 import me.shadowalzazel.mcodyssey.common.listeners.PetListener.addArmorAttribute
 import me.shadowalzazel.mcodyssey.common.listeners.PetListener.addHealthAttribute
 import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.GravitySingularityTask

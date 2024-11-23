@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.tasks.weapon_tasks
 
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags
+import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack

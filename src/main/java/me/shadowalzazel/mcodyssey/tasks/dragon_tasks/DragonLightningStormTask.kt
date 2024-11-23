@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.tasks.dragon_tasks
 
-import me.shadowalzazel.mcodyssey.constants.EntityTags
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import org.bukkit.HeightMap
 import org.bukkit.Particle
 import org.bukkit.entity.EnderDragon

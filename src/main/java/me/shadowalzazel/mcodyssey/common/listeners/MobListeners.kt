@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.common.listeners
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.constants.EntityTags
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.tasks.mob_tasks.PiglinRallyTask
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.Material

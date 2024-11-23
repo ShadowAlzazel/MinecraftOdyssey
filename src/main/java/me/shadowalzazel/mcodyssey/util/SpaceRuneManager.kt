@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.util
 
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags
+import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import me.shadowalzazel.mcodyssey.common.items.SpaceRuneMatrix
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor

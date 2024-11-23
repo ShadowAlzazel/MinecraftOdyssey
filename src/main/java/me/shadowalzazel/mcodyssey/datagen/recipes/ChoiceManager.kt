@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.datagen.recipes
 
-import me.shadowalzazel.mcodyssey.constants.ItemModels
-import me.shadowalzazel.mcodyssey.items.Ingredients
+import me.shadowalzazel.mcodyssey.util.constants.ItemModels
+import me.shadowalzazel.mcodyssey.common.items.custom.Ingredients
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material

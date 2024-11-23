@@ -7,10 +7,10 @@ import me.shadowalzazel.mcodyssey.alchemy.PotionEffectsManager
 import me.shadowalzazel.mcodyssey.alchemy.CauldronRecipes
 import me.shadowalzazel.mcodyssey.alchemy.base.AlchemyCauldronRecipe
 import me.shadowalzazel.mcodyssey.alchemy.utility.CauldronEventSynchro
-import me.shadowalzazel.mcodyssey.constants.EntityTags
-import me.shadowalzazel.mcodyssey.constants.ItemModels
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.effects.*
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags
+import me.shadowalzazel.mcodyssey.util.constants.ItemModels
+import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
+import me.shadowalzazel.mcodyssey.common.effects.*
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.Color
 import org.bukkit.Material

@@ -1,19 +1,11 @@
 package me.shadowalzazel.mcodyssey.common.listeners
 
-import me.shadowalzazel.mcodyssey.constants.EffectTags
-import me.shadowalzazel.mcodyssey.constants.EntityTags
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.TextColor
-import org.bukkit.entity.EntityType
+import me.shadowalzazel.mcodyssey.util.constants.EffectTags
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import org.bukkit.entity.LivingEntity
-import org.bukkit.entity.Villager
-import org.bukkit.entity.Zombie
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
-import org.bukkit.event.entity.EntityDeathEvent
-import org.bukkit.potion.PotionEffect
-import org.bukkit.potion.PotionEffectType
 
 object ScoreboardTagListeners : Listener {
 

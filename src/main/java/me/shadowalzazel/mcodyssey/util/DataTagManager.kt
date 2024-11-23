@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.util
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.constants.DataKeys
+import me.shadowalzazel.mcodyssey.util.constants.DataKeys
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataContainer

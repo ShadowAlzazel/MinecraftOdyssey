@@ -2,8 +2,8 @@
 
 package me.shadowalzazel.mcodyssey.util
 
-import me.shadowalzazel.mcodyssey.constants.AttributeTags
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags
+import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
+import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.inventory.EquipmentSlotGroup

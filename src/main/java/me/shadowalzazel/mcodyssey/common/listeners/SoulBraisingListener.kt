@@ -2,9 +2,9 @@ package me.shadowalzazel.mcodyssey.common.listeners
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.alchemy.SoulBraiseRecipes
-import me.shadowalzazel.mcodyssey.constants.ItemModels
-import me.shadowalzazel.mcodyssey.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.items.Ingredients
+import me.shadowalzazel.mcodyssey.util.constants.ItemModels
+import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
+import me.shadowalzazel.mcodyssey.common.items.custom.Ingredients
 import me.shadowalzazel.mcodyssey.common.listeners.utility.SculkFinderSynchro
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.*

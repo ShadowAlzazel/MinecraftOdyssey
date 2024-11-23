@@ -1,11 +1,11 @@
 package me.shadowalzazel.mcodyssey.commands.admin
 
-import me.shadowalzazel.mcodyssey.mobs.hostile.Preacher
-import me.shadowalzazel.mcodyssey.mobs.hostile.Ruined
-import me.shadowalzazel.mcodyssey.mobs.hostile.Savage
-import me.shadowalzazel.mcodyssey.mobs.hostile.Vanguard
-import me.shadowalzazel.mcodyssey.mobs.neutral.DubiousDealer
-import me.shadowalzazel.mcodyssey.mobs.passive.TreasurePig
+import me.shadowalzazel.mcodyssey.common.mobs.hostile.Preacher
+import me.shadowalzazel.mcodyssey.common.mobs.hostile.Ruined
+import me.shadowalzazel.mcodyssey.common.mobs.hostile.Savage
+import me.shadowalzazel.mcodyssey.common.mobs.hostile.Vanguard
+import me.shadowalzazel.mcodyssey.common.mobs.neutral.DubiousDealer
+import me.shadowalzazel.mcodyssey.common.mobs.passive.TreasurePig
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender

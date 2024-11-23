@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.tasks.enchantment_tasks
 
-import me.shadowalzazel.mcodyssey.constants.EffectTags
-import me.shadowalzazel.mcodyssey.constants.EntityTags
+import me.shadowalzazel.mcodyssey.util.constants.EffectTags
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import org.bukkit.Particle
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity

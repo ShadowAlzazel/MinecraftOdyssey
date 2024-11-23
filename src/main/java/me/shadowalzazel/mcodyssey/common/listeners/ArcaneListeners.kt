@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.common.listeners
 
 import me.shadowalzazel.mcodyssey.util.ArcaneEquipmentManager
-import me.shadowalzazel.mcodyssey.constants.WeaponMaps.ARCANE_RANGES
+import me.shadowalzazel.mcodyssey.util.constants.WeaponMaps.ARCANE_RANGES
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority

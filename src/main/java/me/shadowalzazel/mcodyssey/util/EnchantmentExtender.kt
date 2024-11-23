@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.util
 
+import me.shadowalzazel.mcodyssey.util.constants.CustomColors
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.TextDecoration
