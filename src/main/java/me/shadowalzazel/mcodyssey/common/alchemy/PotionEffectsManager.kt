@@ -3,7 +3,6 @@ package me.shadowalzazel.mcodyssey.common.alchemy
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.util.constants.EffectTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
-import me.shadowalzazel.mcodyssey.util.constants.ItemModels
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import me.shadowalzazel.mcodyssey.common.effects.EffectColors
 import me.shadowalzazel.mcodyssey.util.DataTagManager
@@ -231,7 +230,8 @@ interface PotionEffectsManager : DataTagManager {
             }
         }
         // Meta Apply
-        meta.setCustomModelData(ItemModels.VIAL_CHARGE_1)
+        // TODO
+        //meta.setCustomModelData(ItemModels.VIAL_CHARGE_1)
         meta.basePotionType = PotionType.THICK
         meta.setMaxStackSize(64)
         vial.itemMeta = meta

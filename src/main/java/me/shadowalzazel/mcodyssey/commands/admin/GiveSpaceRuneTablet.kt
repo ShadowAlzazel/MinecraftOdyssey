@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.commands.admin
 
-import me.shadowalzazel.mcodyssey.common.items.custom.Runesherds
-import me.shadowalzazel.mcodyssey.common.items.custom.Runesherds.createSpaceRuneTablet
+import me.shadowalzazel.mcodyssey.common.items.custom.Glyphsherds
+import me.shadowalzazel.mcodyssey.common.items.custom.Glyphsherds.createSpaceRuneTablet
 import me.shadowalzazel.mcodyssey.util.SpaceRuneManager
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -15,7 +15,7 @@ object GiveSpaceRuneTablet : CommandExecutor, SpaceRuneManager {
         if (!sender.isOp) return false
         if (args?.size != 9) return false
         // Variables
-        val item = Runesherds.SPACERUNE_TABLET.createSpaceRuneTablet(1)
+        val item = Glyphsherds.SPACERUNE_TABLET.createSpaceRuneTablet(1)
         item.apply {
             setIntTag("m00", args[0].toInt())
             setIntTag("m10", args[1].toInt())

@@ -64,10 +64,10 @@ object ItemDataTags {
     const val HAS_ENCHANT_TOOL_TIP: String = "odyssey.has_enchant_tool_tip"
 
     // Runes
-    const val IS_RUNEWARE: String = "odyssey.is_runeware" // A finished runic vessel capable of holding multiple rune shards
+    const val IS_GLYPHWARE: String = "odyssey.is_runeware" // A finished runic vessel capable of holding multiple rune shards
     const val RUNEWARE_AUGMENT_COUNT: String = "odyssey.runeware_augment_count"
     const val IS_RUNESHERD: String = "odyssey.is_runesherd"
-    const val HAS_RUNE_AUGMENT: String = "odyssey.has_rune_augment"
+    const val HAS_GLYPH_AUGMENT: String = "odyssey.has_rune_augment"
     const val RUNE_IDENTIFIER: String = "odyssey.rune_identifier"
     const val IS_SPACERUNE: String = "odyssey.is_spacerune"
 

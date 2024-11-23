@@ -4,12 +4,12 @@ package me.shadowalzazel.mcodyssey.common.listeners
 
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.util.constants.ItemModels
-import me.shadowalzazel.mcodyssey.common.items.custom.Runesherds
-import me.shadowalzazel.mcodyssey.common.items.custom.Runesherds.createLootSherdStack
-import me.shadowalzazel.mcodyssey.common.items.custom.Runesherds.createRuneware
-import me.shadowalzazel.mcodyssey.common.items.custom.Runesherds.createPresetSherdStack
-import me.shadowalzazel.mcodyssey.common.items.custom.Runesherds.runesherdRuinsList
-import me.shadowalzazel.mcodyssey.util.RunesherdManager
+import me.shadowalzazel.mcodyssey.common.items.custom.Glyphsherds
+import me.shadowalzazel.mcodyssey.common.items.custom.Glyphsherds.createLootSherdStack
+import me.shadowalzazel.mcodyssey.common.items.custom.Glyphsherds.createRuneware
+import me.shadowalzazel.mcodyssey.common.items.custom.Glyphsherds.createPresetSherdStack
+import me.shadowalzazel.mcodyssey.common.items.custom.Glyphsherds.runesherdRuinsList
+import me.shadowalzazel.mcodyssey.util.GlyphManager
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
@@ -27,10 +27,10 @@ import org.bukkit.event.inventory.PrepareSmithingEvent
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
 
-object RunesherdListeners : Listener, RunesherdManager {
+object GlyphListeners : Listener, GlyphManager {
 
     @EventHandler
-    fun runesherdSmithingHandler(event: PrepareSmithingEvent) {
+    fun glyphSmithingHandler(event: PrepareSmithingEvent) {
         // Variables, return if any null
         val recipe = event.inventory.recipe ?: return
         val mineral = event.inventory.inputMineral ?: return
@@ -67,7 +67,7 @@ object RunesherdListeners : Listener, RunesherdManager {
     }
 
     @EventHandler
-    fun runewareKilnFiringHandler(event: FurnaceStartSmeltEvent) {
+    fun glyphKilnFiringHandler(event: FurnaceStartSmeltEvent) {
         // Get matching
         if (event.block.type != Material.BLAST_FURNACE) return
         val kiln = event.block
@@ -107,7 +107,7 @@ object RunesherdListeners : Listener, RunesherdManager {
     }
 
     @EventHandler
-    fun runewareKilnFinishFiringHandler(event: FurnaceSmeltEvent) {
+    fun glyphKilnFinishFiringHandler(event: FurnaceSmeltEvent) {
         // Get matching vars
         if (event.block.type != Material.BLAST_FURNACE) return
         val kiln = event.block
@@ -117,20 +117,20 @@ object RunesherdListeners : Listener, RunesherdManager {
         if (recipe.result.type != Material.BRICK) return
         if (event.result.type != Material.BRICK) return
         // Tag Check
-        if (!input.hasRunewareTag()) return
+        if (!input.hasGlyphwareTag()) return
         // Cancel if more than 1
         if (event.result.amount > 1) {
             event.isCancelled = true
             return
         }
         val runewareStack = when (input.itemMeta.customModelData) {
-            ItemModels.CLAY_TOTEM -> { Runesherds.GLAZED_RUNE_TOTEM.createRuneware(1) }
-            ItemModels.FRAGMENTED_ORB -> { Runesherds.GLAZED_RUNE_ORB.createRuneware(1) }
-            ItemModels.CLAY_SKULL -> { Runesherds.GLAZED_RUNE_SKULL.createRuneware(1) }
-            ItemModels.CLAY_DOWEL -> { Runesherds.GLAZED_RUNE_DOWEL.createRuneware(1) }
-            ItemModels.FRAGMENTED_RODS -> { Runesherds.GLAZED_RUNE_RODS.createRuneware(1) }
-            ItemModels.CLAY_KEY -> { Runesherds.GLAZED_RUNE_KEY.createRuneware(1) }
-            else -> { Runesherds.GLAZED_RUNE_ORB.createRuneware(1) }
+            ItemModels.CLAY_TOTEM -> { Glyphsherds.GLAZED_TOTEM.createRuneware(1) }
+            ItemModels.FRAGMENTED_ORB -> { Glyphsherds.GLAZED_ORB.createRuneware(1) }
+            ItemModels.CLAY_SKULL -> { Glyphsherds.GLAZED_SKULL.createRuneware(1) }
+            ItemModels.CLAY_DOWEL -> { Glyphsherds.GLAZED_DOWEL.createRuneware(1) }
+            ItemModels.FRAGMENTED_RODS -> { Glyphsherds.GLAZED_RODS.createRuneware(1) }
+            ItemModels.CLAY_KEY -> { Glyphsherds.GLAZED_KEY.createRuneware(1) }
+            else -> { Glyphsherds.GLAZED_ORB.createRuneware(1) }
         }
         // Transfer attribute modifiers to runeware
         val attributeModifiers = input.itemMeta.attributeModifiers ?: return
@@ -143,7 +143,7 @@ object RunesherdListeners : Listener, RunesherdManager {
             for (pair in newList) { it.addAttributeModifier(pair.first, pair.second) }
         }
         runewareStack.addRuneAugmentTag()
-        runewareStack.setRuneAugmentCount(3)
+        runewareStack.setGlyphAugmentCount(3)
         // Set Result
         event.result = runewareStack
     }
@@ -179,7 +179,7 @@ object RunesherdListeners : Listener, RunesherdManager {
         val runesherd = event.inventory.matrix[4] ?: return
         if (!runesherd.hasItemMeta()) return
         if (!runesherd.hasRunesherdTag()) return
-        if (runesherd.hasRunewareTag()) return // No cloning runeware
+        if (runesherd.hasGlyphwareTag()) return // No cloning runeware
         if (!runesherd.itemMeta.hasCustomModelData()) return
         // Result Checks
         val result = event.inventory.result ?: return
@@ -203,7 +203,7 @@ object RunesherdListeners : Listener, RunesherdManager {
         if (runesherd.type == Material.CLAY_BALL) return // No Cloning clones
         if (!runesherd.hasItemMeta()) return
         if (!runesherd.hasRunesherdTag()) return
-        if (runesherd.hasRunewareTag()) return // No cloning runeware
+        if (runesherd.hasGlyphwareTag()) return // No cloning runeware
         if (!runesherd.itemMeta.hasCustomModelData()) return
         // Passed basic checks
         val modifiers = runesherd.itemMeta.attributeModifiers ?: return

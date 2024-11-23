@@ -67,7 +67,7 @@ class HogRiderBoss : OdysseyBoss(
             somePlayer.playSound(somePlayer.location, Sound.ENTITY_GHAST_SCREAM, 2.5F, 0.9F)
             somePlayer.playSound(somePlayer.location, Sound.ITEM_GOAT_HORN_SOUND_5, 2.5F, 0.85F)
             somePlayer.playSound(somePlayer.location, Sound.ITEM_GOAT_HORN_SOUND_6, 2.5F, 0.85F)
-            somePlayer.sendMessage("${ChatColor.GOLD}[Hog Rida] ${ChatColor.RESET}HOOOOOOGGG RIIDDDAAAAAAAAAAA")
+            //somePlayer.sendMessage("${ChatColor.GOLD}[Hog Rida] ${ChatColor.RESET}HOOOOOOGGG RIIDDDAAAAAAAAAAA")
         }
         // 1200 tks = 60 sec
         val hogRider = spawnRider(odysseyWorld, someLocation)
@@ -87,7 +87,7 @@ class HogRiderBoss : OdysseyBoss(
 
         despawnTimer = System.currentTimeMillis()
         // Change Default Behaviour
-        hogRider.customName = "${ChatColor.GOLD}$name"
+        //hogRider.customName = "${ChatColor.GOLD}$name"
         hogRider.isCustomNameVisible = true
         hogRider.removeWhenFarAway = false
         hogRider.isAware = true

@@ -8,7 +8,6 @@ import me.shadowalzazel.mcodyssey.common.alchemy.CauldronRecipes
 import me.shadowalzazel.mcodyssey.common.alchemy.base.AlchemyCauldronRecipe
 import me.shadowalzazel.mcodyssey.common.alchemy.utility.CauldronEventSynchro
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
-import me.shadowalzazel.mcodyssey.util.constants.ItemModels
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import me.shadowalzazel.mcodyssey.common.effects.*
 import me.shadowalzazel.mcodyssey.util.DataTagManager
@@ -261,12 +260,13 @@ object AlchemyListener : Listener, PotionEffectsManager, EffectsManager, DataTag
         val ingredient = event.contents.ingredient ?: return
         val ingredientMaterial = ingredient.type
         // Get Potion Model
+        // TODO FIX!
         val resultModel: Int? = when (ingredientMaterial) {
-            Material.REDSTONE -> ItemModels.VOLUMETRIC_BOTTLE
-            Material.GLOWSTONE_DUST -> ItemModels.SQUARE_BOTTLE
-            Material.GLOW_BERRIES -> ItemModels.SQUARE_BOTTLE
-            Material.HONEY_BOTTLE -> ItemModels.VOLUMETRIC_BOTTLE
-            Material.PRISMARINE_CRYSTALS -> ItemModels.VIAL_CHARGE_1
+            Material.REDSTONE -> 1  //ItemModels.VOLUMETRIC_BOTTLE
+            Material.GLOWSTONE_DUST -> 1  //ItemModels.SQUARE_BOTTLE
+            Material.GLOW_BERRIES -> 1  //ItemModels.SQUARE_BOTTLE
+            Material.HONEY_BOTTLE -> 1  //ItemModels.VOLUMETRIC_BOTTLE
+            Material.PRISMARINE_CRYSTALS -> 1  //ItemModels.VIAL_CHARGE_1
             else -> null
         }
         // Get Result from Ingredient

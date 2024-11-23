@@ -12,7 +12,7 @@ class OdysseyPotion(
     material: Material,
     customName: String,
     lore: List<Component>? = null,
-    customModel: Int? = null,
+    customModel: String = "alchemy_potion",
     internal val potionEffects: List<PotionEffect>? = null,
     internal val potionColor: Color? = null,
     internal val isOdysseyEffect: Boolean = false,
@@ -23,5 +23,4 @@ class OdysseyPotion(
     itemName = name,
     overrideMaterial = material,
     customName = customName,
-    lore = lore,
-    customModel = customModel)
+    lore = lore)

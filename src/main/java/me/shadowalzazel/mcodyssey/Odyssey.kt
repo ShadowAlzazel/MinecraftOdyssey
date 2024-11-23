@@ -135,7 +135,7 @@ class Odyssey : JavaPlugin() {
             DragonListeners,
             SnifferListeners,
             ArtisanListeners,
-            RunesherdListeners,
+            GlyphListeners,
             EffectListeners,
             PetListener,
             InventoryListeners,

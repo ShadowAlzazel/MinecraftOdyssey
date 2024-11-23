@@ -13,7 +13,6 @@ open class OdysseyItem(
     val itemName: String,
     val overrideMaterial: Material,
     val customName: String,
-    val customModel: Int? = null,
     val lore: List<Component>? = null,
     val maxStackSize: Int? = null,
     val maxDamage: Int? = null
@@ -27,7 +26,8 @@ open class OdysseyItem(
             meta.displayName(Component.text(customName).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))
             meta.itemName(Component.text(this.itemName))
             // Optional Variables
-            if (customModel != null) { meta.setCustomModelData(customModel) }
+            //if (customModel != null) { meta.setCustomModelData(customModel) }
+            meta.itemModel = DataKeys.newKey(itemName)
             if (lore != null) { meta.lore(lore) }
             if (maxDamage != null && maxStackSize == 1) {
                 (meta as Damageable).setMaxStackSize(1)

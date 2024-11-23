@@ -3,7 +3,6 @@ package me.shadowalzazel.mcodyssey.common.items.custom
 import me.shadowalzazel.mcodyssey.common.alchemy.PotionEffectsManager
 import me.shadowalzazel.mcodyssey.common.alchemy.base.OdysseyPotion
 import me.shadowalzazel.mcodyssey.util.constants.EffectTags
-import me.shadowalzazel.mcodyssey.util.constants.ItemModels
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import me.shadowalzazel.mcodyssey.common.effects.EffectColors
 import net.kyori.adventure.text.Component
@@ -56,7 +55,7 @@ object Potions : PotionEffectsManager {
         name = "crystalline_potion",
         material = Material.POTION,
         customName =  "Crystalline Potion",
-        customModel = ItemModels.PEARSHAPE_BOTTLE,
+        customModel = "pearshape",
         lore = listOf(Component.text("A crystalline liquid...", TextColor.color(170, 0, 255)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
         potionEffects = listOf(PotionEffect(PotionEffectType.LUCK, 0 , 0)),
         potionColor = Color.fromRGB(147, 84, 255))
@@ -65,7 +64,7 @@ object Potions : PotionEffectsManager {
         name = "potion_of_levitation",
         material = Material.POTION,
         customName = "Potion of Levitation",
-        customModel = ItemModels.PEARSHAPE_BOTTLE,
+        customModel = "pearshape",
         potionEffects = listOf(PotionEffect(PotionEffectType.LEVITATION, 30 * 20 , 0)),
         potionColor = Color.fromRGB(85, 255, 255))
 
@@ -73,7 +72,7 @@ object Potions : PotionEffectsManager {
         name = "potion_of_withering",
         material = Material.POTION,
         customName = "Potion of Decay",
-        customModel = ItemModels.PEARSHAPE_BOTTLE,
+        customModel = "pearshape",
         potionEffects = listOf(PotionEffect(PotionEffectType.WITHER, 30 * 20 , 0)),
         potionColor = Color.fromRGB(55, 55, 55))
 
@@ -81,7 +80,7 @@ object Potions : PotionEffectsManager {
         name = "potion_of_luck",
         material = Material.POTION,
         customName = "Potion of Luck",
-        customModel = ItemModels.PEARSHAPE_BOTTLE,
+        customModel = "pearshape",
         potionEffects = listOf(PotionEffect(PotionEffectType.LUCK, 5 * 60 * 20 , 0)),
         potionColor = Color.fromRGB(255, 157, 0))
 
@@ -89,7 +88,7 @@ object Potions : PotionEffectsManager {
         name = "potion_of_resistance",
         material = Material.POTION,
         customName = "Potion of Resistance",
-        customModel = ItemModels.PEARSHAPE_BOTTLE,
+        customModel = "pearshape",
         potionEffects = listOf(PotionEffect(PotionEffectType.RESISTANCE, 3 * 60 * 20 , 0)),
         potionColor = Color.fromRGB(65, 97, 122))
 
@@ -97,7 +96,7 @@ object Potions : PotionEffectsManager {
         name = "potion_of_resistance",
         material = Material.POTION,
         customName = "Potion of Haste",
-        customModel = ItemModels.PEARSHAPE_BOTTLE,
+        customModel = "pearshape",
         potionEffects = listOf(PotionEffect(PotionEffectType.HASTE, 3 * 60 * 20 , 0)),
         potionColor = Color.fromRGB(255, 233, 133))
 
@@ -105,7 +104,7 @@ object Potions : PotionEffectsManager {
         name = "potion_of_bioluminescence",
         material = Material.POTION,
         customName = "Potion of Bioluminescence",
-        customModel = ItemModels.PEARSHAPE_BOTTLE,
+        customModel = "pearshape",
         potionEffects = listOf(PotionEffect(PotionEffectType.GLOWING, 3 * 60 * 20 , 0)),
         potionColor = Color.fromRGB(0, 255, 179))
 
@@ -113,7 +112,7 @@ object Potions : PotionEffectsManager {
         name = "potion_of_constitution",
         material = Material.POTION,
         customName = "Potion of Constitution",
-        customModel = ItemModels.PEARSHAPE_BOTTLE,
+        customModel = "pearshape",
         potionEffects = listOf(PotionEffect(PotionEffectType.HEALTH_BOOST, 3 * 60 * 20 , 0)),
         potionColor = Color.fromRGB(209, 0, 49))
 
@@ -123,7 +122,7 @@ object Potions : PotionEffectsManager {
         name = "potion_of_stone_skin",
         material = Material.POTION,
         customName = "Potion of Stone Skin",
-        customModel = ItemModels.PEARSHAPE_BOTTLE,
+        customModel = "pearshape",
         potionEffects = listOf(
             PotionEffect(PotionEffectType.ABSORPTION, 2 * 60 * 20 , 2),
             PotionEffect(PotionEffectType.SLOWNESS, 2 * 60 * 20 , 0)),
@@ -133,7 +132,7 @@ object Potions : PotionEffectsManager {
         name = "potion_of_wrath",
         material = Material.POTION,
         customName = "Potion of Wrath",
-        customModel = ItemModels.PEARSHAPE_BOTTLE,
+        customModel = "pearshape",
         potionEffects = listOf(
             PotionEffect(PotionEffectType.STRENGTH, 2 * 60 * 20 , 2),
             PotionEffect(PotionEffectType.HUNGER, 2 * 60 * 20 , 1)),
@@ -143,7 +142,7 @@ object Potions : PotionEffectsManager {
         name = "potion_of_whiz",
         material = Material.POTION,
         customName = "Whiz Potion",
-        customModel = ItemModels.PEARSHAPE_BOTTLE,
+        customModel = "pearshape",
         potionEffects = listOf(
             PotionEffect(PotionEffectType.SPEED, 2 * 60 * 20 , 2),
             PotionEffect(PotionEffectType.HUNGER, 2 * 60 * 20 , 1),
@@ -157,7 +156,7 @@ object Potions : PotionEffectsManager {
         name = "flask_of_rot",
         material = Material.POTION,
         customName = "Flask o' Rot",
-        customModel = ItemModels.CONICAL_BOTTLE,
+        customModel = "conical",
         isOdysseyEffect = true,
         odysseyEffectTag = EffectTags.BUDDING,
         odysseyEffectTimeInTicks = 60 * 20,
@@ -168,7 +167,7 @@ object Potions : PotionEffectsManager {
         name = "flask_of_frost",
         material = Material.POTION,
         customName = "Flask o' Frost",
-        customModel = ItemModels.CONICAL_BOTTLE,
+        customModel = "conical",
         isOdysseyEffect = true,
         odysseyEffectTag = EffectTags.FREEZING,
         odysseyEffectTimeInTicks = 30 * 20,
@@ -179,7 +178,7 @@ object Potions : PotionEffectsManager {
         name = "flask_of_ablaze",
         material = Material.POTION,
         customName = "Flask o' Ablaze",
-        customModel = ItemModels.CONICAL_BOTTLE,
+        customModel = "conical",
         isOdysseyEffect = true,
         odysseyEffectTag = EffectTags.ABLAZE,
         odysseyEffectTimeInTicks = 30 * 20,
@@ -190,7 +189,7 @@ object Potions : PotionEffectsManager {
         name = "flask_of_irradiation",
         material = Material.POTION,
         customName = "Flask o' Irradiation",
-        customModel = ItemModels.CONICAL_BOTTLE,
+        customModel = "conical",
         isOdysseyEffect = true,
         odysseyEffectTag = EffectTags.IRRADIATED,
         odysseyEffectTimeInTicks = 30 * 20,
@@ -201,7 +200,7 @@ object Potions : PotionEffectsManager {
         name = "flask_of_corrosion",
         material = Material.POTION,
         customName = "Flask o' Corrosion",
-        customModel = ItemModels.CONICAL_BOTTLE,
+        customModel = "conical",
         isOdysseyEffect = true,
         odysseyEffectTag = EffectTags.CORRODING,
         odysseyEffectTimeInTicks = 30 * 20,
@@ -212,7 +211,7 @@ object Potions : PotionEffectsManager {
         name = "flask_of_miasma",
         material = Material.POTION,
         customName = "Flask o' Miasma",
-        customModel = ItemModels.CONICAL_BOTTLE,
+        customModel = "conical",
         isOdysseyEffect = true,
         odysseyEffectTag = EffectTags.MIASMA,
         odysseyEffectTimeInTicks = 30 * 20,
@@ -228,7 +227,7 @@ object Potions : PotionEffectsManager {
         name = "accursed_brew",
         material = Material.POTION,
         customName = "Accursed Brew",
-        customModel = ItemModels.ROUND_BOTTLE,
+        customModel = "round",
         isOdysseyEffect = true,
         odysseyEffectTag = EffectTags.ACCURSED,
         odysseyEffectAmplifier = 1,
@@ -238,7 +237,7 @@ object Potions : PotionEffectsManager {
         name = "bottle_of_souls",
         material = Material.POTION,
         customName = "Bottled Souls",
-        customModel = ItemModels.ROUND_BOTTLE,
+        customModel = "round",
         isOdysseyEffect = true,
         odysseyEffectTag = EffectTags.ABLAZE,
         odysseyEffectAmplifier = 1,
@@ -248,7 +247,7 @@ object Potions : PotionEffectsManager {
         name = "bottle_of_shimmer",
         material = Material.POTION,
         customName = "Bottle o' Shimmer",
-        customModel = ItemModels.DAIRYSHAPE_BOTTLE,
+        customModel = "dairyshape",
         potionEffects = listOf(
             PotionEffect(PotionEffectType.RESISTANCE, 120 * 20, 1),
             PotionEffect(PotionEffectType.STRENGTH, 120 * 20, 1),
@@ -266,7 +265,7 @@ object Potions : PotionEffectsManager {
         name = "anglers_concoction",
         material = Material.POTION,
         customName = "Angler's Concoction",
-        customModel = ItemModels.CONCOCTION_BOTTLE,
+        customModel = "concoction",
         potionEffects = listOf(
             PotionEffect(PotionEffectType.NIGHT_VISION, 3 * 60 * 20 , 0),
             PotionEffect(PotionEffectType.WATER_BREATHING, 3 * 60 * 20, 0)),
@@ -279,7 +278,7 @@ object Potions : PotionEffectsManager {
         name = "spelunkers_concoction",
         material = Material.POTION,
         customName = "Spelunker's Concoction",
-        customModel = ItemModels.CONCOCTION_BOTTLE,
+        customModel = "concoction",
         potionEffects = listOf(
             PotionEffect(PotionEffectType.HASTE, 3 * 60 * 20 , 0),
             PotionEffect(PotionEffectType.GLOWING, 3 * 60 * 20, 0)),
@@ -292,7 +291,7 @@ object Potions : PotionEffectsManager {
         name = "nether_owl_concoction",
         material = Material.POTION,
         customName = "Nether Owl Concoction",
-        customModel = ItemModels.CONCOCTION_BOTTLE,
+        customModel = "concoction",
         potionEffects = listOf(
             PotionEffect(PotionEffectType.NIGHT_VISION, 3 * 60 * 20 , 0),
             PotionEffect(PotionEffectType.FIRE_RESISTANCE, 3 * 60 * 20, 0)),
@@ -306,7 +305,7 @@ object Potions : PotionEffectsManager {
         name = "custom_concoction",
         material = Material.POTION,
         customName = "Concoction",
-        customModel = ItemModels.CONCOCTION_BOTTLE,
+        customModel = "concoction",
         potionEffects = emptyList(),
         potionColor = Color.fromRGB(185, 255, 155))
 
