@@ -3,10 +3,10 @@ package me.shadowalzazel.mcodyssey.common.listeners
 import com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent
 import kotlinx.coroutines.*
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.alchemy.PotionEffectsManager
-import me.shadowalzazel.mcodyssey.alchemy.CauldronRecipes
-import me.shadowalzazel.mcodyssey.alchemy.base.AlchemyCauldronRecipe
-import me.shadowalzazel.mcodyssey.alchemy.utility.CauldronEventSynchro
+import me.shadowalzazel.mcodyssey.common.alchemy.PotionEffectsManager
+import me.shadowalzazel.mcodyssey.common.alchemy.CauldronRecipes
+import me.shadowalzazel.mcodyssey.common.alchemy.base.AlchemyCauldronRecipe
+import me.shadowalzazel.mcodyssey.common.alchemy.utility.CauldronEventSynchro
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.util.constants.ItemModels
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags

@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.common.items.custom
 
-import me.shadowalzazel.mcodyssey.alchemy.PotionEffectsManager
-import me.shadowalzazel.mcodyssey.alchemy.base.OdysseyPotion
+import me.shadowalzazel.mcodyssey.common.alchemy.PotionEffectsManager
+import me.shadowalzazel.mcodyssey.common.alchemy.base.OdysseyPotion
 import me.shadowalzazel.mcodyssey.util.constants.EffectTags
 import me.shadowalzazel.mcodyssey.util.constants.ItemModels
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags

@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.alchemy.base
+package me.shadowalzazel.mcodyssey.common.alchemy.base
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags

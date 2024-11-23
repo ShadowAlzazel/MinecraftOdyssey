@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.alchemy.base
+package me.shadowalzazel.mcodyssey.common.alchemy.base
 
 import org.bukkit.Material
 import org.bukkit.Particle

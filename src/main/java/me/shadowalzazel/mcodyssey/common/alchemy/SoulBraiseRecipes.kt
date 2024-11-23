@@ -1,7 +1,7 @@
-package me.shadowalzazel.mcodyssey.alchemy
+package me.shadowalzazel.mcodyssey.common.alchemy
 
-import me.shadowalzazel.mcodyssey.alchemy.base.SoulBraiseRecipe
-import me.shadowalzazel.mcodyssey.alchemy.utility.BraiseBase
+import me.shadowalzazel.mcodyssey.common.alchemy.base.SoulBraiseRecipe
+import me.shadowalzazel.mcodyssey.common.alchemy.utility.BraiseBase
 import me.shadowalzazel.mcodyssey.common.items.custom.Ingredients
 import me.shadowalzazel.mcodyssey.common.items.custom.Miscellaneous
 import org.bukkit.Material

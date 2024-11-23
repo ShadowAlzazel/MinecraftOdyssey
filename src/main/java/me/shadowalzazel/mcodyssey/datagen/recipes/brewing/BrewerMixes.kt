@@ -2,7 +2,7 @@ package me.shadowalzazel.mcodyssey.datagen.recipes.brewing
 
 import io.papermc.paper.potion.PotionMix
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.alchemy.PotionEffectsManager
+import me.shadowalzazel.mcodyssey.common.alchemy.PotionEffectsManager
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack

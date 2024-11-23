@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.common.items
 
-import me.shadowalzazel.mcodyssey.util.constants.DataKeys
+import me.shadowalzazel.mcodyssey.util.DataKeys
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material

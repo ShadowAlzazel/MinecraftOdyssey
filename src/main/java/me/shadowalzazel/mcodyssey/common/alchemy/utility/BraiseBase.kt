@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.alchemy.utility
+package me.shadowalzazel.mcodyssey.common.alchemy.utility
 
 enum class BraiseBase(val blockCoords: Set<Triple<Double, Double, Double>>) {
 

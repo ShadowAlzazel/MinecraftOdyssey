@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.util.constants
 
+@Deprecated(message = "No longer used; moved to ItemModel Component")
 object ItemModels {
 
     // Sniffer Seeds

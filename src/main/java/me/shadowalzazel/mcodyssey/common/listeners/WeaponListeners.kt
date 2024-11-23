@@ -2,7 +2,7 @@ package me.shadowalzazel.mcodyssey.common.listeners
 
 import io.papermc.paper.event.entity.EntityLoadCrossbowEvent
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.alchemy.utility.ThickPotion
+import me.shadowalzazel.mcodyssey.common.alchemy.utility.ThickPotion
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags.getIntTag
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags.setIntTag

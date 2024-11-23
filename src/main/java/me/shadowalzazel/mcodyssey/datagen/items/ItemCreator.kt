@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.datagen.items
 
-import me.shadowalzazel.mcodyssey.util.constants.DataKeys
+import me.shadowalzazel.mcodyssey.util.DataKeys
 import me.shadowalzazel.mcodyssey.util.EnchantabilityHandler
 import me.shadowalzazel.mcodyssey.common.items.custom.Potions.createPotionStack
 import me.shadowalzazel.mcodyssey.common.items.custom.Runesherds.createPresetSherdStack

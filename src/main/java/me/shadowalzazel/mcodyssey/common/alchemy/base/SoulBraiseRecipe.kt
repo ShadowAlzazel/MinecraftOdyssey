@@ -1,6 +1,6 @@
-package me.shadowalzazel.mcodyssey.alchemy.base
+package me.shadowalzazel.mcodyssey.common.alchemy.base
 
-import me.shadowalzazel.mcodyssey.alchemy.utility.BraiseBase
+import me.shadowalzazel.mcodyssey.common.alchemy.utility.BraiseBase
 import me.shadowalzazel.mcodyssey.common.items.OdysseyItem
 import me.shadowalzazel.mcodyssey.common.mobs.base.OdysseyMob
 import me.shadowalzazel.mcodyssey.util.DataTagManager
