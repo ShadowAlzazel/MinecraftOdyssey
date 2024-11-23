@@ -1,6 +1,5 @@
 package me.shadowalzazel.mcodyssey.common.items.custom
 
-import me.shadowalzazel.mcodyssey.util.constants.ItemModels
 import me.shadowalzazel.mcodyssey.common.items.OdysseyItem
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -16,8 +15,7 @@ object Exotics  {
         lore = listOf(
             Component.text("A weapon commissioned to launch kinetic projectiles at stellar speed.",
                 TextColor.color(39, 79, 152)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        overrideMaterial = Material.BOW,
-        customModel = ItemModels.KINETIC_BLASTER
+        overrideMaterial = Material.BOW
     )
     /*
         enchantments = mutableMapOf(
@@ -34,8 +32,7 @@ object Exotics  {
         lore = listOf(
             Component.text("A knight is always vulnerable from behind or when in bed.",
                 TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        overrideMaterial = Material.IRON_SWORD,
-        customModel = ItemModels.KNIGHT_BREAKER
+        overrideMaterial = Material.IRON_SWORD
     )
 
     val SHOGUN_LIGHTNING  = OdysseyItem(
@@ -44,8 +41,7 @@ object Exotics  {
         lore = listOf(
             Component.text("No blade ever retreats from battle, unless its lightning.",
                 TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        overrideMaterial = Material.IRON_SWORD,
-        customModel = ItemModels.SHOGUN_LIGHTNING
+        overrideMaterial = Material.IRON_SWORD
     )
 
     val ABZU_BLADE  = OdysseyItem(
@@ -54,8 +50,7 @@ object Exotics  {
         lore = listOf(
             Component.text("A dark yet living blade meant to destroy foes or friends...",
                 TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        overrideMaterial = Material.IRON_SWORD,
-        customModel = ItemModels.ABZU_BLADE
+        overrideMaterial = Material.IRON_SWORD
     )
 
     val EXCALIBUR  = OdysseyItem(
@@ -64,8 +59,7 @@ object Exotics  {
         lore = listOf(
             Component.text("This master crafted sword is waiting for a worthy owner...",
                 TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        overrideMaterial = Material.IRON_SWORD,
-        customModel = ItemModels.EXCALIBUR
+        overrideMaterial = Material.IRON_SWORD
     )
 
     val FROST_FANG  = OdysseyItem(
@@ -74,8 +68,7 @@ object Exotics  {
         lore = listOf(
             Component.text("tooth and teeth can also be turned into ornate weapons.",
                 TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        overrideMaterial = Material.IRON_SWORD,
-        customModel = ItemModels.FROST_FANG
+        overrideMaterial = Material.IRON_SWORD
     )
 
     val ELUCIDATOR  = OdysseyItem(
@@ -84,8 +77,7 @@ object Exotics  {
         lore = listOf(
             Component.text("The sky castle was bested by this one...",
                 TextColor.color(170, 170, 170)).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)),
-        overrideMaterial = Material.IRON_SWORD,
-        customModel = ItemModels.ELUCIDATOR
+        overrideMaterial = Material.IRON_SWORD
     )
 
 

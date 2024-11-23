@@ -9,7 +9,7 @@ import org.bukkit.attribute.Attribute
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
 
-internal interface RunesherdManager : AttributeManager, DataTagManager {
+internal interface GlyphManager : AttributeManager, DataTagManager {
 
     // MAYBE FOR MAKING HIGHER QUALITY RUNES
     // use pots
@@ -43,26 +43,26 @@ internal interface RunesherdManager : AttributeManager, DataTagManager {
     }
 
     fun ItemStack.addRuneAugmentTag() {
-        addTag(ItemDataTags.HAS_RUNE_AUGMENT)
+        addTag(ItemDataTags.HAS_GLYPH_AUGMENT)
     }
 
     fun ItemStack.hasRuneAugmentTag(): Boolean {
-        return hasTag(ItemDataTags.HAS_RUNE_AUGMENT)
+        return hasTag(ItemDataTags.HAS_GLYPH_AUGMENT)
     }
 
     fun ItemStack.addRunewareTag() {
-        addTag(ItemDataTags.IS_RUNEWARE)
+        addTag(ItemDataTags.IS_GLYPHWARE)
     }
 
-    fun ItemStack.hasRunewareTag(): Boolean {
-        return hasTag(ItemDataTags.IS_RUNEWARE)
+    fun ItemStack.hasGlyphwareTag(): Boolean {
+        return hasTag(ItemDataTags.IS_GLYPHWARE)
     }
 
-    fun ItemStack.setRuneAugmentCount(amount: Int) {
+    fun ItemStack.setGlyphAugmentCount(amount: Int) {
         setIntTag(ItemDataTags.RUNEWARE_AUGMENT_COUNT, amount)
     }
 
-    fun ItemStack.getRuneAugmentCount(): Int {
+    fun ItemStack.getGlyphAugmentCount(): Int {
         return getIntTag(ItemDataTags.RUNEWARE_AUGMENT_COUNT) ?: 0
     }
 
@@ -134,7 +134,7 @@ internal interface RunesherdManager : AttributeManager, DataTagManager {
         if (!runesherd.hasRunesherdTag()) return null
         // Runeware can have up to 3 runesherd augments
         val equipment = item.clone()
-        val itemIsRuneware = equipment.hasRunewareTag()
+        val itemIsRuneware = equipment.hasGlyphwareTag()
         if (equipment.hasRuneAugmentTag() && !itemIsRuneware) return null
         if (!runesherd.itemMeta.hasAttributeModifiers()) return null
         val runeName = runesherd.getRuneIdentifier() ?: return null // ItemName
@@ -156,7 +156,7 @@ internal interface RunesherdManager : AttributeManager, DataTagManager {
         var previousValue = 0.0
         // Add to runeware more
         if (itemIsRuneware) {
-            val runeCount = equipment.getRuneAugmentCount()
+            val runeCount = equipment.getGlyphAugmentCount()
             if (runeCount >= 3) return null // CAN ONLY ADD 3
             // Find and remove attribute
             val equipmentModifiers = equipment.itemMeta.attributeModifiers?.get(runeAttribute)
@@ -168,7 +168,7 @@ internal interface RunesherdManager : AttributeManager, DataTagManager {
                     it.removeAttributeModifier(runeAttribute, matchingModifier)
                 }
             }
-            equipment.setRuneAugmentCount(runeCount + 1)
+            equipment.setGlyphAugmentCount(runeCount + 1)
         }
         // Check sherd slot type
         val itemGroups = getMaterialSlotGroups(equipment.type)

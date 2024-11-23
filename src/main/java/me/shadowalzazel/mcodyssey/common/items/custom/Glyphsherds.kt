@@ -1,12 +1,11 @@
 package me.shadowalzazel.mcodyssey.common.items.custom
 
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
-import me.shadowalzazel.mcodyssey.util.constants.ItemModels
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import me.shadowalzazel.mcodyssey.common.items.OdysseyItem
-import me.shadowalzazel.mcodyssey.util.RunesherdManager
+import me.shadowalzazel.mcodyssey.util.GlyphManager
 import me.shadowalzazel.mcodyssey.util.SpaceRuneManager
-import me.shadowalzazel.mcodyssey.common.items.OdysseyRunesherd
+import me.shadowalzazel.mcodyssey.common.items.Glyphsherd
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
@@ -16,12 +15,12 @@ import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
 
 @Suppress("UnstableApiUsage")
-object Runesherds : RunesherdManager, SpaceRuneManager {
+object Glyphsherds : GlyphManager, SpaceRuneManager {
 
     private val GRAY = TextColor.color(170, 170, 170)
     private val RUNEVOID = TextColor.color(85, 67 ,129)
 
-    fun OdysseyRunesherd.createPresetSherdStack(amount: Int = 1): ItemStack {
+    fun Glyphsherd.createPresetSherdStack(amount: Int = 1): ItemStack {
         val item = this.newItemStack(amount).also {
             it.addRunesherdTag()
         }
@@ -33,7 +32,7 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
         return item
     }
 
-    fun OdysseyRunesherd.createLootSherdStack(amount: Int = 1, bonus: Double = 0.0): ItemStack {
+    fun Glyphsherd.createLootSherdStack(amount: Int = 1, bonus: Double = 0.0): ItemStack {
         val item = this.newItemStack(amount).also {
             it.addRunesherdTag()
         }
@@ -75,40 +74,40 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
     /*-----------------------------------------------------------------------------------------------*/
 
     // ORB
-    val FRAGMENTED_ORB = OdysseyItem("fragmented_orb", Material.CLAY_BALL, "Fragmented Orb", ItemModels.FRAGMENTED_ORB,
-        lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
-    val GLAZED_RUNE_ORB = OdysseyItem("glazed_rune_orb", Material.BRICK, "Glazed Rune Orb", ItemModels.GLAZED_RUNE_ORB,
-        lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+    val CLAY_ORB = OdysseyItem("clay_orb", Material.CLAY_BALL, "Clay Orb",
+        lore = listOf(Component.text("An item capable of holding 3 glyphs.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+    val GLAZED_ORB = OdysseyItem("glazed_orb", Material.BRICK, "Glazed Orb",
+        lore = listOf(Component.text("An item capable of holding 3 glyphs.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
     // TOTEM
-    val CLAY_TOTEM = OdysseyItem("clay_totem", Material.CLAY_BALL, "Clay Totem", ItemModels.CLAY_TOTEM,
-        lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
-    val GLAZED_RUNE_TOTEM = OdysseyItem("glazed_rune_totem", Material.BRICK, "Glazed Rune Totem", ItemModels.GLAZED_RUNE_TOTEM,
-        lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+    val CLAY_TOTEM = OdysseyItem("clay_totem", Material.CLAY_BALL, "Clay Totem",
+        lore = listOf(Component.text("An item capable of holding 3 glyphs.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+    val GLAZED_TOTEM = OdysseyItem("glazed_totem", Material.BRICK, "Glazed Totem",
+        lore = listOf(Component.text("An item capable of holding 3 glyphs.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
     // SKULL
-    val CLAY_SKULL = OdysseyItem("clay_skull", Material.CLAY_BALL, "Clay Skull", ItemModels.CLAY_SKULL,
-        lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
-    val GLAZED_RUNE_SKULL = OdysseyItem("glazed_skull", Material.BRICK, "Glazed Rune Skull", ItemModels.GLAZED_RUNE_SKULL,
-        lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+    val CLAY_SKULL = OdysseyItem("clay_skull", Material.CLAY_BALL, "Clay Skull",
+        lore = listOf(Component.text("An item capable of holding 3 glyphs.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+    val GLAZED_SKULL = OdysseyItem("glazed_skull", Material.BRICK, "Glazed Skull",
+        lore = listOf(Component.text("An item capable of holding 3 glyphs.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
     // DOWEL
-    val CLAY_DOWEL = OdysseyItem("clay_dowel", Material.CLAY_BALL, "Clay Dowel", ItemModels.CLAY_DOWEL,
-        lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
-    val GLAZED_RUNE_DOWEL = OdysseyItem("glazed_rune_dowel", Material.BRICK, "Glazed Rune Dowel", ItemModels.GLAZED_RUNE_DOWEL,
-        lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+    val CLAY_DOWEL = OdysseyItem("clay_dowel", Material.CLAY_BALL, "Clay Dowel",
+        lore = listOf(Component.text("An item capable of holding 3 glyphs.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+    val GLAZED_DOWEL = OdysseyItem("glazed_dowel", Material.BRICK, "Glazed Dowel",
+        lore = listOf(Component.text("An item capable of holding 3 glyphs.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
     // RODS
-    val FRAGMENTED_RODS = OdysseyItem("fragmented_rods", Material.CLAY_BALL, "Fragmented Rods", ItemModels.FRAGMENTED_RODS,
-        lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
-    val GLAZED_RUNE_RODS = OdysseyItem("glazed_rune_rods", Material.BRICK, "Glazed Rune Rods", ItemModels.GLAZED_RUNE_RODS,
-        lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+    val CLAY_RODS = OdysseyItem("clay_rods", Material.CLAY_BALL, "Clay Rods",
+        lore = listOf(Component.text("An item capable of holding 3 glyphs.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+    val GLAZED_RODS = OdysseyItem("glazed_rods", Material.BRICK, "Glazed Rods",
+        lore = listOf(Component.text("An item capable of holding 3 glyphs.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
     // KEY
-    val CLAY_KEY = OdysseyItem("clay_key", Material.CLAY_BALL, "Clay Key", ItemModels.CLAY_KEY,
-        lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
-    val GLAZED_RUNE_KEY = OdysseyItem("glazed_rune_key", Material.BRICK, "Glazed Rune Key", ItemModels.GLAZED_RUNE_KEY,
-        lore = listOf(Component.text("An runeware capable of holding 3 runesherds.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+    val CLAY_KEY = OdysseyItem("clay_key", Material.CLAY_BALL, "Clay Key",
+        lore = listOf(Component.text("An item capable of holding 3 glyphs.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
+    val GLAZED_KEY = OdysseyItem("glazed_key", Material.BRICK, "Glazed Key",
+        lore = listOf(Component.text("An item capable of holding 3 glyphs.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
 
 
@@ -123,131 +122,118 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
 
     /*-----------------------------------------------------------------------------------------------*/
 
-    val ASSAULT_RUNESHERD = OdysseyRunesherd(
+    val ASSAULT_RUNESHERD = Glyphsherd(
         itemName = "assault_runesherd",
         overrideMaterial = Material.BRICK,
         customName = "Assault Runesherd",
-        customModel = ItemModels.ASSAULT_RUNESHERD,
         attribute = Attribute.ATTACK_DAMAGE,
         value = 1.0,
         slotGroup = EquipmentSlotGroup.MAINHAND
     )
 
-    val GUARD_RUNESHERD = OdysseyRunesherd(
+    val GUARD_RUNESHERD = Glyphsherd(
         itemName = "guard_runesherd",
         overrideMaterial = Material.BRICK,
         customName = "Guard Runesherd",
-        customModel = ItemModels.GUARD_RUNESHERD,
         attribute = Attribute.ARMOR,
         value = 1.0,
         slotGroup = EquipmentSlotGroup.ARMOR
     )
 
-    val FINESSE_RUNESHERD = OdysseyRunesherd(
+    val FINESSE_RUNESHERD = Glyphsherd(
         itemName = "finesse_runesherd",
         overrideMaterial = Material.BRICK,
         customName = "Finesse Runesherd",
-        customModel = ItemModels.FINESSE_RUNESHERD,
         attribute = Attribute.ATTACK_SPEED,
         value = 0.2,
         slotGroup = EquipmentSlotGroup.MAINHAND
     )
 
-    val SWIFT_RUNESHERD = OdysseyRunesherd(
+    val SWIFT_RUNESHERD = Glyphsherd(
         itemName = "swift_runesherd",
         overrideMaterial = Material.BRICK,
         customName = "Swift Runesherd",
-        customModel = ItemModels.SWIFT_RUNESHERD,
         attribute = Attribute.MOVEMENT_SPEED,
         value = 0.03,
         slotGroup = EquipmentSlotGroup.FEET
     )
 
-    val VITALITY_RUNESHERD = OdysseyRunesherd(
+    val VITALITY_RUNESHERD = Glyphsherd(
         itemName = "vitality_runesherd",
         overrideMaterial = Material.BRICK,
         customName = "Vitality Runesherd",
-        customModel = ItemModels.VITALITY_RUNESHERD,
         attribute = Attribute.MAX_HEALTH,
         value = 2.0,
         slotGroup = EquipmentSlotGroup.ARMOR
     )
 
-    val STEADFAST_RUNESHERD = OdysseyRunesherd(
+    val STEADFAST_RUNESHERD = Glyphsherd(
         itemName = "steadfast_runesherd",
         overrideMaterial = Material.BRICK,
         customName = "Steadfast Runesherd",
-        customModel = ItemModels.STEADFAST_RUNESHERD,
         attribute = Attribute.KNOCKBACK_RESISTANCE,
         value = 0.2,
         slotGroup = EquipmentSlotGroup.ARMOR
     )
 
-    val FORCE_RUNESHERD = OdysseyRunesherd(
+    val FORCE_RUNESHERD = Glyphsherd(
         itemName = "force_runesherd",
         overrideMaterial = Material.BRICK,
         customName = "Force Runesherd",
-        customModel = ItemModels.FORCE_RUNESHERD,
         attribute = Attribute.ATTACK_KNOCKBACK,
         value = 0.5,
         slotGroup = EquipmentSlotGroup.MAINHAND
     )
 
-    val BREAK_RUNESHERD = OdysseyRunesherd(
+    val BREAK_RUNESHERD = Glyphsherd(
         itemName = "break_runesherd",
         overrideMaterial = Material.BRICK,
         customName = "Break Runesherd",
-        customModel = ItemModels.BREAK_RUNESHERD,
         attribute = Attribute.BLOCK_BREAK_SPEED,
         value = 0.5,
         slotGroup = EquipmentSlotGroup.MAINHAND
     )
 
-    val GRASP_RUNESHERD = OdysseyRunesherd(
+    val GRASP_RUNESHERD = Glyphsherd(
         itemName = "grasp_runesherd",
         overrideMaterial = Material.BRICK,
         customName = "Grasp Runesherd",
-        customModel = ItemModels.GRASP_RUNESHERD,
         attribute = Attribute.BLOCK_INTERACTION_RANGE,
         value = 1.0,
         slotGroup = EquipmentSlotGroup.MAINHAND
     )
 
-    val JUMP_RUNESHERD = OdysseyRunesherd(
+    val JUMP_RUNESHERD = Glyphsherd(
         itemName = "jump_runesherd",
         overrideMaterial = Material.BRICK,
         customName = "Jump Runesherd",
-        customModel = ItemModels.JUMP_RUNESHERD,
         attribute = Attribute.JUMP_STRENGTH,
         value = 0.3,
         slotGroup = EquipmentSlotGroup.LEGS
     )
 
-    val GRAVITY_RUNESHERD = OdysseyRunesherd(
+    val GRAVITY_RUNESHERD = Glyphsherd(
         itemName = "gravity_runesherd",
         overrideMaterial = Material.BRICK,
         customName = "Gravity Runesherd",
-        customModel = ItemModels.GRAVITY_RUNESHERD,
         attribute = Attribute.GRAVITY,
         value = -0.01,
         slotGroup = EquipmentSlotGroup.ARMOR
     )
 
-    val RANGE_RUNESHERD = OdysseyRunesherd(
+    val RANGE_RUNESHERD = Glyphsherd(
         itemName = "range_runesherd",
         overrideMaterial = Material.BRICK,
         customName = "Range Runesherd",
-        customModel = ItemModels.RANGE_RUNESHERD,
         attribute = Attribute.ENTITY_INTERACTION_RANGE,
         value = 0.5,
         slotGroup = EquipmentSlotGroup.MAINHAND
     )
 
-    val SIZE_RUNESHERD = OdysseyRunesherd(
+    val SIZE_RUNESHERD = Glyphsherd(
         itemName = "size_runesherd",
         overrideMaterial = Material.BRICK,
         customName = "Size Runesherd",
-        customModel = ItemModels.SIZE_RUNESHERD,
         attribute = Attribute.SCALE,
         value = 0.25,
         slotGroup = EquipmentSlotGroup.ARMOR
@@ -262,11 +248,11 @@ object Runesherds : RunesherdManager, SpaceRuneManager {
 
     /*-----------------------------------------------------------------------------------------------*/
 
-    val SPACERUNE_TABLET = OdysseyItem("spacerune_tablet", Material.BRICK, "Spacerune Tablet", ItemModels.SPACERUNE_TABLET,
+    val SPACERUNE_TABLET = OdysseyItem("spacerune_tablet", Material.BRICK, "Spacerune Tablet",
         lore = listOf(Component.text("A tablet inscribed with spatial movement transformations.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
 
-    val SPACERUNE_SCROLL = OdysseyItem("spacerune_tablet", Material.BRICK, "Spacerune Tablet", ItemModels.SPACERUNE_TABLET,
+    val SPACERUNE_SCROLL = OdysseyItem("spacerune_tablet", Material.BRICK, "Spacerune Tablet",
         lore = listOf(Component.text("A tablet inscribed with spatial movement transformations.", RUNEVOID).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)))
 
 }

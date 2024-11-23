@@ -6,11 +6,10 @@ import org.bukkit.attribute.Attribute
 import org.bukkit.inventory.EquipmentSlotGroup
 
 @Suppress("UnstableApiUsage")
-class OdysseyRunesherd(
+class Glyphsherd(
     itemName: String,
     overrideMaterial: Material,
     customName: String,
-    customModel: Int? = null,
     lore: List<Component>? = null,
     internal val attribute: Attribute? = null,
     internal val value: Double = 0.0,
@@ -19,5 +18,4 @@ class OdysseyRunesherd(
     itemName = itemName,
     overrideMaterial = overrideMaterial,
     customName = customName,
-    lore = lore,
-    customModel = customModel)
+    lore = lore)

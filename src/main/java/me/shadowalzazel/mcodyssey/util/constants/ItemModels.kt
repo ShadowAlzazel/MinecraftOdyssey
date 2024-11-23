@@ -60,7 +60,7 @@ object ItemModels {
     const val TOME_OF_EXTRACTION: Int = 6906078 // Removes one enchantment and coverts it to a book
     const val TOME_OF_IMITATION: Int = 6906079 // Copies 1 enchant from a book
 
-    // Runesherds
+    // Glyphsherds
     const val ASSAULT_RUNESHERD: Int = 6901453 // Attack Damage
     const val GUARD_RUNESHERD: Int = 6901454 // Armor
     const val FINESSE_RUNESHERD: Int = 6901455 // Attack Speed

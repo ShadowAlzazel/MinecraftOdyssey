@@ -3,7 +3,7 @@ package me.shadowalzazel.mcodyssey.datagen.items
 import me.shadowalzazel.mcodyssey.util.DataKeys
 import me.shadowalzazel.mcodyssey.util.EnchantabilityHandler
 import me.shadowalzazel.mcodyssey.common.items.custom.Potions.createPotionStack
-import me.shadowalzazel.mcodyssey.common.items.custom.Runesherds.createPresetSherdStack
+import me.shadowalzazel.mcodyssey.common.items.custom.Glyphsherds.createPresetSherdStack
 import me.shadowalzazel.mcodyssey.common.items.OdysseyItem
 import me.shadowalzazel.mcodyssey.common.items.custom.*
 import net.kyori.adventure.text.Component
@@ -23,7 +23,7 @@ interface ItemCreator : ExoticCreator, EnchantabilityHandler {
         val itemStack = ItemStack(overrideMaterial, amount).also {
             // Set Variables
             val meta  = it.itemMeta
-            meta.setCustomModelData(customModel)
+            meta.itemModel = DataKeys.newKey(itemName)
             meta.persistentDataContainer.set(DataKeys.ITEM_KEY, PersistentDataType.STRING, itemName) // Change for 1.20.5 to itemName component
             meta.displayName(Component.text(customName).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))
             meta.itemName(Component.text(this.itemName))
@@ -123,7 +123,7 @@ interface ItemCreator : ExoticCreator, EnchantabilityHandler {
             "excalibur" -> Exotics.EXCALIBUR.createExoticWeapon()
             "frost_fang" -> Exotics.FROST_FANG.createExoticWeapon()
             "elucidator" -> Exotics.ELUCIDATOR.createExoticWeapon()
-            "guard_runesherd" -> Runesherds.GUARD_RUNESHERD.createPresetSherdStack(amount)
+            "guard_runesherd" -> Glyphsherds.GUARD_RUNESHERD.createPresetSherdStack(amount)
             else -> null
         }
     }

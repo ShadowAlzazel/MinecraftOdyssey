@@ -2,7 +2,6 @@ package me.shadowalzazel.mcodyssey.common.listeners
 
 import com.destroystokyo.paper.event.inventory.PrepareResultEvent
 import me.shadowalzazel.mcodyssey.util.TomeManager
-import me.shadowalzazel.mcodyssey.util.constants.ItemModels
 import me.shadowalzazel.mcodyssey.util.constants.CustomColors
 import me.shadowalzazel.mcodyssey.common.items.custom.Miscellaneous
 import me.shadowalzazel.mcodyssey.common.items.OdysseyItem
@@ -57,7 +56,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         val second = event.inventory.secondItem
         val viewers = event.viewers
         val result = event.result ?: return
-        val anvil = event.inventory
+        val anvilView = event.view
         val resultIsRepairable = result.itemMeta is Repairable
         // Create Variables to detect conditions
         // CHANGE Anvil cost from being cringe mechanic
@@ -72,7 +71,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
                     bookPoints += getEnchantabilityCost(Pair(e.key, e.value))
                 }
                 // Reset to prevent cringe
-                anvil.repairCost = bookPoints // Current Anvil Cost
+                anvilView.repairCost = bookPoints // Current Anvil Cost
                 resultMeta.repairCost = result.enchantments.size + 1
             }
             result.itemMeta = resultMeta
@@ -86,7 +85,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
                 val cost = pointDiff + result.enchantments.size
                 val resultMeta = result.itemMeta as Repairable
                 // Set Mew Combine Cost
-                anvil.repairCost = cost
+                anvilView.repairCost = cost
                 resultMeta.repairCost = cost
                 result.itemMeta = resultMeta
             }
@@ -95,7 +94,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
             val resultMeta = result.itemMeta as Repairable
             val cost = result.enchantments.size + 1
             // New Cost
-            anvil.repairCost = cost
+            anvilView.repairCost = cost
             resultMeta.repairCost = cost
             result.itemMeta = resultMeta
         }
@@ -113,7 +112,7 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
         }
         // IF empty name
         if (second == null) {
-            anvil.repairCost = 1
+            anvilView.repairCost = 1
         }
     }
 
@@ -242,7 +241,9 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
 
     /*-----------------------------------------------------------------------------------------------*/
     private fun enchantingBookHandler(event: EnchantItemEvent) {
+        /*
         when (event.item.itemMeta.customModelData) {
+
             ItemModels.VOLUME_OF_BLUNTING -> {
                 event.item.enchantments.filter { it.key.canEnchantItem(ItemStack(Material.WOODEN_SWORD, 1)) }
             }
@@ -266,6 +267,17 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
             }
             ItemModels.ARCANE_BOOK -> {
                 arcaneBookHandler(event)
+            }
+        }
+
+         */
+        val itemID = event.item.getItemIdentifier()
+        when (itemID) {
+            "arcane_book" -> {
+                arcaneBookHandler(event)
+            }
+            "blank_tome" -> {
+                enchantingTomeHandler(event)
             }
         }
     }

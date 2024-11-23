@@ -1,6 +1,5 @@
 package me.shadowalzazel.mcodyssey.common.items
 
-import me.shadowalzazel.mcodyssey.common.items.OdysseyItem
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
@@ -13,13 +12,11 @@ class OdysseyFood(
     private val saturation: Float,
     private val nutrition: Int,
     private val eatTime: Float,
-    customModel: Int? = null,
     lore: List<Component>? = null)
     : OdysseyItem(
     itemName,
     overrideMaterial,
     customName,
-    customModel,
     lore
 ) {
 
