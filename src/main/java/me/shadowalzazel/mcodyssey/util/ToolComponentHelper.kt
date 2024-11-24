@@ -7,12 +7,12 @@ import org.bukkit.Tag
 import org.bukkit.inventory.meta.components.ToolComponent
 
 @Suppress("UnstableApiUsage")
-interface ToolMiningManager {
+interface ToolComponentHelper {
 
     fun getTypeMineableTags(toolName: String): Tag<Material>? {
         return when(toolName) {
             "pickaxe", "warhammer" -> Tag.MINEABLE_PICKAXE
-            "axe", "longaxe", "poleaxe" -> Tag.MINEABLE_AXE
+            "axe", "longaxe", "poleaxe", "glaive" -> Tag.MINEABLE_AXE
             "shovel", "spear", "halberd", "lance" -> Tag.MINEABLE_SHOVEL
             "hoe", "scythe" -> Tag.MINEABLE_HOE
             else -> null

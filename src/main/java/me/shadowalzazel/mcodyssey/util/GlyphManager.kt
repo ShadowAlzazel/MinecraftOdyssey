@@ -42,7 +42,7 @@ internal interface GlyphManager : AttributeManager, DataTagManager {
         return null
     }
 
-    fun ItemStack.addRuneAugmentTag() {
+    fun ItemStack.addGlyphAugmentTag() {
         addTag(ItemDataTags.HAS_GLYPH_AUGMENT)
     }
 
@@ -218,7 +218,7 @@ internal interface GlyphManager : AttributeManager, DataTagManager {
         return equipment.apply {
             addRuneModifier(runeAttribute, totalValue, fullAttributeName, finalGroup)
             if (!equipment.hasRuneAugmentTag()) {
-                equipment.addRuneAugmentTag()
+                equipment.addGlyphAugmentTag()
             }
         }
     }

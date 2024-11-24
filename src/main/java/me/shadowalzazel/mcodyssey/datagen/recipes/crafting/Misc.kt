@@ -5,7 +5,7 @@ import me.shadowalzazel.mcodyssey.common.items.custom.Equipment
 import me.shadowalzazel.mcodyssey.common.items.custom.Ingredients
 import me.shadowalzazel.mcodyssey.common.items.custom.Miscellaneous
 import me.shadowalzazel.mcodyssey.common.items.custom.Glyphsherds
-import me.shadowalzazel.mcodyssey.common.items.custom.Glyphsherds.createRuneware
+import me.shadowalzazel.mcodyssey.common.items.custom.Glyphsherds.createGlyphicItem
 import me.shadowalzazel.mcodyssey.datagen.items.ItemCreator
 import me.shadowalzazel.mcodyssey.datagen.recipes.ChoiceManager
 import me.shadowalzazel.mcodyssey.datagen.recipes.creators.BlazingRocketsCreator
@@ -52,7 +52,7 @@ class Misc : ChoiceManager, ItemCreator {
     /*-----------------------------------------------------------------------------------------------*/
     // Runeware
     private fun fragmentedOrbRecipe(): ShapedRecipe {
-        val result = Glyphsherds.CLAY_ORB.createRuneware(1)
+        val result = Glyphsherds.CLAY_ORB.createGlyphicItem(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "fragmented_orb"), result).apply {
             shape(" C ", "CFC", " C ")
             setIngredient('C', Material.CLAY_BALL)
@@ -62,7 +62,7 @@ class Misc : ChoiceManager, ItemCreator {
     }
 
     private fun clayTotemRecipe(): ShapedRecipe {
-        val result = Glyphsherds.CLAY_TOTEM.createRuneware(1)
+        val result = Glyphsherds.CLAY_TOTEM.createGlyphicItem(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "clay_totem"), result).apply {
             shape(" L ", "CCC", " C ")
             setIngredient('C', Material.CLAY_BALL)
@@ -72,7 +72,7 @@ class Misc : ChoiceManager, ItemCreator {
     }
 
     private fun claySkullRecipe(): ShapedRecipe {
-        val result = Glyphsherds.CLAY_SKULL.createRuneware(1)
+        val result = Glyphsherds.CLAY_SKULL.createGlyphicItem(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "clay_skull"), result).apply {
             shape("   ", "LCL", "CCC")
             setIngredient('C', Material.CLAY_BALL)
@@ -82,7 +82,7 @@ class Misc : ChoiceManager, ItemCreator {
     }
 
     private fun clayDowelRecipe(): ShapedRecipe {
-        val result = Glyphsherds.CLAY_DOWEL.createRuneware(1)
+        val result = Glyphsherds.CLAY_DOWEL.createGlyphicItem(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "clay_dowel"), result).apply {
             shape("  C", " L ", "C  ")
             setIngredient('C', Material.CLAY_BALL)
@@ -92,7 +92,7 @@ class Misc : ChoiceManager, ItemCreator {
     }
 
     private fun fragmentedRodsRecipe(): ShapedRecipe {
-        val result = Glyphsherds.CLAY_RODS.createRuneware(1)
+        val result = Glyphsherds.CLAY_RODS.createGlyphicItem(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "fragmented_rods"), result).apply {
             shape("F F", "CFC", " C ")
             setIngredient('C', Material.CLAY_BALL)
@@ -102,7 +102,7 @@ class Misc : ChoiceManager, ItemCreator {
     }
 
     private fun clayKeyRecipe(): ShapedRecipe {
-        val result = Glyphsherds.CLAY_KEY.createRuneware(1)
+        val result = Glyphsherds.CLAY_KEY.createGlyphicItem(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "clay_key"), result).apply {
             shape("L ", "C ", "CC")
             setIngredient('C', Material.CLAY_BALL)

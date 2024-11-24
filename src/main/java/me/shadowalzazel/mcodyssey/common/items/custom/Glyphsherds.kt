@@ -52,7 +52,7 @@ object Glyphsherds : GlyphManager, SpaceRuneManager {
         return item
     }
 
-    fun OdysseyItem.createRuneware(amount: Int = 1): ItemStack {
+    fun OdysseyItem.createGlyphicItem(amount: Int = 1): ItemStack {
         val item = this.newItemStack(amount).also {
             it.addRunewareTag()
             //val newMeta = it.itemMeta // One stack size?
