@@ -3,8 +3,8 @@ package me.shadowalzazel.mcodyssey
 import me.shadowalzazel.mcodyssey.bosses.BossManager
 import me.shadowalzazel.mcodyssey.bosses.hog_rider.HogRiderListeners
 import me.shadowalzazel.mcodyssey.bosses.the_ambassador.AmbassadorListeners
-import me.shadowalzazel.mcodyssey.commands.admin.*
-import me.shadowalzazel.mcodyssey.commands.spells.PlaceFeatureArchaicSeed
+import me.shadowalzazel.mcodyssey.server.commands.admin.*
+import me.shadowalzazel.mcodyssey.server.commands.spells.PlaceFeatureArchaicSeed
 import me.shadowalzazel.mcodyssey.common.listeners.*
 import me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners.*
 import me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners.OtherListeners
@@ -92,11 +92,11 @@ class Odyssey : JavaPlugin() {
         // Enable Enchants
         logger.info("Enabling Enchantments...")
         /*
-        println(OdysseyEnchantments.meleeSet)
-        OdysseyEnchantments.meleeSet.forEach {
-            println(it)
-        }
+        UNUSED
          */
+
+        //logger.info("Testing...")
+        //println("Item; ${LootTableManager.getMinecraftLoot("chests/bastion_treasure")}")
 
         // Register Recipes
         logger.info("Registering Recipes...")

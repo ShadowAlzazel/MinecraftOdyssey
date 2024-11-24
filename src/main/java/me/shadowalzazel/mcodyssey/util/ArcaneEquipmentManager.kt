@@ -3,7 +3,7 @@ package me.shadowalzazel.mcodyssey.util
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.util.constants.WeaponMaps.ARCANE_RANGES
-import me.shadowalzazel.mcodyssey.tasks.arcane_tasks.MagicMissileLauncher
+import me.shadowalzazel.mcodyssey.common.tasks.arcane_tasks.MagicMissileLauncher
 import org.bukkit.*
 import org.bukkit.entity.*
 import org.bukkit.event.player.PlayerInteractEvent
