@@ -8,7 +8,7 @@ import me.shadowalzazel.mcodyssey.common.items.custom.Exotics
 import me.shadowalzazel.mcodyssey.common.items.custom.Miscellaneous
 import me.shadowalzazel.mcodyssey.common.listeners.PetListener.addArmorAttribute
 import me.shadowalzazel.mcodyssey.common.listeners.PetListener.addHealthAttribute
-import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.GravitySingularityTask
+import me.shadowalzazel.mcodyssey.common.tasks.enchantment_tasks.GravitySingularityTask
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration

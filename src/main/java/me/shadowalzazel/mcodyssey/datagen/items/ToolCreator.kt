@@ -5,7 +5,7 @@ import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.util.DataKeys
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
-import me.shadowalzazel.mcodyssey.util.ToolMiningManager
+import me.shadowalzazel.mcodyssey.util.ToolComponentHelper
 import me.shadowalzazel.mcodyssey.common.items.ToolType
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import net.kyori.adventure.text.Component
@@ -16,7 +16,7 @@ import org.bukkit.inventory.meta.Damageable
 import org.bukkit.persistence.PersistentDataType
 
 @Suppress("UnstableApiUsage")
-class ToolCreator : AttributeManager, DataTagManager, ToolMiningManager {
+class ToolCreator : AttributeManager, DataTagManager, ToolComponentHelper {
 
     private val otherTools = listOf(ToolType.SHURIKEN)
 

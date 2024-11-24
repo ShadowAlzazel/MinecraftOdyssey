@@ -3,10 +3,9 @@
 package me.shadowalzazel.mcodyssey.common.listeners
 
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
-import me.shadowalzazel.mcodyssey.util.constants.ItemModels
 import me.shadowalzazel.mcodyssey.common.items.custom.Glyphsherds
 import me.shadowalzazel.mcodyssey.common.items.custom.Glyphsherds.createLootSherdStack
-import me.shadowalzazel.mcodyssey.common.items.custom.Glyphsherds.createRuneware
+import me.shadowalzazel.mcodyssey.common.items.custom.Glyphsherds.createGlyphicItem
 import me.shadowalzazel.mcodyssey.common.items.custom.Glyphsherds.createPresetSherdStack
 import me.shadowalzazel.mcodyssey.common.items.custom.Glyphsherds.runesherdRuinsList
 import me.shadowalzazel.mcodyssey.util.GlyphManager
@@ -123,14 +122,15 @@ object GlyphListeners : Listener, GlyphManager {
             event.isCancelled = true
             return
         }
-        val runewareStack = when (input.itemMeta.customModelData) {
-            ItemModels.CLAY_TOTEM -> { Glyphsherds.GLAZED_TOTEM.createRuneware(1) }
-            ItemModels.FRAGMENTED_ORB -> { Glyphsherds.GLAZED_ORB.createRuneware(1) }
-            ItemModels.CLAY_SKULL -> { Glyphsherds.GLAZED_SKULL.createRuneware(1) }
-            ItemModels.CLAY_DOWEL -> { Glyphsherds.GLAZED_DOWEL.createRuneware(1) }
-            ItemModels.FRAGMENTED_RODS -> { Glyphsherds.GLAZED_RODS.createRuneware(1) }
-            ItemModels.CLAY_KEY -> { Glyphsherds.GLAZED_KEY.createRuneware(1) }
-            else -> { Glyphsherds.GLAZED_ORB.createRuneware(1) }
+        val itemId = input.getRuneIdentifier()
+        val glyphicItem = when (itemId) {
+            "clay_totem" -> { Glyphsherds.GLAZED_TOTEM.createGlyphicItem(1) }
+            "clay_orb"-> { Glyphsherds.GLAZED_ORB.createGlyphicItem(1) }
+            "clay_skull"-> { Glyphsherds.GLAZED_SKULL.createGlyphicItem(1) }
+            "clay_dowel" -> { Glyphsherds.GLAZED_DOWEL.createGlyphicItem(1) }
+            "clay_rods"-> { Glyphsherds.GLAZED_RODS.createGlyphicItem(1) }
+            "clay_key" -> { Glyphsherds.GLAZED_KEY.createGlyphicItem(1) }
+            else -> { Glyphsherds.GLAZED_ORB.createGlyphicItem(1) }
         }
         // Transfer attribute modifiers to runeware
         val attributeModifiers = input.itemMeta.attributeModifiers ?: return
@@ -139,18 +139,18 @@ object GlyphListeners : Listener, GlyphManager {
             val newModifier = AttributeModifier(modifier.key, modifier.amount * 1.25, modifier.operation, EquipmentSlotGroup.HAND)
             newList.add(Pair(attributeKey, newModifier))
         }
-        runewareStack.itemMeta = runewareStack.itemMeta.also {
+        glyphicItem.itemMeta = glyphicItem.itemMeta.also {
             for (pair in newList) { it.addAttributeModifier(pair.first, pair.second) }
         }
-        runewareStack.addRuneAugmentTag()
-        runewareStack.setGlyphAugmentCount(3)
+        glyphicItem.addGlyphAugmentTag()
+        glyphicItem.setGlyphAugmentCount(3)
         // Set Result
-        event.result = runewareStack
+        event.result = glyphicItem
     }
 
 
     // For Changing unknown runesherd to Runesherd drop
-    @EventHandler(priority = EventPriority.LOW)
+    //@EventHandler(priority = EventPriority.LOW)
     fun changeRunicRuinLootTable(event: BlockDropItemEvent) {
         if (event.block.type != Material.SUSPICIOUS_GRAVEL
             && event.block.type != Material.SUSPICIOUS_SAND) return
@@ -158,7 +158,7 @@ object GlyphListeners : Listener, GlyphManager {
         val item = event.items[0]
         if (item.itemStack.type != Material.BRICK) return
         if (!item.itemStack.itemMeta.hasCustomModelData()) return
-        if (item.itemStack.itemMeta.customModelData != ItemModels.UNKNOWN_RUNESHERD) return
+        //if (item.itemStack.itemMeta.customModelData != ItemModels.UNKNOWN_RUNESHERD) return
         // Roll 70 for a preset slot, 30 for random slot
         if ((0..100).random() > 70) {
             item.itemStack = runesherdRuinsList.random().createPresetSherdStack(1)

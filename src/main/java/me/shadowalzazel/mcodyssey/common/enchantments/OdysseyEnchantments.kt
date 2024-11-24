@@ -142,7 +142,6 @@ object OdysseyEnchantments : EnchantmentsManager, RegistryTagManager {
     val VOID_JUMP: Enchantment = getRegisteredEnchant("antibonk")
 
 
-
     val MELEE_SET = setOf(
         ASPHYXIATE,
         ARCANE_CELL,

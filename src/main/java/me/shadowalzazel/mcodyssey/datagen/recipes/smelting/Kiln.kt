@@ -2,7 +2,7 @@ package me.shadowalzazel.mcodyssey.datagen.recipes.smelting
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.items.custom.Glyphsherds
-import me.shadowalzazel.mcodyssey.common.items.custom.Glyphsherds.createRuneware
+import me.shadowalzazel.mcodyssey.common.items.custom.Glyphsherds.createGlyphicItem
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.BlastingRecipe
@@ -19,7 +19,7 @@ class Kiln {
     }
 
     private fun runewareFiringRecipe(): BlastingRecipe {
-        val result: ItemStack = Glyphsherds.GLAZED_ORB.createRuneware(1) // TEMP NAME/ITEM
+        val result: ItemStack = Glyphsherds.GLAZED_ORB.createGlyphicItem(1) // TEMP NAME/ITEM
         val input = RecipeChoice.MaterialChoice(
             Material.CLAY_BALL
         )

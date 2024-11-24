@@ -30,6 +30,10 @@ interface DataTagManager {
         }
     }
 
+    fun ItemStack.getItemNameId(): String {
+        return getItemIdentifier() ?: this.type.name.lowercase()
+    }
+
     fun ItemStack.isThisItem(tag: String): Boolean {
         return this.getOdysseyTag() == tag
     }

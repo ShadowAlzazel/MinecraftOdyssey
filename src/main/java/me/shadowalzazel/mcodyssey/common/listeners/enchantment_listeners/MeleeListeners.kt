@@ -9,7 +9,7 @@ import me.shadowalzazel.mcodyssey.util.constants.EntityTags.removeTag
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags.setIntTag
 import me.shadowalzazel.mcodyssey.common.effects.EffectsManager
 import me.shadowalzazel.mcodyssey.common.items.custom.Miscellaneous.getNameId
-import me.shadowalzazel.mcodyssey.tasks.enchantment_tasks.*
+import me.shadowalzazel.mcodyssey.common.tasks.enchantment_tasks.*
 import me.shadowalzazel.mcodyssey.util.AttackHelper
 import org.bukkit.*
 import org.bukkit.attribute.Attribute

@@ -3,7 +3,7 @@ package me.shadowalzazel.mcodyssey.util
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.util.constants.WeaponMaps.ARCANE_RANGES
-import me.shadowalzazel.mcodyssey.tasks.arcane_tasks.MagicMissileLauncher
+import me.shadowalzazel.mcodyssey.common.tasks.arcane_tasks.MagicMissileLauncher
 import org.bukkit.*
 import org.bukkit.entity.*
 import org.bukkit.event.player.PlayerInteractEvent
@@ -16,7 +16,7 @@ interface ArcaneEquipmentManager {
         val player = event.player
         val offHand = player.equipment.itemInOffHand
         val mainHand = player.equipment.itemInMainHand
-        val model = offHand.itemMeta!!.customModelData
+        val model = offHand.itemMeta!!.itemModel?.key ?: return
         if (mainHand.type != Material.BOOK && mainHand.type != Material.ENCHANTED_BOOK) return
         val entity = getRayTraceEntity(player, model)
         if (entity !is LivingEntity) return
@@ -55,7 +55,7 @@ interface ArcaneEquipmentManager {
         val player = event.player
         val offHand = player.equipment.itemInOffHand
         val mainHand = player.equipment.itemInMainHand
-        val model = offHand.itemMeta!!.customModelData
+        val model = offHand.itemMeta!!.itemModel?.key ?: return
         if (mainHand.type != Material.BOOK && mainHand.type != Material.ENCHANTED_BOOK) return
         player.setCooldown(offHand.type, 3 * 20)
         if (offHand.itemMeta is Damageable) {
@@ -132,7 +132,7 @@ interface ArcaneEquipmentManager {
 
     }
 
-    private fun getRayTraceEntity(player: Player, model: Int): Entity? {
+    private fun getRayTraceEntity(player: Player, model: String): Entity? {
         val reach = ARCANE_RANGES[model] ?: return null
         val result = player.rayTraceEntities(reach.toInt()) ?: return null
         val target = result.hitEntity ?: return null
@@ -141,7 +141,7 @@ interface ArcaneEquipmentManager {
         return target
     }
 
-    private fun getRayTraceLocation(player: Player, model: Int): Location? {
+    private fun getRayTraceLocation(player: Player, model: String): Location? {
         val reach = ARCANE_RANGES[model] ?: return null
         val result = player.rayTraceBlocks(reach, FluidCollisionMode.NEVER) ?: return null
         val location = result.hitPosition.toLocation(player.world)

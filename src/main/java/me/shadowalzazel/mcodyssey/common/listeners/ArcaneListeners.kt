@@ -23,7 +23,7 @@ object ArcaneListeners: Listener, ArcaneEquipmentManager, DataTagManager {
         if (!offHand.itemMeta!!.hasCustomModelData()) return
         if (!offHand.hasOdysseyItemTag()) return
         if (player.hasCooldown(offHand.type)) return
-        val model = offHand.itemMeta!!.customModelData
+        val model = offHand.itemMeta!!.itemModel?.key ?: return
         if (ARCANE_RANGES[model] == null) return
         val mainHandBook = player.equipment.itemInOffHand
         if (!mainHandBook.hasItemMeta()) return

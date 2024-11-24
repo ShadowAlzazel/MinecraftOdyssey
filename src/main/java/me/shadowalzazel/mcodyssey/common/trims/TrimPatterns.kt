@@ -8,8 +8,8 @@ import org.bukkit.inventory.meta.trim.TrimPattern
 
 object TrimPatterns {
 
-    private val trimMaterialRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.TRIM_PATTERN)
+    private val patternRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.TRIM_PATTERN)
 
-    val IMPERIAL: TrimPattern = trimMaterialRegistry.get(NamespacedKey(Odyssey.instance, "imperial")) ?: TrimPattern.COAST
+    val IMPERIAL: TrimPattern = patternRegistry.get(NamespacedKey(Odyssey.instance, "imperial")) ?: TrimPattern.COAST
 
 }

@@ -16,7 +16,7 @@ import me.shadowalzazel.mcodyssey.util.constants.WeaponMaps.PIERCE_MAP
 import me.shadowalzazel.mcodyssey.util.constants.WeaponMaps.REACH_MAP
 import me.shadowalzazel.mcodyssey.util.constants.WeaponMaps.SWEEP_MAP
 import me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners.RangedListeners.hasEnchantment
-import me.shadowalzazel.mcodyssey.tasks.weapon_tasks.*
+import me.shadowalzazel.mcodyssey.common.tasks.weapon_tasks.*
 import me.shadowalzazel.mcodyssey.util.AttackHelper
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.*
