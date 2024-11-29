@@ -57,15 +57,6 @@ interface ItemCreator : ExoticCreator, EnchantabilityHandler {
         return newBook
     }
 
-    fun OdysseyItem.createTome() : ItemStack {
-        val tome = this.newItemStack()
-        val meta = tome.itemMeta
-        meta.displayName(
-            Component.text(customName, TextColor.color(255, 255, 85))
-        )
-        tome.itemMeta = meta
-        return tome
-    }
 
     @Suppress("UnstableApiUsage")
     fun OdysseyItem.createArmor(bonus: Double = 0.0): ItemStack {

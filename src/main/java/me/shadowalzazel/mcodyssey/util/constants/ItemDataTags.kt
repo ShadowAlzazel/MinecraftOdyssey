@@ -25,6 +25,7 @@ object ItemDataTags {
     const val IS_POTION_VIAL: String = "odyssey.is_vial" // Multiple charges of lesser potency
     const val IS_EXTENDED_PLUS: String = "odyssey.is_extended_plus"
     const val IS_UPGRADED_PLUS: String = "odyssey.is_upgraded_plus"
+    const val IS_AURA_POTION: String = "odyssey.is_aura_potion"
     const val IS_LINGERING_STICKY: String = "odyssey.is_lingering_sticky"
 
     // Weapons

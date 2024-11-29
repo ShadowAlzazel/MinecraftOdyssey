@@ -45,35 +45,9 @@ object SmithingListeners : Listener, DataTagManager {
             CUSTOM_TRIMMING.customTrimsHandler(event)
         }
         // Engraving
-        if (result?.type == Material.AMETHYST_SHARD && addition.type == Material.AMETHYST_SHARD) {
-            val isEngraved = equipment.hasTag(ItemDataTags.IS_ENGRAVED)
-            if (isEngraved) {
-                event.viewers.forEach { it.sendBarMessage("This Item Is Already Engraved!") }
-                event.result = ItemStack(Material.AIR)
-                return
-            }
-            event.result = equipment.clone().also {
-                if (it.amount > 1) it.amount = 1
-                it.addTag(ItemDataTags.IS_ENGRAVED)
-                val newLore = it.itemMeta.lore() ?: mutableListOf()
-                val pretext = when (equipment.type) {
-                    Material.POTION -> {
-                        "Brewed"
-                    }
-                    else -> {
-                        "Created"
-                    }
-                }
-                for (engraver in event.viewers) {
-                    it.addStringTag(ItemDataTags.ENGRAVED_BY, engraver.name)
-                    val engraving = Component.text("$pretext by ${engraver.name}", CustomColors.AMETHYST.color, TextDecoration.ITALIC)
-                    newLore.add(engraving)
-                }
-                it.lore(newLore)
-            }
-            return
+        else if (addition.type == Material.AMETHYST_SHARD && template.type == Material.PAPER) {
+            CUSTOM_TRIMMING.customEngraving(event)
         }
-
     }
 
 

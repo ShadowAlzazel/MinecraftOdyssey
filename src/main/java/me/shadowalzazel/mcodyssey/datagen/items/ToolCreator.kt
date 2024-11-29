@@ -18,9 +18,8 @@ import org.bukkit.persistence.PersistentDataType
 @Suppress("UnstableApiUsage")
 class ToolCreator : AttributeManager, DataTagManager, ToolComponentHelper {
 
-    private val otherTools = listOf(ToolType.SHURIKEN)
-
     fun createToolStack(material: ToolMaterial, type: ToolType, amount: Int = 1): ItemStack {
+        val otherTools = listOf(ToolType.SHURIKEN)
         val minecraftItemKey = if (type in otherTools) {
             type.itemOverrideSuf // Get item key from tool
         } else {

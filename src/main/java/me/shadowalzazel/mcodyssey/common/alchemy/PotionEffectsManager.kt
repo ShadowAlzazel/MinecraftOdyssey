@@ -24,7 +24,6 @@ import org.bukkit.potion.PotionType
 interface PotionEffectsManager : DataTagManager {
 
     /*-----------------------------------------------------------------------------------------------*/
-    // Tags
 
     fun ItemStack.hasOdysseyEffectTag(): Boolean {
         return hasTag(ItemDataTags.ODYSSEY_EFFECT_TAG) || hasTag(ItemDataTags.IS_ODYSSEY_EFFECT)
