@@ -1,5 +1,6 @@
-package me.shadowalzazel.mcodyssey.util
+package me.shadowalzazel.mcodyssey.common.enchantments
 
+import me.shadowalzazel.mcodyssey.util.EnchantabilityHandler
 import me.shadowalzazel.mcodyssey.util.constants.CustomColors
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -14,7 +15,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.inventory.meta.Repairable
 
-internal interface TomeManager : EnchantabilityHandler {
+internal interface TomeEnchanting : EnchantabilityHandler {
 
     fun tomeOfDischargeOnItem(item: ItemStack, viewers: List<HumanEntity>): ItemStack? {
         val meta = item.itemMeta

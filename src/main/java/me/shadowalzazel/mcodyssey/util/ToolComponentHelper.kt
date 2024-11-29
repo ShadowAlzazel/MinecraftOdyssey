@@ -2,48 +2,50 @@
 
 package me.shadowalzazel.mcodyssey.util
 
-import org.bukkit.Material
-import org.bukkit.Tag
-import org.bukkit.inventory.meta.components.ToolComponent
+import io.papermc.paper.datacomponent.item.Tool
+import io.papermc.paper.registry.RegistryAccess
+import io.papermc.paper.registry.RegistryKey
+import io.papermc.paper.registry.keys.tags.BlockTypeTagKeys
+import io.papermc.paper.registry.tag.TagKey
+import net.kyori.adventure.util.TriState
+import org.bukkit.NamespacedKey
+import org.bukkit.Registry
+import io.papermc.paper.registry.tag.Tag
+import org.bukkit.block.BlockType
 
 @Suppress("UnstableApiUsage")
-interface ToolComponentHelper {
+interface ToolComponentHelper : RegistryTagManager {
 
-    fun getTypeMineableTags(toolName: String): Tag<Material>? {
-        return when(toolName) {
-            "pickaxe", "warhammer" -> Tag.MINEABLE_PICKAXE
-            "axe", "longaxe", "poleaxe", "glaive" -> Tag.MINEABLE_AXE
-            "shovel", "spear", "halberd", "lance" -> Tag.MINEABLE_SHOVEL
-            "hoe", "scythe" -> Tag.MINEABLE_HOE
+
+    fun getMiningTags(toolType: String): Tag<BlockType>? {
+        return when(toolType) {
+            "pickaxe", "warhammer" -> Registry.BLOCK.getTag(BlockTypeTagKeys.MINEABLE_PICKAXE)
+            "axe", "longaxe", "poleaxe", "glaive" -> Registry.BLOCK.getTag(BlockTypeTagKeys.MINEABLE_PICKAXE)
+            "shovel", "spear", "halberd", "lance" -> Registry.BLOCK.getTag(BlockTypeTagKeys.MINEABLE_PICKAXE)
+            "hoe", "scythe" -> Registry.BLOCK.getTag(BlockTypeTagKeys.MINEABLE_PICKAXE)
             else -> null
         }
     }
 
-   fun createMiningToolComponent(base: ToolComponent, toolMaterial: String, miningTags: Tag<Material>): ToolComponent? {
-        val speed = when(toolMaterial) {
-            "copper" -> {
-                4.5F // Fix later
-            }
-            "iridium" -> {
-                8.5F
-            }
-            "titanium", "anodized_titanium" -> {
-                9.0F
-            }
-            "mithril" -> {
-                10.0F
-            }
-            else -> {
-                null
-            }
+    fun newToolComponent(toolMaterial: String, toolType: String): Tool? {
+        val builder = Tool.tool()
+        val speed = when (toolMaterial) {
+            "copper" -> 4.5F
+            "iridium" -> 8.5F
+            "titanium", "anodized_titanium" -> 9.0F
+            "mithril" -> 10.0F
+            else -> null
         }
         if (speed != null) {
-            base.addRule(miningTags, speed, true)
-            return base
+            //val oldTag = getTagFromRegistry(RegistryKey.BLOCK, "mineable/axe", "minecraft")
+            val tag = getMiningTags(toolType) ?: return null
+            val newRule = Tool.rule(tag, speed, TriState.TRUE)
+            builder.addRule(newRule)
+            builder.damagePerBlock(1)
+            return builder.build()
         }
-        else {
-            return null
-        }
+        else return null
     }
+
 
 }

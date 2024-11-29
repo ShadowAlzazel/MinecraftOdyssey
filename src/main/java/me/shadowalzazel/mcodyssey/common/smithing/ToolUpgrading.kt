@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.common.smithing
 
+import io.papermc.paper.datacomponent.DataComponentTypes
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.api.AdvancementManager
 import me.shadowalzazel.mcodyssey.api.ToolDataManager
@@ -14,7 +15,6 @@ import org.bukkit.attribute.AttributeModifier
 import org.bukkit.event.inventory.PrepareSmithingEvent
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.Damageable
 
 @Suppress("UnstableApiUsage")
 class ToolUpgrading : DataTagManager, ToolComponentHelper {
@@ -78,7 +78,7 @@ class ToolUpgrading : DataTagManager, ToolComponentHelper {
             }
         }
         // Add ToolComponent
-        val mineableTags = getTypeMineableTags(ToolDataManager.getToolType(upgradedItem) ?: "none")
+        val mineableTags = getMiningTags(ToolDataManager.getToolType(upgradedItem) ?: "none")
         if (mineableTags != null) toolMiningComponentHandler(upgradedItem, upgradePath)
         // Finish
         event.result = upgradedItem
@@ -86,28 +86,24 @@ class ToolUpgrading : DataTagManager, ToolComponentHelper {
 
 
     private fun toolUpgradePathHandler(item: ItemStack, upgradePath: String): ItemStack {
-        val meta = item.itemMeta as Damageable
         val toolType = ToolDataManager.getToolType(item)
-        meta.itemModel = DataKeys.newKey("${upgradePath}_${toolType}")
-        meta.setMaxDamage(SmithingMaps.DURABILITY_MAP[upgradePath])
-        item.itemMeta = meta
+        val newModel = DataKeys.newKey("${upgradePath}_${toolType}")
+        item.setData(DataComponentTypes.ITEM_MODEL, newModel)
+        val maxDamage = SmithingMaps.DURABILITY_MAP[upgradePath]
+        if (maxDamage != null)  item.setData(DataComponentTypes.MAX_DAMAGE, maxDamage)
         return item
     }
 
     private fun toolMiningComponentHandler(item: ItemStack, upgradePath: String) {
-        val meta = item.itemMeta
-        meta.setTool(null)
-        val mineableTags = getTypeMineableTags(ToolDataManager.getToolType(item)!!)!!
-        val newToolComponent = createMiningToolComponent(item.itemMeta.tool, upgradePath, mineableTags)
+        val toolType = ToolDataManager.getToolType(item) ?: return
+        val newToolComponent = newToolComponent(upgradePath, toolType)
         if (newToolComponent != null) {
-            newToolComponent.damagePerBlock = 1
-            meta.setTool(newToolComponent)
+            item.resetData(DataComponentTypes.TOOL)
+            item.setData(DataComponentTypes.TOOL, newToolComponent)
         }
-        item.itemMeta = meta
     }
 
 
-    @Suppress("UnstableApiUsage")
     private fun modifyDamage(item: ItemStack, bonus: Double = 1.0) {
         // Get Old Modifier
         val oldDamageModifier = item.itemMeta.getAttributeModifiers(Attribute.ATTACK_DAMAGE)?.first {
@@ -126,7 +122,7 @@ class ToolUpgrading : DataTagManager, ToolComponentHelper {
         item.itemMeta = newMeta
     }
 
-    @Suppress("UnstableApiUsage")
+
     private fun modifyAttackSpeed(item: ItemStack, speed: Double = 1.0) {
         // Get Old Modifier
         val oldModifier = item.itemMeta.getAttributeModifiers(Attribute.ATTACK_SPEED)?.first {
