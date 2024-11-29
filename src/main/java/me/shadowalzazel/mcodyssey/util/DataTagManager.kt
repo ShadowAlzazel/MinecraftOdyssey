@@ -1,5 +1,8 @@
+@file:Suppress("UnstableApiUsage")
+
 package me.shadowalzazel.mcodyssey.util
 
+import io.papermc.paper.datacomponent.DataComponentTypes
 import me.shadowalzazel.mcodyssey.Odyssey
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
@@ -24,10 +27,9 @@ interface DataTagManager {
     // Tries to get Odyssey Tag, then item name
     fun ItemStack.getItemIdentifier(): String? {
         return getOdysseyTag() ?: if (itemMeta.hasItemName()) {
+            @Suppress("DEPRECATION")
             itemMeta.itemName
-        } else {
-            null
-        }
+        } else getData(DataComponentTypes.ITEM_NAME)?.toString()?.lowercase()
     }
 
     fun ItemStack.getItemNameId(): String {

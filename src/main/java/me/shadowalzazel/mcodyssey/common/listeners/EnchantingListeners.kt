@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.common.listeners
 
 import com.destroystokyo.paper.event.inventory.PrepareResultEvent
-import me.shadowalzazel.mcodyssey.util.TomeManager
+import me.shadowalzazel.mcodyssey.common.enchantments.TomeEnchanting
 import me.shadowalzazel.mcodyssey.util.constants.CustomColors
 import me.shadowalzazel.mcodyssey.common.items.custom.Miscellaneous
 import me.shadowalzazel.mcodyssey.common.items.OdysseyItem
@@ -29,7 +29,7 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.inventory.meta.Repairable
 import java.util.*
 
-object EnchantingListeners : Listener, TomeManager, ItemCreator {
+object EnchantingListeners : Listener, ItemCreator, TomeEnchanting {
 
     // IDEAS
     // BOOK that stores EXP points
@@ -241,36 +241,6 @@ object EnchantingListeners : Listener, TomeManager, ItemCreator {
 
     /*-----------------------------------------------------------------------------------------------*/
     private fun enchantingBookHandler(event: EnchantItemEvent) {
-        /*
-        when (event.item.itemMeta.customModelData) {
-
-            ItemModels.VOLUME_OF_BLUNTING -> {
-                event.item.enchantments.filter { it.key.canEnchantItem(ItemStack(Material.WOODEN_SWORD, 1)) }
-            }
-            ItemModels.VOLUME_OF_TILLING -> {
-                event.item.enchantments.filter { it.key.canEnchantItem(ItemStack(Material.WOODEN_AXE, 1)) }
-            }
-            ItemModels.VOLUME_OF_POKING -> {
-                event.item.enchantments.filter { it.key.canEnchantItem(ItemStack(Material.WOODEN_SWORD, 1)) }
-            }
-            ItemModels.VOLUME_OF_CLEAVING -> {
-                event.item.enchantments.filter { it.key.canEnchantItem(ItemStack(Material.WOODEN_HOE, 1)) }
-            }
-            ItemModels.VOLUME_OF_SLASHING -> {
-                event.item.enchantments.filter { it.key.canEnchantItem(ItemStack(Material.WOODEN_SHOVEL, 1)) }
-            }
-            ItemModels.VOLUME_OF_HELMETS -> {
-                event.item.enchantments.filter { it.key.canEnchantItem(ItemStack(Material.WOODEN_PICKAXE, 1)) }
-            }
-            ItemModels.BLANK_TOME -> {
-                enchantingTomeHandler(event)
-            }
-            ItemModels.ARCANE_BOOK -> {
-                arcaneBookHandler(event)
-            }
-        }
-
-         */
         val itemID = event.item.getItemIdentifier()
         when (itemID) {
             "arcane_book" -> {
