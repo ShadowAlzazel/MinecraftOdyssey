@@ -6,6 +6,7 @@ import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
 // This Represents an Item generated from loot/item from datapack
+
 open class Item(
     val name: String,
     val location: String?=null,
@@ -25,6 +26,7 @@ open class Item(
     }
 
 
+    @Suppress("unused")
     companion object {
         // Generic Data Items
         val ARCANE_BOOK = DataItem("arcane_book")
@@ -74,6 +76,33 @@ open class Item(
         val FANCY_PART_PATTERN = DataItem("fancy_part_pattern")
         val HUMBLE_PART_PATTERN = DataItem("humble_part_pattern")
         val EMPTY_PART_PATTERN = DataItem("empty_part_pattern")
+        // Food
+        val GREEN_APPLE = DataItem("green_apple")
+        val BACON = DataItem("bacon")
+        val BERRY_TART = DataItem("berry_tart")
+        val CHOCOLATE_MOCHI = DataItem("chocolate_mochi")
+        val COFFEE = DataItem("coffee")
+        val CRYSTAL_CANDY = DataItem("crystal_candy")
+        val FISH_N_CHIPS = DataItem("fish_n_chips")
+        val FRENCH_TOAST = DataItem("french_toast")
+        val FRUIT_BOWL = DataItem("fruit_bowl")
+        val SALMON_ROLL = DataItem("salmon_roll")
+        val SALMON_NIGIRI = DataItem("salmon_nigiri")
+        val SHOYU_RAMEN = DataItem("shoyu_ramen")
+        val TONKOTSU_RAMEN = DataItem("tonkotsu_ramen")
+        val SPIDER_EYE_BOBA = DataItem("spider_eye_boba")
+        val EARL_LILY_BOBA_TEA = DataItem("earl_lily_boba_tea")
+        val BRISKET = DataItem("brisket")
+        val COOKED_BRISKET = DataItem("cooked_brisket")
+        val OOLONG_ORCHID_BOBA_TEA = DataItem("earl_lily_boba_tea")
+        val MATCHA_MELON_BOBA_TEA = DataItem("earl_lily_boba_tea")
+        val THAI_TULIP_BOBA_TEA = DataItem("earl_lily_boba_tea")
+        val ALLIUM_JADE_BOBA_TEA = DataItem("earl_lily_boba_tea")
+        val CORNFLOWER_CEYLON_BOBA_TEA = DataItem("earl_lily_boba_tea")
+        // Pet
+        val DOG_SPINACH = DataItem("dog_spinach")
+        val DOG_SIZZLE_CRISP = DataItem("dog_sizzle_crisp")
+        val DOG_MILK_BONE = DataItem("dog_milk_bone")
         // Potions
         val CRYSTALLINE_POTION = CustomItem("crystalline_potion", Potions.CRYSTALLINE_POTION)
         val POTION_OF_LEVITATION = CustomItem("potion_of_levitation", Potions.POTION_OF_LEVITATION)

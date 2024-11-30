@@ -4,13 +4,18 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.FoodProperties
 import io.papermc.paper.datacomponent.item.ItemLore
 import io.papermc.paper.datacomponent.item.PotionContents
+import me.shadowalzazel.mcodyssey.util.AttributeManager
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.util.RegistryTagManager
+import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
+import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.potion.PotionEffect
 import org.bukkit.Color
+import org.bukkit.attribute.Attribute
+import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionType
 import java.util.*
@@ -20,9 +25,9 @@ sealed class ItemConstructor(
     val material: Material,
     val itemModel: String? = null,
     val lore: List<Component>? = null
-) : DataTagManager, RegistryTagManager {
+) : DataTagManager, RegistryTagManager, AttributeManager {
 
-    class CustomItemConstructor(material: Material, itemModel: String?, lore: List<Component>?):
+    class GenericItemConstructor(material: Material, itemModel: String?, lore: List<Component>?):
         ItemConstructor(material, itemModel, lore)
     class PotionConstructor(
         material: Material,
@@ -38,14 +43,21 @@ sealed class ItemConstructor(
         val saturation: Float,
         val nutrition: Int,
         val alwaysEat: Boolean): ItemConstructor(material, itemModel=itemModel)
+    class GlyphsherdConstructor(
+        material: Material,
+        itemModel: String?,
+        val attribute: Attribute,
+        val value: Double,
+        val slotGroup: EquipmentSlotGroup): ItemConstructor(material, itemModel=itemModel)
 
     /*-----------------------------------------------------------------------------------------------*/
 
     fun createItemStack(name: String, amount: Int=1, withIdTag: Boolean=true): ItemStack {
         return when(this) {
+            is GenericItemConstructor -> newItem(name, amount, withIdTag)
             is PotionConstructor -> newItemPotion(name, amount, withIdTag)
             is FoodConstructor -> newItemFood(name, amount, withIdTag)
-            is CustomItemConstructor -> newItem(name, amount, withIdTag)
+            is GlyphsherdConstructor -> newItemGlyphsherd(name, amount, withIdTag)
         }
     }
 
@@ -78,6 +90,13 @@ sealed class ItemConstructor(
         val potionComponent = PotionContents.potionContents().potion(this.potionType)
         if (effects != null) potionComponent.addCustomEffects(this.effects.toMutableList())
         if (color != null) potionComponent.customColor(this.color)
+        return item
+    }
+
+    private fun GlyphsherdConstructor.newItemGlyphsherd(name: String, amount: Int=1, withIdTag: Boolean=true): ItemStack {
+        val item = newItem(name, amount, withIdTag)
+        item.addTag(ItemDataTags.IS_GLYPHSHERD)
+        item.setGenericAttribute(value, AttributeTags.GLYPH_SLOT_KEY, attribute, null, slotGroup)
         return item
     }
 

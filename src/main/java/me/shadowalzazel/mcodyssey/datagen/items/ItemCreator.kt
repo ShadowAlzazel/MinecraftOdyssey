@@ -2,9 +2,9 @@ package me.shadowalzazel.mcodyssey.datagen.items
 
 import me.shadowalzazel.mcodyssey.util.NamedKeys
 import me.shadowalzazel.mcodyssey.util.EnchantabilityHandler
-import me.shadowalzazel.mcodyssey.common.items.custom.Glyphsherds.createPresetSherdStack
 import me.shadowalzazel.mcodyssey.common.items.OdysseyItem
 import me.shadowalzazel.mcodyssey.common.items.custom.*
+import me.shadowalzazel.mcodyssey.util.AttributeManager
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.persistence.PersistentDataType
 
-interface ItemCreator : ExoticCreator, EnchantabilityHandler {
+interface ItemCreator : EnchantabilityHandler, AttributeManager {
 
     fun OdysseyItem.createStack(amount: Int = 1): ItemStack {
         val itemStack = ItemStack(overrideMaterial, amount).also {
@@ -105,13 +105,7 @@ interface ItemCreator : ExoticCreator, EnchantabilityHandler {
             "silver_ingot" -> Ingredients.SILVER_INGOT.newItemStack(amount)
             "silver_nugget" -> Ingredients.SILVER_NUGGET.newItemStack(amount)
             "soul_steel_ingot" -> Ingredients.SOUL_STEEL_INGOT.newItemStack(amount)
-            "knight_breaker" -> Exotics.KNIGHT_BREAKER.createExoticWeapon()
-            "shogun_lightning" -> Exotics.SHOGUN_LIGHTNING.createExoticWeapon()
-            "abzu_blade" -> Exotics.ABZU_BLADE.createExoticWeapon()
-            "excalibur" -> Exotics.EXCALIBUR.createExoticWeapon()
-            "frost_fang" -> Exotics.FROST_FANG.createExoticWeapon()
-            "elucidator" -> Exotics.ELUCIDATOR.createExoticWeapon()
-            "guard_runesherd" -> Glyphsherds.GUARD_RUNESHERD.createPresetSherdStack(amount)
+            //"guard_runesherd" -> Glyphsherds.GUARD_RUNESHERD.createPresetSherdStack(amount)
             else -> null
         }
     }

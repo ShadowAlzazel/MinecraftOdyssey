@@ -4,7 +4,6 @@ import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.bosses.base.OdysseyBoss
 import me.shadowalzazel.mcodyssey.util.constants.EffectTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
-import me.shadowalzazel.mcodyssey.common.items.custom.Exotics
 import me.shadowalzazel.mcodyssey.common.items.custom.Miscellaneous
 import me.shadowalzazel.mcodyssey.common.listeners.PetListener.addArmorAttribute
 import me.shadowalzazel.mcodyssey.common.listeners.PetListener.addHealthAttribute
@@ -127,7 +126,6 @@ class TheAmbassador(location: Location) : OdysseyBoss(
             health = 950.0
             // Add Kinetic Blaster
             clearActiveItem()
-            equipment.setItemInMainHand(Exotics.KINETIC_BLASTER.newItemStack(1))
         }
     }
 
@@ -193,7 +191,6 @@ class TheAmbassador(location: Location) : OdysseyBoss(
             )
             // Add Item
             clearActiveItem()
-            equipment.setItemInMainHand(Exotics.KINETIC_BLASTER.newItemStack(1))
             equipment.itemInMainHandDropChance = 0F
         }
     }

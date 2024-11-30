@@ -38,7 +38,6 @@ object SoulBraiseRecipes {
         braiseMaterial = setOf(Material.CALIBRATED_SCULK_SENSOR),
         BraiseBase.PLUS)
 
-    // TODO: WIP
     private val SCULK_HEART_RECIPE = SoulBraiseRecipe(
         itemResult = Miscellaneous.SCULK_HEART,
         mobSummon = null,
@@ -46,7 +45,6 @@ object SoulBraiseRecipes {
         braiseMaterial = setOf(Material.SCULK_CATALYST),
         BraiseBase.PLUS)
 
-    // TODO: WIP
     private val CRYING_GOLD_RECIPE = SoulBraiseRecipe(
         itemResult = Miscellaneous.CRYING_GOLD,
         mobSummon = null,
