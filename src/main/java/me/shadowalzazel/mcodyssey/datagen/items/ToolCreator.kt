@@ -3,7 +3,7 @@ package me.shadowalzazel.mcodyssey.datagen.items
 import io.papermc.paper.datacomponent.DataComponentTypes
 import me.shadowalzazel.mcodyssey.util.AttributeManager
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
-import me.shadowalzazel.mcodyssey.util.DataKeys
+import me.shadowalzazel.mcodyssey.util.NamedKeys
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
 import me.shadowalzazel.mcodyssey.util.ToolComponentHelper
@@ -35,7 +35,7 @@ class ToolCreator : AttributeManager, DataTagManager, ToolComponentHelper {
             val maxDurability = material.maxDurability
             var speed = type.baseSpeed
             val bonusRange = type.bonusRange
-            val itemModel = DataKeys.newKey(itemName)
+            val itemModel = NamedKeys.newKey(itemName)
             // Iridium and titanium have different speeds
             if (material == ToolMaterial.IRIDIUM) {
                 speed *= 0.9
@@ -60,7 +60,7 @@ class ToolCreator : AttributeManager, DataTagManager, ToolComponentHelper {
             //meta.itemName(Component.text(itemName))
             // Set Custom Data
             val meta = this.itemMeta
-            meta.persistentDataContainer.set(DataKeys.ITEM_KEY, PersistentDataType.STRING, itemName)
+            meta.persistentDataContainer.set(NamedKeys.ITEM_KEY, PersistentDataType.STRING, itemName)
             this.itemMeta = meta
             this.addStringTag(ItemDataTags.TOOL_TYPE, type.itemName)
             this.addStringTag(ItemDataTags.MATERIAL_TYPE, material.itemName)

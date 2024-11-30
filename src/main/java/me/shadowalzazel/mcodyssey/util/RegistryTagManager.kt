@@ -4,6 +4,7 @@ import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
 import io.papermc.paper.registry.tag.Tag
 import io.papermc.paper.registry.tag.TagKey
+import me.shadowalzazel.mcodyssey.Odyssey
 import org.bukkit.Keyed
 import org.bukkit.NamespacedKey
 import org.bukkit.Registry

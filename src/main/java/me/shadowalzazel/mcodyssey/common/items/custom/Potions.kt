@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.common.items.custom
 
-import me.shadowalzazel.mcodyssey.common.alchemy.PotionEffectsManager
+import me.shadowalzazel.mcodyssey.common.alchemy.EffectTagsManager
 import me.shadowalzazel.mcodyssey.common.alchemy.base.OdysseyPotion
 import me.shadowalzazel.mcodyssey.util.constants.EffectTags
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
@@ -16,7 +16,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.potion.PotionType
 
-object Potions : PotionEffectsManager {
+object Potions : EffectTagsManager {
 
     fun OdysseyPotion.createPotionStack(): ItemStack {
         return newItemStack(1).apply {

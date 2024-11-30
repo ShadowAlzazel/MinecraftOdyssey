@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.common.alchemy.base
 
-import me.shadowalzazel.mcodyssey.util.constants.EffectTags
 import me.shadowalzazel.mcodyssey.common.items.OdysseyItem
+import me.shadowalzazel.mcodyssey.util.constants.EffectTags
 import net.kyori.adventure.text.Component
 import org.bukkit.Color
 import org.bukkit.Material

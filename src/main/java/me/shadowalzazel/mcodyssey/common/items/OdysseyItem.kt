@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.common.items
 
-import me.shadowalzazel.mcodyssey.util.DataKeys
+import me.shadowalzazel.mcodyssey.util.NamedKeys
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
@@ -22,12 +22,12 @@ open class OdysseyItem(
         val itemStack = ItemStack(overrideMaterial, amount).also {
             // Set Variables
             val meta = it.itemMeta
-            meta.persistentDataContainer.set(DataKeys.ITEM_KEY, PersistentDataType.STRING, itemName) // Change for 1.20.5 to itemName component
+            meta.persistentDataContainer.set(NamedKeys.ITEM_KEY, PersistentDataType.STRING, itemName) // Change for 1.20.5 to itemName component
             meta.displayName(Component.text(customName).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))
             meta.itemName(Component.text(this.itemName))
             // Optional Variables
             //if (customModel != null) { meta.setCustomModelData(customModel) }
-            meta.itemModel = DataKeys.newKey(itemName)
+            meta.itemModel = NamedKeys.newKey(itemName)
             if (lore != null) { meta.lore(lore) }
             if (maxDamage != null && maxStackSize == 1) {
                 (meta as Damageable).setMaxStackSize(1)

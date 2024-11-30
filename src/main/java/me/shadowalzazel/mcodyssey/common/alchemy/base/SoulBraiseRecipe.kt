@@ -13,7 +13,7 @@ import org.bukkit.entity.Entity
 import org.bukkit.entity.Item
 import org.bukkit.inventory.ItemStack
 
-open class SoulBraiseRecipe(
+open class SoulBraiseRecipe( // RENAME TO INFUSION?
     private val itemResult: OdysseyItem?,
     private val mobSummon: OdysseyMob?,
     private val braiseIngredients: List<ItemStack>,

@@ -4,7 +4,7 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.api.AdvancementManager
 import me.shadowalzazel.mcodyssey.api.ToolDataManager
-import me.shadowalzazel.mcodyssey.util.DataKeys
+import me.shadowalzazel.mcodyssey.util.NamedKeys
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.util.ToolComponentHelper
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
@@ -17,7 +17,7 @@ import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
 
 @Suppress("UnstableApiUsage")
-class ToolUpgrading : DataTagManager, ToolComponentHelper {
+class ToolUpgrading : DataTagManager, ToolComponentHelper, AdvancementManager {
 
     fun toolSmithingHandler(event: PrepareSmithingEvent) {
         val recipe = event.inventory.recipe
@@ -61,20 +61,20 @@ class ToolUpgrading : DataTagManager, ToolComponentHelper {
             "iridium" -> {
                 modifyDamage(upgradedItem, 1.0)
                 modifyAttackSpeed(upgradedItem, 0.9)
-                AdvancementManager.rewardAdvancement(event.viewers, "odyssey/smith_iridium")
+                rewardAdvancement(event.viewers, "odyssey/smith_iridium")
             }
             "mithril" -> {
                 modifyDamage(upgradedItem, 2.0)
-                AdvancementManager.rewardAdvancement(event.viewers, "odyssey/smith_mithril")
+                rewardAdvancement(event.viewers, "odyssey/smith_mithril")
             }
             "soul_steel" -> {
                 modifyDamage(upgradedItem, 1.0)
-                AdvancementManager.rewardAdvancement(event.viewers, "odyssey/smith_soul_steel")
+                rewardAdvancement(event.viewers, "odyssey/smith_soul_steel")
             }
             "titanium" -> {
                 modifyDamage(upgradedItem, 1.0)
                 modifyAttackSpeed(upgradedItem, 1.1)
-                AdvancementManager.rewardAdvancement(event.viewers, "odyssey/smith_titanium")
+                rewardAdvancement(event.viewers, "odyssey/smith_titanium")
             }
         }
         // Add ToolComponent
@@ -87,7 +87,7 @@ class ToolUpgrading : DataTagManager, ToolComponentHelper {
 
     private fun toolUpgradePathHandler(item: ItemStack, upgradePath: String): ItemStack {
         val toolType = ToolDataManager.getToolType(item)
-        val newModel = DataKeys.newKey("${upgradePath}_${toolType}")
+        val newModel = NamedKeys.newKey("${upgradePath}_${toolType}")
         item.setData(DataComponentTypes.ITEM_MODEL, newModel)
         val maxDamage = SmithingMaps.DURABILITY_MAP[upgradePath]
         if (maxDamage != null)  item.setData(DataComponentTypes.MAX_DAMAGE, maxDamage)

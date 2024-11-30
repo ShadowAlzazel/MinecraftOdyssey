@@ -1,21 +1,14 @@
 package me.shadowalzazel.mcodyssey.common.listeners
 
 import com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent
-import kotlinx.coroutines.*
-import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.common.alchemy.PotionEffectsManager
-import me.shadowalzazel.mcodyssey.common.alchemy.CauldronRecipes
-import me.shadowalzazel.mcodyssey.common.alchemy.base.AlchemyCauldronRecipe
-import me.shadowalzazel.mcodyssey.common.alchemy.utility.CauldronEventSynchro
+import me.shadowalzazel.mcodyssey.common.alchemy.BrewingManager
+import me.shadowalzazel.mcodyssey.common.alchemy.CauldronManager
+import me.shadowalzazel.mcodyssey.common.effects.EffectsManager
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.common.effects.*
-import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.Color
 import org.bukkit.Material
-import org.bukkit.NamespacedKey
 import org.bukkit.entity.Arrow
-import org.bukkit.entity.Item
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.entity.ThrownPotion
@@ -33,9 +26,32 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import org.bukkit.potion.PotionType
 
-object AlchemyListener : Listener, PotionEffectsManager, EffectsManager, DataTagManager {
+object AlchemyListener : Listener, EffectsManager, BrewingManager, CauldronManager {
+
+    /*-----------------------------------------------------------------------------------------------*/
+    // Sea Crystals -> Vials
+    // Honey Bottle -> Extended+
+    // Glow-berries -> Upgraded+
+    // EXP Bottle -> Changes to Aura
+    // Popped Chorus Fruit -> Concoctions
+
+    @EventHandler
+    fun brewingPotionHandler(event: BrewEvent) {
+        event.contents.ingredient ?: return
+        customBrewingHandler(event)
+    }
+
+    // Handler for cauldron mechanic
+    @EventHandler
+    fun cauldronWateredHandler(event: CauldronLevelChangeEvent) {
+        // Sentry Clauses
+        if (event.entity !is Player) return
+        if (event.newState.type != Material.WATER_CAULDRON) return
+        if (!(event.reason == CauldronLevelChangeEvent.ChangeReason.BOTTLE_EMPTY || event.reason == CauldronLevelChangeEvent.ChangeReason.BUCKET_EMPTY)) return
+        // Run cauldron
+        cauldronAlchemyHandler(event)
+    }
 
     /*-----------------------------------------------------------------------------------------------*/
     // Effects
@@ -201,219 +217,6 @@ object AlchemyListener : Listener, PotionEffectsManager, EffectsManager, DataTag
         //equipment.itemInOffHand.subtract(1)
         event.player.inventory.addItem(arrows)
     }
-    
-    /*-----------------------------------------------------------------------------------------------*/
-    // Cauldron
 
-    // Simple finder function for async class
-    private fun asyncCauldronRecipeFinder(items: MutableCollection<Item>, fuel: Material): AlchemyCauldronRecipe? {
-        return CauldronRecipes.CAULDRON_RECIPE_SET.find {
-            it.validateRecipe(items, fuel)
-        }
-    }
-
-    // Async function to crete new scope and run check
-    @OptIn(DelicateCoroutinesApi::class)
-    private fun asyncCauldronHandler(items: MutableCollection<Item>, fuel: Material) {
-        GlobalScope.launch {
-            val recipe = asyncCauldronRecipeFinder(items, fuel)
-            if (recipe != null) CauldronEventSynchro(recipe, items).runTask(Odyssey.instance)
-        }
-    }
-
-    // Handler for cauldron mechanic
-    @EventHandler
-    fun cauldronWateredHandler(event: CauldronLevelChangeEvent) {
-        // Sentry Clauses
-        if (event.entity !is Player) return
-        if (event.newState.type != Material.WATER_CAULDRON) return
-        if (!(event.reason == CauldronLevelChangeEvent.ChangeReason.BOTTLE_EMPTY || event.reason == CauldronLevelChangeEvent.ChangeReason.BUCKET_EMPTY)) return
-        val blockUnderneath = event.block.location.clone().subtract(0.0, 1.0, 0.0).block
-        val alchemyFuels = CauldronRecipes.fireFuels + CauldronRecipes.soulFireFuels
-        if (blockUnderneath.type !in alchemyFuels) return
-        val entitiesInside = blockUnderneath.world.getNearbyEntities(event.block.boundingBox)
-        val allItems = entitiesInside.all { it is Item }
-        if (!allItems) return
-        val itemList = entitiesInside.filterIsInstance<Item>().toMutableSet()
-        // Advancement
-        val players = event.block.location.getNearbyPlayers(5.0)
-        players.forEach {
-            val advancement = it.server.getAdvancement(NamespacedKey.fromString("odyssey:odyssey/cauldron_alchemy")!!)
-            if (advancement != null) {
-                it.getAdvancementProgress(advancement).awardCriteria("requirement")
-            }
-        }
-        // Run new async
-        asyncCauldronHandler(itemList, blockUnderneath.type)
-    }
-    
-    /*-----------------------------------------------------------------------------------------------*/
-
-    // Sea Crystals -> Vials
-    // Popped Chorus Fruit -> Concoctions
-    // Honey Bottle -> Extended+
-    // Glow-berries -> Upgraded+
-    // EXP Bottle -> Changes to ???
-
-    @EventHandler
-    fun brewingPotionHandler(event: BrewEvent) {
-        val ingredient = event.contents.ingredient ?: return
-        val ingredientMaterial = ingredient.type
-        // Get Potion Model
-        // TODO FIX!
-        val resultModel: Int? = when (ingredientMaterial) {
-            Material.REDSTONE -> 1  //ItemModels.VOLUMETRIC_BOTTLE
-            Material.GLOWSTONE_DUST -> 1  //ItemModels.SQUARE_BOTTLE
-            Material.GLOW_BERRIES -> 1  //ItemModels.SQUARE_BOTTLE
-            Material.HONEY_BOTTLE -> 1  //ItemModels.VOLUMETRIC_BOTTLE
-            Material.PRISMARINE_CRYSTALS -> 1  //ItemModels.VIAL_CHARGE_1
-            else -> null
-        }
-        // Get Result from Ingredient
-        val resultMaterial = when(ingredientMaterial) {
-            Material.GUNPOWDER -> Material.SPLASH_POTION
-            Material.DRAGON_BREATH -> Material.LINGERING_POTION
-            else -> Material.POTION
-        }
-        val contents = event.contents.contents.toList()
-        for (x in 0..2) {
-            val item = contents[x] ?: continue
-            if (item.type == Material.AIR) continue
-            val itemMeta = item.itemMeta
-            if (itemMeta !is PotionMeta) continue
-            var isUpgradePlus = true
-            // -------------------------------------------------
-            when(ingredientMaterial) {
-                // For Upgraded Plus
-                Material.GLOW_BERRIES -> {
-                    event.results[x] = makeUpgradedPlusPotion(item)
-                }
-                // For Extended Plus
-                Material.HONEY_BOTTLE -> {
-                    event.results[x] = makeExtendedPlusPotion(item)
-                }
-                // For Vials
-                Material.PRISMARINE_CRYSTALS -> {
-                    event.results[x] = makeVialPotion(item)
-                }
-                // For Lingering/ Splash
-                else -> {
-                    isUpgradePlus = false
-                }
-            }
-            var result = event.results[x]
-            // Get vars
-
-            val isBasePotion = itemMeta.basePotionType != null
-            val hasCustomEffects = (itemMeta.hasCustomEffects() && itemMeta.customEffects.isNotEmpty()) || item.hasCustomEffectTag()
-            val hasOdysseyEffects = item.hasOdysseyItemTag() && item.hasOdysseyEffectTag()
-            val hasCustomModel = itemMeta.hasCustomModelData()
-            // --------------------------------------------------
-            // For Odyssey Effects
-            if (hasOdysseyEffects) {
-                result = if (resultMaterial == Material.LINGERING_POTION) {
-                    createOdysseyLingeringPotion(item)
-                } else {
-                    makeModeledPotion(resultMaterial, item)
-                }
-            }
-            // For custom effects -> Lingering/Splash [copies item]
-            else if (hasCustomEffects && !isUpgradePlus) {
-                result = if (resultMaterial == Material.LINGERING_POTION) {
-                    makeCustomLingeringPotion(item)
-                } else {
-                    makeModeledPotion(resultMaterial, item)
-                }
-            }
-            // For standard brewing [copies result]
-            else if (isBasePotion && !isUpgradePlus) {
-                result = makeModeledPotion(resultMaterial, result, resultModel)
-            }
-            // For keeping models  [copies result]
-            else if (hasCustomModel && !isUpgradePlus) {
-                result = makeModeledPotion(resultMaterial, result, itemMeta.customModelData)
-            }
-
-            // --------------------------------------------------
-            // Set final
-            val resultMeta = result.itemMeta
-            val stackSize = if (result.hasTag(ItemDataTags.IS_POTION_VIAL)) 64 else 8
-            resultMeta.setMaxStackSize(stackSize)
-            result.itemMeta = resultMeta
-            event.results[x] = result
-        }
-    }
-
-    private fun makeModeledPotion(material: Material, potion: ItemStack, model: Int? = null): ItemStack {
-        val newPotion = ItemStack(material, 1)
-        val meta = potion.itemMeta
-        if (model != null) meta.setCustomModelData(model)
-        newPotion.itemMeta = meta
-        return newPotion
-    }
-
-    private fun makeCustomLingeringPotion(potion: ItemStack, model: Int? = null): ItemStack {
-        val lingeringPotion = ItemStack(Material.LINGERING_POTION, 1)
-        val lingeringMeta = lingeringPotion.itemMeta as PotionMeta
-        if (model != null) lingeringMeta.setCustomModelData(model)
-        // Add lingering potion effects
-        val meta = potion.itemMeta as PotionMeta
-        for (effect in meta.customEffects) {
-            val newEffect = PotionEffect(effect.type, effect.duration, effect.amplifier)
-            lingeringMeta.addCustomEffect(newEffect, true)
-        }
-        lingeringPotion.itemMeta = lingeringMeta
-        return lingeringPotion
-    }
-
-
-    // Fix for all: odyssey effects, custom effects,
-    private fun makeExtendedPlusPotion(potion: ItemStack): ItemStack {
-        if (potion.itemMeta !is PotionMeta) return potion
-        if (potion.hasTag(ItemDataTags.IS_EXTENDED_PLUS)) return potion
-        if (potion.hasTag(ItemDataTags.IS_UPGRADED_PLUS)) return potion
-        val meta = (potion.itemMeta as PotionMeta)
-        val potionType = meta.basePotionType ?: return potion
-        // Get Old effects from custom effects or base type effects
-        val oldEffects = mutableListOf<PotionEffect>()
-        potionType.potionEffects.forEach { oldEffects.add(it) }
-        for (effect in oldEffects) {
-            val newEffect = PotionEffect(effect.type, (effect.duration * 1.5).toInt(), effect.amplifier)
-            meta.addCustomEffect(newEffect, true)
-        }
-        meta.basePotionType = PotionType.THICK
-        return potion.clone().also {
-            it.itemMeta = meta
-            it.addTag(ItemDataTags.IS_EXTENDED_PLUS)
-        }
-    }
-
-    private fun makeUpgradedPlusPotion(potion: ItemStack): ItemStack {
-        if (potion.itemMeta !is PotionMeta) return potion
-        if (potion.hasTag(ItemDataTags.IS_EXTENDED_PLUS)) return potion
-        if (potion.hasTag(ItemDataTags.IS_UPGRADED_PLUS)) return potion
-        val meta = (potion.itemMeta as PotionMeta)
-        val potionType = meta.basePotionType ?: return potion
-        // Get Old effects from custom effects or base type effects
-        val oldEffects = mutableListOf<PotionEffect>()
-        potionType.potionEffects.forEach { oldEffects.add(it) }
-        for (effect in oldEffects) {
-            val newEffect = PotionEffect(effect.type, (effect.duration * 0.6).toInt(), effect.amplifier + 1)
-            meta.addCustomEffect(newEffect, true)
-        }
-        meta.basePotionType = PotionType.THICK
-        return potion.clone().also {
-            it.itemMeta = meta
-            it.addTag(ItemDataTags.IS_UPGRADED_PLUS)
-        }
-    }
-
-    private fun makeVialPotion(potion: ItemStack): ItemStack {
-        if (potion.itemMeta !is PotionMeta) return potion
-        if (potion.hasTag(ItemDataTags.IS_POTION_VIAL)) return potion
-        val vial = createPotionVialStack(potion.clone())
-        vial.amount = 4
-        return vial
-    }
 
 }

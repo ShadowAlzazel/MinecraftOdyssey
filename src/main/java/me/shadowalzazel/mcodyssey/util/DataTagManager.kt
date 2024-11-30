@@ -13,7 +13,7 @@ import java.util.*
 interface DataTagManager {
 
     private fun PersistentDataContainer.hasOdysseyTag(): Boolean {
-        return has(DataKeys.ITEM_KEY)
+        return has(NamedKeys.ITEM_KEY)
     }
 
     fun ItemStack.hasOdysseyItemTag(): Boolean {
@@ -21,7 +21,7 @@ interface DataTagManager {
     }
 
     fun ItemStack.getOdysseyTag(): String? {
-        return itemMeta.persistentDataContainer[DataKeys.ITEM_KEY, PersistentDataType.STRING]
+        return itemMeta.persistentDataContainer[NamedKeys.ITEM_KEY, PersistentDataType.STRING]
     }
 
     // Tries to get Odyssey Tag, then item name
@@ -88,12 +88,12 @@ interface DataTagManager {
 
     fun ItemStack.setUUIDTag(uuid: UUID) {
         itemMeta = itemMeta.also {
-            it.persistentDataContainer.set(DataKeys.UUID_KEY, PersistentDataType.STRING, uuid.toString())
+            it.persistentDataContainer.set(NamedKeys.UUID_KEY, PersistentDataType.STRING, uuid.toString())
         }
     }
 
     fun ItemStack.getUUIDTag(): String {
-        return itemMeta.persistentDataContainer[DataKeys.UUID_KEY, PersistentDataType.STRING] ?: UUID.randomUUID().toString()
+        return itemMeta.persistentDataContainer[NamedKeys.UUID_KEY, PersistentDataType.STRING] ?: UUID.randomUUID().toString()
     }
 
 
