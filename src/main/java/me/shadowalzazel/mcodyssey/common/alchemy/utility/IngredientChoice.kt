@@ -20,6 +20,8 @@ sealed class IngredientChoice(open val amount: Int?) : DataTagManager {
     class AnyEffectChoice: IngredientChoice(null)
     class AnySingleEffectChoice: IngredientChoice(null)
 
+    /*-----------------------------------------------------------------------------------------------*/
+
     fun validateIngredient(item: ItemStack): Boolean {
         val validIngredient = when(this) {
             is MaterialChoice -> item.type == this.material

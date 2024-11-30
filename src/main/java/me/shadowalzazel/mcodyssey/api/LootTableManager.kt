@@ -25,10 +25,11 @@ object LootTableManager {
     //val bastionItem = toMinecraftKey("chests/bastion_treasure")
 
     // Returns 1 item from a loot table
-    fun singleItemFromResource(resourceKey: ResourceKey<LootTable>): ItemStack {
+    private fun singleItemFromResource(resourceKey: ResourceKey<LootTable>): ItemStack {
         val lootTable = CraftLootTable.minecraftToBukkit(resourceKey)
         val builder = LootContext.Builder(Odyssey.instance.overworld.spawnLocation)
         val items = lootTable.populateLoot(Random(1L), builder.build())
+        require(items.isNotEmpty())
         return items.first()
     }
 

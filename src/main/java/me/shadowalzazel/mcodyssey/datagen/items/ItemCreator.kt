@@ -2,7 +2,6 @@ package me.shadowalzazel.mcodyssey.datagen.items
 
 import me.shadowalzazel.mcodyssey.util.NamedKeys
 import me.shadowalzazel.mcodyssey.util.EnchantabilityHandler
-import me.shadowalzazel.mcodyssey.common.items.custom.Potions.createPotionStack
 import me.shadowalzazel.mcodyssey.common.items.custom.Glyphsherds.createPresetSherdStack
 import me.shadowalzazel.mcodyssey.common.items.OdysseyItem
 import me.shadowalzazel.mcodyssey.common.items.custom.*
@@ -88,7 +87,6 @@ interface ItemCreator : ExoticCreator, EnchantabilityHandler {
             "tome_of_expenditure" -> Miscellaneous.TOME_OF_EXPENDITURE.newItemStack(amount)
             "tome_of_avarice" -> Miscellaneous.TOME_OF_AVARICE.newItemStack(amount)
             "tome_of_polymerization" -> Miscellaneous.TOME_OF_POLYMERIZATION.newItemStack(amount)
-            "crystalline_potion" -> Potions.CRYSTALLINE_POTION.createPotionStack()
             "irradiated_rod" -> Ingredients.IRRADIATED_ROD.newItemStack(amount)
             "irradiated_shard" -> Ingredients.IRRADIATED_SHARD.newItemStack(amount)
             "ectoplasm" -> Ingredients.ECTOPLASM.newItemStack(amount)

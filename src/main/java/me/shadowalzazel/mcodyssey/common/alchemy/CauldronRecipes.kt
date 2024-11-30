@@ -3,7 +3,7 @@ package me.shadowalzazel.mcodyssey.common.alchemy
 import me.shadowalzazel.mcodyssey.common.alchemy.base.CauldronAlchemyRecipe
 import me.shadowalzazel.mcodyssey.common.alchemy.utility.CauldronFuels
 import me.shadowalzazel.mcodyssey.common.alchemy.utility.IngredientChoice
-import me.shadowalzazel.mcodyssey.common.items.custom.Potions
+import me.shadowalzazel.mcodyssey.common.items.Item
 import org.bukkit.Material
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.potion.PotionType
@@ -14,7 +14,7 @@ object CauldronRecipes {
     // Singular Potions
 
     private val CRYSTALLINE_POTION_RECIPE = CauldronAlchemyRecipe(
-        result = Potions.CRYSTALLINE_POTION.newItemStack(3),
+        result = Item.CRYSTALLINE_POTION.newItemStack(3),
         itemCount = 2,
         fuels = CauldronFuels.FIRE_FUELS,
         ingredients = listOf(
@@ -23,7 +23,7 @@ object CauldronRecipes {
 
 
     private val POTION_OF_LEVITATION_RECIPE = CauldronAlchemyRecipe(
-        result = Potions.POTION_OF_LEVITATION.newItemStack(3),
+        result = Item.POTION_OF_LEVITATION.newItemStack(3),
         itemCount = 2,
         fuels = CauldronFuels.FIRE_FUELS,
         ingredients = listOf(
@@ -34,7 +34,7 @@ object CauldronRecipes {
     // Powerful Potions
 
     private val POTION_OF_STONE_SKIN_RECIPE = CauldronAlchemyRecipe(
-        result = Potions.POTION_OF_STONE_SKIN.newItemStack(3),
+        result = Item.POTION_OF_STONE_SKIN.newItemStack(3),
         itemCount = 4,
         fuels = CauldronFuels.FIRE_FUELS,
         ingredients = listOf(
@@ -45,7 +45,7 @@ object CauldronRecipes {
 
 
     private val POTION_OF_WRATH_RECIPE = CauldronAlchemyRecipe(
-        result = Potions.POTION_OF_WRATH.newItemStack(3),
+        result = Item.POTION_OF_WRATH.newItemStack(3),
         itemCount = 4,
         fuels = CauldronFuels.FIRE_FUELS,
         ingredients = listOf(
@@ -56,7 +56,7 @@ object CauldronRecipes {
 
 
     private val POTION_OF_ZOOM_RECIPE = CauldronAlchemyRecipe(
-        result = Potions.POTION_OF_WHIZ.newItemStack(3),
+        result = Item.POTION_OF_ZOOM.newItemStack(3),
         itemCount = 4,
         fuels = CauldronFuels.FIRE_FUELS,
         ingredients = listOf(
@@ -67,7 +67,7 @@ object CauldronRecipes {
 
 
     private val POTION_OF_SHIMMER_RECIPE = CauldronAlchemyRecipe(
-        result = Potions.POTION_OF_WHIZ.newItemStack(3),
+        result = Item.POTION_OF_SHIMMER.newItemStack(3),
         itemCount = 4,
         fuels = CauldronFuels.FIRE_FUELS,
         ingredients = listOf(
@@ -81,7 +81,7 @@ object CauldronRecipes {
     // Concoctions
 
     private val ANGLERS_CONCOCTION_RECIPE = CauldronAlchemyRecipe(
-        result = Potions.ANGLERS_CONCOCTION.newItemStack(1),
+        result = Item.ANGLERS_CONCOCTION.newItemStack(1),
         itemCount = 4,
         fuels = CauldronFuels.FIRE_FUELS,
         ingredients = listOf(
@@ -93,7 +93,7 @@ object CauldronRecipes {
 
 
     private val SPELUNKERS_CONCOCTION_RECIPE = CauldronAlchemyRecipe(
-        result = Potions.ANGLERS_CONCOCTION.newItemStack(1),
+        result = Item.SPELUNKERS_CONCOCTION.newItemStack(1),
         itemCount = 4,
         fuels = CauldronFuels.FIRE_FUELS,
         ingredients = listOf(
@@ -105,7 +105,7 @@ object CauldronRecipes {
 
 
     private val NETHER_OWL_CONCOCTION_RECIPE = CauldronAlchemyRecipe(
-        result = Potions.ANGLERS_CONCOCTION.newItemStack(1),
+        result = Item.NETHER_OWL_CONCOCTION.newItemStack(1),
         itemCount = 4,
         fuels = CauldronFuels.FIRE_FUELS,
         ingredients = listOf(
@@ -117,7 +117,7 @@ object CauldronRecipes {
 
     // Custom Concoctions
     private val CUSTOM_CONCOCTION_2_RECIPE = CauldronAlchemyRecipe(
-        result = Potions.CUSTOM_CONCOCTION.newItemStack(1),
+        result = Item.CUSTOM_CONCOCTION.newItemStack(1),
         itemCount = 3,
         fuels = CauldronFuels.FIRE_FUELS,
         ingredients = listOf(
@@ -128,7 +128,7 @@ object CauldronRecipes {
 
     // Custom Concoctions
     private val CUSTOM_CONCOCTION_3_RECIPE = CauldronAlchemyRecipe(
-        result = Potions.CUSTOM_CONCOCTION.newItemStack(1),
+        result = Item.CUSTOM_CONCOCTION.newItemStack(1),
         itemCount = 4,
         fuels = CauldronFuels.FIRE_FUELS,
         ingredients = listOf(
@@ -140,7 +140,7 @@ object CauldronRecipes {
 
     // Custom Concoctions
     private val CUSTOM_CONCOCTION_4_RECIPE = CauldronAlchemyRecipe(
-        result = Potions.CUSTOM_CONCOCTION.newItemStack(1),
+        result = Item.CUSTOM_CONCOCTION.newItemStack(1),
         itemCount = 5,
         fuels = CauldronFuels.FIRE_FUELS,
         ingredients = listOf(
@@ -153,7 +153,7 @@ object CauldronRecipes {
 
     // Custom Concoctions
     private val CUSTOM_CONCOCTION_5_RECIPE = CauldronAlchemyRecipe(
-        result = Potions.CUSTOM_CONCOCTION.newItemStack(1),
+        result = Item.CUSTOM_CONCOCTION.newItemStack(1),
         itemCount = 6,
         fuels = CauldronFuels.FIRE_FUELS,
         ingredients = listOf(
