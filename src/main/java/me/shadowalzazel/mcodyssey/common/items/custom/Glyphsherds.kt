@@ -26,7 +26,7 @@ object Glyphsherds : GlyphManager, SpaceRuneManager {
         }
         // Add a key that all runesherds share
         if (attribute != null && slotGroup != null) {
-            val runeKey = AttributeTags.RUNESHERD_KEY
+            val runeKey = AttributeTags.GLYPH_SLOT_KEY
             item.setGenericAttribute(value, runeKey, attribute, null, slotGroup)
         }
         return item
@@ -38,7 +38,7 @@ object Glyphsherds : GlyphManager, SpaceRuneManager {
         }
         // Add a key that all runesherds share
         if (attribute != null && slotGroup != null) {
-            val runeKey = AttributeTags.RUNESHERD_KEY
+            val runeKey = AttributeTags.GLYPH_SLOT_KEY
             item.setGenericAttribute(value, runeKey, attribute, null, slotGroup)
         }
         /*

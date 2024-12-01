@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.datagen.recipes.crafting
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.common.items.custom.Foods
+import me.shadowalzazel.mcodyssey.common.items.Item
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.*
@@ -42,7 +42,7 @@ class Food {
     // Table
 
     private fun crystalCandyRecipe(): ShapelessRecipe {
-        val result = Foods.CRYSTAL_CANDY.createFoodStack(2)
+        val result = Item.CRYSTAL_CANDY.newItemStack(2)
         return ShapelessRecipe(NamespacedKey(Odyssey.instance, "crystal_candy"), result).apply {
             addIngredient(Material.AMETHYST_SHARD)
             addIngredient(Material.SWEET_BERRIES)
@@ -51,7 +51,7 @@ class Food {
     }
 
     private fun frenchToastRecipe(): ShapelessRecipe {
-        val result = Foods.FRENCH_TOAST.createFoodStack(1)
+        val result = Item.FRENCH_TOAST.newItemStack(1)
         return ShapelessRecipe(NamespacedKey(Odyssey.instance, "french_toast"), result).apply {
             addIngredient(Material.BREAD)
             addIngredient(Material.SUGAR)
@@ -60,7 +60,7 @@ class Food {
     }
 
     private fun chocolateMochiRecipe(): ShapedRecipe {
-        val result = Foods.CHOCOLATE_MOCHI.createFoodStack(4)
+        val result = Item.CHOCOLATE_MOCHI.newItemStack(4)
         return ShapedRecipe(NamespacedKey(Odyssey.instance, "chocolate_mochi"), result).apply {
             shape(" C ", "CSC", " C ")
             setIngredient('S', Material.SUGAR)
@@ -70,7 +70,7 @@ class Food {
     }
 
     private fun berryTartRecipe(): ShapedRecipe {
-        val result = Foods.BERRY_TART.createFoodStack(4)
+        val result = Item.BERRY_TART.newItemStack(4)
         return ShapedRecipe(NamespacedKey(Odyssey.instance, "berry_tart"), result).apply {
             shape(" C ", "CSC", " C ")
             setIngredient('S', Material.SUGAR)
@@ -80,7 +80,7 @@ class Food {
     }
 
     private fun fishNChipsRecipe(): ShapelessRecipe {
-        val result = Foods.FISH_N_CHIPS.createFoodStack(1)
+        val result = Item.FISH_N_CHIPS.newItemStack(1)
         return ShapelessRecipe(NamespacedKey(Odyssey.instance, "fish_n_chips"), result).apply {
             addIngredient(Material.BAKED_POTATO)
             addIngredient(Material.COOKED_COD)
@@ -89,7 +89,7 @@ class Food {
     }
 
     private fun fruitBowlRecipe(): ShapelessRecipe {
-        val result = Foods.FRUIT_BOWL.createFoodStack(1)
+        val result = Item.FRUIT_BOWL.newItemStack(1)
         return ShapelessRecipe(NamespacedKey(Odyssey.instance, "fruit_bowl"), result).apply {
             addIngredient(Material.BOWL)
             addIngredient(Material.APPLE)
@@ -101,7 +101,7 @@ class Food {
     }
 
     private fun spiderEyeBobaRecipe(): ShapedRecipe {
-        val result = Foods.SPIDER_EYE_BOBA.createFoodStack(1)
+        val result = Item.SPIDER_EYE_BOBA.newItemStack(1)
         return ShapedRecipe(NamespacedKey(Odyssey.instance, "spider_eye_boba"), result).apply {
             shape(" R ", " G ", " S ")
             setIngredient('R', Material.ROTTEN_FLESH)
@@ -112,7 +112,7 @@ class Food {
     }
 
     private fun coffeeRecipe(): ShapedRecipe {
-        val result = Foods.COFFEE.createFoodStack(2)
+        val result = Item.COFFEE.newItemStack(2)
         return ShapedRecipe(NamespacedKey(Odyssey.instance, "coffee"), result).apply {
             shape("SCC", " B ", " X ")
             setIngredient('S', Material.SUGAR)
@@ -124,7 +124,7 @@ class Food {
     }
 
     private fun salmonRollRecipe(): ShapelessRecipe {
-        val result = Foods.SALMON_ROLL.createFoodStack(2)
+        val result = Item.SALMON_ROLL.newItemStack(2)
         return ShapelessRecipe(NamespacedKey(Odyssey.instance, "salmon_roll"), result).apply {
             addIngredient(Material.CARROT)
             addIngredient(Material.DRIED_KELP)
@@ -134,7 +134,7 @@ class Food {
     }
 
     private fun salmonNigiriRecipe(): ShapelessRecipe {
-        val result = Foods.SALMON_NIGIRI.createFoodStack(2)
+        val result = Item.SALMON_NIGIRI.newItemStack(2)
         return ShapelessRecipe(NamespacedKey(Odyssey.instance, "salmon_nigiri"), result).apply {
             addIngredient(Material.WHEAT)
             addIngredient(Material.SALMON)
@@ -143,7 +143,7 @@ class Food {
     }
 
     private fun shoyuRamenRecipe(): ShapelessRecipe {
-        val result = Foods.SHOYU_RAMEN.createFoodStack(1)
+        val result = Item.SHOYU_RAMEN.newItemStack(1)
         return ShapelessRecipe(NamespacedKey(Odyssey.instance, "shoyu_ramen"), result).apply {
             addIngredient(Material.COOKED_PORKCHOP)
             addIngredient(Material.WHEAT)
@@ -153,7 +153,7 @@ class Food {
     }
 
     private fun brisketRecipe(): ShapelessRecipe {
-        val result = Foods.BRISKET.createFoodStack(4)
+        val result = Item.BRISKET.newItemStack(4)
         return ShapelessRecipe(NamespacedKey(Odyssey.instance, "brisket"), result).apply {
             addIngredient(Material.BEEF)
             addIngredient(Material.BEEF)
@@ -164,7 +164,7 @@ class Food {
     }
 
     private fun earlLilyBobaTeaRecipe(): ShapedRecipe {
-        val result = Foods.EARL_LILY_BOBA_TEA.createFoodStack(2)
+        val result = Item.EARL_LILY_BOBA_TEA.newItemStack(2)
         return ShapedRecipe(NamespacedKey(Odyssey.instance, "earl_lily_boba_tea"), result).apply {
             shape("SCL", " B ", " C ")
             setIngredient('L', Material.LILY_OF_THE_VALLEY)
@@ -176,7 +176,7 @@ class Food {
     }
 
     private fun oolongOrchidBobaTeaRecipe(): ShapedRecipe {
-        val result = Foods.OOLONG_ORCHID_BOBA_TEA.createFoodStack(2)
+        val result = Item.OOLONG_ORCHID_BOBA_TEA.newItemStack(2)
         return ShapedRecipe(NamespacedKey(Odyssey.instance, "oolong_orchid_boba_tea"), result).apply {
             shape("SCL", " B ", " C ")
             setIngredient('L', Material.BLUE_ORCHID)
@@ -188,7 +188,7 @@ class Food {
     }
 
     private fun matchaMelonBobaTeaRecipe(): ShapedRecipe {
-        val result = Foods.MATCHA_MELON_BOBA_TEA.createFoodStack(2)
+        val result = Item.MATCHA_MELON_BOBA_TEA.newItemStack(2)
         return ShapedRecipe(NamespacedKey(Odyssey.instance, "matcha_melon_boba_tea"), result).apply {
             shape("SCL", " B ", " C ")
             setIngredient('L', Material.MELON_SLICE)
@@ -200,7 +200,7 @@ class Food {
     }
 
     private fun thaiTulipBobaTeaRecipe(): ShapedRecipe {
-        val result = Foods.THAI_TULIP_BOBA_TEA.createFoodStack(2)
+        val result = Item.THAI_TULIP_BOBA_TEA.newItemStack(2)
         return ShapedRecipe(NamespacedKey(Odyssey.instance, "thai_tulip_boba_tea"), result).apply {
             shape("SCL", " B ", " C ")
             setIngredient('L', Material.ORANGE_TULIP)
@@ -212,7 +212,7 @@ class Food {
     }
 
     private fun alliumJadeBobaTeaRecipe(): ShapedRecipe {
-        val result = Foods.ALLIUM_JADE_BOBA_TEA.createFoodStack(2)
+        val result = Item.ALLIUM_JADE_BOBA_TEA.newItemStack(2)
         return ShapedRecipe(NamespacedKey(Odyssey.instance, "allium_jade_boba_tea"), result).apply {
             shape("SCL", " B ", " C ")
             setIngredient('L', Material.ALLIUM)
@@ -224,7 +224,7 @@ class Food {
     }
 
     private fun cornflowerCeylonBobaTeaRecipe(): ShapedRecipe {
-        val result = Foods.CORNFLOWER_CEYLON_BOBA_TEA.createFoodStack(2)
+        val result = Item.CORNFLOWER_CEYLON_BOBA_TEA.newItemStack(2)
         return ShapedRecipe(NamespacedKey(Odyssey.instance, "cornflower_ceylon_boba_tea"), result).apply {
             shape("SCL", " B ", " C ")
             setIngredient('L', Material.CORNFLOWER)
@@ -239,7 +239,7 @@ class Food {
     // Dog Foods
 
     private fun dogSpinachRecipe(): ShapedRecipe {
-        val result = Foods.DOG_SPINACH.newItemStack(2)
+        val result = Item.DOG_SPINACH.newItemStack(2)
         return ShapedRecipe(NamespacedKey(Odyssey.instance, "dog_spinach"), result).apply {
             shape(" K ", "KBK", " K ")
             setIngredient('K', Material.KELP)
@@ -248,7 +248,7 @@ class Food {
     }
 
     private fun dogSizzleCrispRecipe(): ShapedRecipe {
-        val result = Foods.DOG_SIZZLE_CRISP.newItemStack(2)
+        val result = Item.DOG_SIZZLE_CRISP.newItemStack(2)
         return ShapedRecipe(NamespacedKey(Odyssey.instance, "dog_sizzle_crisp"), result).apply {
             shape("RMR", "MBM", "RMR")
             setIngredient('R', Material.REDSTONE)
@@ -258,7 +258,7 @@ class Food {
     }
 
     private fun dogMilkBoneRecipe(): ShapelessRecipe {
-        val result = Foods.DOG_MILK_BONE.newItemStack(1)
+        val result = Item.DOG_MILK_BONE.newItemStack(1)
         return ShapelessRecipe(NamespacedKey(Odyssey.instance, "dog_milk_bone"), result).apply {
             addIngredient(Material.MILK_BUCKET)
             addIngredient(Material.BONE)
@@ -272,7 +272,7 @@ class Food {
     // Campfire
 
     private fun baconRecipe(): CampfireRecipe {
-        val result = Foods.BACON.createFoodStack()
+        val result = Item.BACON.newItemStack()
         return CampfireRecipe(
             NamespacedKey(Odyssey.instance, "bacon"),
             result,
@@ -283,8 +283,8 @@ class Food {
     }
 
     private fun cookedBrisketRecipe(): CampfireRecipe {
-        val result = Foods.COOKED_BRISKET.createFoodStack()
-        val ingredient = RecipeChoice.ExactChoice(Foods.BRISKET.createFoodStack())
+        val result = Item.COOKED_BRISKET.newItemStack()
+        val ingredient = RecipeChoice.ExactChoice(Item.BRISKET.newItemStack())
         return CampfireRecipe(
             NamespacedKey(Odyssey.instance, "cooked_brisket"),
             result,

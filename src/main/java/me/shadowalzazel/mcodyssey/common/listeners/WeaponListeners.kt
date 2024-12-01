@@ -2,7 +2,6 @@ package me.shadowalzazel.mcodyssey.common.listeners
 
 import io.papermc.paper.event.entity.EntityLoadCrossbowEvent
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.common.alchemy.utility.ThickPotion
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags.getIntTag
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags.setIntTag
@@ -806,7 +805,7 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
         // CHANGE TO GET HAND
         val offhandIsPotion = loader.equipment!!.itemInOffHand.type in listOf(
             Material.SPLASH_POTION, Material.LINGERING_POTION)
-        val offhandIsAmmo = loader.equipment!!.itemInOffHand == ThickPotion.createThickPotion() // change to component comparison
+        val offhandIsAmmo = loader.equipment!!.itemInOffHand.type == Material.POTION
         if (!offhandIsPotion && !offhandIsAmmo) {
             return false
         }

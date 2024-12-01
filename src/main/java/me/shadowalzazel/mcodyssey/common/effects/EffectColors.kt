@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.common.effects
 
 import net.kyori.adventure.text.format.TextColor
+import org.bukkit.Color
 
 enum class EffectColors(val color: TextColor) {
 
@@ -15,6 +16,10 @@ enum class EffectColors(val color: TextColor) {
     ROTTING(TextColor.color(114, 227, 154)),
     SOUL(TextColor.color(94, 210, 215)),
     SHIMMER(TextColor.color(78, 0, 161)),
-    TARRED(TextColor.color(56, 56, 38))
+    TARRED(TextColor.color(56, 56, 38));
+
+    fun toItemColor(): Color {
+        return Color.fromRGB(this.color.value())
+    }
 
 }

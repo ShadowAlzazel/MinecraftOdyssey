@@ -8,7 +8,7 @@ import me.shadowalzazel.mcodyssey.server.commands.spells.PlaceFeatureArchaicSeed
 import me.shadowalzazel.mcodyssey.common.listeners.*
 import me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners.*
 import me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners.OtherListeners
-import me.shadowalzazel.mcodyssey.datagen.recipes.RecipeManager
+import me.shadowalzazel.mcodyssey.datagen.RecipeManager
 import me.shadowalzazel.mcodyssey.datagen.recipes.brewing.BrewerMixes
 import me.shadowalzazel.mcodyssey.common.StructureDetector
 import me.shadowalzazel.mcodyssey.world_events.DailyWorldEventManager
@@ -114,8 +114,7 @@ class Odyssey : JavaPlugin() {
             OdysseyAssets,
             ArcaneListeners,
             SmithingListeners,
-            AlchemyListener,
-            SoulBraisingListener,
+            AlchemyListeners,
             EnchantingListeners,
             AmbassadorListeners,
             HogRiderListeners,
@@ -126,7 +125,6 @@ class Odyssey : JavaPlugin() {
             MiscListeners,
             ScoreboardTagListeners,
             LootListeners,
-            FoodListeners,
             WeaponListeners,
             SpawningListeners,
             ItemListeners,

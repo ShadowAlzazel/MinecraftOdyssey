@@ -9,7 +9,7 @@ import org.bukkit.inventory.ShapelessRecipe
 import org.bukkit.inventory.meta.FireworkMeta
 import org.bukkit.inventory.recipe.CraftingBookCategory
 
-class BlazingRocketsCreator {
+class RocketRecipeCreator {
 
     internal fun blazingRocketsRecipe(tier: Int, tierName: String): ShapelessRecipe {
         // New Rocket

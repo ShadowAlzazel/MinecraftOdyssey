@@ -16,9 +16,9 @@ class BuddingTask(private val entity: LivingEntity, private val amplifier: Int, 
     override fun run() {
         counter += 1
         // Check tag
-        if (EffectTags.BUDDING !in entity.scoreboardTags) this.cancel()
+        if (EffectTags.ROTTING !in entity.scoreboardTags) this.cancel()
         if (entity.isDead) {
-            entity.removeScoreboardTag(EffectTags.BUDDING)
+            entity.removeScoreboardTag(EffectTags.ROTTING)
             this.cancel()
             return
         }
@@ -34,7 +34,7 @@ class BuddingTask(private val entity: LivingEntity, private val amplifier: Int, 
         // Every 2 sec
         val timeElapsed = System.currentTimeMillis() - timer
         if (counter > maxCount || timeElapsed > (maxCount * 2) * 1000) {
-            if (!entity.isDead) entity.removeScoreboardTag(EffectTags.BUDDING)
+            if (!entity.isDead) entity.removeScoreboardTag(EffectTags.ROTTING)
             this.cancel()
         }
     }

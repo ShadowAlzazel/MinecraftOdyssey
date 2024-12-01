@@ -321,7 +321,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper {
         level: Int) {
         // Effects
         with(victim) {
-            addOdysseyEffect(EffectTags.BUDDING, 12 * 20, level * 1)
+            addOdysseyEffect(EffectTags.ROTTING, 12 * 20, level * 1)
             world.playSound(location, Sound.BLOCK_BIG_DRIPLEAF_TILT_UP, 2.5F, 0.9F)
         }
     }

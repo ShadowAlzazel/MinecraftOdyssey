@@ -23,11 +23,11 @@ internal interface GlyphManager : AttributeManager, DataTagManager {
     // TODO: Invert values
 
     fun ItemStack.addRunesherdTag() {
-        addTag(ItemDataTags.IS_RUNESHERD)
+        addTag(ItemDataTags.IS_GLYPHSHERD)
     }
 
     fun ItemStack.hasRunesherdTag(): Boolean {
-        return hasTag(ItemDataTags.IS_RUNESHERD)
+        return hasTag(ItemDataTags.IS_GLYPHSHERD)
     }
 
     fun ItemStack.addRuneIdentifier(name: String) {
@@ -139,7 +139,7 @@ internal interface GlyphManager : AttributeManager, DataTagManager {
         if (!runesherd.itemMeta.hasAttributeModifiers()) return null
         val runeName = runesherd.getRuneIdentifier() ?: return null // ItemName
         // Get rune key
-        val runeKey = AttributeTags.RUNESHERD_KEY
+        val runeKey = AttributeTags.GLYPH_SLOT_KEY
         val runeAttribute = findRunesherdAttribute(runeName) ?: return null
         val runesherdAttributeModifiers = runesherd.itemMeta.attributeModifiers?.get(runeAttribute) ?: return null
         val runesherdModifier = runesherdAttributeModifiers.find { it.name == runeKey } ?: return null

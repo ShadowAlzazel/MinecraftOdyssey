@@ -7,7 +7,7 @@ object EffectTags {
 
     // TYPES
     const val FREEZING: String = "odyssey.freezing" // Freeze Ticks + Slow
-    const val BUDDING: String = "odyssey.budding" // Independent Stackable Damage over time
+    const val ROTTING: String = "odyssey.budding" // Independent Stackable Damage over time
     const val ABLAZE: String = "odyssey.ablaze" // More damage Fire ticks
     const val MIASMA: String = "odyssey.miasma" // Reduce maximum health
     const val HONEYED: String = "odyssey.honeyed" // Slowed and reduced jump velocity

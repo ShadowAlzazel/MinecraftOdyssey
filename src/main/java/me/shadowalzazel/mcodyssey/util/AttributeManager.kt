@@ -80,14 +80,12 @@ interface AttributeManager {
         id: NamespacedKey? = null,
         slotGroup: EquipmentSlotGroup? = null)
     {
-        val nameKey = id ?: NamespacedKey(Odyssey.instance, name) // CURRENTLY CHECKING AGAINST KEY~!!!!!
+        val nameKey = id ?: NamespacedKey(Odyssey.instance, name)
         val slots = slotGroup ?: EquipmentSlotGroup.ANY
         val newModifier = AttributeModifier(nameKey, value, AttributeModifier.Operation.ADD_NUMBER, slots)
         itemMeta = itemMeta.also { meta ->
             // Check if already has named modifier to remove
             val attributeModifiers = meta.getAttributeModifiers(attribute)
-            //println("Modifiers for [${meta.itemName}] [${meta.attributeModifiers}]")
-            //println("Adding [$attribute]")
             if (attributeModifiers != null) {
                 if (attributeModifiers.contains(newModifier)) {
                     meta.removeAttributeModifier(attribute, newModifier)

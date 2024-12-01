@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.datagen.recipes
 
 import me.shadowalzazel.mcodyssey.common.items.custom.Ingredients
-import me.shadowalzazel.mcodyssey.util.DataKeys
+import me.shadowalzazel.mcodyssey.util.NamedKeys
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
@@ -14,7 +14,7 @@ interface ChoiceManager {
         val exactItem = Ingredients.SILVER_INGOT.newItemStack(1)
         val dataItem = ItemStack(Material.IRON_INGOT).apply {
             val meta = itemMeta
-            meta.itemModel = DataKeys.newKey("silver_ingot")
+            meta.itemModel = NamedKeys.newKey("silver_ingot")
             val itemName = Component.text("silver_ingot")
             meta.itemName(itemName)
             val name = Component.text("Silver Ingot")
@@ -29,7 +29,7 @@ interface ChoiceManager {
         val exactItem = Ingredients.TITANIUM_INGOT.newItemStack(1)
         val dataItem = ItemStack(Material.IRON_INGOT).apply {
             val meta = itemMeta
-            meta.itemModel = DataKeys.newKey("titanium_ingot")
+            meta.itemModel = NamedKeys.newKey("titanium_ingot")
             val itemName = Component.text("titanium_ingot")
             meta.itemName(itemName)
             val name = Component.text("Titanium Ingot")
@@ -44,7 +44,7 @@ interface ChoiceManager {
         val exactItem = Ingredients.HEATED_TITANIUM_INGOT.newItemStack(1)
         val dataItem = ItemStack(Material.IRON_INGOT).apply {
             val meta = itemMeta
-            meta.itemModel = DataKeys.newKey("heated_titanium_ingot")
+            meta.itemModel = NamedKeys.newKey("heated_titanium_ingot")
             val itemName = Component.text("heated_titanium_ingot")
             meta.itemName(itemName)
             val name = Component.text("Heated Titanium Ingot")
@@ -59,7 +59,7 @@ interface ChoiceManager {
         val exactItem = Ingredients.ANODIZED_TITANIUM_INGOT.newItemStack(1)
         val dataItem = ItemStack(Material.IRON_INGOT).apply {
             val meta = itemMeta
-            meta.itemModel = DataKeys.newKey("anodized_titanium_ingot")
+            meta.itemModel = NamedKeys.newKey("anodized_titanium_ingot")
             val itemName = Component.text("anodized_titanium_ingot")
             meta.itemName(itemName)
             val name = Component.text("Anodized Titanium Ingot")
@@ -74,7 +74,7 @@ interface ChoiceManager {
         val exactItem = Ingredients.IRIDIUM_INGOT.newItemStack(1)
         val dataItem = ItemStack(Material.IRON_INGOT).apply {
             val meta = itemMeta
-            meta.itemModel = DataKeys.newKey("iridium_ingot")
+            meta.itemModel = NamedKeys.newKey("iridium_ingot")
             val itemName = Component.text("iridium_ingot")
             meta.itemName(itemName)
             val name = Component.text("Iridium Ingot")
@@ -89,7 +89,7 @@ interface ChoiceManager {
         val exactItem = Ingredients.MITHRIL_INGOT.newItemStack(1)
         val dataItem = ItemStack(Material.IRON_INGOT).apply {
             val meta = itemMeta
-            meta.itemModel = DataKeys.newKey("mithril_ingot")
+            meta.itemModel = NamedKeys.newKey("mithril_ingot")
             val itemName = Component.text("mithril_ingot")
             meta.itemName(itemName)
             val name = Component.text("Mithril Ingot")

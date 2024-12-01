@@ -210,7 +210,7 @@ object GlyphListeners : Listener, GlyphManager {
         val runeName = runesherd.getRuneIdentifier() ?: "rune.generic"
         val runeAttribute = findRunesherdAttribute(runeName) ?: return
         val runeAttributeModifiers = modifiers.get(runeAttribute) ?: return
-        val runeKey = AttributeTags.RUNESHERD_KEY
+        val runeKey = AttributeTags.GLYPH_SLOT_KEY
         val runeModifier = runeAttributeModifiers.find { it.name == runeKey } ?: return
         // Add to result
         val result = event.inventory.result ?: return

@@ -1,5 +1,7 @@
-package me.shadowalzazel.mcodyssey.datagen.recipes
+package me.shadowalzazel.mcodyssey.datagen
 
+import me.shadowalzazel.mcodyssey.datagen.recipes.Merchant
+import me.shadowalzazel.mcodyssey.datagen.recipes.UtilitySmithing
 import me.shadowalzazel.mcodyssey.datagen.recipes.crafting.*
 import me.shadowalzazel.mcodyssey.datagen.recipes.creators.ToolRecipeCreator
 import me.shadowalzazel.mcodyssey.datagen.recipes.creators.WeaponRecipeCreator

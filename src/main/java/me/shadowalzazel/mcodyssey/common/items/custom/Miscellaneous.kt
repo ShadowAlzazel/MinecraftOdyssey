@@ -77,6 +77,9 @@ object Miscellaneous : ItemCreator {
     // CHARMS ARE MADE -> Less Potent / Personal
 
     // Sniffer
+
+    // New BIOME SEEDS
+    // when combined with MAGIC IDK
     val ASPEN_SEED = OdysseyItem("aspen_seed", Material.WHEAT_SEEDS, "Aspen Seed")
     val MAPLE_SEED = OdysseyItem("maple_seed", Material.WHEAT_SEEDS, "Aspen Seed")
     val SAKURA_SEED = OdysseyItem("sakura_seed", Material.WHEAT_SEEDS, "Aspen Seed")

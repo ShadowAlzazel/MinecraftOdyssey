@@ -2,11 +2,14 @@ package me.shadowalzazel.mcodyssey.common.listeners
 
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import me.shadowalzazel.mcodyssey.util.SpaceRuneManager
+import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerDropItemEvent
+import org.bukkit.event.player.PlayerItemConsumeEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
@@ -28,6 +31,32 @@ object ItemListeners : Listener, SpaceRuneManager {
             }
         }
     }
+
+    @EventHandler
+    fun eatingFood(event: PlayerItemConsumeEvent) {
+        // Buffed Golden Apples
+        if (event.item.type == Material.ENCHANTED_GOLDEN_APPLE) {
+            event.player.addPotionEffect(PotionEffect(PotionEffectType.REGENERATION, 20 * 20, 3))
+            event.player.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION, 120 * 20, 4))
+        }
+    }
+
+    fun deathHandler(event: EntityDeathEvent) {
+        if (event.entity.killer != null && event.droppedExp > 0) {
+            // SOUL_STEEL TODO
+            var expDrop = 0.0
+            val killer = event.entity.killer!!
+            val hasSoulSteel = true
+            if (hasSoulSteel) expDrop += 0.15
+            event.droppedExp += (event.droppedExp * (1 + expDrop)).toInt()
+            with(killer.world) {
+                spawnParticle(Particle.SOUL, killer.location, 8, 0.05, 0.25, 0.05)
+                spawnParticle(Particle.SCULK_SOUL, killer.location, 9, 0.15, 0.25, 0.15)
+            }
+            return
+        }
+    }
+
 
     /*-----------------------------------------------------------------------------------------------*/
 

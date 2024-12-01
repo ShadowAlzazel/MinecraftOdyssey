@@ -2,7 +2,7 @@ package me.shadowalzazel.mcodyssey.datagen.recipes.brewing
 
 import io.papermc.paper.potion.PotionMix
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.common.alchemy.PotionEffectsManager
+import me.shadowalzazel.mcodyssey.common.items.Item
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
@@ -10,7 +10,7 @@ import org.bukkit.inventory.RecipeChoice
 import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.potion.PotionType
 
-object BrewerMixes : PotionEffectsManager {
+object BrewerMixes {
 
     fun getMixes(): List<PotionMix> {
         return listOf(
@@ -26,7 +26,7 @@ object BrewerMixes : PotionEffectsManager {
         val potionMeta = potionItem.itemMeta as PotionMeta
         potionMeta.basePotionType = PotionType.WATER
         potionItem.itemMeta = potionMeta
-        val result: ItemStack = createPotionVialStack(potionItem)
+        val result = Item.POTION_VIAL.newItemStack(1)
         val input = RecipeChoice.MaterialChoice(
             Material.POTION
         )
@@ -47,7 +47,7 @@ object BrewerMixes : PotionEffectsManager {
         val potionMeta = potionItem.itemMeta as PotionMeta
         potionMeta.basePotionType = PotionType.WATER
         potionItem.itemMeta = potionMeta
-        val result: ItemStack = createPotionVialStack(potionItem)
+        val result = Item.POTION_VIAL.newItemStack(1)
         val input = RecipeChoice.MaterialChoice(
             Material.POTION
         )
@@ -68,7 +68,7 @@ object BrewerMixes : PotionEffectsManager {
         val potionMeta = potionItem.itemMeta as PotionMeta
         potionMeta.basePotionType = PotionType.WATER
         potionItem.itemMeta = potionMeta
-        val result: ItemStack = createPotionVialStack(potionItem)
+        val result = Item.POTION_VIAL.newItemStack(1)
         val input = RecipeChoice.MaterialChoice(
             Material.POTION
         )

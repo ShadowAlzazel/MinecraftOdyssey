@@ -8,7 +8,7 @@ import me.shadowalzazel.mcodyssey.common.items.custom.Glyphsherds
 import me.shadowalzazel.mcodyssey.common.items.custom.Glyphsherds.createGlyphicItem
 import me.shadowalzazel.mcodyssey.datagen.items.ItemCreator
 import me.shadowalzazel.mcodyssey.datagen.recipes.ChoiceManager
-import me.shadowalzazel.mcodyssey.datagen.recipes.creators.BlazingRocketsCreator
+import me.shadowalzazel.mcodyssey.datagen.recipes.creators.RocketRecipeCreator
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.*
@@ -17,7 +17,7 @@ import org.bukkit.inventory.recipe.CraftingBookCategory
 class Misc : ChoiceManager, ItemCreator {
 
     fun getRecipes(): List<Recipe> {
-        val rocketCreator = BlazingRocketsCreator()
+        val rocketCreator = RocketRecipeCreator()
 
         return listOf(
             fragmentedOrbRecipe(),

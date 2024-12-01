@@ -1,13 +1,11 @@
 package me.shadowalzazel.mcodyssey.datagen.items
 
-import me.shadowalzazel.mcodyssey.util.DataKeys
+import me.shadowalzazel.mcodyssey.util.NamedKeys
 import me.shadowalzazel.mcodyssey.util.EnchantabilityHandler
-import me.shadowalzazel.mcodyssey.common.items.custom.Potions.createPotionStack
-import me.shadowalzazel.mcodyssey.common.items.custom.Glyphsherds.createPresetSherdStack
 import me.shadowalzazel.mcodyssey.common.items.OdysseyItem
 import me.shadowalzazel.mcodyssey.common.items.custom.*
+import me.shadowalzazel.mcodyssey.util.AttributeManager
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
@@ -17,14 +15,14 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.persistence.PersistentDataType
 
-interface ItemCreator : ExoticCreator, EnchantabilityHandler {
+interface ItemCreator : EnchantabilityHandler, AttributeManager {
 
     fun OdysseyItem.createStack(amount: Int = 1): ItemStack {
         val itemStack = ItemStack(overrideMaterial, amount).also {
             // Set Variables
             val meta  = it.itemMeta
-            meta.itemModel = DataKeys.newKey(itemName)
-            meta.persistentDataContainer.set(DataKeys.ITEM_KEY, PersistentDataType.STRING, itemName) // Change for 1.20.5 to itemName component
+            meta.itemModel = NamedKeys.newKey(itemName)
+            meta.persistentDataContainer.set(NamedKeys.ITEM_KEY, PersistentDataType.STRING, itemName) // Change for 1.20.5 to itemName component
             meta.displayName(Component.text(customName).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))
             meta.itemName(Component.text(this.itemName))
             // Optional Variables
@@ -57,15 +55,6 @@ interface ItemCreator : ExoticCreator, EnchantabilityHandler {
         return newBook
     }
 
-    fun OdysseyItem.createTome() : ItemStack {
-        val tome = this.newItemStack()
-        val meta = tome.itemMeta
-        meta.displayName(
-            Component.text(customName, TextColor.color(255, 255, 85))
-        )
-        tome.itemMeta = meta
-        return tome
-    }
 
     @Suppress("UnstableApiUsage")
     fun OdysseyItem.createArmor(bonus: Double = 0.0): ItemStack {
@@ -98,7 +87,6 @@ interface ItemCreator : ExoticCreator, EnchantabilityHandler {
             "tome_of_expenditure" -> Miscellaneous.TOME_OF_EXPENDITURE.newItemStack(amount)
             "tome_of_avarice" -> Miscellaneous.TOME_OF_AVARICE.newItemStack(amount)
             "tome_of_polymerization" -> Miscellaneous.TOME_OF_POLYMERIZATION.newItemStack(amount)
-            "crystalline_potion" -> Potions.CRYSTALLINE_POTION.createPotionStack()
             "irradiated_rod" -> Ingredients.IRRADIATED_ROD.newItemStack(amount)
             "irradiated_shard" -> Ingredients.IRRADIATED_SHARD.newItemStack(amount)
             "ectoplasm" -> Ingredients.ECTOPLASM.newItemStack(amount)
@@ -117,13 +105,7 @@ interface ItemCreator : ExoticCreator, EnchantabilityHandler {
             "silver_ingot" -> Ingredients.SILVER_INGOT.newItemStack(amount)
             "silver_nugget" -> Ingredients.SILVER_NUGGET.newItemStack(amount)
             "soul_steel_ingot" -> Ingredients.SOUL_STEEL_INGOT.newItemStack(amount)
-            "knight_breaker" -> Exotics.KNIGHT_BREAKER.createExoticWeapon()
-            "shogun_lightning" -> Exotics.SHOGUN_LIGHTNING.createExoticWeapon()
-            "abzu_blade" -> Exotics.ABZU_BLADE.createExoticWeapon()
-            "excalibur" -> Exotics.EXCALIBUR.createExoticWeapon()
-            "frost_fang" -> Exotics.FROST_FANG.createExoticWeapon()
-            "elucidator" -> Exotics.ELUCIDATOR.createExoticWeapon()
-            "guard_runesherd" -> Glyphsherds.GUARD_RUNESHERD.createPresetSherdStack(amount)
+            //"guard_runesherd" -> Glyphsherds.GUARD_RUNESHERD.createPresetSherdStack(amount)
             else -> null
         }
     }
