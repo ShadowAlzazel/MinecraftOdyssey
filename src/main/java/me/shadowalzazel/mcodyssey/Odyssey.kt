@@ -9,7 +9,7 @@ import me.shadowalzazel.mcodyssey.common.listeners.*
 import me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners.*
 import me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners.OtherListeners
 import me.shadowalzazel.mcodyssey.datagen.RecipeManager
-import me.shadowalzazel.mcodyssey.datagen.recipes.brewing.BrewerMixes
+import me.shadowalzazel.mcodyssey.datagen.PotionMixes
 import me.shadowalzazel.mcodyssey.common.StructureDetector
 import me.shadowalzazel.mcodyssey.world_events.DailyWorldEventManager
 import me.shadowalzazel.mcodyssey.world_events.DateTimeSyncer
@@ -105,7 +105,7 @@ class Odyssey : JavaPlugin() {
         }
         // Register Potion Mixes
         logger.info("Registering Brews...")
-        BrewerMixes.getMixes().forEach {
+        PotionMixes.getMixes().forEach {
             server.potionBrewer.addPotionMix(it)
         }
         // Register Events

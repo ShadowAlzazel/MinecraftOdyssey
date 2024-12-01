@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.datagen.recipes.crafting
+package me.shadowalzazel.mcodyssey.datagen.recipes
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.items.Item
@@ -7,7 +7,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.inventory.*
 import org.bukkit.inventory.recipe.CraftingBookCategory
 
-class Food {
+class FoodRecipes {
 
     fun getRecipes(): List<Recipe> {
         return listOf(

@@ -1,112 +1,61 @@
 package me.shadowalzazel.mcodyssey.datagen.recipes
 
-import me.shadowalzazel.mcodyssey.common.items.custom.Ingredients
-import me.shadowalzazel.mcodyssey.util.NamedKeys
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.TextDecoration
+import me.shadowalzazel.mcodyssey.common.items.Item
 import org.bukkit.Material
-import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.RecipeChoice
 
 interface ChoiceManager {
 
     fun silverChoices(): RecipeChoice.ExactChoice {
-        val exactItem = Ingredients.SILVER_INGOT.newItemStack(1)
-        val dataItem = ItemStack(Material.IRON_INGOT).apply {
-            val meta = itemMeta
-            meta.itemModel = NamedKeys.newKey("silver_ingot")
-            val itemName = Component.text("silver_ingot")
-            meta.itemName(itemName)
-            val name = Component.text("Silver Ingot")
-                .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false)
-            meta.displayName(name)
-            itemMeta = meta
-        }
-        return RecipeChoice.ExactChoice(exactItem, dataItem)
+        val bukkitItem = Item.SILVER_INGOT.newItemStack(1)
+        val dataItem = Item.SILVER_INGOT.newItemStack(1, false)
+        return RecipeChoice.ExactChoice(bukkitItem, dataItem)
     }
 
     fun titaniumChoices(): RecipeChoice.ExactChoice {
-        val exactItem = Ingredients.TITANIUM_INGOT.newItemStack(1)
-        val dataItem = ItemStack(Material.IRON_INGOT).apply {
-            val meta = itemMeta
-            meta.itemModel = NamedKeys.newKey("titanium_ingot")
-            val itemName = Component.text("titanium_ingot")
-            meta.itemName(itemName)
-            val name = Component.text("Titanium Ingot")
-                .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false)
-            meta.displayName(name)
-            itemMeta = meta
-        }
-        return RecipeChoice.ExactChoice(exactItem, dataItem)
+        val bukkitItem = Item.TITANIUM_INGOT.newItemStack(1)
+        val dataItem = Item.TITANIUM_INGOT.newItemStack(1, false)
+        return RecipeChoice.ExactChoice(bukkitItem, dataItem)
     }
 
     fun heatedTitaniumChoices(): RecipeChoice.ExactChoice {
-        val exactItem = Ingredients.HEATED_TITANIUM_INGOT.newItemStack(1)
-        val dataItem = ItemStack(Material.IRON_INGOT).apply {
-            val meta = itemMeta
-            meta.itemModel = NamedKeys.newKey("heated_titanium_ingot")
-            val itemName = Component.text("heated_titanium_ingot")
-            meta.itemName(itemName)
-            val name = Component.text("Heated Titanium Ingot")
-                .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false)
-            meta.displayName(name)
-            itemMeta = meta
-        }
-        return RecipeChoice.ExactChoice(exactItem, dataItem)
+        val bukkitItem = Item.HEATED_TITANIUM_INGOT.newItemStack(1)
+        val dataItem = Item.HEATED_TITANIUM_INGOT.newItemStack(1, false)
+        return RecipeChoice.ExactChoice(bukkitItem, dataItem)
     }
 
     fun anodizedTitaniumChoices(): RecipeChoice.ExactChoice {
-        val exactItem = Ingredients.ANODIZED_TITANIUM_INGOT.newItemStack(1)
-        val dataItem = ItemStack(Material.IRON_INGOT).apply {
-            val meta = itemMeta
-            meta.itemModel = NamedKeys.newKey("anodized_titanium_ingot")
-            val itemName = Component.text("anodized_titanium_ingot")
-            meta.itemName(itemName)
-            val name = Component.text("Anodized Titanium Ingot")
-                .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false)
-            meta.displayName(name)
-            itemMeta = meta
-        }
-        return RecipeChoice.ExactChoice(exactItem, dataItem)
+        val bukkitItem = Item.ANODIZED_TITANIUM_INGOT.newItemStack(1)
+        val dataItem = Item.ANODIZED_TITANIUM_INGOT.newItemStack(1, false)
+        return RecipeChoice.ExactChoice(bukkitItem, dataItem)
     }
 
     fun iridiumChoices(): RecipeChoice.ExactChoice {
-        val exactItem = Ingredients.IRIDIUM_INGOT.newItemStack(1)
-        val dataItem = ItemStack(Material.IRON_INGOT).apply {
-            val meta = itemMeta
-            meta.itemModel = NamedKeys.newKey("iridium_ingot")
-            val itemName = Component.text("iridium_ingot")
-            meta.itemName(itemName)
-            val name = Component.text("Iridium Ingot")
-                .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false)
-            meta.displayName(name)
-            itemMeta = meta
-        }
-        return RecipeChoice.ExactChoice(exactItem, dataItem)
+        val bukkitItem = Item.IRIDIUM_INGOT.newItemStack(1)
+        val dataItem = Item.IRIDIUM_INGOT.newItemStack(1, false)
+        return RecipeChoice.ExactChoice(bukkitItem, dataItem)
     }
 
     fun mithrilChoices(): RecipeChoice.ExactChoice {
-        val exactItem = Ingredients.MITHRIL_INGOT.newItemStack(1)
-        val dataItem = ItemStack(Material.IRON_INGOT).apply {
-            val meta = itemMeta
-            meta.itemModel = NamedKeys.newKey("mithril_ingot")
-            val itemName = Component.text("mithril_ingot")
-            meta.itemName(itemName)
-            val name = Component.text("Mithril Ingot")
-                .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false)
-            meta.displayName(name)
-            itemMeta = meta
-        }
-        return RecipeChoice.ExactChoice(exactItem, dataItem)
+        val bukkitItem = Item.MITHRIL_INGOT.newItemStack(1)
+        val dataItem = Item.MITHRIL_INGOT.newItemStack(1, false)
+        return RecipeChoice.ExactChoice(bukkitItem, dataItem)
+    }
+
+    fun soulSteelChoices(): RecipeChoice.ExactChoice {
+        val bukkitItem = Item.SOUL_STEEL_INGOT.newItemStack(1)
+        val dataItem = Item.SOUL_STEEL_INGOT.newItemStack(1, false)
+        return RecipeChoice.ExactChoice(bukkitItem, dataItem)
     }
 
     // Const
-    val WOOD_CHOICES: RecipeChoice.MaterialChoice
-        get() = RecipeChoice.MaterialChoice(
+    fun woodChoices(): RecipeChoice.MaterialChoice {
+        return RecipeChoice.MaterialChoice(
             Material.ACACIA_PLANKS, Material.BIRCH_PLANKS, Material.DARK_OAK_PLANKS,
             Material.OAK_PLANKS, Material.SPRUCE_PLANKS, Material.JUNGLE_PLANKS,
             Material.CHERRY_PLANKS, Material.MANGROVE_PLANKS
         )
+    }
 
 
     // Keys
@@ -114,7 +63,7 @@ interface ChoiceManager {
         get() = mapOf(
             // Minecraft
             "wooden" to mapOf(
-                'X' to WOOD_CHOICES,
+                'X' to woodChoices(),
                 '|' to RecipeChoice.MaterialChoice(Material.STICK)
             ),
             "stone" to mapOf(
@@ -147,7 +96,7 @@ interface ChoiceManager {
                 '|' to RecipeChoice.MaterialChoice(Material.STICK)
             ),
             "soul_steel" to mapOf(
-                'X' to RecipeChoice.ExactChoice(Ingredients.SOUL_STEEL_INGOT.newItemStack(1)),
+                'X' to soulSteelChoices(),
                 '|' to RecipeChoice.MaterialChoice(Material.STICK)
             ),
             "titanium" to mapOf(
@@ -155,7 +104,7 @@ interface ChoiceManager {
                 '|' to RecipeChoice.MaterialChoice(Material.STICK)
             ),
             "anodized_titanium" to mapOf(
-                'X' to RecipeChoice.ExactChoice(Ingredients.ANODIZED_TITANIUM_INGOT.newItemStack(1)),
+                'X' to anodizedTitaniumChoices(),
                 '|' to RecipeChoice.MaterialChoice(Material.STICK)
             ),
             "iridium" to mapOf(

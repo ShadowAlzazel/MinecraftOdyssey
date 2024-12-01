@@ -33,7 +33,7 @@ object LootTableManager {
         return items.first()
     }
 
-    fun getItemFromOdysseyLoot(name: String): ItemStack {
+    fun createItemStackFromLoot(name: String): ItemStack {
         return singleItemFromResource(toLootKey(name))
     }
 

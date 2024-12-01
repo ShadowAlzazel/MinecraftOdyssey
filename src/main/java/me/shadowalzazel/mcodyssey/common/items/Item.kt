@@ -15,10 +15,10 @@ open class Item(
     class DataItem(name: String, location: String?=null): Item(name, location)
     class CustomItem(name: String, val constructor: ItemConstructor): Item(name)
 
-    open fun newItemStack(amount: Int=1, withIdTag: Boolean=true): ItemStack {
+    open fun newItemStack(amount: Int=1, withBukkitId: Boolean=true): ItemStack {
         val item = when(this) {
-            is DataItem -> LootTableManager.getItemFromOdysseyLoot(this.location ?: this.name)
-            is CustomItem -> this.constructor.createItemStack(this.name, amount, withIdTag)
+            is DataItem -> LootTableManager.createItemStackFromLoot(this.location ?: this.name)
+            is CustomItem -> this.constructor.createItemStack(this.name, amount, withBukkitId)
             else -> ItemStack(Material.AIR)
         }
         item.amount = amount
@@ -100,10 +100,6 @@ open class Item(
         val THAI_TULIP_BOBA_TEA = DataItem("earl_lily_boba_tea")
         val ALLIUM_JADE_BOBA_TEA = DataItem("earl_lily_boba_tea")
         val CORNFLOWER_CEYLON_BOBA_TEA = DataItem("earl_lily_boba_tea")
-        // Pet
-        val DOG_SPINACH = DataItem("dog_spinach")
-        val DOG_SIZZLE_CRISP = DataItem("dog_sizzle_crisp")
-        val DOG_MILK_BONE = DataItem("dog_milk_bone")
         // Potions
         val POTION_VIAL = CustomItem("potion_vial", Potions.POTION_VIAL)
         val CRYSTALLINE_POTION = CustomItem("crystalline_potion", Potions.CRYSTALLINE_POTION)
@@ -123,9 +119,35 @@ open class Item(
         val NETHER_OWL_CONCOCTION = CustomItem("nether_owl_concoction", Potions.NETHER_OWL_CONCOCTION)
         val SPELUNKERS_CONCOCTION = CustomItem("spelunkers_concoction", Potions.SPELUNKERS_CONCOCTION)
         val CUSTOM_CONCOCTION = CustomItem("custom_concoction", Potions.CUSTOM_CONCOCTION)
-        // WIP
+        // ---------------------------------- DATA + CUSTOM -----------------------------------
+        // Exotics
+        val ABZU_BLADE = DataItem("abzu_blade")
+        val ELUCIDATOR = DataItem("elucidator")
+        val EXCALIBUR = DataItem("excalibur")
+        val KNIGHT_BREAKER = DataItem("knight_breaker")
+        val SHOGUN_LIGHTNING = DataItem("shogun_lightning")
+        val FROST_FANG = DataItem("frost_fang")
+        // Pet
+        val DOG_SPINACH = DataItem("dog_spinach")
+        val DOG_SIZZLE_CRISP = DataItem("dog_sizzle_crisp")
+        val DOG_MILK_BONE = DataItem("dog_milk_bone")
+        // Misc
         val SCULK_POINTER = DataItem("sculk_pointer")
         val SCULK_HEART = DataItem("sculk_heart")
+        val HORNED_HELMET = DataItem("horned_helmet")
+        // Equipment
+        val GRAPPLING_HOOK = DataItem("grappling_hook")
+        val TINKERED_MUSKET = DataItem("tinkered_musket")
+        val TINKERED_BOW = DataItem("tinkered_bow")
+        val AUTO_CROSSBOW = DataItem("auto_crossbow")
+        val COMPACT_CROSSBOW = DataItem("compact_crossbow")
+        val ALCHEMICAL_DRIVER = DataItem("alchemical_driver")
+        val EXPLOSIVE_ARROW = DataItem("explosive_arrow")
+        val ARCANE_WAND = DataItem("arcane_wand")
+        val ARCANE_BLADE = DataItem("arcane_blade")
+        val ARCANE_SCEPTER = DataItem("arcane_scepter")
+        val WARPING_WAND = DataItem("warping_wand")
+        val VOID_LINKED_KUNAI = DataItem("void_linked_kunai")
 
     }
 

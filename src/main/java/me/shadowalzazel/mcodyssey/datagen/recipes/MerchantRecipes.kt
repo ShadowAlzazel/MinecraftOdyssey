@@ -6,7 +6,7 @@ import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.MerchantRecipe
 
-class Merchant {
+class MerchantRecipes {
 
     fun getRecipes(): List<MerchantRecipe> {
         return listOf(

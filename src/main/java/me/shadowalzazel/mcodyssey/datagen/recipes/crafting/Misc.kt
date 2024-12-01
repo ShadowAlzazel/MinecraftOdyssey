@@ -28,12 +28,11 @@ class Misc : ChoiceManager, ItemCreator {
             clayKeyRecipe(),
 
             blankTomeRecipe(),
-            bundleRecipe(),
             enigmaticOmamoriRecipe(),
             irradiatedFruitRecipe(),
             soulCatalystRecipe(),
             soulSpiceRecipe(),
-            silverIngotRecipe(),
+            //silverIngotRecipe(),
 
             soulSteelUpgradeTemplateRecipe(),
             titaniumUpgradeTemplateRecipe(),
@@ -123,18 +122,7 @@ class Misc : ChoiceManager, ItemCreator {
         return recipe
     }
 
-    private fun bundleRecipe(): ShapedRecipe {
-        val result = ItemStack(Material.BUNDLE, 1)
-        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "bundle"), result).apply {
-            shape(" S ", "RFR", " R ")
-            setIngredient('F', Material.RABBIT_FOOT)
-            setIngredient('S', Material.STRING)
-            setIngredient('R', Material.RABBIT_HIDE)
-            category = CraftingBookCategory.MISC
-        }
-        return recipe
-    }
-
+    /*
 
     private fun silverIngotRecipe(): ShapedRecipe {
         val result = Ingredients.SILVER_INGOT.createStack(1)
@@ -146,6 +134,8 @@ class Misc : ChoiceManager, ItemCreator {
         return recipe
     }
 
+
+     */
 
     private fun enigmaticOmamoriRecipe(): ShapedRecipe {
         val result = Miscellaneous.ENIGMATIC_OMAMORI.newItemStack(1)
@@ -262,4 +252,5 @@ class Misc : ChoiceManager, ItemCreator {
         }
         return recipe
     }
+
 }

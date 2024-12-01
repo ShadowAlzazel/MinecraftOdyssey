@@ -25,7 +25,7 @@ object LootListeners : Listener, ItemCreator {
         if (mob.scoreboardTags.contains(EntityTags.IN_MINESHAFT)) {
             val mobLootLogic = LootLogic(1.0, mob, killer)
             if (mobLootLogic.roll(33.0)) {
-                mob.world.dropItem(mob.location, Ingredients.SILVER_NUGGET.createStack(1))
+                //mob.world.dropItem(mob.location, Ingredients.SILVER_NUGGET.createStack(1)) TODO
             }
         }
         // Arcane Book Handler

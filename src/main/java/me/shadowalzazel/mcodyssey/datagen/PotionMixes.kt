@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.datagen.recipes.brewing
+package me.shadowalzazel.mcodyssey.datagen
 
 import io.papermc.paper.potion.PotionMix
 import me.shadowalzazel.mcodyssey.Odyssey
@@ -10,7 +10,7 @@ import org.bukkit.inventory.RecipeChoice
 import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.potion.PotionType
 
-object BrewerMixes {
+object PotionMixes {
 
     fun getMixes(): List<PotionMix> {
         return listOf(

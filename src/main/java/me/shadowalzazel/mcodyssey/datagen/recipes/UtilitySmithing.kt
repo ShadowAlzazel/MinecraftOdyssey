@@ -13,8 +13,8 @@ class UtilitySmithing { // USE THIS CLASS TO CREATE RECIPE WHICH ARE AVAILABLE T
             bookSmithing(),
             toolUpgrading(),
             engraving(),
-            runesherdAugmenting(),
-            customTrimming()
+            glyphAugmenting(),
+            customArmorTrimming()
         )
     }
 
@@ -23,7 +23,6 @@ class UtilitySmithing { // USE THIS CLASS TO CREATE RECIPE WHICH ARE AVAILABLE T
     private fun bookCombining(): SmithingTransformRecipe {
         val result = ItemStack(Material.ENCHANTED_BOOK)
         val template = RecipeChoice.MaterialChoice(Material.ENCHANTED_BOOK)
-
         return SmithingTransformRecipe(
             NamespacedKey(Odyssey.instance, "book_combining"),
             result,
@@ -37,7 +36,6 @@ class UtilitySmithing { // USE THIS CLASS TO CREATE RECIPE WHICH ARE AVAILABLE T
     private fun bookSmithing(): SmithingTransformRecipe {
         val result = ItemStack(Material.ENCHANTED_BOOK)
         val template = RecipeChoice.MaterialChoice(Material.ENCHANTED_BOOK)
-
         return SmithingTransformRecipe(
             NamespacedKey(Odyssey.instance, "book_smithing"),
             result,
@@ -52,19 +50,15 @@ class UtilitySmithing { // USE THIS CLASS TO CREATE RECIPE WHICH ARE AVAILABLE T
                 Material.NETHERITE_LEGGINGS, Material.DIAMOND_LEGGINGS, Material.IRON_LEGGINGS, Material.GOLDEN_LEGGINGS, Material.CHAINMAIL_LEGGINGS, Material.LEATHER_LEGGINGS,
                 Material.NETHERITE_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.IRON_CHESTPLATE, Material.GOLDEN_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, Material.LEATHER_CHESTPLATE,
                 Material.NETHERITE_HELMET, Material.DIAMOND_HELMET, Material.IRON_HELMET, Material.GOLDEN_HELMET, Material.CHAINMAIL_HELMET, Material.LEATHER_HELMET,
-                Material.ELYTRA, Material.SHIELD, Material.BOW, Material.CROSSBOW, Material.TRIDENT, Material.FISHING_ROD,
-                Material.SUNFLOWER
+                Material.ELYTRA, Material.SHIELD, Material.BOW, Material.CROSSBOW, Material.TRIDENT, Material.FISHING_ROD
             ),
             RecipeChoice.MaterialChoice(Material.PRISMARINE_CRYSTALS, Material.LAPIS_LAZULI)
         )
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-    // Soul Steel Template + Item + Soul Steel Ingot
+    // For Upgrading a tool material
     private fun toolUpgrading(): SmithingTransformRecipe {
-        //val result = Ingredients.SOUL_STEEL_INGOT.newItemStack(1)
-        //val template = RecipeChoice.ExactChoice(Equipment.SOUL_STEEL_UPGRADE_TEMPLATE.newItemStack(1))
-        //val ingot = RecipeChoice.ExactChoice(Ingredients.SOUL_STEEL_INGOT.newItemStack(1))
         val template = RecipeChoice.MaterialChoice(Material.PAPER)
         val addition = RecipeChoice.MaterialChoice(Material.IRON_INGOT)
         return SmithingTransformRecipe(
@@ -100,9 +94,8 @@ class UtilitySmithing { // USE THIS CLASS TO CREATE RECIPE WHICH ARE AVAILABLE T
     private fun engraving(): SmithingTransformRecipe {
         val result = ItemStack(Material.AMETHYST_SHARD)
         val template = RecipeChoice.MaterialChoice(Material.PAPER)
-
         return SmithingTransformRecipe(
-            NamespacedKey(Odyssey.instance, "amethyst_engraving"),
+            NamespacedKey(Odyssey.instance, "engraving"),
             result,
             template,
             RecipeChoice.MaterialChoice(
@@ -119,22 +112,19 @@ class UtilitySmithing { // USE THIS CLASS TO CREATE RECIPE WHICH ARE AVAILABLE T
                 Material.POTION,
                 Material.DIAMOND, Material.EMERALD, Material.GOLD_INGOT, Material.AMETHYST_SHARD, Material.IRON_INGOT,
                 Material.PAPER,
-                Material.RAW_GOLD, Material.RAW_IRON, Material.GOLD_NUGGET, Material.IRON_NUGGET,
-                Material.SUNFLOWER
+                Material.RAW_GOLD, Material.RAW_IRON, Material.GOLD_NUGGET, Material.IRON_NUGGET
             ),
             RecipeChoice.MaterialChoice(Material.AMETHYST_SHARD)
         )
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------------------*/
-
-    private fun runesherdAugmenting(): SmithingTransformRecipe {
+    // For Cloning Glyphs
+    private fun glyphAugmenting(): SmithingTransformRecipe {
         val result = ItemStack(Material.BRICK)
         val template = RecipeChoice.MaterialChoice(Material.BRICK, Material.CLAY_BALL)
-
         return SmithingTransformRecipe(
-            NamespacedKey(Odyssey.instance, "runesherd_augmenting"),
+            NamespacedKey(Odyssey.instance, "glyph_augmenting"),
             result,
             template,
             RecipeChoice.MaterialChoice(
@@ -156,8 +146,8 @@ class UtilitySmithing { // USE THIS CLASS TO CREATE RECIPE WHICH ARE AVAILABLE T
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-
-    private fun customTrimming(): SmithingTrimRecipe {
+    // For Custom Trims
+    private fun customArmorTrimming(): SmithingTrimRecipe {
         val template = RecipeChoice.MaterialChoice(
             Material.DUNE_ARMOR_TRIM_SMITHING_TEMPLATE,
             Material.EYE_ARMOR_TRIM_SMITHING_TEMPLATE,
@@ -179,16 +169,14 @@ class UtilitySmithing { // USE THIS CLASS TO CREATE RECIPE WHICH ARE AVAILABLE T
             Material.BOLT_ARMOR_TRIM_SMITHING_TEMPLATE,
             Material.PAPER
         )
-
         val armor = RecipeChoice.MaterialChoice(
             Material.NETHERITE_BOOTS, Material.DIAMOND_BOOTS, Material.IRON_BOOTS, Material.GOLDEN_BOOTS, Material.CHAINMAIL_BOOTS, Material.LEATHER_BOOTS,
             Material.NETHERITE_LEGGINGS, Material.DIAMOND_LEGGINGS, Material.IRON_LEGGINGS, Material.GOLDEN_LEGGINGS, Material.CHAINMAIL_LEGGINGS, Material.LEATHER_LEGGINGS,
             Material.NETHERITE_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.IRON_CHESTPLATE, Material.GOLDEN_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, Material.LEATHER_CHESTPLATE,
             Material.NETHERITE_HELMET, Material.DIAMOND_HELMET, Material.IRON_HELMET, Material.GOLDEN_HELMET, Material.CHAINMAIL_HELMET, Material.LEATHER_HELMET,
         )
-
         return SmithingTrimRecipe(
-            NamespacedKey(Odyssey.instance, "custom_trims"),
+            NamespacedKey(Odyssey.instance, "custom_armor_trimming"),
             template,
             armor,
             RecipeChoice.MaterialChoice(
