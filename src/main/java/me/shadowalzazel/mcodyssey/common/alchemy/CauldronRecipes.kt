@@ -1,6 +1,5 @@
 package me.shadowalzazel.mcodyssey.common.alchemy
 
-import me.shadowalzazel.mcodyssey.common.alchemy.base.CauldronAlchemyRecipe
 import me.shadowalzazel.mcodyssey.common.alchemy.utility.CauldronFuels
 import me.shadowalzazel.mcodyssey.common.alchemy.utility.IngredientChoice
 import me.shadowalzazel.mcodyssey.common.items.Item

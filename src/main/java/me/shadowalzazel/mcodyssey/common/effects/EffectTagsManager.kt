@@ -1,7 +1,6 @@
-package me.shadowalzazel.mcodyssey.common.alchemy
+package me.shadowalzazel.mcodyssey.common.effects
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.common.effects.EffectColors
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.util.constants.EffectTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
@@ -10,20 +9,21 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Color
-import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.Particle
 import org.bukkit.entity.AreaEffectCloud
 import org.bukkit.entity.ThrownPotion
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.persistence.PersistentDataType
-import org.bukkit.potion.PotionEffect
-import org.bukkit.potion.PotionType
+import java.util.*
 
 interface EffectTagsManager : DataTagManager {
 
     /*-----------------------------------------------------------------------------------------------*/
+
+    // Effects TODO
+    // Reapply effects again
+
 
     fun ItemStack.hasOdysseyEffectTag(): Boolean {
         return hasTag(ItemDataTags.ODYSSEY_EFFECT_TAG) || hasTag(ItemDataTags.IS_ODYSSEY_EFFECT)
@@ -97,12 +97,7 @@ interface EffectTagsManager : DataTagManager {
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-    // TIPPED ARROWS
-
-
-
-    /*-----------------------------------------------------------------------------------------------*/
-    // Components
+    // Test and Lore
 
     fun getRomanNumeral(number: Int): String {
         val numeralList = mapOf(1 to "I", 2 to "II", 3 to "III", 4 to "IV", 5 to "V", 6 to "VI", 7 to "VII", 8 to "VIII", 9 to "IX", 10 to "X")
@@ -115,84 +110,31 @@ interface EffectTagsManager : DataTagManager {
         return if (seconds < 9) { "($minutes:0$seconds)" } else { "($minutes:$seconds)" }
     }
 
-    fun createEffectComponent(tag: String, timeInTicks: Int, amplifier: Int = 1): Component {
+    fun newEffectLoreComponent(tag: String, timeInTicks: Int, amplifier: Int=1): Component {
         val color = getEffectColor(tag)
         val numeral = getRomanNumeral(amplifier)
-        return when (tag) {
-            EffectTags.FREEZING -> {
-                Component.text("Freezing $numeral ${createTimeString(timeInTicks / 20)}", color)
-                    .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-            }
-            EffectTags.BUDDING -> {
-                Component.text("Rotting $numeral ${createTimeString(timeInTicks / 20)}", color)
-                    .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-            }
-            EffectTags.ABLAZE -> {
-                Component.text("Blazing $numeral ${createTimeString(timeInTicks / 20)}", color)
-                    .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-            }
-            EffectTags.IRRADIATED -> {
-                Component.text("Irradiated $numeral ${createTimeString(timeInTicks / 20)}", color)
-                    .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-            }
-            EffectTags.CORRODING -> {
-                Component.text("Corrosion $numeral ${createTimeString(timeInTicks / 20)}", color)
-                    .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-            }
-            EffectTags.MIASMA -> {
-                Component.text("Miasma $numeral ${createTimeString(timeInTicks / 20)}", color)
-                    .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-            }
-            EffectTags.ACCURSED -> {
-                Component.text("Accursed $numeral", color)
-                    .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-            }
-            EffectTags.SOUL_DAMAGE -> {
-                Component.text("Soul Damage $numeral", color)
-                    .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-            }
-            EffectTags.SHIMMER -> {
-                Component.text("Shimmer $numeral ${createTimeString(timeInTicks / 20)}", color)
-                    .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-            }
-            else -> {
-                Component.text("No Effect")
-            }
-        }
+        val displayName = tag.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+        return Component
+            .text("$displayName $numeral ${createTimeString(timeInTicks / 20)}", color)
+            .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+    }
+
+    fun createEffectLore(tag: String, timeInTicks: Int, amplifier: Int = 1): Component {
+        return newEffectLoreComponent(tag, timeInTicks, amplifier)
     }
 
     fun getEffectColor(tag: String): TextColor {
         return when (tag) {
-            EffectTags.FREEZING -> {
-                EffectColors.FREEZING.color
-            }
-            EffectTags.BUDDING -> {
-                EffectColors.ROTTING.color
-            }
-            EffectTags.ABLAZE -> {
-                EffectColors.ABLAZE.color
-            }
-            EffectTags.IRRADIATED -> {
-                EffectColors.IRRADIATED.color
-            }
-            EffectTags.CORRODING -> {
-                EffectColors.CORROSION.color
-            }
-            EffectTags.MIASMA -> {
-                EffectColors.MIASMA.color
-            }
-            EffectTags.ACCURSED -> {
-                EffectColors.ACCURSED.color
-            }
-            EffectTags.SOUL_DAMAGE -> {
-                EffectColors.SOUL.color
-            }
-            EffectTags.SHIMMER -> {
-                EffectColors.SHIMMER.color
-            }
-            else -> {
-                TextColor.color(255, 255, 255)
-            }
+            EffectTags.FREEZING -> EffectColors.FREEZING.color
+            EffectTags.ROTTING ->  EffectColors.ROTTING.color
+            EffectTags.ABLAZE -> EffectColors.ABLAZE.color
+            EffectTags.IRRADIATED -> EffectColors.IRRADIATED.color
+            EffectTags.CORRODING ->     EffectColors.CORROSION.color
+            EffectTags.MIASMA -> EffectColors.MIASMA.color
+            EffectTags.ACCURSED -> EffectColors.ACCURSED.color
+            EffectTags.SOUL_DAMAGE ->   EffectColors.SOUL.color
+            EffectTags.SHIMMER ->  EffectColors.SHIMMER.color
+            else -> TextColor.color(255, 255, 255)
         }
     }
 
@@ -202,69 +144,6 @@ interface EffectTagsManager : DataTagManager {
         val tensSecond = timeSequence[3].toString().toInt()
         val onesSecond = timeSequence[4].toString().toInt()
         return (minute * 60) + (tensSecond * 10) + (onesSecond)
-    }
-
-    /*-----------------------------------------------------------------------------------------------*/
-    // Potion Creators
-    fun createPotionVialStack(potion: ItemStack): ItemStack {
-        val vial = potion.clone()
-        val meta = (vial.itemMeta as PotionMeta)
-        if (meta.basePotionType == null) return potion
-        // Do net Detect Water
-        if (meta.basePotionType != PotionType.WATER) {
-            val newEffects = mutableListOf<PotionEffect>()
-            // Base Effects
-            for (effect in meta.basePotionType!!.potionEffects) {
-                val duration = (effect.duration * 0.4).toInt()
-                newEffects.add(PotionEffect(effect.type, duration, effect.amplifier))
-            }
-            // Custom Effects
-            for (effect in meta.customEffects) {
-                val duration = (effect.duration * 0.4).toInt()
-                newEffects.add(PotionEffect(effect.type, duration, effect.amplifier))
-            }
-            // Override effects
-            for (effect in newEffects) {
-                meta.addCustomEffect(effect, true)
-            }
-        }
-        // Meta Apply
-        // TODO
-        //meta.setCustomModelData(ItemModels.VIAL_CHARGE_1)
-        meta.basePotionType = PotionType.THICK
-        meta.setMaxStackSize(64)
-        vial.itemMeta = meta
-        // Return
-        vial.addTag(ItemDataTags.IS_POTION_VIAL)
-        vial.amount = 4
-        return vial
-        // TODO: For Odyssey Effects
-    }
-
-    fun createOdysseyLingeringPotion(item: ItemStack): ItemStack {
-        val potion = ItemStack(Material.LINGERING_POTION, 1)
-        val oldTime = item.getCustomEffectTimeInTicks()
-        val newTime = oldTime / 4
-        // Logic
-        potion.itemMeta = (item.itemMeta as PotionMeta)
-        // Lore
-        return potion.apply {
-            setCustomEffectTime(newTime)
-            val newLore = lore() ?: mutableListOf()
-            val effectTag = item.getCustomEffectTag()
-            val amplifier = item.getCustomEffectAmplifier()
-            val index = newLore.indexOf(createEffectComponent(effectTag, oldTime, amplifier))
-            val foundLore = newLore.find { it.color() == getEffectColor(effectTag) }
-            if (foundLore != null) {
-                val foundIndex = newLore.indexOf(foundLore)
-                newLore[foundIndex] = createEffectComponent(effectTag, newTime, amplifier)
-            } else if (index != -1) {
-                newLore[index] = createEffectComponent(effectTag, newTime, amplifier)
-            } else {
-                newLore[0] = createEffectComponent(effectTag, newTime, amplifier)
-            }
-            lore(newLore)
-        }
     }
 
     fun createOdysseyEffectCloud(potion: ThrownPotion, cloud: AreaEffectCloud) {
@@ -280,7 +159,7 @@ interface EffectTagsManager : DataTagManager {
             EffectTags.FREEZING -> {
                 cloudTag = EntityTags.FREEZING_CLOUD
             }
-            EffectTags.BUDDING -> {
+            EffectTags.ROTTING -> {
                 cloudTag = EntityTags.DECAYING_CLOUD
             }
             EffectTags.ABLAZE -> {

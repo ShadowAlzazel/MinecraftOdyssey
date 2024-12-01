@@ -4,6 +4,7 @@ package me.shadowalzazel.mcodyssey.common.alchemy
 
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.PotionContents
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.util.RegistryTagManager
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import org.bukkit.Material
@@ -12,15 +13,19 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionType
 
-interface BrewingManager : EffectTagsManager, RegistryTagManager {
+interface BrewingManager : RegistryTagManager, DataTagManager {
 
     fun customBrewingHandler(event: BrewEvent) {
-        val ingredient = event.contents.ingredient ?: return
-        //
+        event.contents.ingredient ?: return
         brewedCustomPotion(event)
-
     }
 
+    /*-----------------------------------------------------------------------------------------------*/
+    // Sea Crystals -> Vials
+    // Honey Bottle -> Extended+
+    // Glow-berries -> Upgraded+
+    // EXP Bottle -> Aura
+    // Popped Chorus Fruit -> Concoctions
 
     private fun brewedCustomPotion(event: BrewEvent) {
         val ingredient = event.contents.ingredient ?: return
@@ -50,8 +55,8 @@ interface BrewingManager : EffectTagsManager, RegistryTagManager {
             result.setData(DataComponentTypes.MAX_STACK_SIZE, 16) // Set stack size
             // Effect Variables to control end result
             val hasBasePotion = potionData.potion() != null
-            val hasCustomEffects = (potionData.customEffects().isNotEmpty()) || item.hasCustomEffectTag()
-            val hasOdysseyPotionEffects = item.hasOdysseyEffectTag()
+            val hasCustomEffects = (potionData.customEffects().isNotEmpty())
+            //val hasOdysseyPotionEffects = item.hasOdysseyEffectTag()
             val hasCustomModel = item.getData(DataComponentTypes.ITEM_MODEL) != null
             // Set Data from OLD item
             result = convertPotionType(result, getIngredientResult(ingredient))

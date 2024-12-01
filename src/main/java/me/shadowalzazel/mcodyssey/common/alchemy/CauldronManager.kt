@@ -5,7 +5,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.api.AdvancementManager
-import me.shadowalzazel.mcodyssey.common.alchemy.base.CauldronAlchemyRecipe
 import me.shadowalzazel.mcodyssey.common.alchemy.utility.CauldronRunner
 import org.bukkit.Material
 import org.bukkit.entity.Item

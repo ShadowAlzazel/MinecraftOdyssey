@@ -8,7 +8,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-interface EffectsManager {
+interface EffectsManager : EffectTagsManager {
 
     //val blazingTasks: MutableMap<UUID, BlazingTask>
     //    get() = mutableMapOf()
@@ -51,7 +51,7 @@ interface EffectsManager {
             EffectTags.MIASMA -> {
                 miasmaAssigner(modifiedDuration, amplifier)
             }
-            EffectTags.BUDDING -> {
+            EffectTags.ROTTING -> {
                 buddingAssigner(modifiedDuration, amplifier)
             }
             EffectTags.SOUL_DAMAGE -> {
@@ -184,8 +184,8 @@ interface EffectsManager {
     ) {
         val potionEffect = PotionEffect(PotionEffectType.HUNGER, durationInTicks, amplifier)
         addPotionEffect(potionEffect)
-        if (EffectTags.BUDDING !in scoreboardTags) {
-            addScoreboardTag(EffectTags.BUDDING)
+        if (EffectTags.ROTTING !in scoreboardTags) {
+            addScoreboardTag(EffectTags.ROTTING)
         }
         BuddingTask(this, amplifier, (durationInTicks / 20) / 2).runTaskTimer(Odyssey.instance, 0, 20 * 2)
     }

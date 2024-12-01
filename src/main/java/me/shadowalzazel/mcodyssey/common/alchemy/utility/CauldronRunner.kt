@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.common.alchemy.utility
 
-import me.shadowalzazel.mcodyssey.common.alchemy.base.CauldronAlchemyRecipe
+import me.shadowalzazel.mcodyssey.common.alchemy.CauldronAlchemyRecipe
 import org.bukkit.entity.Item
 import org.bukkit.scheduler.BukkitRunnable
 

@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.common.alchemy.base
+package me.shadowalzazel.mcodyssey.common.alchemy
 
 import io.papermc.paper.datacomponent.DataComponentTypes
 import org.bukkit.Location

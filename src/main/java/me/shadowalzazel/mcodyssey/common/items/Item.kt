@@ -43,6 +43,7 @@ open class Item(
         val MITHRIL_INGOT = DataItem("mithril_ingot")
         val NEPTUNIAN = DataItem("neptunian")
         val RUBY = DataItem("ruby")
+        val SOUL_CRYSTAL = DataItem("soul_crystal")
         val SILVER_INGOT = DataItem("silver_ingot")
         val SILVER_NUGGET = DataItem("silver_nugget")
         val SOUL_STEEL_INGOT = DataItem("soul_steel_ingot")
@@ -104,6 +105,7 @@ open class Item(
         val DOG_SIZZLE_CRISP = DataItem("dog_sizzle_crisp")
         val DOG_MILK_BONE = DataItem("dog_milk_bone")
         // Potions
+        val POTION_VIAL = CustomItem("potion_vial", Potions.POTION_VIAL)
         val CRYSTALLINE_POTION = CustomItem("crystalline_potion", Potions.CRYSTALLINE_POTION)
         val POTION_OF_LEVITATION = CustomItem("potion_of_levitation", Potions.POTION_OF_LEVITATION)
         val POTION_OF_WITHERING = CustomItem("potion_of_withering", Potions.POTION_OF_WITHERING)
@@ -121,6 +123,9 @@ open class Item(
         val NETHER_OWL_CONCOCTION = CustomItem("nether_owl_concoction", Potions.NETHER_OWL_CONCOCTION)
         val SPELUNKERS_CONCOCTION = CustomItem("spelunkers_concoction", Potions.SPELUNKERS_CONCOCTION)
         val CUSTOM_CONCOCTION = CustomItem("custom_concoction", Potions.CUSTOM_CONCOCTION)
+        // WIP
+        val SCULK_POINTER = DataItem("sculk_pointer")
+        val SCULK_HEART = DataItem("sculk_heart")
 
     }
 

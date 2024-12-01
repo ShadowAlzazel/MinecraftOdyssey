@@ -159,5 +159,9 @@ internal object Potions {
         capModel = "screw_cap",
         color = Color.fromRGB(210, 222, 222))
 
+    val POTION_VIAL = PotionConstructor(
+        material = Material.POTION,
+        itemModel = "potion_vial",
+        color = Color.fromRGB(210, 222, 222))
 
 }
