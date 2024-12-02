@@ -26,8 +26,8 @@ interface ToolMaker : AttributeManager, DataTagManager, ToolComponentHelper {
         val minecraftMaterial = Material.matchMaterial(minecraftItemKey) ?: return ItemStack(Material.AIR)
         val itemStack = ItemStack(minecraftMaterial, amount).apply {
             // Create Variables
-            val itemName = "${material.itemName}_${type.itemName}"
-            val upperName = "${material.customName} ${type.customName}"
+            val itemName = "${material.namePre}_${type.nameSuf}"
+            val upperName = "${material.customNamePre} ${type.customNameSuf}"
             val customName = Component.text(upperName).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
             val damage = material.attackDamage + type.baseDamage
             val maxDurability = material.maxDurability
@@ -42,9 +42,9 @@ interface ToolMaker : AttributeManager, DataTagManager, ToolComponentHelper {
                 speed *= 1.1
             }
             // Tools with mining ToolComponent
-            val mineableTags = getMiningTags(type.itemName)
+            val mineableTags = getMiningTags(type.nameSuf)
             if (mineableTags != null) {
-                val newToolComponent = newToolComponent(material.itemName, type.itemName)
+                val newToolComponent = newToolComponent(material.namePre, type.nameSuf)
                 if (newToolComponent != null) {
                     this.resetData(DataComponentTypes.TOOL)
                     this.setData(DataComponentTypes.TOOL, newToolComponent)
@@ -60,8 +60,8 @@ interface ToolMaker : AttributeManager, DataTagManager, ToolComponentHelper {
             val meta = this.itemMeta
             meta.persistentDataContainer.set(NamedKeys.ITEM_KEY, PersistentDataType.STRING, itemName)
             this.itemMeta = meta
-            this.addStringTag(ItemDataTags.TOOL_TYPE, type.itemName)
-            this.addStringTag(ItemDataTags.MATERIAL_TYPE, material.itemName)
+            this.addStringTag(ItemDataTags.TOOL_TYPE, type.nameSuf)
+            this.addStringTag(ItemDataTags.MATERIAL_TYPE, material.namePre)
             // Assign Base attributes
             this.addAttackDamageAttribute(damage, AttributeTags.ITEM_BASE_ATTACK_DAMAGE)
             this.setNewAttackSpeedAttribute(speed)

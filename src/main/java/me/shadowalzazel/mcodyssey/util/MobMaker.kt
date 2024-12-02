@@ -63,7 +63,7 @@ interface MobMaker: AttributeManager, EnchantabilityHandler, ToolMaker {
         }
         val weapon = mainHand.enchantWithLevels(20, false, Random())
         mob.apply {
-            val armorType = armorMaterial ?: weaponMaterial.itemName
+            val armorType = armorMaterial ?: weaponMaterial.namePre
             createTrimmedArmor(this, trim, armorType, enchantedArmor)
             equipment?.also {
                 it.setItemInMainHand(weapon)
@@ -146,7 +146,7 @@ interface MobMaker: AttributeManager, EnchantabilityHandler, ToolMaker {
             isCustomNameVisible = true
             canPickupItems = true
             // Add Items
-            createTrimmedArmor(this, trim, materialType.itemName, enchantedArmor)
+            createTrimmedArmor(this, trim, materialType.namePre, enchantedArmor)
             equipment?.also {
                 it.setItemInMainHand(weapon)
                 it.itemInMainHandDropChance = 0.35F // Change to difficulty

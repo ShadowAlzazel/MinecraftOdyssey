@@ -4,8 +4,6 @@ import me.shadowalzazel.mcodyssey.datagen.recipes.*
 import me.shadowalzazel.mcodyssey.datagen.recipes.crafting.EquipmentRecipes
 import me.shadowalzazel.mcodyssey.datagen.recipes.crafting.FoodRecipes
 import me.shadowalzazel.mcodyssey.datagen.recipes.crafting.ItemRecipes
-import me.shadowalzazel.mcodyssey.datagen.recipes.creators.ToolRecipeCreator
-import me.shadowalzazel.mcodyssey.datagen.recipes.creators.WeaponRecipeCreator
 import org.bukkit.inventory.Recipe
 
 class RecipeManager {
