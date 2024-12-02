@@ -4,14 +4,15 @@ import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.items.Item
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
-import org.bukkit.inventory.*
+import org.bukkit.inventory.Recipe
+import org.bukkit.inventory.ShapedRecipe
+import org.bukkit.inventory.ShapelessRecipe
 import org.bukkit.inventory.recipe.CraftingBookCategory
 
-class Food {
+class FoodRecipes {
 
     fun getRecipes(): List<Recipe> {
         return listOf(
-            baconRecipe(),
             berryTartRecipe(),
             chocolateMochiRecipe(),
             coffeeRecipe(),
@@ -24,7 +25,6 @@ class Food {
             shoyuRamenRecipe(),
             spiderEyeBobaRecipe(),
             earlLilyBobaTeaRecipe(),
-            cookedBrisketRecipe(),
             brisketRecipe(),
             oolongOrchidBobaTeaRecipe(),
             matchaMelonBobaTeaRecipe(),
@@ -268,30 +268,6 @@ class Food {
         }
     }
 
-    /*-----------------------------------------------------------------------------------------------*/
-    // Campfire
 
-    private fun baconRecipe(): CampfireRecipe {
-        val result = Item.BACON.newItemStack()
-        return CampfireRecipe(
-            NamespacedKey(Odyssey.instance, "bacon"),
-            result,
-            Material.COOKED_PORKCHOP,
-            1.0F,
-            10 * 20
-        )
-    }
-
-    private fun cookedBrisketRecipe(): CampfireRecipe {
-        val result = Item.COOKED_BRISKET.newItemStack()
-        val ingredient = RecipeChoice.ExactChoice(Item.BRISKET.newItemStack())
-        return CampfireRecipe(
-            NamespacedKey(Odyssey.instance, "cooked_brisket"),
-            result,
-            ingredient,
-            1.0F,
-            10 * 20
-        )
-    }
 
 }

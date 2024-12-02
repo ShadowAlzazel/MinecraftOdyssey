@@ -1,21 +1,15 @@
 package me.shadowalzazel.mcodyssey.common.listeners
 
-import me.shadowalzazel.mcodyssey.api.MessageHandler.sendBarMessage
 import me.shadowalzazel.mcodyssey.common.smithing.CustomTrimming
 import me.shadowalzazel.mcodyssey.common.smithing.SmithingMaps
 import me.shadowalzazel.mcodyssey.common.smithing.ToolUpgrading
 import me.shadowalzazel.mcodyssey.util.DataTagManager
-import me.shadowalzazel.mcodyssey.util.constants.CustomColors
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.FurnaceSmeltEvent
 import org.bukkit.event.inventory.PrepareSmithingEvent
-import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.ArmorMeta
 
 @Suppress("UnstableApiUsage")
 object SmithingListeners : Listener, DataTagManager {

@@ -1,7 +1,6 @@
 package me.shadowalzazel.mcodyssey.common.listeners
 
-import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.util.SpaceRuneManager
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
@@ -13,7 +12,7 @@ import org.bukkit.event.player.PlayerItemConsumeEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object ItemListeners : Listener, SpaceRuneManager {
+object ItemListeners : Listener, DataTagManager {
 
     @EventHandler
     fun itemUseOnDropHandler(event: PlayerDropItemEvent) {
@@ -22,9 +21,6 @@ object ItemListeners : Listener, SpaceRuneManager {
         when (event.itemDrop.itemStack.getItemIdentifier()) {
             "soul_spice" -> {
                 soulSpiceItemHandler(event)
-            }
-            "spacerune_tablet" -> {
-                spaceRuneItemHandler(event)
             }
             else -> {
 
@@ -83,18 +79,5 @@ object ItemListeners : Listener, SpaceRuneManager {
         }
         event.itemDrop.remove()
     }
-
-    private fun spaceRuneItemHandler(event: PlayerDropItemEvent) {
-        val entityItem = event.itemDrop
-        if (entityItem.itemStack.amount != 1) return
-        val item = entityItem.itemStack
-        val player = event.player
-        if (player.hasCooldown(item.type)) return
-        if (!item.hasTag(ItemDataTags.IS_SPACERUNE)) return
-        // Run TP
-        spaceRuneTabletTeleport(player, item)
-        event.isCancelled = true
-    }
-
 
 }

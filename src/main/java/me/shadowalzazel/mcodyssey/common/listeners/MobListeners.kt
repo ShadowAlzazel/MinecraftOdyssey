@@ -1,9 +1,9 @@
 package me.shadowalzazel.mcodyssey.common.listeners
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.common.tasks.mob_tasks.PiglinRallyTask
 import me.shadowalzazel.mcodyssey.util.DataTagManager
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import org.bukkit.Material
 import org.bukkit.MusicInstrument
 import org.bukkit.Sound

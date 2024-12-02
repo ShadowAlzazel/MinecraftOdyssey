@@ -2,15 +2,16 @@ package me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners
 
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent
 import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.common.effects.EffectsManager
+import me.shadowalzazel.mcodyssey.common.tasks.enchantment_tasks.*
+import me.shadowalzazel.mcodyssey.util.AttackHelper
+import me.shadowalzazel.mcodyssey.util.EnchantmentsManager
+import me.shadowalzazel.mcodyssey.util.RegistryTagManager
 import me.shadowalzazel.mcodyssey.util.constants.EffectTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags.getIntTag
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags.removeTag
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags.setIntTag
-import me.shadowalzazel.mcodyssey.common.effects.EffectsManager
-import me.shadowalzazel.mcodyssey.common.items.custom.Miscellaneous.getNameId
-import me.shadowalzazel.mcodyssey.common.tasks.enchantment_tasks.*
-import me.shadowalzazel.mcodyssey.util.AttackHelper
 import org.bukkit.*
 import org.bukkit.attribute.Attribute
 import org.bukkit.damage.DamageSource
@@ -26,11 +27,11 @@ import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
-import java.util.UUID
+import java.util.*
 import kotlin.math.log2
 import kotlin.math.pow
 
-object MeleeListeners : Listener, EffectsManager, AttackHelper {
+object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentsManager {
 
     private val recallTargets: MutableMap<UUID, LivingEntity> = mutableMapOf()
 

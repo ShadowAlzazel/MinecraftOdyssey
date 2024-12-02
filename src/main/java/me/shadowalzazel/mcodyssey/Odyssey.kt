@@ -3,14 +3,13 @@ package me.shadowalzazel.mcodyssey
 import me.shadowalzazel.mcodyssey.bosses.BossManager
 import me.shadowalzazel.mcodyssey.bosses.hog_rider.HogRiderListeners
 import me.shadowalzazel.mcodyssey.bosses.the_ambassador.AmbassadorListeners
-import me.shadowalzazel.mcodyssey.server.commands.admin.*
-import me.shadowalzazel.mcodyssey.server.commands.spells.PlaceFeatureArchaicSeed
+import me.shadowalzazel.mcodyssey.common.StructureDetector
 import me.shadowalzazel.mcodyssey.common.listeners.*
 import me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners.*
 import me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners.OtherListeners
+import me.shadowalzazel.mcodyssey.datagen.PotionMixes
 import me.shadowalzazel.mcodyssey.datagen.RecipeManager
-import me.shadowalzazel.mcodyssey.datagen.recipes.brewing.BrewerMixes
-import me.shadowalzazel.mcodyssey.common.StructureDetector
+import me.shadowalzazel.mcodyssey.server.commands.admin.*
 import me.shadowalzazel.mcodyssey.world_events.DailyWorldEventManager
 import me.shadowalzazel.mcodyssey.world_events.DateTimeSyncer
 import net.kyori.adventure.text.Component
@@ -105,7 +104,7 @@ class Odyssey : JavaPlugin() {
         }
         // Register Potion Mixes
         logger.info("Registering Brews...")
-        BrewerMixes.getMixes().forEach {
+        PotionMixes.getMixes().forEach {
             server.potionBrewer.addPotionMix(it)
         }
         // Register Events
@@ -146,14 +145,10 @@ class Odyssey : JavaPlugin() {
         logger.info("Setting Commands...")
         mapOf("summon_boss" to SummonBoss,
             "enchant_with_odyssey" to EnchantWithOdyssey,
-            "place_feature_archaic_seed" to PlaceFeatureArchaicSeed,
             "get_item_data" to GetItemData,
             "give_item" to GiveItem,
             "give_weapon" to GiveWeapon,
-            "give_arcane_book" to GiveArcaneBook,
-            "give_spacerune_tablet" to GiveSpaceRuneTablet,
             "summon_mob" to SummonMob,
-            "summon_doppelganger" to SummonDoppelganger,
         ).forEach {
             getCommand(it.key)?.setExecutor(it.value)
         }

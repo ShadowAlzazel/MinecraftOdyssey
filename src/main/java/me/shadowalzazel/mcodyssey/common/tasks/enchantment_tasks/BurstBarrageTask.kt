@@ -1,8 +1,9 @@
 package me.shadowalzazel.mcodyssey.common.tasks.enchantment_tasks
 
-import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners.RangedListeners.cloneAndTag
-import org.bukkit.entity.*
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags
+import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Projectile
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
 

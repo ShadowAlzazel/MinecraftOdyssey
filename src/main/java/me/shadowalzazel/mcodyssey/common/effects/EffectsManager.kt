@@ -1,8 +1,8 @@
 package me.shadowalzazel.mcodyssey.common.effects
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.util.constants.EffectTags
 import me.shadowalzazel.mcodyssey.common.effects.tasks.*
+import me.shadowalzazel.mcodyssey.util.constants.EffectTags
 import org.bukkit.Particle
 import org.bukkit.entity.LivingEntity
 import org.bukkit.potion.PotionEffect

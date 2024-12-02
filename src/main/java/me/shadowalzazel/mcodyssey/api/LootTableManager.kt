@@ -10,7 +10,7 @@ import org.bukkit.craftbukkit.CraftLootTable
 import org.bukkit.craftbukkit.util.CraftNamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.loot.LootContext
-import java.util.Random
+import java.util.*
 
 object LootTableManager {
 
@@ -33,7 +33,7 @@ object LootTableManager {
         return items.first()
     }
 
-    fun getItemFromOdysseyLoot(name: String): ItemStack {
+    fun createItemStackFromLoot(name: String): ItemStack {
         return singleItemFromResource(toLootKey(name))
     }
 

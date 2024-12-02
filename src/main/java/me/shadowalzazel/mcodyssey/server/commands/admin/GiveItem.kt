@@ -1,14 +1,13 @@
 package me.shadowalzazel.mcodyssey.server.commands.admin
 
 
-import me.shadowalzazel.mcodyssey.datagen.items.ItemCreator
 import org.bukkit.command.BlockCommandSender
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-object GiveItem : CommandExecutor, ItemCreator {
+object GiveItem : CommandExecutor {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
         val isOp = sender is Player && sender.isOp
@@ -22,8 +21,9 @@ object GiveItem : CommandExecutor, ItemCreator {
         val argAmount = if (args.size == 3) args[2].toInt() else 1
         val amount = minOf(64, maxOf(1, argAmount))
         // Change to Base
-        val item = createItemFromName(itemName, amount) ?: return false // MAYBE CREATE A LAMBDA TO MATCH TO DIFFERENT CREATE FUNCTIONS
-        player.inventory.addItem(item)
+        //val item = ITemS
+       // player.inventory.addItem(item)
+        //return true
         return true
     }
 }

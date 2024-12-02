@@ -2,11 +2,15 @@ package me.shadowalzazel.mcodyssey.common.listeners
 
 import io.papermc.paper.event.entity.EntityLoadCrossbowEvent
 import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners.RangedListeners.hasEnchantment
+import me.shadowalzazel.mcodyssey.common.tasks.weapon_tasks.*
+import me.shadowalzazel.mcodyssey.util.AttackHelper
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags.getIntTag
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags.setIntTag
-import me.shadowalzazel.mcodyssey.util.constants.ItemModels
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
+import me.shadowalzazel.mcodyssey.util.constants.ItemModels
 import me.shadowalzazel.mcodyssey.util.constants.WeaponMaps.BLUDGEON_MAP
 import me.shadowalzazel.mcodyssey.util.constants.WeaponMaps.CLEAVE_MAP
 import me.shadowalzazel.mcodyssey.util.constants.WeaponMaps.LACERATE_MAP
@@ -14,11 +18,7 @@ import me.shadowalzazel.mcodyssey.util.constants.WeaponMaps.MIN_RANGE_MAP
 import me.shadowalzazel.mcodyssey.util.constants.WeaponMaps.PIERCE_MAP
 import me.shadowalzazel.mcodyssey.util.constants.WeaponMaps.REACH_MAP
 import me.shadowalzazel.mcodyssey.util.constants.WeaponMaps.SWEEP_MAP
-import me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners.RangedListeners.hasEnchantment
-import me.shadowalzazel.mcodyssey.common.tasks.weapon_tasks.*
-import me.shadowalzazel.mcodyssey.util.AttackHelper
-import me.shadowalzazel.mcodyssey.util.DataTagManager
-import org.bukkit.*
+import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.*

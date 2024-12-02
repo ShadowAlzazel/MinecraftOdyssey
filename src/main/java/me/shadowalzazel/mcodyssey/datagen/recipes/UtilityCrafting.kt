@@ -1,14 +1,14 @@
-package me.shadowalzazel.mcodyssey.datagen.recipes.crafting
+package me.shadowalzazel.mcodyssey.datagen.recipes
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.datagen.recipes.ChoiceManager
+import me.shadowalzazel.mcodyssey.datagen.ChoiceManager
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.ShapedRecipe
 import org.bukkit.inventory.recipe.CraftingBookCategory
 
-class Utility : ChoiceManager {
+class UtilityCrafting : ChoiceManager {
     fun getRecipes(): List<ShapedRecipe> {
         return listOf(
             cloneRunesherd()

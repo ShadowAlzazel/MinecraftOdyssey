@@ -3,7 +3,7 @@ package me.shadowalzazel.mcodyssey.server.commands.admin
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
-import org.bukkit.craftbukkit.inventory.CraftItemStack as CraftItemStack
+import org.bukkit.craftbukkit.inventory.CraftItemStack
 import org.bukkit.entity.Player
 
 object GetItemData : CommandExecutor {

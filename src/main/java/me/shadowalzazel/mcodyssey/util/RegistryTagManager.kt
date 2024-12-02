@@ -4,7 +4,6 @@ import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
 import io.papermc.paper.registry.tag.Tag
 import io.papermc.paper.registry.tag.TagKey
-import me.shadowalzazel.mcodyssey.Odyssey
 import org.bukkit.Keyed
 import org.bukkit.NamespacedKey
 import org.bukkit.Registry
@@ -24,7 +23,7 @@ interface RegistryTagManager {
         return NamespacedKey.minecraft(name)
     }
 
-    fun <T: Keyed> createTagKeyFromNamedKey(registryKey: RegistryKey<T>, namespacedKey: NamespacedKey): TagKey<T> {
+    fun <T: Keyed> createTagKey(registryKey: RegistryKey<T>, namespacedKey: NamespacedKey): TagKey<T> {
         return TagKey.create(registryKey, namespacedKey)
     }
 
@@ -36,6 +35,17 @@ interface RegistryTagManager {
         val paperRegistry = RegistryAccess.registryAccess().getRegistry(registryKey)
         val tagKey = TagKey.create(registryKey, namespacedKey)
         return paperRegistry.getTag(tagKey)
+    }
+
+    fun <T: Keyed> getCollectionFromTag(registryKey: RegistryKey<T>, location: String, namespace: String="odyssey"): Collection<T> {
+        val registry = getPaperRegistry(registryKey)
+        val tag = getTagFromRegistry(registryKey, location, namespace)
+        val listOfValues: MutableList<T> = mutableListOf()
+        for (tagEntry in tag.values()) {
+            val value = registry.get(tagEntry.key()) ?: continue
+            listOfValues.add(value)
+        }
+        return listOfValues.toSet()
     }
 
 

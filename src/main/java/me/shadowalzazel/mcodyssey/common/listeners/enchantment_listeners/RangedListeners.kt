@@ -3,13 +3,13 @@ package me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners
 import com.destroystokyo.paper.event.player.PlayerReadyArrowEvent
 import io.papermc.paper.event.entity.EntityLoadCrossbowEvent
 import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.common.tasks.enchantment_tasks.*
+import me.shadowalzazel.mcodyssey.util.EnchantmentsManager
 import me.shadowalzazel.mcodyssey.util.constants.EffectTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags.getIntTag
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags.removeTag
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags.setIntTag
-import me.shadowalzazel.mcodyssey.util.EnchantmentsManager
-import me.shadowalzazel.mcodyssey.common.tasks.enchantment_tasks.*
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Location

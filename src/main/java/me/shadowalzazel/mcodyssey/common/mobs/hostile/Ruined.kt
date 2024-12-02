@@ -1,6 +1,5 @@
 package me.shadowalzazel.mcodyssey.common.mobs.hostile
 
-import me.shadowalzazel.mcodyssey.datagen.items.WeaponCreator
 import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
 import me.shadowalzazel.mcodyssey.common.items.ToolType
 import me.shadowalzazel.mcodyssey.common.mobs.base.OdysseyMob
@@ -29,7 +28,7 @@ object Ruined : OdysseyMob("Ruined", "ruined", EntityType.STRAY, 30.0) {
             customName(Component.text(displayName, TextColor.color(220, 216, 75)))
             clearActiveItem()
             // Weapon
-            val weapon = WeaponCreator.toolCreator.createToolStack(ToolMaterial.DIAMOND, ToolType.CLAYMORE).apply {
+            val weapon = createToolStack(ToolMaterial.DIAMOND, ToolType.CLAYMORE).apply {
                 addUnsafeEnchantment(Enchantment.UNBREAKING, 3)
                 addUnsafeEnchantment(Enchantment.SHARPNESS, 5)
                 addUnsafeEnchantment(Enchantment.KNOCKBACK, 3)

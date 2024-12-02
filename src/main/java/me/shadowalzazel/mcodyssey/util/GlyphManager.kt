@@ -139,7 +139,7 @@ internal interface GlyphManager : AttributeManager, DataTagManager {
         if (!runesherd.itemMeta.hasAttributeModifiers()) return null
         val runeName = runesherd.getRuneIdentifier() ?: return null // ItemName
         // Get rune key
-        val runeKey = AttributeTags.GLYPH_SLOT_KEY
+        val runeKey = AttributeTags.GLYPH_SLOT
         val runeAttribute = findRunesherdAttribute(runeName) ?: return null
         val runesherdAttributeModifiers = runesherd.itemMeta.attributeModifiers?.get(runeAttribute) ?: return null
         val runesherdModifier = runesherdAttributeModifiers.find { it.name == runeKey } ?: return null

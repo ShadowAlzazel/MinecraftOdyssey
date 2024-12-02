@@ -1,11 +1,11 @@
 package me.shadowalzazel.mcodyssey.api
 
-import me.shadowalzazel.mcodyssey.server.commands.admin.EnchantWithOdyssey.getStringTag
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
-object ToolDataManager {
+object ToolDataManager : DataTagManager{
 
     fun getToolType(item: ItemStack): String? {
         return item.getStringTag(ItemDataTags.TOOL_TYPE) ?: getToolTypeFromMaterial(item.type)

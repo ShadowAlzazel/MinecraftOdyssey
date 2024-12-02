@@ -1,7 +1,5 @@
 package me.shadowalzazel.mcodyssey.common.mobs.hostile
 
-import me.shadowalzazel.mcodyssey.common.items.custom.Equipment
-import me.shadowalzazel.mcodyssey.datagen.items.WeaponCreator
 import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
 import me.shadowalzazel.mcodyssey.common.items.ToolType
 import me.shadowalzazel.mcodyssey.common.mobs.base.OdysseyMob
@@ -22,7 +20,7 @@ object Savage : OdysseyMob("Savage", "savage", EntityType.ZOMBIE, 30.0) {
 
     fun createKnight(world: World, location: Location): Pair<Zombie, ZombieHorse> {
         // Longaxe Weapon
-        val weapon = WeaponCreator.toolCreator.createToolStack(ToolMaterial.COPPER, ToolType.LONGAXE).apply {
+        val weapon = createToolStack(ToolMaterial.COPPER, ToolType.LONGAXE).apply {
             addUnsafeEnchantment(Enchantment.UNBREAKING, 3)
             addUnsafeEnchantment(Enchantment.SHARPNESS, 5)
             addUnsafeEnchantment(Enchantment.KNOCKBACK, 3)
@@ -51,7 +49,7 @@ object Savage : OdysseyMob("Savage", "savage", EntityType.ZOMBIE, 30.0) {
 
     override fun createMob(world: World, location: Location): Zombie {
         // Dagger
-        val weapon = WeaponCreator.toolCreator.createToolStack(ToolMaterial.COPPER, ToolType.DAGGER).apply {
+        val weapon = createToolStack(ToolMaterial.COPPER, ToolType.DAGGER).apply {
             addUnsafeEnchantment(Enchantment.UNBREAKING, 3)
             addUnsafeEnchantment(Enchantment.SHARPNESS, 5)
             addUnsafeEnchantment(Enchantment.KNOCKBACK, 3)
@@ -72,7 +70,7 @@ object Savage : OdysseyMob("Savage", "savage", EntityType.ZOMBIE, 30.0) {
             equipment.also {
                 it.setItemInMainHand(weapon)
                 it.setItemInOffHand(weapon.clone())
-                it.helmet = Equipment.HORNED_HELMET.newItemStack(1)
+               // it.helmet = Equipment.HORNED_HELMET.newItemStack(1)
                 it.chestplate = ItemStack(Material.IRON_CHESTPLATE, 1)
                 it.leggings = ItemStack(Material.CHAINMAIL_LEGGINGS, 1)
                 it.boots = ItemStack(Material.CHAINMAIL_BOOTS, 1)

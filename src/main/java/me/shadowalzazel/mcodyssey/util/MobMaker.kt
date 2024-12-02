@@ -1,14 +1,13 @@
 package me.shadowalzazel.mcodyssey.util
 
-import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
-import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.common.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.datagen.items.ToolCreator
-import me.shadowalzazel.mcodyssey.datagen.items.WeaponCreator
+import me.shadowalzazel.mcodyssey.common.items.ToolMaker
 import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
 import me.shadowalzazel.mcodyssey.common.items.ToolType
 import me.shadowalzazel.mcodyssey.common.trims.TrimMaterials
+import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.util.constants.CustomColors
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
@@ -27,7 +26,7 @@ import java.util.*
 import kotlin.math.absoluteValue
 import kotlin.math.pow
 
-interface MobCreationHelper: AttributeManager, EnchantabilityHandler {
+interface MobMaker: AttributeManager, EnchantabilityHandler, ToolMaker {
 
     fun getScaledDifficulty(entity: Entity): Double {
         // Find the XY distance from zero
@@ -58,13 +57,13 @@ interface MobCreationHelper: AttributeManager, EnchantabilityHandler {
         val weaponType = weaponList.random()
         // Override with new weapon
         val mainHand: ItemStack = if (newWeapon) {
-            WeaponCreator.toolCreator.createToolStack(weaponMaterial, weaponType)
+            createToolStack(weaponMaterial, weaponType)
         } else {
-            mob.equipment?.itemInMainHand ?: ToolCreator().createToolStack(weaponMaterial, weaponType)
+            mob.equipment?.itemInMainHand ?: createToolStack(weaponMaterial, weaponType)
         }
         val weapon = mainHand.enchantWithLevels(20, false, Random())
         mob.apply {
-            val armorType = armorMaterial ?: weaponMaterial.itemName
+            val armorType = armorMaterial ?: weaponMaterial.namePre
             createTrimmedArmor(this, trim, armorType, enchantedArmor)
             equipment?.also {
                 it.setItemInMainHand(weapon)
@@ -100,7 +99,7 @@ interface MobCreationHelper: AttributeManager, EnchantabilityHandler {
         val weaponType = weaponList.random()
         // Override with new weapon
         val mainHand: ItemStack = if (newWeapon) {
-            WeaponCreator.toolCreator.createToolStack(materialType, weaponType)
+            createToolStack(materialType, weaponType)
         } else {
             when(mob.type) {
                 EntityType.SKELETON, EntityType.STRAY, EntityType.BOGGED -> {
@@ -108,11 +107,11 @@ interface MobCreationHelper: AttributeManager, EnchantabilityHandler {
                 }
 
                 EntityType.ZOMBIE, EntityType.HUSK -> {
-                    WeaponCreator.toolCreator.createToolStack(materialType, weaponType)
+                    createToolStack(materialType, weaponType)
                 }
 
                 else -> {
-                    WeaponCreator.toolCreator.createToolStack(materialType, weaponType)
+                    createToolStack(materialType, weaponType)
                 }
             }
         }
@@ -147,7 +146,7 @@ interface MobCreationHelper: AttributeManager, EnchantabilityHandler {
             isCustomNameVisible = true
             canPickupItems = true
             // Add Items
-            createTrimmedArmor(this, trim, materialType.itemName, enchantedArmor)
+            createTrimmedArmor(this, trim, materialType.namePre, enchantedArmor)
             equipment?.also {
                 it.setItemInMainHand(weapon)
                 it.itemInMainHandDropChance = 0.35F // Change to difficulty

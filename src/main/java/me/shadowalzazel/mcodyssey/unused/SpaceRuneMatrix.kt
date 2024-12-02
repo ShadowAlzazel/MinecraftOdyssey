@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.common.items
+package me.shadowalzazel.mcodyssey.unused
 
 import org.bukkit.util.Vector
 import org.joml.Matrix3d

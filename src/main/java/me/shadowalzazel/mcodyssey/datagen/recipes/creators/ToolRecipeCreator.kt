@@ -1,20 +1,17 @@
 package me.shadowalzazel.mcodyssey.datagen.recipes.creators
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.datagen.items.ItemCreator
-import me.shadowalzazel.mcodyssey.datagen.items.ToolCreator
+import me.shadowalzazel.mcodyssey.common.items.ToolMaker
 import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
 import me.shadowalzazel.mcodyssey.common.items.ToolType
-import me.shadowalzazel.mcodyssey.datagen.recipes.ChoiceManager
+import me.shadowalzazel.mcodyssey.datagen.ChoiceManager
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.Recipe
 import org.bukkit.inventory.ShapedRecipe
 import org.bukkit.inventory.recipe.CraftingBookCategory
 
-class ToolRecipeCreator : ItemCreator, DataTagManager, ChoiceManager {
-
-    private val toolCreator = ToolCreator()
+class ToolRecipeCreator : DataTagManager, ChoiceManager, ToolMaker {
 
     private val toolPatterns = mapOf(
         "pickaxe" to listOf(
@@ -41,14 +38,14 @@ class ToolRecipeCreator : ItemCreator, DataTagManager, ChoiceManager {
 
     private fun createToolRecipe(material: ToolMaterial, type: ToolType): Recipe {
         val amount = 1
-        val result = toolCreator.createToolStack(material, type, amount)
+        val result = createToolStack(material, type, amount)
         // Create name variables
         val itemName = result.getItemIdentifier()!!
         val resultKey = NamespacedKey(Odyssey.instance, itemName)
         // Get Pattern/Shape
-        val pattern = toolPatterns[type.itemName]!!
+        val pattern = toolPatterns[type.nameSuf]!!
         // Create Recipe keys and ingredients
-        val ingredientMap = materialKeys[material.itemName]!!.toMutableMap()
+        val ingredientMap = materialKeys[material.namePre]!!.toMutableMap()
         // Assemble recipe
         val recipe = ShapedRecipe(resultKey, result).apply {
             shape(*pattern.toTypedArray())
@@ -58,7 +55,7 @@ class ToolRecipeCreator : ItemCreator, DataTagManager, ChoiceManager {
                     setIngredient(ingredient.key, ingredient.value)
                 }
             }
-            group = type.itemName
+            group = type.nameSuf
             category = CraftingBookCategory.EQUIPMENT
         }
         return recipe

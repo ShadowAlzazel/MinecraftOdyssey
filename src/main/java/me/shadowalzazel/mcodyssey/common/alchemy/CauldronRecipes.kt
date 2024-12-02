@@ -68,7 +68,7 @@ object CauldronRecipes {
     private val POTION_OF_SHIMMER_RECIPE = CauldronAlchemyRecipe(
         result = Item.POTION_OF_SHIMMER.newItemStack(3),
         itemCount = 4,
-        fuels = CauldronFuels.FIRE_FUELS,
+        fuels = CauldronFuels.SOUL_FIRE_FUELS,
         ingredients = listOf(
             IngredientChoice.ItemNameChoice("crystalline_potion"),
             IngredientChoice.MaterialChoice(Material.DIAMOND, 1),

@@ -3,7 +3,10 @@ package me.shadowalzazel.mcodyssey.bosses.hog_rider
 import me.shadowalzazel.mcodyssey.bosses.base.OdysseyBoss
 import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.text.Component
-import org.bukkit.*
+import org.bukkit.Location
+import org.bukkit.Material
+import org.bukkit.Sound
+import org.bukkit.World
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Hoglin

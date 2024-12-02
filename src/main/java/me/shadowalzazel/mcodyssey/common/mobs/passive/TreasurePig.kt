@@ -1,7 +1,6 @@
 package me.shadowalzazel.mcodyssey.common.mobs.passive
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.common.items.custom.Ingredients
 import me.shadowalzazel.mcodyssey.common.mobs.base.FallingBlockTimer
 import me.shadowalzazel.mcodyssey.common.mobs.base.OdysseyMob
 import net.kyori.adventure.text.Component
@@ -16,7 +15,7 @@ import org.bukkit.scheduler.BukkitRunnable
 
 object TreasurePig: OdysseyMob("Treasure Pig", "treasure_pig", EntityType.PIG, 100.0) {
 
-    private val lootTable = listOf(Ingredients.NEPTUNIAN_DIAMOND, Ingredients.JOVIAN_EMERALD, Ingredients.KUNZITE)
+    //private val lootTable = listOf()
 
     override fun createMob(world: World, location: Location): Pig {
         // Some Block
@@ -54,7 +53,7 @@ object TreasurePig: OdysseyMob("Treasure Pig", "treasure_pig", EntityType.PIG, 1
             if (!pig.isDead && counter < 40) {
                 counter += 1
                 with(pig.world) {
-                    dropItem(pig.location, lootTable.random().newItemStack(1))
+                    //dropItem(pig.location, lootTable)
                     dropItem(pig.location, ItemStack(Material.GOLD_NUGGET, (1..2).random()))
                     playSound(pig.location, Sound.ENTITY_WITHER_BREAK_BLOCK, 2.5F, 0.5F)
                     val goldBlockBreak = Material.GOLD_BLOCK.createBlockData()

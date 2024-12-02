@@ -58,7 +58,7 @@ object AttributeTags {
     const val RUNE_ARMOR = "rune.armor"
     const val RUNE_ARMOR_TOUGHNESS = "rune.armor_toughness"
 
-    const val GLYPH_SLOT_KEY = "glyph_slot_key"
+    const val GLYPH_SLOT = "glyph.slot"
 
 
     // Items - Weapons

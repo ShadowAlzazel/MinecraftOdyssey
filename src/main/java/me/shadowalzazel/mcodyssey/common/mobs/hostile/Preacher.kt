@@ -1,6 +1,5 @@
 package me.shadowalzazel.mcodyssey.common.mobs.hostile
 
-import me.shadowalzazel.mcodyssey.datagen.items.WeaponCreator
 import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
 import me.shadowalzazel.mcodyssey.common.items.ToolType
 import me.shadowalzazel.mcodyssey.common.mobs.base.OdysseyMob
@@ -31,7 +30,7 @@ object Preacher : OdysseyMob("Preacher", "preacher", EntityType.WITHER_SKELETON,
             clearActiveItem()
             customName(Component.text(this@Preacher.displayName, TextColor.color(40, 6, 25)))
             // Add Items /
-            val weapon = WeaponCreator.toolCreator.createToolStack(ToolMaterial.NETHERITE, ToolType.CLAYMORE) // ADD SLOTS AND ENCHANTS
+            val weapon = createToolStack(ToolMaterial.NETHERITE, ToolType.CLAYMORE) // ADD SLOTS AND ENCHANTS
             equipment.also {
                 it.setItemInMainHand(weapon) // ADD TRIMS
                 it.helmet = ItemStack(Material.NETHERITE_HELMET, 1)
