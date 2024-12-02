@@ -12,7 +12,11 @@ import org.bukkit.inventory.recipe.CraftingBookCategory
 class EquipmentRecipes : ChoiceManager {
 
     fun getRecipes(): List<Recipe> {
-        return listOf()
+        return listOf(
+            grapplingHookRecipe(), tinkeredMusketRecipe(), tinkeredBowRecipe(), autoCrossbowRecipe(), warpingWandRecipe(),
+            arcaneWandRecipe(), arcaneBladeRecipe(), arcaneScepterRecipe(), explosiveArrowRecipe(), alchemicalDriverRecipe(),
+            compactCrossbowRecipe(), voidLinkedKunaiRecipe()
+        )
     }
 
     private fun grapplingHookRecipe(): ShapedRecipe {

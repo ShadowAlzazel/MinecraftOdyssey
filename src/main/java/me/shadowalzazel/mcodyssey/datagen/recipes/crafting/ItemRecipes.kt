@@ -5,10 +5,19 @@ import me.shadowalzazel.mcodyssey.common.items.Item
 import me.shadowalzazel.mcodyssey.datagen.ChoiceManager
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
+import org.bukkit.inventory.Recipe
 import org.bukkit.inventory.ShapedRecipe
 import org.bukkit.inventory.recipe.CraftingBookCategory
 
 class ItemRecipes : ChoiceManager {
+
+    fun getRecipes(): List<Recipe> {
+        return listOf(
+            soulSteelUpgradeTemplateRecipe(), titaniumUpgradeTemplateRecipe(), iridiumUpgradeTemplateRecipe(),
+            mithrilUpgradeTemplateRecipe(), blankTomeRecipe(), clayTotemRecipe(), clayOrbRecipe(), claySkullRecipe(), clayDowelRecipe(),
+            clayKeyRecipe(), clayRodsRecipe()
+        )
+    }
 
     // Smithing
     private fun soulSteelUpgradeTemplateRecipe(): ShapedRecipe {

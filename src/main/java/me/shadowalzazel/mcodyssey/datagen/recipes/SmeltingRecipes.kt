@@ -7,9 +7,18 @@ import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.BlastingRecipe
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.Recipe
 import org.bukkit.inventory.RecipeChoice
 
 class SmeltingRecipes : ChoiceManager {
+
+    fun getRecipes(): List<Recipe> {
+        return listOf(
+            glyphicItemFurnaceRecipe(),
+            heatedTitaniumRecipe(),
+            anodizedTitaniumRecipe(),
+        )
+    }
 
     private fun glyphicItemFurnaceRecipe(): BlastingRecipe {
         val result = ItemStack(Material.BRICK)

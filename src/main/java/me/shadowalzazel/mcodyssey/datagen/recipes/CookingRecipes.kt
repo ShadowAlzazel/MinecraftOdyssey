@@ -5,9 +5,16 @@ import me.shadowalzazel.mcodyssey.common.items.Item
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.CampfireRecipe
+import org.bukkit.inventory.Recipe
 import org.bukkit.inventory.RecipeChoice
 
 class CookingRecipes {
+
+    fun getRecipes(): List<Recipe> {
+        return listOf(
+            baconRecipe(), cookedBrisketRecipe()
+        )
+    }
 
     /*-----------------------------------------------------------------------------------------------*/
     // Campfire
