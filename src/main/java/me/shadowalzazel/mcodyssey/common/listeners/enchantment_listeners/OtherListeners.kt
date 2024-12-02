@@ -1,9 +1,11 @@
 package me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners
 
-import me.shadowalzazel.mcodyssey.util.EnchantmentsManager
-import me.shadowalzazel.mcodyssey.common.items.custom.Ingredients
 import me.shadowalzazel.mcodyssey.util.AttackHelper
-import org.bukkit.*
+import me.shadowalzazel.mcodyssey.util.EnchantmentsManager
+import org.bukkit.Location
+import org.bukkit.Material
+import org.bukkit.Particle
+import org.bukkit.Sound
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -85,10 +87,6 @@ object OtherListeners : Listener, EnchantmentsManager, AttackHelper {
                     val gems = listOf(
                         ItemStack(Material.EMERALD, (1..(enchant.value)).random()),
                         ItemStack(Material.DIAMOND, (1..(enchant.value)).random()),
-                        Ingredients.JADE.newItemStack((1..(enchant.value)).random()),
-                        Ingredients.RUBY.newItemStack((1..(enchant.value)).random()),
-                        Ingredients.KUNZITE.newItemStack((1..(enchant.value)).random()),
-                        Ingredients.ALEXANDRITE.newItemStack((1..(enchant.value)).random()),
                     )
                     //item.itemStack = gems.random()
                     if (item.itemStack.type !in goodPulls) {

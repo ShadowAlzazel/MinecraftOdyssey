@@ -2,12 +2,9 @@ package me.shadowalzazel.mcodyssey.bosses.the_ambassador
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.bosses.base.OdysseyBoss
+import me.shadowalzazel.mcodyssey.common.tasks.enchantment_tasks.GravitySingularityTask
 import me.shadowalzazel.mcodyssey.util.constants.EffectTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
-import me.shadowalzazel.mcodyssey.common.items.custom.Miscellaneous
-import me.shadowalzazel.mcodyssey.common.listeners.PetListener.addArmorAttribute
-import me.shadowalzazel.mcodyssey.common.listeners.PetListener.addHealthAttribute
-import me.shadowalzazel.mcodyssey.common.tasks.enchantment_tasks.GravitySingularityTask
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
@@ -135,7 +132,7 @@ class TheAmbassador(location: Location) : OdysseyBoss(
         if (entity != this.illusioner) return
         if (vanquisher is Player) {
             //vanquisher.world.dropItem(vanquisher.location, (Arcane.GILDED_BOOK.createGildedBook(OdysseyEnchantments.GRAVITY_WELL, 1)))
-            vanquisher.world.dropItem(vanquisher.location, (Miscellaneous.PRIMO_GEM.newItemStack(15)))
+            //vanquisher.world.dropItem(vanquisher.location, (Miscellaneous.PRIMO_GEM.newItemStack(15)))
             vanquisher.giveExpLevels(40)
         }
         val vanquisherName = vanquisher?.name ?: "An unknown Hero"
@@ -460,12 +457,12 @@ class TheAmbassador(location: Location) : OdysseyBoss(
             }
             Material.AMETHYST_SHARD -> {
                 giftLikeness += 2
-                inventory.addItem(Miscellaneous.BLANK_TOME.newItemStack(maxOf(extraValue - 1, 1)))
+                //inventory.addItem(Miscellaneous.BLANK_TOME.newItemStack(maxOf(extraValue - 1, 1)))
             }
             Material.AMETHYST_BLOCK -> {
                 giftLikeness += 8
-                val tome = listOf(Miscellaneous.TOME_OF_PROMOTION, Miscellaneous.TOME_OF_EMBRACE, Miscellaneous.TOME_OF_DISCHARGE).random()
-                inventory.addItem(tome.newItemStack(1))
+                //val tome = listOf(Miscellaneous.TOME_OF_PROMOTION, Miscellaneous.TOME_OF_EMBRACE, Miscellaneous.TOME_OF_DISCHARGE).random()
+                //inventory.addItem(tome.newItemStack(1))
             }
             Material.EMERALD -> {
                 giftLikeness += 4
@@ -506,7 +503,7 @@ class TheAmbassador(location: Location) : OdysseyBoss(
                 inventory.addItem(ItemStack(randomFood.random(), extraValue))
             }
             Material.ENCHANTED_GOLDEN_APPLE -> {
-                inventory.addItem(Miscellaneous.TOME_OF_POLYMERIZATION.newItemStack(1))
+                //inventory.addItem(Miscellaneous.TOME_OF_POLYMERIZATION.newItemStack(1))
                 giftLikeness += 15
             }
             Material.HEART_OF_THE_SEA -> {

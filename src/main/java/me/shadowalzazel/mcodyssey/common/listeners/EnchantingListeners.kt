@@ -2,10 +2,8 @@ package me.shadowalzazel.mcodyssey.common.listeners
 
 import com.destroystokyo.paper.event.inventory.PrepareResultEvent
 import me.shadowalzazel.mcodyssey.common.enchantments.TomeEnchanting
+import me.shadowalzazel.mcodyssey.common.items.Item
 import me.shadowalzazel.mcodyssey.util.constants.CustomColors
-import me.shadowalzazel.mcodyssey.common.items.custom.Miscellaneous
-import me.shadowalzazel.mcodyssey.common.items.OdysseyItem
-import me.shadowalzazel.mcodyssey.datagen.items.ItemCreator
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
@@ -29,7 +27,8 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.inventory.meta.Repairable
 import java.util.*
 
-object EnchantingListeners : Listener, ItemCreator, TomeEnchanting {
+@Suppress("UnstableApiUsage")
+object EnchantingListeners : Listener, TomeEnchanting {
 
     // IDEAS
     // BOOK that stores EXP points
@@ -253,7 +252,7 @@ object EnchantingListeners : Listener, ItemCreator, TomeEnchanting {
     }
 
     private fun enchantingTomeHandler(event: EnchantItemEvent) {
-        val randomTome: OdysseyItem
+        val randomTome: Item
         //val enchanterLevel = maxOf(1, event.enchanter.level)
         val tierCost: Int
         //val tableCost = event.expLevelCost
@@ -261,19 +260,19 @@ object EnchantingListeners : Listener, ItemCreator, TomeEnchanting {
         when (event.whichButton()) {
             0 -> {
                 tierCost = 1
-                randomTome = listOf(Miscellaneous.TOME_OF_DISCHARGE, Miscellaneous.TOME_OF_PROMOTION).random()
+                randomTome = listOf(Item.TOME_OF_DISCHARGE, Item.TOME_OF_PROMOTION).random()
             }
             1 -> {
                 tierCost = 2
-                randomTome = listOf(Miscellaneous.TOME_OF_IMITATION, Miscellaneous.TOME_OF_EXPENDITURE).random()
+                randomTome = listOf(Item.TOME_OF_IMITATION, Item.TOME_OF_EXPENDITURE).random()
             }
             2 -> {
                 tierCost = 3
-                randomTome = listOf(Miscellaneous.TOME_OF_AVARICE, Miscellaneous.TOME_OF_HARMONY).random()
+                randomTome = listOf(Item.TOME_OF_AVARICE, Item.TOME_OF_HARMONY).random()
             }
             else -> {
                 tierCost = 0
-                randomTome = listOf(Miscellaneous.TOME_OF_HARMONY).random()
+                randomTome = listOf(Item.TOME_OF_HARMONY).random()
             }
         }
         // Particles and sounds

@@ -11,12 +11,12 @@ import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextDecoration
-import org.bukkit.Material
-import org.bukkit.potion.PotionEffect
 import org.bukkit.Color
+import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
+import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionType
 import java.util.*
 
@@ -96,7 +96,7 @@ sealed class ItemConstructor(
     private fun GlyphsherdConstructor.newItemGlyphsherd(name: String, amount: Int=1, withIdTag: Boolean=true): ItemStack {
         val item = newItem(name, amount, withIdTag)
         item.addTag(ItemDataTags.IS_GLYPHSHERD)
-        item.setGenericAttribute(value, AttributeTags.GLYPH_SLOT_KEY, attribute, null, slotGroup)
+        item.setGenericAttribute(value, AttributeTags.GLYPH_SLOT, attribute, null, slotGroup)
         return item
     }
 

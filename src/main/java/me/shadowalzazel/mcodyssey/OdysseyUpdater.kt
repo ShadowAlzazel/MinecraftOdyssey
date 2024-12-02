@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey
 
-import me.shadowalzazel.mcodyssey.util.NamedKeys
 import me.shadowalzazel.mcodyssey.util.DataTagManager
+import me.shadowalzazel.mcodyssey.util.NamedKeys
 import org.bukkit.inventory.ItemStack
 
 class OdysseyUpdater : DataTagManager {

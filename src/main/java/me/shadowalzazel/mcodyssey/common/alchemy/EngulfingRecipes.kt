@@ -1,8 +1,8 @@
 package me.shadowalzazel.mcodyssey.common.alchemy
 
+import me.shadowalzazel.mcodyssey.common.alchemy.utility.IngredientChoice
 import me.shadowalzazel.mcodyssey.common.items.Item
 import org.bukkit.Material
-import me.shadowalzazel.mcodyssey.common.alchemy.utility.IngredientChoice
 
 object EngulfingRecipes {
 

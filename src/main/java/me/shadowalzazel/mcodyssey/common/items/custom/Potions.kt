@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.common.items.constructors
+package me.shadowalzazel.mcodyssey.common.items.custom
 
 import me.shadowalzazel.mcodyssey.common.effects.EffectColors
 import me.shadowalzazel.mcodyssey.common.items.ItemConstructor.PotionConstructor

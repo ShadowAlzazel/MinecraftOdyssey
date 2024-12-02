@@ -1,7 +1,8 @@
 package me.shadowalzazel.mcodyssey.common.items
 
 import me.shadowalzazel.mcodyssey.api.LootTableManager
-import me.shadowalzazel.mcodyssey.common.items.constructors.Potions
+import me.shadowalzazel.mcodyssey.common.items.custom.Misc
+import me.shadowalzazel.mcodyssey.common.items.custom.Potions
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
@@ -28,7 +29,7 @@ open class Item(
 
     @Suppress("unused")
     companion object {
-        // Generic Data Items
+        // ---------------------------------- GENERIC DATA ITEMS -----------------------------------
         val ARCANE_BOOK = DataItem("arcane_book")
         val ANODIZED_TITANIUM_INGOT = DataItem("anodized_titanium_ingot")
         val COAGULATED_BLOOD = DataItem("coagulated_blood")
@@ -49,6 +50,7 @@ open class Item(
         val SOUL_STEEL_INGOT = DataItem("soul_steel_ingot")
         val TITANIUM_INGOT = DataItem("titanium_ingot")
         val SHADOW_TRIAL_KEY = DataItem("shadow_trial_key")
+        // Smithing
         val ARCANE_ARMOR_TRIM_SMITHING_TEMPLATE = DataItem("arcane_armor_trim_smithing_template")
         val DANGER_ARMOR_TRIM_SMITHING_TEMPLATE = DataItem("danger_armor_trim_smithing_template")
         val IMPERIAL_ARMOR_TRIM_SMITHING_TEMPLATE = DataItem("imperial_armor_trim_smithing_template")
@@ -56,12 +58,16 @@ open class Item(
         val SOUL_STEEL_UPGRADE_TEMPLATE = DataItem("soul_steel_upgrade_template")
         val TITANIUM_UPGRADE_TEMPLATE = DataItem("titanium_upgrade_template")
         val IRIDIUM_UPGRADE_TEMPLATE = DataItem("iridium_upgrade_template")
+        // Enchanting
         val TOME_OF_DISCHARGE = DataItem("tome_of_discharge")
         val TOME_OF_EXPENDITURE = DataItem("tome_of_expenditure")
         val TOME_OF_EXTRACTION = DataItem("tome_of_extraction")
         val TOME_OF_IMITATION = DataItem("tome_of_imitation")
         val TOME_OF_PROMOTION = DataItem("tome_of_promotion")
+        val TOME_OF_AVARICE = DataItem("tome_of_avarice")
+        val TOME_OF_HARMONY = DataItem("tome_of_harmony")
         val TOME_OF_REPLICATION = DataItem("tome_of_replication")
+        // Tool Parts
         val BLADE_PART_UPGRADE_TEMPLATE = DataItem("blade_part_upgrade_template")
         val HANDLE_PART_UPGRADE_TEMPLATE = DataItem("handle_part_upgrade_template")
         val POMMEL_PART_UPGRADE_TEMPLATE = DataItem("pommel_part_upgrade_template")
@@ -77,6 +83,33 @@ open class Item(
         val FANCY_PART_PATTERN = DataItem("fancy_part_pattern")
         val HUMBLE_PART_PATTERN = DataItem("humble_part_pattern")
         val EMPTY_PART_PATTERN = DataItem("empty_part_pattern")
+        // Glyphic
+        val GLAZED_ORB = DataItem("glazed_orb")
+        val GLAZED_RODS = DataItem("glazed_rods")
+        val GLAZED_KEY = DataItem("glazed_key")
+        val GLAZED_SKULL = DataItem("glazed_skull")
+        val GLAZED_DOWEL = DataItem("glazed_dowel")
+        val GLAZED_TOTEM = DataItem("glazed_totem")
+        val CLAY_ORB = DataItem("clay_orb")
+        val CLAY_RODS = DataItem("clay_rods")
+        val CLAY_KEY = DataItem("clay_key")
+        val CLAY_SKULL = DataItem("clay_skull")
+        val CLAY_DOWEL = DataItem("clay_dowel")
+        val CLAY_TOTEM = DataItem("clay_totem")
+        // Glyphsherds
+        val ASSAULT_GLYPHSHERD = DataItem("assault_glyphsherd")
+        val GUARD_GLYPHSHERD = DataItem("guard_glyphsherd")
+        val FINESSE_GLYPHSHERD = DataItem("finesse_glyphsherd")
+        val SWIFT_GLYPHSHERD = DataItem("swift_glyphsherd")
+        val VITALITY_GLYPHSHERD = DataItem("vitality_glyphsherd")
+        val STEADFAST_GLYPHSHERD = DataItem("steadfast_glyphsherd")
+        val FORCE_GLYPHSHERD = DataItem("force_glyphsherd")
+        val BREAK_GLYPHSHERD = DataItem("break_glyphsherd")
+        val GRASP_GLYPHSHERD = DataItem("grasp_glyphsherd")
+        val JUMP_GLYPHSHERD = DataItem("jump_glyphsherd")
+        val GRAVITY_GLYPHSHERD = DataItem("gravity_glyphsherd")
+        val RANGE_GLYPHSHERD = DataItem("range_glyphsherd")
+        val SIZE_GLYPHSHERD = DataItem("size_glyphsherd")
         // Food
         val GREEN_APPLE = DataItem("green_apple")
         val BACON = DataItem("bacon")
@@ -100,26 +133,7 @@ open class Item(
         val THAI_TULIP_BOBA_TEA = DataItem("earl_lily_boba_tea")
         val ALLIUM_JADE_BOBA_TEA = DataItem("earl_lily_boba_tea")
         val CORNFLOWER_CEYLON_BOBA_TEA = DataItem("earl_lily_boba_tea")
-        // Potions
-        val POTION_VIAL = CustomItem("potion_vial", Potions.POTION_VIAL)
-        val CRYSTALLINE_POTION = CustomItem("crystalline_potion", Potions.CRYSTALLINE_POTION)
-        val POTION_OF_LEVITATION = CustomItem("potion_of_levitation", Potions.POTION_OF_LEVITATION)
-        val POTION_OF_WITHERING = CustomItem("potion_of_withering", Potions.POTION_OF_WITHERING)
-        val POTION_OF_DARKNESS = CustomItem("potion_of_darkness", Potions.POTION_OF_DARKNESS)
-        val POTION_OF_LUCK = CustomItem("potion_of_luck", Potions.POTION_OF_LUCK)
-        val POTION_OF_RESISTANCE = CustomItem("potion_of_resistance", Potions.POTION_OF_RESISTANCE)
-        val POTION_OF_HASTE = CustomItem("potion_of_haste", Potions.POTION_OF_HASTE)
-        val POTION_OF_BIOLUMINESCENCE = CustomItem("potion_of_bioluminescence", Potions.POTION_OF_BIOLUMINESCENCE)
-        val POTION_OF_CONSTITUTION = CustomItem("potion_of_constitution", Potions.POTION_OF_CONSTITUTION)
-        val POTION_OF_STONE_SKIN = CustomItem("potion_of_stone_skin", Potions.POTION_OF_STONE_SKIN)
-        val POTION_OF_WRATH = CustomItem("potion_of_wrath", Potions.POTION_OF_WRATH)
-        val POTION_OF_ZOOM = CustomItem("potion_of_zoom", Potions.POTION_OF_ZOOM)
-        val POTION_OF_SHIMMER = CustomItem("bottle_of_shimmer", Potions.POTION_OF_SHIMMER)
-        val ANGLERS_CONCOCTION = CustomItem("anglers_concoction", Potions.ANGLERS_CONCOCTION)
-        val NETHER_OWL_CONCOCTION = CustomItem("nether_owl_concoction", Potions.NETHER_OWL_CONCOCTION)
-        val SPELUNKERS_CONCOCTION = CustomItem("spelunkers_concoction", Potions.SPELUNKERS_CONCOCTION)
-        val CUSTOM_CONCOCTION = CustomItem("custom_concoction", Potions.CUSTOM_CONCOCTION)
-        // ---------------------------------- DATA + CUSTOM -----------------------------------
+        // ---------------------------------- CUSTOM DATA ITEMS -----------------------------------
         // Exotics
         val ABZU_BLADE = DataItem("abzu_blade")
         val ELUCIDATOR = DataItem("elucidator")
@@ -148,6 +162,29 @@ open class Item(
         val ARCANE_SCEPTER = DataItem("arcane_scepter")
         val WARPING_WAND = DataItem("warping_wand")
         val VOID_LINKED_KUNAI = DataItem("void_linked_kunai")
+        // ---------------------------------- ODYSSEY GENERATED -----------------------------------
+        // Potions
+        val POTION_VIAL = CustomItem("potion_vial", Potions.POTION_VIAL)
+        val CRYSTALLINE_POTION = CustomItem("crystalline_potion", Potions.CRYSTALLINE_POTION)
+        val POTION_OF_LEVITATION = CustomItem("potion_of_levitation", Potions.POTION_OF_LEVITATION)
+        val POTION_OF_WITHERING = CustomItem("potion_of_withering", Potions.POTION_OF_WITHERING)
+        val POTION_OF_DARKNESS = CustomItem("potion_of_darkness", Potions.POTION_OF_DARKNESS)
+        val POTION_OF_LUCK = CustomItem("potion_of_luck", Potions.POTION_OF_LUCK)
+        val POTION_OF_RESISTANCE = CustomItem("potion_of_resistance", Potions.POTION_OF_RESISTANCE)
+        val POTION_OF_HASTE = CustomItem("potion_of_haste", Potions.POTION_OF_HASTE)
+        val POTION_OF_BIOLUMINESCENCE = CustomItem("potion_of_bioluminescence", Potions.POTION_OF_BIOLUMINESCENCE)
+        val POTION_OF_CONSTITUTION = CustomItem("potion_of_constitution", Potions.POTION_OF_CONSTITUTION)
+        val POTION_OF_STONE_SKIN = CustomItem("potion_of_stone_skin", Potions.POTION_OF_STONE_SKIN)
+        val POTION_OF_WRATH = CustomItem("potion_of_wrath", Potions.POTION_OF_WRATH)
+        val POTION_OF_ZOOM = CustomItem("potion_of_zoom", Potions.POTION_OF_ZOOM)
+        val POTION_OF_SHIMMER = CustomItem("bottle_of_shimmer", Potions.POTION_OF_SHIMMER)
+        val ANGLERS_CONCOCTION = CustomItem("anglers_concoction", Potions.ANGLERS_CONCOCTION)
+        val NETHER_OWL_CONCOCTION = CustomItem("nether_owl_concoction", Potions.NETHER_OWL_CONCOCTION)
+        val SPELUNKERS_CONCOCTION = CustomItem("spelunkers_concoction", Potions.SPELUNKERS_CONCOCTION)
+        val CUSTOM_CONCOCTION = CustomItem("custom_concoction", Potions.CUSTOM_CONCOCTION)
+        // Misc
+        val BLAZING_ROCKET = CustomItem("blazing_rocket", Misc.BLAZING_ROCKET)
+
 
     }
 

@@ -1,19 +1,16 @@
 package me.shadowalzazel.mcodyssey.common.listeners
 
-import me.shadowalzazel.mcodyssey.util.constants.EntityTags
-import me.shadowalzazel.mcodyssey.common.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.common.items.custom.Ingredients
-import me.shadowalzazel.mcodyssey.common.items.custom.Miscellaneous
-import me.shadowalzazel.mcodyssey.datagen.items.ItemCreator
 import me.shadowalzazel.mcodyssey.common.listeners.utility.LootLogic
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import org.bukkit.Particle
 import org.bukkit.Sound
-import org.bukkit.entity.*
+import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDeathEvent
 
-object LootListeners : Listener, ItemCreator {
+object LootListeners : Listener {
 
     @EventHandler
     fun mobDeathDropHandler(event: EntityDeathEvent) {
@@ -39,10 +36,11 @@ object LootListeners : Listener, ItemCreator {
         // Create a calculation class that handles all the logic
         val mobLootLogic = LootLogic(1.0, mob, player)
         // Loot check and entity check
+        /*
         when (mob) {
             is Skeleton -> {
                 if (mobLootLogic.roll(2.5)) {
-                    val rangedSet = OdysseyEnchantments.RANGED_SET.filter { enchant -> enchant !in OdysseyEnchantments.EXOTIC_LIST }
+                    val rangedSet = OdysseyEnchantments.rangedSet.filter { enchant -> enchant !in OdysseyEnchantments.EXOTIC_LIST }
                     mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBookStack(rangedSet.random(), 1)))
                     droppedItemSound(player)
                 }
@@ -67,13 +65,13 @@ object LootListeners : Listener, ItemCreator {
             }
             is Zombie -> {
                 if (mobLootLogic.roll(2.5)) {
-                    val meleeSet = OdysseyEnchantments.MELEE_SET.filter { enchant -> enchant !in OdysseyEnchantments.EXOTIC_LIST }
+                    val meleeSet = OdysseyEnchantments.meleeSet.filter { enchant -> enchant !in OdysseyEnchantments.EXOTIC_LIST }
                     mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBookStack(meleeSet.random(), 1)))
                     droppedItemSound(player)
                 }
                 // TODO: Is Blood Moon
                 if (mobLootLogic.roll(4.0)) {
-                    mob.world.dropItem(mob.location, (Ingredients.COAGULATED_BLOOD.newItemStack((1..3).random())))
+                    //mob.world.dropItem(mob.location, (Ingredients.COAGULATED_BLOOD.newItemStack((1..3).random())))
                 }
             }
             is Witch -> {
@@ -149,13 +147,9 @@ object LootListeners : Listener, ItemCreator {
                 }
             }
             is ElderGuardian -> {
-                mob.world.dropItem(mob.location, (Ingredients.IRRADIATED_ROD.newItemStack((1..3).random())))
-                mob.world.dropItem(mob.location, (Ingredients.IRRADIATED_SHARD.newItemStack((2..5).random())))
             }
             is Warden -> {
-                mob.world.dropItem(mob.location, (Ingredients.WARDEN_ENTRAILS.newItemStack(1)))
                 mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBookStack(OdysseyEnchantments.SCULK_SENSITIVE, 1)))
-                droppedItemSound(player)
             }
             is Wither -> {
                 mob.world.dropItem(mob.location, (Miscellaneous.ARCANE_BOOK.createArcaneBookStack(OdysseyEnchantments.BLACK_ROSE, 1)))
@@ -166,6 +160,8 @@ object LootListeners : Listener, ItemCreator {
             else -> {
             }
         }
+
+         */
         // Check if gilded
         if (mob.scoreboardTags.contains(EntityTags.GILDED_MOB)) {
             droppedItemSound(player)

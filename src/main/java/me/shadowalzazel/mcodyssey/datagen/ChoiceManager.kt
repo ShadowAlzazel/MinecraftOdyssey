@@ -1,10 +1,16 @@
-package me.shadowalzazel.mcodyssey.datagen.recipes
+package me.shadowalzazel.mcodyssey.datagen
 
 import me.shadowalzazel.mcodyssey.common.items.Item
 import org.bukkit.Material
 import org.bukkit.inventory.RecipeChoice
 
 interface ChoiceManager {
+
+    fun Item.toRecipeChoice(): RecipeChoice.ExactChoice {
+        val bukkitItem = this.newItemStack(1)
+        val dataItem = this.newItemStack(1, false)
+        return RecipeChoice.ExactChoice(bukkitItem, dataItem)
+    }
 
     fun silverChoices(): RecipeChoice.ExactChoice {
         val bukkitItem = Item.SILVER_INGOT.newItemStack(1)

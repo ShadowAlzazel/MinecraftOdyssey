@@ -1,17 +1,10 @@
-package me.shadowalzazel.mcodyssey.util
+package me.shadowalzazel.mcodyssey.unused
 
-import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.common.items.SpaceRuneMatrix
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.TextColor
-import net.kyori.adventure.text.format.TextDecoration
-import org.bukkit.entity.Entity
-import org.bukkit.inventory.ItemStack
-import org.bukkit.util.Vector
-import org.joml.Vector3d
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 
 interface SpaceRuneManager : DataTagManager {
 
+    /*
     fun teleportFromSpaceRuneMatrix(entity: Entity, spaceRune: SpaceRuneMatrix) {
         // MATH
         val runeMatrix = spaceRune.asMatrix
@@ -85,6 +78,8 @@ interface SpaceRuneManager : DataTagManager {
         lore(newLore)
     }
 
+
+     */
 
     // Crafting table grid
     // used to make tablets/scrolls of TP matrix transformations

@@ -2,28 +2,19 @@
 
 package me.shadowalzazel.mcodyssey.common.listeners
 
-import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
-import me.shadowalzazel.mcodyssey.common.items.custom.Glyphsherds
-import me.shadowalzazel.mcodyssey.common.items.custom.Glyphsherds.createLootSherdStack
-import me.shadowalzazel.mcodyssey.common.items.custom.Glyphsherds.createGlyphicItem
-import me.shadowalzazel.mcodyssey.common.items.custom.Glyphsherds.createPresetSherdStack
-import me.shadowalzazel.mcodyssey.common.items.custom.Glyphsherds.runesherdRuinsList
 import me.shadowalzazel.mcodyssey.util.GlyphManager
+import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
-import org.bukkit.attribute.Attribute
-import org.bukkit.attribute.AttributeModifier
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockDropItemEvent
 import org.bukkit.event.inventory.CraftItemEvent
-import org.bukkit.event.inventory.FurnaceSmeltEvent
 import org.bukkit.event.inventory.FurnaceStartSmeltEvent
 import org.bukkit.event.inventory.PrepareItemCraftEvent
 import org.bukkit.event.inventory.PrepareSmithingEvent
-import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
 
 object GlyphListeners : Listener, GlyphManager {
@@ -105,6 +96,7 @@ object GlyphListeners : Listener, GlyphManager {
          */
     }
 
+    /*
     @EventHandler
     fun glyphKilnFinishFiringHandler(event: FurnaceSmeltEvent) {
         // Get matching vars
@@ -148,6 +140,8 @@ object GlyphListeners : Listener, GlyphManager {
         event.result = glyphicItem
     }
 
+     */
+
 
     // For Changing unknown runesherd to Runesherd drop
     //@EventHandler(priority = EventPriority.LOW)
@@ -160,12 +154,15 @@ object GlyphListeners : Listener, GlyphManager {
         if (!item.itemStack.itemMeta.hasCustomModelData()) return
         //if (item.itemStack.itemMeta.customModelData != ItemModels.UNKNOWN_RUNESHERD) return
         // Roll 70 for a preset slot, 30 for random slot
+        /*
         if ((0..100).random() > 70) {
             item.itemStack = runesherdRuinsList.random().createPresetSherdStack(1)
         }
         else {
             item.itemStack = runesherdRuinsList.random().createLootSherdStack(1) // Do more random slots
         }
+
+         */
         // Advancement
         val advancement = event.player.server.getAdvancement(NamespacedKey.fromString("odyssey:odyssey/dig_runesherd")!!)
         if (advancement != null) {
@@ -210,7 +207,7 @@ object GlyphListeners : Listener, GlyphManager {
         val runeName = runesherd.getRuneIdentifier() ?: "rune.generic"
         val runeAttribute = findRunesherdAttribute(runeName) ?: return
         val runeAttributeModifiers = modifiers.get(runeAttribute) ?: return
-        val runeKey = AttributeTags.GLYPH_SLOT_KEY
+        val runeKey = AttributeTags.GLYPH_SLOT
         val runeModifier = runeAttributeModifiers.find { it.name == runeKey } ?: return
         // Add to result
         val result = event.inventory.result ?: return

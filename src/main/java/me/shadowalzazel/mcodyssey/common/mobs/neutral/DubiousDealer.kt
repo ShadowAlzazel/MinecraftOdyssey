@@ -1,7 +1,6 @@
 package me.shadowalzazel.mcodyssey.common.mobs.neutral
 
 import me.shadowalzazel.mcodyssey.common.mobs.base.OdysseyMob
-import me.shadowalzazel.mcodyssey.datagen.recipes.merchant.ArcaneSales
 import net.kyori.adventure.text.Component
 import org.bukkit.Location
 import org.bukkit.Material
@@ -37,12 +36,12 @@ object DubiousDealer : OdysseyMob("Dubious Dealer", "dubious_dealer", EntityType
                 it.bootsDropChance = 0F
             }
             // Add Recipes
-            recipes.add(ArcaneSales.prismaticBookTrade())
-            recipes.add(ArcaneSales.lowTierTomeTrade())
-            recipes.add(ArcaneSales.lowTierTomeTrade())
-            recipes.add(ArcaneSales.midTierTomeTrade())
-            recipes.add(ArcaneSales.lowLevelArcaneBookTrade())
-            recipes.add(ArcaneSales.lowLevelArcaneBookTrade())
+            //recipes.add(ArcaneSales.prismaticBookTrade())
+            //recipes.add(ArcaneSales.lowTierTomeTrade())
+            //recipes.add(ArcaneSales.lowTierTomeTrade())
+            //recipes.add(ArcaneSales.midTierTomeTrade())
+            //recipes.add(ArcaneSales.lowLevelArcaneBookTrade())
+            //recipes.add(ArcaneSales.lowLevelArcaneBookTrade())
         }
     }
 

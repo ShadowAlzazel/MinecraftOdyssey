@@ -1,28 +1,15 @@
 package me.shadowalzazel.mcodyssey.common.enchantments
 
-import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
-import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.util.EnchantmentsManager
 import me.shadowalzazel.mcodyssey.util.RegistryTagManager
-import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
 
 @Suppress("MemberVisibilityCanBePrivate")
 object OdysseyEnchantments : EnchantmentsManager, RegistryTagManager {
 
-    private val enchantmentRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.ENCHANTMENT)
-    private val getRegisteredEnchant: (String) -> (Enchantment) = {
-        enchantmentRegistry.get(NamespacedKey(Odyssey.instance, it))!!
-    }
-
-    // TEST!!!
-    //val odysseyKey = NamespacedKey("odyssey", "non_table/melee")
-    //val typedKey = TypedKey.create(RegistryKey.ENCHANTMENT, odysseyKey)
-    //val tagKey = TagKey.create(RegistryKey.ENCHANTMENT, odysseyKey)
-    //val keySet = RegistrySet.keySet(RegistryKey.ENCHANTMENT, typedKey)
-    //val melSet = enchantmentRegistry.getTag(tagKey)
-    //val meleeSet = getRegistryTag("treasure", RegistryKey.ENCHANTMENT)
+    private val enchantmentRegistry = getPaperRegistry(RegistryKey.ENCHANTMENT)
+    private val getRegisteredEnchant: (String) -> (Enchantment) = { enchantmentRegistry.get(createOdysseyKey(it))!!}
 
     // Armor
     val ANALYSIS: Enchantment = getRegisteredEnchant("analysis")
@@ -141,73 +128,16 @@ object OdysseyEnchantments : EnchantmentsManager, RegistryTagManager {
     val MIRROR_FORCE: Enchantment = getRegisteredEnchant("mirror_force")
     val VOID_JUMP: Enchantment = getRegisteredEnchant("antibonk")
 
+    /*-----------------------------------------------------------------------------------------------*/
+    //getTagFromRegistry(RegistryKey.ENCHANTMENT, "curse") -> returns enchants in datapack with curse
 
-    val MELEE_SET = setOf(
-        ASPHYXIATE,
-        ARCANE_CELL,
-        BACKSTABBER,
-        BANE_OF_THE_ILLAGER,
-        BANE_OF_THE_SEA,
-        BANE_OF_THE_SWINE,
-        SWAP,
-        BUDDING,
-        BUZZY_BEES,
-        COMMITTED,
-        CULL_THE_WEAK,
-        DECAY,
-        DOUSE,
-        ECHO,
-        EXPLODING,
-        FEARFUL_FINISHER,
-        FREEZING_ASPECT,
-        FROG_FRIGHT,
-        FROSTY_FUSE,
-        GRAVITY_WELL,
-        GUARDING_STRIKE,
-        GUST,
-        HEMORRHAGE,
-        ILLUCIDATION,
-        RUPTURE,
-        PESTILENCE,
-        VITAL,
-        VOID_STRIKE,
-        WHIRLWIND
-    )
 
-    val ARMOR_SET = setOf(
-        ANTIBONK,
-        BEASTLY,
-        BLACK_ROSE,
-        BLURCISE,
-        BRAWLER,
-        BULWARK,
-        CHITIN,
-        COWARDICE,
-        DEVASTATING_DROP,
-        FRUITFUL_FARE,
-        IGNORE_PAIN,
-        ILLUMINEYE,
-        LEAP_FROG,
-        MANDIBLEMANIA,
-        MOLTEN_CORE,
-        MOONPATCH,
-        OPTICALIZATION,
-        POTION_BARRIER,
-        RAGING_ROAR,
-        RECKLESS,
-        RELENTLESS,
-        ROOT_BOOTS,
-        SCULK_SENSITIVE,
-        SPEEDY_SPURS,
-        SPOREFUL,
-        SQUIDIFY,
-        SSLITHER_SSIGHT,
-        STATIC_SOCKS,
-        UNTOUCHABLE,
-        VEILED_IN_SHADOW,
-        VENGEFUL,
-        VIGOR
-    )
+    val inTableMelee = getCollectionFromTag(RegistryKey.ENCHANTMENT, "in_table/melee")
+    val nonTableMelee = getCollectionFromTag(RegistryKey.ENCHANTMENT, "non_table/melee")
+
+    val meleeSet = inTableMelee + nonTableMelee
+    val rangedSet = getCollectionFromTag(RegistryKey.ENCHANTMENT, "in_table/ranged")
+    val armorSet = getCollectionFromTag(RegistryKey.ENCHANTMENT, "non_table/armor")
 
     val MISC_SET = setOf(
         BOMB_OB,
@@ -220,34 +150,6 @@ object OdysseyEnchantments : EnchantmentsManager, RegistryTagManager {
         YANK
     )
 
-    val RANGED_SET = setOf(
-        ALCHEMY_ARTILLERY,
-        BALLISTICS,
-        BOLA_SHOT,
-        BURST_BARRAGE,
-        CHAIN_REACTION,
-        CLUSTER_SHOT,
-        DEADEYE,
-        DEATH_FROM_ABOVE,
-        DOUBLE_TAP,
-        ENTANGLEMENT,
-        FAN_FIRE,
-        GALE,
-        LUCKY_DRAW,
-        LUXPOSE,
-        OVERCHARGE,
-        PERPETUAL,
-        RAIN_OF_ARROWS,
-        RICOCHET,
-        SHARPSHOOTER,
-        SINGLE_OUT,
-        SINGULARITY_SHOT,
-        REND,
-        TEMPORAL,
-        VULNEROCITY
-    )
-
-    val ALL_SET = ARMOR_SET + MELEE_SET + MISC_SET + RANGED_SET
     val EXOTIC_LIST = setOf(SINGULARITY_SHOT, GRAVITY_WELL, SCULK_SENSITIVE, BLACK_ROSE) // To exclude from enchantment table
 
 }

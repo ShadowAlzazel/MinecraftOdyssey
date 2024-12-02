@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.common.tasks.weapon_tasks
 
-import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import me.shadowalzazel.mcodyssey.util.DataTagManager
+import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.CrossbowMeta

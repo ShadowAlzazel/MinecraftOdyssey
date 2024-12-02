@@ -1,12 +1,11 @@
 package me.shadowalzazel.mcodyssey.common.mobs.hostile
 
-import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
-import me.shadowalzazel.mcodyssey.datagen.items.WeaponCreator
 import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
 import me.shadowalzazel.mcodyssey.common.items.ToolType
 import me.shadowalzazel.mcodyssey.common.mobs.base.OdysseyMob
 import me.shadowalzazel.mcodyssey.common.trims.TrimMaterials
 import me.shadowalzazel.mcodyssey.common.trims.TrimPatterns
+import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import net.kyori.adventure.text.Component
 import org.bukkit.Location
 import org.bukkit.Material
@@ -42,7 +41,7 @@ object Vanguard : OdysseyMob("Vanguard", "vanguard", EntityType.SKELETON, 25.0) 
     override fun createMob(world: World, location: Location): Skeleton {
         val mob = super.createMob(world, location) as Skeleton
         // Weapon
-        val mainHand = WeaponCreator.toolCreator.createToolStack(ToolMaterial.IRON, ToolType.POLEAXE)
+        val mainHand = createToolStack(ToolMaterial.IRON, ToolType.POLEAXE)
         val weapon = mainHand.clone()
         // Add Enchantments
         val enchantItem = ItemStack(Material.NETHERITE_SWORD).enchantWithLevels(30, false, Random())

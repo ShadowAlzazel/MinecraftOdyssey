@@ -3,16 +3,15 @@ package me.shadowalzazel.mcodyssey.common.listeners
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
-import me.shadowalzazel.mcodyssey.util.constants.EntityTags
-import me.shadowalzazel.mcodyssey.datagen.items.WeaponCreator
 import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
 import me.shadowalzazel.mcodyssey.common.items.ToolType
 import me.shadowalzazel.mcodyssey.common.mobs.neutral.DubiousDealer
-import me.shadowalzazel.mcodyssey.util.StructureManager
 import me.shadowalzazel.mcodyssey.common.trims.TrimMaterials
 import me.shadowalzazel.mcodyssey.common.trims.TrimPatterns
-import me.shadowalzazel.mcodyssey.util.MobCreationHelper
+import me.shadowalzazel.mcodyssey.util.MobMaker
+import me.shadowalzazel.mcodyssey.util.StructureManager
+import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
@@ -30,7 +29,7 @@ import org.bukkit.inventory.meta.trim.TrimMaterial
 import org.bukkit.inventory.meta.trim.TrimPattern
 import java.util.*
 
-object SpawningListeners : Listener, MobCreationHelper, StructureManager {
+object SpawningListeners : Listener, MobMaker, StructureManager {
 
     @EventHandler
     fun mobNaturalSpawningHandler(event: CreatureSpawnEvent) {
@@ -98,7 +97,7 @@ object SpawningListeners : Listener, MobCreationHelper, StructureManager {
         // Vanguard
         if (mob.scoreboardTags.contains("odyssey.vanguard")) {
             // Weapon
-            val mainHand = WeaponCreator.toolCreator.createToolStack(ToolMaterial.IRON, ToolType.POLEAXE)
+            val mainHand = createToolStack(ToolMaterial.IRON, ToolType.POLEAXE)
             val weapon = mainHand.clone()
             // Add Enchantments
             val enchantItem = ItemStack(Material.NETHERITE_SWORD).enchantWithLevels(30, false, Random())

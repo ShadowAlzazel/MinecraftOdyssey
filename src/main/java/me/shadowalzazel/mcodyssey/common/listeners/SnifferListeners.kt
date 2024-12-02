@@ -1,9 +1,8 @@
 package me.shadowalzazel.mcodyssey.common.listeners
 
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.common.items.custom.Miscellaneous
-import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
@@ -54,6 +53,7 @@ object SnifferListeners : Listener, DataTagManager {
         val sniffer = event.entity as Sniffer
         if (!sniffer.scoreboardTags.contains(EntityTags.CAN_DIG_BIOME_SEEDS)) return // TODO: Change IDl TEMP DETECTION
         // Get Archaic Biome Seeds
+        /*
         val archaicSeeds = listOf(Miscellaneous.ASPEN_SEED, Miscellaneous.MAPLE_SEED, Miscellaneous.SAKURA_SEED, Miscellaneous.REDWOOD_SEED)
         val seed = archaicSeeds.random()
         val drop = seed.newItemStack(1).apply {
@@ -79,6 +79,8 @@ object SnifferListeners : Listener, DataTagManager {
         }
         event.itemDrop.itemStack = drop
         println(event.entity.type.toString() + " Drops " + event.itemDrop)
+
+         */
 
     }
 

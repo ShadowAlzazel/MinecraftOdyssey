@@ -3,14 +3,10 @@
 package me.shadowalzazel.mcodyssey.util
 
 import io.papermc.paper.datacomponent.item.Tool
-import io.papermc.paper.registry.RegistryAccess
-import io.papermc.paper.registry.RegistryKey
 import io.papermc.paper.registry.keys.tags.BlockTypeTagKeys
-import io.papermc.paper.registry.tag.TagKey
-import net.kyori.adventure.util.TriState
-import org.bukkit.NamespacedKey
-import org.bukkit.Registry
 import io.papermc.paper.registry.tag.Tag
+import net.kyori.adventure.util.TriState
+import org.bukkit.Registry
 import org.bukkit.block.BlockType
 
 @Suppress("UnstableApiUsage")

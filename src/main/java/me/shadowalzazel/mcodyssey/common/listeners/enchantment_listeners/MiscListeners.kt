@@ -2,8 +2,8 @@ package me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners
 
 import io.papermc.paper.world.MoonPhase
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.util.EnchantmentsManager
 import me.shadowalzazel.mcodyssey.common.listeners.utility.MoonwardPhase
+import me.shadowalzazel.mcodyssey.util.EnchantmentsManager
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.datagen.recipes.creators
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.common.items.custom.Miscellaneous
+import me.shadowalzazel.mcodyssey.common.items.Item
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.RecipeChoice
@@ -13,7 +13,7 @@ class RocketRecipeCreator {
 
     internal fun blazingRocketsRecipe(tier: Int, tierName: String): ShapelessRecipe {
         // New Rocket
-        val rocket = Miscellaneous.BLAZING_ROCKET.newItemStack(3)
+        val rocket = Item.BLAZING_ROCKET.newItemStack(3)
         rocket.itemMeta = (rocket.itemMeta as FireworkMeta).also {
             it.power = tier + 3
         }
