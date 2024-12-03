@@ -8,7 +8,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-interface EnchantmentsManager: DataTagManager {
+interface EnchantmentManager: DataTagManager {
 
     /*-----------------------------------------------------------------------------------------------*/
     // Helper Functions

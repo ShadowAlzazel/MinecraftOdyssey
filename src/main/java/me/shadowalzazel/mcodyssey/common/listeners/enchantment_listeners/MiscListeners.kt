@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners
 
-import me.shadowalzazel.mcodyssey.util.EnchantmentsManager
+import me.shadowalzazel.mcodyssey.util.EnchantmentManager
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
 
 
-object MiscListeners : Listener, EnchantmentsManager {
+object MiscListeners : Listener, EnchantmentManager {
 
 
     @EventHandler

@@ -6,10 +6,14 @@ object ItemDataTags {
     const val IS_ARCHAIC_SEED: String = "odyssey.is_archaic_seed"
     const val ARCHAIC_NAMESPACE: String = "odyssey.archaic_namespace"
 
-    // Alchemy
-    const val ALCHEMY_ARTILLERY_LOADED: String = "odyssey.alchemy_artillery_loaded"
+    // Alchemical Weapons
+    const val HAS_POTION_LOADED: String = "odyssey.alchemy_artillery_loaded"
     const val ALCHEMY_COPY_STORED: String = "odyssey.alchemy_copy_stored"
-    const val ALCHEMICAL_AMMO_COUNT: String ="odyssey.alchemical_ammo_count"
+    const val LOADED_POTIONS_AMOUNT: String = "odyssey.alchemical_ammo_count"
+    const val LOADED_POTION_TYPE: String = "odyssey.loaded_potion_type"
+    const val POTION_AMMO_AMOUNT: String = "odyssey.potion_ammo_amount"
+    const val MULTISHOT_TRACKER: String = "odyssey.multishot_tracker"
+    // Alchemy
     const val IS_ALCHEMY_COMBINATION: String = "odyssey.is_alchemy_combination" // For Alchemy Combinations/ Concoctions
     const val IS_CUSTOM_EFFECT: String = "odyssey.is_custom_effect"
     const val IS_ODYSSEY_EFFECT: String = "odyssey.is_odyssey_effect"

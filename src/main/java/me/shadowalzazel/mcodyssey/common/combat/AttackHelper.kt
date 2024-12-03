@@ -1,6 +1,7 @@
-package me.shadowalzazel.mcodyssey.util
+package me.shadowalzazel.mcodyssey.common.combat
 
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
+import me.shadowalzazel.mcodyssey.util.constants.WeaponMaps
 import org.bukkit.Location
 import org.bukkit.Particle
 import org.bukkit.Sound
@@ -10,13 +11,14 @@ import org.bukkit.damage.DamageSource
 import org.bukkit.damage.DamageType
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import kotlin.math.pow
 
-
+@Suppress("UnstableApiUsage")
 interface AttackHelper {
 
-    @Suppress("UnstableApiUsage")
+
     fun doWeaponAOESweep(attacker: LivingEntity, victim: LivingEntity, damage: Double, angle: Double, radius: Double? = null) {
         val sweepRadius = radius ?: attacker.location.distance(victim.location)
         val targets = attacker.getNearbyEntities(sweepRadius, sweepRadius, sweepRadius).filter {
@@ -42,11 +44,29 @@ interface AttackHelper {
         attacker.world.playSound(victim.location, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1.75F, 0.5F)
     }
 
+    fun getEntitiesInArc(origin: LivingEntity, angle: Double, radius: Double): List<LivingEntity> {
+        val originDirection = origin.eyeLocation.direction.clone()
+        val nearby = origin.getNearbyEntities(radius, radius, radius).filter {
+            it != origin && it is LivingEntity
+        }
+        val arcEntities: MutableList<LivingEntity> = mutableListOf()
+        for (entity in nearby) {
+            if (entity !is LivingEntity) continue
+            // Get angle
+            val entityDirection = entity.location.subtract(originDirection).toVector()
+            val crossedAngle = originDirection.angle(entityDirection)
+            if (crossedAngle > angle) continue
+            arcEntities.add(entity)
+        }
+        return arcEntities
+    }
+
+
     fun getWeaponAttack(item: ItemStack): Double {
         var damage = 0.0
         val attackModifiers = item.itemMeta.attributeModifiers?.get(Attribute.ATTACK_DAMAGE)
-        if (attackModifiers != null) {
-            for (modifier in attackModifiers) { // FIX LATER
+        if (!attackModifiers.isNullOrEmpty()) {
+            for (modifier in attackModifiers) {
                 damage += modifier.amount
             }
         }
@@ -56,7 +76,7 @@ interface AttackHelper {
         return damage
     }
 
-    @Suppress("UnstableApiUsage")
+
     fun createPlayerDamageSource(player: Entity, projectile: Entity? = null, type: DamageType = DamageType.PLAYER_ATTACK): DamageSource {
         val sourceBuilder = DamageSource.builder(DamageType.PLAYER_ATTACK)
         sourceBuilder.withCausingEntity(player)
@@ -69,7 +89,7 @@ interface AttackHelper {
         return damageSource
     }
 
-    @Suppress("UnstableApiUsage")
+
     fun explosionHandler(entities: Collection<LivingEntity>, center: Location, radius: Double) {
         if (radius < 0) return
         center.world.spawnParticle(Particle.EXPLOSION, center, 1, 0.0, 0.04, 0.0)
@@ -82,6 +102,33 @@ interface AttackHelper {
             entity.damage(power, damageSource) // Create Damage Source
         }
 
+    }
+
+    fun getRayTraceTarget(player: Player, weapon: String): Entity? {
+        val reach = WeaponMaps.REACH_MAP[weapon] ?: return null
+        val result = player.rayTraceEntities(reach.toInt() + 1) ?: return null
+        val target = result.hitEntity ?: return null
+        val closestDistance = if (target is LivingEntity) {
+            minOf(player.location.distance(target.location), player.eyeLocation.distance(target.location)) }
+        else {
+            player.location.distance(target.location)
+        }
+        if (reach < closestDistance) { return null }
+        return target
+    }
+
+    fun dualWieldAttack(player: Player, target: LivingEntity) {
+        with(player.equipment) {
+            val mainHand = itemInMainHand.clone()
+            val offHand = itemInOffHand.clone()
+            setItemInOffHand(mainHand)
+            setItemInMainHand(offHand)
+            player.attack(target)
+            setItemInMainHand(mainHand)
+            setItemInOffHand(offHand)
+        }
+        player.resetCooldown()
+        player.swingOffHand()
     }
 
 }

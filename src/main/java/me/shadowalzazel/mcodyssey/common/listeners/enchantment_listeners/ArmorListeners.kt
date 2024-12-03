@@ -6,7 +6,7 @@ import io.papermc.paper.entity.LookAnchor
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.effects.EffectsManager
 import me.shadowalzazel.mcodyssey.common.tasks.enchantment_tasks.SpeedySpursTask
-import me.shadowalzazel.mcodyssey.util.EnchantmentsManager
+import me.shadowalzazel.mcodyssey.util.EnchantmentManager
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags.getIntTag
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags.removeTag
@@ -31,7 +31,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import java.util.*
 
-object ArmorListeners : Listener, EnchantmentsManager, EffectsManager {
+object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
 
     // Pollen
     private val pollenMaxHeadPlayers = mutableMapOf<UUID, Int>()

@@ -9,6 +9,7 @@ import me.shadowalzazel.mcodyssey.util.NamedKeys
 import me.shadowalzazel.mcodyssey.util.ToolComponentHelper
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.attribute.Attribute
@@ -87,12 +88,14 @@ class ToolUpgrading : DataTagManager, ToolComponentHelper, AdvancementManager {
     }
 
 
+    // Main method to upgrade
     private fun toolUpgrader(item: ItemStack, upgradeMaterial: String): ItemStack {
         val toolType = ToolDataManager.getToolType(item)!!
         val newModel = NamedKeys.newKey("${upgradeMaterial}_${toolType}")
-        val itemName = item.getItemIdentifier()
+        val itemName = item.getItemNameId()
         item.setStringTag(ItemDataTags.MATERIAL_TYPE, toolType)
         item.setStringTag(ItemDataTags.TOOL_TYPE, upgradeMaterial)
+        item.setData(DataComponentTypes.ITEM_NAME, Component.text(itemName))
         item.setData(DataComponentTypes.ITEM_MODEL, newModel)
         val maxDamage = SmithingMaps.DURABILITY_MAP[upgradeMaterial]
         if (maxDamage != null)  item.setData(DataComponentTypes.MAX_DAMAGE, maxDamage)

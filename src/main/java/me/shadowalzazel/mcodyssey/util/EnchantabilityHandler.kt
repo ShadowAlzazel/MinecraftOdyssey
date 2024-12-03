@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 
-interface EnchantabilityHandler : EnchantmentsManager, EnchantmentExtender, DataTagManager {
+interface EnchantabilityHandler : EnchantmentManager, EnchantmentExtender, DataTagManager {
 
     /*-----------------------------------------------------------------------------------------------*/
     fun getEnchantabilityCost(enchant: Pair<Enchantment, Int>, override: Int? = null): Int {
