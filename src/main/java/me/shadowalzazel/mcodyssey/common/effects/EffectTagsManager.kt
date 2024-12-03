@@ -39,7 +39,7 @@ interface EffectTagsManager : DataTagManager {
     }
 
     fun ItemStack.setCustomEffectTag(effectTag: String) {
-        addStringTag(ItemDataTags.ODYSSEY_EFFECT_TAG, effectTag)
+        setStringTag(ItemDataTags.ODYSSEY_EFFECT_TAG, effectTag)
     }
 
     // Default is Ticks

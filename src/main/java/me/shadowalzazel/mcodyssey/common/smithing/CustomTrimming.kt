@@ -51,8 +51,8 @@ class CustomTrimming : DataTagManager {
         val engraver = event.viewers.first()
         // Apply
         val item = equipment.clone()
-        item.addTag(ItemDataTags.IS_ENGRAVED)
-        item.addStringTag(ItemDataTags.ENGRAVED_BY, engraver.name)
+        item.setTag(ItemDataTags.IS_ENGRAVED)
+        item.setStringTag(ItemDataTags.ENGRAVED_BY, engraver.name)
         val pretext = "Created"
         val engraving = Component.text("$pretext by ${engraver.name}", CustomColors.DARK_GRAY.color, TextDecoration.ITALIC)
         val oldLore = item.getData(DataComponentTypes.LORE)

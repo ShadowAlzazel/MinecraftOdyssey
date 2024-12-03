@@ -65,7 +65,7 @@ sealed class ItemConstructor(
 
     private fun newItem(name: String, amount: Int=1, withBukkitId: Boolean=true) : ItemStack {
         val item = ItemStack(this.material)
-        if (withBukkitId) item.addStringTag("item", name) // ID Tag is for Recipe Choice for crafting
+        if (withBukkitId) item.setStringTag("item", name) // ID Tag is for Recipe Choice for crafting
         item.setData(DataComponentTypes.ITEM_NAME, Component.text(name))
         val customName = Component.text(name.toTitleCase()).decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false)
         item.setData(DataComponentTypes.CUSTOM_NAME, customName)
@@ -95,7 +95,7 @@ sealed class ItemConstructor(
 
     private fun GlyphsherdConstructor.newItemGlyphsherd(name: String, amount: Int=1, withIdTag: Boolean=true): ItemStack {
         val item = newItem(name, amount, withIdTag)
-        item.addTag(ItemDataTags.IS_GLYPHSHERD)
+        item.setTag(ItemDataTags.IS_GLYPHSHERD)
         item.setGenericAttribute(value, AttributeTags.GLYPH_SLOT, attribute, null, slotGroup)
         return item
     }

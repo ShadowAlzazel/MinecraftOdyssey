@@ -23,7 +23,7 @@ internal interface GlyphManager : AttributeManager, DataTagManager {
     // TODO: Invert values
 
     fun ItemStack.addRunesherdTag() {
-        addTag(ItemDataTags.IS_GLYPHSHERD)
+        setTag(ItemDataTags.IS_GLYPHSHERD)
     }
 
     fun ItemStack.hasRunesherdTag(): Boolean {
@@ -31,7 +31,7 @@ internal interface GlyphManager : AttributeManager, DataTagManager {
     }
 
     fun ItemStack.addRuneIdentifier(name: String) {
-        addStringTag(ItemDataTags.RUNE_IDENTIFIER, name)
+        setStringTag(ItemDataTags.RUNE_IDENTIFIER, name)
     }
 
     fun ItemStack.getRuneIdentifier(): String? {
@@ -43,7 +43,7 @@ internal interface GlyphManager : AttributeManager, DataTagManager {
     }
 
     fun ItemStack.addGlyphAugmentTag() {
-        addTag(ItemDataTags.HAS_GLYPH_AUGMENT)
+        setTag(ItemDataTags.HAS_GLYPH_AUGMENT)
     }
 
     fun ItemStack.hasRuneAugmentTag(): Boolean {
@@ -51,7 +51,7 @@ internal interface GlyphManager : AttributeManager, DataTagManager {
     }
 
     fun ItemStack.addRunewareTag() {
-        addTag(ItemDataTags.IS_GLYPHWARE)
+        setTag(ItemDataTags.IS_GLYPHWARE)
     }
 
     fun ItemStack.hasGlyphwareTag(): Boolean {

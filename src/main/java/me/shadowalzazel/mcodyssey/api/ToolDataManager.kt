@@ -5,7 +5,7 @@ import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
-object ToolDataManager : DataTagManager{
+object ToolDataManager : DataTagManager {
 
     fun getToolType(item: ItemStack): String? {
         return item.getStringTag(ItemDataTags.TOOL_TYPE) ?: getToolTypeFromMaterial(item.type)

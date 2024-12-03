@@ -16,7 +16,7 @@ object ItemListeners : Listener, DataTagManager {
 
     @EventHandler
     fun itemUseOnDropHandler(event: PlayerDropItemEvent) {
-        if (!event.itemDrop.itemStack.hasOdysseyItemTag()) return
+        if (!event.itemDrop.itemStack.hasItemKeyTag()) return
         // For all Item on Drop Uses
         when (event.itemDrop.itemStack.getItemIdentifier()) {
             "soul_spice" -> {

@@ -67,7 +67,7 @@ interface EnchantabilityHandler : EnchantmentsManager, EnchantmentExtender, Data
             if (hasToolTip) {
                 this.removeTag(ItemDataTags.HAS_ENCHANT_TOOL_TIP)
             } else {
-                this.addTag(ItemDataTags.HAS_ENCHANT_TOOL_TIP)
+                this.setTag(ItemDataTags.HAS_ENCHANT_TOOL_TIP)
             }
         }
         // get gilded [WIP]
@@ -202,7 +202,7 @@ interface EnchantabilityHandler : EnchantmentsManager, EnchantmentExtender, Data
             if (hasToolTip) {
                 this.removeTag(ItemDataTags.HAS_ENCHANT_TOOL_TIP)
             } else {
-                this.addTag(ItemDataTags.HAS_ENCHANT_TOOL_TIP)
+                this.setTag(ItemDataTags.HAS_ENCHANT_TOOL_TIP)
             }
         }
     }

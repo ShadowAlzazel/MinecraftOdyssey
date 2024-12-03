@@ -73,7 +73,7 @@ class CauldronAlchemyRecipe (
             }
         }
         result.setData(DataComponentTypes.POTION_CONTENTS, builder)
-        result.addTag(ItemDataTags.IS_ALCHEMY_COMBINATION)
+        result.setTag(ItemDataTags.IS_ALCHEMY_COMBINATION)
     }
 
     private fun ItemStack.hasEffects(): Boolean {

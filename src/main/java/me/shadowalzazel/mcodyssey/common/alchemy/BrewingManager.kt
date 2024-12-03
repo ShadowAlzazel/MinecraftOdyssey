@@ -153,7 +153,7 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
         }
         potion.setData(DataComponentTypes.POTION_CONTENTS, newPotionData)
         potion.setData(DataComponentTypes.MAX_STACK_SIZE, 16)
-        potion.addTag(ItemDataTags.IS_UPGRADED_PLUS)
+        potion.setTag(ItemDataTags.IS_UPGRADED_PLUS)
         return potion
     }
 
@@ -171,7 +171,7 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
         }
         potion.setData(DataComponentTypes.POTION_CONTENTS, newPotionData)
         potion.setData(DataComponentTypes.MAX_STACK_SIZE, 16)
-        potion.addTag(ItemDataTags.IS_EXTENDED_PLUS)
+        potion.setTag(ItemDataTags.IS_EXTENDED_PLUS)
         return potion
     }
 
@@ -188,7 +188,7 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
         }
         potion.setData(DataComponentTypes.POTION_CONTENTS, newPotionData)
         potion.setData(DataComponentTypes.MAX_STACK_SIZE, 64)
-        potion.addTag(ItemDataTags.IS_POTION_VIAL)
+        potion.setTag(ItemDataTags.IS_POTION_VIAL)
         potion.amount = 4
         return potion
     }
@@ -207,7 +207,7 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
         }
         potion.setData(DataComponentTypes.POTION_CONTENTS, newPotionData)
         potion.setData(DataComponentTypes.MAX_STACK_SIZE, 16)
-        potion.addTag(ItemDataTags.IS_AURA_POTION)
+        potion.setTag(ItemDataTags.IS_AURA_POTION)
         potion.amount = 4
         return potion
     }

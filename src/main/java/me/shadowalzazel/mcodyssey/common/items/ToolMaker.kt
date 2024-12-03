@@ -58,10 +58,10 @@ interface ToolMaker : AttributeManager, DataTagManager, ToolComponentHelper {
             //meta.itemName(Component.text(itemName))
             // Set Custom Data
             val meta = this.itemMeta
-            meta.persistentDataContainer.set(NamedKeys.ITEM_KEY, PersistentDataType.STRING, itemName)
+            meta.persistentDataContainer.set(NamedKeys.ITEM_KEY, PersistentDataType.STRING, itemName) // ItemKey
             this.itemMeta = meta
-            this.addStringTag(ItemDataTags.TOOL_TYPE, type.nameSuf)
-            this.addStringTag(ItemDataTags.MATERIAL_TYPE, material.namePre)
+            this.setStringTag(ItemDataTags.TOOL_TYPE, type.nameSuf)
+            this.setStringTag(ItemDataTags.MATERIAL_TYPE, material.namePre)
             // Assign Base attributes
             this.addAttackDamageAttribute(damage, AttributeTags.ITEM_BASE_ATTACK_DAMAGE)
             this.setNewAttackSpeedAttribute(speed)

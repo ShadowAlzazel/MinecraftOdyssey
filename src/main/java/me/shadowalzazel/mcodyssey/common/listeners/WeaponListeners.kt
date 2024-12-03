@@ -542,7 +542,7 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
             val thrower = projectile.shooter ?: return
             victim.addScoreboardTag(EntityTags.THROWABLE_ATTACK_HIT)
             // Match same weapon
-            if (thrower is HumanEntity && thrower.equipment.itemInMainHand.getOdysseyTag() == projectile.item.getOdysseyTag()) {
+            if (thrower is HumanEntity && thrower.equipment.itemInMainHand.getItemKeyTag() == projectile.item.getItemKeyTag()) {
                 //thrower.attack(victim)
                 victim.damage(damage * 1.0, createPlayerDamageSource(thrower))
 
@@ -792,7 +792,7 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
                     val task = LoadAutoCrossbow(event.entity, crossbow, loadedItems)
                     task.runTaskLater(Odyssey.instance, 1)
                 }
-                crossbow.addTag(ItemDataTags.AUTO_LOADER_LOADING)
+                crossbow.setTag(ItemDataTags.AUTO_LOADER_LOADING)
             }
         }
     }
@@ -814,7 +814,7 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
         return if (!crossbow.hasTag(ItemDataTags.ALCHEMY_ARTILLERY_LOADED)) {
             val newUUID = UUID.randomUUID()
             val oldUUID =  UUID.fromString(crossbow.getUUIDTag())
-            crossbow.addTag(ItemDataTags.ALCHEMY_ARTILLERY_LOADED)
+            crossbow.setTag(ItemDataTags.ALCHEMY_ARTILLERY_LOADED)
             crossbow.setUUIDTag(newUUID)
             // Load Item to UUID
             // STORE IN COMPONENTS FOR 1.20.5 !!
@@ -822,7 +822,7 @@ object WeaponListeners : Listener, AttackHelper, DataTagManager {
             if (offhandIsAmmo && oldPotion != null) {
                 LOADED_ALCHEMICAL_AMMO[newUUID] = oldPotion.clone()
                 LOADED_ALCHEMICAL_AMMO[oldUUID] = null
-                crossbow.addTag(ItemDataTags.ALCHEMY_COPY_STORED)
+                crossbow.setTag(ItemDataTags.ALCHEMY_COPY_STORED)
             } else {
                 LOADED_ALCHEMICAL_AMMO[newUUID] = potionOffHand.clone()
             }

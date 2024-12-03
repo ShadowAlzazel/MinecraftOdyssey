@@ -12,21 +12,21 @@ import java.util.*
 
 interface DataTagManager {
 
-    private fun PersistentDataContainer.hasOdysseyTag(): Boolean {
+    private fun PersistentDataContainer.hasItemKeyTag(): Boolean {
         return has(NamedKeys.ITEM_KEY)
     }
 
-    fun ItemStack.hasOdysseyItemTag(): Boolean {
-        return itemMeta.persistentDataContainer.hasOdysseyTag()
+    fun ItemStack.hasItemKeyTag(): Boolean {
+        return itemMeta.persistentDataContainer.hasItemKeyTag()
     }
 
-    fun ItemStack.getOdysseyTag(): String? {
+    fun ItemStack.getItemKeyTag(): String? {
         return itemMeta.persistentDataContainer[NamedKeys.ITEM_KEY, PersistentDataType.STRING]
     }
 
-    // Tries to get Odyssey Tag, then item name
+    // Tries to get item_name
     fun ItemStack.getItemIdentifier(): String? {
-        return getOdysseyTag() ?: if (itemMeta.hasItemName()) {
+        return getItemKeyTag() ?: if (itemMeta.hasItemName()) {
             @Suppress("DEPRECATION")
             itemMeta.itemName
         } else getData(DataComponentTypes.ITEM_NAME)?.toString()?.lowercase()
@@ -36,11 +36,11 @@ interface DataTagManager {
         return getItemIdentifier() ?: this.type.name.lowercase()
     }
 
-    fun ItemStack.isThisItem(tag: String): Boolean {
-        return this.getOdysseyTag() == tag
+    fun ItemStack.matchItem(tag: String): Boolean {
+        return this.getItemKeyTag() == tag
     }
 
-    fun ItemStack.addTag(tag: String) {
+    fun ItemStack.setTag(tag: String) {
         val tagKey = NamespacedKey(Odyssey.instance, tag)
         itemMeta = itemMeta.also {
             it.persistentDataContainer.set(tagKey, PersistentDataType.BOOLEAN, true)
@@ -73,7 +73,7 @@ interface DataTagManager {
         return itemMeta.persistentDataContainer[tagKey, PersistentDataType.INTEGER]
     }
 
-    fun ItemStack.addStringTag(tag: String, text: String) {
+    fun ItemStack.setStringTag(tag: String, text: String) {
         val tagKey = NamespacedKey(Odyssey.instance, tag)
         itemMeta = itemMeta.also {
             it.persistentDataContainer.set(tagKey, PersistentDataType.STRING, text)

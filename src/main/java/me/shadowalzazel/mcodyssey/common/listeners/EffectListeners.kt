@@ -86,7 +86,7 @@ object EffectListeners : Listener, EffectsManager {
         if (event.item.type != Material.POTION) return
         // Potion Item Tag Getters
         val item = event.item
-        val isOdysseyEffect = item.hasOdysseyEffectTag() && item.hasOdysseyItemTag()
+        val isOdysseyEffect = item.hasOdysseyEffectTag() && item.hasItemKeyTag()
         if (isOdysseyEffect) {
             val effect = item.getCustomEffectTag()
             val duration = item.getCustomEffectTimeInTicks()
@@ -103,7 +103,7 @@ object EffectListeners : Listener, EffectsManager {
         // Potion Item Tag Getters
         if (!event.potion.item.hasItemMeta()) return
         if (!event.potion.item.hasOdysseyEffectTag()) return
-        if (!event.potion.item.hasOdysseyItemTag()) return
+        if (!event.potion.item.hasItemKeyTag()) return
         val effect = event.potion.item.getCustomEffectTag()
         val duration = event.potion.item.getCustomEffectTimeInTicks()
         val amplifier = event.potion.item.getCustomEffectAmplifier()
@@ -129,7 +129,7 @@ object EffectListeners : Listener, EffectsManager {
                 event.areaEffectCloud.addCustomEffect(newEffect, true)
             }
         }
-        if (!potionItem.hasOdysseyItemTag()) return
+        if (!potionItem.hasItemKeyTag()) return
         if (!potionItem.hasOdysseyEffectTag()) return
         // Huge buff to lingering if made sticky
         val isSticky = potionItem.hasTag(ItemDataTags.IS_LINGERING_STICKY)
