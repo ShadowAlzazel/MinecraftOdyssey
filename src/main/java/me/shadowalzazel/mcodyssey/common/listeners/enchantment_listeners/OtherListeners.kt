@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners
 
 import me.shadowalzazel.mcodyssey.common.combat.AttackHelper
-import me.shadowalzazel.mcodyssey.util.EnchantmentManager
+import me.shadowalzazel.mcodyssey.common.enchantments.EnchantmentManager
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Particle

@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.util
+package me.shadowalzazel.mcodyssey.common.enchantments
 
 import me.shadowalzazel.mcodyssey.util.constants.CustomColors
 import net.kyori.adventure.text.Component
@@ -20,7 +20,7 @@ interface EnchantmentExtender {
 
     /*-----------------------------------------------------------------------------------------------*/
     // Extension Helper
-    fun Enchantment.getDescriptionTooltip(level: Int): List<Component>  {
+    fun Enchantment.getDescription(level: Int): List<Component>  {
         val name = this.key.key
         val textList = getToolTipText(name, level)
         val description: MutableList<Component> = mutableListOf()

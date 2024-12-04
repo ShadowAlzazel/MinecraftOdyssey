@@ -1,5 +1,7 @@
-package me.shadowalzazel.mcodyssey.util
+package me.shadowalzazel.mcodyssey.common.enchantments
 
+import io.papermc.paper.datacomponent.DataComponentTypes
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.util.constants.CustomColors
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import net.kyori.adventure.text.Component
@@ -11,8 +13,8 @@ import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.EnchantmentStorageMeta
 
+@Suppress("UnstableApiUsage")
 interface EnchantabilityHandler : EnchantmentManager, EnchantmentExtender, DataTagManager {
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -42,20 +44,14 @@ interface EnchantabilityHandler : EnchantmentManager, EnchantmentExtender, DataT
     // Mains
     fun ItemStack.updateEnchantabilityPoints(
         newEnchants: MutableMap<Enchantment, Int>? = null,
-        removedEnchants: MutableMap<Enchantment, Int>? = null,
+        enchantsToRemove: MutableMap<Enchantment, Int>? = null,
         resetLore: Boolean = true,
         toggleToolTip: Boolean = false
     ) {
         val newLore = itemMeta.lore() ?: mutableListOf()
         // Enchantment assigner
-        val updatedEnchantments: MutableMap<Enchantment, Int>
-        if (newEnchants != null) {
-            updatedEnchantments = newEnchants
-        } else if (itemMeta is EnchantmentStorageMeta) {
-            updatedEnchantments = (itemMeta as EnchantmentStorageMeta).storedEnchants
-        } else {
-            updatedEnchantments = this.enchantments
-        }
+        val updatedEnchantments = newEnchants ?: this.getData(DataComponentTypes.ENCHANTMENTS)?.enchantments()
+        if (updatedEnchantments == null) return
         // Create Header if it does not exist
         if (!newLore.contains(loreSeperator)) {
             newLore.add(0, Component.text("Header Holder"))
@@ -70,20 +66,15 @@ interface EnchantabilityHandler : EnchantmentManager, EnchantmentExtender, DataT
                 this.setTag(ItemDataTags.HAS_ENCHANT_TOOL_TIP)
             }
         }
-        // get gilded [WIP]
-        // Gilded enchantments do not take up any Enchantability-points
-
         // Remove designated to be removed
-        if (removedEnchants != null) {
-            for (r in removedEnchants) {
-                val enchantment = r.key
-                val level = r.value
-                val pointCost = enchantment.enchantabilityCost(level)
-                newLore.remove(createEnchantLoreComponent(enchantment, level, pointCost))
+        if (enchantsToRemove != null) {
+            for (enchant in enchantsToRemove) {
+                val pointCost = enchant.key.enchantabilityCost(enchant.value)
+                newLore.remove(createEnchantLoreComponent(enchant.key, enchant.value, pointCost))
             }
         }
         // Remove all lore between
-        if (resetLore || removedEnchants != null) {
+        if (resetLore || enchantsToRemove != null) {
             val startIndex = newLore.indexOf(loreSeperator)
             var endIndex = newLore.indexOf(loreFooter)
             if (endIndex == -1) {
@@ -128,7 +119,7 @@ interface EnchantabilityHandler : EnchantmentManager, EnchantmentExtender, DataT
             newLore[enchantIndex] = createEnchantLoreComponent(enchantment, level, pointCost)
             counter += 1
             if (toggleToolTip && !hasToolTip) {
-                val description = enchantment.getDescriptionTooltip(level)
+                val description = enchantment.getDescription(level)
                 newLore.addAll(seperatorIndex + counter, description)
                 counter += description.size
             }
@@ -140,21 +131,13 @@ interface EnchantabilityHandler : EnchantmentManager, EnchantmentExtender, DataT
             newLore.remove(engraving)
             newLore.add(engraving)
         }
-        // Update Glint
-        val newMeta = itemMeta.also {
-            if (enchantmentCount == 0) {
-                it.setEnchantmentGlintOverride(null)
-            }
-            else {
-                it.addItemFlags(ItemFlag.HIDE_ENCHANTS)
-                it.setEnchantmentGlintOverride(true)
-            }
-        }
         // Header, Footer
         newLore[seperatorIndex - 1] = createEnchantHeader(usedEnchantabilityPoints, maxEnchantabilityPoints)
         newLore.add(seperatorIndex + counter, loreFooter)
-        newMeta.lore(newLore)
-        itemMeta = newMeta
+        itemMeta = itemMeta.clone().also {
+            it.lore(newLore)
+            it.addItemFlags(ItemFlag.HIDE_ENCHANTS)
+        }
     }
 
     fun ItemStack.updateStoredEnchantmentPoints(
@@ -163,8 +146,8 @@ interface EnchantabilityHandler : EnchantmentManager, EnchantmentExtender, DataT
         // Checks
         val bookMeta = itemMeta
         // Enchantments
-        // Get from newEnchants or from StorageMeta
-        val updatedEnchantments: MutableMap<Enchantment, Int> = newEnchants ?: if (bookMeta is EnchantmentStorageMeta) bookMeta.storedEnchants else mutableMapOf()
+        val updatedEnchantments = newEnchants ?: this.getData(DataComponentTypes.STORED_ENCHANTMENTS)?.enchantments()
+        if (updatedEnchantments == null) return
         // Tool tip
         val hasToolTip = this.hasTag(ItemDataTags.HAS_ENCHANT_TOOL_TIP)
         // Points Lore
@@ -185,7 +168,7 @@ interface EnchantabilityHandler : EnchantmentManager, EnchantmentExtender, DataT
             newLore[enchantIndex] = createEnchantLoreComponent(enchantment, level, pointCost)
             counter += 1
             if (toggleToolTip && !hasToolTip) {
-                val description = enchantment.getDescriptionTooltip(level)
+                val description = enchantment.getDescription(level)
                 newLore.addAll(startIndex + counter, description)
                 counter += description.size
             }
@@ -193,10 +176,6 @@ interface EnchantabilityHandler : EnchantmentManager, EnchantmentExtender, DataT
         if (updatedEnchantments.isNotEmpty()) {
             newLore.add(Component.text(""))
         }
-        bookMeta.lore(newLore)
-        // Update Lore Flags
-        bookMeta.addItemFlags(ItemFlag.HIDE_STORED_ENCHANTS)
-        itemMeta = bookMeta
         // Final Tool Tip
         if (toggleToolTip) {
             if (hasToolTip) {
@@ -204,6 +183,11 @@ interface EnchantabilityHandler : EnchantmentManager, EnchantmentExtender, DataT
             } else {
                 this.setTag(ItemDataTags.HAS_ENCHANT_TOOL_TIP)
             }
+        }
+        // New
+        itemMeta = itemMeta.clone().also {
+            it.lore(newLore)
+            it.addItemFlags(ItemFlag.HIDE_STORED_ENCHANTS)
         }
     }
 
@@ -213,11 +197,8 @@ interface EnchantabilityHandler : EnchantmentManager, EnchantmentExtender, DataT
         newEnchants: MutableMap<Enchantment, Int>? = null) {
         if (this.type == Material.ENCHANTED_BOOK || this.type == Material.BOOK) {
             this.updateStoredEnchantmentPoints(toggleToolTip, newEnchants)
-        }
-        else {
-            this.updateEnchantabilityPoints(
-                newEnchants, null, resetLore, toggleToolTip
-            )
+        } else {
+            this.updateEnchantabilityPoints(newEnchants, null, resetLore, toggleToolTip)
         }
     }
 

@@ -5,7 +5,7 @@ import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.effects.EffectsManager
 import me.shadowalzazel.mcodyssey.common.tasks.enchantment_tasks.*
 import me.shadowalzazel.mcodyssey.common.combat.AttackHelper
-import me.shadowalzazel.mcodyssey.util.EnchantmentManager
+import me.shadowalzazel.mcodyssey.common.enchantments.EnchantmentManager
 import me.shadowalzazel.mcodyssey.util.constants.EffectTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags.getIntTag

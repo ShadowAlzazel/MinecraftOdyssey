@@ -6,7 +6,7 @@ import io.papermc.paper.entity.LookAnchor
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.effects.EffectsManager
 import me.shadowalzazel.mcodyssey.common.tasks.enchantment_tasks.SpeedySpursTask
-import me.shadowalzazel.mcodyssey.util.EnchantmentManager
+import me.shadowalzazel.mcodyssey.common.enchantments.EnchantmentManager
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags.getIntTag
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags.removeTag

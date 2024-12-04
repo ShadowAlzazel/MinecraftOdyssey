@@ -1,6 +1,5 @@
 package me.shadowalzazel.mcodyssey.common.enchantments
 
-import me.shadowalzazel.mcodyssey.util.EnchantabilityHandler
 import me.shadowalzazel.mcodyssey.util.constants.CustomColors
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -47,7 +46,7 @@ internal interface TomeEnchanting : EnchantabilityHandler {
                 }
             }
         }
-        item.updateEnchantabilityPoints(removedEnchants=removedEnchantsMap)
+        item.updateEnchantabilityPoints(enchantsToRemove=removedEnchantsMap)
         return item
     }
 

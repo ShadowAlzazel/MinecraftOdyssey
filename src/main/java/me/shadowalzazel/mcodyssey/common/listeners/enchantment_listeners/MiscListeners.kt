@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners
 
-import me.shadowalzazel.mcodyssey.util.EnchantmentManager
+import me.shadowalzazel.mcodyssey.common.enchantments.EnchantmentManager
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

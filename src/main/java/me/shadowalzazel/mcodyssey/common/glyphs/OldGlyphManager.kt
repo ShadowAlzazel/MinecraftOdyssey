@@ -1,15 +1,19 @@
 @file:Suppress("UnstableApiUsage")
 
-package me.shadowalzazel.mcodyssey.util
+package me.shadowalzazel.mcodyssey.common.glyphs
 
+import io.papermc.paper.datacomponent.DataComponentTypes
+import me.shadowalzazel.mcodyssey.util.AttributeManager
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
+import org.bukkit.attribute.AttributeModifier
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
 
-internal interface GlyphManager : AttributeManager, DataTagManager {
+internal interface OldGlyphManager : AttributeManager, DataTagManager {
 
     // MAYBE FOR MAKING HIGHER QUALITY RUNES
     // use pots
@@ -20,13 +24,11 @@ internal interface GlyphManager : AttributeManager, DataTagManager {
     /* ---------------------------------------- */
     // TAGS
 
-    // TODO: Invert values
-
-    fun ItemStack.addRunesherdTag() {
+    fun ItemStack.addGlyphsherdTag() {
         setTag(ItemDataTags.IS_GLYPHSHERD)
     }
 
-    fun ItemStack.hasRunesherdTag(): Boolean {
+    fun ItemStack.hasGlyphsherdTag(): Boolean {
         return hasTag(ItemDataTags.IS_GLYPHSHERD)
     }
 
@@ -46,11 +48,11 @@ internal interface GlyphManager : AttributeManager, DataTagManager {
         setTag(ItemDataTags.HAS_GLYPH_AUGMENT)
     }
 
-    fun ItemStack.hasRuneAugmentTag(): Boolean {
+    fun ItemStack.hasGlyphAugmentTag(): Boolean {
         return hasTag(ItemDataTags.HAS_GLYPH_AUGMENT)
     }
 
-    fun ItemStack.addRunewareTag() {
+    fun ItemStack.addGlyphwareTag() {
         setTag(ItemDataTags.IS_GLYPHWARE)
     }
 
@@ -109,6 +111,9 @@ internal interface GlyphManager : AttributeManager, DataTagManager {
         }
     }
 
+
+
+
     fun ItemStack.addRuneModifier(
         attribute: Attribute,
         value: Double,
@@ -131,11 +136,11 @@ internal interface GlyphManager : AttributeManager, DataTagManager {
     // Add runesherd to item
     fun addRunesherdToItemStack(runesherd: ItemStack, item: ItemStack): ItemStack? {
         // Basic Checks
-        if (!runesherd.hasRunesherdTag()) return null
+        if (!runesherd.hasGlyphsherdTag()) return null
         // Runeware can have up to 3 runesherd augments
         val equipment = item.clone()
         val itemIsRuneware = equipment.hasGlyphwareTag()
-        if (equipment.hasRuneAugmentTag() && !itemIsRuneware) return null
+        if (equipment.hasGlyphAugmentTag() && !itemIsRuneware) return null
         if (!runesherd.itemMeta.hasAttributeModifiers()) return null
         val runeName = runesherd.getRuneIdentifier() ?: return null // ItemName
         // Get rune key
@@ -217,7 +222,7 @@ internal interface GlyphManager : AttributeManager, DataTagManager {
         // Apply
         return equipment.apply {
             addRuneModifier(runeAttribute, totalValue, fullAttributeName, finalGroup)
-            if (!equipment.hasRuneAugmentTag()) {
+            if (!equipment.hasGlyphAugmentTag()) {
                 equipment.addGlyphAugmentTag()
             }
         }

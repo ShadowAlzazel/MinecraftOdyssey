@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.server.commands.admin
 
-import me.shadowalzazel.mcodyssey.util.EnchantabilityHandler
+import me.shadowalzazel.mcodyssey.common.enchantments.EnchantabilityHandler
 import org.bukkit.Material
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor

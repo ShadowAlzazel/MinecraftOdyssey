@@ -2,7 +2,7 @@
 
 package me.shadowalzazel.mcodyssey.common.listeners
 
-import me.shadowalzazel.mcodyssey.util.GlyphManager
+import me.shadowalzazel.mcodyssey.common.glyphs.OldGlyphManager
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
@@ -17,7 +17,7 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent
 import org.bukkit.event.inventory.PrepareSmithingEvent
 import org.bukkit.inventory.ItemStack
 
-object GlyphListeners : Listener, GlyphManager {
+object GlyphListeners : Listener, OldGlyphManager {
 
     @EventHandler
     fun glyphSmithingHandler(event: PrepareSmithingEvent) {
@@ -26,7 +26,7 @@ object GlyphListeners : Listener, GlyphManager {
         val mineral = event.inventory.inputMineral ?: return
         val equipment = event.inventory.inputEquipment?.clone() ?: return
         val template = event.inventory.inputTemplate ?: return
-        val runesherd = if (template.hasRunesherdTag() || template.getRuneIdentifier() != null) {
+        val runesherd = if (template.hasGlyphsherdTag() || template.getRuneIdentifier() != null) {
             template
         } else {
             return
@@ -175,12 +175,12 @@ object GlyphListeners : Listener, GlyphManager {
         if (event.recipe.result.type != Material.CLAY_BALL) return
         val runesherd = event.inventory.matrix[4] ?: return
         if (!runesherd.hasItemMeta()) return
-        if (!runesherd.hasRunesherdTag()) return
+        if (!runesherd.hasGlyphsherdTag()) return
         if (runesherd.hasGlyphwareTag()) return // No cloning runeware
         if (!runesherd.itemMeta.hasCustomModelData()) return
         // Result Checks
         val result = event.inventory.result ?: return
-        if (!result.hasRunesherdTag()) return
+        if (!result.hasGlyphsherdTag()) return
         // Add to inventory
         val player = event.whoClicked
         val clone = runesherd.clone()
@@ -199,7 +199,7 @@ object GlyphListeners : Listener, GlyphManager {
         val runesherd = event.inventory.matrix[4] ?: return
         if (runesherd.type == Material.CLAY_BALL) return // No Cloning clones
         if (!runesherd.hasItemMeta()) return
-        if (!runesherd.hasRunesherdTag()) return
+        if (!runesherd.hasGlyphsherdTag()) return
         if (runesherd.hasGlyphwareTag()) return // No cloning runeware
         if (!runesherd.itemMeta.hasCustomModelData()) return
         // Passed basic checks
@@ -216,7 +216,7 @@ object GlyphListeners : Listener, GlyphManager {
         resultMeta.displayName(Component.text("Runepeice"))
         resultMeta.setCustomModelData(runesherd.itemMeta.customModelData)
         result.itemMeta = resultMeta
-        result.addRunesherdTag()
+        result.addGlyphsherdTag()
         result.addRuneIdentifier(runeName)
         event.inventory.result = result
 

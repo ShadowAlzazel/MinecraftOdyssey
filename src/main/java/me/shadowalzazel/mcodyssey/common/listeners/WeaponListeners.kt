@@ -5,8 +5,7 @@ import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.tasks.weapon_tasks.*
 import me.shadowalzazel.mcodyssey.common.combat.WeaponCombatHandler
 import me.shadowalzazel.mcodyssey.common.combat.WeaponProjectileHandler
-import me.shadowalzazel.mcodyssey.common.listeners.WeaponListeners.getItemIdentifier
-import me.shadowalzazel.mcodyssey.util.EnchantmentManager
+import me.shadowalzazel.mcodyssey.common.enchantments.EnchantmentManager
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags.getIntTag
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags.setIntTag
