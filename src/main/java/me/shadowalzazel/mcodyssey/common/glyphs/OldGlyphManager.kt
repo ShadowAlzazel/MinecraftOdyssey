@@ -2,17 +2,16 @@
 
 package me.shadowalzazel.mcodyssey.common.glyphs
 
-import io.papermc.paper.datacomponent.DataComponentTypes
 import me.shadowalzazel.mcodyssey.util.AttributeManager
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
-import org.bukkit.attribute.AttributeModifier
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
 
+@Deprecated("Unused")
 internal interface OldGlyphManager : AttributeManager, DataTagManager {
 
     // MAYBE FOR MAKING HIGHER QUALITY RUNES
@@ -25,7 +24,7 @@ internal interface OldGlyphManager : AttributeManager, DataTagManager {
     // TAGS
 
     fun ItemStack.addGlyphsherdTag() {
-        setTag(ItemDataTags.IS_GLYPHSHERD)
+        addTag(ItemDataTags.IS_GLYPHSHERD)
     }
 
     fun ItemStack.hasGlyphsherdTag(): Boolean {
@@ -45,7 +44,7 @@ internal interface OldGlyphManager : AttributeManager, DataTagManager {
     }
 
     fun ItemStack.addGlyphAugmentTag() {
-        setTag(ItemDataTags.HAS_GLYPH_AUGMENT)
+        addTag(ItemDataTags.HAS_GLYPH_AUGMENT)
     }
 
     fun ItemStack.hasGlyphAugmentTag(): Boolean {
@@ -53,19 +52,19 @@ internal interface OldGlyphManager : AttributeManager, DataTagManager {
     }
 
     fun ItemStack.addGlyphwareTag() {
-        setTag(ItemDataTags.IS_GLYPHWARE)
+        addTag(ItemDataTags.IS_GLYPHIC_ITEM)
     }
 
     fun ItemStack.hasGlyphwareTag(): Boolean {
-        return hasTag(ItemDataTags.IS_GLYPHWARE)
+        return hasTag(ItemDataTags.IS_GLYPHIC_ITEM)
     }
 
     fun ItemStack.setGlyphAugmentCount(amount: Int) {
-        setIntTag(ItemDataTags.RUNEWARE_AUGMENT_COUNT, amount)
+        setIntTag(ItemDataTags.GLYPH_AUGMENT_COUNT, amount)
     }
 
     fun ItemStack.getGlyphAugmentCount(): Int {
-        return getIntTag(ItemDataTags.RUNEWARE_AUGMENT_COUNT) ?: 0
+        return getIntTag(ItemDataTags.GLYPH_AUGMENT_COUNT) ?: 0
     }
 
     /*-----------------------------------------------------------------------------------------------*/

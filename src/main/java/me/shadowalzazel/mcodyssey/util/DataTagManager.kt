@@ -26,10 +26,12 @@ interface DataTagManager {
 
     // Tries to get item_name
     fun ItemStack.getItemIdentifier(): String? {
-        return getItemKeyTag() ?: if (itemMeta.hasItemName()) {
+        return if (this.hasItemMeta() && itemMeta.hasItemName()) {
             @Suppress("DEPRECATION")
             itemMeta.itemName
-        } else getData(DataComponentTypes.ITEM_NAME)?.toString()?.lowercase()
+        } else {
+            getData(DataComponentTypes.ITEM_NAME)?.toString()?.lowercase() ?: getItemKeyTag()
+        }
     }
 
     fun ItemStack.getItemNameId(): String {
@@ -40,7 +42,7 @@ interface DataTagManager {
         return this.getItemKeyTag() == tag
     }
 
-    fun ItemStack.setTag(tag: String) {
+    fun ItemStack.addTag(tag: String) {
         val tagKey = NamespacedKey(Odyssey.instance, tag)
         itemMeta = itemMeta.also {
             it.persistentDataContainer.set(tagKey, PersistentDataType.BOOLEAN, true)

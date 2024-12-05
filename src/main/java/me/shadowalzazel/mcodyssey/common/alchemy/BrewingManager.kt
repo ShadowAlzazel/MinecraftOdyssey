@@ -104,9 +104,12 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
         return newPotion
     }
 
+    /*
     private fun convertToLingeringPotion(potion: ItemStack): ItemStack {
         return convertPotionType(potion, Material.LINGERING_POTION)
     }
+
+     */
 
     private fun getIngredientResult(ingredient: ItemStack): Material {
         // Get Result from Ingredient
@@ -153,7 +156,7 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
         }
         potion.setData(DataComponentTypes.POTION_CONTENTS, newPotionData)
         potion.setData(DataComponentTypes.MAX_STACK_SIZE, 16)
-        potion.setTag(ItemDataTags.IS_UPGRADED_PLUS)
+        potion.addTag(ItemDataTags.IS_UPGRADED_PLUS)
         return potion
     }
 
@@ -171,7 +174,7 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
         }
         potion.setData(DataComponentTypes.POTION_CONTENTS, newPotionData)
         potion.setData(DataComponentTypes.MAX_STACK_SIZE, 16)
-        potion.setTag(ItemDataTags.IS_EXTENDED_PLUS)
+        potion.addTag(ItemDataTags.IS_EXTENDED_PLUS)
         return potion
     }
 
@@ -188,7 +191,7 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
         }
         potion.setData(DataComponentTypes.POTION_CONTENTS, newPotionData)
         potion.setData(DataComponentTypes.MAX_STACK_SIZE, 64)
-        potion.setTag(ItemDataTags.IS_POTION_VIAL)
+        potion.addTag(ItemDataTags.IS_POTION_VIAL)
         potion.amount = 4
         return potion
     }
@@ -207,7 +210,7 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
         }
         potion.setData(DataComponentTypes.POTION_CONTENTS, newPotionData)
         potion.setData(DataComponentTypes.MAX_STACK_SIZE, 16)
-        potion.setTag(ItemDataTags.IS_AURA_POTION)
+        potion.addTag(ItemDataTags.IS_AURA_POTION)
         potion.amount = 4
         return potion
     }

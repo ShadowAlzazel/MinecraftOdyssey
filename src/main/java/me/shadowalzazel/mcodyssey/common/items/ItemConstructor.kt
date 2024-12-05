@@ -33,7 +33,7 @@ sealed class ItemConstructor(
         material: Material,
         itemModel: String?,
         val effects: List<PotionEffect>?=null,
-        val capModel: String?="potion_cap",
+        val capModel: String?="potion_cap", // TODO: Waiting for 1.21.4
         val bottleModel: String?="bottle_cap",
         val color: Color?=null,
         val potionType: PotionType=PotionType.THICK): ItemConstructor(material, itemModel=itemModel)
@@ -95,7 +95,7 @@ sealed class ItemConstructor(
 
     private fun GlyphsherdConstructor.newItemGlyphsherd(name: String, amount: Int=1, withIdTag: Boolean=true): ItemStack {
         val item = newItem(name, amount, withIdTag)
-        item.setTag(ItemDataTags.IS_GLYPHSHERD)
+        item.addTag(ItemDataTags.IS_GLYPHSHERD)
         item.setGenericAttribute(value, AttributeTags.GLYPH_SLOT, attribute, null, slotGroup)
         return item
     }

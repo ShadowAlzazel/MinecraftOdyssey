@@ -135,7 +135,8 @@ interface WeaponCombatHandler : AttackHelper, DataTagManager {
         event.damage += bonusDamage
     }
 
-
+    // THROWABLE
+    /*-----------------------------------------------------------------------------------------------*/
 
 
 }

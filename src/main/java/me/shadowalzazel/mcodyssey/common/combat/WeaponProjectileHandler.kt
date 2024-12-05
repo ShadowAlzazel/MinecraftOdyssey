@@ -2,22 +2,22 @@ package me.shadowalzazel.mcodyssey.common.combat
 
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.ChargedProjectiles
+import io.papermc.paper.event.entity.EntityLoadCrossbowEvent
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.listeners.WeaponListeners
 import me.shadowalzazel.mcodyssey.common.tasks.weapon_tasks.LoadAutoCrossbow
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.common.enchantments.EnchantmentManager
+import me.shadowalzazel.mcodyssey.common.tasks.weapon_tasks.LoadCompactCrossbow
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.entity.Arrow
-import org.bukkit.entity.EntityType
-import org.bukkit.entity.LivingEntity
-import org.bukkit.entity.ThrownPotion
+import org.bukkit.entity.*
 import org.bukkit.event.entity.EntityShootBowEvent
 import org.bukkit.event.entity.ProjectileHitEvent
+import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.CrossbowMeta
 
@@ -63,7 +63,7 @@ interface WeaponProjectileHandler : DataTagManager, EnchantmentManager, AttackHe
                     val task = LoadAutoCrossbow(event.entity, crossbow, loadedItems)
                     task.runTaskLater(Odyssey.instance, 1)
                 }
-                crossbow.setTag(ItemDataTags.AUTO_LOADER_LOADING)
+                crossbow.addTag(ItemDataTags.AUTO_LOADER_LOADING)
             }
         }
     }
@@ -182,7 +182,7 @@ interface WeaponProjectileHandler : DataTagManager, EnchantmentManager, AttackHe
         // Set Components
         crossbow.setData(DataComponentTypes.POTION_CONTENTS, potionContents)
         crossbow.setData(DataComponentTypes.CHARGED_PROJECTILES, chargedProjectiles)
-        crossbow.setTag(ItemDataTags.HAS_POTION_LOADED)
+        crossbow.addTag(ItemDataTags.HAS_POTION_LOADED)
         // For Each
         when(weaponType) {
             "alchemical_driver" -> {
@@ -206,5 +206,16 @@ interface WeaponProjectileHandler : DataTagManager, EnchantmentManager, AttackHe
     }
 
     /*-----------------------------------------------------------------------------------------------*/
+    fun compactCrossbowLoading(event: EntityLoadCrossbowEvent) {
+        val player = event.entity
+        if (player !is Player) return
+        if (player.inventory.itemInMainHand.type != Material.CROSSBOW) return
+        if (player.inventory.itemInOffHand.type != Material.CROSSBOW) return
+        if (player.inventory.itemInMainHand.getItemIdentifier() != "compact_crossbow") return
+        if (player.inventory.itemInOffHand.getItemIdentifier() != "compact_crossbow") return
+        // Call runnable
+        val handToLoad = if (event.hand == EquipmentSlot.HAND) EquipmentSlot.OFF_HAND else EquipmentSlot.HAND
+        LoadCompactCrossbow(player, handToLoad).run()
+    }
 
 }

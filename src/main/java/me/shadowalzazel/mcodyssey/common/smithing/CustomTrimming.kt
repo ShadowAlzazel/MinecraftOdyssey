@@ -51,7 +51,7 @@ class CustomTrimming : DataTagManager {
         val engraver = event.viewers.first()
         // Apply
         val item = equipment.clone()
-        item.setTag(ItemDataTags.IS_ENGRAVED)
+        item.addTag(ItemDataTags.IS_ENGRAVED)
         item.setStringTag(ItemDataTags.ENGRAVED_BY, engraver.name)
         val pretext = "Created"
         val engraving = Component.text("$pretext by ${engraver.name}", CustomColors.DARK_GRAY.color, TextDecoration.ITALIC)
@@ -63,7 +63,7 @@ class CustomTrimming : DataTagManager {
     }
 
     fun customPartUpgrading(event: PrepareSmithingEvent) {
-
+        //TODO - Waiting for 1.21.4
     }
 
 

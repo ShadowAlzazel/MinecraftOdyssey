@@ -63,7 +63,7 @@ interface EnchantabilityHandler : EnchantmentManager, EnchantmentExtender, DataT
             if (hasToolTip) {
                 this.removeTag(ItemDataTags.HAS_ENCHANT_TOOL_TIP)
             } else {
-                this.setTag(ItemDataTags.HAS_ENCHANT_TOOL_TIP)
+                this.addTag(ItemDataTags.HAS_ENCHANT_TOOL_TIP)
             }
         }
         // Remove designated to be removed
@@ -143,8 +143,6 @@ interface EnchantabilityHandler : EnchantmentManager, EnchantmentExtender, DataT
     fun ItemStack.updateStoredEnchantmentPoints(
         toggleToolTip: Boolean = true,
         newEnchants: MutableMap<Enchantment, Int>? = null) {
-        // Checks
-        val bookMeta = itemMeta
         // Enchantments
         val updatedEnchantments = newEnchants ?: this.getData(DataComponentTypes.STORED_ENCHANTMENTS)?.enchantments()
         if (updatedEnchantments == null) return
@@ -181,7 +179,7 @@ interface EnchantabilityHandler : EnchantmentManager, EnchantmentExtender, DataT
             if (hasToolTip) {
                 this.removeTag(ItemDataTags.HAS_ENCHANT_TOOL_TIP)
             } else {
-                this.setTag(ItemDataTags.HAS_ENCHANT_TOOL_TIP)
+                this.addTag(ItemDataTags.HAS_ENCHANT_TOOL_TIP)
             }
         }
         // New

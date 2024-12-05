@@ -7,7 +7,6 @@ import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.util.RegistryTagManager
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
-import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.inventory.ItemStack
 
@@ -22,7 +21,7 @@ interface GlyphManager :  AttributeManager, DataTagManager, RegistryTagManager {
         return found
     }
 
-    // Checks for raw "odyssey.glyph.slot"
+    // Checks for raw "odyssey:glyph.slot"
     fun getRawGlyphEntry(item: ItemStack): ItemAttributeModifiers.Entry? {
         val modifiers = item.getData(DataComponentTypes.ATTRIBUTE_MODIFIERS) ?: return null
         val found = modifiers.modifiers().first { AttributeTags.GLYPH_SLOT in it.modifier().name }
@@ -33,6 +32,7 @@ interface GlyphManager :  AttributeManager, DataTagManager, RegistryTagManager {
         return getGlyphEntry(item) ?: getRawGlyphEntry(item)
     }
 
+    /*
     fun getGlyphModifier(item: ItemStack): AttributeModifier? {
         return getGlyphAttributeModifier(item)?.modifier()
     }
@@ -40,8 +40,10 @@ interface GlyphManager :  AttributeManager, DataTagManager, RegistryTagManager {
     fun getGlyphAttribute(item: ItemStack): Attribute? {
         return getGlyphAttributeModifier(item)?.attribute()
     }
+     */
 
-    fun ItemStack.addGlyph(glyphItem: ItemStack) {
+    // Used for most items that have a singular glyph slot
+    private fun ItemStack.addGlyphToSlot(glyphItem: ItemStack) {
         // Sentries
         // ADD Separate function to handle holders of glyphs
         val glyphAugment = getGlyphAttributeModifier(glyphItem) ?: return
@@ -51,7 +53,7 @@ interface GlyphManager :  AttributeManager, DataTagManager, RegistryTagManager {
         val hasAugment = this.hasTag(ItemDataTags.HAS_GLYPH_AUGMENT)
         val oldGlyphAugment = if (hasAugment) getGlyphAttributeModifier(this) else null
         val itemModifiers = this.getData(DataComponentTypes.ATTRIBUTE_MODIFIERS)
-        itemModifiers?.modifiers()?.remove(oldGlyphAugment)
+        if (oldGlyphAugment != null) itemModifiers?.modifiers()?.remove(oldGlyphAugment)
         // Create New augment
         val slotGroup = glyphModifier.slotGroup
         val newGlyphKey = createOdysseyKey("${AttributeTags.GLYPH_SLOT}.$slotGroup")
@@ -59,16 +61,37 @@ interface GlyphManager :  AttributeManager, DataTagManager, RegistryTagManager {
         val operation = glyphModifier.operation
         val newGlyphAugment = AttributeModifier(newGlyphKey, newValue, operation, slotGroup)
         // Add
-        val newBuilder = ItemAttributeModifiers.itemAttributes().addModifier(glyphAugment.attribute(), newGlyphAugment)
+        val attributeBuilder = ItemAttributeModifiers.itemAttributes().addModifier(glyphAugment.attribute(), newGlyphAugment)
         if (itemModifiers != null && itemModifiers.modifiers().isNotEmpty()) {
             for (x in itemModifiers.modifiers()) {
-                newBuilder.addModifier(x.attribute(), x.modifier())
+                attributeBuilder.addModifier(x.attribute(), x.modifier())
             }
         }
         // Set Data
-        this.setTag(ItemDataTags.HAS_GLYPH_AUGMENT)
-        this.setData(DataComponentTypes.ATTRIBUTE_MODIFIERS, newBuilder)
+        this.addTag(ItemDataTags.HAS_GLYPH_AUGMENT)
+        this.setData(DataComponentTypes.ATTRIBUTE_MODIFIERS, attributeBuilder)
     }
 
 
+    fun ItemStack.addGlyph(glyphItem: ItemStack) {
+        if (this.hasTag(ItemDataTags.IS_GLYPHIC_ITEM)) {
+            return
+        } else {
+            this.addGlyphToSlot(glyphItem)
+        }
+    }
+
+
+    /*
+    fun advancementGive(player: Player) {
+        val advancement = player.server.getAdvancement(NamespacedKey.fromString("odyssey:odyssey/dig_runesherd")!!)
+        if (advancement != null) {
+            player.getAdvancementProgress(advancement).awardCriteria("requirement")
+        }
+    }
+
+     */
+
+
 }
+

@@ -13,7 +13,6 @@ import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import me.shadowalzazel.mcodyssey.util.constants.WeaponMaps.MIN_RANGE_MAP
 import me.shadowalzazel.mcodyssey.util.constants.WeaponMaps.REACH_MAP
 import me.shadowalzazel.mcodyssey.util.constants.WeaponMaps.SWEEP_MAP
-import org.bukkit.Material
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -25,7 +24,6 @@ import org.bukkit.event.entity.ProjectileHitEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerSwapHandItemsEvent
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.CrossbowMeta
 import java.util.*
 
 // --------------------------------- NOTES --------------------------------
@@ -41,7 +39,7 @@ import java.util.*
 // Rabbit Hide -> Sheath
 // PARRY
 // IF hand raised
-// IF weapon can parry
+// weapon can parry
 // If attack right after parry
 // DO damage,
 
@@ -82,10 +80,10 @@ object WeaponListeners : Listener, WeaponCombatHandler, WeaponProjectileHandler,
         val victim = event.entity as LivingEntity
         // Further checks
         val mainWeapon = player.equipment.itemInMainHand
-        val offHandWeapon = player.equipment.itemInOffHand
+        //val offHandWeapon = player.equipment.itemInOffHand
         // Get weapon type
         val mainWeaponType = mainWeapon.getStringTag(ItemDataTags.TOOL_TYPE)
-        val mainWeaponMaterial = mainWeapon.getStringTag(ItemDataTags.MATERIAL_TYPE)
+        //val mainWeaponMaterial = mainWeapon.getStringTag(ItemDataTags.MATERIAL_TYPE)
         // Sweep damage should not? call other bonuses?
         if (event.cause == EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) {
             event.damage += SWEEP_MAP[mainWeaponType] ?: 0.0
@@ -115,7 +113,6 @@ object WeaponListeners : Listener, WeaponCombatHandler, WeaponProjectileHandler,
                 }
             }
         }
-
         // Make sure not to get negative event damage
         event.damage = maxOf(0.0, event.damage)
     }
@@ -450,7 +447,7 @@ object WeaponListeners : Listener, WeaponCombatHandler, WeaponProjectileHandler,
         when(val itemName = bow.getItemIdentifier()) {
             "auto_crossbow" -> autoCrossbowShooting(event)
             "warped_bow" -> return // Has +2 damage but -10% accuracy
-            "tinkered_musket" -> return // Shoot projectiles at 400% speed x2 reload
+            "tinkered_musket" -> return // Shoot projectiles at 400% speed
             "tinkered_bow" -> return // Has 50% greater accuracy
             "alchemical_driver" -> alchemicalWeaponShooting(event, itemName) // Launches potions
             "alchemical_diffuser" -> alchemicalWeaponShooting(event, itemName) // Sprays a mist with the potion effect
@@ -465,7 +462,8 @@ object WeaponListeners : Listener, WeaponCombatHandler, WeaponProjectileHandler,
         val crossbow = event.crossbow
         if (!crossbow.hasItemMeta()) return
         when(val itemName = crossbow.getItemIdentifier()) {
-            "compact_crossbow" -> compactCrossbowHandler(event)
+            "compact_crossbow" -> compactCrossbowLoading(event)
+            "tinkered_musket" -> return // Requires x2 reload (gunpowder -> iron both have to be in hand)
             "alchemical_driver" -> event.isCancelled = alchemicalWeaponLoading(event.entity, crossbow, itemName)
             "alchemical_diffuser" -> event.isCancelled = alchemicalWeaponLoading(event.entity, crossbow, itemName)
             "alchemical_bolter" -> event.isCancelled = alchemicalWeaponLoading(event.entity, crossbow, itemName)
@@ -529,30 +527,5 @@ object WeaponListeners : Listener, WeaponCombatHandler, WeaponProjectileHandler,
         println("FINISHED PULL CALL")
     }
 
-    /*-----------------------------------------------------------------------------------------------*/
-    // COMPACT CROSSBOW
-
-    private fun compactCrossbowHandler(event: EntityLoadCrossbowEvent) {
-        val player = event.entity
-        if (player !is Player) return
-
-        if (player.inventory.itemInMainHand.type != Material.CROSSBOW) return
-        val otherBow = if (player.inventory.itemInOffHand.type == Material.CROSSBOW) {
-            player.inventory.itemInOffHand
-        }
-        else {
-            return
-        }
-        if (!otherBow.hasItemMeta()) return
-        val otherBowMeta = otherBow.itemMeta as CrossbowMeta
-        if (!otherBowMeta.hasCustomModelData()) return
-        if (otherBowMeta.hasChargedProjectiles()) return
-        val bowMeta = event.crossbow.itemMeta as CrossbowMeta
-        if (bowMeta.hasChargedProjectiles()) return
-        // Load
-        val loadedItem = ItemStack(Material.ARROW, 1)
-        otherBowMeta.addChargedProjectile(loadedItem)
-        otherBow.itemMeta = otherBowMeta
-    }
 
 }
