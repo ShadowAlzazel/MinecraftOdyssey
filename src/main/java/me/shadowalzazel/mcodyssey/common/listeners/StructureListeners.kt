@@ -4,7 +4,7 @@ import com.destroystokyo.paper.event.player.PlayerTeleportEndGatewayEvent
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.util.StructureManager
+import me.shadowalzazel.mcodyssey.util.StructureHelper
 import org.bukkit.HeightMap
 import org.bukkit.NamespacedKey
 import org.bukkit.World
@@ -13,7 +13,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.util.Vector
 
-object StructureListeners : Listener, StructureManager {
+object StructureListeners : Listener, StructureHelper {
 
     @EventHandler
     fun obeliskTeleportHandler(event: PlayerTeleportEndGatewayEvent) {

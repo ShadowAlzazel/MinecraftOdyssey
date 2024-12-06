@@ -21,9 +21,8 @@ interface EffectTagsManager : DataTagManager {
 
     /*-----------------------------------------------------------------------------------------------*/
 
-    // Effects TODO
+    // Effects TODO: Finish maybe when official support for custom effects
     // Reapply effects again
-
 
     fun ItemStack.hasOdysseyEffectTag(): Boolean {
         return hasTag(ItemDataTags.ODYSSEY_EFFECT_TAG) || hasTag(ItemDataTags.IS_ODYSSEY_EFFECT)

@@ -160,7 +160,7 @@ class EquipmentRecipes : ChoiceManager {
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "void_linked_kunai"), result).apply {
             shape("N", "B", "E")
             setIngredient('N', Material.NETHERITE_INGOT)
-            setIngredient('B', Material.BREEZE_ROD)  // TODO :Change to breeze rod
+            setIngredient('B', Material.BREEZE_ROD)
             setIngredient('E', Material.ENDER_EYE)
             category = CraftingBookCategory.EQUIPMENT
         }

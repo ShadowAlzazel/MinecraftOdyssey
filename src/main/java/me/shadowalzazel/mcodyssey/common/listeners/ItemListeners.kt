@@ -39,7 +39,7 @@ object ItemListeners : Listener, DataTagManager {
 
     fun deathHandler(event: EntityDeathEvent) {
         if (event.entity.killer != null && event.droppedExp > 0) {
-            // SOUL_STEEL TODO
+            // SOUL_STEEL TODO: Finish
             var expDrop = 0.0
             val killer = event.entity.killer!!
             val hasSoulSteel = true

@@ -3,7 +3,7 @@ package me.shadowalzazel.mcodyssey.util
 import org.bukkit.entity.LivingEntity
 import org.bukkit.generator.structure.Structure
 
-interface StructureManager {
+interface StructureHelper {
 
     fun getBoundedStructures(entity: LivingEntity): List<Structure>? {
         val chunkStructures = entity.location.chunk.structures

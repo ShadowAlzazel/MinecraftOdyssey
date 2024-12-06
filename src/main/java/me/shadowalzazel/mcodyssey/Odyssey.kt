@@ -162,15 +162,16 @@ class Odyssey : JavaPlugin() {
         val wikiLink = "https://minecraftodyssey.fandom.com/wiki/MinecraftOdyssey_Wiki"
         val wikiLinkDisplay = Component.text("Odyssey Wiki")
         server.serverLinks.addLink(wikiLinkDisplay, URI(wikiLink))
-        // Map [VailCraft]
-        val mapLink = "http://map.vailcraft.net:25563/#world:0:0:0:2250:0:0:0:0:perspective"
-        val mapLinkDisplay = Component.text("Map")
-        server.serverLinks.addLink(mapLinkDisplay, URI(mapLink))
         // Github
         val pluginLink = "https://github.com/ShadowAlzazel/MinecraftOdyssey"
         val pluginLinkDisplay = Component.text("Github - Odyssey Plugin")
         server.serverLinks.addLink(pluginLinkDisplay, URI(pluginLink))
-
+        // Server Map
+        if (config.get("server-map.enabled") == true) {
+            val mapLink = config.get("server-map.link") as String
+            val mapLinkDisplay = Component.text(config.get("server-map.name") as String)
+            server.serverLinks.addLink(mapLinkDisplay, URI(mapLink))
+        }
         // Hello World!
         val timeElapsed = (System.currentTimeMillis() - timerStart).div(1000.0)
         logger.info("Odyssey start up sequence in ($timeElapsed) seconds!")

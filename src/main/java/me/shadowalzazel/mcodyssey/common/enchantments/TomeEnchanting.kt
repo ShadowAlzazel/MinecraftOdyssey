@@ -176,7 +176,7 @@ internal interface TomeEnchanting : EnchantabilityHandler {
         val newMeta = extractedBook.itemMeta as EnchantmentStorageMeta
         newMeta.addStoredEnchant(extractedEnchant.first, checkMax, false)
         extractedBook.itemMeta = newMeta
-        return extractedBook // TODO !! Maybe switch to arcane
+        return extractedBook
     }
 
     // Removes all enchants and gain XP! destroys item
