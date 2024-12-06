@@ -1,9 +1,6 @@
 package me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners
 
-import io.papermc.paper.world.MoonPhase
-import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.common.listeners.utility.MoonwardPhase
-import me.shadowalzazel.mcodyssey.util.EnchantmentsManager
+import me.shadowalzazel.mcodyssey.common.enchantments.EnchantmentManager
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -12,11 +9,10 @@ import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerItemDamageEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
-import java.util.*
 
-object MiscListeners : Listener, EnchantmentsManager {
 
-    private val moonpatchPlayers = mutableListOf<UUID>()
+object MiscListeners : Listener, EnchantmentManager {
+
 
     @EventHandler
     fun itemDamageHandler(event: PlayerItemDamageEvent) {
@@ -102,19 +98,6 @@ object MiscListeners : Listener, EnchantmentsManager {
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-    private fun moonpatchEnchantment(event: PlayerItemDamageEvent) {
-        if (!event.player.world.hasSkyLight()) return
-        if (event.player.world.isDayTime) return
-        if (event.player.world.moonPhase == MoonPhase.NEW_MOON) return
-        if (event.player.location.block.lightFromSky < 8) return
-        event.damage = maxOf(event.damage - 1, 0)
-        // TODO: TO EXPENSIVE TO RUN EVERY TIME MOVE LATER
-        if (!moonpatchPlayers.contains(event.player.uniqueId)) {
-            moonpatchPlayers.add(event.player.uniqueId)
-            val moonwardPhase = MoonwardPhase(event.player)
-            moonwardPhase.runTaskTimer(Odyssey.instance, 10, 20)
-        }
-    }
 
     private fun parasiticCurseEnchantment(event: PlayerItemDamageEvent, level: Int) {
         val rolled = (level * 10 > (0..100).random())

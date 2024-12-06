@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners
 
-import me.shadowalzazel.mcodyssey.util.AttackHelper
-import me.shadowalzazel.mcodyssey.util.EnchantmentsManager
+import me.shadowalzazel.mcodyssey.common.combat.AttackHelper
+import me.shadowalzazel.mcodyssey.common.enchantments.EnchantmentManager
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Particle
@@ -13,7 +13,7 @@ import org.bukkit.event.entity.ProjectileLaunchEvent
 import org.bukkit.event.player.PlayerFishEvent
 import org.bukkit.inventory.ItemStack
 
-object OtherListeners : Listener, EnchantmentsManager, AttackHelper {
+object OtherListeners : Listener, EnchantmentManager, AttackHelper {
 
     /*-----------------------------------------------------------------------------------------------*/
     private fun getActiveRod(player: Player): ItemStack? {

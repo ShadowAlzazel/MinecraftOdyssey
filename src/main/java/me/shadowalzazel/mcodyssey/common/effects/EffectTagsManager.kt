@@ -21,9 +21,8 @@ interface EffectTagsManager : DataTagManager {
 
     /*-----------------------------------------------------------------------------------------------*/
 
-    // Effects TODO
+    // Effects TODO: Finish maybe when official support for custom effects
     // Reapply effects again
-
 
     fun ItemStack.hasOdysseyEffectTag(): Boolean {
         return hasTag(ItemDataTags.ODYSSEY_EFFECT_TAG) || hasTag(ItemDataTags.IS_ODYSSEY_EFFECT)
@@ -39,7 +38,7 @@ interface EffectTagsManager : DataTagManager {
     }
 
     fun ItemStack.setCustomEffectTag(effectTag: String) {
-        addStringTag(ItemDataTags.ODYSSEY_EFFECT_TAG, effectTag)
+        setStringTag(ItemDataTags.ODYSSEY_EFFECT_TAG, effectTag)
     }
 
     // Default is Ticks

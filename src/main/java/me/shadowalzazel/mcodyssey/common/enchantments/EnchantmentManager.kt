@@ -1,14 +1,15 @@
-package me.shadowalzazel.mcodyssey.util
+package me.shadowalzazel.mcodyssey.common.enchantments
 
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
 import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-interface EnchantmentsManager: DataTagManager {
+interface EnchantmentManager: DataTagManager {
 
     /*-----------------------------------------------------------------------------------------------*/
     // Helper Functions
@@ -61,14 +62,14 @@ interface EnchantmentsManager: DataTagManager {
 
     // Does not contribute towards total Points
     fun ItemStack.addGildedEnchant(enchantment: Enchantment, newLevel: Int) {
-        this.addStringTag(ItemDataTags.GILDED_ENCHANT, enchantment.getNameId())
+        this.setStringTag(ItemDataTags.GILDED_ENCHANT, enchantment.getNameId())
         this.removeEnchantment(enchantment)
         this.addUnsafeEnchantment(enchantment, newLevel)
     }
 
     // Is Over the max
     fun ItemStack.addShinyEnchant(enchantment: Enchantment, newLevel: Int) {
-        this.addStringTag(ItemDataTags.SHINY_ENCHANT, enchantment.getNameId())
+        this.setStringTag(ItemDataTags.SHINY_ENCHANT, enchantment.getNameId())
         this.removeEnchantment(enchantment)
         this.addUnsafeEnchantment(enchantment, newLevel)
     }

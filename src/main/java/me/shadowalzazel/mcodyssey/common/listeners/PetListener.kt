@@ -20,7 +20,7 @@ object PetListener : Listener, AttributeManager, DataTagManager {
         val mainHand = event.player.inventory.itemInMainHand
         val entity = event.rightClicked as LivingEntity
         // Make Permanent
-        when (mainHand.getOdysseyTag()) {
+        when (mainHand.getItemKeyTag()) {
             "dog_spinach" -> {
                 entity.addPotionEffect(PotionEffect(PotionEffectType.STRENGTH, 10 * 20, 0))
             }

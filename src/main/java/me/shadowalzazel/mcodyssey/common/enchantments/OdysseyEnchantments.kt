@@ -1,12 +1,11 @@
 package me.shadowalzazel.mcodyssey.common.enchantments
 
 import io.papermc.paper.registry.RegistryKey
-import me.shadowalzazel.mcodyssey.util.EnchantmentsManager
 import me.shadowalzazel.mcodyssey.util.RegistryTagManager
 import org.bukkit.enchantments.Enchantment
 
-@Suppress("MemberVisibilityCanBePrivate")
-object OdysseyEnchantments : EnchantmentsManager, RegistryTagManager {
+@Suppress("MemberVisibilityCanBePrivate", "Unused")
+object OdysseyEnchantments : EnchantmentManager, RegistryTagManager {
 
     private val enchantmentRegistry = getPaperRegistry(RegistryKey.ENCHANTMENT)
     private val getRegisteredEnchant: (String) -> (Enchantment) = { enchantmentRegistry.get(createOdysseyKey(it))!!}

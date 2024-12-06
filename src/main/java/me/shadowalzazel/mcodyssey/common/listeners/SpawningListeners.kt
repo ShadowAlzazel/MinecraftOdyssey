@@ -9,7 +9,7 @@ import me.shadowalzazel.mcodyssey.common.mobs.neutral.DubiousDealer
 import me.shadowalzazel.mcodyssey.common.trims.TrimMaterials
 import me.shadowalzazel.mcodyssey.common.trims.TrimPatterns
 import me.shadowalzazel.mcodyssey.util.MobMaker
-import me.shadowalzazel.mcodyssey.util.StructureManager
+import me.shadowalzazel.mcodyssey.util.StructureHelper
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import org.bukkit.Material
@@ -29,7 +29,7 @@ import org.bukkit.inventory.meta.trim.TrimMaterial
 import org.bukkit.inventory.meta.trim.TrimPattern
 import java.util.*
 
-object SpawningListeners : Listener, MobMaker, StructureManager {
+object SpawningListeners : Listener, MobMaker, StructureHelper {
 
     @EventHandler
     fun mobNaturalSpawningHandler(event: CreatureSpawnEvent) {

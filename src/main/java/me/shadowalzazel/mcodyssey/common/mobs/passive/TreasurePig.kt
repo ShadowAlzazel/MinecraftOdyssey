@@ -19,6 +19,7 @@ object TreasurePig: OdysseyMob("Treasure Pig", "treasure_pig", EntityType.PIG, 1
 
     override fun createMob(world: World, location: Location): Pig {
         // Some Block
+        /*
         val blockData = Odyssey.instance.server.createBlockData(Material.BARREL)
         val fallingBlock = world.spawnFallingBlock(location, blockData).apply {
             shouldAutoExpire(false)
@@ -44,6 +45,9 @@ object TreasurePig: OdysseyMob("Treasure Pig", "treasure_pig", EntityType.PIG, 1
         val droppingLootTask = DroppingLootTask(entity)
         droppingLootTask.runTaskTimer(Odyssey.instance, 20 * 10, 20 * 10)
         return entity
+
+         */
+        return world.spawnEntity(location, EntityType.PIG) as Pig
     }
 
 

@@ -39,7 +39,7 @@ class GrapplingHookShot(
     }
 
     private fun cancelShot(reason: String) {
-        println("Canceled because: $reason")
+        //println("Canceled because: $reason")
         hooker.removeScoreboardTag(EntityTags.HAS_SHOT_GRAPPLE)
         hook.removeScoreboardTag(EntityTags.GRAPPLE_HOOK)
         this.cancel()

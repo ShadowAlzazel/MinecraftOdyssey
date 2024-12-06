@@ -2,3 +2,19 @@
 # Minecraft Odyssey Config File
 # -------------------------------------
 
+mobs:
+  enable-shiny-mobs: true
+  enable-special-loot: true
+
+world:
+  enable-obelisk-travel: true
+
+
+
+
+
+# Server Based links
+server-map:
+  enabled: false
+  name: "Vailcraft Map"
+  link: "http://map.vailcraft.net:25563/#world:0:0:0:2250:0:0:0:0:perspective"

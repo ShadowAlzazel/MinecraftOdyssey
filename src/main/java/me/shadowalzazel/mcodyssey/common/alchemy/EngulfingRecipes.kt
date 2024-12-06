@@ -6,7 +6,7 @@ import org.bukkit.Material
 
 object EngulfingRecipes {
 
-    val SOUL_CRYSTAL_RECIPE = EngulfingRecipe(
+    private val SOUL_CRYSTAL_RECIPE = EngulfingRecipe(
         result = Item.SOUL_CRYSTAL.newItemStack(1),
         fuel = listOf(Material.SOUL_FIRE),
         ingredient = IngredientChoice.MaterialChoice(Material.QUARTZ, 1),

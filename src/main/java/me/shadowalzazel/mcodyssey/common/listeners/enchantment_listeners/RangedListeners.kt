@@ -4,7 +4,7 @@ import com.destroystokyo.paper.event.player.PlayerReadyArrowEvent
 import io.papermc.paper.event.entity.EntityLoadCrossbowEvent
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.tasks.enchantment_tasks.*
-import me.shadowalzazel.mcodyssey.util.EnchantmentsManager
+import me.shadowalzazel.mcodyssey.common.enchantments.EnchantmentManager
 import me.shadowalzazel.mcodyssey.util.constants.EffectTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags.getIntTag
@@ -33,7 +33,7 @@ import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.sin
 
-object RangedListeners : Listener, EnchantmentsManager {
+object RangedListeners : Listener, EnchantmentManager {
 
     private val currentOverchargeTasks = mutableMapOf<UUID, OverchargeTask>()
 

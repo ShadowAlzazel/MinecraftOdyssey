@@ -87,7 +87,7 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
             this.setData(DataComponentTypes.ITEM_MODEL, createOdysseyKey("alchemy_potion"))
         }
         // set custom data
-        // TODO
+        // TODO: Waiting for 1.21.4
     }
 
     private fun isPreviouslyEnhanced(potion: ItemStack): Boolean {
@@ -104,9 +104,12 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
         return newPotion
     }
 
+    /*
     private fun convertToLingeringPotion(potion: ItemStack): ItemStack {
         return convertPotionType(potion, Material.LINGERING_POTION)
     }
+
+     */
 
     private fun getIngredientResult(ingredient: ItemStack): Material {
         // Get Result from Ingredient

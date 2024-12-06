@@ -2,6 +2,7 @@ package me.shadowalzazel.mcodyssey.unused
 
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 
+@Deprecated("Not in use")
 interface SpaceRuneManager : DataTagManager {
 
     /*

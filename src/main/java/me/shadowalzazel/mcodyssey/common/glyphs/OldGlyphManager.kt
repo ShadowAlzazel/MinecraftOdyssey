@@ -1,7 +1,9 @@
 @file:Suppress("UnstableApiUsage")
 
-package me.shadowalzazel.mcodyssey.util
+package me.shadowalzazel.mcodyssey.common.glyphs
 
+import me.shadowalzazel.mcodyssey.util.AttributeManager
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import org.bukkit.Material
@@ -9,7 +11,8 @@ import org.bukkit.attribute.Attribute
 import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
 
-internal interface GlyphManager : AttributeManager, DataTagManager {
+@Deprecated("Unused")
+internal interface OldGlyphManager : AttributeManager, DataTagManager {
 
     // MAYBE FOR MAKING HIGHER QUALITY RUNES
     // use pots
@@ -20,18 +23,16 @@ internal interface GlyphManager : AttributeManager, DataTagManager {
     /* ---------------------------------------- */
     // TAGS
 
-    // TODO: Invert values
-
-    fun ItemStack.addRunesherdTag() {
+    fun ItemStack.addGlyphsherdTag() {
         addTag(ItemDataTags.IS_GLYPHSHERD)
     }
 
-    fun ItemStack.hasRunesherdTag(): Boolean {
+    fun ItemStack.hasGlyphsherdTag(): Boolean {
         return hasTag(ItemDataTags.IS_GLYPHSHERD)
     }
 
     fun ItemStack.addRuneIdentifier(name: String) {
-        addStringTag(ItemDataTags.RUNE_IDENTIFIER, name)
+        setStringTag(ItemDataTags.RUNE_IDENTIFIER, name)
     }
 
     fun ItemStack.getRuneIdentifier(): String? {
@@ -46,24 +47,24 @@ internal interface GlyphManager : AttributeManager, DataTagManager {
         addTag(ItemDataTags.HAS_GLYPH_AUGMENT)
     }
 
-    fun ItemStack.hasRuneAugmentTag(): Boolean {
+    fun ItemStack.hasGlyphAugmentTag(): Boolean {
         return hasTag(ItemDataTags.HAS_GLYPH_AUGMENT)
     }
 
-    fun ItemStack.addRunewareTag() {
-        addTag(ItemDataTags.IS_GLYPHWARE)
+    fun ItemStack.addGlyphwareTag() {
+        addTag(ItemDataTags.IS_GLYPHIC_ITEM)
     }
 
     fun ItemStack.hasGlyphwareTag(): Boolean {
-        return hasTag(ItemDataTags.IS_GLYPHWARE)
+        return hasTag(ItemDataTags.IS_GLYPHIC_ITEM)
     }
 
     fun ItemStack.setGlyphAugmentCount(amount: Int) {
-        setIntTag(ItemDataTags.RUNEWARE_AUGMENT_COUNT, amount)
+        setIntTag(ItemDataTags.GLYPH_AUGMENT_COUNT, amount)
     }
 
     fun ItemStack.getGlyphAugmentCount(): Int {
-        return getIntTag(ItemDataTags.RUNEWARE_AUGMENT_COUNT) ?: 0
+        return getIntTag(ItemDataTags.GLYPH_AUGMENT_COUNT) ?: 0
     }
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -109,6 +110,9 @@ internal interface GlyphManager : AttributeManager, DataTagManager {
         }
     }
 
+
+
+
     fun ItemStack.addRuneModifier(
         attribute: Attribute,
         value: Double,
@@ -131,11 +135,11 @@ internal interface GlyphManager : AttributeManager, DataTagManager {
     // Add runesherd to item
     fun addRunesherdToItemStack(runesherd: ItemStack, item: ItemStack): ItemStack? {
         // Basic Checks
-        if (!runesherd.hasRunesherdTag()) return null
+        if (!runesherd.hasGlyphsherdTag()) return null
         // Runeware can have up to 3 runesherd augments
         val equipment = item.clone()
         val itemIsRuneware = equipment.hasGlyphwareTag()
-        if (equipment.hasRuneAugmentTag() && !itemIsRuneware) return null
+        if (equipment.hasGlyphAugmentTag() && !itemIsRuneware) return null
         if (!runesherd.itemMeta.hasAttributeModifiers()) return null
         val runeName = runesherd.getRuneIdentifier() ?: return null // ItemName
         // Get rune key
@@ -217,7 +221,7 @@ internal interface GlyphManager : AttributeManager, DataTagManager {
         // Apply
         return equipment.apply {
             addRuneModifier(runeAttribute, totalValue, fullAttributeName, finalGroup)
-            if (!equipment.hasRuneAugmentTag()) {
+            if (!equipment.hasGlyphAugmentTag()) {
                 equipment.addGlyphAugmentTag()
             }
         }

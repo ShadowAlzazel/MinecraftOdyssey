@@ -33,7 +33,7 @@ sealed class ItemConstructor(
         material: Material,
         itemModel: String?,
         val effects: List<PotionEffect>?=null,
-        val capModel: String?="potion_cap",
+        val capModel: String?="potion_cap", // TODO: Waiting for 1.21.4
         val bottleModel: String?="bottle_cap",
         val color: Color?=null,
         val potionType: PotionType=PotionType.THICK): ItemConstructor(material, itemModel=itemModel)
@@ -65,7 +65,7 @@ sealed class ItemConstructor(
 
     private fun newItem(name: String, amount: Int=1, withBukkitId: Boolean=true) : ItemStack {
         val item = ItemStack(this.material)
-        if (withBukkitId) item.addStringTag("item", name) // ID Tag is for Recipe Choice for crafting
+        if (withBukkitId) item.setStringTag("item", name) // ID Tag is for Recipe Choice for crafting
         item.setData(DataComponentTypes.ITEM_NAME, Component.text(name))
         val customName = Component.text(name.toTitleCase()).decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false)
         item.setData(DataComponentTypes.CUSTOM_NAME, customName)

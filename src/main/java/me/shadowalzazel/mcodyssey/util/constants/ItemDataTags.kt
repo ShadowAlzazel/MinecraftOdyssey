@@ -6,10 +6,12 @@ object ItemDataTags {
     const val IS_ARCHAIC_SEED: String = "odyssey.is_archaic_seed"
     const val ARCHAIC_NAMESPACE: String = "odyssey.archaic_namespace"
 
+    // Alchemical Weapons
+    const val HAS_POTION_LOADED: String = "odyssey.alchemy_artillery_loaded"
+    const val POTION_AMMO_AMOUNT: String = "odyssey.potion_ammo_amount"
+    const val MULTISHOT_TRACKER: String = "odyssey.multishot_tracker"
+
     // Alchemy
-    const val ALCHEMY_ARTILLERY_LOADED: String = "odyssey.alchemy_artillery_loaded"
-    const val ALCHEMY_COPY_STORED: String = "odyssey.alchemy_copy_stored"
-    const val ALCHEMICAL_AMMO_COUNT: String ="odyssey.alchemical_ammo_count"
     const val IS_ALCHEMY_COMBINATION: String = "odyssey.is_alchemy_combination" // For Alchemy Combinations/ Concoctions
     const val IS_CUSTOM_EFFECT: String = "odyssey.is_custom_effect"
     const val IS_ODYSSEY_EFFECT: String = "odyssey.is_odyssey_effect"
@@ -35,42 +37,32 @@ object ItemDataTags {
     const val IS_ENGRAVED: String = "odyssey.is_engraved"
     const val ENGRAVED_BY: String = "odyssey.engraved_by"
 
-    // Weapon Types
+    // Tools and Materials
     const val TOOL_TYPE: String = "odyssey.weapon_type" // Key for string type
     const val MATERIAL_TYPE: String = "odyssey.material_type"  // Key for string type
 
-    // Tools
-    const val SOUL_STEEL_TOOL: String = "odyssey.soul_steel_tool"
-    const val TITANIUM_TOOL: String = "odyssey.soul_steel_tool"
-    const val IRIDIUM_TOOL: String = "odyssey.soul_steel_tool"
-    const val MITHRIL_TOOL: String = "odyssey.soul_steel_tool"
-    const val NETHERITE_TOOL: String = "odyssey.netherite_tool"
 
     // Equipment Classifications
     const val IS_KUNAI: String = "odyssey.is_kunai"
     const val IS_CHAKRAM: String = "odyssey.is_chakram"
-
     // Tier
     const val IS_EXOTIC: String = "odyssey.is_exotic"
 
-    // Enchanting - OLD
-    const val GILDED_SLOTS: String = "odyssey.gilded_slots"
-    const val ENCHANT_SLOTS: String = "odyssey.enchant_slots"
-    const val IS_SLOTTED: String = "odyssey.is_slotted"
+    // Enchanting
     const val GILDED_ENCHANT: String = "odyssey.gilded_enchant"
     const val SHINY_ENCHANT: String = "odyssey.shiny_enchant"
-    // Enchanting - NEW
 
     const val EXTRA_ENCHANTABILITY_POINTS: String = "odyssey.enchantability_points"
     const val HAS_ENCHANT_TOOL_TIP: String = "odyssey.has_enchant_tool_tip"
 
-    // Runes
-    const val IS_GLYPHWARE: String = "odyssey.is_runeware" // A finished runic vessel capable of holding multiple rune shards
-    const val RUNEWARE_AUGMENT_COUNT: String = "odyssey.runeware_augment_count"
-    const val IS_GLYPHSHERD: String = "odyssey.is_runesherd"
-    const val HAS_GLYPH_AUGMENT: String = "odyssey.has_rune_augment"
+    // Glyphs
+    const val IS_GLYPHIC_ITEM: String = "odyssey.is_glyphic_item"
+    const val GLYPH_AUGMENT_COUNT: String = "odyssey.glyph_augment_count"
+    const val IS_GLYPHSHERD: String = "odyssey.is_glyphsherd"
+    const val HAS_GLYPH_AUGMENT: String = "odyssey.has_glyph_augment"
+    const val IS_COPIED_GLYPH: String = "odyssey.is_copied_glyph  "
+
     const val RUNE_IDENTIFIER: String = "odyssey.rune_identifier"
-    const val IS_SPACERUNE: String = "odyssey.is_spacerune"
 
     // Compasses
     const val IS_SCULK_FINDER: String = "odyssey.is_sculk_finder"

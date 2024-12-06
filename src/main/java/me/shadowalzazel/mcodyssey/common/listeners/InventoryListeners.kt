@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.common.listeners
 
-import me.shadowalzazel.mcodyssey.util.EnchantabilityHandler
+import me.shadowalzazel.mcodyssey.common.enchantments.EnchantabilityHandler
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

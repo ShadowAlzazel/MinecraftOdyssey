@@ -44,7 +44,7 @@ object MobListeners : Listener, DataTagManager {
     @EventHandler
     fun piglinHireHandler(event: PiglinBarterEvent) {
         if (!event.input.itemMeta.hasCustomModelData()) { return }
-        if (!event.input.isThisItem("crying_gold")) { return }
+        if (!event.input.matchItem("crying_gold")) { return }
         // NOT KIDS
         if (event.entity.scoreboardTags.contains(EntityTags.IS_HIRED)) return
         //println(event.entity.target)

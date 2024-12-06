@@ -2,20 +2,19 @@
 
 package me.shadowalzazel.mcodyssey.common.listeners
 
-import me.shadowalzazel.mcodyssey.util.GlyphManager
-import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
+import io.papermc.paper.datacomponent.DataComponentTypes
+import io.papermc.paper.datacomponent.item.ItemAttributeModifiers
+import me.shadowalzazel.mcodyssey.common.glyphs.GlyphManager
+import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
-import org.bukkit.NamespacedKey
+import org.bukkit.attribute.AttributeModifier
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
-import org.bukkit.event.block.BlockDropItemEvent
-import org.bukkit.event.inventory.CraftItemEvent
-import org.bukkit.event.inventory.FurnaceStartSmeltEvent
-import org.bukkit.event.inventory.PrepareItemCraftEvent
-import org.bukkit.event.inventory.PrepareSmithingEvent
-import org.bukkit.inventory.ItemStack
+import org.bukkit.event.inventory.*
+import org.bukkit.inventory.EquipmentSlotGroup
 
 object GlyphListeners : Listener, GlyphManager {
 
@@ -25,48 +24,28 @@ object GlyphListeners : Listener, GlyphManager {
         val recipe = event.inventory.recipe ?: return
         val mineral = event.inventory.inputMineral ?: return
         val equipment = event.inventory.inputEquipment?.clone() ?: return
-        val template = event.inventory.inputTemplate ?: return
-        val runesherd = if (template.hasRunesherdTag() || template.getRuneIdentifier() != null) {
-            template
-        } else {
-            return
-        }
-
-        val result = event.result ?: return
+        val glyph = event.inventory.inputTemplate ?: return
+        if (glyph.hasTag(ItemDataTags.IS_GLYPHIC_ITEM)) return // No cloning glyphic items
         // Check types
         if (mineral.type != Material.DIAMOND) return
-        //if (template.type != Material.BRICK || template.type !=) return
         if (recipe.result.type != Material.BRICK) return
-        // Check meta
-        if (!runesherd.itemMeta.hasCustomModelData()) {
-            event.result = ItemStack(Material.AIR)
-            return
-        }
-        // Avoid Conflict with other smithing using (Brick)
-        if (result.type == Material.BRICK) {
-            event.result = ItemStack(Material.AIR)
-        }
-        // Run
-        val item = addRunesherdToItemStack(runesherd, equipment) ?: return
-        item.also {
-            it.amount = 1
-        }
-        event.inventory.result = item
+
+        // Check if glyph
+        if (glyph.getItemIdentifier()?.contains("glyph") != true) return
+        // Apply
+        val item = equipment.clone()
+        item.addGlyph(glyph)
         event.result = item
-        return
     }
 
     @EventHandler
     fun glyphKilnFiringHandler(event: FurnaceStartSmeltEvent) {
-        // Get matching
+        // Sentries
         if (event.block.type != Material.BLAST_FURNACE) return
-        val kiln = event.block
-        val input = event.source
-        if (input.type != Material.CLAY_BALL) return
-        val recipe = event.recipe
-        if (recipe.result.type != Material.BRICK) return
-        // Get Structure, slow down if not configured right
-        val location = kiln.location.clone().toCenterLocation()
+        if (event.source.type != Material.CLAY_BALL) return
+        if (event.recipe.result.type != Material.BRICK) return
+        // Get Build, slow down if not configured right
+        val location = event.block.location.clone().toCenterLocation()
         if (location.clone().add(0.0, -1.0, 0.0).block.type != Material.CAMPFIRE) {
             event.totalCookTime += 30 * 20
         }
@@ -96,128 +75,82 @@ object GlyphListeners : Listener, GlyphManager {
          */
     }
 
-    /*
     @EventHandler
     fun glyphKilnFinishFiringHandler(event: FurnaceSmeltEvent) {
         // Get matching vars
         if (event.block.type != Material.BLAST_FURNACE) return
-        val kiln = event.block
-        val input = event.source
-        if (input.type != Material.CLAY_BALL) return
+        val source = event.source
+        if (source.type != Material.CLAY_BALL) return
+        if (!source.hasItemMeta()) return
         val recipe = event.recipe ?: return
         if (recipe.result.type != Material.BRICK) return
         if (event.result.type != Material.BRICK) return
         // Tag Check
-        if (!input.hasGlyphwareTag()) return
+        if (!source.hasTag(ItemDataTags.IS_GLYPHIC_ITEM)) return
+        val itemId = source.getItemIdentifier() ?: return
         // Cancel if more than 1
         if (event.result.amount > 1) {
             event.isCancelled = true
             return
         }
-        val itemId = input.getRuneIdentifier()
-        val glyphicItem = when (itemId) {
-            "clay_totem" -> { Glyphsherds.GLAZED_TOTEM.createGlyphicItem(1) }
-            "clay_orb"-> { Glyphsherds.GLAZED_ORB.createGlyphicItem(1) }
-            "clay_skull"-> { Glyphsherds.GLAZED_SKULL.createGlyphicItem(1) }
-            "clay_dowel" -> { Glyphsherds.GLAZED_DOWEL.createGlyphicItem(1) }
-            "clay_rods"-> { Glyphsherds.GLAZED_RODS.createGlyphicItem(1) }
-            "clay_key" -> { Glyphsherds.GLAZED_KEY.createGlyphicItem(1) }
-            else -> { Glyphsherds.GLAZED_ORB.createGlyphicItem(1) }
-        }
+        // Get new itemName
+        val result = source.clone()
+        val newItemName = itemId.replace("clay", "glyphic")
         // Transfer attribute modifiers to runeware
-        val attributeModifiers = input.itemMeta.attributeModifiers ?: return
-        val newList = mutableListOf<Pair<Attribute, AttributeModifier>>()
-        attributeModifiers.forEach { attributeKey, modifier ->
+        val attributeModifiers = source.itemMeta.attributeModifiers ?: return
+        val attributeBuilder = ItemAttributeModifiers.itemAttributes()
+        attributeModifiers.forEach { attribute, modifier ->
             val newModifier = AttributeModifier(modifier.key, modifier.amount * 1.25, modifier.operation, EquipmentSlotGroup.HAND)
-            newList.add(Pair(attributeKey, newModifier))
+            attributeBuilder.addModifier(attribute, newModifier)
         }
-        glyphicItem.itemMeta = glyphicItem.itemMeta.also {
-            for (pair in newList) { it.addAttributeModifier(pair.first, pair.second) }
-        }
-        glyphicItem.addGlyphAugmentTag()
-        glyphicItem.setGlyphAugmentCount(3)
+        // Set Data
+        result.setData(DataComponentTypes.ITEM_NAME, Component.text(newItemName))
+        result.setData(DataComponentTypes.ITEM_MODEL, createOdysseyKey(newItemName))
+        result.setData(DataComponentTypes.ATTRIBUTE_MODIFIERS, attributeBuilder)
+        result.setIntTag(ItemDataTags.GLYPH_AUGMENT_COUNT, attributeModifiers.size())
         // Set Result
-        event.result = glyphicItem
+        event.result = result
     }
 
-     */
-
-
-    // For Changing unknown runesherd to Runesherd drop
-    //@EventHandler(priority = EventPriority.LOW)
-    fun changeRunicRuinLootTable(event: BlockDropItemEvent) {
-        if (event.block.type != Material.SUSPICIOUS_GRAVEL
-            && event.block.type != Material.SUSPICIOUS_SAND) return
-        if (event.items.size != 1) return
-        val item = event.items[0]
-        if (item.itemStack.type != Material.BRICK) return
-        if (!item.itemStack.itemMeta.hasCustomModelData()) return
-        //if (item.itemStack.itemMeta.customModelData != ItemModels.UNKNOWN_RUNESHERD) return
-        // Roll 70 for a preset slot, 30 for random slot
-        /*
-        if ((0..100).random() > 70) {
-            item.itemStack = runesherdRuinsList.random().createPresetSherdStack(1)
-        }
-        else {
-            item.itemStack = runesherdRuinsList.random().createLootSherdStack(1) // Do more random slots
-        }
-
-         */
-        // Advancement
-        val advancement = event.player.server.getAdvancement(NamespacedKey.fromString("odyssey:odyssey/dig_runesherd")!!)
-        if (advancement != null) {
-            event.player.getAdvancementProgress(advancement).awardCriteria("requirement")
-        }
-    }
 
     @EventHandler(priority = EventPriority.HIGH)
-    private fun craftRunesherd(event: CraftItemEvent) {
+    private fun createGlyphCopy(event: CraftItemEvent) {
         if (event.recipe.result.type != Material.CLAY_BALL) return
-        val runesherd = event.inventory.matrix[4] ?: return
-        if (!runesherd.hasItemMeta()) return
-        if (!runesherd.hasRunesherdTag()) return
-        if (runesherd.hasGlyphwareTag()) return // No cloning runeware
-        if (!runesherd.itemMeta.hasCustomModelData()) return
+        val glyphsherd = event.inventory.matrix[4] ?: return // Center
+        if (!glyphsherd.hasItemMeta()) return
+        if (glyphsherd.hasTag(ItemDataTags.IS_GLYPHIC_ITEM)) return // No cloning glyphic items
         // Result Checks
-        val result = event.inventory.result ?: return
-        if (!result.hasRunesherdTag()) return
+        event.inventory.result ?: return
         // Add to inventory
         val player = event.whoClicked
-        val clone = runesherd.clone()
+        val clone = glyphsherd.clone()
         clone.amount = 1
         val overflow = player.inventory.addItem(clone)
         if (overflow.isNotEmpty()) {
             player.world.dropItem(player.location, overflow[0]!!)
         }
-
     }
 
+
     @EventHandler(priority = EventPriority.LOW)
-    private fun prepareCraftRunesherd(event: PrepareItemCraftEvent) {
+    private fun prepareCraftGlyphsherd(event: PrepareItemCraftEvent) {
         if (event.recipe == null) return
         if (event.recipe?.result?.type != Material.CLAY_BALL) return
-        val runesherd = event.inventory.matrix[4] ?: return
-        if (runesherd.type == Material.CLAY_BALL) return // No Cloning clones
-        if (!runesherd.hasItemMeta()) return
-        if (!runesherd.hasRunesherdTag()) return
-        if (runesherd.hasGlyphwareTag()) return // No cloning runeware
-        if (!runesherd.itemMeta.hasCustomModelData()) return
+        val glyphsherd = event.inventory.matrix[4] ?: return
+        if (glyphsherd.type == Material.CLAY_BALL) return // No Cloning clones
+        if (!glyphsherd.hasItemMeta()) return
+        if (glyphsherd.hasTag(ItemDataTags.IS_GLYPHIC_ITEM)) return // No cloning glyphic items
         // Passed basic checks
-        val modifiers = runesherd.itemMeta.attributeModifiers ?: return
-        val runeName = runesherd.getRuneIdentifier() ?: "rune.generic"
-        val runeAttribute = findRunesherdAttribute(runeName) ?: return
-        val runeAttributeModifiers = modifiers.get(runeAttribute) ?: return
-        val runeKey = AttributeTags.GLYPH_SLOT
-        val runeModifier = runeAttributeModifiers.find { it.name == runeKey } ?: return
+        val modifiers = glyphsherd.getData(DataComponentTypes.ATTRIBUTE_MODIFIERS) ?: return
+        val glyphAugment = modifiers.modifiers().find { it.modifier().name == "glyph.slot" } ?: return
+        val newModifiers = ItemAttributeModifiers.itemAttributes()
+        newModifiers.addModifier(glyphAugment.attribute(), glyphAugment.modifier())
         // Add to result
         val result = event.inventory.result ?: return
-        val resultMeta = result.itemMeta
-        resultMeta.addAttributeModifier(runeAttribute, runeModifier)
-        resultMeta.displayName(Component.text("Runepeice"))
-        resultMeta.setCustomModelData(runesherd.itemMeta.customModelData)
-        result.itemMeta = resultMeta
-        result.addRunesherdTag()
-        result.addRuneIdentifier(runeName)
+        val newName = "makeshift_glyph"
+        result.setData(DataComponentTypes.ITEM_NAME, Component.text(newName).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))
+        result.setData(DataComponentTypes.ATTRIBUTE_MODIFIERS, newModifiers)
+        result.addTag(ItemDataTags.IS_COPIED_GLYPH)
         event.inventory.result = result
 
     }

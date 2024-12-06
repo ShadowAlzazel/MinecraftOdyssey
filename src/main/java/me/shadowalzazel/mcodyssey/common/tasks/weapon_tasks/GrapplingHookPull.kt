@@ -58,7 +58,7 @@ class GrapplingHookPull(
             val pullingVector = destination.clone().subtract(origin).toVector().normalize().multiply(pullForce)
             val newVector = hooker.velocity.clone().add(pullingVector)
             hooker.velocity = newVector
-            println("New Velocity: $newVector")
+            //println("New Velocity: $newVector")
             val distance = destination.distance(origin)
             //val display = origin.world.spawnEntity(origin, EntityType.BLOCK_DISPLAY)
             // Cancel Grapple if too close
@@ -74,7 +74,7 @@ class GrapplingHookPull(
     }
 
     private fun cancelGrapple(reason: String) {
-        println("Canceled because: $reason")
+        //println("Canceled because: $reason")
         hooker.removeScoreboardTag(EntityTags.IS_GRAPPLING)
         this.cancel()
     }

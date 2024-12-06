@@ -4,9 +4,8 @@ import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.effects.EffectsManager
 import me.shadowalzazel.mcodyssey.common.tasks.enchantment_tasks.*
-import me.shadowalzazel.mcodyssey.util.AttackHelper
-import me.shadowalzazel.mcodyssey.util.EnchantmentsManager
-import me.shadowalzazel.mcodyssey.util.RegistryTagManager
+import me.shadowalzazel.mcodyssey.common.combat.AttackHelper
+import me.shadowalzazel.mcodyssey.common.enchantments.EnchantmentManager
 import me.shadowalzazel.mcodyssey.util.constants.EffectTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags.getIntTag
@@ -31,7 +30,7 @@ import java.util.*
 import kotlin.math.log2
 import kotlin.math.pow
 
-object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentsManager {
+object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManager {
 
     private val recallTargets: MutableMap<UUID, LivingEntity> = mutableMapOf()
 

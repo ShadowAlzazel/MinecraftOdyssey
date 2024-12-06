@@ -22,7 +22,7 @@ object ArcaneListeners: Listener, ArcaneEquipmentManager, DataTagManager {
         val offHand = player.equipment.itemInOffHand
         if (!offHand.hasItemMeta()) return
         if (!offHand.itemMeta!!.hasCustomModelData()) return
-        if (!offHand.hasOdysseyItemTag()) return
+        if (!offHand.hasItemKeyTag()) return
         if (player.hasCooldown(offHand.type)) return
         val model = offHand.itemMeta!!.itemModel?.key ?: return
         if (ARCANE_RANGES[model] == null) return
@@ -30,7 +30,7 @@ object ArcaneListeners: Listener, ArcaneEquipmentManager, DataTagManager {
         if (!mainHandBook.hasItemMeta()) return
         // if (!mainHandBook.itemMeta!!.hasCustomModelData()) return // Can only use volumes ??????
         // Sentries Passed
-        val itemTag = offHand.getOdysseyTag() ?: return
+        val itemTag = offHand.getItemKeyTag() ?: return
         when (itemTag) {
             "arcane_wand" -> arcaneWandHandler(event)
             "arcane_blade" -> arcaneBladeHandler(event)

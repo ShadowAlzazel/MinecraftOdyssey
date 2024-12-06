@@ -38,12 +38,12 @@ class CustomTrimming : DataTagManager {
     fun customEngraving(event: PrepareSmithingEvent) {
         // Get Ids
         val equipment = event.inventory.inputEquipment ?: return
-        val addition = event.inventory.inputMineral ?: return
-        val template = event.inventory.inputTemplate ?: return
+        //val addition = event.inventory.inputMineral ?: return
+        //val template = event.inventory.inputTemplate ?: return
         // Checks
         val isEngraved = equipment.hasTag(ItemDataTags.IS_ENGRAVED)
         if (isEngraved) {
-            event.viewers.forEach { it.sendBarMessage("This Item Is Already Engraved!") }
+            event.viewers.forEach { it.sendBarMessage("This Item Is Already Engraved!", CustomColors.GRAY.color) }
             event.result = ItemStack(Material.AIR)
             return
         }
@@ -52,7 +52,7 @@ class CustomTrimming : DataTagManager {
         // Apply
         val item = equipment.clone()
         item.addTag(ItemDataTags.IS_ENGRAVED)
-        item.addStringTag(ItemDataTags.ENGRAVED_BY, engraver.name)
+        item.setStringTag(ItemDataTags.ENGRAVED_BY, engraver.name)
         val pretext = "Created"
         val engraving = Component.text("$pretext by ${engraver.name}", CustomColors.DARK_GRAY.color, TextDecoration.ITALIC)
         val oldLore = item.getData(DataComponentTypes.LORE)
@@ -60,6 +60,10 @@ class CustomTrimming : DataTagManager {
         item.setData(DataComponentTypes.LORE, newLore)
         // Finish
         event.result = item
+    }
+
+    fun customPartUpgrading(event: PrepareSmithingEvent) {
+        //TODO - Waiting for 1.21.4
     }
 
 

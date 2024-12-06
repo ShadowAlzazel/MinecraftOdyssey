@@ -16,7 +16,7 @@ object ItemListeners : Listener, DataTagManager {
 
     @EventHandler
     fun itemUseOnDropHandler(event: PlayerDropItemEvent) {
-        if (!event.itemDrop.itemStack.hasOdysseyItemTag()) return
+        if (!event.itemDrop.itemStack.hasItemKeyTag()) return
         // For all Item on Drop Uses
         when (event.itemDrop.itemStack.getItemIdentifier()) {
             "soul_spice" -> {
@@ -39,7 +39,7 @@ object ItemListeners : Listener, DataTagManager {
 
     fun deathHandler(event: EntityDeathEvent) {
         if (event.entity.killer != null && event.droppedExp > 0) {
-            // SOUL_STEEL TODO
+            // SOUL_STEEL TODO: Finish
             var expDrop = 0.0
             val killer = event.entity.killer!!
             val hasSoulSteel = true
