@@ -31,7 +31,6 @@ object OdysseyEnchantments : EnchantmentManager, RegistryTagManager {
     val MOLTEN_CORE: Enchantment = getRegisteredEnchant("molten_core")
     val OPTICALIZATION: Enchantment = getRegisteredEnchant("opticalization")
     val POTION_BARRIER: Enchantment = getRegisteredEnchant("potion_barrier")
-    val RAGING_ROAR: Enchantment = getRegisteredEnchant("antibonk")
     val RECKLESS: Enchantment = getRegisteredEnchant("reckless")
     val RELENTLESS: Enchantment = getRegisteredEnchant("relentless")
     val ROOT_BOOTS: Enchantment = getRegisteredEnchant("root_boots")

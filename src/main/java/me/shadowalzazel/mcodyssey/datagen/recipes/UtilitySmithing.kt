@@ -14,7 +14,8 @@ class UtilitySmithing { // USE THIS CLASS TO CREATE RECIPE WHICH ARE AVAILABLE T
             toolUpgrading(),
             engraving(),
             glyphAugmenting(),
-            customArmorTrimming()
+            customArmorTrimming(),
+            customPartUpgrading()
         )
     }
 
@@ -190,7 +191,30 @@ class UtilitySmithing { // USE THIS CLASS TO CREATE RECIPE WHICH ARE AVAILABLE T
                 Material.LAPIS_LAZULI,
                 Material.QUARTZ,
                 Material.COPPER_INGOT,
-                Material.OBSIDIAN
+                Material.OBSIDIAN,
+                Material.RESIN_CLUMP
+            )
+        )
+    }
+
+    /*-----------------------------------------------------------------------------------------------*/
+    // For Custom Parts
+    private fun customPartUpgrading(): SmithingTrimRecipe {
+        val pattern = RecipeChoice.MaterialChoice(
+            Material.PAPER
+        )
+        val tool = RecipeChoice.MaterialChoice(
+            Material.NETHERITE_SWORD, Material.DIAMOND_SWORD, Material.IRON_SWORD, Material.GOLDEN_SWORD, Material.STONE_SWORD, Material.WOODEN_SWORD,
+            Material.NETHERITE_AXE, Material.DIAMOND_AXE, Material.IRON_AXE, Material.GOLDEN_AXE, Material.STONE_AXE, Material.WOODEN_AXE,
+            Material.NETHERITE_PICKAXE, Material.DIAMOND_PICKAXE, Material.IRON_PICKAXE, Material.GOLDEN_PICKAXE, Material.STONE_PICKAXE, Material.WOODEN_PICKAXE,
+            Material.NETHERITE_SHOVEL, Material.DIAMOND_SHOVEL, Material.IRON_SHOVEL, Material.GOLDEN_SHOVEL, Material.STONE_SHOVEL, Material.WOODEN_SHOVEL)
+        return SmithingTrimRecipe(
+            NamespacedKey(Odyssey.instance, "custom_part_upgrading"),
+            pattern,
+            tool,
+            RecipeChoice.MaterialChoice(
+                Material.IRON_INGOT, // For iridium
+                Material.GOLD_INGOT
             )
         )
     }

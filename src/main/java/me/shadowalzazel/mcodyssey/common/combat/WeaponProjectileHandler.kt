@@ -77,17 +77,11 @@ interface WeaponProjectileHandler : DataTagManager, EnchantmentManager, AttackHe
         // Potion Data
         val potionContents = crossbow.getData(DataComponentTypes.POTION_CONTENTS) ?: return
         val chargedProjectiles = crossbow.getData(DataComponentTypes.CHARGED_PROJECTILES) ?: return
-        val chargedPotion = chargedProjectiles.projectiles().first()
-        val potionItem = chargedPotion.clone()
-        potionItem.setData(DataComponentTypes.POTION_CONTENTS, potionContents)
         // Entity Data
         val shooter = event.entity
         val projectile = event.projectile
         var lastShot = false
         var hasAmmo = true
-        //val potionType = crossbow.getStringTag(ItemDataTags.LOADED_POTION_TYPE) ?: "splash_potion"
-        //val potionMaterial = if (potionType == "lingering_potion") Material.LINGERING_POTION else Material.SPLASH_POTION
-        //val potionItem = ItemStack(potionMaterial, 1)
         //val potionItem = chargedPotions.projectiles().find { it.hasData(DataComponentTypes.POTION_CONTENTS) }
         // Run
         val multiCounter = crossbow.getIntTag(ItemDataTags.MULTISHOT_TRACKER) ?: 1
@@ -96,6 +90,13 @@ interface WeaponProjectileHandler : DataTagManager, EnchantmentManager, AttackHe
             "alchemical_driver" -> {
                 var thrownPotion: ThrownPotion? = null
                 if (multiCounter >= 1) {
+                    // Set throwing potion
+                    val potionItem = if (chargedProjectiles.projectiles().isNotEmpty()) chargedProjectiles.projectiles().first() else {
+                        val potionType = crossbow.getStringTag(ItemDataTags.LOADED_POTION_TYPE) ?: "splash_potion"
+                        val potionMaterial = if (potionType == "lingering_potion") Material.LINGERING_POTION else Material.SPLASH_POTION
+                        ItemStack(potionMaterial, 1)
+                    }
+                    potionItem.setData(DataComponentTypes.POTION_CONTENTS, potionContents)
                     // Spawn Entity
                     thrownPotion = (shooter.world.spawnEntity(projectile.location, EntityType.POTION) as ThrownPotion).also {
                         it.item = potionItem
@@ -107,6 +108,7 @@ interface WeaponProjectileHandler : DataTagManager, EnchantmentManager, AttackHe
                     if (multiCounter - 1 <= 0) {
                         lastShot = true
                         hasAmmo = false
+                        crossbow.removeTag(ItemDataTags.LOADED_POTION_TYPE)
                     }
                 }
                 // Shoot if potion made
@@ -187,6 +189,8 @@ interface WeaponProjectileHandler : DataTagManager, EnchantmentManager, AttackHe
         when(weaponType) {
             "alchemical_driver" -> {
                 crossbow.setIntTag(ItemDataTags.MULTISHOT_TRACKER, multiCounter)
+                val potionType = if (potionOffHand.type == Material.LINGERING_POTION) "lingering_potion" else "splash_potion"
+                crossbow.setStringTag(ItemDataTags.LOADED_POTION_TYPE, potionType)
                 // Has no ammo slots as loads 1 potion at a time
             }
             "alchemical_diffuser" -> {

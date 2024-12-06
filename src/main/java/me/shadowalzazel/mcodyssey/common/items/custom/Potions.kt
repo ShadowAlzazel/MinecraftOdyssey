@@ -83,7 +83,7 @@ internal object Potions {
         material = Material.POTION,
         itemModel = "alchemy_potion",
         bottleModel = "potent_bottle",
-        capModel = "ring_cap",
+        capModel = "potion_cap",
         effects = listOf(
             PotionEffect(PotionEffectType.ABSORPTION, 2 * 60 * 20 , 2),
             PotionEffect(PotionEffectType.SLOWNESS, 2 * 60 * 20 , 0)),
@@ -93,7 +93,7 @@ internal object Potions {
         material = Material.POTION,
         itemModel = "alchemy_potion",
         bottleModel = "potent_bottle",
-        capModel = "ring_cap",
+        capModel = "potion_cap",
         effects = listOf(
             PotionEffect(PotionEffectType.STRENGTH, 2 * 60 * 20 , 2),
             PotionEffect(PotionEffectType.HUNGER, 2 * 60 * 20 , 1)),
@@ -103,7 +103,7 @@ internal object Potions {
         material = Material.POTION,
         itemModel = "alchemy_potion",
         bottleModel = "potent_bottle",
-        capModel = "ring_cap",
+        capModel = "potion_cap",
         effects = listOf(
             PotionEffect(PotionEffectType.SPEED, 2 * 60 * 20 , 2),
             PotionEffect(PotionEffectType.HUNGER, 2 * 60 * 20 , 1),
@@ -150,7 +150,7 @@ internal object Potions {
         effects = listOf(
             PotionEffect(PotionEffectType.HASTE, 3 * 60 * 20 , 0),
             PotionEffect(PotionEffectType.GLOWING, 3 * 60 * 20, 0)),
-        color = Color.fromRGB(115, 215, 233))
+        color = Color.fromRGB(233, 213, 115))
 
     val CUSTOM_CONCOCTION = PotionConstructor(
         material = Material.POTION,

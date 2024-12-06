@@ -36,7 +36,12 @@ object SmithingListeners : Listener, DataTagManager {
         }
         // Trims
         else if (templateId in SmithingMaps.TRIM_TEMPLATES) {
+            // Check if tool or weapon trim
             CUSTOM_TRIMMING.customTrimsHandler(event)
+        }
+        // Tool Parts
+        else if (templateId.contains("part_pattern") && additionId.contains("part_upgrade")) {
+            CUSTOM_TRIMMING.customPartUpgrading(event)
         }
         // Engraving
         else if (addition.type == Material.AMETHYST_SHARD && template.type == Material.PAPER) {

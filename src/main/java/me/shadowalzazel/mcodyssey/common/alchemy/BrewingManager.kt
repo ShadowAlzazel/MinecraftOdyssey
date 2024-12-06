@@ -3,6 +3,7 @@
 package me.shadowalzazel.mcodyssey.common.alchemy
 
 import io.papermc.paper.datacomponent.DataComponentTypes
+import io.papermc.paper.datacomponent.item.CustomModelData
 import io.papermc.paper.datacomponent.item.PotionContents
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.util.RegistryTagManager
@@ -49,7 +50,10 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
                 // Maybe create a sticky/spreading potion?
                 else -> createdEnhanced = false
             }
-            if (createdEnhanced) continue // Continue if created a new Enhanced Type
+            if (createdEnhanced) {
+                event.results[x].updatePotionModel(bottleModel, capModel)
+                continue
+            } // Continue if created a new Enhanced Type
             // Get result
             var result = event.results[x] // Result != Item in Brewer
             result.setData(DataComponentTypes.MAX_STACK_SIZE, 16) // Set stack size
@@ -87,7 +91,18 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
             this.setData(DataComponentTypes.ITEM_MODEL, createOdysseyKey("alchemy_potion"))
         }
         // set custom data
-        // TODO: Waiting for 1.21.4
+        val oldModelData = this.getData(DataComponentTypes.CUSTOM_MODEL_DATA)
+        val potionParts = oldModelData?.strings()?.toMutableList() ?: mutableListOf("alchemy_potion", "bottle", "cap")
+        // Set
+        if (bottle != null) potionParts[1] = bottle
+        if (cap != null) potionParts[2] = cap
+        val customData = CustomModelData.customModelData().addStrings(potionParts)
+        if (oldModelData != null) { // Copy from ol
+            customData.addFlags(oldModelData.flags())
+            customData.addFloats(oldModelData.floats())
+            customData.addColors(oldModelData.colors())
+        }
+        this.setData(DataComponentTypes.CUSTOM_MODEL_DATA, customData)
     }
 
     private fun isPreviouslyEnhanced(potion: ItemStack): Boolean {
@@ -96,20 +111,13 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
         if (potion.hasTag(ItemDataTags.IS_UPGRADED_PLUS)) return false
         if (potion.hasTag(ItemDataTags.IS_POTION_VIAL)) return false
         if (potion.hasTag(ItemDataTags.IS_AURA_POTION)) return false
-        else return true
+        return true
     }
 
     private fun convertPotionType(potion: ItemStack, material: Material): ItemStack {
         val newPotion = potion.withType(material)
         return newPotion
     }
-
-    /*
-    private fun convertToLingeringPotion(potion: ItemStack): ItemStack {
-        return convertPotionType(potion, Material.LINGERING_POTION)
-    }
-
-     */
 
     private fun getIngredientResult(ingredient: ItemStack): Material {
         // Get Result from Ingredient
@@ -122,20 +130,22 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
 
     private fun getCapModel(material: Material): String? {
         return when (material) {
-            Material.REDSTONE -> "volumetric_bottle"
-            Material.GLOWSTONE_DUST -> "square_bottle"
-            Material.GLOW_BERRIES -> "square_bottle"
-            Material.HONEY_BOTTLE -> "volumetric_bottle"
+            Material.REDSTONE -> "tall_cap"
+            Material.GLOWSTONE_DUST -> "short_cap"
+            Material.GLOW_BERRIES -> "short_cap"
+            Material.HONEY_BOTTLE -> "tall_cap"
+            Material.EXPERIENCE_BOTTLE -> "ring_cap"
             else -> null
         }
     }
 
     private fun getBottleModel(material: Material): String? {
         return when (material) {
-            Material.REDSTONE -> "volumetric_cap"
-            Material.GLOWSTONE_DUST -> "short_cap"
-            Material.GLOW_BERRIES -> "short_cap"
-            Material.HONEY_BOTTLE -> "volumetric_cap"
+            Material.REDSTONE -> "volumetric_bottle"
+            Material.GLOWSTONE_DUST -> "square_bottle"
+            Material.GLOW_BERRIES -> "square_bottle"
+            Material.HONEY_BOTTLE -> "volumetric_bottle"
+            Material.EXPERIENCE_BOTTLE -> "compact_bottle"
             else -> null
         }
     }
@@ -211,7 +221,6 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
         potion.setData(DataComponentTypes.POTION_CONTENTS, newPotionData)
         potion.setData(DataComponentTypes.MAX_STACK_SIZE, 16)
         potion.addTag(ItemDataTags.IS_AURA_POTION)
-        potion.amount = 4
         return potion
     }
 

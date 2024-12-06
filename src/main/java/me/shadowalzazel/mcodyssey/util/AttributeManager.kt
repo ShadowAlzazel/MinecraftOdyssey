@@ -107,7 +107,7 @@ interface AttributeManager {
         val speedModifier = AttributeModifier(speedKey, speed, AttributeModifier.Operation.ADD_NUMBER, slots)
         itemMeta = itemMeta.also {
             it.addAttributeModifier(Attribute.ATTACK_SPEED, resetModifier)
-            it.addAttributeModifier(Attribute.ATTACK_DAMAGE, speedModifier)
+            it.addAttributeModifier(Attribute.ATTACK_SPEED, speedModifier)
         }
     }
 

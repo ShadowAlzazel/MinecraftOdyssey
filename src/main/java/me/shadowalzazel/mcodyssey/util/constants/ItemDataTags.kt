@@ -10,6 +10,7 @@ object ItemDataTags {
     const val HAS_POTION_LOADED: String = "odyssey.alchemy_artillery_loaded"
     const val POTION_AMMO_AMOUNT: String = "odyssey.potion_ammo_amount"
     const val MULTISHOT_TRACKER: String = "odyssey.multishot_tracker"
+    const val LOADED_POTION_TYPE: String = "odyssey.loaded_potion_type"
 
     // Alchemy
     const val IS_ALCHEMY_COMBINATION: String = "odyssey.is_alchemy_combination" // For Alchemy Combinations/ Concoctions

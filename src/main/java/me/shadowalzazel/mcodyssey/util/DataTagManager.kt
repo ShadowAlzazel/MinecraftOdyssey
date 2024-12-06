@@ -4,6 +4,8 @@ package me.shadowalzazel.mcodyssey.util
 
 import io.papermc.paper.datacomponent.DataComponentTypes
 import me.shadowalzazel.mcodyssey.Odyssey
+import net.kyori.adventure.text.TextComponent
+import net.kyori.adventure.text.TranslatableComponent
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataContainer
@@ -30,7 +32,10 @@ interface DataTagManager {
             @Suppress("DEPRECATION")
             itemMeta.itemName
         } else {
-            getData(DataComponentTypes.ITEM_NAME)?.toString()?.lowercase() ?: getItemKeyTag()
+            val text = getData(DataComponentTypes.ITEM_NAME)
+            if (text is TextComponent) return text.content()
+            if (text is TranslatableComponent) return null // Ignore Translate Key
+            getItemKeyTag()
         }
     }
 

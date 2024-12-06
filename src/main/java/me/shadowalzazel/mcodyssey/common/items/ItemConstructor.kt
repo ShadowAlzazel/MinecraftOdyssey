@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.common.items
 
 import io.papermc.paper.datacomponent.DataComponentTypes
+import io.papermc.paper.datacomponent.item.CustomModelData
 import io.papermc.paper.datacomponent.item.FoodProperties
 import io.papermc.paper.datacomponent.item.ItemLore
 import io.papermc.paper.datacomponent.item.PotionContents
@@ -33,7 +34,7 @@ sealed class ItemConstructor(
         material: Material,
         itemModel: String?,
         val effects: List<PotionEffect>?=null,
-        val capModel: String?="potion_cap", // TODO: Waiting for 1.21.4
+        val capModel: String?="potion_cap",
         val bottleModel: String?="bottle_cap",
         val color: Color?=null,
         val potionType: PotionType=PotionType.THICK): ItemConstructor(material, itemModel=itemModel)
@@ -69,7 +70,7 @@ sealed class ItemConstructor(
         item.setData(DataComponentTypes.ITEM_NAME, Component.text(name))
         val customName = Component.text(name.toTitleCase()).decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false)
         item.setData(DataComponentTypes.CUSTOM_NAME, customName)
-        if (itemModel != null) item.setData(DataComponentTypes.ITEM_MODEL, createOdysseyKey(name))
+        if (itemModel != null) item.setData(DataComponentTypes.ITEM_MODEL, createOdysseyKey(this.itemModel))
         if (lore != null) item.setData(DataComponentTypes.LORE, ItemLore.lore(this.lore))
         item.amount = amount
         return item
@@ -88,8 +89,15 @@ sealed class ItemConstructor(
     private fun PotionConstructor.newItemPotion(name: String, amount: Int=1, withIdTag: Boolean=true): ItemStack {
         val item = newItem(name, amount, withIdTag)
         val potionComponent = PotionContents.potionContents().potion(this.potionType)
-        if (effects != null) potionComponent.addCustomEffects(this.effects.toMutableList())
+        if (effects != null) potionComponent.addCustomEffects(this.effects)
         if (color != null) potionComponent.customColor(this.color)
+        val potionParts = mutableListOf("alchemy_potion", "bottle", "cap")
+        if (bottleModel != null) potionParts[1] = this.bottleModel
+        if (capModel != null) potionParts[2] = this.capModel
+        val customData = CustomModelData.customModelData().addStrings(potionParts)
+        item.setData(DataComponentTypes.CUSTOM_MODEL_DATA, customData)
+        item.setData(DataComponentTypes.POTION_CONTENTS, potionComponent)
+        item.setData(DataComponentTypes.MAX_STACK_SIZE, 16)
         return item
     }
 

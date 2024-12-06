@@ -5,7 +5,7 @@
  */
 
 group = "me.shadowalzazel"
-version = "0.15-BETA-1.21.3"
+version = "1.0-BETA-1.21.4"
 description = "A server side expansion pack for a new minecraft adventure!"
 
 plugins {
@@ -13,7 +13,7 @@ plugins {
     `maven-publish`
     kotlin("jvm") version "2.0.20"
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("io.papermc.paperweight.userdev") version "1.7.5" // Check for new versions at https://plugins.gradle.org/plugin/io.papermc.paperweight.userdev
+    id("io.papermc.paperweight.userdev") version "1.7.7" // Check for new versions at https://plugins.gradle.org/plugin/io.papermc.paperweight.userdev
 }
 
 java {
@@ -31,14 +31,10 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.3-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
     //implementation(kotlin("stdlib-jdk21"))
-    paperweight.paperDevBundle("1.21.3-R0.1-SNAPSHOT")
-    //api(org.jetbrains.kotlin.kotlin.stdlib.jdk8)
-    //api(org.jetbrains.kotlinx.kotlinx.coroutines.core)
-    //api(org.jetbrains.kotlinx.kotlinx.serialization.json)
-    //testImplementation("org.jetbrains.kotlin.kotlin.test")
+    paperweight.paperDevBundle("1.21.4-R0.1-SNAPSHOT")
 }
 
 publishing {
@@ -55,7 +51,6 @@ tasks {
 
     compileJava {
         options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
-
         // Set the release flag. This configures what version bytecode the compiler will emit, as well as what JDK APIs are usable.
         // See https://openjdk.java.net/jeps/247 for more information.
         options.release.set(21)

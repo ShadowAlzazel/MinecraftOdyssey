@@ -110,7 +110,7 @@ class Odyssey : JavaPlugin() {
         // Register Events
         logger.info("Registering Events...")
         listOf(
-            OdysseyAssets,
+            //OdysseyAssets, OFF for TESTING
             ArcaneListeners,
             SmithingListeners,
             AlchemyListeners,

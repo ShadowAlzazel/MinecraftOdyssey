@@ -16,7 +16,8 @@ object PotionMixes {
         return listOf(
             potionVialMix(),
             potionExtendedPlusMix(),
-            potionUpgradedPlusMix()
+            potionUpgradedPlusMix(),
+            potionAuraMix()
         )
     }
 
@@ -77,6 +78,27 @@ object PotionMixes {
         )
         return PotionMix(
             NamespacedKey(Odyssey.instance, "extended_plus_brewing"),
+            result,
+            input,
+            ingredient
+        )
+    }
+
+    private fun potionAuraMix(): PotionMix {
+        // Water
+        val potionItem = ItemStack(Material.POTION, 1)
+        val potionMeta = potionItem.itemMeta as PotionMeta
+        potionMeta.basePotionType = PotionType.WATER
+        potionItem.itemMeta = potionMeta
+        val result = Item.POTION_VIAL.newItemStack(1)
+        val input = RecipeChoice.MaterialChoice(
+            Material.POTION
+        )
+        val ingredient = RecipeChoice.MaterialChoice(
+            Material.EXPERIENCE_BOTTLE
+        )
+        return PotionMix(
+            NamespacedKey(Odyssey.instance, "aura_potion_brewing"),
             result,
             input,
             ingredient
