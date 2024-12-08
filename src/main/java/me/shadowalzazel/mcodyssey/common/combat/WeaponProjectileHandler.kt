@@ -13,6 +13,8 @@ import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import org.bukkit.Material
 import org.bukkit.Particle
+import org.bukkit.Sound
+import org.bukkit.SoundCategory
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.*
 import org.bukkit.event.entity.EntityShootBowEvent
@@ -219,7 +221,77 @@ interface WeaponProjectileHandler : DataTagManager, EnchantmentManager, AttackHe
         if (player.inventory.itemInOffHand.getItemIdentifier() != "compact_crossbow") return
         // Call runnable
         val handToLoad = if (event.hand == EquipmentSlot.HAND) EquipmentSlot.OFF_HAND else EquipmentSlot.HAND
-        LoadCompactCrossbow(player, handToLoad).run()
+        LoadCompactCrossbow(player, handToLoad).runTask(Odyssey.instance)
     }
+
+    /*-----------------------------------------------------------------------------------------------*/
+    fun tinkeredMusketLoading(event: EntityLoadCrossbowEvent) {
+        val player = event.entity
+        if (player !is Player) return
+        if (player.inventory.itemInMainHand.type != Material.CROSSBOW) return
+        if (player.inventory.itemInMainHand.getItemIdentifier() != "tinkered_musket") return
+        if (player.inventory.itemInOffHand.getItemIdentifier() == "tinkered_musket") {
+            event.isCancelled =true
+            return
+        } // Can not load this way
+        val musket = event.crossbow
+        val offhand = player.inventory.itemInOffHand
+        if (musket.hasTag(ItemDataTags.MUSKET_LOADED_STAGE_2)) {
+            event.isCancelled = true // Prevent
+            return
+        }
+        // Stage 1 -> Gunpowder
+        if (!musket.hasTag(ItemDataTags.MUSKET_LOADED_STAGE_1)) {
+            if (offhand.type != Material.GUNPOWDER) {
+                event.isCancelled = true // Prevent
+            } else {
+                musket.addTag(ItemDataTags.MUSKET_LOADED_STAGE_1)
+                offhand.subtract()
+                event.isCancelled = true // Stop
+            }
+            return
+        }
+        // Stage 2 -> Iron nugget
+        if (musket.hasTag(ItemDataTags.MUSKET_LOADED_STAGE_1)) {
+            if (offhand.type != Material.IRON_NUGGET) {
+                event.isCancelled = true // Prevent
+            } else {
+                musket.removeTag(ItemDataTags.MUSKET_LOADED_STAGE_1)
+                musket.addTag(ItemDataTags.MUSKET_LOADED_STAGE_2)
+                offhand.subtract()
+            }
+            return
+        }
+    }
+
+    fun tinkeredMusketShooting(event: EntityShootBowEvent) {
+        val entity = event.entity
+        val musket = event.bow ?: return
+        if (!musket.hasTag(ItemDataTags.MUSKET_LOADED_STAGE_2)) {
+            event.isCancelled = true
+            return
+        }
+        else {
+            musket.removeTag(ItemDataTags.MUSKET_LOADED_STAGE_2)
+            // Projectile Stats
+            with(event.projectile) {
+                val eyeDirection = entity.eyeLocation.direction.clone().multiply( 1.25)
+                val speed = 7.75F
+                val aimVector = eyeDirection.add(velocity).normalize().multiply(speed)
+                velocity = aimVector
+                if (this is Arrow) {
+                    damage = 4.0
+                }
+            }
+            // Recoil
+            val recoilVector = event.projectile.velocity.clone().normalize().multiply(-0.4)
+            entity.velocity = entity.velocity.add(recoilVector)
+            val location = entity.location
+            location.world.playSound(location, Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, SoundCategory.BLOCKS, 0.8F, 1.7F)
+        }
+
+
+    }
+
 
 }

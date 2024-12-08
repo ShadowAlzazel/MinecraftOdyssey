@@ -14,15 +14,17 @@ import java.util.*
 
 interface DataTagManager {
 
-    private fun PersistentDataContainer.hasItemKeyTag(): Boolean {
+    private fun PersistentDataContainer.hasItemIdTag(): Boolean {
         return has(NamedKeys.ITEM_KEY)
     }
 
-    fun ItemStack.hasItemKeyTag(): Boolean {
-        return itemMeta.persistentDataContainer.hasItemKeyTag()
+    fun ItemStack.hasItemIdTag(): Boolean {
+        if (!this.hasItemMeta()) return false
+        return itemMeta.persistentDataContainer.hasItemIdTag()
     }
 
-    fun ItemStack.getItemKeyTag(): String? {
+    fun ItemStack.getItemIdTag(): String? {
+        if (!hasItemMeta()) return null
         return itemMeta.persistentDataContainer[NamedKeys.ITEM_KEY, PersistentDataType.STRING]
     }
 
@@ -35,7 +37,7 @@ interface DataTagManager {
             val text = getData(DataComponentTypes.ITEM_NAME)
             if (text is TextComponent) return text.content()
             if (text is TranslatableComponent) return null // Ignore Translate Key
-            getItemKeyTag()
+            getItemIdTag()
         }
     }
 
@@ -44,7 +46,7 @@ interface DataTagManager {
     }
 
     fun ItemStack.matchItem(tag: String): Boolean {
-        return this.getItemKeyTag() == tag
+        return this.getItemIdTag() == tag
     }
 
     fun ItemStack.addTag(tag: String) {

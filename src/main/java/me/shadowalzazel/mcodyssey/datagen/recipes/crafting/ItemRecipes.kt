@@ -15,7 +15,9 @@ class ItemRecipes : ChoiceManager {
         return listOf(
             soulSteelUpgradeTemplateRecipe(), titaniumUpgradeTemplateRecipe(), iridiumUpgradeTemplateRecipe(),
             mithrilUpgradeTemplateRecipe(), blankTomeRecipe(), clayTotemRecipe(), clayOrbRecipe(), claySkullRecipe(), clayDowelRecipe(),
-            clayKeyRecipe(), clayRodsRecipe()
+            clayKeyRecipe(), clayRodsRecipe(),
+            pommelPartUpgradeTemplateRecipe(), hiltPartUpgradeTemplateRecipe(), bladePartUpgradeTemplateRecipe(), handlePartUpgradeTemplateRecipe(),
+            mastercraftedToolTemplateRecipe()
         )
     }
 
@@ -137,6 +139,61 @@ class ItemRecipes : ChoiceManager {
             shape("L ", "C ", "CC")
             setIngredient('C', Material.CLAY_BALL)
             setIngredient('L', Material.LAPIS_LAZULI)
+        }
+        return recipe
+    }
+
+    private fun bladePartUpgradeTemplateRecipe(): ShapedRecipe {
+        val result = Item.BLADE_PART_UPGRADE_TEMPLATE.newItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "blade_part_upgrade_template"), result).apply {
+            shape(" GG", " GG", "   ")
+            setIngredient('G', Material.GOLD_INGOT)
+            category = CraftingBookCategory.MISC
+            group = "part_upgrade_templates"
+        }
+        return recipe
+    }
+
+    private fun handlePartUpgradeTemplateRecipe(): ShapedRecipe {
+        val result = Item.HANDLE_PART_UPGRADE_TEMPLATE.newItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "handle_part_upgrade_template"), result).apply {
+            shape("   ", " GG", " GG")
+            setIngredient('G', Material.GOLD_INGOT)
+            category = CraftingBookCategory.MISC
+            group = "part_upgrade_templates"
+        }
+        return recipe
+    }
+
+    private fun pommelPartUpgradeTemplateRecipe(): ShapedRecipe {
+        val result = Item.POMMEL_PART_UPGRADE_TEMPLATE.newItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "pommel_part_upgrade_template"), result).apply {
+            shape("   ", "GG ", "GG ")
+            setIngredient('G', Material.GOLD_INGOT)
+            category = CraftingBookCategory.MISC
+            group = "part_upgrade_templates"
+        }
+        return recipe
+    }
+
+    private fun hiltPartUpgradeTemplateRecipe(): ShapedRecipe {
+        val result = Item.HANDLE_PART_UPGRADE_TEMPLATE.newItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "hilt_part_upgrade_template"), result).apply {
+            shape("GG ", "GG ", "   ")
+            setIngredient('G', Material.GOLD_INGOT)
+            category = CraftingBookCategory.MISC
+            group = "part_upgrade_templates"
+        }
+        return recipe
+    }
+
+    private fun mastercraftedToolTemplateRecipe(): ShapedRecipe {
+        val result = Item.MASTERCRAFTED_TOOL_TEMPLATE.newItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "mastercrafted_tool_template"), result).apply {
+            shape(" G ", "GIG", " G ")
+            setIngredient('G', Material.GOLD_INGOT)
+            setIngredient('I', iridiumChoices())
+            category = CraftingBookCategory.MISC
         }
         return recipe
     }

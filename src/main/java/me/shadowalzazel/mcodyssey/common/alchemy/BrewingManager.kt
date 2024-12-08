@@ -8,6 +8,8 @@ import io.papermc.paper.datacomponent.item.PotionContents
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.util.RegistryTagManager
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.event.inventory.BrewEvent
 import org.bukkit.inventory.ItemStack
@@ -39,7 +41,7 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
             val item = brewerSlots[x]?.clone() ?: continue
             if (item.type == Material.AIR) continue
             if (!isPreviouslyEnhanced(item)) continue // Enhanced Potions can not be upgraded
-            val potionData = item.getData(DataComponentTypes.POTION_CONTENTS) ?: continue
+            val oldPotionData = item.getData(DataComponentTypes.POTION_CONTENTS) ?: continue
             // Create Enhanced Potions
             var createdEnhanced = true
             when(ingredient.type) {
@@ -58,17 +60,22 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
             var result = event.results[x] // Result != Item in Brewer
             result.setData(DataComponentTypes.MAX_STACK_SIZE, 16) // Set stack size
             // Effect Variables to control end result
-            val hasBasePotion = potionData.potion() != null
-            val hasCustomEffects = (potionData.customEffects().isNotEmpty())
+            val hadBasePotion = oldPotionData.potion() != null
+            val hadCustomEffects = (oldPotionData.customEffects().isNotEmpty())
             //val hasOdysseyPotionEffects = item.hasOdysseyEffectTag()
-            val hasCustomModel = item.getData(DataComponentTypes.ITEM_MODEL) != null
+            val hadCustomModel = item.getData(DataComponentTypes.ITEM_MODEL) != null
             // Set Data from OLD item
             result = convertPotionType(result, getIngredientResult(ingredient))
-            if (hasCustomEffects || hasBasePotion) {
-                result.setData(DataComponentTypes.POTION_CONTENTS, potionData)
+            if (hadCustomEffects) {
+                result.setData(DataComponentTypes.POTION_CONTENTS, oldPotionData)
+                // TODO: UPGRADE DEPENDING ON WHAT IT IS
+            }
+            // Just set model for base potion
+            if (hadBasePotion) {
+                event.results[x].updatePotionModel(bottleModel, capModel)
             }
             // Set Model
-            if (!hasCustomModel) {
+            if (!hadCustomModel) {
                 result.updatePotionModel(bottleModel, capModel, "alchemy_potion")
             } else {
                 result.updatePotionModel(bottleModel, capModel)
@@ -145,7 +152,7 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
             Material.GLOWSTONE_DUST -> "square_bottle"
             Material.GLOW_BERRIES -> "square_bottle"
             Material.HONEY_BOTTLE -> "volumetric_bottle"
-            Material.EXPERIENCE_BOTTLE -> "compact_bottle"
+            Material.EXPERIENCE_BOTTLE -> "aura_bottle"
             else -> null
         }
     }
@@ -220,6 +227,7 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
         }
         potion.setData(DataComponentTypes.POTION_CONTENTS, newPotionData)
         potion.setData(DataComponentTypes.MAX_STACK_SIZE, 16)
+        potion.setData(DataComponentTypes.ITEM_NAME, Component.text("aura_potion").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false))
         potion.addTag(ItemDataTags.IS_AURA_POTION)
         return potion
     }

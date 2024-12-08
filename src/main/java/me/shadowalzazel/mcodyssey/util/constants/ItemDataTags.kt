@@ -61,9 +61,12 @@ object ItemDataTags {
     const val GLYPH_AUGMENT_COUNT: String = "odyssey.glyph_augment_count"
     const val IS_GLYPHSHERD: String = "odyssey.is_glyphsherd"
     const val HAS_GLYPH_AUGMENT: String = "odyssey.has_glyph_augment"
-    const val IS_COPIED_GLYPH: String = "odyssey.is_copied_glyph  "
+    const val IS_COPIED_GLYPH: String = "odyssey.is_copied_glyph"
 
     const val RUNE_IDENTIFIER: String = "odyssey.rune_identifier"
+
+    const val MUSKET_LOADED_STAGE_1: String = "odyssey.musket_loaded_stage_1"
+    const val MUSKET_LOADED_STAGE_2: String = "odyssey.musket_loaded_stage_2"
 
     // Compasses
     const val IS_SCULK_FINDER: String = "odyssey.is_sculk_finder"

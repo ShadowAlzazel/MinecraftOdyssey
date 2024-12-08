@@ -90,6 +90,7 @@ open class Item(
         val FANCY_PART_PATTERN = DataItem("fancy_part_pattern")
         val HUMBLE_PART_PATTERN = DataItem("humble_part_pattern")
         val EMPTY_PART_PATTERN = DataItem("empty_part_pattern")
+        val MASTERCRAFTED_TOOL_TEMPLATE = DataItem("mastercrafted_tool_template")
         // Glyphic
         val GLAZED_ORB = DataItem("glazed_orb")
         val GLAZED_RODS = DataItem("glazed_rods")
@@ -189,6 +190,7 @@ open class Item(
         val POTION_OF_CONSTITUTION = GeneratedItem("potion_of_constitution", Potions.POTION_OF_CONSTITUTION)
         val POTION_OF_STONE_SKIN = GeneratedItem("potion_of_stone_skin", Potions.POTION_OF_STONE_SKIN)
         val POTION_OF_WRATH = GeneratedItem("potion_of_wrath", Potions.POTION_OF_WRATH)
+        val POTION_OF_RECOUP = GeneratedItem("potion_of_recoup", Potions.POTION_OF_RECOUP)
         val POTION_OF_ZOOM = GeneratedItem("potion_of_zoom", Potions.POTION_OF_ZOOM)
         val POTION_OF_SHIMMER = GeneratedItem("bottle_of_shimmer", Potions.POTION_OF_SHIMMER)
         val ANGLERS_CONCOCTION = GeneratedItem("anglers_concoction", Potions.ANGLERS_CONCOCTION)

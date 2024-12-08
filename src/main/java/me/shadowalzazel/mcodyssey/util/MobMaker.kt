@@ -129,6 +129,7 @@ interface MobMaker: AttributeManager, EnchantabilityHandler, ToolMaker {
             val checkMax = if (newEnchant.key.maxLevel != 1) { newEnchant.value + 1 } else { 1 }
             greaterEnchant = Pair(newEnchant.key, checkMax)
             addShinyEnchant(greaterEnchant.first, greaterEnchant.second)
+            //
             val enchantment = OdysseyEnchantments.O_SHINY
             addEnchantment(enchantment, 1)
             updateEnchantabilityPoints()

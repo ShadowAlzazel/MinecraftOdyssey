@@ -67,7 +67,7 @@ sealed class ItemConstructor(
     private fun newItem(name: String, amount: Int=1, withBukkitId: Boolean=true) : ItemStack {
         val item = ItemStack(this.material)
         if (withBukkitId) item.setStringTag("item", name) // ID Tag is for Recipe Choice for crafting
-        item.setData(DataComponentTypes.ITEM_NAME, Component.text(name))
+        item.setData(DataComponentTypes.ITEM_NAME, Component.text(name).decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false))
         val customName = Component.text(name.toTitleCase()).decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false)
         item.setData(DataComponentTypes.CUSTOM_NAME, customName)
         if (itemModel != null) item.setData(DataComponentTypes.ITEM_MODEL, createOdysseyKey(this.itemModel))
