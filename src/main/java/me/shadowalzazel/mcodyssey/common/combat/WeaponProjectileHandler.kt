@@ -4,6 +4,7 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.ChargedProjectiles
 import io.papermc.paper.event.entity.EntityLoadCrossbowEvent
 import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.api.VectorParticles
 import me.shadowalzazel.mcodyssey.common.listeners.WeaponListeners
 import me.shadowalzazel.mcodyssey.common.tasks.weapon_tasks.LoadAutoCrossbow
 import me.shadowalzazel.mcodyssey.util.DataTagManager
@@ -24,7 +25,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.CrossbowMeta
 
 @Suppress("UnstableApiUsage")
-interface WeaponProjectileHandler : DataTagManager, EnchantmentManager, AttackHelper {
+interface WeaponProjectileHandler : DataTagManager, EnchantmentManager, AttackHelper, VectorParticles {
 
     /*-----------------------------------------------------------------------------------------------*/
     // EXPLOSIVE ARROW
@@ -120,12 +121,14 @@ interface WeaponProjectileHandler : DataTagManager, EnchantmentManager, AttackHe
             }
             "alchemical_diffuser" -> {
                 // Spray
-                val rads = (30 * Math.PI) / 180 //60 degrees in front
-                val entitiesInCone = getEntitiesInArc(shooter, rads, 6.0)
+                val rads = (45 * Math.PI) / 180 //60 degrees in front
+                val entitiesInCone = getEntitiesInArc(shooter, rads, 6.5)
                 val effects = potionContents.customEffects() + (potionContents.potion()?.potionEffects ?: mutableListOf())
                 if (effects.isEmpty()) return
+                // Particles
                 val particle = Particle.ENTITY_EFFECT
                 val color = potionContents.customColor() ?: effects.first().type.color
+                spawnConeParticles(particle, shooter.location, 280, 45.0, 6.0, color)
                 // Run
                 for (entity in entitiesInCone) {
                     entity.addPotionEffects(effects)
@@ -179,7 +182,7 @@ interface WeaponProjectileHandler : DataTagManager, EnchantmentManager, AttackHe
         val potionOffHand = loader.equipment!!.itemInOffHand
         val potionContents = potionOffHand.getData(DataComponentTypes.POTION_CONTENTS) ?: return false
         // Check if potion loaded
-        if (crossbow.hasTag(ItemDataTags.HAS_POTION_LOADED)) return true // Cancel loading event - have to empty ammo first
+        if (crossbow.hasTag(ItemDataTags.HAS_POTION_LOADED)) return false // Cancel loading logic - have to empty ammo first
         // Get vars
         val multiCounter = if (crossbow.itemMeta.hasEnchant(Enchantment.MULTISHOT)) 3 else 1
         val chargedProjectiles = ChargedProjectiles.chargedProjectiles(listOf(potionOffHand.clone()))

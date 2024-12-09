@@ -7,7 +7,7 @@ import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.enchantments.Enchantment
 import kotlin.math.pow
 
-interface EnchantmentExtender {
+interface DescriptionManager {
 
     /*-----------------------------------------------------------------------------------------------*/
     // Helper Functions
@@ -300,8 +300,8 @@ interface EnchantmentExtender {
             // Odyssey - Ranged
             "alchemy_artillery" -> listOf(
                 "- Potion effect projectiles have their effect timers increased",
-                "by ${0.2 * level}=[0.2 x level]%. These projectiles also have their",
-                "speed increased by ${0.1 * level}%=[0.1 x level]")
+                "by ${(0.2 * level).format(2)}=[0.2 x level]%. These projectiles also have their",
+                "speed increased by ${(0.1 * level).format(2)}%=[0.1 x level]")
             "ambush" -> listOf(
                 "- The first projectile to hit an enemy deals ${level * 2}=[level x 2] more damage.")
             "ballistics" -> listOf(

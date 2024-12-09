@@ -65,14 +65,15 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
             //val hasOdysseyPotionEffects = item.hasOdysseyEffectTag()
             val hadCustomModel = item.getData(DataComponentTypes.ITEM_MODEL) != null
             // Set Data from OLD item
-            result = convertPotionType(result, getIngredientResult(ingredient))
             if (hadCustomEffects) {
+                result = convertPotionType(result, getIngredientResult(ingredient))
                 result.setData(DataComponentTypes.POTION_CONTENTS, oldPotionData)
                 // TODO: UPGRADE DEPENDING ON WHAT IT IS
             }
             // Just set model for base potion
             if (hadBasePotion) {
-                event.results[x].updatePotionModel(bottleModel, capModel)
+                //result = convertPotionType(result, getIngredientResult(ingredient))
+                result.updatePotionModel(bottleModel, capModel)
             }
             // Set Model
             if (!hadCustomModel) {

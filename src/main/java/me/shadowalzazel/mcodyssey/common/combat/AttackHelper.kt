@@ -44,21 +44,23 @@ interface AttackHelper {
         attacker.world.playSound(victim.location, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1.75F, 0.5F)
     }
 
+
     fun getEntitiesInArc(origin: LivingEntity, angle: Double, radius: Double): List<LivingEntity> {
         val originDirection = origin.eyeLocation.direction.clone()
-        val nearby = origin.getNearbyEntities(radius, radius, radius).filter {
+        val nearby = origin.world.getNearbyLivingEntities(origin.location, radius + 0.25).filter {
             it != origin && it is LivingEntity
         }
-        val arcEntities: MutableList<LivingEntity> = mutableListOf()
+        val entitiesInArc: MutableList<LivingEntity> = mutableListOf()
         for (entity in nearby) {
             if (entity !is LivingEntity) continue
             // Get angle
-            val entityDirection = entity.location.subtract(originDirection).toVector()
-            val crossedAngle = originDirection.angle(entityDirection)
-            if (crossedAngle > angle) continue
-            arcEntities.add(entity)
+            val entityDirection = entity.location.subtract(origin.location).toVector()
+            val deltaAngle = originDirection.angle(entityDirection)
+            // Check if angle outside range
+            if (deltaAngle > angle) continue
+            entitiesInArc.add(entity)
         }
-        return arcEntities
+        return entitiesInArc
     }
 
 

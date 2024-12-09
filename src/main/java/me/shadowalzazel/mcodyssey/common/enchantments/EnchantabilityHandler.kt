@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 
 @Suppress("UnstableApiUsage")
-interface EnchantabilityHandler : EnchantmentManager, EnchantmentExtender, DataTagManager {
+interface EnchantabilityHandler : EnchantmentManager, DescriptionManager, DataTagManager {
 
     /*-----------------------------------------------------------------------------------------------*/
     fun getEnchantabilityCost(enchant: Pair<Enchantment, Int>, override: Int? = null): Int {
