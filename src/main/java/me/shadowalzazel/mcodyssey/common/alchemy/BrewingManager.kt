@@ -9,6 +9,7 @@ import io.papermc.paper.datacomponent.item.PotionContents
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.util.RegistryTagManager
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
+import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
@@ -39,45 +40,50 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
         val brewerSlots = event.contents.contents.toList()
         // Loop for each item in the Brewing stand
         for (x in 0..2) {
-            val item = brewerSlots[x]?.clone() ?: continue
-            if (item.type == Material.AIR) continue
-            val oldPotionData = item.getData(DataComponentTypes.POTION_CONTENTS) ?: continue
+            val input = brewerSlots[x]?.clone() ?: continue
+            if (input.type == Material.AIR) continue
+            val oldPotionData = input.getData(DataComponentTypes.POTION_CONTENTS) ?: continue
             // Create Enhanced Potions
-            var createdEnhanced = true
-            if (!isPreviouslyEnhanced(item)) { // Enhanced Potions can not be upgraded
+            var enhancedRecipe = true
+            if (inputIsGeneric(input)) { // Enhanced Potions can not be upgraded
                 when(ingredient.type) {
-                    Material.GLOW_BERRIES ->  event.results[x] = createUpgradedPlusPotion(item) // Maybe move to Cauldron?
-                    Material.HONEY_BOTTLE ->  event.results[x] = createExtendedPlusPotion(item) // Maybe move to Cauldron?
-                    Material.EXPERIENCE_BOTTLE -> event.results[x] = createAuraPotion(item)
+                    Material.GLOW_BERRIES ->  event.results[x] = createUpgradedPlusPotion(input) // Maybe move to Cauldron?
+                    Material.HONEY_BOTTLE ->  event.results[x] = createExtendedPlusPotion(input) // Maybe move to Cauldron?
+                    Material.EXPERIENCE_BOTTLE -> event.results[x] = createAuraPotion(input)
                     Material.PRISMARINE_CRYSTALS ->  {
-                        event.results[x] = createPotionVials(item)
+                        event.results[x] = createPotionVials(input)
                         continue
                     }
                     // Maybe create a sticky/spreading potion?
-                    else -> createdEnhanced = false
+                    else -> enhancedRecipe = false
+                }
+                // Update models for non vials
+                if (enhancedRecipe) { // Continue if created a new Enhanced Type
+                    event.results[x].updatePotionModel(bottleModel, capModel)
+                    continue
                 }
             }
-            if (createdEnhanced) { // Continue if created a new Enhanced Type
-                event.results[x].updatePotionModel(bottleModel, capModel)
-                continue
-            }
             // Get result
-            var result = event.results[x] // Result != Item in Brewer
-            result.setData(DataComponentTypes.MAX_STACK_SIZE, 16) // Set stack size
-            // Effect Variables to control end result
+            var result = event.results[x] // Result != Input item in Brewer
+            // Checking for potion data and effects
             val hadBasePotion = oldPotionData.potion() != null
             val hadCustomEffects = (oldPotionData.customEffects().isNotEmpty())
-            //val hasOdysseyPotionEffects = item.hasOdysseyEffectTag()
-            val hadCustomModel = item.getData(DataComponentTypes.ITEM_MODEL) != null
+            val hadCustomModel = input.getData(DataComponentTypes.ITEM_MODEL) != null
+            //val hasOdysseyPotionEffects = item.hasOdysseyEffectTag() -> eventually add support for odyssey effects
+            if (result.hasTag(ItemDataTags.IS_POTION_VIAL)) {
+                // Update Model
+                continue
+            }
+            // Set stack size
+            result.setData(DataComponentTypes.MAX_STACK_SIZE, 16)
             // Set Data from OLD item
             if (hadCustomEffects) {
                 result = convertPotionType(result, getIngredientResult(ingredient))
                 result.setData(DataComponentTypes.POTION_CONTENTS, oldPotionData)
-                // TODO: UPGRADE DEPENDING ON WHAT IT IS
+                // TODO: Do Non-vanilla upgrades
             }
             // Just set model for base potion
             if (hadBasePotion) {
-                //result = convertPotionType(result, getIngredientResult(ingredient))
                 result.updatePotionModel(bottleModel, capModel)
             }
             // Set Model
@@ -86,7 +92,6 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
             } else {
                 result.updatePotionModel(bottleModel, capModel)
             }
-            // TODO - Convert Odyssey Potions
             // Final
             event.results[x] = result
         }
@@ -96,6 +101,7 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
     /*-----------------------------------------------------------------------------------------------*/
 
     fun ItemStack.updatePotionModel(bottle: String?, cap: String?, newModel: String?=null) {
+        // TODO -> add models for splash and lingering
         // Create a new model
         if (newModel != null) {
             this.setData(DataComponentTypes.ITEM_MODEL, createOdysseyKey(newModel))
@@ -118,7 +124,7 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
         this.setData(DataComponentTypes.CUSTOM_MODEL_DATA, customData)
     }
 
-    private fun isPreviouslyEnhanced(potion: ItemStack): Boolean {
+    private fun inputIsGeneric(potion: ItemStack): Boolean {
         //val hasPotionTag: (String) -> Boolean = { tag: String -> potion.hasTag(tag)}
         if (potion.hasTag(ItemDataTags.IS_EXTENDED_PLUS)) return false
         if (potion.hasTag(ItemDataTags.IS_UPGRADED_PLUS)) return false
@@ -213,6 +219,7 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
             newPotionData.addCustomEffect(PotionEffect(effect.type, (effect.duration * 0.4).toInt(), effect.amplifier))
         }
         val consumable = Consumable.consumable().consumeSeconds(0.8F)
+        consumable.sound(Key.key("entity.generic.drink"))
         potion.setData(DataComponentTypes.CONSUMABLE, consumable)
         potion.setData(DataComponentTypes.POTION_CONTENTS, newPotionData)
         potion.setData(DataComponentTypes.MAX_STACK_SIZE, 64)

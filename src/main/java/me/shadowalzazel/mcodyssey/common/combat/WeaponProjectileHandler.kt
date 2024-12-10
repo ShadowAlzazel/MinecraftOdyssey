@@ -181,6 +181,8 @@ interface WeaponProjectileHandler : DataTagManager, EnchantmentManager, AttackHe
                 // Ammo tracker
                 crossbow.setIntTag(ItemDataTags.POTION_AMMO_AMOUNT, potionAmmoCount - 1)
                 if (potionAmmoCount - 1 <= 0) hasAmmo = false
+                shooter.world.playSound(shooter.location, Sound.ITEM_GLOW_INK_SAC_USE, SoundCategory.MASTER, 2.3F, 1.3F)
+                event.projectile.remove()
             }
             "alchemical_bolter" -> {
                 // Add potions to arrow
@@ -246,7 +248,7 @@ interface WeaponProjectileHandler : DataTagManager, EnchantmentManager, AttackHe
                 crossbow.setIntTag(ItemDataTags.POTION_AMMO_AMOUNT, 16)  // Has 16 ammo slots
             }
         }
-
+        loader.world.playSound(loader.location, Sound.ITEM_BOTTLE_FILL_DRAGONBREATH, SoundCategory.MASTER, 1.8F, 1.3F)
         loader.equipment!!.itemInOffHand.subtract()
         //val potionType = if (potionOffHand.type == Material.LINGERING_POTION) "lingering_potion" else "splash_potion"
         //crossbow.setStringTag(ItemDataTags.LOADED_POTION_TYPE, potionType)

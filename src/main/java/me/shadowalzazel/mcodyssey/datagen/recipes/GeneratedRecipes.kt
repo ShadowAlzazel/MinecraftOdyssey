@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.datagen.recipes
 
 import me.shadowalzazel.mcodyssey.datagen.ChoiceManager
+import me.shadowalzazel.mcodyssey.datagen.recipes.creators.ArmorRecipeCreator
 import me.shadowalzazel.mcodyssey.datagen.recipes.creators.RocketRecipeCreator
 import me.shadowalzazel.mcodyssey.datagen.recipes.creators.ToolRecipeCreator
 import me.shadowalzazel.mcodyssey.datagen.recipes.creators.WeaponRecipeCreator
@@ -18,6 +19,7 @@ class GeneratedRecipes : ChoiceManager {
             rocketCreator.blazingRocketsRecipe(5, "five"))
         recipeList.addAll(ToolRecipeCreator().generateToolRecipes())
         recipeList.addAll(WeaponRecipeCreator().generateWeaponRecipes())
+        recipeList.addAll(ArmorRecipeCreator().generateArmorRecipes())
         return recipeList
     }
 
