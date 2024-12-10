@@ -445,6 +445,7 @@ object WeaponListeners : Listener, WeaponCombatHandler, WeaponProjectileHandler,
         }
         // Match Shoot
         when(val itemName = bow.getItemIdentifier()) {
+            "crossbolter" -> crossbolterShooting(event)
             "auto_crossbow" -> autoCrossbowShooting(event)
             "warped_bow" -> return // Has +2 damage but -10% accuracy
             "tinkered_musket" -> tinkeredMusketShooting(event) // Shoot projectiles at 400% speed
@@ -462,6 +463,7 @@ object WeaponListeners : Listener, WeaponCombatHandler, WeaponProjectileHandler,
         val crossbow = event.crossbow
         if (!crossbow.hasItemMeta()) return
         when(val itemName = crossbow.getItemIdentifier()) {
+            "crossbolter" -> crossbolterLoading(event)
             "compact_crossbow" -> compactCrossbowLoading(event)
             "tinkered_musket" -> tinkeredMusketLoading(event) // Requires x2 reload (gunpowder -> iron both have to be in hand)
             "alchemical_driver" -> event.isCancelled = alchemicalWeaponLoading(event.entity, crossbow, itemName)

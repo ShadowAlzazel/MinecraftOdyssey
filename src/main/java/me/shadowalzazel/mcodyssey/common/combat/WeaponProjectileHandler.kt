@@ -10,6 +10,7 @@ import me.shadowalzazel.mcodyssey.common.tasks.weapon_tasks.LoadAutoCrossbow
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.common.enchantments.EnchantmentManager
 import me.shadowalzazel.mcodyssey.common.tasks.weapon_tasks.LoadCompactCrossbow
+import me.shadowalzazel.mcodyssey.common.tasks.weapon_tasks.LoadCrossbolter
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import org.bukkit.Material
@@ -69,6 +70,44 @@ interface WeaponProjectileHandler : DataTagManager, EnchantmentManager, AttackHe
                 crossbow.addTag(ItemDataTags.AUTO_LOADER_LOADING)
             }
         }
+    }
+
+    /*-----------------------------------------------------------------------------------------------*/
+    fun crossbolterShooting(event: EntityShootBowEvent) {
+        val crossbow = event.bow ?: return
+        if (crossbow.type != Material.CROSSBOW) return
+        val ammo = event.consumable ?: return
+        // States
+        // CURRENTLY multishot counts as 3
+        val ammoCounter = crossbow.getIntTag(ItemDataTags.AMMO_COUNT) ?: return
+        // Subtract ammo or remove count
+        if (ammoCounter <= 1) {
+            crossbow.removeTag(ItemDataTags.AMMO_COUNT)
+        } else {
+            crossbow.setIntTag(ItemDataTags.AMMO_COUNT, ammoCounter - 1)
+        }
+        // Load if possible
+        if (!crossbow.hasTag(ItemDataTags.IS_LOADING_AMMO)) {
+            // Load
+            val loadedItems = mutableListOf(ammo.clone())
+            crossbow.addTag(ItemDataTags.IS_LOADING_AMMO)
+            val task = LoadCrossbolter(event.entity, crossbow, loadedItems)
+            task.runTaskLater(Odyssey.instance, 8)
+        }
+    }
+
+    fun crossbolterLoading(event: EntityLoadCrossbowEvent) {
+        if (event.crossbow.hasTag(ItemDataTags.AMMO_COUNT)) return
+        val crossbow = event.crossbow
+        if (crossbow.hasTag(ItemDataTags.IS_LOADING_AMMO)) return
+        // Need to load offhand
+        if (crossbow == event.entity.equipment?.itemInOffHand) return
+        // Add ammo tag
+        val offhand = event.entity.equipment?.itemInOffHand ?: return
+        //if (offhand.type != Material.ARROW) return
+        val ammoCount = minOf(offhand.amount, 7)
+        offhand.subtract(ammoCount - 1)
+        crossbow.setIntTag(ItemDataTags.AMMO_COUNT, ammoCount)
     }
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -278,7 +317,7 @@ interface WeaponProjectileHandler : DataTagManager, EnchantmentManager, AttackHe
             musket.removeTag(ItemDataTags.MUSKET_LOADED_STAGE_2)
             // Projectile Stats
             with(event.projectile) {
-                val eyeDirection = entity.eyeLocation.direction.clone().multiply( 1.25)
+                val eyeDirection = entity.eyeLocation.direction.clone().normalize().multiply( 1.125)
                 val speed = 7.75F
                 val aimVector = eyeDirection.add(velocity).normalize().multiply(speed)
                 velocity = aimVector

@@ -97,7 +97,7 @@ sealed class ItemConstructor(
         val customData = CustomModelData.customModelData().addStrings(potionParts)
         item.setData(DataComponentTypes.CUSTOM_MODEL_DATA, customData)
         item.setData(DataComponentTypes.POTION_CONTENTS, potionComponent)
-        item.setData(DataComponentTypes.MAX_STACK_SIZE, 16)
+        item.setData(DataComponentTypes.MAX_STACK_SIZE, 8)
         return item
     }
 

@@ -6,11 +6,10 @@ import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.CrossbowMeta
 import org.bukkit.scheduler.BukkitRunnable
 
 @Suppress("UnstableApiUsage")
-class LoadAutoCrossbow(
+class LoadCrossbolter(
     private val entity: LivingEntity,
     private val crossbow: ItemStack,
     private val itemsToLoad: MutableList<ItemStack>
@@ -18,20 +17,15 @@ class LoadAutoCrossbow(
 
     override fun run() {
         if (entity.equipment!!.itemInMainHand == crossbow) {
-            /*
-            val meta = crossbow.itemMeta as CrossbowMeta
-            meta.setChargedProjectiles(mutableListOf())
-            for (item in itemsToLoad) {
-                meta.addChargedProjectile(item)
-            }
-            crossbow.itemMeta = meta
-             */
+            // Run
             val projectiles = ChargedProjectiles.chargedProjectiles().addAll(itemsToLoad)
             crossbow.setData(DataComponentTypes.CHARGED_PROJECTILES, projectiles)
-            crossbow.removeTag(ItemDataTags.AUTO_LOADER_LOADING)
-            crossbow.damage(2, entity)
-            this.cancel()
+            crossbow.removeTag(ItemDataTags.IS_LOADING_AMMO)
+            crossbow.damage(1, entity)
         }
+        this.cancel()
     }
+
+
 
 }

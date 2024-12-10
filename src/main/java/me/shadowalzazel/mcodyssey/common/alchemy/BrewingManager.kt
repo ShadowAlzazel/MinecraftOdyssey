@@ -3,6 +3,7 @@
 package me.shadowalzazel.mcodyssey.common.alchemy
 
 import io.papermc.paper.datacomponent.DataComponentTypes
+import io.papermc.paper.datacomponent.item.Consumable
 import io.papermc.paper.datacomponent.item.CustomModelData
 import io.papermc.paper.datacomponent.item.PotionContents
 import me.shadowalzazel.mcodyssey.util.DataTagManager
@@ -40,22 +41,26 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
         for (x in 0..2) {
             val item = brewerSlots[x]?.clone() ?: continue
             if (item.type == Material.AIR) continue
-            if (!isPreviouslyEnhanced(item)) continue // Enhanced Potions can not be upgraded
             val oldPotionData = item.getData(DataComponentTypes.POTION_CONTENTS) ?: continue
             // Create Enhanced Potions
             var createdEnhanced = true
-            when(ingredient.type) {
-                Material.GLOW_BERRIES ->  event.results[x] = createUpgradedPlusPotion(item) // Maybe move to Cauldron?
-                Material.HONEY_BOTTLE ->  event.results[x] = createExtendedPlusPotion(item) // Maybe move to Cauldron?
-                Material.EXPERIENCE_BOTTLE -> event.results[x] = createAuraPotion(item)
-                Material.PRISMARINE_CRYSTALS ->  event.results[x] = createPotionVials(item)
-                // Maybe create a sticky/spreading potion?
-                else -> createdEnhanced = false
+            if (!isPreviouslyEnhanced(item)) { // Enhanced Potions can not be upgraded
+                when(ingredient.type) {
+                    Material.GLOW_BERRIES ->  event.results[x] = createUpgradedPlusPotion(item) // Maybe move to Cauldron?
+                    Material.HONEY_BOTTLE ->  event.results[x] = createExtendedPlusPotion(item) // Maybe move to Cauldron?
+                    Material.EXPERIENCE_BOTTLE -> event.results[x] = createAuraPotion(item)
+                    Material.PRISMARINE_CRYSTALS ->  {
+                        event.results[x] = createPotionVials(item)
+                        continue
+                    }
+                    // Maybe create a sticky/spreading potion?
+                    else -> createdEnhanced = false
+                }
             }
-            if (createdEnhanced) {
+            if (createdEnhanced) { // Continue if created a new Enhanced Type
                 event.results[x].updatePotionModel(bottleModel, capModel)
                 continue
-            } // Continue if created a new Enhanced Type
+            }
             // Get result
             var result = event.results[x] // Result != Item in Brewer
             result.setData(DataComponentTypes.MAX_STACK_SIZE, 16) // Set stack size
@@ -173,7 +178,7 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
             newPotionData.addCustomEffect(PotionEffect(effect.type, (effect.duration * 0.6).toInt(), effect.amplifier + 1))
         }
         potion.setData(DataComponentTypes.POTION_CONTENTS, newPotionData)
-        potion.setData(DataComponentTypes.MAX_STACK_SIZE, 16)
+        potion.setData(DataComponentTypes.MAX_STACK_SIZE, 8)
         potion.addTag(ItemDataTags.IS_UPGRADED_PLUS)
         return potion
     }
@@ -191,7 +196,7 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
             newPotionData.addCustomEffect(PotionEffect(effect.type, (effect.duration * 1.5).toInt(), effect.amplifier))
         }
         potion.setData(DataComponentTypes.POTION_CONTENTS, newPotionData)
-        potion.setData(DataComponentTypes.MAX_STACK_SIZE, 16)
+        potion.setData(DataComponentTypes.MAX_STACK_SIZE, 8)
         potion.addTag(ItemDataTags.IS_EXTENDED_PLUS)
         return potion
     }
@@ -207,8 +212,13 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
         for (effect in allEffects) {
             newPotionData.addCustomEffect(PotionEffect(effect.type, (effect.duration * 0.4).toInt(), effect.amplifier))
         }
+        val consumable = Consumable.consumable().consumeSeconds(0.8F)
+        potion.setData(DataComponentTypes.CONSUMABLE, consumable)
         potion.setData(DataComponentTypes.POTION_CONTENTS, newPotionData)
         potion.setData(DataComponentTypes.MAX_STACK_SIZE, 64)
+        potion.setData(DataComponentTypes.ITEM_MODEL, createOdysseyKey("potion_vial"))
+        potion.setData(DataComponentTypes.ITEM_NAME, Component.text("potion_vial")
+            .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false))
         potion.addTag(ItemDataTags.IS_POTION_VIAL)
         potion.amount = 4
         return potion
@@ -227,8 +237,9 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
             newPotionData.addCustomEffect(PotionEffect(effect.type, (effect.duration * 0.6).toInt(), effect.amplifier))
         }
         potion.setData(DataComponentTypes.POTION_CONTENTS, newPotionData)
-        potion.setData(DataComponentTypes.MAX_STACK_SIZE, 16)
-        potion.setData(DataComponentTypes.ITEM_NAME, Component.text("aura_potion").decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false))
+        potion.setData(DataComponentTypes.MAX_STACK_SIZE, 8)
+        potion.setData(DataComponentTypes.ITEM_NAME, Component.text("aura_potion")
+            .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false))
         potion.addTag(ItemDataTags.IS_AURA_POTION)
         return potion
     }

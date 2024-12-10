@@ -1,8 +1,8 @@
 package me.shadowalzazel.mcodyssey
 
-import me.shadowalzazel.mcodyssey.bosses.BossManager
-import me.shadowalzazel.mcodyssey.bosses.hog_rider.HogRiderListeners
-import me.shadowalzazel.mcodyssey.bosses.the_ambassador.AmbassadorListeners
+import me.shadowalzazel.mcodyssey.unused.bosses.BossManager
+import me.shadowalzazel.mcodyssey.unused.bosses.hog_rider.HogRiderListeners
+import me.shadowalzazel.mcodyssey.unused.bosses.the_ambassador.AmbassadorListeners
 import me.shadowalzazel.mcodyssey.common.StructureDetector
 import me.shadowalzazel.mcodyssey.common.listeners.*
 import me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners.*
@@ -10,8 +10,7 @@ import me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners.OtherLi
 import me.shadowalzazel.mcodyssey.datagen.PotionMixes
 import me.shadowalzazel.mcodyssey.datagen.RecipeManager
 import me.shadowalzazel.mcodyssey.server.commands.admin.*
-import me.shadowalzazel.mcodyssey.world_events.DailyWorldEventManager
-import me.shadowalzazel.mcodyssey.world_events.DateTimeSyncer
+import me.shadowalzazel.mcodyssey.common.world_events.WorldEventsManager
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.NamespacedKey
@@ -27,8 +26,7 @@ class Odyssey : JavaPlugin() {
 
     // Managers
     val bossManager: BossManager
-    val worldEventManager: DailyWorldEventManager
-    val dateTimeSyncer: DateTimeSyncer
+    val worldEventManager: WorldEventsManager
     val structureDetector: StructureDetector
 
     // Overworld
@@ -42,8 +40,7 @@ class Odyssey : JavaPlugin() {
     init {
         instance = this
         bossManager = BossManager(this)
-        worldEventManager = DailyWorldEventManager(this)
-        dateTimeSyncer = DateTimeSyncer(this)
+        worldEventManager = WorldEventsManager(this)
         structureDetector = StructureDetector(this)
     }
 
@@ -55,11 +52,13 @@ class Odyssey : JavaPlugin() {
     override fun onEnable() {
         // Start Timer
         val timerStart: Long = System.currentTimeMillis()
-        // Config start up
-        config.options().copyDefaults()
-        saveConfig()
 
-        // Asset Loader
+        // Config start up
+        saveResource("config.yml",false)
+        saveDefaultConfig()
+        //saveConfig()
+
+        // Datapack data and folder
         val datapackManager = OdysseyDatapack(this)
 
         // Need to find the main world for others
@@ -84,29 +83,25 @@ class Odyssey : JavaPlugin() {
             server.pluginManager.disablePlugin(this)
             return
         }
-        // Set Edge
-        val foundEdge = server.getWorld(NamespacedKey(instance, "edge")) ?: server.worlds.first()
-        edge = foundEdge
+
+        // Set Worlds
+        edge = server.getWorld(NamespacedKey(instance, "edge"))!!
 
         // Enable Enchants
         logger.info("Enabling Enchantments...")
-        /*
-        UNUSED
-         */
-
-        //logger.info("Testing...")
-        //println("Item; ${LootTableManager.getMinecraftLoot("chests/bastion_treasure")}")
 
         // Register Recipes
         logger.info("Registering Recipes...")
         RecipeManager().createAllRecipes().forEach {
             Bukkit.addRecipe(it)
         }
+
         // Register Potion Mixes
         logger.info("Registering Brews...")
         PotionMixes.getMixes().forEach {
             server.potionBrewer.addPotionMix(it)
         }
+
         // Register Events
         logger.info("Registering Events...")
         listOf(
@@ -141,6 +136,7 @@ class Odyssey : JavaPlugin() {
         ).forEach {
             registerEventListeners(it)
         }
+
         // Set Commands
         logger.info("Setting Commands...")
         mapOf("summon_boss" to SummonBoss,
@@ -152,10 +148,12 @@ class Odyssey : JavaPlugin() {
         ).forEach {
             getCommand(it.key)?.setExecutor(it.value)
         }
-        // Starting World Date
+
+        // Starting World Events
         logger.info("Initializing World Events...")
-        dateTimeSyncer.currentDay = 0 //dateTimeSyncer.getDay()
         //dateTimeSyncer.runTaskTimer(this, 20, 20 * 10) // Run every 200 ticks = 10 secs
+
+        // Structures
         structureDetector.runTaskTimer(this, 20L, 20 * 10)
 
         // Wiki
@@ -172,6 +170,7 @@ class Odyssey : JavaPlugin() {
             val mapLinkDisplay = Component.text(config.get("server-map.name") as String)
             server.serverLinks.addLink(mapLinkDisplay, URI(mapLink))
         }
+
         // Hello World!
         val timeElapsed = (System.currentTimeMillis() - timerStart).div(1000.0)
         logger.info("Odyssey start up sequence in ($timeElapsed) seconds!")

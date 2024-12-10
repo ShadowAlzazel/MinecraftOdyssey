@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.server.commands.admin
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.bosses.the_ambassador.TheAmbassador
+import me.shadowalzazel.mcodyssey.unused.bosses.the_ambassador.TheAmbassador
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender

@@ -33,6 +33,8 @@ object ItemDataTags {
 
     // Weapons
     const val AUTO_LOADER_LOADING: String = "odyssey.auto_loader_loading"
+    const val IS_LOADING_AMMO: String = "odyssey.is_loading_ammo"
+    const val AMMO_COUNT: String = "odyssey.ammo_count"
 
     // Engraving
     const val IS_ENGRAVED: String = "odyssey.is_engraved"
