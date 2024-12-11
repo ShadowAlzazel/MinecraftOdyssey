@@ -1,6 +1,9 @@
 package me.shadowalzazel.mcodyssey.util
 
+import io.papermc.paper.datacomponent.DataComponentTypes
+import io.papermc.paper.datacomponent.item.ItemAttributeModifiers
 import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.api.ItemComponentsManager
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import org.bukkit.NamespacedKey
 import org.bukkit.attribute.Attribute
@@ -10,7 +13,7 @@ import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
 
 @Suppress("UnstableApiUsage")
-interface AttributeManager {
+interface AttributeManager : ItemComponentsManager, RegistryTagManager {
 
     fun LivingEntity.setAttributeModifier(
         value: Double,
@@ -69,6 +72,37 @@ interface AttributeManager {
     {
         this.setAttributeModifier(value, name, Attribute.STEP_HEIGHT)
     }
+
+    /*-----------------------------------------------------------------------------------------------*/
+    // Item Components
+    fun ItemStack.copyAttributes(input: ItemStack, union: Boolean=true) {
+        // Copy from input
+        if (!union) {
+            transferComponent(this, input, DataComponentTypes.ATTRIBUTE_MODIFIERS)
+            return
+        }
+        // If union, transfer old attributes not found in new input
+        else {
+            val transferredAttributes = input.getData(DataComponentTypes.ATTRIBUTE_MODIFIERS)?.modifiers()?.toList() ?: return
+            val existingAttributes = this.getData(DataComponentTypes.ATTRIBUTE_MODIFIERS)?.modifiers()?.toList()
+            // Builder for attributes
+            val builder = ItemAttributeModifiers.itemAttributes()
+            transferredAttributes.forEach { builder.addModifier(it.attribute(), it.modifier()) }
+            // Loop through existing attributes to get the key and match to the Data Item
+            if (existingAttributes != null) {
+                for (modifier in existingAttributes) {
+                    // If modifier key not in modifiers -> add to builder
+                    val modifierKey = modifier.modifier().key
+                    if (modifierKey.namespace == "minecraft") continue // Ignore default modifiers
+                    val hasKey = transferredAttributes.any { it.modifier().key == modifierKey }
+                    if (!hasKey) builder.addModifier(modifier.attribute(), modifier.modifier())
+                    //else if (override) builder.addModifier(modifier.attribute(), modifier.modifier())
+                }
+            }
+            this.setData(DataComponentTypes.ATTRIBUTE_MODIFIERS, builder)
+        }
+    }
+
 
     /*-----------------------------------------------------------------------------------------------*/
     // Items

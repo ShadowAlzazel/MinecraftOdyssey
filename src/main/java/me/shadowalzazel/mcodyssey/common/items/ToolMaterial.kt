@@ -22,6 +22,7 @@ enum class ToolMaterial(
     TITANIUM("titanium", "Titanium", 4.0, "iron", 1002), // OVERWORLD
     ANODIZED_TITANIUM("anodized_titanium", "Anodized Titanium", 4.0, "iron", 1002), // OVERWORLD
     IRIDIUM("iridium", "Iridium", 5.0, "iron", 3108), // OVERWORLD
-    MITHRIL("mithril", "Mithril", 6.0, "iron", 1789), // EDGE
+    MITHRIL("mithril", "Mithril", 6.0, "iron", 1789); // EDGE
+
 
 }

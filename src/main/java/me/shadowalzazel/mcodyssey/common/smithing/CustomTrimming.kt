@@ -20,7 +20,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.trim.ArmorTrim
 
 @Suppress("UnstableApiUsage")
-class CustomTrimming : DataTagManager, RegistryTagManager {
+internal interface CustomTrimming : DataTagManager, RegistryTagManager {
 
     fun customTrimsHandler(event: PrepareSmithingEvent) {
         // Get IDs

@@ -1,11 +1,30 @@
 package me.shadowalzazel.mcodyssey.common.smithing
 
+import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
 import me.shadowalzazel.mcodyssey.common.trims.TrimMaterials
 import me.shadowalzazel.mcodyssey.common.trims.TrimPatterns
 import org.bukkit.inventory.meta.trim.TrimMaterial
 import org.bukkit.inventory.meta.trim.TrimPattern
 
 object SmithingMaps {
+
+    val TOOL_MATERIALS = mapOf(
+        // Vanilla
+        "wooden" to ToolMaterial.WOODEN,
+        "golden" to ToolMaterial.GOLDEN,
+        "stone" to ToolMaterial.STONE,
+        "iron" to ToolMaterial.IRON,
+        "diamond" to ToolMaterial.DIAMOND,
+        "netherite" to ToolMaterial.NETHERITE,
+        // Odyssey
+        "copper" to ToolMaterial.COPPER,
+        "silver" to ToolMaterial.SILVER,
+        "soul_steel" to ToolMaterial.SOUL_STEEL,
+        "titanium" to ToolMaterial.TITANIUM,
+        "anodized_titanium" to ToolMaterial.ANODIZED_TITANIUM,
+        "iridium" to ToolMaterial.IRIDIUM,
+        "mithril" to ToolMaterial.MITHRIL,
+    )
 
     val MATERIAL_UPGRADE_MAP = mapOf(
         "soul_steel_ingot" to "soul_steel",
@@ -22,13 +41,21 @@ object SmithingMaps {
         "iridium_upgrade_template" to "iridium_ingot"
     )
 
-    val DURABILITY_MAP = mapOf(
+    val TOOL_DURABILITY_MAP = mapOf(
         "iridium" to 3178,
         "mithril" to 1789,
         "titanium" to 1002,
         "anodized_titanium" to 1002,
         "soul_steel" to 666,
         "netherite" to 2031
+    )
+
+    val ARMOR_DURABILITY_MAP = mapOf(
+        "iridium" to 3.7,
+        "mithril" to 2.3,
+        "titanium" to 1.9,
+        "anodized_titanium" to 1.9,
+        "soul_steel" to 1.6
     )
 
     val MODEL_DATA_MAP = mapOf(
