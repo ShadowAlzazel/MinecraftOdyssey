@@ -13,6 +13,30 @@ import kotlin.math.sqrt
 
 interface VectorParticles {
 
+    fun spawnLineParticles(particle: Particle, start: Location, end: Location, count: Int, color: Color?) {
+        // Calculate the vector from start to end
+        val vector = end.toVector().subtract(start.toVector())
+        val length = vector.length()
+        vector.normalize() // Normalize the vector to unit length
+
+        // Calculate the spacing between particles
+        val spacing = length / count
+
+        // Iterate along the line and spawn particles
+        for (i in 0..count) {
+            // Calculate the current point on the line
+            val offset = vector.clone().multiply(i * spacing)
+            val particleLocation = start.clone().add(offset)
+
+            // Spawn the particle at the current location
+            if (color != null) {
+                start.world.spawnParticle(particle, particleLocation, 1, 0.0, 0.0, 0.0, color)
+            } else {
+                start.world.spawnParticle(particle, particleLocation, 1, 0.0, 0.0, 0.0)
+            }
+        }
+    }
+
     fun spawnConeParticles(particle: Particle, location: Location, count: Int, coneAngle: Double, coneLength: Double, color: Color?) {
         val random: Random = Random()
         val angleRadians = Math.toRadians(coneAngle) // Convert to radians

@@ -11,6 +11,7 @@ import me.shadowalzazel.mcodyssey.datagen.PotionMixes
 import me.shadowalzazel.mcodyssey.datagen.RecipeManager
 import me.shadowalzazel.mcodyssey.server.commands.admin.*
 import me.shadowalzazel.mcodyssey.common.world_events.WorldEventsManager
+import me.shadowalzazel.mcodyssey.server.commands.UpdateModel
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.NamespacedKey
@@ -105,7 +106,6 @@ class Odyssey : JavaPlugin() {
         // Register Events
         logger.info("Registering Events...")
         listOf(
-            //OdysseyAssets, OFF for TESTING
             ArcaneListeners,
             SmithingListeners,
             AlchemyListeners,
@@ -137,6 +137,10 @@ class Odyssey : JavaPlugin() {
             registerEventListeners(it)
         }
 
+        // Setting resource pack
+        logger.info("Setting Resource Pack...")
+        registerEventListeners(OdysseyAssets)
+
         // Set Commands
         logger.info("Setting Commands...")
         mapOf("summon_boss" to SummonBoss,
@@ -145,6 +149,7 @@ class Odyssey : JavaPlugin() {
             "give_item" to GiveItem,
             "give_weapon" to GiveWeapon,
             "summon_mob" to SummonMob,
+            "update_model" to UpdateModel
         ).forEach {
             getCommand(it.key)?.setExecutor(it.value)
         }

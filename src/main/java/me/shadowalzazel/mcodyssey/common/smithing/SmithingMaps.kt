@@ -26,19 +26,20 @@ object SmithingMaps {
         "mithril" to ToolMaterial.MITHRIL,
     )
 
-    val MATERIAL_UPGRADE_MAP = mapOf(
+    val GET_UPGRADE_PATH = mapOf(
         "soul_steel_ingot" to "soul_steel",
         "mithril_ingot" to "mithril",
         "titanium_ingot" to "titanium",
-        "anodized_titanium_ingot" to "titanium",
+        "anodized_titanium_ingot" to "anodized_titanium",
         "iridium_ingot" to "iridium"
     )
 
-    val TEMPLATE_INPUT_MAP = mapOf(
-        "soul_steel_upgrade_template" to "soul_steel_ingot",
-        "mithril_upgrade_template" to "mithril_ingot",
-        "titanium_upgrade_template" to "titanium_ingot",
-        "iridium_upgrade_template" to "iridium_ingot"
+    val GET_TEMPLATE_FROM_MATERIAL = mapOf(
+        "soul_steel_ingot" to "soul_steel_upgrade_template",
+        "mithril_ingot" to "mithril_upgrade_template",
+        "titanium_ingot" to "titanium_upgrade_template",
+        "anodized_titanium_ingot" to "titanium_upgrade_template",
+        "iridium_ingot" to "iridium_upgrade_template"
     )
 
     val TOOL_DURABILITY_MAP = mapOf(

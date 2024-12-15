@@ -5,7 +5,7 @@ import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
-object EquipmentDataManager : DataTagManager {
+interface EquipmentDataManager : DataTagManager {
 
     fun getEquipmentType(item: ItemStack): String? {
         return item.getStringTag(ItemDataTags.TOOL_TYPE) ?: getDefaultType(item.type)
@@ -63,19 +63,23 @@ object EquipmentDataManager : DataTagManager {
         return getDefaultType(material) in listOf("helmet", "chestplate", "leggings", "boots")
     }
 
-    fun toolIsIron(material: Material): Boolean {
+    fun equipmentIsIron(material: Material): Boolean {
         return when(material) {
-            Material.IRON_SWORD, Material.IRON_PICKAXE, Material.IRON_AXE, Material.IRON_SHOVEL, Material.IRON_HOE -> true
+            Material.IRON_SWORD, Material.IRON_PICKAXE, Material.IRON_AXE, Material.IRON_SHOVEL, Material.IRON_HOE,
+            Material.IRON_HELMET, Material.IRON_CHESTPLATE, Material.IRON_LEGGINGS, Material.IRON_BOOTS-> true
             else -> false
         }
     }
 
-    fun toolIsDiamond(material: Material): Boolean {
+    fun equipmentIsDiamond(material: Material): Boolean {
         return when(material) {
-            Material.DIAMOND_SWORD, Material.DIAMOND_PICKAXE, Material.DIAMOND_AXE, Material.DIAMOND_SHOVEL, Material.DIAMOND_HOE -> true
+            Material.DIAMOND_SWORD, Material.DIAMOND_PICKAXE, Material.DIAMOND_AXE, Material.DIAMOND_SHOVEL, Material.DIAMOND_HOE,
+            Material.DIAMOND_HELMET, Material.DIAMOND_CHESTPLATE, Material.DIAMOND_LEGGINGS, Material.DIAMOND_BOOTS-> true
             else -> false
         }
     }
+
+
 
 
 }

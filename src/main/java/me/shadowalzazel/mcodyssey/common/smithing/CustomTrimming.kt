@@ -22,6 +22,8 @@ import org.bukkit.inventory.meta.trim.ArmorTrim
 @Suppress("UnstableApiUsage")
 internal interface CustomTrimming : DataTagManager, RegistryTagManager {
 
+    // BIOME SPECIFIC SETS !!
+
     fun customTrimsHandler(event: PrepareSmithingEvent) {
         // Get IDs
         val trimMaterial = event.inventory.inputMineral ?: return

@@ -18,7 +18,7 @@ import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
 
 @Suppress("UnstableApiUsage")
-internal interface ToolUpgrading : DataTagManager, ToolComponentHelper, AdvancementManager {
+internal interface ToolUpgrading : EquipmentDataManager, ToolComponentHelper, AdvancementManager {
 
     fun toolSmithingHandler(event: PrepareSmithingEvent) {
         val recipe = event.inventory.recipe
@@ -26,7 +26,7 @@ internal interface ToolUpgrading : DataTagManager, ToolComponentHelper, Advancem
         if (recipe?.result?.type == Material.ENCHANTED_BOOK) return
         val inputMaterial = event.inventory.inputMineral ?: return
         val equipment = event.inventory.inputEquipment ?: return
-        if (EquipmentDataManager.getEquipmentMaterial(equipment) in SmithingMaps.NOT_UPGRADEABLE) return
+        if (getEquipmentMaterial(equipment) in SmithingMaps.NOT_UPGRADEABLE) return
         // Switch case
         when (inputMaterial.type) {
             Material.NETHERITE_INGOT -> netheriteUpgrading(event)
@@ -55,9 +55,11 @@ internal interface ToolUpgrading : DataTagManager, ToolComponentHelper, Advancem
         val inputMaterialId = event.inventory.inputMineral?.getItemIdentifier() ?: return
         val templateId = event.inventory.inputTemplate?.getItemIdentifier() ?: return
         // Cross-check
-        if (SmithingMaps.TEMPLATE_INPUT_MAP[templateId] != inputMaterialId) return
+        if (SmithingMaps.GET_TEMPLATE_FROM_MATERIAL[inputMaterialId] != templateId) return
         // Get upgrade path from the inputMaterial
-        val upgradeMaterial = SmithingMaps.MATERIAL_UPGRADE_MAP[inputMaterialId] ?: return
+        val upgradeMaterial = SmithingMaps.GET_UPGRADE_PATH[inputMaterialId] ?: return
+        if (!itemIsUpgradeable(item, upgradeMaterial)) return
+        // Upgrade
         val upgradedItem = toolUpgrader(item, upgradeMaterial)
         when (upgradeMaterial) {
             "iridium" -> {
@@ -73,24 +75,29 @@ internal interface ToolUpgrading : DataTagManager, ToolComponentHelper, Advancem
                 modifyDamage(upgradedItem, 1.0)
                 rewardAdvancement(event.viewers, "odyssey/smith_soul_steel")
             }
-            "titanium" -> {
+            "titanium", "anodized_titanium" -> {
                 modifyDamage(upgradedItem, 1.0)
                 modifyAttackSpeed(upgradedItem, 1.1)
                 rewardAdvancement(event.viewers, "odyssey/smith_titanium")
             }
         }
         // Add ToolComponent
-        val mineableTags = getMiningTags(EquipmentDataManager.getEquipmentType(upgradedItem) ?: "none")
+        val mineableTags = getMiningTags(getEquipmentType(upgradedItem) ?: "none")
         if (mineableTags != null) toolMiningUpgrader(upgradedItem, upgradeMaterial)
         // Finish
         event.result = upgradedItem
         event.inventory.result = upgradedItem
     }
 
+    private fun itemIsUpgradeable(item: ItemStack, path: String): Boolean {
+        if (path in listOf("iridium", "mithril") && !equipmentIsDiamond(item.type)) return false
+        if (path in listOf("titanium", "anodized_titanium", "soul_steel") && !equipmentIsIron(item.type)) return false
+        return true
+    }
 
     // Main method to upgrade
     private fun toolUpgrader(item: ItemStack, upgradeMaterial: String): ItemStack {
-        val toolType = EquipmentDataManager.getEquipmentType(item)!!
+        val toolType = getEquipmentType(item)!!
         val itemName = "${upgradeMaterial}_${toolType}"
         val newModel = createOdysseyKey(itemName)
         item.setStringTag(ItemDataTags.MATERIAL_TYPE, upgradeMaterial)
@@ -103,7 +110,7 @@ internal interface ToolUpgrading : DataTagManager, ToolComponentHelper, Advancem
     }
 
     private fun toolMiningUpgrader(item: ItemStack, upgradeMaterial: String) {
-        val toolType = EquipmentDataManager.getEquipmentType(item) ?: return
+        val toolType = getEquipmentType(item) ?: return
         val newToolComponent = newToolComponent(upgradeMaterial, toolType)
         if (newToolComponent != null) {
             item.resetData(DataComponentTypes.TOOL)

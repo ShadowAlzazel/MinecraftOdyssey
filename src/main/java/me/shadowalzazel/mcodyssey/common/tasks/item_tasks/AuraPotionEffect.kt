@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.common.tasks.item_tasks
 
+import me.shadowalzazel.mcodyssey.api.VectorParticles
 import org.bukkit.Color
 import org.bukkit.Particle
 import org.bukkit.entity.Entity
@@ -12,7 +13,7 @@ class AuraPotionEffect(
     private val effects: List<PotionEffect>,
     private val maxCount: Int,
     private val color: Color
-) : BukkitRunnable() {
+) : BukkitRunnable(), VectorParticles {
     private var timer = System.currentTimeMillis()
     private var counter = 0
     override fun run() {
@@ -22,7 +23,8 @@ class AuraPotionEffect(
             it.world.spawnParticle(Particle.ENTITY_EFFECT, it.location, 15, 0.03, 0.1, 0.03, color)
             it.addPotionEffects(effects)
         }
-        // If doesnt have remove
+        // Remove if milk bucket?
+        spawnLineParticles(Particle.ENTITY_EFFECT, entity.location, entity.location.clone().add(0.0, 3.0, 0.0), 40, color)
 
         // Sentry
         val timeElapsed = System.currentTimeMillis() - timer

@@ -17,7 +17,7 @@ enum class ToolType(
 
     // Sword overrides
     KATANA("katana", "Katana", 3.0, 1.7, "sword", 0.2),
-    CLAYMORE("claymore", "Claymore", 6.0, 0.85, "sword", 0.5),
+    CLAYMORE("claymore", "Claymore", 6.0, 0.9, "sword", 0.5),
     DAGGER("dagger", "Dagger", 1.0, 3.0, "sword", -0.2),
     RAPIER("rapier", "Rapier", 1.5, 3.5, "sword"),
     CUTLASS("cutlass", "Cutlass", 2.5, 2.1, "sword"),
@@ -28,6 +28,7 @@ enum class ToolType(
     LONGSWORD("longsword", "Longsword", 4.0, 1.5, "sword", 0.3),
     ARM_BLADE("arm_blade", "Arm Blade", 2.0, 3.0, "sword", -0.3),
     ZWEIHANDER("zweihander", "Zweihander", 7.0, 0.7, "sword", 0.8),
+    KRIEGSMESSER("kriegsmesser", "Kriegsmesser", 6.0, 0.8, "sword", 0.6),
     // Shovel Overrides
     SPEAR("spear", "Spear", 3.0, 1.2, "shovel", 2.0),
     HALBERD("halberd", "Halberd", 5.0, 0.9, "shovel",3.0),

@@ -1,5 +1,8 @@
 package me.shadowalzazel.mcodyssey.common.enchantments
 
+import io.papermc.paper.datacomponent.DataComponentTypes
+import io.papermc.paper.datacomponent.item.ItemEnchantments
+import me.shadowalzazel.mcodyssey.api.AdvancementManager
 import me.shadowalzazel.mcodyssey.util.constants.CustomColors
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -14,39 +17,41 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.inventory.meta.Repairable
 
-internal interface TomeEnchanting : EnchantabilityHandler {
+@Suppress("UnstableApiUsage")
+internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager {
 
     fun tomeOfDischargeOnItem(item: ItemStack, viewers: List<HumanEntity>): ItemStack? {
-        val meta = item.itemMeta
-        val hasStoredEnchants = meta is EnchantmentStorageMeta && meta.storedEnchants.isNotEmpty()
-        if (!meta.hasEnchants() && !hasStoredEnchants) {
+        val itemEnchants = item.getData(DataComponentTypes.ENCHANTMENTS)
+        val storedEnchants = item.getData(DataComponentTypes.STORED_ENCHANTMENTS)
+        if (itemEnchants == null && storedEnchants == null) {
             viewers.forEach { it.sendBarMessage("This item needs to be enchanted to use this tome.") }
             return null
         }
-        // Remove Enchant
-        val enchantToRemove: Pair<Enchantment, Int>
-        if (hasStoredEnchants) {
-            val storedMeta = item.itemMeta as EnchantmentStorageMeta
-            enchantToRemove = storedMeta.enchants.toList().random()
-            storedMeta.removeStoredEnchant(enchantToRemove.first)
-            item.itemMeta = storedMeta
-        } else {
-            enchantToRemove = item.enchantments.toList().random()
-            item.removeEnchantment(enchantToRemove.first)
+        // Find an enchant to remove
+        val enchantToRemove = storedEnchants?.enchantments()?.toList()?.random() ?: itemEnchants?.enchantments()?.toList()?.random()
+        if (enchantToRemove == null) {
+            viewers.forEach { it.sendBarMessage("This item needs to have enchantments to use this tome.") }
+            return null
         }
-        val removedEnchantsMap = mutableMapOf(enchantToRemove.first to enchantToRemove.second)
         // Advancement
         if (enchantToRemove.first.isCursed) {
-            viewers.forEach {
-                if (it is Player) {
-                    val advancement = it.server.getAdvancement(NamespacedKey.fromString("odyssey:odyssey/discharge_a_curse")!!)
-                    if (advancement != null) {
-                        it.getAdvancementProgress(advancement).awardCriteria("requirement")
-                    }
-                }
-            }
+            rewardAdvancement(viewers, "odyssey:odyssey/discharge_a_curse")
         }
-        item.updateEnchantabilityPoints(enchantsToRemove=removedEnchantsMap)
+        // Remove enchantment
+        if (itemEnchants != null) {
+            val enchantmentMap = itemEnchants.enchantments().toMutableMap()
+            enchantmentMap.remove(enchantToRemove.first)
+            val newEnchantments = ItemEnchantments.itemEnchantments(enchantmentMap,false)
+            item.setData(DataComponentTypes.ENCHANTMENTS, newEnchantments)
+        }
+        if (storedEnchants != null) {
+            val enchantmentMap = storedEnchants.enchantments().toMutableMap()
+            enchantmentMap.remove(enchantToRemove.first)
+            val newEnchantments = ItemEnchantments.itemEnchantments(enchantmentMap,false)
+            item.setData(DataComponentTypes.STORED_ENCHANTMENTS, newEnchantments)
+        }
+
+        item.updateEnchantabilityPoints()
         return item
     }
 

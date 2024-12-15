@@ -19,7 +19,8 @@ object PotionMixes {
             potionVialMix(),
             potionExtendedPlusMix(),
             potionUpgradedPlusMix(),
-            potionAuraMix()
+            potionAuraMix(),
+            potionBlastMix()
         )
     }
 
@@ -80,5 +81,20 @@ object PotionMixes {
             ingredient
         )
     }
+
+    private fun potionBlastMix(): PotionMix {
+        val inputPredicate = PotionMix.createPredicateChoice {
+            !it.hasTag(ItemDataTags.IS_BLAST_POTION) && it.type == Material.SPLASH_POTION
+        }
+        val result = ItemStack(Material.POTION)
+        val ingredient = RecipeChoice.MaterialChoice(Material.FIRE_CHARGE)
+        return PotionMix(
+            NamespacedKey(Odyssey.instance, "blast_potion_brewing"),
+            result,
+            inputPredicate,
+            ingredient
+        )
+    }
+
 
 }

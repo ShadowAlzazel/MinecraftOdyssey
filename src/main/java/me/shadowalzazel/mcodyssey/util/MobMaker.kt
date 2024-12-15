@@ -1,33 +1,242 @@
 package me.shadowalzazel.mcodyssey.util
 
-import me.shadowalzazel.mcodyssey.common.enchantments.EnchantabilityHandler
+import io.papermc.paper.datacomponent.DataComponentTypes
+import io.papermc.paper.registry.RegistryKey
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.common.items.ToolMaker
 import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
 import me.shadowalzazel.mcodyssey.common.items.ToolType
-import me.shadowalzazel.mcodyssey.common.trims.TrimMaterials
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.util.constants.CustomColors
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
+import me.shadowalzazel.mcodyssey.util.constants.MobData
 import net.kyori.adventure.text.Component
-import org.bukkit.Material
-import org.bukkit.enchantments.Enchantment
-import org.bukkit.entity.Creeper
-import org.bukkit.entity.Entity
-import org.bukkit.entity.EntityType
-import org.bukkit.entity.LivingEntity
+import net.kyori.adventure.text.format.TextColor
+import org.bukkit.entity.*
+import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.ArmorMeta
-import org.bukkit.inventory.meta.trim.ArmorTrim
-import org.bukkit.inventory.meta.trim.TrimMaterial
-import org.bukkit.inventory.meta.trim.TrimPattern
-import org.bukkit.potion.PotionEffect
-import org.bukkit.potion.PotionEffectType
-import java.util.*
 import kotlin.math.absoluteValue
 import kotlin.math.pow
 
-interface MobMaker: AttributeManager, EnchantabilityHandler, ToolMaker {
+@Suppress("UnstableApiUsage")
+interface MobMaker : LootEquipmentCreator {
+
+
+    fun eliteMobCreator(event: CreatureSpawnEvent) {
+        val mob = event.entity
+        if (mob is Creeper) return
+        if (mob.scoreboardTags.contains(EntityTags.HANDLED)) return
+        // Surface Spawns for now -> fix for mob farms
+        //if (mob.location.block.lightFromSky < 1) return
+        val inEdge = mob.location.world == Odyssey.instance.edge
+        // random roll
+        val roll = (0..1000).random()
+        val difficulty = getScaledDifficulty(mob)
+
+        // Roll Elite - Base 2% + 1.5% for zombie/skeleton
+        val elitePreferenceBonus = if (mob is Zombie && mob !is PigZombie || mob is Skeleton) 15 else 0
+        var eliteSpawnChance = 20 + elitePreferenceBonus + (difficulty * 10) // 1% per difficulty
+        if (inEdge) eliteSpawnChance += 10
+        val rolledElite = (eliteSpawnChance > roll)
+        if (!rolledElite) return
+        // 2% For A Pack of elites
+        // 0.2% For a Shiny Mob
+
+        // Handle Spawning
+        var shinySpawnChance = 2 + (difficulty * 10) + elitePreferenceBonus
+        if (inEdge) shinySpawnChance += 5
+        val rolledShiny = (shinySpawnChance > roll) // Check if shiny
+
+        // Handle Shiny
+        if (rolledShiny) {
+            // Get dimension materials
+            val materials = mutableListOf(ToolMaterial.DIAMOND)
+            if (inEdge) materials.add(ToolMaterial.MITHRIL)
+            if (mob.location.world.key.key == "overworld") materials.add(ToolMaterial.IRIDIUM)
+            if (mob.location.world.key.key == "nether") materials.add(ToolMaterial.NETHERITE)
+            // Get Equipment Randomizer
+            val equipmentRandomizer = EquipmentRandomizer(
+                materials,
+                MobData.ALL_WEAPONS,
+                MobData.ALL_PARTS,
+                toStringList(materials),
+                MobData.ELITE_ARMOR_TRIM_MATS,
+                MobData.SHINY_ARMOR_TRIM_PATTERNS)
+            // Create
+            createShinyMob(mob, equipmentRandomizer)
+        }
+        // Handle Elite
+        else {
+            // Equipment Randomizer
+            val materials = listOf(ToolMaterial.SILVER, ToolMaterial.TITANIUM, ToolMaterial.ANODIZED_TITANIUM,
+                ToolMaterial.COPPER, ToolMaterial.IRON, ToolMaterial.GOLDEN)
+            val equipmentRandomizer = EquipmentRandomizer(
+                materials,
+                MobData.ALL_WEAPONS,
+                MobData.ALL_PARTS,
+                toStringList(materials) + "chainmail",
+                MobData.ELITE_ARMOR_TRIM_MATS,
+                MobData.ELITE_ARMOR_TRIM_PATTERNS)
+
+            // Create Mob Pack Data
+            val mobs = mutableListOf(mob)
+            val name = mob.name
+            val prefix = MobData.DANGER_PREFIXES.random()
+            val randomMax = (1..(difficulty * 1.25).toInt() + 2).random()
+
+            // Create Pack based on amount
+            repeat(randomMax) {
+                val newMob = mob.world.spawnEntity(mob.location, mob.type, CreatureSpawnEvent.SpawnReason.CUSTOM) as LivingEntity
+                mobs.add(newMob)
+            }
+            mobs.forEach {
+                createRandomizedMob(it, equipmentRandomizer, enchanted=true, newWeapon=true)
+                customizeName(it, "$prefix $name", CustomColors.CURSED.color)
+            }
+        }
+
+    }
+
+    private fun toStringList(matList: List<ToolMaterial>): List<String> {
+        return matList.map { it.namePre }
+    }
+
+    /*-----------------------------------------------------------------------------------------------*/
+
+    // Naming Mob
+    private fun customizeName(mob: LivingEntity, name: String, color: TextColor) {
+        val newName = Component.text(name).color(color)
+        mob.customName(newName)
+        mob.isCustomNameVisible = true
+    }
+
+    fun createRandomizedMob(
+        mob: LivingEntity,
+        lootEquipmentHolder: EquipmentRandomizer,
+        enchanted: Boolean = false,
+        newWeapon: Boolean = false)
+    {
+        // Difficulty
+        val difficulty = getScaledDifficulty(mob)
+
+        // Methods to create customized equipment
+        val mainHand: ItemStack = if (newWeapon) {
+            lootEquipmentHolder.newWeapon()
+        } else {
+            mob.equipment?.itemInMainHand ?: lootEquipmentHolder.newWeapon()
+        }
+        val armorList = lootEquipmentHolder.newTrimmedArmor()
+        val dualWielding = lootEquipmentHolder.toolType in listOf(ToolType.DAGGER, ToolType.CHAKRAM, ToolType.SICKLE, ToolType.CUTLASS)
+
+        // Enchant
+        if (enchanted) {
+            if (!mainHand.hasData(DataComponentTypes.ENCHANTMENTS)) enchantItemsRandomly(listOf(mainHand), 10 + difficulty.toInt())
+            enchantItemsRandomly(armorList, 10 + difficulty.toInt())
+        }
+
+        // Apply to Mob
+        mob.apply {
+            canPickupItems = true
+            isPersistent = false
+            addScoreboardTag(EntityTags.HANDLED)
+            // Add Items
+            setArmor(armorList)
+            equipment?.also {
+                it.setItemInMainHand(mainHand)
+                it.itemInMainHandDropChance = (0.15F * (difficulty)).toFloat()  + 0.025F
+                if (dualWielding) {
+                    it.setItemInOffHand(mainHand.clone())
+                    it.itemInOffHandDropChance = (0.05F * (difficulty)).toFloat()
+                }
+            }
+            // Stats
+            setEliteAttributes(difficulty, 0.25)
+            setArmorDropChances(0.075F)
+        }
+    }
+
+    fun createShinyMob(
+        mob: LivingEntity,
+        equipmentRandomizer: EquipmentRandomizer,
+        newWeapon: Boolean = true)
+    {
+        if (mob is Creeper) return
+        val shinyColor = CustomColors.SHINY.color
+        // Difficulty
+        val difficulty = getScaledDifficulty(mob)
+
+        // Methods to create customized equipment
+        val mainHand: ItemStack = if (newWeapon) {
+            equipmentRandomizer.newWeapon()
+        } else {
+            mob.equipment?.itemInMainHand ?: equipmentRandomizer.newWeapon()
+        }
+        val armorList = equipmentRandomizer.newTrimmedArmor()
+        val dualWielding = equipmentRandomizer.toolType in listOf(ToolType.DAGGER, ToolType.CHAKRAM, ToolType.SICKLE, ToolType.CUTLASS)
+
+
+        // Create shiny enchant and enchant main weapon
+        val shinyEnchant = OdysseyEnchantments.meleeSet.random()
+        val checkedMax = if (shinyEnchant.maxLevel != 1) { shinyEnchant.maxLevel + 1 } else { 1 }
+        val enchantTagSet = getTagFromRegistry(RegistryKey.ENCHANTMENT, "in_table/melee")
+        enchantItemsWithTagSet(listOf(mainHand), enchantTagSet, 20 + difficulty.toInt())
+        mainHand.apply {
+            addShinyEnchant(shinyEnchant, checkedMax)
+            addEnchantment(OdysseyEnchantments.O_SHINY, 1)
+            updateEnchantabilityPoints()
+        }
+        enchantItemsRandomly(armorList, 25 + difficulty.toInt())
+
+        // Naming Mob
+        val enchantName = shinyEnchant.displayName(checkedMax).color(shinyColor)
+        val eliteName = MobData.newName(mob.name)
+        // Create new name component
+        val newName = Component.text(eliteName).color(shinyColor).append(enchantName)
+
+        // Apply to Mob
+        mob.apply {
+            // Options
+            isPersistent = false
+            customName(newName)
+            addScoreboardTag(EntityTags.HANDLED)
+            isCustomNameVisible = true
+            canPickupItems = true
+            // Add Items
+            setArmor(armorList)
+            equipment?.also {
+                it.setItemInMainHand(mainHand)
+                it.itemInMainHandDropChance = (0.15F * (difficulty)).toFloat() + 0.05F
+                if (dualWielding) {
+                    it.setItemInOffHand(mainHand.clone())
+                    it.itemInOffHandDropChance = (0.05F * (difficulty)).toFloat()
+                }
+            }
+            // Stats
+            addScaleAttribute(0.2)
+            setEliteAttributes(difficulty)
+            setArmorDropChances(0.085F)
+            // Persistent
+            /*
+            if (mob.location.block.lightFromSky > 5) {
+                isPersistent = true
+            }
+
+             */
+        }
+    }
+
+
+    private fun LivingEntity.setEliteAttributes(difficulty: Double = 1.0, modifier: Double = 1.0) {
+        val value = difficulty * 1.0
+        addHealthAttribute((20.0 + (10.0 * value)) * modifier, AttributeTags.ELITE_HEALTH)
+        health += (20.0 + (10.0 * value)) * modifier
+        addAttackAttribute((4 + (1.0 * value)) * modifier, AttributeTags.ELITE_ATTACK_DAMAGE)
+        addArmorAttribute((2 + (1 * value)) * modifier, AttributeTags.ELITE_ARMOR)
+        addSpeedAttribute((0.015 + (0.015 * value)) * modifier, AttributeTags.ELITE_SPEED)
+        addStepAttribute(2.0, AttributeTags.ELITE_STEP_HEIGHT)
+        addScoreboardTag(EntityTags.ELITE_MOB)
+    }
+
 
     fun getScaledDifficulty(entity: Entity): Double {
         // Find the XY distance from zero
@@ -40,249 +249,5 @@ interface MobMaker: AttributeManager, EnchantabilityHandler, ToolMaker {
         val scaleDist = 1.0 / 10000.0
         return (scaleDist * distanceFromZero) + (scaleDist * distanceFromZero).pow(2)
     }
-
-    fun createArmoredMob(
-        mob: LivingEntity,
-        newWeapon: Boolean = false,
-        weaponMaterial: ToolMaterial = ToolMaterial.IRON,
-        armorMaterial: String? = null,
-        trim: ArmorTrim? = null,
-        enchantedArmor: Boolean = false)
-       {
-        // Weapon
-        val weaponList = listOf(
-            ToolType.SABER, ToolType.KATANA, ToolType.LONGSWORD, ToolType.CUTLASS, ToolType.CLAYMORE, ToolType.RAPIER, // 1 Hand
-            ToolType.POLEAXE, ToolType.LONGAXE, ToolType.GLAIVE,
-            ToolType.WARHAMMER,  ToolType.SCYTHE, ToolType.SPEAR, ToolType.HALBERD,
-            ToolType.DAGGER, ToolType.SICKLE, ToolType.CHAKRAM) // Double
-        val weaponType = weaponList.random()
-        // Override with new weapon
-        val mainHand: ItemStack = if (newWeapon) {
-            createToolStack(weaponMaterial, weaponType)
-        } else {
-            mob.equipment?.itemInMainHand ?: createToolStack(weaponMaterial, weaponType)
-        }
-        val weapon = mainHand.enchantWithLevels(20, false, Random())
-        mob.apply {
-            val armorType = armorMaterial ?: weaponMaterial.namePre
-            createTrimmedArmor(this, trim, armorType, enchantedArmor)
-            equipment?.also {
-                it.setItemInMainHand(weapon)
-                it.itemInMainHandDropChance = 0.15F // Change to difficulty
-                val dualWieldTypes = listOf(ToolType.DAGGER, ToolType.SICKLE, ToolType.CHAKRAM)
-                if (weaponType in dualWieldTypes) {
-                    it.setItemInOffHand(weapon.clone())
-                    it.itemInOffHandDropChance = 0.15F // Change to difficulty
-                }
-                it.helmetDropChance = 0.0F
-                it.chestplateDropChance = 0.0F
-                it.leggingsDropChance = 0.0F
-                it.bootsDropChance = 0.0F
-            }
-        }
-    }
-
-    fun createShinyMob(
-        mob: LivingEntity,
-        enchantedArmor: Boolean,
-        materialType: ToolMaterial = ToolMaterial.SILVER,
-        newWeapon: Boolean = false) {
-        if (mob is Creeper) return
-        val shinyColor = CustomColors.SHINY.color
-        // Difficulty
-        val difficultyMod = getScaledDifficulty(mob)
-        // Weapon
-        val weaponList = listOf(
-            ToolType.SABER, ToolType.KATANA, ToolType.LONGSWORD, ToolType.CUTLASS, ToolType.CLAYMORE, ToolType.RAPIER, // 1 Hand
-            ToolType.POLEAXE, ToolType.LONGAXE, ToolType.GLAIVE,
-            ToolType.WARHAMMER,  ToolType.SCYTHE, ToolType.SPEAR, ToolType.HALBERD,
-            ToolType.DAGGER, ToolType.SICKLE, ToolType.CHAKRAM) // Double
-        val weaponType = weaponList.random()
-        // Override with new weapon
-        val mainHand: ItemStack = if (newWeapon) {
-            createToolStack(materialType, weaponType)
-        } else {
-            when(mob.type) {
-                EntityType.SKELETON, EntityType.STRAY, EntityType.BOGGED -> {
-                    mob.equipment?.itemInMainHand ?: ItemStack(Material.BOW)
-                }
-
-                EntityType.ZOMBIE, EntityType.HUSK -> {
-                    createToolStack(materialType, weaponType)
-                }
-
-                else -> {
-                    createToolStack(materialType, weaponType)
-                }
-            }
-        }
-        // GET ENCHANTMENTS TO SWORD
-        val greaterEnchant: Pair<Enchantment, Int>
-        // Enchant randomly and get gilded
-        val weapon = mainHand.enchantWithLevels(30, false, Random())
-        // Prevent Empty Collection
-        if (weapon.enchantments.isEmpty()) {
-            return
-        }
-        weapon.apply {
-            val newEnchant = this.enchantments.entries.random()
-            val checkMax = if (newEnchant.key.maxLevel != 1) { newEnchant.value + 1 } else { 1 }
-            greaterEnchant = Pair(newEnchant.key, checkMax)
-            addShinyEnchant(greaterEnchant.first, greaterEnchant.second)
-            //
-            val enchantment = OdysseyEnchantments.O_SHINY
-            addEnchantment(enchantment, 1)
-            updateEnchantabilityPoints()
-        }
-        // Naming
-        val enchantName = greaterEnchant.first.displayName(greaterEnchant.second).color(shinyColor)
-        val conjunctions = listOf("with", "of", "master of", "joined with", "imbued by", "keeper of", "holder of")
-        val nameText = "${dangerPrefixes.random()} ${mob.name} ${conjunctions.random()} "
-        //val nameText = "${dangerPrefixes.random()} ${mob.name}"
-        val newName = Component.text(nameText).color(shinyColor).append(enchantName)
-        // Apply to Mob
-        val trim = createRandomArmorTrim()
-        mob.apply {
-            // Options
-            customName(newName)
-            isCustomNameVisible = true
-            canPickupItems = true
-            // Add Items
-            createTrimmedArmor(this, trim, materialType.namePre, enchantedArmor)
-            equipment?.also {
-                it.setItemInMainHand(weapon)
-                it.itemInMainHandDropChance = 0.35F // Change to difficulty
-                val dualWieldTypes = listOf(ToolType.DAGGER, ToolType.SICKLE, ToolType.CHAKRAM)
-                if (weaponType in dualWieldTypes) {
-                    it.setItemInOffHand(weapon.clone())
-                    it.itemInOffHandDropChance = 0.15F // Change to difficulty
-                }
-                it.helmetDropChance = 0.075F
-                it.chestplateDropChance = 0.075F
-                it.leggingsDropChance = 0.075F
-                it.bootsDropChance = 0.075F
-            }
-            addHealthAttribute(25.0 + (15.0 * difficultyMod), AttributeTags.ELITE_HEALTH)
-            health += 25.0 + (15.0 * difficultyMod)
-            addAttackAttribute(9 + (1.25 * difficultyMod), AttributeTags.ELITE_ATTACK_DAMAGE)
-            addArmorAttribute(4 + (2 * difficultyMod), AttributeTags.ELITE_ARMOR)
-            addSpeedAttribute(0.015 + (0.015 * difficultyMod), AttributeTags.ELITE_SPEED)
-            addScaleAttribute(0.2)
-            addStepAttribute(2.0, AttributeTags.ELITE_STEP_HEIGHT)
-            addScoreboardTag(EntityTags.ELITE_MOB)
-            addPotionEffect(PotionEffect(PotionEffectType.RESISTANCE, 20 * 3600, 0))
-            // Persistent
-            if (mob.location.block.lightFromSky > 5) {
-                isPersistent = true
-            }
-        }
-        //println("Spawned Elite Shiny Mob at: ${mob.location}")
-    }
-
-    val dangerPrefixes: Set<String>
-        get() = setOf(
-            "Deadly",
-            "Magnificent",
-            "Terrorizing",
-            "Classic",
-            "Potent",
-            "Dominant",
-            "Forceful",
-            "Mighty",
-            "Great",
-            "Cruel",
-            "Dangerous",
-            "Savage",
-            "Lethal",
-            "Fatal",
-            "Whimsy",
-            "Mythic",
-            "Legendary",
-            "Shiny",
-            "Glistening",
-            "Sparkling")
-
-    fun createTrimmedArmor(entity: LivingEntity, trim: ArmorTrim?, type: String, enchantArmor: Boolean = false) {
-        // Create armors from type
-        val helmet = when (type) {
-            "diamond" -> {
-                ItemStack(Material.DIAMOND_HELMET)
-            }
-            "chainmail" -> {
-                ItemStack(Material.CHAINMAIL_HELMET)
-            }
-            else -> {
-                ItemStack(Material.IRON_HELMET)
-            }
-        }
-        val chestplate = when (type) {
-            "diamond" -> {
-                ItemStack(Material.DIAMOND_CHESTPLATE)
-            }
-            "chainmail" -> {
-                ItemStack(Material.CHAINMAIL_CHESTPLATE)
-            }
-            else -> {
-                ItemStack(Material.IRON_CHESTPLATE)
-            }
-        }
-        val leggings = when (type) {
-            "diamond" -> {
-                ItemStack(Material.DIAMOND_LEGGINGS)
-            }
-            "chainmail" -> {
-                ItemStack(Material.CHAINMAIL_LEGGINGS)
-            }
-            else -> {
-                ItemStack(Material.IRON_LEGGINGS)
-            }
-        }
-        val boots = when (type) {
-            "diamond" -> {
-                ItemStack(Material.DIAMOND_BOOTS)
-            }
-            "chainmail" -> {
-                ItemStack(Material.CHAINMAIL_BOOTS)
-            }
-            else -> {
-                ItemStack(Material.IRON_BOOTS)
-            }
-        }
-        val armorList = listOf(helmet, chestplate, leggings, boots)
-        // Enchant Armors
-        if (enchantArmor) {
-            val randomSeed = Random()
-            for (armor in armorList) {
-                val copy = armor.enchantWithLevels(30, false, randomSeed)
-                armor.itemMeta = copy.itemMeta
-            }
-        }
-        // Trim
-        if (trim != null) {
-            for (armor in armorList) {
-                val meta = armor.itemMeta as ArmorMeta
-                meta.trim = trim
-                armor.itemMeta = meta
-            }
-        }
-
-        // Apply
-        entity.equipment?.also {
-            it.helmet = helmet
-            it.chestplate = chestplate
-            it.leggings = leggings
-            it.boots = boots
-        }
-
-    }
-
-    fun createRandomArmorTrim(materials: List<TrimMaterial>? = null, patterns: List<TrimPattern>? = null): ArmorTrim {
-        val mats = materials ?: listOf(TrimMaterial.AMETHYST, TrimMaterial.COPPER, TrimMaterial.DIAMOND,
-            TrimMaterials.JADE, TrimMaterials.OBSIDIAN, TrimMaterials.TITANIUM)
-        val pats = patterns ?: listOf(TrimPattern.WAYFINDER, TrimPattern.RAISER, TrimPattern.HOST, TrimPattern.SHAPER,
-            TrimPattern.SENTRY, TrimPattern.DUNE, TrimPattern.WILD, TrimPattern.COAST)
-        return ArmorTrim(mats.random(), pats.random())
-    }
-
 
 }

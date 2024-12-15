@@ -50,6 +50,7 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
                     Material.GLOW_BERRIES ->  event.results[x] = createUpgradedPlusPotion(input) // Maybe move to Cauldron?
                     Material.HONEY_BOTTLE ->  event.results[x] = createExtendedPlusPotion(input) // Maybe move to Cauldron?
                     Material.EXPERIENCE_BOTTLE -> event.results[x] = createAuraPotion(input)
+                    Material.FIRE_CHARGE -> event.results[x] = createBlastPotion(input)
                     Material.PRISMARINE_CRYSTALS ->  {
                         event.results[x] = createPotionVials(input)
                         continue
@@ -59,20 +60,25 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
                 }
                 // Update models for non vials
                 if (enhancedRecipe) { // Continue if created a new Enhanced Type
-                    event.results[x].updatePotionModel(bottleModel, capModel)
+                    event.results[x].updatePotionModel(bottleModel, capModel, "alchemy_potion")
                     continue
                 }
             }
             // Get result
             var result = event.results[x] // Result != Input item in Brewer
+            if (result.hasTag(ItemDataTags.IS_POTION_VIAL)) {
+                continue
+            }
             // Checking for potion data and effects
             val hadBasePotion = oldPotionData.potion() != null
-            val hadCustomEffects = (oldPotionData.customEffects().isNotEmpty())
+            val hadCustomEffects = oldPotionData.customEffects().isNotEmpty()
             val hadCustomModel = input.getData(DataComponentTypes.ITEM_MODEL) != null
             //val hasOdysseyPotionEffects = item.hasOdysseyEffectTag() -> eventually add support for odyssey effects
-            if (result.hasTag(ItemDataTags.IS_POTION_VIAL)) {
-                // Update Model
-                continue
+            // Model Customization
+            if (!hadCustomModel) {
+                result.updatePotionModel(bottleModel, capModel, "alchemy_potion")
+            } else {
+                result.updatePotionModel(bottleModel, capModel, "alchemy_potion")
             }
             // Set stack size
             result.setData(DataComponentTypes.MAX_STACK_SIZE, 16)
@@ -84,14 +90,10 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
             }
             // Just set model for base potion
             if (hadBasePotion) {
-                result.updatePotionModel(bottleModel, capModel)
+                // Empty
             }
             // Set Model
-            if (!hadCustomModel) {
-                result.updatePotionModel(bottleModel, capModel, "alchemy_potion")
-            } else {
-                result.updatePotionModel(bottleModel, capModel)
-            }
+
             // Final
             event.results[x] = result
         }
@@ -101,13 +103,9 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
     /*-----------------------------------------------------------------------------------------------*/
 
     fun ItemStack.updatePotionModel(bottle: String?, cap: String?, newModel: String?=null) {
-        // TODO -> add models for splash and lingering
         // Create a new model
         if (newModel != null) {
             this.setData(DataComponentTypes.ITEM_MODEL, createOdysseyKey(newModel))
-        }
-        else if (this.getData(DataComponentTypes.ITEM_MODEL)?.value() != "alchemy_potion") {
-            this.setData(DataComponentTypes.ITEM_MODEL, createOdysseyKey("alchemy_potion"))
         }
         // set custom data
         val oldModelData = this.getData(DataComponentTypes.CUSTOM_MODEL_DATA)
@@ -116,7 +114,7 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
         if (bottle != null) potionParts[1] = bottle
         if (cap != null) potionParts[2] = cap
         val customData = CustomModelData.customModelData().addStrings(potionParts)
-        if (oldModelData != null) { // Copy from ol
+        if (oldModelData != null) { // Copy from old
             customData.addFlags(oldModelData.flags())
             customData.addFloats(oldModelData.floats())
             customData.addColors(oldModelData.colors())
@@ -124,12 +122,24 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
         this.setData(DataComponentTypes.CUSTOM_MODEL_DATA, customData)
     }
 
+
+    private fun ItemStack.updatePrefixName(newPrefix: String) {
+        val oldName = this.getData(DataComponentTypes.CUSTOM_NAME) ?: return
+        val prefixedName = Component.text(newPrefix)
+            .decoration(TextDecoration.ITALIC, false)
+            .decoration(TextDecoration.BOLD, false)
+            .append(oldName)
+        this.setData(DataComponentTypes.CUSTOM_NAME, prefixedName)
+    }
+
+
     private fun inputIsGeneric(potion: ItemStack): Boolean {
         //val hasPotionTag: (String) -> Boolean = { tag: String -> potion.hasTag(tag)}
+        if (potion.hasTag(ItemDataTags.IS_POTION_VIAL)) return false
         if (potion.hasTag(ItemDataTags.IS_EXTENDED_PLUS)) return false
         if (potion.hasTag(ItemDataTags.IS_UPGRADED_PLUS)) return false
-        if (potion.hasTag(ItemDataTags.IS_POTION_VIAL)) return false
         if (potion.hasTag(ItemDataTags.IS_AURA_POTION)) return false
+        if (potion.hasTag(ItemDataTags.IS_BLAST_POTION)) return false
         return true
     }
 
@@ -154,6 +164,9 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
             Material.GLOW_BERRIES -> "short_cap"
             Material.HONEY_BOTTLE -> "tall_cap"
             Material.EXPERIENCE_BOTTLE -> "ring_cap"
+            Material.GUNPOWDER -> "splash_cap"
+            Material.LINGERING_POTION -> "lingering_cap"
+            Material.FIRE_CHARGE -> "fuse_cap"
             else -> null
         }
     }
@@ -248,6 +261,26 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
         potion.setData(DataComponentTypes.ITEM_NAME, Component.text("aura_potion")
             .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false))
         potion.addTag(ItemDataTags.IS_AURA_POTION)
+        return potion
+    }
+
+    private fun createBlastPotion(potion: ItemStack): ItemStack {
+        // Create BLAST POTION, timed potion that explodes after a 10 sec delay or something contacts it
+        if (potion.hasTag(ItemDataTags.IS_BLAST_POTION)) return potion
+        val potionData = potion.getData(DataComponentTypes.POTION_CONTENTS) ?: return potion
+        // Get all effects
+        val allEffects = (potionData.potion()?.potionEffects ?: mutableListOf()) + potionData.customEffects()
+        if (allEffects.isEmpty()) return potion
+        // Create new effect list
+        val newPotionData = PotionContents.potionContents().potion(PotionType.THICK)
+        for (effect in allEffects) {
+            newPotionData.addCustomEffect(PotionEffect(effect.type, (effect.duration * 1.0).toInt(), effect.amplifier))
+        }
+        potion.setData(DataComponentTypes.POTION_CONTENTS, newPotionData)
+        potion.setData(DataComponentTypes.MAX_STACK_SIZE, 8)
+        potion.setData(DataComponentTypes.ITEM_NAME, Component.text("blast_potion")
+            .decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false))
+        potion.addTag(ItemDataTags.IS_BLAST_POTION)
         return potion
     }
 

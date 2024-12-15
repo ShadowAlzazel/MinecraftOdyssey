@@ -1,6 +1,5 @@
 package me.shadowalzazel.mcodyssey.common.listeners
 
-import me.shadowalzazel.mcodyssey.api.EquipmentDataManager
 import me.shadowalzazel.mcodyssey.common.smithing.ArmorUpgrading
 import me.shadowalzazel.mcodyssey.common.smithing.CustomTrimming
 import me.shadowalzazel.mcodyssey.common.smithing.SmithingMaps
@@ -32,7 +31,7 @@ object SmithingListeners : Listener, CustomTrimming, ToolUpgrading, ArmorUpgradi
         val templateId = template.getItemNameId()
         // Custom Upgrades
         if (templateId in SmithingMaps.UPGRADE_TEMPLATES) {
-            if (EquipmentDataManager.itemIsArmor(equipment.type)) armorSmithingHandler(event)
+            if (itemIsArmor(equipment.type)) armorSmithingHandler(event)
             else toolSmithingHandler(event)
         }
         // Trims
