@@ -16,7 +16,7 @@ open class Item(
     class DataItem(name: String, location: String?=null): Item(name, location)
     class GeneratedItem(name: String, val constructor: ItemConstructor): Item(name)
 
-    open fun newItemStack(amount: Int=1, withBukkitId: Boolean=true): ItemStack {
+    open fun newItemStack(amount: Int=1, withBukkitId: Boolean=false): ItemStack {
         val item = when(this) {
             is DataItem -> LootTableManager.createItemStackFromLoot(this.location ?: this.name)
             is GeneratedItem -> this.constructor.createItemStack(this.name, amount, withBukkitId)
@@ -50,6 +50,7 @@ open class Item(
         val SOUL_STEEL_INGOT = DataItem("soul_steel_ingot")
         val TITANIUM_INGOT = DataItem("titanium_ingot")
         val SHADOW_TRIAL_KEY = DataItem("shadow_trial_key")
+        val CRYSTAL_ALLOY_INGOT = DataItem("crystal_alloy_ingot")
         // Smithing
         val IMPERIAL_ARMOR_TRIM_SMITHING_TEMPLATE = DataItem("imperial_armor_trim_smithing_template")
         val VOYAGER_ARMOR_TRIM_SMITHING_TEMPLATE = DataItem("voyager_armor_trim_smithing_template")
@@ -65,6 +66,7 @@ open class Item(
         val SOUL_STEEL_UPGRADE_TEMPLATE = DataItem("soul_steel_upgrade_template")
         val TITANIUM_UPGRADE_TEMPLATE = DataItem("titanium_upgrade_template")
         val IRIDIUM_UPGRADE_TEMPLATE = DataItem("iridium_upgrade_template")
+        val CRYSTAL_ALLOY_UPGRADE_TEMPLATE = DataItem("crystal_alloy_upgrade_template")
         // Enchanting
         val TOME_OF_DISCHARGE = DataItem("tome_of_discharge")
         val TOME_OF_EXPENDITURE = DataItem("tome_of_expenditure")

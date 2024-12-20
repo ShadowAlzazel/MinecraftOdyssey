@@ -3,6 +3,8 @@ package me.shadowalzazel.mcodyssey.server.commands
 import io.papermc.paper.datacomponent.DataComponentTypes
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.util.RegistryTagManager
+import org.bukkit.block.Chest
+import org.bukkit.block.data.BlockData
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -14,9 +16,23 @@ object UpdateModel : CommandExecutor, RegistryTagManager, DataTagManager {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
         if (sender !is Player) return false
-        val allItems = args != null && args.isNotEmpty() && args[0] == "*"
-        if (!allItems) sender.inventory.itemInMainHand.updateItemModel()
-        else sender.inventory.contents.forEach { it?.updateItemModel() }
+        val hasArgs = args != null && args.isNotEmpty()
+        val allItems = hasArgs && args?.get(0) == "all"
+        val container = hasArgs && args?.get(0) == "container"
+        if (allItems) {
+           sender.inventory.contents.forEach { it?.updateItemModel() }
+        } else if (container) {
+            val rayTrace = sender.rayTraceBlocks(3.0)
+            val block = rayTrace?.hitBlock ?: return false
+            if (block is Chest) {
+                if (block.isLocked) return false
+                if (block.hasLootTable()) return false
+                block.inventory.contents.forEach { it?.updateItemModel() }
+            }
+        } else {
+            sender.inventory.itemInMainHand.updateItemModel()
+        }
+
         return true
     }
 

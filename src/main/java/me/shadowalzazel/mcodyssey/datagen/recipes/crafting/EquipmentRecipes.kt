@@ -112,7 +112,7 @@ class EquipmentRecipes : ChoiceManager {
         val result = Item.ARCANE_WAND.newItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "arcane_wand"), result).apply {
             shape("A", "S")
-            setIngredient('A', Material.AMETHYST_CLUSTER)
+            setIngredient('A', Item.CRYSTAL_ALLOY_INGOT.toRecipeChoice())
             setIngredient('S', Material.STICK)
             category = CraftingBookCategory.EQUIPMENT
         }
@@ -123,7 +123,7 @@ class EquipmentRecipes : ChoiceManager {
         val result = Item.ARCANE_BLADE.newItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "arcane_blade"), result).apply {
             shape("A A", "AQA", " S ")
-            setIngredient('A', Material.AMETHYST_SHARD)
+            setIngredient('A', Item.CRYSTAL_ALLOY_INGOT.toRecipeChoice())
             setIngredient('Q', Material.GOLD_INGOT)
             setIngredient('S', Material.STICK)
             category = CraftingBookCategory.EQUIPMENT
@@ -135,7 +135,7 @@ class EquipmentRecipes : ChoiceManager {
         val result = Item.ARCANE_SCEPTER.newItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "arcane_scepter"), result).apply {
             shape(" Q ", "ASA", " S ")
-            setIngredient('A', Material.AMETHYST_SHARD)
+            setIngredient('A', Item.CRYSTAL_ALLOY_INGOT.toRecipeChoice())
             setIngredient('Q', Material.AMETHYST_CLUSTER)
             setIngredient('S', Material.STICK)
             category = CraftingBookCategory.EQUIPMENT

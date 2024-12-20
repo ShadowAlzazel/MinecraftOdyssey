@@ -17,7 +17,7 @@ class ItemRecipes : ChoiceManager {
             mithrilUpgradeTemplateRecipe(), blankTomeRecipe(), clayTotemRecipe(), clayOrbRecipe(), claySkullRecipe(), clayDowelRecipe(),
             clayKeyRecipe(), clayRodsRecipe(),
             pommelPartUpgradeTemplateRecipe(), hiltPartUpgradeTemplateRecipe(), bladePartUpgradeTemplateRecipe(), handlePartUpgradeTemplateRecipe(),
-            mastercraftedToolTemplateRecipe()
+            mastercraftedToolTemplateRecipe(), crystalAlloyIngotRecipe(), crystalAlloyUpgradeTemplateRecipe()
         )
     }
 
@@ -146,8 +146,9 @@ class ItemRecipes : ChoiceManager {
     private fun bladePartUpgradeTemplateRecipe(): ShapedRecipe {
         val result = Item.BLADE_PART_UPGRADE_TEMPLATE.newItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "blade_part_upgrade_template"), result).apply {
-            shape(" GG", " GG", "   ")
+            shape("GGX", "GXG", "GGG")
             setIngredient('G', Material.GOLD_INGOT)
+            setIngredient('X', Material.LAPIS_LAZULI)
             category = CraftingBookCategory.MISC
             group = "part_upgrade_templates"
         }
@@ -157,8 +158,9 @@ class ItemRecipes : ChoiceManager {
     private fun handlePartUpgradeTemplateRecipe(): ShapedRecipe {
         val result = Item.HANDLE_PART_UPGRADE_TEMPLATE.newItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "handle_part_upgrade_template"), result).apply {
-            shape("   ", " GG", " GG")
+            shape("GGG", "GXG", "GXG")
             setIngredient('G', Material.GOLD_INGOT)
+            setIngredient('X', Material.LAPIS_LAZULI)
             category = CraftingBookCategory.MISC
             group = "part_upgrade_templates"
         }
@@ -168,8 +170,9 @@ class ItemRecipes : ChoiceManager {
     private fun pommelPartUpgradeTemplateRecipe(): ShapedRecipe {
         val result = Item.POMMEL_PART_UPGRADE_TEMPLATE.newItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "pommel_part_upgrade_template"), result).apply {
-            shape("   ", "GG ", "GG ")
+            shape("GGG", "GXG", "XGG")
             setIngredient('G', Material.GOLD_INGOT)
+            setIngredient('X', Material.LAPIS_LAZULI)
             category = CraftingBookCategory.MISC
             group = "part_upgrade_templates"
         }
@@ -177,12 +180,37 @@ class ItemRecipes : ChoiceManager {
     }
 
     private fun hiltPartUpgradeTemplateRecipe(): ShapedRecipe {
-        val result = Item.HANDLE_PART_UPGRADE_TEMPLATE.newItemStack(1)
+        val result = Item.HILT_PART_UPGRADE_TEMPLATE.newItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "hilt_part_upgrade_template"), result).apply {
-            shape("GG ", "GG ", "   ")
+            shape("GGG", "XGX", "GGG")
             setIngredient('G', Material.GOLD_INGOT)
+            setIngredient('X', Material.LAPIS_LAZULI)
             category = CraftingBookCategory.MISC
             group = "part_upgrade_templates"
+        }
+        return recipe
+    }
+
+    private fun crystalAlloyIngotRecipe(): ShapedRecipe {
+        val result = Item.CRYSTAL_ALLOY_INGOT.newItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "crystal_alloy_ingot"), result).apply {
+            shape("DG", "GX")
+            setIngredient('G', Material.GOLD_INGOT)
+            setIngredient('D', Material.DIAMOND)
+            setIngredient('X', Material.AMETHYST_SHARD)
+            category = CraftingBookCategory.MISC
+        }
+        return recipe
+    }
+
+    private fun crystalAlloyUpgradeTemplateRecipe(): ShapedRecipe {
+        val result = Item.CRYSTAL_ALLOY_UPGRADE_TEMPLATE.newItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "crystal_alloy_upgrade_template"), result).apply {
+            shape("SES", "SCS", "SSS")
+            setIngredient('C', Material.LAPIS_LAZULI)
+            setIngredient('E', Material.AMETHYST_SHARD)
+            setIngredient('S', Material.COBBLESTONE)
+            category = CraftingBookCategory.MISC
         }
         return recipe
     }

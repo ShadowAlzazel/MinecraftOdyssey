@@ -276,7 +276,8 @@ interface EnchantabilityHandler : EnchantmentManager, DescriptionManager, DataTa
             else -> 35
         }
         var bonusPoints = 0
-        if (item.getStringTag(ItemDataTags.MATERIAL_TYPE) == "mithril") {
+        val materialType = item.getStringTag(ItemDataTags.MATERIAL_TYPE)
+        if (materialType == "mithril" || materialType == "crystal_alloy") {
             bonusPoints += 5
         }
         val extraPoints = item.getIntTag(ItemDataTags.EXTRA_ENCHANTABILITY_POINTS) ?: 0

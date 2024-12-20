@@ -10,6 +10,7 @@ import me.shadowalzazel.mcodyssey.common.items.ToolMaker
 import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
 import me.shadowalzazel.mcodyssey.common.items.ToolType
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
+import me.shadowalzazel.mcodyssey.util.constants.MobData
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.LivingEntity
@@ -23,8 +24,12 @@ import java.util.*
 interface LootEquipmentCreator : ToolMaker, EnchantabilityHandler {
 
     // Equipment Randomizer
-    fun EquipmentRandomizer.newWeapon(): ItemStack {
-        return generateCompositeWeapon(listOf(toolType), listOf(toolMaterial), listOf(toolPattern))
+    fun EquipmentRandomizer.newWeapon(randomParts: Boolean = true): ItemStack {
+        return if (randomParts) {
+            generateCompositeWeapon(listOf(toolType), listOf(toolMaterial), MobData.ALL_PARTS)
+        } else {
+            generateCompositeWeapon(listOf(toolType), listOf(toolMaterial), listOf(toolPattern))
+        }
     }
 
     fun EquipmentRandomizer.newTrimmedArmor(): List<ItemStack> {

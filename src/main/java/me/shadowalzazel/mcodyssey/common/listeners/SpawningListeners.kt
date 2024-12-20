@@ -6,6 +6,7 @@ import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
 import me.shadowalzazel.mcodyssey.common.items.ToolType
 import me.shadowalzazel.mcodyssey.common.trims.TrimMaterials
+import me.shadowalzazel.mcodyssey.common.trims.TrimPatterns
 import me.shadowalzazel.mcodyssey.util.EquipmentRandomizer
 import me.shadowalzazel.mcodyssey.util.MobMaker
 import me.shadowalzazel.mcodyssey.util.StructureHelper
@@ -92,8 +93,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper {
         // Vanguard
         if (mob.scoreboardTags.contains("odyssey.vanguard")) {
             // Weapon
-            val mainHand = createToolStack(ToolMaterial.IRON, ToolType.POLEAXE)
-            val weapon = mainHand.clone()
+            val weapon = createToolStack(ToolMaterial.IRON, ToolType.POLEAXE)
             // Add Enchantments
             val enchantItem = ItemStack(Material.NETHERITE_SWORD).enchantWithLevels(30, false, Random())
             val swordEnchants = enchantItem.enchantments
@@ -115,11 +115,8 @@ object SpawningListeners : Listener, MobMaker, StructureHelper {
                 listOf(ToolType.HALBERD),
                 listOf("imperial"),
                 null,
-                listOf(TrimMaterial.DIAMOND),
-                listOf(TrimPattern.WILD))
-
-            // Do Custom mob
-            createRandomizedMob(mob, equipmentRandomizer, enchanted = true, newWeapon = false)
+                listOf(TrimMaterial.GOLD),
+                listOf(TrimPatterns.VOYAGER))
 
             // Apply Stats and weapon
             mob.apply {
@@ -128,11 +125,15 @@ object SpawningListeners : Listener, MobMaker, StructureHelper {
                 heal(25.0)
                 addAttackAttribute(10.0, AttributeTags.MOB_ATTACK_DAMAGE)
                 addScaleAttribute(0.1, AttributeTags.MOB_SCALE)
+
+                // Equipment
                 equipment?.also {
                     it.setItemInOffHand(offHand)
                     it.setItemInMainHand(weapon)
                     it.itemInMainHandDropChance = 0.05F // Change to difficulty
                 }
+                // Do Custom mob
+                createRandomizedMob(this, equipmentRandomizer, enchanted = true, newWeapon = false)
             }
         }
 

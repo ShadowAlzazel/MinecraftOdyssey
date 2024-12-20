@@ -1,10 +1,7 @@
 package me.shadowalzazel.mcodyssey.datagen.recipes
 
 import me.shadowalzazel.mcodyssey.datagen.ChoiceManager
-import me.shadowalzazel.mcodyssey.datagen.recipes.creators.ArmorRecipeCreator
-import me.shadowalzazel.mcodyssey.datagen.recipes.creators.RocketRecipeCreator
-import me.shadowalzazel.mcodyssey.datagen.recipes.creators.ToolRecipeCreator
-import me.shadowalzazel.mcodyssey.datagen.recipes.creators.WeaponRecipeCreator
+import me.shadowalzazel.mcodyssey.datagen.recipes.creators.*
 import org.bukkit.inventory.Recipe
 
 class GeneratedRecipes : ChoiceManager {
@@ -20,6 +17,7 @@ class GeneratedRecipes : ChoiceManager {
         recipeList.addAll(ToolRecipeCreator().generateToolRecipes())
         recipeList.addAll(WeaponRecipeCreator().generateWeaponRecipes())
         recipeList.addAll(ArmorRecipeCreator().generateArmorRecipes())
+        recipeList.addAll(ItemRecipeCreator().generateItemRecipes())
         return recipeList
     }
 

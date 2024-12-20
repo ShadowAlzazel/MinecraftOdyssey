@@ -21,8 +21,8 @@ enum class ToolMaterial(
     SOUL_STEEL("soul_steel", "Soul Steel", 4.0, "iron", 666), // NETHER
     TITANIUM("titanium", "Titanium", 4.0, "iron", 1002), // OVERWORLD
     ANODIZED_TITANIUM("anodized_titanium", "Anodized Titanium", 4.0, "iron", 1002), // OVERWORLD
-    IRIDIUM("iridium", "Iridium", 5.0, "iron", 3108), // OVERWORLD
-    MITHRIL("mithril", "Mithril", 6.0, "iron", 1789); // EDGE
-
+    IRIDIUM("iridium", "Iridium", 5.0, "diamond", 3108), // OVERWORLD
+    MITHRIL("mithril", "Mithril", 6.0, "diamond", 1789), // EDGE
+    CRYSTAL_ALLOY("crystal_alloy", "Crystal Alloy", 4.0, "iron", 1123); // EDGE
 
 }

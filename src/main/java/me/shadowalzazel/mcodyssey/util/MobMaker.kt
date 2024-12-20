@@ -53,7 +53,7 @@ interface MobMaker : LootEquipmentCreator {
             val materials = mutableListOf(ToolMaterial.DIAMOND)
             if (inEdge) materials.add(ToolMaterial.MITHRIL)
             if (mob.location.world.key.key == "overworld") materials.add(ToolMaterial.IRIDIUM)
-            if (mob.location.world.key.key == "nether") materials.add(ToolMaterial.NETHERITE)
+            if (mob.location.world.key.key == "the_nether") materials.add(ToolMaterial.NETHERITE)
             // Get Equipment Randomizer
             val equipmentRandomizer = EquipmentRandomizer(
                 materials,

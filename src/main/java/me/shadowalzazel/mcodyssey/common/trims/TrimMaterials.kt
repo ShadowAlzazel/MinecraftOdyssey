@@ -25,5 +25,6 @@ object TrimMaterials : RegistryTagManager {
     val TITANIUM: TrimMaterial = trimMaterialRegistry.get(createOdysseyKey("titanium"))!!
     val ANODIZED_TITANIUM: TrimMaterial = trimMaterialRegistry.get(createOdysseyKey("anodized_titanium"))!!
     val IRIDIUM: TrimMaterial = trimMaterialRegistry.get(createOdysseyKey("iridium"))!!
+    val CRYSTAL_ALLOY: TrimMaterial = trimMaterialRegistry.get(createOdysseyKey("crystal_alloy"))!!
 
 }

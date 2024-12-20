@@ -24,6 +24,7 @@ object SmithingMaps {
         "anodized_titanium" to ToolMaterial.ANODIZED_TITANIUM,
         "iridium" to ToolMaterial.IRIDIUM,
         "mithril" to ToolMaterial.MITHRIL,
+        "crystal_alloy" to ToolMaterial.CRYSTAL_ALLOY,
     )
 
     val GET_UPGRADE_PATH = mapOf(
@@ -31,7 +32,8 @@ object SmithingMaps {
         "mithril_ingot" to "mithril",
         "titanium_ingot" to "titanium",
         "anodized_titanium_ingot" to "anodized_titanium",
-        "iridium_ingot" to "iridium"
+        "iridium_ingot" to "iridium",
+        "crystal_alloy_ingot" to "crystal_alloy"
     )
 
     val GET_TEMPLATE_FROM_MATERIAL = mapOf(
@@ -39,9 +41,11 @@ object SmithingMaps {
         "mithril_ingot" to "mithril_upgrade_template",
         "titanium_ingot" to "titanium_upgrade_template",
         "anodized_titanium_ingot" to "titanium_upgrade_template",
-        "iridium_ingot" to "iridium_upgrade_template"
+        "iridium_ingot" to "iridium_upgrade_template",
+        "crystal_alloy_ingot" to "crystal_alloy_upgrade_template"
     )
 
+    /*
     val TOOL_DURABILITY_MAP = mapOf(
         "iridium" to 3178,
         "mithril" to 1789,
@@ -58,6 +62,8 @@ object SmithingMaps {
         "anodized_titanium" to 1.9,
         "soul_steel" to 1.6
     )
+
+     */
 
     val MODEL_DATA_MAP = mapOf(
         "tool_type" to 0, // Not available to modify
@@ -112,6 +118,7 @@ object SmithingMaps {
         "quartz" to TrimMaterial.QUARTZ,
         "copper_ingot" to TrimMaterial.COPPER,
         "obsidian" to TrimMaterials.OBSIDIAN,
+        "crystal_alloy_ingot" to TrimMaterials.CRYSTAL_ALLOY,
         "resin" to TrimMaterial.RESIN,
     )
 
@@ -158,11 +165,12 @@ object SmithingMaps {
         "soul_steel_upgrade_template",
         "titanium_upgrade_template",
         "iridium_upgrade_template",
-        "netherite_upgrade_template"
+        "netherite_upgrade_template",
+        "crystal_alloy_upgrade_template"
     )
 
     val NOT_UPGRADEABLE = listOf(
-        "titanium", "iridium", "mithril", "anodized_titanium", "silver", "soul_steel", "netherite"
+        "titanium", "iridium", "mithril", "anodized_titanium", "silver", "soul_steel", "netherite", "crystal_alloy"
     )
 
     val TRIM_TEMPLATES = listOf(

@@ -75,6 +75,10 @@ internal interface ToolUpgrading : EquipmentDataManager, ToolComponentHelper, Ad
                 modifyDamage(upgradedItem, 1.0)
                 rewardAdvancement(event.viewers, "odyssey/smith_soul_steel")
             }
+            "crystal_alloy" -> {
+                modifyDamage(upgradedItem, 1.0)
+                //rewardAdvancement(event.viewers, "odyssey/smith_crystal_alloy")
+            }
             "titanium", "anodized_titanium" -> {
                 modifyDamage(upgradedItem, 1.0)
                 modifyAttackSpeed(upgradedItem, 1.1)

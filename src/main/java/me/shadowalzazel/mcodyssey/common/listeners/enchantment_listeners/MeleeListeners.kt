@@ -356,6 +356,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
 
     private fun cleaveEnchantment(victim: LivingEntity, level: Int) {
         val equipment = victim.equipment ?: return
+        /*
         if (equipment.chestplate.hasItemMeta()) {
             equipment.chestplate.damage(level, victim)
         }
@@ -368,6 +369,8 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         if (equipment.chestplate.hasItemMeta()) {
             equipment.chestplate.damage(level, victim)
         }
+         */
+        // Check slots contents of ARMOR then damage a random one
         victim.shieldBlockingDelay += level * 20
     }
 
