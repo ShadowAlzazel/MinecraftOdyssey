@@ -220,15 +220,7 @@ object EnchantingListeners : Listener, TomeEnchanting {
     fun enchantingTableHandler(event: EnchantItemEvent) {
         when (event.item.type) {
             Material.BOOK -> {
-                if (event.item.itemMeta.hasCustomModelData()) {
-                    enchantingBookHandler(event)
-                }
-                else {
-                    // Update Points
-                    val book = event.item
-                    book.updatePoints(resetLore = true, toggleToolTip = true, newEnchants = event.enchantsToAdd)
-                    event.item = book
-                }
+                enchantingBookHandler(event)
             }
             else -> {
                 enchantingItemHandler(event)
@@ -246,6 +238,11 @@ object EnchantingListeners : Listener, TomeEnchanting {
             }
             "blank_tome" -> {
                 enchantingTomeHandler(event)
+            }
+            else -> { // Update Points
+                val book = event.item
+                book.updatePoints(resetLore = true, toggleToolTip = true, newEnchants = event.enchantsToAdd)
+                event.item = book
             }
         }
     }

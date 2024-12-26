@@ -16,6 +16,7 @@ object EntityTags {
 
     // MINESHAFT
     const val IN_MINESHAFT: String = "odyssey.in_mineshaft"
+    const val IN_SUPERSHAFT: String = "odyssey.in_supershaft"
 
     // SNIFFERS
     const val CAN_DIG_BIOME_SEEDS: String = "odyssey.can_dig_biome_seeds"

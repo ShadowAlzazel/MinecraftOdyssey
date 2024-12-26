@@ -8,7 +8,7 @@ enum class CustomColors(val color: TextColor) {
     DARK_GRAY(TextColor.color(85, 85, 85)),
     ENCHANT(TextColor.color(191, 255, 189)),
     GILDED(TextColor.color(255, 170, 0)),
-    ARCANE(TextColor.color(207, 187, 255)),
+    AURA(TextColor.color(207, 187, 255)),
     RUNEVOID(TextColor.color(85, 67 ,129)),
     AMETHYST(TextColor.color(141, 109, 209)),
     CURSED(TextColor.color(255, 85, 85)),

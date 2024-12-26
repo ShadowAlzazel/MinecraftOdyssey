@@ -15,7 +15,7 @@ class EquipmentRecipes : ChoiceManager {
         return listOf(
             grapplingHookRecipe(), tinkeredMusketRecipe(), tinkeredBowRecipe(), autoCrossbowRecipe(), warpingWandRecipe(),
             arcaneWandRecipe(), arcaneBladeRecipe(), arcaneScepterRecipe(), explosiveArrowRecipe(), alchemicalDriverRecipe(),
-            compactCrossbowRecipe(), voidLinkedKunaiRecipe()
+            compactCrossbowRecipe(), voidLinkedKunaiRecipe(), alchemicalDiffuserRecipe()
         )
     }
 
@@ -86,11 +86,23 @@ class EquipmentRecipes : ChoiceManager {
     private fun alchemicalDriverRecipe(): ShapedRecipe {
         val result = Item.ALCHEMICAL_DRIVER.newItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "alchemical_driver"), result).apply {
-            shape(" A ", "QXQ", " S ")
+            shape("A", "X", "Q")
             setIngredient('A', silverChoices())
             setIngredient('Q', Material.DRAGON_BREATH)
             setIngredient('X', Material.CROSSBOW)
-            setIngredient('S', Material.NAUTILUS_SHELL)
+            category = CraftingBookCategory.EQUIPMENT
+        }
+        return recipe
+    }
+
+    private fun alchemicalDiffuserRecipe(): ShapedRecipe {
+        val result = Item.ALCHEMICAL_DIFFUSER.newItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "alchemical_diffuser"), result).apply {
+            shape(" D ", "QXQ", " A ")
+            setIngredient('A', silverChoices())
+            setIngredient('D', Material.DIAMOND)
+            setIngredient('Q', Material.DRAGON_BREATH)
+            setIngredient('X', Material.CROSSBOW)
             category = CraftingBookCategory.EQUIPMENT
         }
         return recipe

@@ -1,20 +1,20 @@
 package me.shadowalzazel.mcodyssey.common.listeners
 
-import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
 import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.api.LootTableManager
 import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
 import me.shadowalzazel.mcodyssey.common.items.ToolType
 import me.shadowalzazel.mcodyssey.common.trims.TrimMaterials
 import me.shadowalzazel.mcodyssey.common.trims.TrimPatterns
 import me.shadowalzazel.mcodyssey.util.EquipmentRandomizer
 import me.shadowalzazel.mcodyssey.util.MobMaker
+import me.shadowalzazel.mcodyssey.util.RegistryTagManager
 import me.shadowalzazel.mcodyssey.util.StructureHelper
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.util.constants.MobData
 import org.bukkit.Material
-import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
@@ -23,25 +23,25 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.entity.EntityRegainHealthEvent
 import org.bukkit.event.world.ChunkPopulateEvent
-import org.bukkit.generator.structure.Structure
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ArmorMeta
 import org.bukkit.inventory.meta.trim.ArmorTrim
 import org.bukkit.inventory.meta.trim.TrimMaterial
 import org.bukkit.inventory.meta.trim.TrimPattern
+import org.bukkit.loot.Lootable
 import java.util.*
 
-object SpawningListeners : Listener, MobMaker, StructureHelper {
+object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManager {
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     fun mobNaturalSpawningHandler(event: CreatureSpawnEvent) {
         if (event.spawnReason != CreatureSpawnEvent.SpawnReason.NATURAL) return
         if (event.entity !is Enemy) return
         if (event.entity is Guardian) return
         val mob = event.entity
-
-        // Handle structure spawns
-        structureTagHandler(mob)
+        if (mob.scoreboardTags.contains(EntityTags.HANDLED)) return // Do not handle twice
+        // Handle natural spawning inside Structures
+        mobNaturalStructureSpawning(event)
 
         // Handle Creating Elites
         eliteMobCreator(event)
@@ -49,25 +49,76 @@ object SpawningListeners : Listener, MobMaker, StructureHelper {
         // Handle edge spawns
         val inEdge = mob.location.world == Odyssey.instance.edge
         if (inEdge) {
-            mob.addAttackAttribute(2.0 + (1..4).random(), AttributeTags.MOB_EDGE_ATTACK_BONUS)
+            mob.addAttackAttribute(3.0, AttributeTags.MOB_EDGE_ATTACK_BONUS)
             mob.addHealthAttribute(15.0, AttributeTags.MOB_EDGE_HEALTH_BONUS)
             mob.heal(15.0)
         }
     }
 
-
+    // Handle structure spawns
     @EventHandler(priority = EventPriority.LOWEST)
-    fun shadowChamberSpawning(event: CreatureSpawnEvent) {
+    fun mobStructureSpawningHandler(event: CreatureSpawnEvent) {
         //println(event.spawnReason) // -> DEFAULT
-        val boundedStructures = getBoundedStructures(event.entity) ?: return
-        // Get from registry
-        val structureRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.STRUCTURE)
-        val shadowChambers = structureRegistry.get(NamespacedKey(Odyssey.instance, "shadow_chambers")) ?: return
-        if (shadowChambers !in boundedStructures) return
-        // Handle mob customization
         val mob = event.entity
         if (mob.scoreboardTags.contains(EntityTags.HANDLED)) return // Do not handle twice
+        // Get from registry
+        val boundedStructures = getBoundedStructures(mob) ?: return
+        val structureRegistry = getPaperRegistry(RegistryKey.STRUCTURE)
+        // Check structures
+        for (structure in boundedStructures) {
+            when (val name = structureRegistry.getKey(structure)?.key) {
+                "shadow_chamber" -> {
+                    shadowChamberSpawning(event)
+                }
+            }
+        }
+    }
 
+    private fun mobNaturalStructureSpawning(event: CreatureSpawnEvent) {
+        val mob = event.entity
+        // Get from registry
+        val boundedStructures = getBoundedStructures(mob) ?: return
+        val structureRegistry = getPaperRegistry(RegistryKey.STRUCTURE)
+        // Check structures
+        for (structure in boundedStructures) {
+            when (val name = structureRegistry.getKey(structure)?.key) {
+                "mineshaft", "mineshaft_mesa" -> {
+                    mineshaftSpawning(event)
+                }
+                "supershaft" -> {
+                    supershaftSpawning(event)
+                }
+            }
+        }
+    }
+
+    /*-----------------------------------------------------------------------------------------------*/
+
+    private fun mineshaftSpawning(event: CreatureSpawnEvent) {
+        val mob = event.entity
+        mob.addScoreboardTag(EntityTags.IN_MINESHAFT)
+        if (mob is Lootable) {
+            val roll = (0..100).random()
+            if (75 > roll) { // 75% chance to change LootTable of mobs in mineshaft
+                mob.lootTable = LootTableManager.getResourceLootTable("structure_spawns/mineshaft")
+            }
+        }
+    }
+
+    private fun supershaftSpawning(event: CreatureSpawnEvent) {
+        val mob = event.entity
+        mob.addScoreboardTag(EntityTags.IN_SUPERSHAFT)
+        if (mob is Lootable) {
+            val roll = (0..100).random()
+            if (75 > roll) { // 75% chance to change LootTable of mobs in supershaft
+                mob.lootTable = LootTableManager.getResourceLootTable("structure_spawns/supershaft")
+            }
+        }
+    }
+
+    private fun shadowChamberSpawning(event: CreatureSpawnEvent) {
+        // Handle mob customization
+        val mob = event.entity
         // Create shiny if trial elite
         if (mob.scoreboardTags.contains("odyssey.trial_elite")) {
             val equipmentRandomizer = EquipmentRandomizer(
@@ -78,6 +129,9 @@ object SpawningListeners : Listener, MobMaker, StructureHelper {
                 MobData.ELITE_ARMOR_TRIM_MATS,
                 MobData.SHINY_ARMOR_TRIM_PATTERNS)
             createShinyMob(mob, equipmentRandomizer, true)
+            // Bonus Stats
+            mob.addAttackAttribute(6.0, AttributeTags.MOB_ATTACK_DAMAGE)
+            mob.addReachAttribute(0.5,  AttributeTags.MOB_REACH)
         }
 
         // Giant Spider,
@@ -121,11 +175,10 @@ object SpawningListeners : Listener, MobMaker, StructureHelper {
             // Apply Stats and weapon
             mob.apply {
                 // Stats
-                addHealthAttribute(25.0, AttributeTags.MOB_HEALTH)
-                heal(25.0)
-                addAttackAttribute(10.0, AttributeTags.MOB_ATTACK_DAMAGE)
+                addHealthAttribute(15.0, AttributeTags.MOB_HEALTH)
+                heal(15.0)
+                addAttackAttribute(4.0, AttributeTags.MOB_ATTACK_DAMAGE)
                 addScaleAttribute(0.1, AttributeTags.MOB_SCALE)
-
                 // Equipment
                 equipment?.also {
                     it.setItemInOffHand(offHand)
@@ -151,10 +204,9 @@ object SpawningListeners : Listener, MobMaker, StructureHelper {
 
             // Creator
             createRandomizedMob(mob, equipmentRandomizer, enchanted = true, newWeapon = true)
-
             // Stats
             mob.addAttackAttribute(2.0, AttributeTags.MOB_ATTACK_DAMAGE)
-            mob.addAttackAttribute(10.0, AttributeTags.MOB_HEALTH)
+            mob.addHealthAttribute(10.0, AttributeTags.MOB_HEALTH)
             mob.addArmorAttribute(2.0, AttributeTags.MOB_ARMOR)
             mob.heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
         }
@@ -165,9 +217,9 @@ object SpawningListeners : Listener, MobMaker, StructureHelper {
             addScoreboardTag(EntityTags.HANDLED)
             addScoreboardTag(EntityTags.SHADOW_MOB)
             // Stats
-            addHealthAttribute(15.0, AttributeTags.SHADOW_CHAMBERS_HEALTH_BONUS)
-            mob.heal(15.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
-            addAttackAttribute(3.0, AttributeTags.SHADOW_CHAMBERS_ATTACK_BONUS)
+            addHealthAttribute(10.0, AttributeTags.SHADOW_CHAMBERS_HEALTH_BONUS)
+            mob.heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
+            addAttackAttribute(2.0, AttributeTags.SHADOW_CHAMBERS_ATTACK_BONUS)
             addArmorAttribute(2.0, AttributeTags.SHADOW_CHAMBERS_ARMOR_BONUS)
             addSpeedAttribute(0.0325, AttributeTags.SHADOW_CHAMBERS_SPEED_BONUS)
             addStepAttribute(0.5, AttributeTags.SHADOW_CHAMBERS_STEP_HEIGHT)
@@ -177,21 +229,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper {
     }
 
     /*-----------------------------------------------------------------------------------------------*/
-
-    private fun structureTagHandler(mob: LivingEntity) {
-        val boundedStructures = getBoundedStructures(mob) ?: return
-        // Check if inside
-        for (struct in boundedStructures) {
-            // Is Mesa
-            if (struct == Structure.MINESHAFT || struct == Structure.MINESHAFT_MESA) {
-                mob.addScoreboardTag(EntityTags.IN_MINESHAFT)
-            }
-        }
-    }
-
-    /*-----------------------------------------------------------------------------------------------*/
     // OLD
-
     fun mobStructureSpawning(event: ChunkPopulateEvent) {
         val pigList = event.chunk.entities.filter { it.type == EntityType.PIGLIN_BRUTE }
         if (pigList.isNotEmpty()) {

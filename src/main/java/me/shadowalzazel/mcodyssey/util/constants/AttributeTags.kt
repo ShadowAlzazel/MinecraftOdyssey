@@ -8,6 +8,7 @@ object AttributeTags {
     const val MOB_SCALE = "mob.scale"
     const val MOB_MOVEMENT_SPEED = "mob.movement_speed"
     const val MOB_ARMOR = "mob.armor"
+    const val MOB_REACH = "mob.reach"
 
     // Elites
     const val ELITE_HEALTH = "mob.elite.health"

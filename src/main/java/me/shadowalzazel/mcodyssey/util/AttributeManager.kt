@@ -31,6 +31,13 @@ interface AttributeManager : ItemComponentsManager, RegistryTagManager {
         }
     }
 
+    fun LivingEntity.addReachAttribute(
+        value: Double,
+        name: String)
+    {
+        this.setAttributeModifier(value, name, Attribute.ENTITY_INTERACTION_RANGE)
+    }
+
     fun LivingEntity.addScaleAttribute(
         value: Double,
         name: String = AttributeTags.MOB_SCALE)

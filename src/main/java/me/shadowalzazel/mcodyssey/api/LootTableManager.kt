@@ -10,6 +10,7 @@ import org.bukkit.craftbukkit.CraftLootTable
 import org.bukkit.craftbukkit.util.CraftNamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.loot.LootContext
+import org.bukkit.loot.LootTable
 import java.util.*
 
 object LootTableManager : RegistryTagManager {
@@ -36,9 +37,29 @@ object LootTableManager : RegistryTagManager {
         return items.first()
     }
 
+    private fun getItemsFromResource(name: String, namespace: String): MutableCollection<ItemStack> {
+        val lootTableKey: ResourceKey<NmsLootTable> = newLootKey(name, namespace)
+        // Using `type:chest`
+        val lootTable = CraftLootTable.minecraftToBukkit(lootTableKey)
+        val contextBuilder = LootContext.Builder(Odyssey.instance.overworld.spawnLocation).apply {
+            lootedEntity(null)
+            luck(0F)
+            killer(null)
+        }
+        val context = contextBuilder.build()
+        val items = lootTable.populateLoot(Random(0L), context)
+        return items
+    }
+
     // Creates an item from the odyssey:item/* loot table
     fun createItemStackFromLoot(name: String): ItemStack {
         return singleItemFromResource("item/$name", "odyssey")
+    }
+
+    fun getResourceLootTable(name: String, namespace: String = "odyssey"): LootTable? {
+        val lootTableKey: ResourceKey<NmsLootTable> = newLootKey(name, namespace)
+        val lootTable = CraftLootTable.minecraftToBukkit(lootTableKey)
+        return lootTable
     }
 
     fun getOdysseyLoot(name: String): ItemStack {
