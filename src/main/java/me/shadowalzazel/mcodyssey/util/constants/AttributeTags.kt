@@ -7,6 +7,7 @@ object AttributeTags {
     const val MOB_ATTACK_DAMAGE = "mob.attack_damage"
     const val MOB_SCALE = "mob.scale"
     const val MOB_MOVEMENT_SPEED = "mob.movement_speed"
+    const val MOB_STEP_HEIGHT = "mob.step_height"
     const val MOB_ARMOR = "mob.armor"
     const val MOB_REACH = "mob.reach"
 
@@ -21,11 +22,30 @@ object AttributeTags {
     const val MOB_EDGE_HEALTH_BONUS = "mob.edge.health_bonus"
     const val MOB_EDGE_ATTACK_BONUS = "mob.edge.attack_bonus"
 
+    // Structures
     const val SHADOW_CHAMBERS_HEALTH_BONUS = "mob.shadow_chambers.health_bonus"
     const val SHADOW_CHAMBERS_ARMOR_BONUS = "mob.shadow_chambers.armor_bonus"
     const val SHADOW_CHAMBERS_ATTACK_BONUS = "mob.shadow_chambers.attack_bonus"
     const val SHADOW_CHAMBERS_SPEED_BONUS = "mob.shadow_chambers.speed_bonus"
     const val SHADOW_CHAMBERS_STEP_HEIGHT = "mob.shadow_chambers.step_height"
+
+    const val TERMINAL_GRID_HEALTH_BONUS = "mob.terminal_grid.health_bonus"
+    const val TERMINAL_GRID_ARMOR_BONUS = "mob.terminal_grid.armor_bonus"
+    const val TERMINAL_GRID_ATTACK_BONUS = "mob.terminal_grid.attack_bonus"
+    const val TERMINAL_GRID_SPEED_BONUS = "mob.terminal_grid.speed_bonus"
+    const val TERMINAL_GRID_STEP_HEIGHT = "mob.terminal_grid.step_height"
+
+    const val HYPERCUBIC_CHAMBER_HEALTH_BONUS = "mob.hypercubic_chamber.health_bonus"
+    const val HYPERCUBIC_CHAMBER_ARMOR_BONUS = "mob.hypercubic_chamber.armor_bonus"
+    const val HYPERCUBIC_CHAMBER_ATTACK_BONUS = "mob.hypercubic_chamber.attack_bonus"
+    const val HYPERCUBIC_CHAMBER_SPEED_BONUS = "mob.hypercubic_chamber.speed_bonus"
+    const val HYPERCUBIC_CHAMBER_STEP_HEIGHT = "mob.hypercubic_chamber.step_height"
+
+    const val SUNKEN_LIBRARY_HEALTH_BONUS = "mob.sunken_library.health_bonus"
+    const val SUNKEN_LIBRARY_ARMOR_BONUS = "mob.sunken_library.armor_bonus"
+    const val SUNKEN_LIBRARY_ATTACK_BONUS = "mob.sunken_library.attack_bonus"
+    const val SUNKEN_LIBRARY_SPEED_BONUS = "mob.sunken_library.speed_bonus"
+    const val SUNKEN_LIBRARY_STEP_HEIGHT = "mob.sunken_library.step_height"
 
     // Players
     const val PLAYER_GENERIC_HEALTH = "player.generic_health"

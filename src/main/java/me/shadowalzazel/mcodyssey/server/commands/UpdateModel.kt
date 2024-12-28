@@ -14,9 +14,9 @@ import org.bukkit.inventory.ItemStack
 @Suppress("UnstableApiUsage")
 object UpdateModel : CommandExecutor, RegistryTagManager, DataTagManager {
 
-    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
+    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender !is Player) return false
-        val hasArgs = args != null && args.isNotEmpty()
+        val hasArgs = args.isNotEmpty()
         val allItems = hasArgs && args?.get(0) == "all"
         val container = hasArgs && args?.get(0) == "container"
         if (allItems) {

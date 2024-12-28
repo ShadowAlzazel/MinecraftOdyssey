@@ -31,6 +31,7 @@ import org.bukkit.inventory.meta.trim.TrimPattern
 import org.bukkit.loot.Lootable
 import java.util.*
 
+@Suppress("UnstableApiUsage")
 object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManager {
 
     @EventHandler(priority = EventPriority.LOW)
@@ -67,8 +68,20 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
         // Check structures
         for (structure in boundedStructures) {
             when (val name = structureRegistry.getKey(structure)?.key) {
-                "shadow_chamber" -> {
-                    shadowChamberSpawning(event)
+                "shadow_chambers" -> {
+                    shadowChamberSpawnerSpawning(event)
+                }
+                "terminal_grid" -> {
+                    terminalGridSpawnerSpawning(event)
+                }
+                "hypercubic_chamber" -> {
+                    hypercubicChamberSpawnerSpawning(event)
+                }
+                "sunken_library" -> {
+                    sunkenLibrarySpawnerSpawning(event)
+                }
+                "line_mine" -> {
+                    //shadowChamberSpawnerSpawning(event)
                 }
             }
         }
@@ -86,6 +99,9 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
                     mineshaftSpawning(event)
                 }
                 "supershaft" -> {
+                    supershaftSpawning(event)
+                }
+                "line_mine" -> {
                     supershaftSpawning(event)
                 }
             }
@@ -116,7 +132,19 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
         }
     }
 
-    private fun shadowChamberSpawning(event: CreatureSpawnEvent) {
+    private fun lineMineSpawning(event: CreatureSpawnEvent) {
+        val mob = event.entity
+        mob.addScoreboardTag(EntityTags.IN_LINE_MINE)
+        if (mob is Lootable) {
+            val roll = (0..100).random()
+            if (75 > roll) { // 75% chance to change LootTable of mobs in supershaft
+                mob.lootTable = LootTableManager.getResourceLootTable("structure_spawns/line_mine")
+            }
+        }
+    }
+
+
+    private fun shadowChamberSpawnerSpawning(event: CreatureSpawnEvent) {
         // Handle mob customization
         val mob = event.entity
         // Create shiny if trial elite
@@ -130,7 +158,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
                 MobData.SHINY_ARMOR_TRIM_PATTERNS)
             createShinyMob(mob, equipmentRandomizer, true)
             // Bonus Stats
-            mob.addAttackAttribute(6.0, AttributeTags.MOB_ATTACK_DAMAGE)
+            mob.addAttackAttribute(8.0, AttributeTags.MOB_ATTACK_DAMAGE)
             mob.addReachAttribute(0.5,  AttributeTags.MOB_REACH)
         }
 
@@ -143,7 +171,6 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
                 addScaleAttribute(0.7, AttributeTags.MOB_SCALE)
             }
         }
-
         // Vanguard
         if (mob.scoreboardTags.contains("odyssey.vanguard")) {
             // Weapon
@@ -189,7 +216,6 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
                 createRandomizedMob(this, equipmentRandomizer, enchanted = true, newWeapon = false)
             }
         }
-
         // Basic Mob
         val basicMob = mob.scoreboardTags.isEmpty()
         if (basicMob) {
@@ -205,12 +231,11 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             // Creator
             createRandomizedMob(mob, equipmentRandomizer, enchanted = true, newWeapon = true)
             // Stats
-            mob.addAttackAttribute(2.0, AttributeTags.MOB_ATTACK_DAMAGE)
+            mob.addAttackAttribute(4.0, AttributeTags.MOB_ATTACK_DAMAGE)
             mob.addHealthAttribute(10.0, AttributeTags.MOB_HEALTH)
             mob.addArmorAttribute(2.0, AttributeTags.MOB_ARMOR)
             mob.heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
         }
-
         // All Shadow Chamber Mobs
         mob.apply {
             // handlers
@@ -218,11 +243,143 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             addScoreboardTag(EntityTags.SHADOW_MOB)
             // Stats
             addHealthAttribute(10.0, AttributeTags.SHADOW_CHAMBERS_HEALTH_BONUS)
-            mob.heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
+            heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
             addAttackAttribute(2.0, AttributeTags.SHADOW_CHAMBERS_ATTACK_BONUS)
             addArmorAttribute(2.0, AttributeTags.SHADOW_CHAMBERS_ARMOR_BONUS)
             addSpeedAttribute(0.0325, AttributeTags.SHADOW_CHAMBERS_SPEED_BONUS)
             addStepAttribute(0.5, AttributeTags.SHADOW_CHAMBERS_STEP_HEIGHT)
+        }
+        // Finish
+        return
+    }
+
+    private fun terminalGridSpawnerSpawning(event: CreatureSpawnEvent) {
+        // Handle mob customization
+        val mob = event.entity
+        if (mob is Creaking) {
+            mob.addHealthAttribute(40.0, AttributeTags.MOB_HEALTH)
+            mob.heal(40.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
+            mob.addAttackAttribute(10.0, AttributeTags.MOB_ATTACK_DAMAGE)
+        } else {
+            // Get Equipment Randomizer
+            val equipmentRandomizer = EquipmentRandomizer(
+                listOf(ToolMaterial.COPPER),
+                MobData.ALL_WEAPONS,
+                MobData.ALL_PARTS,
+                listOf("copper"),
+                listOf(TrimMaterial.RESIN),
+                listOf(TrimPatterns.VOYAGER))
+
+            // Creator
+            createRandomizedMob(mob, equipmentRandomizer, enchanted = true, newWeapon = true)
+            // Stats
+            mob.addAttackAttribute(2.0, AttributeTags.MOB_ATTACK_DAMAGE)
+            mob.addHealthAttribute(10.0, AttributeTags.MOB_HEALTH)
+            mob.addArmorAttribute(2.0, AttributeTags.MOB_ARMOR)
+            mob.heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
+        }
+        // All Mobs
+        mob.apply {
+            // handlers
+            addScoreboardTag(EntityTags.HANDLED)
+            // Stats
+            addHealthAttribute(10.0, AttributeTags.TERMINAL_GRID_HEALTH_BONUS)
+            heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
+            addAttackAttribute(2.0, AttributeTags.TERMINAL_GRID_ATTACK_BONUS)
+            addArmorAttribute(2.0, AttributeTags.TERMINAL_GRID_ARMOR_BONUS)
+            addSpeedAttribute(0.02, AttributeTags.TERMINAL_GRID_SPEED_BONUS)
+            addStepAttribute(0.5, AttributeTags.TERMINAL_GRID_STEP_HEIGHT)
+        }
+        // Finish
+        return
+    }
+
+    private fun hypercubicChamberSpawnerSpawning(event: CreatureSpawnEvent) {
+        // Handle mob customization
+        val mob = event.entity
+        // Guard Skeletons and Wither Skeletons
+        if (mob is Skeleton) {
+            // Get Equipment Randomizer
+            val equipmentRandomizer = EquipmentRandomizer(
+                listOf(ToolMaterial.SILVER, ToolMaterial.IRON),
+                MobData.ALL_WEAPONS,
+                MobData.ALL_PARTS,
+                listOf("silver"),
+                listOf(TrimMaterials.SILVER),
+                listOf(TrimPatterns.VOYAGER, TrimPattern.BOLT, TrimPattern.RAISER))
+
+            // Creator
+            createRandomizedMob(mob, equipmentRandomizer, enchanted = true, newWeapon = true)
+            // Stats
+            mob.addAttackAttribute(2.0, AttributeTags.MOB_ATTACK_DAMAGE)
+            mob.addHealthAttribute(10.0, AttributeTags.MOB_HEALTH)
+            mob.addArmorAttribute(2.0, AttributeTags.MOB_ARMOR)
+            mob.heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
+        }
+        // All Mobs
+        mob.apply {
+            // handlers
+            addScoreboardTag(EntityTags.HANDLED)
+            // Stats
+            addHealthAttribute(10.0, AttributeTags.HYPERCUBIC_CHAMBER_HEALTH_BONUS)
+            heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
+            addAttackAttribute(2.0, AttributeTags.HYPERCUBIC_CHAMBER_ATTACK_BONUS)
+            addArmorAttribute(2.0, AttributeTags.HYPERCUBIC_CHAMBER_ARMOR_BONUS)
+            addSpeedAttribute(0.02, AttributeTags.HYPERCUBIC_CHAMBER_SPEED_BONUS)
+            addStepAttribute(0.5, AttributeTags.HYPERCUBIC_CHAMBER_STEP_HEIGHT)
+        }
+        // Finish
+        return
+    }
+
+    private fun sunkenLibrarySpawnerSpawning(event: CreatureSpawnEvent) {
+        // Handle mob customization
+        val mob = event.entity
+        if (mob is Skeleton || mob is WitherSkeleton) {
+            // Get Equipment Randomizer
+            val equipmentRandomizer = EquipmentRandomizer(
+                listOf(ToolMaterial.SILVER, ToolMaterial.IRON),
+                MobData.ALL_WEAPONS,
+                MobData.ALL_PARTS,
+                listOf("silver"),
+                listOf(TrimMaterials.SILVER),
+                listOf(TrimPatterns.VOYAGER, TrimPattern.BOLT, TrimPattern.RAISER))
+
+            // Creator
+            createRandomizedMob(mob, equipmentRandomizer, enchanted = true, newWeapon = true)
+            // Stats
+            mob.addAttackAttribute(2.0, AttributeTags.MOB_ATTACK_DAMAGE)
+            mob.addHealthAttribute(10.0, AttributeTags.MOB_HEALTH)
+            mob.addArmorAttribute(2.0, AttributeTags.MOB_ARMOR)
+            mob.heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
+        }
+        // Creaking
+        if (mob is Creaking) {
+            mob.addHealthAttribute(40.0, AttributeTags.MOB_HEALTH)
+            mob.heal(40.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
+            mob.addAttackAttribute(10.0, AttributeTags.MOB_ATTACK_DAMAGE)
+        }
+        // Spider
+        if (mob.scoreboardTags.contains("odyssey.giant") && mob is Spider) {
+            mob.apply {
+                addHealthAttribute(40.0, AttributeTags.MOB_HEALTH)
+                mob.heal(40.0)
+                addAttackAttribute(10.0, AttributeTags.MOB_ATTACK_DAMAGE)
+                addScaleAttribute(0.7, AttributeTags.MOB_SCALE)
+            }
+        }
+
+        // All Mobs
+        mob.apply {
+            // handlers
+            addScoreboardTag(EntityTags.HANDLED)
+            // Stats
+            addHealthAttribute(10.0, AttributeTags.SUNKEN_LIBRARY_HEALTH_BONUS)
+            heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
+            addAttackAttribute(2.0, AttributeTags.SUNKEN_LIBRARY_ATTACK_BONUS)
+            addArmorAttribute(2.0, AttributeTags.SUNKEN_LIBRARY_ARMOR_BONUS)
+            addSpeedAttribute(0.02, AttributeTags.SUNKEN_LIBRARY_SPEED_BONUS)
+            addStepAttribute(0.5, AttributeTags.SUNKEN_LIBRARY_STEP_HEIGHT)
         }
         // Finish
         return
