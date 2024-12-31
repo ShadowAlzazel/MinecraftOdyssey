@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners
 
-import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent
 import com.destroystokyo.paper.event.player.PlayerJumpEvent
+import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.entity.LookAnchor
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.effects.EffectsManager
@@ -31,13 +31,8 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import java.util.*
 
+@Suppress("UnstableApiUsage")
 object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
-
-    // Pollen
-    private val pollenMaxHeadPlayers = mutableMapOf<UUID, Int>()
-    private val pollenMaxChestPlayers = mutableMapOf<UUID, Int>()
-    private val pollenMaxLegsPlayers = mutableMapOf<UUID, Int>()
-    private val pollenMaxBootsPlayers = mutableMapOf<UUID, Int>()
 
     // Main function for enchantments relating to entity damage for armor
     @EventHandler
@@ -306,32 +301,6 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
 
     }
 
-    // Main function for enchantments relating to using items
-    /*
-    @EventHandler
-    fun mainArmorUsageHandler(event: PlayerInteractEvent) {
-        if (event.item == null) { return }
-        if (event.item!!.type !in listOf(Material.SPYGLASS, Material.GOAT_HORN)) { return }
-        val player = event.player
-        val item = event.item!!
-        if (player.equipment.helmet?.hasItemMeta() == true) {
-            val helmet = player.equipment.helmet!!
-            for (enchant in helmet.enchantments) {
-                when (enchant.key.getNameId()) {
-                    // ALL REMOVED MOVED TO OWN
-                }
-            }
-        }
-        if (player.equipment.chestplate?.hasItemMeta() == true) {
-            val chestplate = player.equipment.chestplate
-            for (enchant in chestplate!!.enchantments) {
-                when (enchant.key.getNameId()) {
-                }
-            }
-        }
-    }
-     */
-
     @EventHandler
     fun passiveRegenHandler(event: EntityRegainHealthEvent) {
         if (event.entity !is LivingEntity) return
@@ -399,21 +368,6 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         }
     }
 
-    // Function for knockback effects
-    @EventHandler
-    fun knockBackHandler(event: EntityKnockbackByEntityEvent) {
-        val defender = event.entity
-        if (defender.equipment?.boots?.hasItemMeta() == true) {
-            val boots = defender.equipment?.boots!!
-            for (enchant in boots.enchantments) {
-                when (enchant.key.getNameId()) {
-                    "root_boots" -> {
-                    }
-                }
-            }
-        }
-    }
-
     // Function for sneaking
     @EventHandler
     fun sneakHandler(event: PlayerToggleSneakEvent) {
@@ -433,6 +387,7 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
             val chestplate = sneaker.equipment.chestplate!!
             for (enchant in chestplate.enchantments) {
                 when (enchant.key.getNameId()) {
+                    // Empty
                 }
             }
         }
@@ -467,9 +422,10 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
     @EventHandler
     fun jumpHandler(event: PlayerJumpEvent) {
         val jumper = event.player
-        if (jumper.equipment.leggings?.hasItemMeta() == true) {
-            val leggings = jumper.equipment.leggings!!
-            for (enchant in leggings.enchantments) {
+        // Leggings
+        val leggingEnchants = jumper.equipment.leggings?.getData(DataComponentTypes.ENCHANTMENTS)?.enchantments()
+        if (leggingEnchants != null) {
+            for (enchant in leggingEnchants) {
                 when (enchant.key.getNameId()) {
                     "leap_frog" -> {
                         leapFrogEnchantment(jumper, enchant.value)
@@ -477,14 +433,17 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
                 }
             }
         }
-    }
-
-    private fun getRayTraceTarget(player: Player, maxRange: Int=100): Entity? {
-        val result = player.rayTraceEntities(maxRange) ?: return null
-        val target = result.hitEntity ?: return null
-        val distance = player.eyeLocation.distance(target.location)
-        if (maxRange < distance) { return null }
-        return target
+        // Leggings
+        val bootEnchants = jumper.equipment.boots?.getData(DataComponentTypes.ENCHANTMENTS)?.enchantments()
+        if (bootEnchants != null) {
+            for (enchant in bootEnchants) {
+                when (enchant.key.getNameId()) {
+                    "cloud_strider" -> {
+                        event.player
+                    }
+                }
+            }
+        }
     }
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -841,7 +800,7 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         // Effects
         //player.addOdysseyEffect(EffectTags.BARRIER, (4 + (level * 4)) * 20)
         player.addPotionEffect(PotionEffect(PotionEffectType.RESISTANCE, 10 * 20, 0))
-        val itemCooldown = (maxOf(1, 8 - (level * 2))) * 20
+        //val itemCooldown = (maxOf(1, 8 - (level * 2))) * 20
         player.setCooldown(potion.type, (2 + (level * 2)) * 20)
         // Particles
         with(player.world) {

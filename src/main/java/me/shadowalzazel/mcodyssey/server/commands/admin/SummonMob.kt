@@ -13,10 +13,10 @@ import org.bukkit.entity.Player
 
 object SummonMob : CommandExecutor {
 
-    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
+    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender !is Player) return false
         if (!sender.isOp) return false
-        if (args?.size != 1) return false
+        if (args.size != 1) return false
         // Variables
         val mobName = args[0]
         val location = sender.location

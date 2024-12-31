@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.common.listeners
 
 import me.shadowalzazel.mcodyssey.util.DataTagManager
+import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
@@ -16,7 +17,7 @@ object ItemListeners : Listener, DataTagManager {
 
     @EventHandler
     fun itemUseOnDropHandler(event: PlayerDropItemEvent) {
-        if (!event.itemDrop.itemStack.hasItemKeyTag()) return
+        if (!event.itemDrop.itemStack.hasItemIdTag()) return
         // For all Item on Drop Uses
         when (event.itemDrop.itemStack.getItemIdentifier()) {
             "soul_spice" -> {
@@ -37,17 +38,19 @@ object ItemListeners : Listener, DataTagManager {
         }
     }
 
+    @EventHandler
     fun deathHandler(event: EntityDeathEvent) {
         if (event.entity.killer != null && event.droppedExp > 0) {
-            // SOUL_STEEL TODO: Finish
+            val killer = event.entity.killer ?: return
+            if (killer.inventory.itemInMainHand.getStringTag(ItemDataTags.MATERIAL_TYPE) != "soul_steel") return
+            // Soul steel
             var expDrop = 0.0
-            val killer = event.entity.killer!!
             val hasSoulSteel = true
             if (hasSoulSteel) expDrop += 0.15
             event.droppedExp += (event.droppedExp * (1 + expDrop)).toInt()
             with(killer.world) {
-                spawnParticle(Particle.SOUL, killer.location, 8, 0.05, 0.25, 0.05)
-                spawnParticle(Particle.SCULK_SOUL, killer.location, 9, 0.15, 0.25, 0.15)
+                spawnParticle(Particle.SOUL, killer.location, 2, 0.05, 0.25, 0.05)
+                spawnParticle(Particle.SCULK_SOUL, killer.location, 3, 0.15, 0.25, 0.15)
             }
             return
         }

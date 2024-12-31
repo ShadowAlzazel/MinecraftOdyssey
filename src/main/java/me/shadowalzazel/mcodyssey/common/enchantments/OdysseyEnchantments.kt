@@ -31,7 +31,6 @@ object OdysseyEnchantments : EnchantmentManager, RegistryTagManager {
     val MOLTEN_CORE: Enchantment = getRegisteredEnchant("molten_core")
     val OPTICALIZATION: Enchantment = getRegisteredEnchant("opticalization")
     val POTION_BARRIER: Enchantment = getRegisteredEnchant("potion_barrier")
-    val RAGING_ROAR: Enchantment = getRegisteredEnchant("antibonk")
     val RECKLESS: Enchantment = getRegisteredEnchant("reckless")
     val RELENTLESS: Enchantment = getRegisteredEnchant("relentless")
     val ROOT_BOOTS: Enchantment = getRegisteredEnchant("root_boots")
@@ -133,10 +132,9 @@ object OdysseyEnchantments : EnchantmentManager, RegistryTagManager {
 
     val inTableMelee = getCollectionFromTag(RegistryKey.ENCHANTMENT, "in_table/melee")
     val nonTableMelee = getCollectionFromTag(RegistryKey.ENCHANTMENT, "non_table/melee")
-
     val meleeSet = inTableMelee + nonTableMelee
-    val rangedSet = getCollectionFromTag(RegistryKey.ENCHANTMENT, "in_table/ranged")
-    val armorSet = getCollectionFromTag(RegistryKey.ENCHANTMENT, "non_table/armor")
+    val rangedSet = getCollectionFromTag(RegistryKey.ENCHANTMENT, "in_table/range")
+    val armorSet = getCollectionFromTag(RegistryKey.ENCHANTMENT, "in_table/armor")
 
     val MISC_SET = setOf(
         BOMB_OB,

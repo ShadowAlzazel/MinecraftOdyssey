@@ -147,8 +147,7 @@ object EnchantingListeners : Listener, TomeEnchanting {
         val equipment = event.inventory.inputEquipment!!.clone()
         val template = event.inventory.inputTemplate!!
         // Avoid Conflict with other smithing, using (Enchanted Book)
-        if (!template.itemMeta.hasCustomModelData()) return
-        if (!equipment.hasItemMeta()) return
+        val templateId = template.getItemIdentifier() ?: return
         if (recipe.result.type != Material.ENCHANTED_BOOK) return
         if (event.result?.type == Material.ENCHANTED_BOOK) {
             event.result = ItemStack(Material.AIR)
@@ -160,7 +159,7 @@ object EnchantingListeners : Listener, TomeEnchanting {
         val hasItem = hasBook || hasEquipment
         // Check for [TOME] + [EQUIPMENT] + [LAPIS]
         if (hasLapis && hasItem) {
-            val result = when(template.getItemIdentifier()) {
+            val result = when(templateId) {
                 "tome_of_avarice" -> tomeOfAvariceOnItem(equipment, event.viewers)
                 "tome_of_discharge" -> tomeOfDischargeOnItem(equipment, event.viewers)
                 "tome_of_expenditure" -> tomeOfExpenditureOnItem(equipment, event.viewers)
@@ -221,15 +220,7 @@ object EnchantingListeners : Listener, TomeEnchanting {
     fun enchantingTableHandler(event: EnchantItemEvent) {
         when (event.item.type) {
             Material.BOOK -> {
-                if (event.item.itemMeta.hasCustomModelData()) {
-                    enchantingBookHandler(event)
-                }
-                else {
-                    // Update Points
-                    val book = event.item
-                    book.updatePoints(resetLore = true, toggleToolTip = true, newEnchants = event.enchantsToAdd)
-                    event.item = book
-                }
+                enchantingBookHandler(event)
             }
             else -> {
                 enchantingItemHandler(event)
@@ -247,6 +238,11 @@ object EnchantingListeners : Listener, TomeEnchanting {
             }
             "blank_tome" -> {
                 enchantingTomeHandler(event)
+            }
+            else -> { // Update Points
+                val book = event.item
+                book.updatePoints(resetLore = true, toggleToolTip = true, newEnchants = event.enchantsToAdd)
+                event.item = book
             }
         }
     }

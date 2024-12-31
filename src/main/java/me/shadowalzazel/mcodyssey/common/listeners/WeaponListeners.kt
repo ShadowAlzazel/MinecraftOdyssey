@@ -93,7 +93,7 @@ object WeaponListeners : Listener, WeaponCombatHandler, WeaponProjectileHandler,
         if (wasThrowable) {
             victim.removeScoreboardTag(EntityTags.THROWABLE_ATTACK_HIT)
         }
-        if (event.damage > 1.0 && !wasThrowable) { event.damage -= 1.0 } // Reduce Weapon Damage by 1 to match attribute display
+        //if (event.damage > 1.0 && !wasThrowable) { event.damage -= 1.0 } // Reduce Weapon Damage by 1 to match attribute display
         // Called Before
         weaponBonusAttributesHandler(event, mainWeaponType)
         // Prevent Recursive AOE calls
@@ -327,7 +327,7 @@ object WeaponListeners : Listener, WeaponCombatHandler, WeaponProjectileHandler,
             val thrower = projectile.shooter ?: return
             victim.addScoreboardTag(EntityTags.THROWABLE_ATTACK_HIT)
             // Match same weapon
-            if (thrower is HumanEntity && thrower.equipment.itemInMainHand.getItemKeyTag() == projectile.item.getItemKeyTag()) {
+            if (thrower is HumanEntity && thrower.equipment.itemInMainHand.getItemIdTag() == projectile.item.getItemIdTag()) {
                 //thrower.attack(victim)
                 victim.damage(damage * 1.0, createPlayerDamageSource(thrower))
 
@@ -445,9 +445,10 @@ object WeaponListeners : Listener, WeaponCombatHandler, WeaponProjectileHandler,
         }
         // Match Shoot
         when(val itemName = bow.getItemIdentifier()) {
+            "crossbolter" -> crossbolterShooting(event)
             "auto_crossbow" -> autoCrossbowShooting(event)
             "warped_bow" -> return // Has +2 damage but -10% accuracy
-            "tinkered_musket" -> return // Shoot projectiles at 400% speed
+            "tinkered_musket" -> tinkeredMusketShooting(event) // Shoot projectiles at 400% speed
             "tinkered_bow" -> return // Has 50% greater accuracy
             "alchemical_driver" -> alchemicalWeaponShooting(event, itemName) // Launches potions
             "alchemical_diffuser" -> alchemicalWeaponShooting(event, itemName) // Sprays a mist with the potion effect
@@ -462,8 +463,9 @@ object WeaponListeners : Listener, WeaponCombatHandler, WeaponProjectileHandler,
         val crossbow = event.crossbow
         if (!crossbow.hasItemMeta()) return
         when(val itemName = crossbow.getItemIdentifier()) {
+            "crossbolter" -> crossbolterLoading(event)
             "compact_crossbow" -> compactCrossbowLoading(event)
-            "tinkered_musket" -> return // Requires x2 reload (gunpowder -> iron both have to be in hand)
+            "tinkered_musket" -> tinkeredMusketLoading(event) // Requires x2 reload (gunpowder -> iron both have to be in hand)
             "alchemical_driver" -> event.isCancelled = alchemicalWeaponLoading(event.entity, crossbow, itemName)
             "alchemical_diffuser" -> event.isCancelled = alchemicalWeaponLoading(event.entity, crossbow, itemName)
             "alchemical_bolter" -> event.isCancelled = alchemicalWeaponLoading(event.entity, crossbow, itemName)

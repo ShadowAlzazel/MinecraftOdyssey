@@ -16,9 +16,9 @@ interface ToolComponentHelper : RegistryTagManager {
     fun getMiningTags(toolType: String): Tag<BlockType>? {
         return when(toolType) {
             "pickaxe", "warhammer" -> Registry.BLOCK.getTag(BlockTypeTagKeys.MINEABLE_PICKAXE)
-            "axe", "longaxe", "poleaxe", "glaive" -> Registry.BLOCK.getTag(BlockTypeTagKeys.MINEABLE_PICKAXE)
-            "shovel", "spear", "halberd", "lance" -> Registry.BLOCK.getTag(BlockTypeTagKeys.MINEABLE_PICKAXE)
-            "hoe", "scythe" -> Registry.BLOCK.getTag(BlockTypeTagKeys.MINEABLE_PICKAXE)
+            "axe", "longaxe", "poleaxe", "glaive" -> Registry.BLOCK.getTag(BlockTypeTagKeys.MINEABLE_AXE)
+            "shovel", "spear", "halberd", "lance" -> Registry.BLOCK.getTag(BlockTypeTagKeys.MINEABLE_SHOVEL)
+            "hoe", "scythe" -> Registry.BLOCK.getTag(BlockTypeTagKeys.MINEABLE_HOE)
             else -> null
         }
     }
@@ -30,6 +30,7 @@ interface ToolComponentHelper : RegistryTagManager {
             "iridium" -> 8.5F
             "titanium", "anodized_titanium" -> 9.0F
             "mithril" -> 10.0F
+            "crystal_alloy" -> 14.0F
             else -> null
         }
         if (speed != null) {

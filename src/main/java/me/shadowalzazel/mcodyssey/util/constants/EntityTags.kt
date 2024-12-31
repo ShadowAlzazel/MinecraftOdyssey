@@ -16,6 +16,8 @@ object EntityTags {
 
     // MINESHAFT
     const val IN_MINESHAFT: String = "odyssey.in_mineshaft"
+    const val IN_SUPERSHAFT: String = "odyssey.in_supershaft"
+    const val IN_LINE_MINE: String = "odyssey.in_line_mine"
 
     // SNIFFERS
     const val CAN_DIG_BIOME_SEEDS: String = "odyssey.can_dig_biome_seeds"
@@ -51,6 +53,7 @@ object EntityTags {
 
     // MOBS
     const val ODYSSEY_MOB: String = "odyssey.mob"
+    const val CUSTOMIZED_MOB: String = "odyssey.customized_mob"
     const val GILDED_MOB: String = "odyssey.gilded_mob"
     const val ELITE_MOB: String = "odyssey.elite_mob"
     const val BLOOD_MOON_MOB: String = "odyssey.blood_moon_mob"
@@ -58,6 +61,8 @@ object EntityTags {
 
     const val TRIAL_ELITE: String = "odyssey.trial_elite"
     const val GIANT_MOB: String = "odyssey.giant"
+
+    const val HANDLED: String = "odyssey._handled" // Used to check and not trigger spawn events
 
     // ARROWS
     const val AMBUSH_ARROW: String = "odyssey.ambush_arrow"

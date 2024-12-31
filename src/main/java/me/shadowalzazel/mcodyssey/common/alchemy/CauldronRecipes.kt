@@ -65,6 +65,17 @@ object CauldronRecipes {
             IngredientChoice.MaterialChoice(Material.FEATHER, 1)))
 
 
+    private val POTION_OF_RECOUP_RECIPE = CauldronAlchemyRecipe(
+        result = Item.POTION_OF_RECOUP.newItemStack(3),
+        itemCount = 4,
+        fuels = CauldronFuels.FIRE_FUELS,
+        ingredients = listOf(
+            IngredientChoice.ItemNameChoice("crystalline_potion"),
+            IngredientChoice.MaterialChoice(Material.GHAST_TEAR, 1),
+            IngredientChoice.MaterialChoice(Material.HONEYCOMB, 1),
+            IngredientChoice.MaterialChoice(Material.APPLE, 1)))
+
+
     private val POTION_OF_SHIMMER_RECIPE = CauldronAlchemyRecipe(
         result = Item.POTION_OF_SHIMMER.newItemStack(3),
         itemCount = 4,
@@ -172,6 +183,7 @@ object CauldronRecipes {
         POTION_OF_LEVITATION_RECIPE,
         POTION_OF_STONE_SKIN_RECIPE,
         POTION_OF_WRATH_RECIPE,
+        POTION_OF_RECOUP_RECIPE,
         POTION_OF_ZOOM_RECIPE,
         POTION_OF_SHIMMER_RECIPE,
         ANGLERS_CONCOCTION_RECIPE,

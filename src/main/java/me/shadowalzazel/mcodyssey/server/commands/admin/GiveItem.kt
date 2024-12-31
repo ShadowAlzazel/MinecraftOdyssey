@@ -9,11 +9,10 @@ import org.bukkit.entity.Player
 
 object GiveItem : CommandExecutor {
 
-    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
+    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         val isOp = sender is Player && sender.isOp
         val isCommandBlock = sender is BlockCommandSender
         if (!isOp && !isCommandBlock) return false
-        if (args == null) return false
         if (args.size > 3) return false
         // Variables
         val player = sender.server.getPlayer(args[0]) ?: return false

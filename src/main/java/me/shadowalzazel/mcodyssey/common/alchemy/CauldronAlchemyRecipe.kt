@@ -57,8 +57,8 @@ class CauldronAlchemyRecipe (
 
     private fun createCombination(items: List<ItemStack>, result: ItemStack) {
         val potions = items.filter { it.hasEffects() }
-        val isPresetCombo = !ingredients.any { it is IngredientChoice.AnyEffectChoice }
-        val concentration = if (!isPresetCombo) { 1.25 } else { maxOf(1.4 - (potions.size * 0.2), 0.2) }
+        val isSpecialCombo = ingredients.any { it is IngredientChoice.PotionEffectChoice }
+        val concentration = if (isSpecialCombo) { 1.25 } else { maxOf(1.4 - (potions.size * 0.2), 0.2) }
         // Apply effects
         val builder = PotionContents.potionContents()
         for (potion in potions) {
@@ -69,7 +69,7 @@ class CauldronAlchemyRecipe (
             val allEffects = rawEffects + customEffects
             if (allEffects.isEmpty()) continue
             allEffects.forEach {
-                builder.addCustomEffect(PotionEffect(it.type, (it.duration * concentration).toInt() + 1, it.amplifier))
+                builder.addCustomEffect(PotionEffect(it.type, (it.duration * concentration).toInt(), it.amplifier))
             }
         }
         result.setData(DataComponentTypes.POTION_CONTENTS, builder)

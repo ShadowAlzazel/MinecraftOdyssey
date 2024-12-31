@@ -306,10 +306,13 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         val distance = attackerLocation.distance(victimLocation)
 
         attacker.teleport(victimLocation)
+        /*
         if (attacker is HumanEntity) {
             val log2Amount = maxOf(log2(distance).toInt() - 1, 0)
             attacker.foodLevel = maxOf(attacker.foodLevel - log2Amount, 0)
         }
+
+         */
         victim.teleport(attackerLocation)
     }
 
@@ -353,6 +356,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
 
     private fun cleaveEnchantment(victim: LivingEntity, level: Int) {
         val equipment = victim.equipment ?: return
+        /*
         if (equipment.chestplate.hasItemMeta()) {
             equipment.chestplate.damage(level, victim)
         }
@@ -365,6 +369,8 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         if (equipment.chestplate.hasItemMeta()) {
             equipment.chestplate.damage(level, victim)
         }
+         */
+        // Check slots contents of ARMOR then damage a random one
         victim.shieldBlockingDelay += level * 20
     }
 

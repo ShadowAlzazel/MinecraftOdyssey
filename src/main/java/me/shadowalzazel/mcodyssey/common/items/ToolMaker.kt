@@ -3,7 +3,6 @@ package me.shadowalzazel.mcodyssey.common.items
 import io.papermc.paper.datacomponent.DataComponentTypes
 import me.shadowalzazel.mcodyssey.util.AttributeManager
 import me.shadowalzazel.mcodyssey.util.DataTagManager
-import me.shadowalzazel.mcodyssey.util.NamedKeys
 import me.shadowalzazel.mcodyssey.util.ToolComponentHelper
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
@@ -11,7 +10,6 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
-import org.bukkit.persistence.PersistentDataType
 
 @Suppress("UnstableApiUsage")
 interface ToolMaker : AttributeManager, DataTagManager, ToolComponentHelper {
@@ -33,7 +31,7 @@ interface ToolMaker : AttributeManager, DataTagManager, ToolComponentHelper {
             val maxDurability = material.maxDurability
             var speed = type.baseSpeed
             val bonusRange = type.bonusRange
-            val itemModel = NamedKeys.newKey(itemName)
+            val itemModel = createOdysseyKey(itemName)
             // Iridium and titanium have different speeds
             if (material == ToolMaterial.IRIDIUM) {
                 speed *= 0.9
@@ -57,9 +55,10 @@ interface ToolMaker : AttributeManager, DataTagManager, ToolComponentHelper {
             this.setData(DataComponentTypes.ITEM_NAME, Component.text(itemName))
             //meta.itemName(Component.text(itemName))
             // Set Custom Data
-            val meta = this.itemMeta
-            meta.persistentDataContainer.set(NamedKeys.ITEM_KEY, PersistentDataType.STRING, itemName) // ItemKey
-            this.itemMeta = meta
+            //val meta = this.itemMeta
+            //meta.persistentDataContainer.set(NamedKeys.ITEM_KEY, PersistentDataType.STRING, itemName) // ItemKey
+            //this.itemMeta = meta
+            this.setStringTag("item", itemName) // ItemKey
             this.setStringTag(ItemDataTags.TOOL_TYPE, type.nameSuf)
             this.setStringTag(ItemDataTags.MATERIAL_TYPE, material.namePre)
             // Assign Base attributes

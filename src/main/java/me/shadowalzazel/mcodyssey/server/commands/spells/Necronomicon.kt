@@ -8,9 +8,9 @@ import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.meta.BookMeta
 
-object Necronomicon : CommandExecutor {
+object Necronomicon  {
 
-    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
+   fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender is LivingEntity) {
             if (sender.equipment?.itemInMainHand?.type == Material.WRITTEN_BOOK) {
                 val someBook = sender.equipment!!.itemInMainHand

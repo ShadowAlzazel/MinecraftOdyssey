@@ -1,6 +1,9 @@
 package me.shadowalzazel.mcodyssey.common.listeners
 
+import io.papermc.paper.datacomponent.DataComponentTypes
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.effects.EffectsManager
+import me.shadowalzazel.mcodyssey.common.tasks.item_tasks.AuraPotionEffect
 import me.shadowalzazel.mcodyssey.util.constants.EffectTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags.getIntTag
@@ -20,6 +23,7 @@ import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
+@Suppress("UnstableApiUsage")
 object EffectListeners : Listener, EffectsManager {
 
     @EventHandler
@@ -71,7 +75,8 @@ object EffectListeners : Listener, EffectsManager {
         if (event.item.itemMeta !is PotionMeta) return
         when(event.item.type) {
             Material.POTION -> {
-                potionDrinkHandler(event)
+                //potionDrinkHandler(event)
+                auraPotionDrinking(event)
             }
             else -> {
                 return
@@ -80,13 +85,30 @@ object EffectListeners : Listener, EffectsManager {
         return
     }
 
+    fun getPotionEffects(item: ItemStack): List<PotionEffect>? {
+        val potionData = item.getData(DataComponentTypes.POTION_CONTENTS) ?: return null
+        return (potionData.potion()?.potionEffects ?: listOf<PotionEffect>()) + potionData.customEffects()
+    }
+
+
+    private fun auraPotionDrinking(event: PlayerItemConsumeEvent) {
+        if (event.item.type != Material.POTION) return
+        val item = event.item
+        if (item.getItemIdentifier() != "aura_potion") return
+        if (item.getData(DataComponentTypes.POTION_CONTENTS) == null) return
+        // Task
+        val effects = getPotionEffects(item) ?: return
+        val task = AuraPotionEffect(event.player, effects, 20, Color.GREEN) // TEMP: TODO
+        task.runTaskTimer(Odyssey.instance, 0, 20)
+    }
+
 
 
     private fun potionDrinkHandler(event: PlayerItemConsumeEvent) {
         if (event.item.type != Material.POTION) return
         // Potion Item Tag Getters
         val item = event.item
-        val isOdysseyEffect = item.hasOdysseyEffectTag() && item.hasItemKeyTag()
+        val isOdysseyEffect = item.hasOdysseyEffectTag() && item.hasItemIdTag()
         if (isOdysseyEffect) {
             val effect = item.getCustomEffectTag()
             val duration = item.getCustomEffectTimeInTicks()
@@ -94,6 +116,9 @@ object EffectListeners : Listener, EffectsManager {
             // Apply to Player
             event.player.addOdysseyEffect(effect, duration, amplifier)
         }
+
+
+
     }
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -103,7 +128,7 @@ object EffectListeners : Listener, EffectsManager {
         // Potion Item Tag Getters
         if (!event.potion.item.hasItemMeta()) return
         if (!event.potion.item.hasOdysseyEffectTag()) return
-        if (!event.potion.item.hasItemKeyTag()) return
+        if (!event.potion.item.hasItemIdTag()) return
         val effect = event.potion.item.getCustomEffectTag()
         val duration = event.potion.item.getCustomEffectTimeInTicks()
         val amplifier = event.potion.item.getCustomEffectAmplifier()
@@ -129,7 +154,7 @@ object EffectListeners : Listener, EffectsManager {
                 event.areaEffectCloud.addCustomEffect(newEffect, true)
             }
         }
-        if (!potionItem.hasItemKeyTag()) return
+        if (!potionItem.hasItemIdTag()) return
         if (!potionItem.hasOdysseyEffectTag()) return
         // Huge buff to lingering if made sticky
         val isSticky = potionItem.hasTag(ItemDataTags.IS_LINGERING_STICKY)
@@ -149,7 +174,7 @@ object EffectListeners : Listener, EffectsManager {
                 it.radiusPerTick = 0.001F
             }
         }
-        AlchemyListeners.createOdysseyEffectCloud(event.entity, event.areaEffectCloud)
+        createOdysseyEffectCloud(event.entity, event.areaEffectCloud)
     }
 
     // Main function for detecting entity clouds from alchemy potions

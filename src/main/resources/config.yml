@@ -2,16 +2,18 @@
 # Minecraft Odyssey Config File
 # -------------------------------------
 
+# For most accessed configs
+odyssey:
+  require-resource-pack: true
+
+# For mob related configs
 mobs:
   enable-shiny-mobs: true
   enable-special-loot: true
 
+# For world related configs
 world:
   enable-obelisk-travel: true
-
-
-
-
 
 # Server Based links
 server-map:

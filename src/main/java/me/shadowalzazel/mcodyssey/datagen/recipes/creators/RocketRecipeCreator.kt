@@ -11,9 +11,6 @@ import org.bukkit.inventory.recipe.CraftingBookCategory
 
 class RocketRecipeCreator {
 
-
-
-
     internal fun blazingRocketsRecipe(tier: Int, tierName: String): ShapelessRecipe {
         // New Rocket
         val rocket = Item.BLAZING_ROCKET.newItemStack(3)

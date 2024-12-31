@@ -3,8 +3,7 @@ package me.shadowalzazel.mcodyssey.common.mobs.hostile
 import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
 import me.shadowalzazel.mcodyssey.common.items.ToolType
 import me.shadowalzazel.mcodyssey.common.mobs.base.OdysseyMob
-import me.shadowalzazel.mcodyssey.common.trims.TrimMaterials
-import me.shadowalzazel.mcodyssey.common.trims.TrimPatterns
+import me.shadowalzazel.mcodyssey.util.EquipmentRandomizer
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import net.kyori.adventure.text.Component
 import org.bukkit.Location
@@ -15,7 +14,8 @@ import org.bukkit.entity.EntityType
 import org.bukkit.entity.Skeleton
 import org.bukkit.entity.SkeletonHorse
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.trim.ArmorTrim
+import org.bukkit.inventory.meta.trim.TrimMaterial
+import org.bukkit.inventory.meta.trim.TrimPattern
 import java.util.*
 
 object Vanguard : OdysseyMob("Vanguard", "vanguard", EntityType.SKELETON, 25.0) {
@@ -57,11 +57,20 @@ object Vanguard : OdysseyMob("Vanguard", "vanguard", EntityType.SKELETON, 25.0) 
             updateEnchantabilityPoints()
         }
         val offHand = ItemStack(Material.SHIELD)
-        val silverTrim = ArmorTrim(
-            TrimMaterials.SILVER,
-            listOf(TrimPatterns.IMPERIAL).random()
-        )
-        createArmoredMob(mob, false, ToolMaterial.IRON, "iron", silverTrim, true)
+
+        // Get Equipment Randomizer
+        val equipmentRandomizer = EquipmentRandomizer(
+            listOf(ToolMaterial.SILVER),
+            listOf(ToolType.HALBERD),
+            listOf("imperial"),
+            null,
+            listOf(TrimMaterial.DIAMOND),
+            listOf(TrimPattern.WILD))
+
+        // Do Custom mob
+        createRandomizedMob(mob, equipmentRandomizer, enchanted = true, newWeapon = false)
+
+        // Apply Stats and weapon
         mob.apply {
             addHealthAttribute(25.0, AttributeTags.MOB_HEALTH)
             heal(25.0)

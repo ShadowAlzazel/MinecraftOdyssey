@@ -10,6 +10,7 @@ object ItemDataTags {
     const val HAS_POTION_LOADED: String = "odyssey.alchemy_artillery_loaded"
     const val POTION_AMMO_AMOUNT: String = "odyssey.potion_ammo_amount"
     const val MULTISHOT_TRACKER: String = "odyssey.multishot_tracker"
+    const val LOADED_POTION_TYPE: String = "odyssey.loaded_potion_type"
 
     // Alchemy
     const val IS_ALCHEMY_COMBINATION: String = "odyssey.is_alchemy_combination" // For Alchemy Combinations/ Concoctions
@@ -28,10 +29,14 @@ object ItemDataTags {
     const val IS_EXTENDED_PLUS: String = "odyssey.is_extended_plus"
     const val IS_UPGRADED_PLUS: String = "odyssey.is_upgraded_plus"
     const val IS_AURA_POTION: String = "odyssey.is_aura_potion"
+    const val IS_BLAST_POTION: String = "odyssey.is_blast_potion"
+
     const val IS_LINGERING_STICKY: String = "odyssey.is_lingering_sticky"
 
     // Weapons
     const val AUTO_LOADER_LOADING: String = "odyssey.auto_loader_loading"
+    const val IS_LOADING_AMMO: String = "odyssey.is_loading_ammo"
+    const val AMMO_COUNT: String = "odyssey.ammo_count"
 
     // Engraving
     const val IS_ENGRAVED: String = "odyssey.is_engraved"
@@ -60,9 +65,12 @@ object ItemDataTags {
     const val GLYPH_AUGMENT_COUNT: String = "odyssey.glyph_augment_count"
     const val IS_GLYPHSHERD: String = "odyssey.is_glyphsherd"
     const val HAS_GLYPH_AUGMENT: String = "odyssey.has_glyph_augment"
-    const val IS_COPIED_GLYPH: String = "odyssey.is_copied_glyph  "
+    const val IS_COPIED_GLYPH: String = "odyssey.is_copied_glyph"
 
     const val RUNE_IDENTIFIER: String = "odyssey.rune_identifier"
+
+    const val MUSKET_LOADED_STAGE_1: String = "odyssey.musket_loaded_stage_1"
+    const val MUSKET_LOADED_STAGE_2: String = "odyssey.musket_loaded_stage_2"
 
     // Compasses
     const val IS_SCULK_FINDER: String = "odyssey.is_sculk_finder"

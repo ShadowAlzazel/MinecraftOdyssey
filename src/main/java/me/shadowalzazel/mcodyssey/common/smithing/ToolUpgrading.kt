@@ -3,9 +3,8 @@ package me.shadowalzazel.mcodyssey.common.smithing
 import io.papermc.paper.datacomponent.DataComponentTypes
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.api.AdvancementManager
-import me.shadowalzazel.mcodyssey.api.ToolDataManager
+import me.shadowalzazel.mcodyssey.api.EquipmentDataManager
 import me.shadowalzazel.mcodyssey.util.DataTagManager
-import me.shadowalzazel.mcodyssey.util.NamedKeys
 import me.shadowalzazel.mcodyssey.util.ToolComponentHelper
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
@@ -19,7 +18,7 @@ import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
 
 @Suppress("UnstableApiUsage")
-class ToolUpgrading : DataTagManager, ToolComponentHelper, AdvancementManager {
+internal interface ToolUpgrading : EquipmentDataManager, ToolComponentHelper, AdvancementManager {
 
     fun toolSmithingHandler(event: PrepareSmithingEvent) {
         val recipe = event.inventory.recipe
@@ -27,7 +26,7 @@ class ToolUpgrading : DataTagManager, ToolComponentHelper, AdvancementManager {
         if (recipe?.result?.type == Material.ENCHANTED_BOOK) return
         val inputMaterial = event.inventory.inputMineral ?: return
         val equipment = event.inventory.inputEquipment ?: return
-        if (ToolDataManager.getToolMaterial(equipment) in SmithingMaps.NOT_UPGRADEABLE) return
+        if (getEquipmentMaterial(equipment) in SmithingMaps.NOT_UPGRADEABLE) return
         // Switch case
         when (inputMaterial.type) {
             Material.NETHERITE_INGOT -> netheriteUpgrading(event)
@@ -39,7 +38,7 @@ class ToolUpgrading : DataTagManager, ToolComponentHelper, AdvancementManager {
 
     private fun netheriteUpgrading(event: PrepareSmithingEvent) {
         val equipment = event.inventory.inputEquipment ?: return
-        if (equipment.itemMeta?.hasItemModel() != true) return
+        if (equipment.getData(DataComponentTypes.ITEM_MODEL) == null) return
         val upgradeMaterial = "netherite"
         val itemType = event.result!!.type
         val upgradedItem = toolUpgrader(equipment.withType(itemType), upgradeMaterial)
@@ -51,15 +50,17 @@ class ToolUpgrading : DataTagManager, ToolComponentHelper, AdvancementManager {
     private fun customUpgrading(event: PrepareSmithingEvent) {
         event.result = ItemStack(Material.AIR)
         val equipment = event.inventory.inputEquipment ?: return
-        val resultItem = equipment.clone()
+        val item = equipment.clone()
         // Get ids
         val inputMaterialId = event.inventory.inputMineral?.getItemIdentifier() ?: return
         val templateId = event.inventory.inputTemplate?.getItemIdentifier() ?: return
         // Cross-check
-        if (SmithingMaps.TEMPLATE_INPUT_MAP[templateId] != inputMaterialId) return
+        if (SmithingMaps.GET_TEMPLATE_FROM_MATERIAL[inputMaterialId] != templateId) return
         // Get upgrade path from the inputMaterial
-        val upgradeMaterial = SmithingMaps.MATERIAL_UPGRADE_MAP[inputMaterialId] ?: return
-        val upgradedItem = toolUpgrader(resultItem, upgradeMaterial)
+        val upgradeMaterial = SmithingMaps.GET_UPGRADE_PATH[inputMaterialId] ?: return
+        if (!itemIsUpgradeable(item, upgradeMaterial)) return
+        // Upgrade
+        val upgradedItem = toolUpgrader(item, upgradeMaterial)
         when (upgradeMaterial) {
             "iridium" -> {
                 modifyDamage(upgradedItem, 1.0)
@@ -74,43 +75,52 @@ class ToolUpgrading : DataTagManager, ToolComponentHelper, AdvancementManager {
                 modifyDamage(upgradedItem, 1.0)
                 rewardAdvancement(event.viewers, "odyssey/smith_soul_steel")
             }
-            "titanium" -> {
+            "crystal_alloy" -> {
+                modifyDamage(upgradedItem, 1.0)
+                //rewardAdvancement(event.viewers, "odyssey/smith_crystal_alloy")
+            }
+            "titanium", "anodized_titanium" -> {
                 modifyDamage(upgradedItem, 1.0)
                 modifyAttackSpeed(upgradedItem, 1.1)
                 rewardAdvancement(event.viewers, "odyssey/smith_titanium")
             }
         }
         // Add ToolComponent
-        val mineableTags = getMiningTags(ToolDataManager.getToolType(upgradedItem) ?: "none")
+        val mineableTags = getMiningTags(getEquipmentType(upgradedItem) ?: "none")
         if (mineableTags != null) toolMiningUpgrader(upgradedItem, upgradeMaterial)
         // Finish
         event.result = upgradedItem
+        event.inventory.result = upgradedItem
     }
 
+    private fun itemIsUpgradeable(item: ItemStack, path: String): Boolean {
+        if (path in listOf("iridium", "mithril") && !equipmentIsDiamond(item.type)) return false
+        if (path in listOf("titanium", "anodized_titanium", "soul_steel") && !equipmentIsIron(item.type)) return false
+        return true
+    }
 
     // Main method to upgrade
     private fun toolUpgrader(item: ItemStack, upgradeMaterial: String): ItemStack {
-        val toolType = ToolDataManager.getToolType(item)!!
-        val newModel = NamedKeys.newKey("${upgradeMaterial}_${toolType}")
-        val itemName = item.getItemNameId()
-        item.setStringTag(ItemDataTags.MATERIAL_TYPE, toolType)
-        item.setStringTag(ItemDataTags.TOOL_TYPE, upgradeMaterial)
+        val toolType = getEquipmentType(item)!!
+        val itemName = "${upgradeMaterial}_${toolType}"
+        val newModel = createOdysseyKey(itemName)
+        item.setStringTag(ItemDataTags.MATERIAL_TYPE, upgradeMaterial)
+        item.setStringTag(ItemDataTags.TOOL_TYPE, toolType)
         item.setData(DataComponentTypes.ITEM_NAME, Component.text(itemName))
         item.setData(DataComponentTypes.ITEM_MODEL, newModel)
-        val maxDamage = SmithingMaps.DURABILITY_MAP[upgradeMaterial]
-        if (maxDamage != null)  item.setData(DataComponentTypes.MAX_DAMAGE, maxDamage)
+        val maxDamage = SmithingMaps.TOOL_MATERIALS[upgradeMaterial]?.maxDurability
+        if (maxDamage != null) item.setData(DataComponentTypes.MAX_DAMAGE, maxDamage)
         return item
     }
 
     private fun toolMiningUpgrader(item: ItemStack, upgradeMaterial: String) {
-        val toolType = ToolDataManager.getToolType(item) ?: return
+        val toolType = getEquipmentType(item) ?: return
         val newToolComponent = newToolComponent(upgradeMaterial, toolType)
         if (newToolComponent != null) {
             item.resetData(DataComponentTypes.TOOL)
             item.setData(DataComponentTypes.TOOL, newToolComponent)
         }
     }
-
 
     private fun modifyDamage(item: ItemStack, bonus: Double = 1.0) {
         // Get Old Modifier

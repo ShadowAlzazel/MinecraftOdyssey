@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 
 @Suppress("UnstableApiUsage")
-interface EnchantabilityHandler : EnchantmentManager, EnchantmentExtender, DataTagManager {
+interface EnchantabilityHandler : EnchantmentManager, DescriptionManager, DataTagManager {
 
     /*-----------------------------------------------------------------------------------------------*/
     fun getEnchantabilityCost(enchant: Pair<Enchantment, Int>, override: Int? = null): Int {
@@ -276,7 +276,8 @@ interface EnchantabilityHandler : EnchantmentManager, EnchantmentExtender, DataT
             else -> 35
         }
         var bonusPoints = 0
-        if (item.getStringTag(ItemDataTags.MATERIAL_TYPE) == "mithril") {
+        val materialType = item.getStringTag(ItemDataTags.MATERIAL_TYPE)
+        if (materialType == "mithril" || materialType == "crystal_alloy") {
             bonusPoints += 5
         }
         val extraPoints = item.getIntTag(ItemDataTags.EXTRA_ENCHANTABILITY_POINTS) ?: 0

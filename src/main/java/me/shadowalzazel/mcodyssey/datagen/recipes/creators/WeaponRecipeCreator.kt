@@ -65,6 +65,10 @@ class WeaponRecipeCreator : DataTagManager, ChoiceManager, ToolMaker {
             "X X",
             " X ",
             "C X"),
+        "kriegsmesser" to listOf(
+            " XX",
+            "XX ",
+            "|  "),
         // Shovel Overrides
         "spear" to listOf(
             "  X",

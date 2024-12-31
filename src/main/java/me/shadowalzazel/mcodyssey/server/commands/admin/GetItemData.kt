@@ -8,7 +8,7 @@ import org.bukkit.entity.Player
 
 object GetItemData : CommandExecutor {
 
-    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
+    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender !is Player) return false
         if (!sender.isOp) return false
         val item = sender.inventory.itemInMainHand

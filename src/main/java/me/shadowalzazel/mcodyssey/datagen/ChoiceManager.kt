@@ -7,50 +7,56 @@ import org.bukkit.inventory.RecipeChoice
 interface ChoiceManager {
 
     fun Item.toRecipeChoice(): RecipeChoice.ExactChoice {
-        val bukkitItem = this.newItemStack(1)
-        val dataItem = this.newItemStack(1, false)
+        val bukkitItem = this.newItemStack(1, true)
+        val dataItem = this.newItemStack(1)
         return RecipeChoice.ExactChoice(bukkitItem, dataItem)
     }
 
     fun silverChoices(): RecipeChoice.ExactChoice {
-        val bukkitItem = Item.SILVER_INGOT.newItemStack(1)
-        val dataItem = Item.SILVER_INGOT.newItemStack(1, false)
+        val bukkitItem = Item.SILVER_INGOT.newItemStack(1, true)
+        val dataItem = Item.SILVER_INGOT.newItemStack(1)
         return RecipeChoice.ExactChoice(bukkitItem, dataItem)
     }
 
     fun titaniumChoices(): RecipeChoice.ExactChoice {
-        val bukkitItem = Item.TITANIUM_INGOT.newItemStack(1)
-        val dataItem = Item.TITANIUM_INGOT.newItemStack(1, false)
+        val bukkitItem = Item.TITANIUM_INGOT.newItemStack(1, true)
+        val dataItem = Item.TITANIUM_INGOT.newItemStack(1)
         return RecipeChoice.ExactChoice(bukkitItem, dataItem)
     }
 
     fun heatedTitaniumChoices(): RecipeChoice.ExactChoice {
-        val bukkitItem = Item.HEATED_TITANIUM_INGOT.newItemStack(1)
-        val dataItem = Item.HEATED_TITANIUM_INGOT.newItemStack(1, false)
+        val bukkitItem = Item.HEATED_TITANIUM_INGOT.newItemStack(1, true)
+        val dataItem = Item.HEATED_TITANIUM_INGOT.newItemStack(1)
         return RecipeChoice.ExactChoice(bukkitItem, dataItem)
     }
 
     fun anodizedTitaniumChoices(): RecipeChoice.ExactChoice {
-        val bukkitItem = Item.ANODIZED_TITANIUM_INGOT.newItemStack(1)
-        val dataItem = Item.ANODIZED_TITANIUM_INGOT.newItemStack(1, false)
+        val bukkitItem = Item.ANODIZED_TITANIUM_INGOT.newItemStack(1, true)
+        val dataItem = Item.ANODIZED_TITANIUM_INGOT.newItemStack(1)
         return RecipeChoice.ExactChoice(bukkitItem, dataItem)
     }
 
     fun iridiumChoices(): RecipeChoice.ExactChoice {
-        val bukkitItem = Item.IRIDIUM_INGOT.newItemStack(1)
-        val dataItem = Item.IRIDIUM_INGOT.newItemStack(1, false)
+        val bukkitItem = Item.IRIDIUM_INGOT.newItemStack(1, true)
+        val dataItem = Item.IRIDIUM_INGOT.newItemStack(1)
         return RecipeChoice.ExactChoice(bukkitItem, dataItem)
     }
 
     fun mithrilChoices(): RecipeChoice.ExactChoice {
-        val bukkitItem = Item.MITHRIL_INGOT.newItemStack(1)
-        val dataItem = Item.MITHRIL_INGOT.newItemStack(1, false)
+        val bukkitItem = Item.MITHRIL_INGOT.newItemStack(1, true)
+        val dataItem = Item.MITHRIL_INGOT.newItemStack(1)
         return RecipeChoice.ExactChoice(bukkitItem, dataItem)
     }
 
     fun soulSteelChoices(): RecipeChoice.ExactChoice {
-        val bukkitItem = Item.SOUL_STEEL_INGOT.newItemStack(1)
-        val dataItem = Item.SOUL_STEEL_INGOT.newItemStack(1, false)
+        val bukkitItem = Item.SOUL_STEEL_INGOT.newItemStack(1, true)
+        val dataItem = Item.SOUL_STEEL_INGOT.newItemStack(1)
+        return RecipeChoice.ExactChoice(bukkitItem, dataItem)
+    }
+
+    fun crystalAlloyChoices(): RecipeChoice.ExactChoice {
+        val bukkitItem = Item.CRYSTAL_ALLOY_INGOT.newItemStack(1, true)
+        val dataItem = Item.CRYSTAL_ALLOY_INGOT.newItemStack(1)
         return RecipeChoice.ExactChoice(bukkitItem, dataItem)
     }
 
@@ -119,6 +125,10 @@ interface ChoiceManager {
             ),
             "mithril" to mapOf(
                 'X' to mithrilChoices(),
+                '|' to RecipeChoice.MaterialChoice(Material.STICK)
+            ),
+            "crystal_alloy" to mapOf(
+                'X' to crystalAlloyChoices(),
                 '|' to RecipeChoice.MaterialChoice(Material.STICK)
             ),
         )

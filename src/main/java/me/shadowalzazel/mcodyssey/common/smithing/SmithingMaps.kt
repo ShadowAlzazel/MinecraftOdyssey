@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.common.smithing
 
+import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
 import me.shadowalzazel.mcodyssey.common.trims.TrimMaterials
 import me.shadowalzazel.mcodyssey.common.trims.TrimPatterns
 import org.bukkit.inventory.meta.trim.TrimMaterial
@@ -7,22 +8,45 @@ import org.bukkit.inventory.meta.trim.TrimPattern
 
 object SmithingMaps {
 
-    val MATERIAL_UPGRADE_MAP = mapOf(
+    val TOOL_MATERIALS = mapOf(
+        // Vanilla
+        "wooden" to ToolMaterial.WOODEN,
+        "golden" to ToolMaterial.GOLDEN,
+        "stone" to ToolMaterial.STONE,
+        "iron" to ToolMaterial.IRON,
+        "diamond" to ToolMaterial.DIAMOND,
+        "netherite" to ToolMaterial.NETHERITE,
+        // Odyssey
+        "copper" to ToolMaterial.COPPER,
+        "silver" to ToolMaterial.SILVER,
+        "soul_steel" to ToolMaterial.SOUL_STEEL,
+        "titanium" to ToolMaterial.TITANIUM,
+        "anodized_titanium" to ToolMaterial.ANODIZED_TITANIUM,
+        "iridium" to ToolMaterial.IRIDIUM,
+        "mithril" to ToolMaterial.MITHRIL,
+        "crystal_alloy" to ToolMaterial.CRYSTAL_ALLOY,
+    )
+
+    val GET_UPGRADE_PATH = mapOf(
         "soul_steel_ingot" to "soul_steel",
         "mithril_ingot" to "mithril",
         "titanium_ingot" to "titanium",
-        "anodized_titanium_ingot" to "titanium",
-        "iridium_ingot" to "iridium"
+        "anodized_titanium_ingot" to "anodized_titanium",
+        "iridium_ingot" to "iridium",
+        "crystal_alloy_ingot" to "crystal_alloy"
     )
 
-    val TEMPLATE_INPUT_MAP = mapOf(
-        "soul_steel_upgrade_template" to "soul_steel_ingot",
-        "mithril_upgrade_template" to "mithril_ingot",
-        "titanium_upgrade_template" to "titanium_ingot",
-        "iridium_upgrade_template" to "iridium_ingot"
+    val GET_TEMPLATE_FROM_MATERIAL = mapOf(
+        "soul_steel_ingot" to "soul_steel_upgrade_template",
+        "mithril_ingot" to "mithril_upgrade_template",
+        "titanium_ingot" to "titanium_upgrade_template",
+        "anodized_titanium_ingot" to "titanium_upgrade_template",
+        "iridium_ingot" to "iridium_upgrade_template",
+        "crystal_alloy_ingot" to "crystal_alloy_upgrade_template"
     )
 
-    val DURABILITY_MAP = mapOf(
+    /*
+    val TOOL_DURABILITY_MAP = mapOf(
         "iridium" to 3178,
         "mithril" to 1789,
         "titanium" to 1002,
@@ -31,8 +55,42 @@ object SmithingMaps {
         "netherite" to 2031
     )
 
-    val NOT_UPGRADEABLE = listOf(
-        "titanium", "iridium", "mithril", "anodized_titanium", "silver", "soul_steel", "netherite"
+    val ARMOR_DURABILITY_MAP = mapOf(
+        "iridium" to 3.7,
+        "mithril" to 2.3,
+        "titanium" to 1.9,
+        "anodized_titanium" to 1.9,
+        "soul_steel" to 1.6
+    )
+
+     */
+
+    val MODEL_DATA_MAP = mapOf(
+        "tool_type" to 0, // Not available to modify
+        "blade" to 1,
+        "handle" to 2,
+        "hilt" to 3,
+        "pommel" to 4,
+        "trim_pattern" to 5
+    )
+
+    val PART_FROM_ITEM = mapOf(
+        "blade_part_upgrade_template" to "blade",
+        "handle_part_upgrade_template" to "handle",
+        "hilt_part_upgrade_template" to "hilt",
+        "pommel_part_upgrade_template" to "pommel",
+    )
+
+    val PATTERN_FROM_ITEM = mapOf(
+        "voyager_part_pattern" to "voyager",
+        "danger_part_pattern" to "danger",
+        "seraph_part_pattern" to "seraph",
+        "marauder_part_pattern" to "marauder",
+        "crusader_part_pattern" to "crusader",
+        "vandal_part_pattern" to "vandal",
+        "imperial_part_pattern" to "imperial",
+        "fancy_part_pattern" to "fancy",
+        "humble_part_pattern" to "humble"
     )
 
     val TRIM_MATERIAL_FROM_ITEM_MAP = mapOf(
@@ -59,11 +117,19 @@ object SmithingMaps {
         "lapis_lazuli" to TrimMaterial.LAPIS,
         "quartz" to TrimMaterial.QUARTZ,
         "copper_ingot" to TrimMaterial.COPPER,
-        "obsidian" to TrimMaterials.OBSIDIAN
+        "obsidian" to TrimMaterials.OBSIDIAN,
+        "crystal_alloy_ingot" to TrimMaterials.CRYSTAL_ALLOY,
+        "resin" to TrimMaterial.RESIN,
     )
 
-    val PATTERN_FROM_ITEM_MAP = mapOf(
+    val ARMOR_TRIM_PATTERNS_FROM_ITEM = mapOf(
+        // Odyssey
         "imperial_armor_trim_smithing_template" to TrimPatterns.IMPERIAL,
+        "voyager_armor_trim_smithing_template" to TrimPatterns.VOYAGER,
+        "leaf_armor_trim_smithing_template" to TrimPatterns.LEAF,
+        "danger_armor_trim_smithing_template" to TrimPatterns.DANGER,
+        "ring_armor_trim_smithing_template" to TrimPatterns.RING,
+        // Vanilla
         "ward_armor_trim_smithing_template" to TrimPattern.WARD,
         "spire_armor_trim_smithing_template" to TrimPattern.SPIRE,
         "coast_armor_trim_smithing_template" to TrimPattern.COAST,
@@ -84,16 +150,42 @@ object SmithingMaps {
         "bolt_armor_trim_smithing_template" to TrimPattern.BOLT
     )
 
+    val WEAPON_TRIM_PATTERNS_FROM_ITEM = mapOf(
+        "cross_weapon_trim_smithing_template" to TrimPatterns.CROSS,
+        "spine_weapon_trim_smithing_template" to TrimPatterns.SPINE,
+        "wings_weapon_trim_smithing_template" to TrimPatterns.WINGS,
+        "trace_weapon_trim_smithing_template" to TrimPatterns.TRACE,
+        "jewel_weapon_trim_smithing_template" to TrimPatterns.JEWEL,
+    )
+
+    // LISTS
+
     val UPGRADE_TEMPLATES = listOf(
         "mithril_upgrade_template",
         "soul_steel_upgrade_template",
         "titanium_upgrade_template",
         "iridium_upgrade_template",
-        "netherite_upgrade_template"
+        "netherite_upgrade_template",
+        "crystal_alloy_upgrade_template"
+    )
+
+    val NOT_UPGRADEABLE = listOf(
+        "titanium", "iridium", "mithril", "anodized_titanium", "silver", "soul_steel", "netherite", "crystal_alloy"
     )
 
     val TRIM_TEMPLATES = listOf(
+        // Odyssey
         "imperial_armor_trim_smithing_template",
+        "voyager_armor_trim_smithing_template",
+        "leaf_armor_trim_smithing_template",
+        "danger_armor_trim_smithing_template",
+        "ring_armor_trim_smithing_template",
+        "cross_weapon_trim_smithing_template",
+        "spine_weapon_trim_smithing_template",
+        "wings_weapon_trim_smithing_template",
+        "trace_weapon_trim_smithing_template",
+        "jewel_weapon_trim_smithing_template",
+        // Vanilla
         "ward_armor_trim_smithing_template",
         "spire_armor_trim_smithing_template",
         "coast_armor_trim_smithing_template",

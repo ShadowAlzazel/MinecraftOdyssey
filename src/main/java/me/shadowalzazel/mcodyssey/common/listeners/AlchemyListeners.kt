@@ -4,7 +4,6 @@ import com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent
 import me.shadowalzazel.mcodyssey.common.alchemy.BrewingManager
 import me.shadowalzazel.mcodyssey.common.alchemy.CauldronManager
 import me.shadowalzazel.mcodyssey.common.alchemy.EngulfingManager
-import me.shadowalzazel.mcodyssey.common.effects.EffectsManager
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import org.bukkit.Material
 import org.bukkit.entity.EntityType
@@ -16,7 +15,7 @@ import org.bukkit.event.block.CauldronLevelChangeEvent
 import org.bukkit.event.entity.EntityCombustByBlockEvent
 import org.bukkit.event.inventory.BrewEvent
 
-object AlchemyListeners : Listener, EffectsManager, EngulfingManager,
+object AlchemyListeners : Listener, EngulfingManager,
     BrewingManager, CauldronManager {
 
     /*-----------------------------------------------------------------------------------------------*/

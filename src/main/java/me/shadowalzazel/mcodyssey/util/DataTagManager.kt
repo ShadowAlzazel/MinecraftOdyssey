@@ -4,6 +4,8 @@ package me.shadowalzazel.mcodyssey.util
 
 import io.papermc.paper.datacomponent.DataComponentTypes
 import me.shadowalzazel.mcodyssey.Odyssey
+import net.kyori.adventure.text.TextComponent
+import net.kyori.adventure.text.TranslatableComponent
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataContainer
@@ -12,15 +14,17 @@ import java.util.*
 
 interface DataTagManager {
 
-    private fun PersistentDataContainer.hasItemKeyTag(): Boolean {
+    private fun PersistentDataContainer.hasItemIdTag(): Boolean {
         return has(NamedKeys.ITEM_KEY)
     }
 
-    fun ItemStack.hasItemKeyTag(): Boolean {
-        return itemMeta.persistentDataContainer.hasItemKeyTag()
+    fun ItemStack.hasItemIdTag(): Boolean {
+        if (!this.hasItemMeta()) return false
+        return itemMeta.persistentDataContainer.hasItemIdTag()
     }
 
-    fun ItemStack.getItemKeyTag(): String? {
+    fun ItemStack.getItemIdTag(): String? {
+        if (!hasItemMeta()) return null
         return itemMeta.persistentDataContainer[NamedKeys.ITEM_KEY, PersistentDataType.STRING]
     }
 
@@ -30,7 +34,10 @@ interface DataTagManager {
             @Suppress("DEPRECATION")
             itemMeta.itemName
         } else {
-            getData(DataComponentTypes.ITEM_NAME)?.toString()?.lowercase() ?: getItemKeyTag()
+            val text = getData(DataComponentTypes.ITEM_NAME)
+            if (text is TextComponent) return text.content()
+            if (text is TranslatableComponent) return null // Ignore Translate Key
+            getItemIdTag()
         }
     }
 
@@ -39,7 +46,7 @@ interface DataTagManager {
     }
 
     fun ItemStack.matchItem(tag: String): Boolean {
-        return this.getItemKeyTag() == tag
+        return this.getItemIdTag() == tag
     }
 
     fun ItemStack.addTag(tag: String) {
