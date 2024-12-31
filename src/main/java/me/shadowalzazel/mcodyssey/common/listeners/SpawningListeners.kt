@@ -102,7 +102,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
                     supershaftSpawning(event)
                 }
                 "line_mine" -> {
-                    supershaftSpawning(event)
+                    lineMineSpawning(event)
                 }
             }
         }
@@ -244,7 +244,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             // Stats
             addHealthAttribute(10.0, AttributeTags.SHADOW_CHAMBERS_HEALTH_BONUS)
             heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
-            addAttackAttribute(2.0, AttributeTags.SHADOW_CHAMBERS_ATTACK_BONUS)
+            addAttackAttribute(3.0, AttributeTags.SHADOW_CHAMBERS_ATTACK_BONUS)
             addArmorAttribute(2.0, AttributeTags.SHADOW_CHAMBERS_ARMOR_BONUS)
             addSpeedAttribute(0.0325, AttributeTags.SHADOW_CHAMBERS_SPEED_BONUS)
             addStepAttribute(0.5, AttributeTags.SHADOW_CHAMBERS_STEP_HEIGHT)
@@ -258,8 +258,9 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
         val mob = event.entity
         if (mob is Creaking) {
             mob.addHealthAttribute(40.0, AttributeTags.MOB_HEALTH)
+            mob.addSpeedAttribute(0.03, AttributeTags.MOB_MOVEMENT_SPEED)
             mob.heal(40.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
-            mob.addAttackAttribute(10.0, AttributeTags.MOB_ATTACK_DAMAGE)
+            mob.addAttackAttribute(8.0, AttributeTags.MOB_ATTACK_DAMAGE)
         } else {
             // Get Equipment Randomizer
             val equipmentRandomizer = EquipmentRandomizer(
@@ -305,7 +306,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
                 MobData.ALL_WEAPONS,
                 MobData.ALL_PARTS,
                 listOf("silver"),
-                listOf(TrimMaterials.SILVER),
+                listOf(TrimMaterials.NEPTUNIAN, TrimMaterials.JOVIANITE),
                 listOf(TrimPatterns.VOYAGER, TrimPattern.BOLT, TrimPattern.RAISER))
 
             // Creator
@@ -357,7 +358,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
         if (mob is Creaking) {
             mob.addHealthAttribute(40.0, AttributeTags.MOB_HEALTH)
             mob.heal(40.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
-            mob.addAttackAttribute(10.0, AttributeTags.MOB_ATTACK_DAMAGE)
+            mob.addAttackAttribute(8.0, AttributeTags.MOB_ATTACK_DAMAGE)
         }
         // Spider
         if (mob.scoreboardTags.contains("odyssey.giant") && mob is Spider) {
@@ -376,7 +377,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             // Stats
             addHealthAttribute(10.0, AttributeTags.SUNKEN_LIBRARY_HEALTH_BONUS)
             heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
-            addAttackAttribute(2.0, AttributeTags.SUNKEN_LIBRARY_ATTACK_BONUS)
+            addAttackAttribute(3.0, AttributeTags.SUNKEN_LIBRARY_ATTACK_BONUS)
             addArmorAttribute(2.0, AttributeTags.SUNKEN_LIBRARY_ARMOR_BONUS)
             addSpeedAttribute(0.02, AttributeTags.SUNKEN_LIBRARY_SPEED_BONUS)
             addStepAttribute(0.5, AttributeTags.SUNKEN_LIBRARY_STEP_HEIGHT)

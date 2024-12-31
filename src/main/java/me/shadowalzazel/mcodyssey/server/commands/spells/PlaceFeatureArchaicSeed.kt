@@ -49,7 +49,7 @@ object PlaceFeatureArchaicSeed : DataTagManager {
         with(sender.world) {
             spawnParticle(Particle.CRIT, sender.location, 30, 0.35, 0.5, 0.35)
         }
-        sender.performCommand("place feature $seedNamespace $coordinates")
+        //sender.performCommand("place feature $seedNamespace $coordinates")
 
         return true
     }

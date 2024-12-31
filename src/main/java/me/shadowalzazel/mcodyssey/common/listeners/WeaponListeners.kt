@@ -93,7 +93,7 @@ object WeaponListeners : Listener, WeaponCombatHandler, WeaponProjectileHandler,
         if (wasThrowable) {
             victim.removeScoreboardTag(EntityTags.THROWABLE_ATTACK_HIT)
         }
-        if (event.damage > 1.0 && !wasThrowable) { event.damage -= 1.0 } // Reduce Weapon Damage by 1 to match attribute display
+        //if (event.damage > 1.0 && !wasThrowable) { event.damage -= 1.0 } // Reduce Weapon Damage by 1 to match attribute display
         // Called Before
         weaponBonusAttributesHandler(event, mainWeaponType)
         // Prevent Recursive AOE calls

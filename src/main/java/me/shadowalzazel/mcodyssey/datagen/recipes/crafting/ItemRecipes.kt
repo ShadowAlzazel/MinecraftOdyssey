@@ -26,7 +26,7 @@ class ItemRecipes : ChoiceManager {
         val result = Item.SOUL_STEEL_UPGRADE_TEMPLATE.newItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "soul_steel_upgrade_template"), result).apply {
             shape("SES", "SCS", "SSS")
-            setIngredient('C', Item.SOUL_CRYSTAL.toRecipeChoice())
+            setIngredient('C', Item.SOUL_QUARTZ.toRecipeChoice())
             setIngredient('E', Item.ECTOPLASM.toRecipeChoice())
             setIngredient('S', Material.SOUL_SAND)
             category = CraftingBookCategory.MISC

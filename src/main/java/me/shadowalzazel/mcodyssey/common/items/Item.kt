@@ -34,7 +34,7 @@ open class Item(
         val ANODIZED_TITANIUM_INGOT = DataItem("anodized_titanium_ingot")
         val COAGULATED_BLOOD = DataItem("coagulated_blood")
         val ECTOPLASM = DataItem("ectoplasm")
-        val SOUL_CRYSTAL = DataItem("soul_crystal")
+        val SOUL_QUARTZ = DataItem("soul_quartz")
         val HEATED_TITANIUM_INGOT = DataItem("heated_titanium_ingot")
         val IRIDIUM_INGOT = DataItem("iridium_ingot")
         val BLANK_TOME = DataItem("blank_tome")
@@ -178,6 +178,7 @@ open class Item(
         val ARCANE_SCEPTER = DataItem("arcane_scepter")
         val WARPING_WAND = DataItem("warping_wand")
         val VOID_LINKED_KUNAI = DataItem("void_linked_kunai")
+        val SCROLL = DataItem("scroll")
         // ---------------------------------- ODYSSEY GENERATED -----------------------------------
         // Potions
         val POTION_VIAL = GeneratedItem("potion_vial", Potions.POTION_VIAL)
