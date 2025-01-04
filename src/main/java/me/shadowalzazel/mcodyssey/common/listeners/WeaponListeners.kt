@@ -453,7 +453,7 @@ object WeaponListeners : Listener, WeaponCombatHandler, WeaponProjectileHandler,
             "alchemical_driver" -> alchemicalWeaponShooting(event, itemName) // Launches potions
             "alchemical_diffuser" -> alchemicalWeaponShooting(event, itemName) // Sprays a mist with the potion effect
             "alchemical_bolter" -> alchemicalWeaponShooting(event, itemName) // Shoots arrows of tipped with the effect
-            "grappling_hook_mk1" -> grapplingHookShooting(event)
+            "chain_hook" -> grapplingHookShooting(event)
         }
     }
 
@@ -476,7 +476,7 @@ object WeaponListeners : Listener, WeaponCombatHandler, WeaponProjectileHandler,
     /*-----------------------------------------------------------------------------------------------*/
     // GRAPPLING HOOK (cross hook)
     private fun grapplingHookShooting(event: EntityShootBowEvent, power: Double = 0.2) {
-        println("CALLED SHOOT")
+        //println("CALLED SHOOT")
         if (event.entity.scoreboardTags.contains(EntityTags.HAS_SHOT_GRAPPLE)) {
             event.entity.removeScoreboardTag(EntityTags.HAS_SHOT_GRAPPLE)
             event.entity.removeScoreboardTag(EntityTags.IS_GRAPPLING)
@@ -496,11 +496,11 @@ object WeaponListeners : Listener, WeaponCombatHandler, WeaponProjectileHandler,
         projectile.velocity = projectile.velocity.multiply(2.0)
         currentGrappleShotTasks[hookerId] = task
         task.runTaskTimer(Odyssey.instance, 1, 1)
-        println("FINISHED SHOOT")
+        //println("FINISHED SHOOT")
     }
 
     private fun grapplingHookHitHandler(event: ProjectileHitEvent) {
-        println("CALLED PULL")
+        //println("CALLED PULL")
         val projectile = event.entity
         val hooker = projectile.shooter
         if (hooker !is LivingEntity) return
@@ -526,7 +526,7 @@ object WeaponListeners : Listener, WeaponCombatHandler, WeaponProjectileHandler,
         hooker.addScoreboardTag(EntityTags.IS_GRAPPLING)
         currentGrapplePullTasks[hookerId] = task
         task.runTaskTimer(Odyssey.instance, 1, 1)
-        println("FINISHED PULL CALL")
+        //println("FINISHED PULL CALL")
     }
 
 

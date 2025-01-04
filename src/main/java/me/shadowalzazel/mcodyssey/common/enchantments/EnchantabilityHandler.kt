@@ -42,7 +42,7 @@ interface EnchantabilityHandler : EnchantmentManager, DescriptionManager, DataTa
 
     /*-----------------------------------------------------------------------------------------------*/
     // Mains
-    fun ItemStack.updateEnchantabilityPoints(
+    fun ItemStack.updateItemPoints(
         newEnchants: MutableMap<Enchantment, Int>? = null,
         enchantsToRemove: MutableMap<Enchantment, Int>? = null,
         resetLore: Boolean = true,
@@ -189,14 +189,14 @@ interface EnchantabilityHandler : EnchantmentManager, DescriptionManager, DataTa
         }
     }
 
-    fun ItemStack.updatePoints(
+    fun ItemStack.updateEnchantPoints(
         resetLore: Boolean = true,
         toggleToolTip: Boolean = true,
         newEnchants: MutableMap<Enchantment, Int>? = null) {
         if (this.type == Material.ENCHANTED_BOOK || this.type == Material.BOOK) {
             this.updateStoredEnchantmentPoints(toggleToolTip, newEnchants)
         } else {
-            this.updateEnchantabilityPoints(newEnchants, null, resetLore, toggleToolTip)
+            this.updateItemPoints(newEnchants, null, resetLore, toggleToolTip)
         }
     }
 

@@ -21,9 +21,6 @@ object MiscListeners : Listener, EnchantmentManager {
         val item = event.item
         for (enchant in item.enchantments) {
             when(enchant.key.getNameId()) {
-                "moonpatch" -> {
-                    //moonpatchEnchantment(event)
-                }
                 "parasitic_curse" -> {
                     parasiticCurseEnchantment(event, enchant.value)
                 }

@@ -166,7 +166,7 @@ open class Item(
         // Equipment
         // val HORNED_HELMET = DataItem("horned_helmet")
         val TINKERED_BOW = DataItem("tinkered_bow")
-        val GRAPPLING_HOOK = DataItem("grappling_hook")
+        val CHAIN_HOOK = DataItem("chain_hook")
         val TINKERED_MUSKET = DataItem("tinkered_musket")
         val AUTO_CROSSBOW = DataItem("auto_crossbow")
         val COMPACT_CROSSBOW = DataItem("compact_crossbow")

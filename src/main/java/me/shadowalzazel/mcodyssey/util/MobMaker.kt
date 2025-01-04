@@ -183,7 +183,7 @@ interface MobMaker : LootEquipmentCreator {
         mainHand.apply {
             addShinyEnchant(shinyEnchant, checkedMax)
             addEnchantment(OdysseyEnchantments.O_SHINY, 1)
-            updateEnchantabilityPoints()
+            updateEnchantPoints()
         }
         enchantItemsRandomly(armorList, 25 + difficulty.toInt())
 

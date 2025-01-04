@@ -22,7 +22,7 @@ import java.net.URI
 object OdysseyAssets : Listener, RegistryTagManager, DataTagManager {
 
     // Put hash into resource-pack-sha1 WITHIN server.properties
-    private const val RESOURCE_PACK_HASH = "0e5b1797691e621650800004569651659da2925b"
+    private const val RESOURCE_PACK_HASH = "9648192d7b73af98290a7f0ed43a0a661d455ffd"
 
     private fun resourcePackHandler(player: Player) {
         // PROD

@@ -1,19 +1,22 @@
 package me.shadowalzazel.mcodyssey.common.tasks.weapon_tasks
 
+import me.shadowalzazel.mcodyssey.api.VectorParticles
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
+import org.bukkit.Particle
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.entity.Projectile
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 
+@Suppress("UnstableApiUsage")
 class GrapplingHookPull(
     private val hooker: LivingEntity,
     private val hook: Projectile,
     private val grapplingHook: ItemStack,
     private val power: Double = 0.2,
-    private val maxClose: Double = 2.0
-) : BukkitRunnable() {
+    private val maxClose: Double? = 2.0
+) : BukkitRunnable(), VectorParticles {
 
     // FOR ODM Gear have shift fire the grapples
     override fun run() {
@@ -60,12 +63,18 @@ class GrapplingHookPull(
             hooker.velocity = newVector
             //println("New Velocity: $newVector")
             val distance = destination.distance(origin)
+
+            //spawnLineParticles(Particle.ASH, origin, destination, (distance * 5).toInt(), null)
+
             //val display = origin.world.spawnEntity(origin, EntityType.BLOCK_DISPLAY)
             // Cancel Grapple if too close
-            if (distance < maxClose) {
+            /*
+            if (maxClose != null) {
                 cancelGrapple("Too Close")
                 return
             }
+
+             */
             // !!!!! MAYBE GAIN SOME VELOCITY IN DIRECTION LOOKING AT OR CURRENT DIRECTION
         } else {
             cancelGrapple("Not Grappling")

@@ -107,7 +107,7 @@ object EnchantingListeners : Listener, TomeEnchanting {
         }
         // Update
         if (result.hasItemMeta()) {
-            result.updatePoints()
+            result.updateEnchantPoints()
         }
         // IF empty name
         if (second == null) {
@@ -133,19 +133,16 @@ object EnchantingListeners : Listener, TomeEnchanting {
                 result.itemMeta = newMeta
             }
         }
-        event.result = result.clone().also { it.updatePoints() }
+        event.result = result.clone().also { it.updateEnchantPoints() }
     }
 
     /*-----------------------------------------------------------------------------------------------*/
     @EventHandler(priority = EventPriority.HIGH)
     fun smithingEnchantHandler(event: PrepareSmithingEvent) {
         val recipe = event.inventory.recipe ?: return
-        if (event.inventory.inputMineral == null) return
-        if (event.inventory.inputEquipment == null) return
-        if (event.inventory.inputTemplate == null) return
-        val mineral = event.inventory.inputMineral!!
-        val equipment = event.inventory.inputEquipment!!.clone()
-        val template = event.inventory.inputTemplate!!
+        val mineral = event.inventory.inputMineral ?: return
+        val equipment = event.inventory.inputEquipment ?: return
+        val template = event.inventory.inputTemplate ?: return
         // Avoid Conflict with other smithing, using (Enchanted Book)
         val templateId = template.getItemIdentifier() ?: return
         if (recipe.result.type != Material.ENCHANTED_BOOK) return
@@ -160,20 +157,21 @@ object EnchantingListeners : Listener, TomeEnchanting {
         // Check for [TOME] + [EQUIPMENT] + [LAPIS]
         if (hasLapis && hasItem) {
             val result = when(templateId) {
-                "tome_of_avarice" -> tomeOfAvariceOnItem(equipment, event.viewers)
-                "tome_of_discharge" -> tomeOfDischargeOnItem(equipment, event.viewers)
-                "tome_of_expenditure" -> tomeOfExpenditureOnItem(equipment, event.viewers)
-                "tome_of_harmony" -> tomeOfHarmonyOnItem(equipment)
+                "tome_of_avarice" -> tomeOfAvariceOnItem(equipment.clone(), event.viewers)
+                "tome_of_discharge" -> tomeOfDischargeOnItem(equipment.clone(), event.viewers)
+                "tome_of_expenditure" -> tomeOfExpenditureOnItem(equipment.clone(), event.viewers)
+                "tome_of_harmony" -> tomeOfHarmonyOnItem(equipment.clone())
                 //"tome_of_polymerization" -> tomeOfPolymerizationOnItem(template, equipment, event.viewers)
-                "tome_of_promotion" -> tomeOfPromotionOnItem(equipment, event.viewers)
-                "tome_of_imitation" -> tomeOfImitationOnItem(equipment, event.viewers)
-                "tome_of_replication" -> tomeOfReplicationOnItem(equipment, event.viewers)
+                "tome_of_promotion" -> tomeOfPromotionOnItem(equipment.clone(), event.viewers)
+                "tome_of_imitation" -> tomeOfImitationOnItem(equipment.clone(), event.viewers)
+                "tome_of_replication" -> tomeOfReplicationOnItem(equipment.clone(), event.viewers)
+                "tome_of_extraction" -> tomeOfExtractionOnItem(equipment.clone(), event.viewers)
                 else -> {
                     null
                 }
             }
             // Change result to air if null result
-            result?.updatePoints()
+            result?.updateEnchantPoints()
             event.result = result ?: ItemStack(Material.AIR)
         }
     }
@@ -181,7 +179,7 @@ object EnchantingListeners : Listener, TomeEnchanting {
     @EventHandler(priority = EventPriority.HIGH)
     fun smithingDoneHandler(event: SmithItemEvent) {
         val smithingInventory = event.inventory
-        if (smithingInventory.result == null) return
+        val result = smithingInventory.result ?: return
         val template = smithingInventory.inputTemplate ?: return
         val mineral = smithingInventory.inputMineral ?: return
         val equipment = smithingInventory.inputEquipment ?: return
@@ -204,6 +202,13 @@ object EnchantingListeners : Listener, TomeEnchanting {
                 }
                 "tome_of_replication" -> {
                     val overflow = player.inventory.addItem(equipment.clone())
+                    if (overflow.isNotEmpty()) {
+                        player.world.dropItem(player.location, overflow[0]!!)
+                    }
+                }
+                "tome_of_extraction" -> {
+                    val extractionItem = tomeOfExtractionPostEffect(equipment, result, event.viewers) ?: return
+                    val overflow = player.inventory.addItem(extractionItem)
                     if (overflow.isNotEmpty()) {
                         player.world.dropItem(player.location, overflow[0]!!)
                     }
@@ -240,9 +245,8 @@ object EnchantingListeners : Listener, TomeEnchanting {
                 enchantingTomeHandler(event)
             }
             else -> { // Update Points
-                val book = event.item
-                book.updatePoints(resetLore = true, toggleToolTip = true, newEnchants = event.enchantsToAdd)
-                event.item = book
+                //book.updatePoints(resetLore = true, toggleToolTip = true, newEnchants = event.enchantsToAdd)
+                //event.item = book
             }
         }
     }
@@ -306,7 +310,7 @@ object EnchantingListeners : Listener, TomeEnchanting {
             newEnchants[enchant.key] = enchant.value
         }
         // update
-        book.updatePoints(resetLore = true, toggleToolTip = true, newEnchants = newEnchants) // Not full trigger since its passed as a book
+        book.updateEnchantPoints(resetLore = true, toggleToolTip = true, newEnchants = newEnchants) // Not full trigger since its passed as a book
         event.item = book
     }
 
@@ -317,7 +321,7 @@ object EnchantingListeners : Listener, TomeEnchanting {
         val item = event.item
         val newEnchants = event.enchantsToAdd
         // Can get OVER-MAXED ITEMS if lucky
-        item.updateEnchantabilityPoints(newEnchants, toggleToolTip = true)
+        item.updateItemPoints(newEnchants, toggleToolTip = true)
         event.item = item
     }
 

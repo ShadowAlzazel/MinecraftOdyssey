@@ -13,19 +13,20 @@ class EquipmentRecipes : ChoiceManager {
 
     fun getRecipes(): List<Recipe> {
         return listOf(
-            grapplingHookRecipe(), tinkeredMusketRecipe(), tinkeredBowRecipe(), autoCrossbowRecipe(), warpingWandRecipe(),
+            chainHookRecipe(), tinkeredMusketRecipe(), tinkeredBowRecipe(), autoCrossbowRecipe(), warpingWandRecipe(),
             arcaneWandRecipe(), arcaneBladeRecipe(), arcaneScepterRecipe(), explosiveArrowRecipe(), alchemicalDriverRecipe(),
             compactCrossbowRecipe(), voidLinkedKunaiRecipe(), alchemicalDiffuserRecipe()
         )
     }
 
-    private fun grapplingHookRecipe(): ShapedRecipe {
-        val result = Item.GRAPPLING_HOOK.newItemStack(1)
-        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "grappling_hook"), result).apply {
-            shape(" X ", "STS", " L ")
+    private fun chainHookRecipe(): ShapedRecipe {
+        val result = Item.CHAIN_HOOK.newItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "chain_hook"), result).apply {
+            shape("CXC", "STS", " L ")
             setIngredient('X', titaniumChoices())
+            setIngredient('C', Material.COPPER_INGOT)
             setIngredient('S', Material.STRING)
-            setIngredient('T', Material.TRIPWIRE_HOOK)
+            setIngredient('T', Material.CHAIN)
             setIngredient('L', Material.STICK)
             category = CraftingBookCategory.EQUIPMENT
         }
