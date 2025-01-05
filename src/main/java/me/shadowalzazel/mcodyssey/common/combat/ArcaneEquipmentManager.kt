@@ -1,56 +1,109 @@
-package me.shadowalzazel.mcodyssey.util
+package me.shadowalzazel.mcodyssey.common.combat
 
 import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.util.VectorParticles
 import me.shadowalzazel.mcodyssey.common.tasks.arcane_tasks.MagicMissileLauncher
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.util.constants.WeaponMaps.ARCANE_RANGES
 import org.bukkit.*
+import org.bukkit.damage.DamageType
 import org.bukkit.entity.*
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.meta.Damageable
+import org.bukkit.util.Vector
 
-interface ArcaneEquipmentManager {
+@Suppress("UnstableApiUsage")
+interface ArcaneEquipmentManager : VectorParticles, AttackHelper {
 
     fun arcaneWandHandler(event: PlayerInteractEvent) {
-        // Basic Vars
-        val player = event.player
-        val offHand = player.equipment.itemInOffHand
-        val mainHand = player.equipment.itemInMainHand
-        val model = offHand.itemMeta!!.itemModel?.key ?: return
-        if (mainHand.type != Material.BOOK && mainHand.type != Material.ENCHANTED_BOOK) return
-        val entity = getRayTraceEntity(player, model)
-        if (entity !is LivingEntity) return
-        // Run Attack
-        player.attack(entity)
-        player.setCooldown(offHand.type, 3 * 20)
-        if (offHand.itemMeta is Damageable) {
-            offHand.damage(1, player)
+        val attacker = event.player
+        val arcaneHand = attacker.equipment.itemInOffHand
+        val bookHand = attacker.equipment.itemInMainHand
+        // Cooldown
+        if (attacker.getCooldown(arcaneHand) > 0) return
+        attacker.setCooldown(arcaneHand, 20)
+        // Vars
+        val range = 32.0
+        val aimAssist = 0.5
+        // Logic
+        val endLocation: Location
+        val target = getRayTraceEntity(attacker, range, aimAssist)
+        if (target is LivingEntity) {
+            // Run Attack
+            //player.attack(entity)
+            //attacker.attack(target)
+            val damageSource = createEntityDamageSource(attacker, null, type = DamageType.MAGIC)
+            target.damage(4.0, damageSource)
+
+            endLocation = target.eyeLocation
+        } else {
+            endLocation = attacker.eyeLocation.clone().add(attacker.eyeLocation.direction.clone().normalize().multiply(range))
         }
-        // Particles
-        var location = player.location.clone()
-        val unitVector = player.eyeLocation.direction.clone()
-        val distance = player.location.distance(entity.location)
-        for (x in 0..(distance.toInt())) {
-            location = location.add(unitVector)
-            player.world.spawnParticle(Particle.WITCH, location, 3, 0.01, 0.01, 0.01)
-            // Amethyst noise step/hit every %3
-            if (x % 3 == 0) {
-                entity.world.playSound(entity.location, Sound.BLOCK_AMETHYST_CLUSTER_HIT, 2F, 2F)
-                entity.world.playSound(entity.location, Sound.BLOCK_AMETHYST_CLUSTER_STEP, 2F, 2F)
-            }
-        }
-        player.world.playSound(player.location, Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, 2F, 2F)
-        entity.world.playSound(entity.location, Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, 2F, 2F)
+
+        // Particles in Line
+        val particleCount = endLocation.distance(attacker.location) * 6
+        spawnLineParticles(
+            particle = Particle.WITCH,
+            start = attacker.location,
+            end = endLocation,
+            count = particleCount.toInt()
+        )
+        attacker.world.playSound(attacker.location, Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, 2F, 2F)
     }
 
+
     fun arcaneBladeHandler(event: PlayerInteractEvent) {
-        val player = event.player
-        val offHand = player.equipment.itemInOffHand
-        val mainHand = player.equipment.itemInMainHand
-        if (mainHand.type != Material.BOOK && mainHand.type != Material.ENCHANTED_BOOK) return
+        val attacker = event.player
+        val arcaneHand = attacker.equipment.itemInOffHand
+        val bookHand = attacker.equipment.itemInMainHand
+        // Cooldown
+        if (attacker.getCooldown(arcaneHand) > 0) return
+        attacker.setCooldown(arcaneHand, 20)
+        // Vars
+        val range = 6.0
+        // Logic
+
+        // Spawn particles in Arc
+        spawnArcParticles(
+            particle = Particle.WITCH,
+            center = attacker.eyeLocation,
+            directionVector = attacker.eyeLocation.direction,
+            pitchAngle = 0.0,
+            radius = range,
+            arcLength = Math.toRadians(70.0),
+            height = 0.1,
+            count = 55)
     }
 
     fun arcaneScepterHandler(event: PlayerInteractEvent) {
+        val attacker = event.player
+        val arcaneHand = attacker.equipment.itemInOffHand
+        val bookHand = attacker.equipment.itemInMainHand
+        // Cooldown
+        if (attacker.getCooldown(arcaneHand) > 0) return
+        attacker.setCooldown(arcaneHand, 30)
+        // Vars
+        val range = 32.0
+        val radius = 3.0
+        val aimAssist = 0.25
+        // Logic
+        val circleLocation = getRayTraceLocation(attacker, range, aimAssist) ?: return
+        val damageSource = createEntityDamageSource(attacker, null, type = DamageType.MAGIC)
+        circleLocation.getNearbyLivingEntities(radius).forEach {
+            it.damage(4.0, damageSource)
+        }
+        // Particles
+        spawnCircleParticles(
+            particle = Particle.WITCH,
+            center = circleLocation,
+            upDirection = Vector(0, 1, 0),
+            radius = radius,
+            heightOffset = 0.25,
+            count = 55)
+        attacker.world.playSound(attacker.location, Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, 2F, 2F)
+    }
+
+    fun arcaneMissileHandler(event: PlayerInteractEvent) {
         // Basic Variables
         val player = event.player
         val offHand = player.equipment.itemInOffHand
@@ -66,7 +119,7 @@ interface ArcaneEquipmentManager {
         val launchDirection = eyeDirection.multiply(1.3)
         //val arcDirection = eyeDirection.clone().setY(0.0).normalize().setY(0.8).normalize().multiply(1.3) // PRESET OR OVERRIDE MODES
         // Get Target from block ray trace or vector addition
-        val targetLocation = getRayTraceLocation(player, model) ?: eyeDirection.clone().multiply(48.0).toLocation(player.world)
+        val targetLocation = getRayTraceBlock(player, model) ?: eyeDirection.clone().multiply(48.0).toLocation(player.world)
         // Spawn Missile
         val missile = (player.world.spawnEntity(player.eyeLocation, EntityType.SNOWBALL) as Snowball).also {
             it.item = mainHand.clone()
@@ -132,16 +185,27 @@ interface ArcaneEquipmentManager {
 
     }
 
-    private fun getRayTraceEntity(player: Player, model: String): Entity? {
-        val reach = ARCANE_RANGES[model] ?: return null
-        val result = player.rayTraceEntities(reach.toInt()) ?: return null
-        val target = result.hitEntity ?: return null
-        val distance = player.eyeLocation.distance(target.location)
-        if (reach < distance) return null
+    private fun getRayTraceLocation(entity: LivingEntity, range: Double, raySize: Double): Location? {
+        val entityPredicate = { e: Entity -> e != entity}
+        val result = entity.world.rayTrace(
+            entity.eyeLocation, entity.eyeLocation.direction, range,
+            FluidCollisionMode.NEVER, true, raySize, entityPredicate)
+        if (result == null) return null
+        return result.hitEntity?.location ?: result.hitBlock?.location?.add(0.0, 1.0, 0.0)
+    }
+
+    private fun getRayTraceEntity(entity: LivingEntity, range: Double, raySize: Double): Entity? {
+        val entityPredicate = { e: Entity -> e != entity}
+        val result = entity.world.rayTrace(
+            entity.eyeLocation, entity.eyeLocation.direction, range,
+            FluidCollisionMode.NEVER, true, raySize, entityPredicate)
+        val target = result?.hitEntity ?: return null
+        val distance = entity.eyeLocation.distance(target.location)
+        if (range < distance) return null
         return target
     }
 
-    private fun getRayTraceLocation(player: Player, model: String): Location? {
+    private fun getRayTraceBlock(player: Player, model: String): Location? {
         val reach = ARCANE_RANGES[model] ?: return null
         val result = player.rayTraceBlocks(reach, FluidCollisionMode.NEVER) ?: return null
         val location = result.hitPosition.toLocation(player.world)

@@ -13,6 +13,7 @@ import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import me.shadowalzazel.mcodyssey.util.constants.WeaponMaps.MIN_RANGE_MAP
 import me.shadowalzazel.mcodyssey.util.constants.WeaponMaps.REACH_MAP
 import me.shadowalzazel.mcodyssey.util.constants.WeaponMaps.SWEEP_MAP
+import org.bukkit.damage.DamageType
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -329,7 +330,7 @@ object WeaponListeners : Listener, WeaponCombatHandler, WeaponProjectileHandler,
             // Match same weapon
             if (thrower is HumanEntity && thrower.equipment.itemInMainHand.getItemIdTag() == projectile.item.getItemIdTag()) {
                 //thrower.attack(victim)
-                victim.damage(damage * 1.0, createPlayerDamageSource(thrower))
+                victim.damage(damage * 1.0, createEntityDamageSource(thrower, projectile, DamageType.PLAYER_ATTACK))
 
             } else {
                 victim.damage(damage * 1.0, thrower as LivingEntity)
@@ -353,7 +354,7 @@ object WeaponListeners : Listener, WeaponCombatHandler, WeaponProjectileHandler,
             val thrower = projectile.shooter ?: return
             if (thrower !is LivingEntity) return
             target.addScoreboardTag(EntityTags.THROWABLE_ATTACK_HIT)
-            target.damage(damage * 1.0, createPlayerDamageSource(thrower))
+            target.damage(damage * 1.0, createEntityDamageSource(thrower, projectile, DamageType.PLAYER_ATTACK))
             returnChakram = true
         }
         // If hit owner, reset Cooldown

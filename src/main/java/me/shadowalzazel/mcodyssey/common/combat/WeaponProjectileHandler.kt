@@ -4,7 +4,7 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.ChargedProjectiles
 import io.papermc.paper.event.entity.EntityLoadCrossbowEvent
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.api.VectorParticles
+import me.shadowalzazel.mcodyssey.util.VectorParticles
 import me.shadowalzazel.mcodyssey.common.listeners.WeaponListeners
 import me.shadowalzazel.mcodyssey.common.tasks.weapon_tasks.LoadAutoCrossbow
 import me.shadowalzazel.mcodyssey.util.DataTagManager

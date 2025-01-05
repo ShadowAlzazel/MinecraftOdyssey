@@ -1,8 +1,7 @@
 package me.shadowalzazel.mcodyssey.common.tasks.weapon_tasks
 
-import me.shadowalzazel.mcodyssey.api.VectorParticles
+import me.shadowalzazel.mcodyssey.util.VectorParticles
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
-import org.bukkit.Particle
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.entity.Projectile
