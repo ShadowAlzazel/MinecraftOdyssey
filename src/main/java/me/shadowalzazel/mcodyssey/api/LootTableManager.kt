@@ -1,7 +1,6 @@
 package me.shadowalzazel.mcodyssey.api
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.util.RegistryTagManager
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.world.level.storage.loot.LootTable as NmsLootTable

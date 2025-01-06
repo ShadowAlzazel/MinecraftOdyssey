@@ -5,7 +5,7 @@
  */
 
 group = "me.shadowalzazel"
-version = "1.0-BETA-1.21.4"
+version = "1.0.1-ALPHA-1.21.4"
 description = "A server side expansion pack for a new minecraft adventure!"
 
 plugins {

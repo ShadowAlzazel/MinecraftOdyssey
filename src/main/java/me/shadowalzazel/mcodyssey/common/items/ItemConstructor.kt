@@ -7,7 +7,7 @@ import io.papermc.paper.datacomponent.item.ItemLore
 import io.papermc.paper.datacomponent.item.PotionContents
 import me.shadowalzazel.mcodyssey.util.AttributeManager
 import me.shadowalzazel.mcodyssey.util.DataTagManager
-import me.shadowalzazel.mcodyssey.util.RegistryTagManager
+import me.shadowalzazel.mcodyssey.api.RegistryTagManager
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import net.kyori.adventure.text.Component

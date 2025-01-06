@@ -6,12 +6,6 @@ import java.io.FileNotFoundException
 
 class OdysseyDatapack(val odyssey: Odyssey) {
 
-    /*
-    private val hasTerralith: Boolean = odyssey.overworld.isBedWorks
-    private val hasIncendium: Boolean = odyssey.overworld.isBedWorks
-    val hasContinents: Boolean = odyssey.overworld.isBedWorks
-     */
-
     fun findOdysseyDatapack(): Boolean {
         val worldFilePath = Odyssey.instance.overworld.worldFolder.path
         val datapackPathString = "/datapacks/OdysseyDataPack"

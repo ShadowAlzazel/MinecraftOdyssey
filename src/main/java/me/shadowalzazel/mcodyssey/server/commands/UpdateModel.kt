@@ -2,9 +2,8 @@ package me.shadowalzazel.mcodyssey.server.commands
 
 import io.papermc.paper.datacomponent.DataComponentTypes
 import me.shadowalzazel.mcodyssey.util.DataTagManager
-import me.shadowalzazel.mcodyssey.util.RegistryTagManager
+import me.shadowalzazel.mcodyssey.api.RegistryTagManager
 import org.bukkit.block.Chest
-import org.bukkit.block.data.BlockData
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender

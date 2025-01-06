@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.common.enchantments
 
 import io.papermc.paper.registry.RegistryKey
-import me.shadowalzazel.mcodyssey.util.RegistryTagManager
+import me.shadowalzazel.mcodyssey.api.RegistryTagManager
 import org.bukkit.enchantments.Enchantment
 
 @Suppress("MemberVisibilityCanBePrivate", "Unused")

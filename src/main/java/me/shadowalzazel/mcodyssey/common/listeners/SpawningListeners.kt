@@ -9,7 +9,7 @@ import me.shadowalzazel.mcodyssey.common.trims.TrimMaterials
 import me.shadowalzazel.mcodyssey.common.trims.TrimPatterns
 import me.shadowalzazel.mcodyssey.util.EquipmentRandomizer
 import me.shadowalzazel.mcodyssey.util.MobMaker
-import me.shadowalzazel.mcodyssey.util.RegistryTagManager
+import me.shadowalzazel.mcodyssey.api.RegistryTagManager
 import me.shadowalzazel.mcodyssey.util.StructureHelper
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags

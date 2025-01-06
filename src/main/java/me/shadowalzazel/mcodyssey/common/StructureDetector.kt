@@ -3,7 +3,7 @@ package me.shadowalzazel.mcodyssey.common
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.util.RegistryTagManager
+import me.shadowalzazel.mcodyssey.api.RegistryTagManager
 import me.shadowalzazel.mcodyssey.util.StructureHelper
 import org.bukkit.NamespacedKey
 import org.bukkit.generator.structure.Structure
