@@ -18,14 +18,6 @@ class LoadAutoCrossbow(
 
     override fun run() {
         if (entity.equipment!!.itemInMainHand == crossbow) {
-            /*
-            val meta = crossbow.itemMeta as CrossbowMeta
-            meta.setChargedProjectiles(mutableListOf())
-            for (item in itemsToLoad) {
-                meta.addChargedProjectile(item)
-            }
-            crossbow.itemMeta = meta
-             */
             val projectiles = ChargedProjectiles.chargedProjectiles().addAll(itemsToLoad)
             crossbow.setData(DataComponentTypes.CHARGED_PROJECTILES, projectiles)
             crossbow.removeTag(ItemDataTags.AUTO_LOADER_LOADING)

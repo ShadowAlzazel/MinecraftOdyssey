@@ -41,7 +41,7 @@ interface LootEquipmentCreator : ToolMaker, EnchantabilityHandler {
         items.forEach {
             val copy = it.enchantWithLevels(minOf(30, level), keySet, Random())
             it.setData(DataComponentTypes.ENCHANTMENTS, copy.getData(DataComponentTypes.ENCHANTMENTS)!!)
-            it.updateEnchantabilityPoints()
+            it.updateEnchantPoints()
         }
     }
 
@@ -49,7 +49,7 @@ interface LootEquipmentCreator : ToolMaker, EnchantabilityHandler {
         items.forEach {
             val copy = it.enchantWithLevels(minOf(30, level), false, Random())
             it.setData(DataComponentTypes.ENCHANTMENTS, copy.getData(DataComponentTypes.ENCHANTMENTS)!!)
-            it.updateEnchantabilityPoints()
+            it.updateEnchantPoints()
         }
     }
 

@@ -18,7 +18,6 @@ import kotlin.math.pow
 @Suppress("UnstableApiUsage")
 interface AttackHelper {
 
-
     fun doWeaponAOESweep(attacker: LivingEntity, victim: LivingEntity, damage: Double, angle: Double, radius: Double? = null) {
         val sweepRadius = radius ?: attacker.location.distance(victim.location)
         val targets = attacker.getNearbyEntities(sweepRadius, sweepRadius, sweepRadius).filter {
@@ -36,7 +35,7 @@ interface AttackHelper {
             if (attackAngle > angle) continue
             entity.addScoreboardTag(EntityTags.HIT_BY_AOE_SWEEP)
             // Source
-            val damageSource = createPlayerDamageSource(attacker)
+            val damageSource = createEntityDamageSource(attacker, null, DamageType.PLAYER_ATTACK)
             entity.damage(damage, damageSource)
             entity.world.spawnParticle(Particle.SWEEP_ATTACK, entity.location, 1, 0.0, 0.0, 0.0)
         }
@@ -79,13 +78,13 @@ interface AttackHelper {
     }
 
 
-    fun createPlayerDamageSource(player: Entity, projectile: Entity? = null, type: DamageType = DamageType.PLAYER_ATTACK): DamageSource {
-        val sourceBuilder = DamageSource.builder(DamageType.PLAYER_ATTACK)
-        sourceBuilder.withCausingEntity(player)
+    fun createEntityDamageSource(entity: Entity, projectile: Entity? = null, type: DamageType): DamageSource {
+        val sourceBuilder = DamageSource.builder(type)
+        sourceBuilder.withCausingEntity(entity)
         if (projectile != null) {
             sourceBuilder.withDirectEntity(projectile)
         } else {
-            sourceBuilder.withDirectEntity(player)
+            sourceBuilder.withDirectEntity(entity)
         }
         val damageSource = sourceBuilder.build()
         return damageSource

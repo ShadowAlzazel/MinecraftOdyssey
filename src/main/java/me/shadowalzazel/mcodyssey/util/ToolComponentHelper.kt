@@ -5,6 +5,7 @@ package me.shadowalzazel.mcodyssey.util
 import io.papermc.paper.datacomponent.item.Tool
 import io.papermc.paper.registry.keys.tags.BlockTypeTagKeys
 import io.papermc.paper.registry.tag.Tag
+import me.shadowalzazel.mcodyssey.api.RegistryTagManager
 import net.kyori.adventure.util.TriState
 import org.bukkit.Registry
 import org.bukkit.block.BlockType

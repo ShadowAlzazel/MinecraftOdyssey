@@ -9,7 +9,6 @@ import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.Sound
-import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
@@ -51,13 +50,8 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager {
             item.setData(DataComponentTypes.STORED_ENCHANTMENTS, newEnchantments)
         }
 
-        item.updateEnchantabilityPoints()
+        item.updateEnchantPoints()
         return item
-    }
-
-    @Deprecated(message = "No more slots")
-    fun tomeOfEmbraceOnItem(item: ItemStack, viewers: List<HumanEntity>): ItemStack? {
-        return null
     }
 
     fun tomeOfHarmonyOnItem(item: ItemStack): ItemStack? {
@@ -65,7 +59,7 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager {
         if (meta !is Repairable) return null
         meta.repairCost = 1
         item.itemMeta = meta
-        item.updateEnchantabilityPoints()
+        item.updateEnchantPoints()
         return item
     }
 
@@ -111,7 +105,7 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager {
             // Remove and re-add
             item.removeEnchantment(enchantToUpgrade.first)
             item.addEnchantment(enchantToUpgrade.first, checkedMaxLevel)
-            item.updateEnchantabilityPoints()
+            item.updateEnchantPoints()
         }
         // Advancement
         if (checkedMaxLevel >= enchantToUpgrade.first.maxLevel) {
@@ -167,9 +161,71 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager {
         return imitatedBook
     }
 
+    // Extracts an enchantment from an item, without destroying it
+    fun tomeOfExtractionOnItem(item: ItemStack, viewers: List<HumanEntity>): ItemStack? {
+        // Sentries
+        val storedEnchantments = item.getData(DataComponentTypes.STORED_ENCHANTMENTS)?.enchantments()
+        val itemEnchantments = item.getData(DataComponentTypes.ENCHANTMENTS)?.enchantments()
+        if (itemEnchantments.isNullOrEmpty() && storedEnchantments.isNullOrEmpty()) {
+            viewers.forEach { it.sendBarMessage("This item needs to be enchanted to use this tome.") }
+            return null
+        }
+        // Depends on what data type
+        if (!itemEnchantments.isNullOrEmpty()) {
+            // Get enchantment
+            val extractedEnchant = itemEnchantments.toList().random()
+            val checkMax = minOf(extractedEnchant.first.maxLevel, extractedEnchant.second)
+            // New Book
+            val extractedBook = ItemStack(Material.ENCHANTED_BOOK, 1)
+            val bookEnchantment = ItemEnchantments.itemEnchantments().add(extractedEnchant.first, checkMax)
+            extractedBook.setData(DataComponentTypes.STORED_ENCHANTMENTS, bookEnchantment)
+            // Return book
+            extractedBook.updateEnchantPoints()
+            return extractedBook
+        }
+        else if (!storedEnchantments.isNullOrEmpty()) {
+            // Get enchantment
+            val extractedEnchant = storedEnchantments.toList().random()
+            val checkMax = minOf(extractedEnchant.first.maxLevel, extractedEnchant.second)
+            // New Book
+            val extractedBook = ItemStack(Material.ENCHANTED_BOOK, 1)
+            val bookEnchantment = ItemEnchantments.itemEnchantments().add(extractedEnchant.first, checkMax)
+            extractedBook.setData(DataComponentTypes.STORED_ENCHANTMENTS, bookEnchantment)
+            // Return book
+            extractedBook.updateEnchantPoints()
+            return extractedBook
+        }
+        return null
+    }
+
+    fun tomeOfExtractionPostEffect(item: ItemStack, book: ItemStack, viewers: List<HumanEntity>): ItemStack? {
+        val storedEnchantments = item.getData(DataComponentTypes.STORED_ENCHANTMENTS)?.enchantments()
+        val itemEnchantments = item.getData(DataComponentTypes.ENCHANTMENTS)?.enchantments()
+        // Get Extracted Enchant
+        val extractedEnchant = book.getData(DataComponentTypes.STORED_ENCHANTMENTS)?.enchantments()?.toList()?.first() ?: return null
+
+        // Remove from old
+        if (!itemEnchantments.isNullOrEmpty()) {
+            val enchantmentMap = itemEnchantments.toMutableMap()
+            enchantmentMap.remove(extractedEnchant.first)
+            val newEnchantments = ItemEnchantments.itemEnchantments(enchantmentMap,false)
+            item.setData(DataComponentTypes.ENCHANTMENTS, newEnchantments)
+        }
+        if (!storedEnchantments.isNullOrEmpty()) {
+            val enchantmentMap = storedEnchantments.toMutableMap()
+            enchantmentMap.remove(extractedEnchant.first)
+            val newEnchantments = ItemEnchantments.itemEnchantments(enchantmentMap,false)
+            item.setData(DataComponentTypes.STORED_ENCHANTMENTS, newEnchantments)
+        }
+        item.updateEnchantPoints()
+        return item
+    }
+
     fun tomeOfExpenditureOnItem(item: ItemStack, viewers: List<HumanEntity>): ItemStack? {
-        val meta = item.itemMeta
-        if (!meta.hasEnchants()) {
+        // Sentries
+        val storedEnchantments = item.getData(DataComponentTypes.STORED_ENCHANTMENTS)?.enchantments()
+        val itemEnchantments = item.getData(DataComponentTypes.ENCHANTMENTS)?.enchantments()
+        if (itemEnchantments == null && storedEnchantments == null) {
             viewers.forEach { it.sendBarMessage("This item needs to be enchanted to use this tome.") }
             return null
         }
@@ -258,12 +314,6 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager {
         }
         return result
     }
-
-    @Deprecated(message = "No more slots")
-    fun tomeOfBanishmentOnItem(item: ItemStack, viewers: List<HumanEntity>): ItemStack? {
-        return null
-    }
-
 
     /*-----------------------------------------------------------------------------------------------*/
     // Fail Message

@@ -23,11 +23,11 @@ object InventoryListeners : Listener, EnchantabilityHandler {
         if (!item.hasItemMeta() && item.type != Material.ENCHANTED_BOOK) return
         // Check if Enchanted Item
         if (item.itemMeta.hasEnchants()) {
-            item.updatePoints(resetLore = true, toggleToolTip = true)
+            item.updateEnchantPoints(resetLore = true, toggleToolTip = true)
             return
         }
         if (item.itemMeta is EnchantmentStorageMeta) {
-            item.updatePoints(resetLore = true, toggleToolTip = true)
+            item.updateEnchantPoints(resetLore = true, toggleToolTip = true)
             return
         }
     }

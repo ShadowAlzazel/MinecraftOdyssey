@@ -7,9 +7,9 @@ import io.papermc.paper.datacomponent.item.CustomModelData
 import io.papermc.paper.datacomponent.item.ItemArmorTrim
 import io.papermc.paper.datacomponent.item.ItemLore
 import io.papermc.paper.registry.RegistryKey
-import me.shadowalzazel.mcodyssey.api.MessageHandler.sendBarMessage
+import me.shadowalzazel.mcodyssey.util.MessageHandler.sendBarMessage
 import me.shadowalzazel.mcodyssey.util.DataTagManager
-import me.shadowalzazel.mcodyssey.util.RegistryTagManager
+import me.shadowalzazel.mcodyssey.api.RegistryTagManager
 import me.shadowalzazel.mcodyssey.util.constants.CustomColors
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import net.kyori.adventure.text.Component

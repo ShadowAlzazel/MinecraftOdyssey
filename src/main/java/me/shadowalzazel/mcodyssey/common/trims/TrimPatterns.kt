@@ -2,9 +2,7 @@ package me.shadowalzazel.mcodyssey.common.trims
 
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
-import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.util.RegistryTagManager
-import org.bukkit.NamespacedKey
+import me.shadowalzazel.mcodyssey.api.RegistryTagManager
 import org.bukkit.inventory.meta.trim.TrimPattern
 
 object TrimPatterns : RegistryTagManager {

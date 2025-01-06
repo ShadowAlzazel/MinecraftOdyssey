@@ -11,8 +11,6 @@ import org.bukkit.inventory.ItemStack
 
 interface EnchantmentManager: DataTagManager {
 
-    /*-----------------------------------------------------------------------------------------------*/
-    // Helper Functions
     fun Enchantment.isOdysseyEnchantment(): Boolean {
         val key = RegistryAccess.registryAccess().getRegistry(RegistryKey.ENCHANTMENT).getKey(this)
         return key?.namespace == "odyssey"

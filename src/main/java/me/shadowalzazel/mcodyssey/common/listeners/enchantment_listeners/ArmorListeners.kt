@@ -44,6 +44,9 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         val enemy = event.damager as LivingEntity
         val defender = event.entity as LivingEntity
         val originalAmount = event.damage
+        // RESET DAMAGE TICKS
+        val bonusImmunityTime = mutableListOf(0) // Reference
+        defender.maximumNoDamageTicks = 20
         // Start of ifs
         if (defender.equipment?.helmet?.hasItemMeta() == true) {
             val helmet = defender.equipment?.helmet!!
@@ -64,11 +67,14 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
                     "sslither_ssight" -> {
                         sslitherSsightEnchantment(enemy, defender, enchant.value)
                     }
+                    "reckless" -> {
+                        event.damage += recklessDefenderEnchantment(originalAmount, enchant.value)
+                    }
                     "relentless" -> {
                         event.damage -= relentlessEnchantment(defender, enchant.value, originalAmount)
                     }
                     "veiled_in_shadow" -> {
-                        veiledInShadowEnchantment(defender, enchant.value)
+                        veiledInShadowEnchantment(defender, enchant.value, bonusImmunityTime)
                     }
                 }
             }
@@ -81,7 +87,7 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
                         blackRoseEnchantment(enemy, enchant.value)
                     }
                     "brawler" -> {
-                        event.damage -= brawlerEnchantment(defender, event.damage, enchant.value)
+                        event.damage -= brawlerEnchantment(defender, originalAmount, enchant.value)
                     }
                     "ignore_pain" -> {
                         ignorePainEnchantment(defender, enchant.value)
@@ -89,14 +95,17 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
                     "molten_core" -> {
                         moltenCoreEnchantment(defender, enemy, enchant.value)
                     }
+                    "reckless" -> {
+                        event.damage += recklessDefenderEnchantment(originalAmount, enchant.value)
+                    }
                     "relentless" -> {
                         event.damage -= relentlessEnchantment(defender, enchant.value, originalAmount)
                     }
                     "untouchable" -> {
-                        untouchableEnchantment(defender)
+                        untouchableEnchantment(defender, bonusImmunityTime)
                     }
                     "veiled_in_shadow" -> {
-                        veiledInShadowEnchantment(defender, enchant.value)
+                        veiledInShadowEnchantment(defender, enchant.value, bonusImmunityTime)
                     }
                 }
             }
@@ -109,10 +118,13 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
                         cowardiceEnchantment(enemy, defender, enchant.value)
                     }
                     "brawler" -> {
-                        event.damage -= brawlerEnchantment(defender, event.damage, enchant.value)
+                        event.damage -= brawlerEnchantment(defender, originalAmount, enchant.value)
                     }
                     "blurcise" -> {
                         event.damage -= blurciseEnchantment(defender, enchant.value, originalAmount)
+                    }
+                    "reckless" -> {
+                        event.damage += recklessDefenderEnchantment(originalAmount, enchant.value)
                     }
                     "relentless" -> {
                         event.damage -= relentlessEnchantment(defender, enchant.value, originalAmount)
@@ -124,7 +136,7 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
                         squidifyEnchantment(defender, enchant.value)
                     }
                     "veiled_in_shadow" -> {
-                        veiledInShadowEnchantment(defender, enchant.value)
+                        veiledInShadowEnchantment(defender, enchant.value, bonusImmunityTime)
                     }
                 }
             }
@@ -136,6 +148,9 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
                     "brawler" -> {
                         event.damage -= brawlerEnchantment(defender, event.damage, enchant.value)
                     }
+                    "reckless" -> {
+                        event.damage += recklessDefenderEnchantment(originalAmount, enchant.value)
+                    }
                     "relentless" -> {
                         event.damage -= relentlessEnchantment(defender, enchant.value, originalAmount)
                     }
@@ -143,11 +158,24 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
                         event.damage -= rootBootsDefenseHandler(defender, enchant.value)
                     }
                     "veiled_in_shadow" -> {
-                        veiledInShadowEnchantment(defender, enchant.value)
+                        veiledInShadowEnchantment(defender, enchant.value, bonusImmunityTime)
                     }
                 }
             }
         }
+        // Edit Damage Ticks
+        if (bonusImmunityTime[0] > 0) {
+            val immunityTicks = bonusImmunityTime[0]
+            defender.maximumNoDamageTicks = 20 + immunityTicks
+            defender.noDamageTicks = 10 + immunityTicks
+        }
+        /*
+        println("Immunity")
+        println(defender.maximumNoDamageTicks)
+        println(defender.noDamageTicks)
+
+         */
+
         // Check
         if (event.damage < 0.0) {
             event.damage = 0.0
@@ -185,11 +213,20 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
             val helmet = attacker.equipment?.helmet!!
             for (enchant in helmet.enchantments) {
                 when (enchant.key.getNameId()) {
+                    "brawler" -> {
+                        event.damage += brawlerEnchantment(attacker, originalAmount, enchant.value)
+                    }
+                    "vigor" -> {
+                        event.damage += vigorEnchantment(attacker, enchant.value, originalAmount)
+                    }
+                    "mandiblemania" -> {
+                        mandiblemaniaEnchantment(attacker, enchant.value)
+                    }
                     "opticalization" -> {
                         opticalizationHitEnchantment(enemy, attacker, enchant.value)
                     }
                     "reckless" -> {
-                        recklessEnchantment(attacker, originalAmount, enchant.value)
+                        event.damage += recklessAttackerEnchantment(originalAmount, enchant.value)
                     }
                 }
             }
@@ -198,11 +235,14 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
             val chestplate = attacker.equipment?.chestplate!!
             for (enchant in chestplate.enchantments) {
                 when (enchant.key.getNameId()) {
+                    "brawler" -> {
+                        event.damage += brawlerEnchantment(attacker, originalAmount, enchant.value)
+                    }
                     "vigor" -> {
                         event.damage += vigorEnchantment(attacker, enchant.value, originalAmount)
                     }
                     "reckless" -> {
-                        recklessEnchantment(attacker, originalAmount, enchant.value)
+                        event.damage += recklessAttackerEnchantment(originalAmount, enchant.value)
                     }
                 }
             }
@@ -211,11 +251,17 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
             val leggings = attacker.equipment?.leggings!!
             for (enchant in leggings.enchantments) {
                 when (enchant.key.getNameId()) {
+                    "brawler" -> {
+                        event.damage += brawlerEnchantment(attacker, originalAmount, enchant.value)
+                    }
+                    "vigor" -> {
+                        event.damage += vigorEnchantment(attacker, enchant.value, originalAmount)
+                    }
                     "impetus" -> {
                         event.damage += impetusEnchantment(attacker, enchant.value, originalAmount)
                     }
                     "reckless" -> {
-                        recklessEnchantment(attacker, originalAmount, enchant.value)
+                        event.damage += recklessAttackerEnchantment(originalAmount, enchant.value)
                     }
                 }
             }
@@ -224,8 +270,14 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
             val boots = attacker.equipment?.boots!!
             for (enchant in boots.enchantments) {
                 when (enchant.key.getNameId()) {
+                    "brawler" -> {
+                        event.damage += brawlerEnchantment(attacker, originalAmount, enchant.value)
+                    }
+                    "vigor" -> {
+                        event.damage += vigorEnchantment(attacker, enchant.value, originalAmount)
+                    }
                     "reckless" -> {
-                        recklessEnchantment(attacker, originalAmount, enchant.value)
+                        event.damage += recklessAttackerEnchantment(originalAmount, enchant.value)
                     }
                     "static_socks" -> {
                         event.damage += staticSocksAttackEnchantment(attacker, enchant.value)
@@ -311,8 +363,8 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
             val helmet = defender.equipment?.helmet!!
             for (enchant in helmet.enchantments) {
                 when (enchant.key.getNameId()) {
-                    "beastly" -> {
-                        event.amount += beastlyEnchantment(originalAmount, enchant.value)
+                    "revitalize" -> {
+                        event.amount += revitalizeEnchant(originalAmount, enchant.value)
                     }
                 }
             }
@@ -321,8 +373,8 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
             val chestplate = defender.equipment?.chestplate!!
             for (enchant in chestplate.enchantments) {
                 when (enchant.key.getNameId()) {
-                    "beastly" -> {
-                        event.amount += beastlyEnchantment(originalAmount, enchant.value)
+                    "revitalize" -> {
+                        event.amount += revitalizeEnchant(originalAmount, enchant.value)
                     }
                 }
             }
@@ -331,8 +383,8 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
             val leggings = defender.equipment?.leggings!!
             for (enchant in leggings.enchantments) {
                 when (enchant.key.getNameId()) {
-                    "beastly" -> {
-                        event.amount += beastlyEnchantment(originalAmount, enchant.value)
+                    "revitalize" -> {
+                        event.amount += revitalizeEnchant(originalAmount, enchant.value)
                     }
                 }
             }
@@ -341,8 +393,8 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
             val boots = defender.equipment?.boots!!
             for (enchant in boots.enchantments) {
                 when (enchant.key.getNameId()) {
-                    "beastly" -> {
-                        event.amount += beastlyEnchantment(originalAmount, enchant.value)
+                    "revitalize" -> {
+                        event.amount += revitalizeEnchant(originalAmount, enchant.value)
                     }
                 }
             }
@@ -460,11 +512,11 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         }
     }
 
-    private fun beastlyEnchantment(
+    private fun revitalizeEnchant(
         amount: Double,
         level: Int,
     ): Double {
-        return amount * (level * 0.25)
+        return amount * (level * 0.1)
     }
 
     private fun brawlerEnchantment(
@@ -473,7 +525,7 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         level: Int
     ): Double {
         if (defender.location.getNearbyLivingEntities(6.0).size >= 4) { // 3 + self
-            return damage * (0.03 + (level * 0.03))
+            return damage * (level * 0.5)
         }
         return 0.0
     }
@@ -509,7 +561,7 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         level: Int,
         amount: Double,
     ): Double {
-        if (defender.velocity.length() > 1.2) {
+        if (defender.velocity.length() > 0.5) {
             return amount * (level * 0.1)
         }
         return 0.0
@@ -660,7 +712,7 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         level: Int,
         amount: Double
     ): Double {
-        if (wearer.velocity.length() > 1.2) {
+        if (wearer.velocity.length() > 0.5) {
             return amount * (0.05 + (level * 0.05))
         }
         return 0.0
@@ -702,7 +754,7 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
             jumper.velocity = jumper.velocity.multiply(1.0 + (0.4 * level))
         }
         if (jumper.scoreboardTags.contains(EntityTags.LEAP_FROG_READY)) {
-            jumper.velocity = jumper.velocity.multiply(1.0 + (0.4 * level))
+            jumper.velocity = jumper.velocity.multiply(1.0 + 1)
             jumper.scoreboardTags.remove(EntityTags.LEAP_FROG_READY)
         }
 
@@ -712,7 +764,9 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         entity: LivingEntity,
         level: Int
     ) {
-        entity.noDamageTicks += (level * 0.1).toInt()
+        if (entity is Player) {
+            entity.saturation += (entity.saturation * (1 + (level * 0.02))).toFloat()
+        }
     }
 
     private fun moltenCoreEnchantment(
@@ -810,15 +864,18 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         }
     }
 
-    private fun recklessEnchantment(
-        attacker: LivingEntity,
+    private fun recklessAttackerEnchantment(
         damage: Double,
         level: Int
     ): Double {
-        if (attacker.location.getNearbyLivingEntities(6.0).size >= 4) { // 3 + self
-            return damage * (0.05 + (level * 0.05))
-        }
-        return 0.0
+        return damage * (level * 0.05)
+    }
+
+    private fun recklessDefenderEnchantment(
+        damage: Double,
+        level: Int
+    ): Double {
+        return damage * (level * 0.05)
     }
 
 
@@ -978,23 +1035,36 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
     }
 
     private fun untouchableEnchantment(
-        defender: LivingEntity
+        defender: LivingEntity,
+        bonusImmunityTime: MutableList<Int>
     ) {
+        /*
         if (defender.noDamageTicks < 20) {
-            defender.noDamageTicks = 20
+            defender.noDamageTicks = 20 // Add more immunity time
         } else {
-            defender.noDamageTicks += 10 // Add 0.5 seconds more of immunity
+            defender.noDamageTicks += 10 // Add more immunity time
         }
+        defender.noDamageTicks += 10 // Add more immunity time
+         */
+        //defender.noDamageTicks += 10
+        //defender.maximumNoDamageTicks = defender.noDamageTicks
+        bonusImmunityTime[0] += 10
     }
 
     private fun veiledInShadowEnchantment(
         defender: LivingEntity,
-        level: Int) {
-        val shadowLevelBlock = 10 - defender.location.block.lightFromBlocks + level
+        level: Int,
+        bonusImmunityTime: MutableList<Int>) {
+        val shadowLevelBlock = 10 + level - defender.location.block.lightFromBlocks
         val shadowLevelSky = if (!defender.world.isDayTime) { 10 + level }
-        else { 10 - defender.location.block.lightFromSky + level }
-        defender.noDamageTicks += maxOf(minOf(shadowLevelBlock, shadowLevelSky), 0)
-        // gain 15 ticks of immunity when in full darkness with lvl 5
+        else { 10 + level - defender.location.block.lightFromSky}
+        val shadowTicks = maxOf(minOf(shadowLevelBlock, shadowLevelSky), 0)
+        // gain at most 15 ticks of extra immunity when in full darkness with lvl 5
+        if (shadowTicks > 0) {
+            //defender.noDamageTicks += shadowTicks
+            //defender.maximumNoDamageTicks = defender.noDamageTicks
+            bonusImmunityTime[0] += shadowTicks
+        }
     }
 
     private fun vigorEnchantment(

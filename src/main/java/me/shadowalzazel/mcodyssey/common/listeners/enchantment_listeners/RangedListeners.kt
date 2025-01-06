@@ -258,7 +258,7 @@ object RangedListeners : Listener, EnchantmentManager {
         }
     }
 
-    // TODO: QuickHands -> auto reload?? maybe compact??
+    // QuickHands -> auto reload?? maybe compact??
     // Helper function for cooldown
     private fun cooldownManager(hitter: LivingEntity, message: String, cooldownMap: MutableMap<UUID, Long>, timer: Double): Boolean {
         if (!cooldownMap.containsKey(hitter.uniqueId)) {
@@ -336,7 +336,7 @@ object RangedListeners : Listener, EnchantmentManager {
                 }
                 projectile.velocity.multiply(1 + (0.1 * level))
             }
-            // TODO: Fix for 1.20.5 basePotionType
+            // Fix for 1.20.5 basePotionType
             // getBasePotionType.toEffect
         }
         else if (projectile is ThrownPotion) {
@@ -417,7 +417,7 @@ object RangedListeners : Listener, EnchantmentManager {
             val initialVelocity = projectile.velocity.clone()
             // Tasks
             val task = BurstBarrageTask(shooter, level, initialVelocity, projectile)
-            task.runTaskTimer(Odyssey.instance, 3, 3)
+            task.runTaskTimer(Odyssey.instance, 1, 1)
         }
 
     }

@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.common.tasks.item_tasks
 
-import me.shadowalzazel.mcodyssey.api.VectorParticles
+import me.shadowalzazel.mcodyssey.util.VectorParticles
 import org.bukkit.Color
 import org.bukkit.Particle
 import org.bukkit.entity.Entity

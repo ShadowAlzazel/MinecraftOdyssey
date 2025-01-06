@@ -1,16 +1,10 @@
 package me.shadowalzazel.mcodyssey.common.mobs.passive
 
-import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.common.mobs.base.FallingBlockTimer
 import me.shadowalzazel.mcodyssey.common.mobs.base.OdysseyMob
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.TextColor
 import org.bukkit.*
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Pig
 import org.bukkit.inventory.ItemStack
-import org.bukkit.potion.PotionEffect
-import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
 
 object TreasurePig: OdysseyMob("Treasure Pig", "treasure_pig", EntityType.PIG, 100.0) {

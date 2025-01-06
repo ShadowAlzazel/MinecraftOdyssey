@@ -27,7 +27,6 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
 import java.util.*
-import kotlin.math.log2
 import kotlin.math.pow
 
 object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManager {
@@ -653,7 +652,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
             return
         }
         else if (lastTarget != victim) {
-            val source = createPlayerDamageSource(attacker)
+            val source = createEntityDamageSource(attacker, null, DamageType.PLAYER_ATTACK)
             recallTargets[attacker.uniqueId] = victim // Prevent recursion
             val recallDamage = damage * (level * 0.1)
             victim.damage(recallDamage, source)
