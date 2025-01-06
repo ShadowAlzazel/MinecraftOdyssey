@@ -18,7 +18,6 @@ import kotlin.math.pow
 @Suppress("UnstableApiUsage")
 interface AttackHelper {
 
-
     fun doWeaponAOESweep(attacker: LivingEntity, victim: LivingEntity, damage: Double, angle: Double, radius: Double? = null) {
         val sweepRadius = radius ?: attacker.location.distance(victim.location)
         val targets = attacker.getNearbyEntities(sweepRadius, sweepRadius, sweepRadius).filter {

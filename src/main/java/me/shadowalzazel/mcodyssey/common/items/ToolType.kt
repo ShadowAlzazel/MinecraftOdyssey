@@ -45,10 +45,5 @@ enum class ToolType(
     // Others
     SHURIKEN("shuriken", "Shuriken", 0.5, 1.0, "iron_nugget")
 
-
-    // Old
-    //CLUB(3.0, 1.6, "Club", 6900),
-    //STAFF(2.5, 1.3, "Staff", 6900),
-    //ZWEIHANDER(6.0, 0.9, "Zweihander", ItemModels.ZWEIHANDER)
 }
 

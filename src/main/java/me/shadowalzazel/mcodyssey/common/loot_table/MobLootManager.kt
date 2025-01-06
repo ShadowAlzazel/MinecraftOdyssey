@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.common.loot_table
 
 import me.shadowalzazel.mcodyssey.common.enchantments.OdysseyEnchantments
-import me.shadowalzazel.mcodyssey.util.RegistryTagManager
+import me.shadowalzazel.mcodyssey.api.RegistryTagManager
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity

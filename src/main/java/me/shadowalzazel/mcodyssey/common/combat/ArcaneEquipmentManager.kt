@@ -15,40 +15,47 @@ import org.bukkit.util.Vector
 @Suppress("UnstableApiUsage")
 interface ArcaneEquipmentManager : VectorParticles, AttackHelper {
 
-    fun arcaneWandHandler(event: PlayerInteractEvent) {
+    fun arcaneWandUseHandler(event: PlayerInteractEvent) {
         val attacker = event.player
         val arcaneHand = attacker.equipment.itemInOffHand
         val bookHand = attacker.equipment.itemInMainHand
         // Cooldown
         if (attacker.getCooldown(arcaneHand) > 0) return
+        arcaneHand.damage(2, attacker)
         attacker.setCooldown(arcaneHand, 20)
         // Vars
+        val damage = 4.0
         val range = 32.0
         val aimAssist = 0.5
+        // Run
+        arcaneLine(attacker, damage, range, aimAssist)
+    }
+
+    fun arcaneLine(user: LivingEntity, damage: Double, range: Double, aimAssist: Double) {
         // Logic
         val endLocation: Location
-        val target = getRayTraceEntity(attacker, range, aimAssist)
+        val target = getRayTraceEntity(user, range, aimAssist)
         if (target is LivingEntity) {
             // Run Attack
             //player.attack(entity)
             //attacker.attack(target)
-            val damageSource = createEntityDamageSource(attacker, null, type = DamageType.MAGIC)
-            target.damage(4.0, damageSource)
+            val damageSource = createEntityDamageSource(user, null, type = DamageType.MAGIC)
+            target.damage(damage, damageSource)
 
             endLocation = target.eyeLocation
         } else {
-            endLocation = attacker.eyeLocation.clone().add(attacker.eyeLocation.direction.clone().normalize().multiply(range))
+            endLocation = user.eyeLocation.clone().add(user.eyeLocation.direction.clone().normalize().multiply(range))
         }
 
         // Particles in Line
-        val particleCount = endLocation.distance(attacker.location) * 6
+        val particleCount = endLocation.distance(user.location) * 6
         spawnLineParticles(
             particle = Particle.WITCH,
-            start = attacker.location,
+            start = user.location,
             end = endLocation,
             count = particleCount.toInt()
         )
-        attacker.world.playSound(attacker.location, Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, 2F, 2F)
+        user.world.playSound(user.location, Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, 2F, 2F)
     }
 
 
@@ -58,11 +65,16 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper {
         val bookHand = attacker.equipment.itemInMainHand
         // Cooldown
         if (attacker.getCooldown(arcaneHand) > 0) return
+        arcaneHand.damage(2, attacker)
         attacker.setCooldown(arcaneHand, 20)
         // Vars
         val range = 6.0
+        val angle = 70.0
         // Logic
-
+        getEntitiesInArc(attacker, angle, range).forEach {
+            val damageSource = createEntityDamageSource(attacker, null, type = DamageType.MAGIC)
+            it.damage(4.0, damageSource)
+        }
         // Spawn particles in Arc
         spawnArcParticles(
             particle = Particle.WITCH,
@@ -70,7 +82,7 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper {
             directionVector = attacker.eyeLocation.direction,
             pitchAngle = 0.0,
             radius = range,
-            arcLength = Math.toRadians(70.0),
+            arcLength = Math.toRadians(angle),
             height = 0.1,
             count = 55)
     }
@@ -81,16 +93,23 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper {
         val bookHand = attacker.equipment.itemInMainHand
         // Cooldown
         if (attacker.getCooldown(arcaneHand) > 0) return
+        arcaneHand.damage(2, attacker)
         attacker.setCooldown(arcaneHand, 30)
         // Vars
+        val damage = 4.0
         val range = 32.0
         val radius = 3.0
         val aimAssist = 0.25
+        // Run
+        arcaneCircle(attacker, damage, range, radius, aimAssist)
+    }
+
+    fun arcaneCircle(user: LivingEntity, damage: Double, range: Double, radius: Double, aimAssist: Double) {
         // Logic
-        val circleLocation = getRayTraceLocation(attacker, range, aimAssist) ?: return
-        val damageSource = createEntityDamageSource(attacker, null, type = DamageType.MAGIC)
+        val circleLocation = getRayTraceLocation(user, range, aimAssist) ?: return
+        val damageSource = createEntityDamageSource(user, null, type = DamageType.MAGIC)
         circleLocation.getNearbyLivingEntities(radius).forEach {
-            it.damage(4.0, damageSource)
+            it.damage(damage, damageSource)
         }
         // Particles
         spawnCircleParticles(
@@ -100,7 +119,7 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper {
             radius = radius,
             heightOffset = 0.25,
             count = 55)
-        attacker.world.playSound(attacker.location, Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, 2F, 2F)
+        user.world.playSound(user.location, Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, 2F, 2F)
     }
 
     fun arcaneMissileHandler(event: PlayerInteractEvent) {

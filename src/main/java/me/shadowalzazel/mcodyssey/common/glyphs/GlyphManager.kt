@@ -4,7 +4,7 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.ItemAttributeModifiers
 import me.shadowalzazel.mcodyssey.util.AttributeManager
 import me.shadowalzazel.mcodyssey.util.DataTagManager
-import me.shadowalzazel.mcodyssey.util.RegistryTagManager
+import me.shadowalzazel.mcodyssey.api.RegistryTagManager
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import org.bukkit.Material
@@ -41,17 +41,6 @@ interface GlyphManager :  AttributeManager, DataTagManager, RegistryTagManager {
             this.addGlyphToSlot(glyphItem)
         }
     }
-
-
-    /*
-    fun getGlyphModifier(item: ItemStack): AttributeModifier? {
-        return getGlyphAttributeModifier(item)?.modifier()
-    }
-
-    fun getGlyphAttribute(item: ItemStack): Attribute? {
-        return getGlyphAttributeModifier(item)?.attribute()
-    }
-     */
 
     // Used for most items that have a singular glyph slot
     private fun ItemStack.addGlyphToSlot(glyphItem: ItemStack) {
@@ -119,17 +108,6 @@ interface GlyphManager :  AttributeManager, DataTagManager, RegistryTagManager {
             }
         }
     }
-
-    /*
-    fun advancementGive(player: Player) {
-        val advancement = player.server.getAdvancement(NamespacedKey.fromString("odyssey:odyssey/dig_runesherd")!!)
-        if (advancement != null) {
-            player.getAdvancementProgress(advancement).awardCriteria("requirement")
-        }
-    }
-
-     */
-
 
 }
 

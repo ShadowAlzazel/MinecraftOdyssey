@@ -26,7 +26,7 @@ class BurstBarrageTask(
             it.cloneAndTag(projectile)
             it.addScoreboardTag(EntityTags.REPLICATED_ARROW)
             // Projectile
-            it.velocity = shooter.eyeLocation.direction.clone().normalize().multiply(velocity.length() - (0.05))
+            it.velocity = shooter.eyeLocation.direction.clone().normalize().multiply(velocity.length() - (0.01))
         }
         if (counter > amount) {
             shooter.removeScoreboardTag(EntityTags.IS_BURST_BARRAGING)

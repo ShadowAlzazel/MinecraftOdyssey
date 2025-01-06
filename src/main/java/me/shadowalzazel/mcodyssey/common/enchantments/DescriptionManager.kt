@@ -9,16 +9,7 @@ import kotlin.math.pow
 
 interface DescriptionManager {
 
-    /*-----------------------------------------------------------------------------------------------*/
-    // Helper Functions
-    private fun getGrayTextComponent(text: String): TextComponent {
-        return Component
-            .text(text)
-            .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-            .color(CustomColors.DARK_GRAY.color)
-    }
 
-    /*-----------------------------------------------------------------------------------------------*/
     // Extension Helper
     fun Enchantment.getDescription(level: Int): List<Component>  {
         val name = this.key.key
@@ -29,8 +20,6 @@ interface DescriptionManager {
         }
         return description
     }
-
-    private fun Double.format(digits: Int) = "%.${digits}f".format(this)
 
     private fun getToolTipText(name: String, level: Int): List<String> {
         return when(name) {
@@ -410,6 +399,16 @@ interface DescriptionManager {
 
             else -> listOf(name)
         }
+    }
+
+    private fun Double.format(digits: Int) = "%.${digits}f".format(this)
+
+    // Helper Functions
+    private fun getGrayTextComponent(text: String): TextComponent {
+        return Component
+            .text(text)
+            .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+            .color(CustomColors.DARK_GRAY.color)
     }
 
 }

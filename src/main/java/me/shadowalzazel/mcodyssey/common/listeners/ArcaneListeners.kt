@@ -28,14 +28,12 @@ object ArcaneListeners: Listener, ArcaneEquipmentManager, DataTagManager {
         //if (ARCANE_RANGES[itemName] == null) return
         val book = player.equipment.itemInMainHand
         if (book.type == Material.AIR) return
-        val bookEnchantments = book.getData(DataComponentTypes.STORED_ENCHANTMENTS) ?: return
+        val bookEnchantments = book.getData(DataComponentTypes.STORED_ENCHANTMENTS)
         // Sentries Passed
-        println("PASSED")
         when (itemName) {
-            "arcane_wand" -> arcaneWandHandler(event)
+            "arcane_wand" -> arcaneWandUseHandler(event)
             "arcane_blade" -> arcaneBladeHandler(event)
             "arcane_scepter" -> arcaneScepterHandler(event)
-            "warping_wand" -> warpingWandHandler(event)
         }
 
     }
