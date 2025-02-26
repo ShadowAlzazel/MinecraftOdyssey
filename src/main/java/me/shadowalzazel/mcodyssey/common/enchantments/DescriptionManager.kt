@@ -398,6 +398,7 @@ interface DescriptionManager {
                 "Taking damage resets this cooldown but stacks the damage up to your [%] max health."
             )
 
+            // Other
             "magistrate" -> listOf( // Helmet
                 "- TODO: Sounds cool though"
             )
