@@ -15,7 +15,7 @@ object ArtisanListeners : Listener {
     @EventHandler
     fun waterKeg(event: PlayerInteractEvent) {
         // Check WATER BOTTLE
-        val bottle = event.player.equipment.itemInMainHand
+        val bottle = event.player.equipment!!.itemInMainHand
         if (bottle.type != Material.POTION) return
         if (!bottle.hasItemMeta()) return
         if ((bottle.itemMeta as PotionMeta).basePotionType != PotionType.WATER) return

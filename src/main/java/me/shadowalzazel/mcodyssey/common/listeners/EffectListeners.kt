@@ -218,7 +218,7 @@ object EffectListeners : Listener, EffectsManager {
         if (event.clickedBlock == null) return
         if (!event.action.isLeftClick) return
         if (event.clickedBlock!!.type != Material.FLETCHING_TABLE) return
-        val equipment = event.player.equipment
+        val equipment = event.player.equipment!!
         if (equipment.itemInMainHand.type != Material.ARROW) return
         if (equipment.itemInMainHand.amount < 1) return
         if (equipment.itemInOffHand.type != Material.LINGERING_POTION) return

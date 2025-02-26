@@ -23,7 +23,7 @@ object SnifferListeners : Listener, DataTagManager {
     fun enableSnifferDigArchaic(event: PlayerInteractAtEntityEvent) {
         if (event.rightClicked.type != EntityType.SNIFFER) return
         // Check if special food for sniffer
-        val hand = event.player.equipment.itemInMainHand
+        val hand = event.player.equipment!!.itemInMainHand
         val snifferFood = listOf(Material.BEETROOT_SEEDS, Material.BROWN_MUSHROOM)
         if (hand.type !in snifferFood) return
         // FInd biome
@@ -86,8 +86,8 @@ object SnifferListeners : Listener, DataTagManager {
 
     @EventHandler
     fun placeSeed(event: BlockPlaceEvent) {
-        if (event.player.equipment.itemInMainHand.type != Material.WHEAT_SEEDS) return
-        val archaicSeed = event.player.equipment.itemInMainHand
+        if (event.player.equipment!!.itemInMainHand.type != Material.WHEAT_SEEDS) return
+        val archaicSeed = event.player.equipment!!.itemInMainHand
         if (!archaicSeed.hasItemMeta()) return
         if (!archaicSeed.hasTag(ItemDataTags.IS_ARCHAIC_SEED)) return
         if (event.blockAgainst.type != Material.FARMLAND) return

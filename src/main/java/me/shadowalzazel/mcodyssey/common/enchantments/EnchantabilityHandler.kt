@@ -200,7 +200,6 @@ interface EnchantabilityHandler : EnchantmentManager, DescriptionManager, DataTa
         }
     }
 
-
     // Create the lore component for item
     fun createEnchantLoreComponent(enchantment: Enchantment, level: Int, pointCost: Int): Component {
         val color = if (enchantment.isCursed) {

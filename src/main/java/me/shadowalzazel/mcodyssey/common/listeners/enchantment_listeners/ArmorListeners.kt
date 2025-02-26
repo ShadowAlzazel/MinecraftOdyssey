@@ -324,8 +324,8 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
     @EventHandler
     fun mainArmorConsumingHandler(event: PlayerItemConsumeEvent) {
         val player = event.player
-        if (player.equipment.helmet?.hasItemMeta() == true) {
-            val helmet = player.equipment.helmet!!
+        if (player.equipment!!.helmet?.hasItemMeta() == true) {
+            val helmet = player.equipment!!.helmet!!
             for (enchant in helmet.enchantments) {
                 when (enchant.key.getNameId()) {
                     "brewful_breath" -> {
@@ -337,8 +337,8 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
                 }
             }
         }
-        if (player.equipment.chestplate?.hasItemMeta() == true) {
-            val chestplate = player.equipment.chestplate!!
+        if (player.equipment!!.chestplate?.hasItemMeta() == true) {
+            val chestplate = player.equipment!!.chestplate!!
             for (enchant in chestplate.enchantments) {
                 when (enchant.key.getNameId()) {
                     "fruitful_fare" -> {
@@ -425,8 +425,8 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
     fun sneakHandler(event: PlayerToggleSneakEvent) {
         val sneaker = event.player
         // Start of ifs
-        if (sneaker.equipment.helmet?.hasItemMeta() == true) {
-            val helmet = sneaker.equipment.helmet!!
+        if (sneaker.equipment!!.helmet?.hasItemMeta() == true) {
+            val helmet = sneaker.equipment!!.helmet!!
             for (enchant in helmet.enchantments) {
                 when (enchant.key.getNameId()) {
                     "sculk_sensitive" -> {
@@ -435,16 +435,16 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
                 }
             }
         }
-        if (sneaker.equipment.chestplate?.hasItemMeta() == true) {
-            val chestplate = sneaker.equipment.chestplate!!
+        if (sneaker.equipment!!.chestplate?.hasItemMeta() == true) {
+            val chestplate = sneaker.equipment!!.chestplate!!
             for (enchant in chestplate.enchantments) {
                 when (enchant.key.getNameId()) {
                     // Empty
                 }
             }
         }
-        if (sneaker.equipment.leggings?.hasItemMeta() == true) {
-            val leggings = sneaker.equipment.leggings!!
+        if (sneaker.equipment!!.leggings?.hasItemMeta() == true) {
+            val leggings = sneaker.equipment!!.leggings!!
             for (enchant in leggings.enchantments) {
                 when (enchant.key.getNameId()) {
                     "leap_frog" -> {
@@ -453,8 +453,8 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
                 }
             }
         }
-        if (sneaker.equipment.boots?.hasItemMeta() == true) {
-            val boots = sneaker.equipment.boots!!
+        if (sneaker.equipment!!.boots?.hasItemMeta() == true) {
+            val boots = sneaker.equipment!!.boots!!
             for (enchant in boots.enchantments) {
                 when (enchant.key.getNameId()) {
                     "root_boots" -> {
@@ -475,7 +475,7 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
     fun jumpHandler(event: PlayerJumpEvent) {
         val jumper = event.player
         // Leggings
-        val leggingEnchants = jumper.equipment.leggings?.getData(DataComponentTypes.ENCHANTMENTS)?.enchantments()
+        val leggingEnchants = jumper.equipment!!.leggings?.getData(DataComponentTypes.ENCHANTMENTS)?.enchantments()
         if (leggingEnchants != null) {
             for (enchant in leggingEnchants) {
                 when (enchant.key.getNameId()) {
@@ -486,7 +486,7 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
             }
         }
         // Leggings
-        val bootEnchants = jumper.equipment.boots?.getData(DataComponentTypes.ENCHANTMENTS)?.enchantments()
+        val bootEnchants = jumper.equipment!!.boots?.getData(DataComponentTypes.ENCHANTMENTS)?.enchantments()
         if (bootEnchants != null) {
             for (enchant in bootEnchants) {
                 when (enchant.key.getNameId()) {

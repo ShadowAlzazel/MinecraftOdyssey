@@ -13,8 +13,8 @@ object PlaceFeatureArchaicSeed : DataTagManager {
 
     fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
         if (sender !is Player) return false
-        if (sender.equipment.itemInMainHand.type != Material.WHEAT_SEEDS) return false
-        val archaicSeed = sender.equipment.itemInMainHand
+        if (sender.equipment!!.itemInMainHand.type != Material.WHEAT_SEEDS) return false
+        val archaicSeed = sender.equipment!!.itemInMainHand
         if (!archaicSeed.hasItemMeta()) return false
         if (!archaicSeed.hasTag(ItemDataTags.IS_ARCHAIC_SEED)) return false
         // Plant

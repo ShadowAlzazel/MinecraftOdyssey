@@ -119,7 +119,7 @@ interface AttackHelper {
     }
 
     fun dualWieldAttack(player: Player, target: LivingEntity) {
-        with(player.equipment) {
+        with(player.equipment!!) {
             val mainHand = itemInMainHand.clone()
             val offHand = itemInOffHand.clone()
             setItemInOffHand(mainHand)

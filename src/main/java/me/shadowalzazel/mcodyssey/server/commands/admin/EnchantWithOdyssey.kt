@@ -13,14 +13,14 @@ object EnchantWithOdyssey : CommandExecutor, EnchantabilityHandler {
         if (sender !is Player) return false
         if (!sender.isOp) return false
         if (args?.size != 2) return false
-        if (sender.equipment.itemInMainHand.type == Material.AIR) return false
+        if (sender.equipment!!.itemInMainHand.type == Material.AIR) return false
         // Get args
         val level = args[1].toInt()
         val name = args[0]
         val enchant = getOdysseyEnchantmentFromString(name) ?: getMinecraftEnchantmentFromString(name)
         if (enchant == null) return false
         // Passed Checks
-        val item = sender.equipment.itemInMainHand
+        val item = sender.equipment!!.itemInMainHand
         item.addEnchantment(enchant, level)
         item.updateItemPoints()
         return true

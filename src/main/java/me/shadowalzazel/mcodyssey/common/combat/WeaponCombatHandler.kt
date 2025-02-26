@@ -25,8 +25,8 @@ interface WeaponCombatHandler : AttackHelper, DataTagManager {
         val player = event.damager as Player
         val victim = event.entity as LivingEntity
         // Further checks
-        val mainWeapon = player.equipment.itemInMainHand
-        val offHandWeapon = player.equipment.itemInOffHand
+        val mainWeapon = player.equipment!!.itemInMainHand
+        val offHandWeapon = player.equipment!!.itemInOffHand
         // Get weapon type
         val mainWeaponType = mainWeapon.getStringTag(ItemDataTags.TOOL_TYPE)
         //val mainWeaponMaterial = mainWeapon.getStringTag(ItemDataTags.MATERIAL_TYPE)
