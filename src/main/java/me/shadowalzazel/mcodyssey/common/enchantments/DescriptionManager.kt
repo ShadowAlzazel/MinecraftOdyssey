@@ -130,16 +130,15 @@ interface DescriptionManager {
             "blurcise" -> listOf(
                 "- While moving, take ${level * 10}%=[level x 10] reduced damage.")
             "brawler" -> listOf(
-                "- When surrounded (by 3 or more enemies within a 6 block radius),",
-                "deal ${level * 5}%=[level x 5] increased damage.")
+                "- Reduced damage done by mobs or creatures by ${2 * level}%=[level x 2].")
             "bulwark" -> listOf(
-                "- Increase armor by ${2 * level}%=[2 x level].")
+                "- Increase armor by ${2 * level}%=[level x 2].")
             "claw_climbing" -> listOf(
                 "- Increase automatic step height by $level=[level] blocks.")
             "cowardice" -> listOf(
-                "- Get knock backed further and get speed $level=[level] for 6 seconds.")
+                "- Get knock backed further and get speed $level=[level] for 6 seconds when hit.")
             "devastating_drop" -> listOf(
-                "- Converts fall damage to AOE damage at ${40 * level}%=[40 x level]")
+                "- Converts fall damage to AOE damage at ${40 * level}%=[level x 40]")
             "fruitful_fare" -> listOf(
                 "- Eating a fruit recovers $level=[level] Health. Adds a 3 second cooldown to the fruit.")
             "ignore_pain" -> listOf(
@@ -156,7 +155,7 @@ interface DescriptionManager {
                 "- Dealing damage increases your saturation by ${level * 2}%=[level * 2].")
             "molten_core" -> listOf(
                 "- Enemies that attack the wearer are set on fire for ${4 * level}=[4 x level] seconds.",
-                "This effect is doubled when on fire or on lava.")
+                "This effect is doubled when on fire or in lava.")
             "opticalization" -> listOf(
                 "- Getting damaged by an entity or attacking an entity within",
                 "${2 * level}=[2 x level] blocks forces the wearer and entity to target each other.")
@@ -194,7 +193,7 @@ interface DescriptionManager {
             "veiled_in_shadow" -> listOf(
                 "- Gain invulnerable time negatively proportional to light level.",
                 "Reduce required light level by $level=[level].")
-            "vigor" -> listOf(
+            "vigor" -> listOf( // All Armor
                 "- Deal ${level * 5}%=[level x 5] increased damage while above 25% health.")
             // Odyssey - Melee
             "agile" -> listOf(
@@ -254,7 +253,7 @@ interface DescriptionManager {
             "grasp" -> listOf(
                 "- Gain ${1 + level * 0.5}=[1 + (level x 0.5)] block interaction range.")
             "gravity_well" -> listOf(
-                "- TODO ")
+                "- Spawn a black hole at the target hit.")
             "guarding_strike" -> listOf(
                 "- Attacking while sneaking applies Resistance I for ${level * 5}=[level x 5] seconds.")
             "gust" -> listOf(
@@ -301,10 +300,9 @@ interface DescriptionManager {
             "burst_barrage" -> listOf(
                 "- Shoot ${level}=[2 + level] consecutive arrows. (This does not bypass immunity).")
             "chain_reaction" -> listOf(
-                "- On projectile hit, spawn an arrow that targets the closest",
-                "enemy. This can happen ${2 + level}=[2 + level] amount of times")
+                "- Shoots the projectile in all directions upon impact on a target.")
             "cluster_shot" -> listOf(
-                "TODO")
+                "- After a brief 0.5 seconds delay, the projectiles spreads into sub munitions in a cone.")
             "deadeye" -> listOf(
                 "- Projectiles deal ${3 + level * 2}=[3 + (level x 2)] more damage if it hits the target's eye.")
             "death_from_above" -> listOf(
@@ -330,7 +328,7 @@ interface DescriptionManager {
             "perpetual" -> listOf(
                 "- Projectiles ignore gravity for ${10 + (level * 5)}=[10 + (level x 5)] seconds.")
             "rain_of_arrows" -> listOf(
-                "TODO")
+                "- After an arrow hits a target, more arrows shoot upward then fall downwards.")
             "ricochet" -> listOf(
                 "- Projectiles ricochet off entities/block up to a max of ${level}=[level].",
                 "Each bounce increases damage by 2.")
@@ -340,7 +338,7 @@ interface DescriptionManager {
             "single_out" -> listOf(
                 "- Isolated targets more than 16 blocks away from another entity take ${level * 2}=[level x 2] more damage.")
             "singularity_shot" -> listOf(
-                "TODO")
+                "- The projectile has a black hole that sucks nearby entities.")
             "rend" -> listOf(
                 "- Marks struck enemies with Rend",
                 "- On item hand swap, damage all marked enemies based on how many",
@@ -393,6 +391,19 @@ interface DescriptionManager {
             "reinforced_plating" -> listOf( // Chestplate
                 "- Increase armor toughness by ${level * 10}%=[level x 10].")
 
+
+            // idea -> When damaged, after 1.0 seconds apply that damage, taking damage resets this cooldown but stacks the damage.
+            "grit" -> listOf(
+                "Mitigate any damage taken; after [0.5 x level] seconds apply the stored damage to yourself and nearby entities.",
+                "Taking damage resets this cooldown but stacks the damage up to your [%] max health."
+            )
+
+            "magistrate" -> listOf( // Helmet
+                "- TODO: Sounds cool though"
+            )
+            "chain_reaction_old" -> listOf(
+                "- On projectile hit, spawn an arrow that targets the closest",
+                "enemy. This can happen ${2 + level}=[2 + level] amount of times")
             // PROBABLY NOT
             "??" -> listOf(
                 "- Enemies that you attack have their current speed reduced by ${20 * level}%=[level x 20].")

@@ -37,8 +37,8 @@ object OtherListeners : Listener {
         val creeper = event.damager as Creeper
         if (!creeper.isPowered) return
         if (event.finalDamage <= player.health) return
-        if (player.equipment.itemInOffHand.type == Material.TOTEM_OF_UNDYING
-            || player.equipment.itemInMainHand.type == Material.TOTEM_OF_UNDYING) return
+        if (player.equipment!!.itemInOffHand.type == Material.TOTEM_OF_UNDYING
+            || player.equipment!!.itemInMainHand.type == Material.TOTEM_OF_UNDYING) return
 
         val skull = ItemStack(Material.PLAYER_HEAD, 1)
         val skullMeta = (skull.itemMeta as SkullMeta)

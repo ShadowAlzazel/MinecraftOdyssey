@@ -138,8 +138,8 @@ object OtherListeners : Listener, EnchantmentManager, AttackHelper {
         if (event.entity !is EnderPearl) return
         if (event.entity.shooter !is Player) return
         val player = event.entity.shooter!! as Player
-        if (player.equipment.chestplate.type != Material.ELYTRA) return
-        val elytra = player.equipment.chestplate
+        if (player.equipment!!.chestplate.type != Material.ELYTRA) return
+        val elytra = player.equipment!!.chestplate
         if (!elytra.hasItemMeta()) return
         if (!elytra.hasEnchantment("void_jump")) return
         val activeItem = player.activeItem

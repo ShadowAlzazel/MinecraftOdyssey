@@ -17,8 +17,9 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper {
 
     fun arcaneWandUseHandler(event: PlayerInteractEvent) {
         val attacker = event.player
-        val arcaneHand = attacker.equipment.itemInOffHand
-        val bookHand = attacker.equipment.itemInMainHand
+        val equipment = attacker.equipment ?: return
+        val arcaneHand = equipment.itemInOffHand
+        val bookHand = equipment.itemInMainHand
         // Cooldown
         if (attacker.getCooldown(arcaneHand) > 0) return
         arcaneHand.damage(2, attacker)
@@ -61,8 +62,9 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper {
 
     fun arcaneBladeHandler(event: PlayerInteractEvent) {
         val attacker = event.player
-        val arcaneHand = attacker.equipment.itemInOffHand
-        val bookHand = attacker.equipment.itemInMainHand
+        val equipment = attacker.equipment ?: return
+        val arcaneHand = equipment.itemInOffHand
+        val bookHand = equipment.itemInMainHand
         // Cooldown
         if (attacker.getCooldown(arcaneHand) > 0) return
         arcaneHand.damage(2, attacker)
@@ -89,8 +91,9 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper {
 
     fun arcaneScepterHandler(event: PlayerInteractEvent) {
         val attacker = event.player
-        val arcaneHand = attacker.equipment.itemInOffHand
-        val bookHand = attacker.equipment.itemInMainHand
+        val equipment = attacker.equipment ?: return
+        val arcaneHand = equipment.itemInOffHand
+        val bookHand = equipment.itemInMainHand
         // Cooldown
         if (attacker.getCooldown(arcaneHand) > 0) return
         arcaneHand.damage(2, attacker)
@@ -125,8 +128,9 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper {
     fun arcaneMissileHandler(event: PlayerInteractEvent) {
         // Basic Variables
         val player = event.player
-        val offHand = player.equipment.itemInOffHand
-        val mainHand = player.equipment.itemInMainHand
+        val equipment = player.equipment ?: return
+        val offHand = equipment.itemInOffHand
+        val mainHand = equipment.itemInMainHand
         val model = offHand.itemMeta!!.itemModel?.key ?: return
         if (mainHand.type != Material.BOOK && mainHand.type != Material.ENCHANTED_BOOK) return
         player.setCooldown(offHand.type, 3 * 20)
@@ -158,7 +162,7 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper {
 
     fun ovalWandHandler(event: PlayerInteractEvent) {
         val player = event.player
-        val offHandEquipment = player.equipment.itemInOffHand
+        val offHandEquipment = player.equipment?.itemInOffHand
         var location = player.location.clone()
         val unitVector = player.eyeLocation.direction.clone()
         // MAKE OVAL
@@ -174,8 +178,8 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper {
 
     fun warpingWandHandler(event: PlayerInteractEvent) {
         val player = event.player
-        val offHandEquipment = player.equipment.itemInOffHand
-        val mainHandEquipment = player.equipment.itemInMainHand
+        val offHandEquipment = player.equipment!!.itemInOffHand
+        val mainHandEquipment = player.equipment!!.itemInMainHand
         if (mainHandEquipment.type != Material.BOOK && mainHandEquipment.type != Material.ENCHANTED_BOOK) return
         if (offHandEquipment.itemMeta is Damageable) {
             (offHandEquipment.itemMeta as Damageable).damage -= 1

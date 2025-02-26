@@ -5,15 +5,15 @@
  */
 
 group = "me.shadowalzazel"
-version = "1.0.1-ALPHA-1.21.4"
+version = "1.0.2-ALPHA-1.21.4"
 description = "A server side expansion pack for a new minecraft adventure!"
 
 plugins {
     `java-library`
     `maven-publish`
-    kotlin("jvm") version "2.0.20"
+    kotlin("jvm") version "2.0.21"
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("io.papermc.paperweight.userdev") version "2.0.0-beta.10" // Check for new versions at https://plugins.gradle.org/plugin/io.papermc.paperweight.userdev
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.14" // Check for new versions at https://plugins.gradle.org/plugin/io.papermc.paperweight.userdev
 }
 
 java {
@@ -26,7 +26,11 @@ kotlin {
 
 repositories {
     mavenCentral()
-    maven("https://repo.papermc.io/repository/maven-public/")
+    maven {
+        name = "papermc"
+        url = uri("https://repo.papermc.io/repository/maven-public/")
+    }
+    //maven("https://repo.papermc.io/repository/maven-public/")
     //maven("https://oss.sonatype.org/content/groups/public/")
 }
 

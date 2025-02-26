@@ -14,8 +14,8 @@ class LootLogic(
     private var lootLuck: Double = 0.0 // Rename
 
     init {
-        if (player.equipment.itemInMainHand.itemMeta != null) {
-            if (player.equipment.itemInMainHand.itemMeta.hasEnchant(Enchantment.LOOTING)) {
+        if (player.equipment!!.itemInMainHand.itemMeta != null) {
+            if (player.equipment!!.itemInMainHand.itemMeta.hasEnchant(Enchantment.LOOTING)) {
                 lootLuck += player.activeItem.getEnchantmentLevel(Enchantment.LOOTING) * 1.0
             }
         }

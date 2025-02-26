@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.common.listeners
 
 import com.destroystokyo.paper.event.inventory.PrepareResultEvent
+import io.papermc.paper.datacomponent.DataComponentTypes
 import me.shadowalzazel.mcodyssey.common.enchantments.TomeEnchanting
 import me.shadowalzazel.mcodyssey.common.items.Item
 import me.shadowalzazel.mcodyssey.util.constants.CustomColors
@@ -106,9 +107,11 @@ object EnchantingListeners : Listener, TomeEnchanting {
             return
         }
         // Update
-        if (result.hasItemMeta()) {
+        val finalHasEnchants = (result.getData(DataComponentTypes.ENCHANTMENTS) != null) || (result.getData(DataComponentTypes.STORED_ENCHANTMENTS) != null)
+        if (finalHasEnchants) {
             result.updateEnchantPoints()
         }
+
         // IF empty name
         if (second == null) {
             anvilView.repairCost = 1
