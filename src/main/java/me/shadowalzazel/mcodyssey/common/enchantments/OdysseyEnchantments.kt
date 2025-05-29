@@ -132,20 +132,12 @@ object OdysseyEnchantments : EnchantmentManager, RegistryTagManager {
 
     val inTableMelee = getCollectionFromTag(RegistryKey.ENCHANTMENT, "in_table/melee")
     val nonTableMelee = getCollectionFromTag(RegistryKey.ENCHANTMENT, "non_table/melee")
-    val meleeSet = inTableMelee + nonTableMelee
+
     val rangedSet = getCollectionFromTag(RegistryKey.ENCHANTMENT, "in_table/range")
     val armorSet = getCollectionFromTag(RegistryKey.ENCHANTMENT, "in_table/armor")
+    val MISC_SET = getCollectionFromTag(RegistryKey.ENCHANTMENT, "in_table/other")
 
-    val MISC_SET = setOf(
-        BOMB_OB,
-        HOOK_SHOT,
-        LENGTHY_LINE,
-        MIRROR_FORCE,
-        O_SHINY,
-        VOID_JUMP,
-        WISDOM_OF_THE_DEEP,
-        YANK
-    )
+    val meleeSet = inTableMelee + nonTableMelee
 
     val EXOTIC_LIST = setOf(SINGULARITY_SHOT, GRAVITY_WELL, SCULK_SENSITIVE, BLACK_ROSE) // To exclude from enchantment table
 

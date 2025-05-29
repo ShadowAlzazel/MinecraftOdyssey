@@ -121,8 +121,7 @@ interface DescriptionManager {
             "antibonk" -> listOf(
                 "- Reduce critical hit damage by ${level * 10}%=[level x 10].")
             "beastly" -> listOf(
-                "- When surrounded (by 3 or more enemies within a 6 block radius),",
-                "take ${level * 5}%=[level x 5] reduced damage.")
+                "- Take reduced damage from living mobs or creatures by ${2 * level}%=[level x 2].")
             "black_rose" -> listOf(
                 "- Applies Wither II for ${level * 4}=[level x 4] seconds to enemies",
                 "that attacked the wearer.",
@@ -130,7 +129,8 @@ interface DescriptionManager {
             "blurcise" -> listOf(
                 "- While moving, take ${level * 10}%=[level x 10] reduced damage.")
             "brawler" -> listOf(
-                "- Reduced damage done by mobs or creatures by ${2 * level}%=[level x 2].")
+                "- When surrounded (by 3 or more enemies within a 6 block radius),",
+                "take ${level * 5}%=[level x 5] reduced damage.")
             "bulwark" -> listOf(
                 "- Increase armor by ${2 * level}%=[level x 2].")
             "claw_climbing" -> listOf(
@@ -194,7 +194,7 @@ interface DescriptionManager {
                 "- Gain invulnerable time negatively proportional to light level.",
                 "Reduce required light level by $level=[level].")
             "vigor" -> listOf( // All Armor
-                "- Deal ${level * 5}%=[level x 5] increased damage while above 25% health.")
+                "- Deal ${level * 5}%=[level x 5] increased damage while above 40% health.")
             // Odyssey - Melee
             "agile" -> listOf(
                 "- Increase attack speed by ${level * 5}%=[level x 5].")
