@@ -2,6 +2,8 @@ package me.shadowalzazel.mcodyssey.common.listeners
 
 import com.destroystokyo.paper.event.inventory.PrepareResultEvent
 import io.papermc.paper.datacomponent.DataComponentTypes
+import io.papermc.paper.registry.RegistryKey
+import me.shadowalzazel.mcodyssey.api.RegistryTagManager
 import me.shadowalzazel.mcodyssey.common.enchantments.TomeEnchanting
 import me.shadowalzazel.mcodyssey.common.items.Item
 import me.shadowalzazel.mcodyssey.util.constants.CustomColors
@@ -29,7 +31,7 @@ import org.bukkit.inventory.meta.Repairable
 import java.util.*
 
 @Suppress("UnstableApiUsage")
-object EnchantingListeners : Listener, TomeEnchanting {
+object EnchantingListeners : Listener, TomeEnchanting, RegistryTagManager {
 
     // IDEAS
     // BOOK that stores EXP points
@@ -354,30 +356,36 @@ object EnchantingListeners : Listener, TomeEnchanting {
                 if (bookMeta.storedEnchants.isEmpty()) continue
                 // Add enchantability point to chance
                 bookMeta.storedEnchants.forEach {
-                    val enchantabilityCost = it.key.enchantabilityCost(it.value)
+                    //val enchantabilityCost = it.key.enchantabilityCost(it.value)
+                    val enchantWeight = it.key.weight
                     if (it.key !in shelfEnchantsMap) {
-                        shelfEnchantsMap[it.key] = enchantabilityCost
+                        shelfEnchantsMap[it.key] = enchantWeight
                     }
                     else {
-                        shelfEnchantsMap[it.key] = shelfEnchantsMap[it.key]!! + enchantabilityCost
+                        shelfEnchantsMap[it.key] = shelfEnchantsMap[it.key]!! + enchantWeight
                     }
                 }
             }
         }
+        if (shelfEnchantsMap.isEmpty()) return // Skip if empty
+        // MAYBE add - negative modifier per unique enchants? OR positive bonus
+
         // Get final calculations (Enchant, lvl)
+        //val playerLevel = event.enchanter.level
+        //val enchantSet = getTagFromRegistry(RegistryKey.ENCHANTMENT, "in_enchanting_table", "minecraft")
+
+        //val itemClone = event.item.clone().enchantWithLevels(playerLevel, enchantSet, Random())
+
+
         val bonusEnchants = mutableMapOf<Enchantment, Int>()
-        for (rolled in shelfEnchantsMap) {
-            // MAYBE add - negative modifier per unique enchants? OR positive bonus
-            if (rolled.value >= (1..100).random()) {
-                val enchantment = rolled.key
+        for (shelfEnchants in shelfEnchantsMap) {
+            if (shelfEnchants.value >= (1..100).random()) {
+                val enchantment = shelfEnchants.key
                 val level = enchantment.maxLevel
-                bonusEnchants[rolled.key] = level
-                //bonusEnchants[rolled.key] = rolled.value.floorDiv(100) + 1
+                bonusEnchants[shelfEnchants.key] = level
             }
-            //println("Bookshelf Enchant: ${rolled.key} with ${rolled.value}%")
         }
-        //println("Bonus Enchants: $bonusEnchants")
-        // Add to events list
+
         for (enchant in bonusEnchants) {
             if (enchant.key !in event.enchantsToAdd.keys) {
                 event.enchantsToAdd[enchant.key] = enchant.value
