@@ -5,7 +5,7 @@
  */
 
 group = "me.shadowalzazel"
-version = "1.0.2-ALPHA-1.21.4"
+version = "1.0.3-ALPHA-1.21.5"
 description = "A server side expansion pack for a new minecraft adventure!"
 
 plugins {
@@ -13,7 +13,7 @@ plugins {
     `maven-publish`
     kotlin("jvm") version "2.0.21"
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("io.papermc.paperweight.userdev") version "2.0.0-beta.14" // Check for new versions at https://plugins.gradle.org/plugin/io.papermc.paperweight.userdev
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.17" // Check for new versions at https://plugins.gradle.org/plugin/io.papermc.paperweight.userdev
 }
 
 java {
@@ -35,10 +35,10 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.5-R0.1-SNAPSHOT")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
     //implementation(kotlin("stdlib-jdk21"))
-    paperweight.paperDevBundle("1.21.4-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.21.5-R0.1-SNAPSHOT")
 }
 
 publishing {
@@ -68,7 +68,7 @@ tasks {
             "name" to project.name,
             "version" to project.version,
             "description" to project.description,
-            "apiVersion" to "1.21"
+            "apiVersion" to "1.21.5"
         )
         inputs.properties(props)
         filesMatching("plugin.yml") {

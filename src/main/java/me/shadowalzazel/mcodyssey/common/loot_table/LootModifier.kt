@@ -11,7 +11,7 @@ interface LootModifier {
 
     fun newArcaneBook(enchantment: Enchantment, level: Int=1): ItemStack {
         val book = Item.ARCANE_BOOK.newItemStack()
-        val builder = ItemEnchantments.itemEnchantments(mapOf(enchantment to level), true)
+        val builder = ItemEnchantments.itemEnchantments(mapOf(enchantment to level))
         book.setData(DataComponentTypes.STORED_ENCHANTMENTS, builder)
         return book
     }

@@ -140,7 +140,7 @@ interface WeaponProjectileHandler : DataTagManager, EnchantmentManager, AttackHe
                     }
                     potionItem.setData(DataComponentTypes.POTION_CONTENTS, potionContents)
                     // Spawn Entity
-                    thrownPotion = (shooter.world.spawnEntity(projectile.location, EntityType.POTION) as ThrownPotion).also {
+                    thrownPotion = (shooter.world.spawnEntity(projectile.location, EntityType.SPLASH_POTION) as ThrownPotion).also { // NOTE!! This was changed recently
                         it.item = potionItem
                         it.velocity = projectile.velocity.clone().multiply(0.6)
                         it.shooter = shooter

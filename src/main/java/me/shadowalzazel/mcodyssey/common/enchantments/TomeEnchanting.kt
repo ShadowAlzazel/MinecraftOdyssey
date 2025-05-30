@@ -40,14 +40,14 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager {
         if (itemEnchants != null) {
             val enchantmentMap = itemEnchants.enchantments().toMutableMap()
             enchantmentMap.remove(enchantToRemove.first)
-            val newEnchantments = ItemEnchantments.itemEnchantments(enchantmentMap,false)
-            item.setData(DataComponentTypes.ENCHANTMENTS, newEnchantments)
+            val enchantmentBuilder = ItemEnchantments.itemEnchantments().addAll(enchantmentMap)
+            item.setData(DataComponentTypes.ENCHANTMENTS, enchantmentBuilder)
         }
         if (storedEnchants != null) {
             val enchantmentMap = storedEnchants.enchantments().toMutableMap()
             enchantmentMap.remove(enchantToRemove.first)
-            val newEnchantments = ItemEnchantments.itemEnchantments(enchantmentMap,false)
-            item.setData(DataComponentTypes.STORED_ENCHANTMENTS, newEnchantments)
+            val enchantmentBuilder = ItemEnchantments.itemEnchantments().addAll(enchantmentMap)
+            item.setData(DataComponentTypes.ENCHANTMENTS, enchantmentBuilder)
         }
 
         item.updateEnchantPoints()
@@ -208,14 +208,14 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager {
         if (!itemEnchantments.isNullOrEmpty()) {
             val enchantmentMap = itemEnchantments.toMutableMap()
             enchantmentMap.remove(extractedEnchant.first)
-            val newEnchantments = ItemEnchantments.itemEnchantments(enchantmentMap,false)
-            item.setData(DataComponentTypes.ENCHANTMENTS, newEnchantments)
+            val enchantmentBuilder = ItemEnchantments.itemEnchantments().addAll(enchantmentMap)
+            item.setData(DataComponentTypes.ENCHANTMENTS, enchantmentBuilder)
         }
         if (!storedEnchantments.isNullOrEmpty()) {
             val enchantmentMap = storedEnchantments.toMutableMap()
             enchantmentMap.remove(extractedEnchant.first)
-            val newEnchantments = ItemEnchantments.itemEnchantments(enchantmentMap,false)
-            item.setData(DataComponentTypes.STORED_ENCHANTMENTS, newEnchantments)
+            val enchantmentBuilder = ItemEnchantments.itemEnchantments().addAll(enchantmentMap)
+            item.setData(DataComponentTypes.ENCHANTMENTS, enchantmentBuilder)
         }
         item.updateEnchantPoints()
         return item
