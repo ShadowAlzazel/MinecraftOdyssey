@@ -8,9 +8,10 @@ import me.shadowalzazel.mcodyssey.common.listeners.*
 import me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners.*
 import me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners.OtherListeners
 import me.shadowalzazel.mcodyssey.datagen.PotionMixes
-import me.shadowalzazel.mcodyssey.datagen.RecipeManager
+import me.shadowalzazel.mcodyssey.datagen.RecipeLoader
 import me.shadowalzazel.mcodyssey.server.commands.admin.*
 import me.shadowalzazel.mcodyssey.common.world_events.WorldEventsManager
+import me.shadowalzazel.mcodyssey.datagen.RecipeManager
 import me.shadowalzazel.mcodyssey.server.commands.UpdateModel
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
@@ -93,7 +94,7 @@ class Odyssey : JavaPlugin() {
 
         // Register Recipes
         logger.info("Registering Recipes...")
-        RecipeManager().createAllRecipes().forEach {
+        RecipeLoader().createAllRecipes().forEach {
             Bukkit.addRecipe(it)
         }
 
@@ -121,6 +122,7 @@ class Odyssey : JavaPlugin() {
             LootListeners,
             WeaponListeners,
             SpawningListeners,
+            VillagerListeners,
             ItemListeners,
             OtherListeners,
             MobListeners,

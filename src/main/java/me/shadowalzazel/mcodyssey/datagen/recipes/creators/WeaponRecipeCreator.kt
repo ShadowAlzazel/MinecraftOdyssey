@@ -155,10 +155,10 @@ class WeaponRecipeCreator : DataTagManager, ChoiceManager, ToolMaker {
         val itemName = result.getItemIdentifier()!!
         val resultKey = NamespacedKey(Odyssey.instance, itemName)
         // Get Pattern/Shape
-        val pattern = weaponPatterns[type.nameSuf]!!
+        val pattern = weaponPatterns[type.toolName]!!
         // Create Recipe keys and ingredients
         val ingredientMap = materialKeys[material.namePre]!!.toMutableMap()
-        val extraIngredientMap = weaponSpecialMaterialKeys[type.nameSuf]
+        val extraIngredientMap = weaponSpecialMaterialKeys[type.toolName]
         if (extraIngredientMap != null) {
             ingredientMap.putAll(extraIngredientMap)
         }
@@ -171,7 +171,7 @@ class WeaponRecipeCreator : DataTagManager, ChoiceManager, ToolMaker {
                     setIngredient(ingredient.key, ingredient.value)
                 }
             }
-            group = type.nameSuf
+            group = type.toolName
             category = CraftingBookCategory.EQUIPMENT
         }
         return recipe

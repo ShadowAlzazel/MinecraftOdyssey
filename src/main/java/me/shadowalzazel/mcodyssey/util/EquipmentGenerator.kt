@@ -21,7 +21,7 @@ import org.bukkit.inventory.meta.trim.TrimPattern
 import java.util.*
 
 @Suppress("UnstableApiUsage")
-interface LootEquipmentCreator : ToolMaker, EnchantabilityHandler {
+interface EquipmentGenerator : ToolMaker, EnchantabilityHandler {
 
     // Equipment Randomizer
     fun EquipmentRandomizer.newWeapon(randomParts: Boolean = true): ItemStack {
@@ -72,16 +72,16 @@ interface LootEquipmentCreator : ToolMaker, EnchantabilityHandler {
         val weapon = generateNewRandomWeapon(weaponTypes, toolMaterials)
         weapon.apply {
             val weaponType = getStringTag(ItemDataTags.TOOL_TYPE)!!
-            setData(DataComponentTypes.CUSTOM_MODEL_DATA, generateRandomWeaponParts(partSet, weaponType))
+            setData(DataComponentTypes.CUSTOM_MODEL_DATA, generateRandomWeaponPartsData(partSet, weaponType))
         }
         return weapon
     }
 
-    private fun generateNewRandomWeapon(weaponTypes: List<ToolType>, toolMaterials: List<ToolMaterial>): ItemStack {
+    fun generateNewRandomWeapon(weaponTypes: List<ToolType>, toolMaterials: List<ToolMaterial>): ItemStack {
         return createToolStack(toolMaterials.random(), weaponTypes.random())
     }
 
-    private fun generateRandomWeaponParts(patterns: List<String>, toolType: String): CustomModelData.Builder {
+    private fun generateRandomWeaponPartsData(patterns: List<String>, toolType: String): CustomModelData.Builder {
         val pat = { name: String -> "${patterns.random()}_${name}"}
         val parts = mutableListOf(toolType, pat("blade"), pat("handle"), pat("hilt"), pat("pommel"), "no_trim")
         val customData = CustomModelData.customModelData().addStrings(parts)
@@ -95,7 +95,7 @@ interface LootEquipmentCreator : ToolMaker, EnchantabilityHandler {
     /*-----------------------------------------------------------------------------------------------*/
     // Creator functions accept non lists to create items
 
-    private fun createWeaponParts(pattern: String, toolType: String): CustomModelData.Builder {
+    private fun createWeaponPartsData(pattern: String, toolType: String): CustomModelData.Builder {
         val pat = { name: String -> "${pattern}_${name}"}
         val parts = mutableListOf(toolType, pat("blade"), pat("handle"), pat("hilt"), pat("pommel"), "no_trim")
         val customData = CustomModelData.customModelData().addStrings(parts)

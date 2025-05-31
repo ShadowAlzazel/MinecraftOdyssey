@@ -236,6 +236,8 @@ interface DescriptionManager {
                 "- Deal bonus damage to enemies that are on fire, or susceptible to water.")
             "echo" -> listOf(
                 "- Attacking has a ${20 * level}%=[20 x level] chance to attack again. (Can not re-apply).")
+            "execution" -> listOf(
+                "- Execute an enemy if it is below ${level * 2}%=[level x 2] max health.")
             "expedite" -> listOf(
                 "- Increase base mining speed by ${level * 5}%=[level x 5].")
             "exploding" -> listOf(
@@ -265,15 +267,17 @@ interface DescriptionManager {
                 "If the attack is a crit, it is doubled, but the glowing is removed.")
             "invocative" -> listOf(
                 "- Increase damage to a new target by ${level * 10}%=[level x 10] of your previous attack.")
-            "magic_touch" -> listOf(
+            "magic_aspect" -> listOf(
                 "- Convert ${level * 10}%=[level x 10] of melee damage into magic type damage.")
             "metabolic" -> listOf(
                 "- Have a ${level * 10}%=[level x 10] chance to regain food levels when breaking a block.")
             "pestilence" -> listOf(
                 "- Killing an enemy that is afflicted by a potion effect, spreads the effect",
                 "at ${level * 20}%=[level x 20] potency within a 4 block radius.")
-            "pluck_pocket" -> listOf(
+            "pluck" -> listOf(
                 "- Items that are mined are directly added to the players inventory.")
+            "plunder" -> listOf(
+                "- Items that dropped from mobs are directly added to the players inventory.")
             "rupture" -> listOf(
                 "- Every third attack against a target deals ${level}=[level] true damage.")
             "vengeful" -> listOf(
@@ -367,7 +371,7 @@ interface DescriptionManager {
             "fealty" -> listOf(
                 "- When the wearer dies, this item is kept when respawning.")
             // Fallback
-            else -> listOf(name)
+            else -> listOf("No description for $name")
         }
     }
 

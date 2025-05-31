@@ -43,7 +43,7 @@ class ToolRecipeCreator : DataTagManager, ChoiceManager, ToolMaker {
         val itemName = result.getItemIdentifier()!!
         val resultKey = NamespacedKey(Odyssey.instance, itemName)
         // Get Pattern/Shape
-        val pattern = toolPatterns[type.nameSuf]!!
+        val pattern = toolPatterns[type.toolName]!!
         // Create Recipe keys and ingredients
         val ingredientMap = materialKeys[material.namePre]!!.toMutableMap()
         // Assemble recipe
@@ -55,7 +55,7 @@ class ToolRecipeCreator : DataTagManager, ChoiceManager, ToolMaker {
                     setIngredient(ingredient.key, ingredient.value)
                 }
             }
-            group = type.nameSuf
+            group = type.toolName
             category = CraftingBookCategory.EQUIPMENT
         }
         return recipe

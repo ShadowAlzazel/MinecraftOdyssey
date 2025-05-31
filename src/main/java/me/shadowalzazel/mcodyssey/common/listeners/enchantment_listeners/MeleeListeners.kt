@@ -23,6 +23,7 @@ import org.bukkit.event.block.BlockDropItemEvent
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityDeathEvent
+import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
@@ -160,6 +161,9 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
                 "fearful_finisher" -> {
                     fearfulFinisherEnchantment(victim, enchant.value)
                 }
+                "plunder" -> {
+                    plunderEnchantment(event)
+                }
             }
         }
     }
@@ -189,8 +193,8 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         // Loop
         for (enchant in hand.enchantments) {
             when (enchant.key.getNameId()) {
-                "pluck_pocket" -> {
-                    pluckPocketEnchantment(event)
+                "pluck" -> {
+                    pluckEnchantment(event)
                 }
             }
         }
@@ -226,7 +230,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         }
     }
 
-    private fun pluckPocketEnchantment(event: BlockDropItemEvent) {
+    private fun pluckEnchantment(event: BlockDropItemEvent) {
         val items = event.items
         val player = event.player
         for (drop in items) {
@@ -642,6 +646,30 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         for (entity in nearbyEntities) {
             entity.addPotionEffects(spreadingEffects)
         }
+    }
+
+    private fun plunderEnchantment(event: EntityDeathEvent) {
+        val items = event.drops
+        val killer = event.entity.killer as LivingEntity
+
+        val dropsToRemove = mutableListOf<ItemStack>()
+
+        for (drop in items) {
+            if (killer is Player) {
+                val overflow = killer.inventory.addItem(drop.clone())
+                // Empty -> Success
+                if (overflow.isEmpty()) {
+                    dropsToRemove.add(drop)
+                }
+            }
+            else {
+                // Do Nothing
+            }
+        }
+        for (plunderedDrop in dropsToRemove) {
+            items.remove(plunderedDrop)
+        }
+
     }
 
     @Suppress("UnstableApiUsage")

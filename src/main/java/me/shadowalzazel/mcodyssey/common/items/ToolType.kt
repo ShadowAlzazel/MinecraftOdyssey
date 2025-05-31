@@ -1,11 +1,11 @@
 package me.shadowalzazel.mcodyssey.common.items
 
 enum class ToolType(
-    val nameSuf: String, // 'item_name' component
-    val customNameSuf: String, // 'custom_name' component
+    val toolName: String, // 'item_name' component
+    val fullName: String, // 'custom_name' component
     val baseDamage: Double,
     val baseSpeed: Double,
-    val itemOverrideSuf: String,  // for finding the item id
+    val itemOverrideName: String,  // for finding the item id
     val bonusRange: Double? = null
 ) {
     // Vanilla

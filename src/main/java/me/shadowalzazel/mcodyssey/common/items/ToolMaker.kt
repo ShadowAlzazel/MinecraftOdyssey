@@ -17,15 +17,15 @@ interface ToolMaker : AttributeManager, DataTagManager, ToolComponentHelper {
     fun createToolStack(material: ToolMaterial, type: ToolType, amount: Int = 1): ItemStack {
         val otherTools = listOf(ToolType.SHURIKEN)
         val minecraftItemKey = if (type in otherTools) {
-            type.itemOverrideSuf // Get item key from tool
+            type.itemOverrideName // Get item key from tool
         } else {
-            "${material.itemOverridePre}_${type.itemOverrideSuf}"
+            "${material.itemOverridePre}_${type.itemOverrideName}"
         }
         val minecraftMaterial = Material.matchMaterial(minecraftItemKey) ?: return ItemStack(Material.AIR)
         val itemStack = ItemStack(minecraftMaterial, amount).apply {
             // Create Variables
-            val itemName = "${material.namePre}_${type.nameSuf}"
-            val upperName = "${material.customNamePre} ${type.customNameSuf}"
+            val itemName = "${material.namePre}_${type.toolName}"
+            val upperName = "${material.customNamePre} ${type.fullName}"
             val customName = Component.text(upperName).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
             val damage = material.attackDamage + type.baseDamage
             val maxDurability = material.maxDurability
@@ -40,9 +40,9 @@ interface ToolMaker : AttributeManager, DataTagManager, ToolComponentHelper {
                 speed *= 1.1
             }
             // Tools with mining ToolComponent
-            val mineableTags = getMiningTags(type.nameSuf)
+            val mineableTags = getMiningTags(type.toolName)
             if (mineableTags != null) {
-                val newToolComponent = newToolComponent(material.namePre, type.nameSuf)
+                val newToolComponent = newToolComponent(material.namePre, type.toolName)
                 if (newToolComponent != null) {
                     this.resetData(DataComponentTypes.TOOL)
                     this.setData(DataComponentTypes.TOOL, newToolComponent)
@@ -59,7 +59,7 @@ interface ToolMaker : AttributeManager, DataTagManager, ToolComponentHelper {
             //meta.persistentDataContainer.set(NamedKeys.ITEM_KEY, PersistentDataType.STRING, itemName) // ItemKey
             //this.itemMeta = meta
             this.setStringTag("item", itemName) // ItemKey
-            this.setStringTag(ItemDataTags.TOOL_TYPE, type.nameSuf)
+            this.setStringTag(ItemDataTags.TOOL_TYPE, type.toolName)
             this.setStringTag(ItemDataTags.MATERIAL_TYPE, material.namePre)
             // Assign Base attributes
             this.addAttackDamageAttribute(damage, AttributeTags.ITEM_BASE_ATTACK_DAMAGE)

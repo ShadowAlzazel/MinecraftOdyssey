@@ -19,7 +19,7 @@ import kotlin.math.absoluteValue
 import kotlin.math.pow
 
 @Suppress("UnstableApiUsage")
-interface MobMaker : LootEquipmentCreator {
+interface MobMaker : EquipmentGenerator {
 
 
     fun eliteMobCreator(event: CreatureSpawnEvent) {
@@ -112,7 +112,7 @@ interface MobMaker : LootEquipmentCreator {
 
     fun createRandomizedMob(
         mob: LivingEntity,
-        lootEquipmentHolder: EquipmentRandomizer,
+        equipmentRandomizer: EquipmentRandomizer,
         enchanted: Boolean = false,
         newWeapon: Boolean = false)
     {
@@ -121,12 +121,12 @@ interface MobMaker : LootEquipmentCreator {
 
         // Methods to create customized equipment
         val mainHand: ItemStack = if (newWeapon) {
-            lootEquipmentHolder.newWeapon()
+            equipmentRandomizer.newWeapon()
         } else {
-            mob.equipment?.itemInMainHand ?: lootEquipmentHolder.newWeapon()
+            mob.equipment?.itemInMainHand ?: equipmentRandomizer.newWeapon()
         }
-        val armorList = lootEquipmentHolder.newTrimmedArmor()
-        val dualWielding = lootEquipmentHolder.toolType in listOf(ToolType.DAGGER, ToolType.CHAKRAM, ToolType.SICKLE, ToolType.CUTLASS)
+        val armorList = equipmentRandomizer.newTrimmedArmor()
+        val dualWielding = equipmentRandomizer.toolType in listOf(ToolType.DAGGER, ToolType.CHAKRAM, ToolType.SICKLE, ToolType.CUTLASS)
 
         // Enchant
         if (enchanted) {
