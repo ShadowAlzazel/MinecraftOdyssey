@@ -22,9 +22,12 @@ object VillagerListeners : Listener {
     private fun weaponSmithVillagerHandler(event: VillagerAcquireTradeEvent) {
         val villager = event.entity as Villager
         // TEMP TODO -> Make this a weighted method later
-        if ((0..10).random() <= 3) {
-            println("Changing Recipe to part Upgrade")
-            event.recipe = RecipeManager.merchantRecipes.createPartUpgradeTemplateTrade()
+        // level 1
+        if (villager.villagerLevel == 1) {   // Apprentice -> Journeyman
+            if ((0..10).random() <= 4) {
+                println("Changing Recipe to part Upgrade")
+                event.recipe = RecipeManager.merchantRecipes.createPartUpgradeTemplateTrade()
+            }
         }
 
         // Rank

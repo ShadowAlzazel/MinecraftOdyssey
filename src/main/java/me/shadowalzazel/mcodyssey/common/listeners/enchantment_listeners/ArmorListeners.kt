@@ -29,6 +29,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import org.bukkit.util.Vector
 import java.util.*
 
 @Suppress("UnstableApiUsage")
@@ -463,6 +464,9 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
                     "static_socks" -> {
                         staticSocksSneakEnchantment(sneaker, enchant.value)  // Trigger on one toggle only
                     }
+                    "cloud_strider" -> {
+                        cloudStriderEnchantment(sneaker, enchant.value)
+                    }
                 }
             }
         }
@@ -474,8 +478,9 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
     @EventHandler
     fun jumpHandler(event: PlayerJumpEvent) {
         val jumper = event.player
+        val equipment = jumper.equipment ?: return
         // Leggings
-        val leggingEnchants = jumper.equipment!!.leggings?.getData(DataComponentTypes.ENCHANTMENTS)?.enchantments()
+        val leggingEnchants = equipment.leggings?.getData(DataComponentTypes.ENCHANTMENTS)?.enchantments()
         if (leggingEnchants != null) {
             for (enchant in leggingEnchants) {
                 when (enchant.key.getNameId()) {
@@ -485,13 +490,13 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
                 }
             }
         }
-        // Leggings
-        val bootEnchants = jumper.equipment!!.boots?.getData(DataComponentTypes.ENCHANTMENTS)?.enchantments()
+        // Boots
+        val bootEnchants = equipment.boots?.getData(DataComponentTypes.ENCHANTMENTS)?.enchantments()
         if (bootEnchants != null) {
             for (enchant in bootEnchants) {
                 when (enchant.key.getNameId()) {
                     "cloud_strider" -> {
-                        event.player
+                        cloudStriderEnchantment(jumper, enchant.value)
                     }
                 }
             }
@@ -637,6 +642,31 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         // Movement Math
         if (attacker.location.distance(defender.location) <= 5.0) {
             defender.location.clone().subtract(attacker.location).toVector().normalize().multiply(1.6)
+        }
+    }
+
+    private fun cloudStriderEnchantment(
+        jumper: Player,
+        level: Int
+    ) {
+        // Starting variables
+        val maxJumps = level
+        val jumpSpeed = 0.5
+
+        println("Detected ${jumper} is trying to jump")
+        // If player is on ground, reset jump count
+        var currentCloudJumps = jumper.getIntTag(EntityTags.CLOUD_STRIDER_JUMPS) ?: 0
+        if (jumper.isOnGround) {
+            println("Is ON Ground")
+            currentCloudJumps = 0
+            jumper.setIntTag(EntityTags.CLOUD_STRIDER_JUMPS, currentCloudJumps)
+        }
+        // Else if not max jumps, do cloud stride jump
+        else if (currentCloudJumps < maxJumps) {
+            println("Player has cloud jumped")
+            currentCloudJumps += 1
+            jumper.velocity = jumper.velocity.add(Vector(0.0, jumpSpeed, 0.0)) // Add Y
+            jumper.setIntTag(EntityTags.CLOUD_STRIDER_JUMPS, currentCloudJumps)
         }
     }
 
