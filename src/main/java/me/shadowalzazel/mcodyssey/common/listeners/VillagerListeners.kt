@@ -21,6 +21,12 @@ object VillagerListeners : Listener {
 
     private fun weaponSmithVillagerHandler(event: VillagerAcquireTradeEvent) {
         val villager = event.entity as Villager
+        // TEMP TODO -> Make this a weighted method later
+        if ((0..10).random() <= 3) {
+            println("Changing Recipe to part Upgrade")
+            event.recipe = RecipeManager.merchantRecipes.createPartUpgradeTemplateTrade()
+        }
+
         // Rank
         if (villager.villagerLevel == 3) {   // Apprentice -> Journeyman
             if ((0..10).random() <= 5) {
@@ -31,7 +37,7 @@ object VillagerListeners : Listener {
         else if (villager.villagerLevel == 4) { // Journeyman -> Expert
             if ((0..10).random() <= 5) {
                 println("Changing Recipe to Customized Iron Weapon")
-                val viableParts = listOf(listOf("blade", "pommel", "hilt").random()) // Just 1 part
+                val viableParts = listOf(listOf("blade", "hilt").random()) // Just 1 part
                 event.recipe = RecipeManager.merchantRecipes.createCustomizedIronWeaponTrade(viableParts)
             }
         }

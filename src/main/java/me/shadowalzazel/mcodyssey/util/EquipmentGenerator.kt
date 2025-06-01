@@ -103,7 +103,7 @@ interface EquipmentGenerator : ToolMaker, EnchantabilityHandler {
     }
 
     private fun createDataArmorSet(material: String): List<ItemStack> {
-        val lootItem = { name: String -> LootTableManager.createItemStackFromLoot("${material}_${name}")}
+        val lootItem = { name: String -> LootTableManager.createItemStackFromItemTable("${material}_${name}")}
         val dataItems = listOf(lootItem("helmet"), lootItem("chestplate"), lootItem("leggings"), lootItem("boots"))
         return dataItems
     }

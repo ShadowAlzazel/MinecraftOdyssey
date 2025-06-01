@@ -31,7 +31,8 @@ object LootTableManager : RegistryTagManager {
             killer(null)
         }
         val context = contextBuilder.build()
-        val items = lootTable.populateLoot(Random(0L), context)
+        val random = Random((0L..100000L).random())
+        val items = lootTable.populateLoot(random, context)
         require(items.isNotEmpty())
         return items.first()
     }
@@ -50,26 +51,48 @@ object LootTableManager : RegistryTagManager {
         return items
     }
 
-    // Creates an item from the odyssey:item/* loot table
-    fun createItemStackFromLoot(name: String): ItemStack {
+    /**
+     * This creates an itemStack from the odyssey:item/. loot table.
+     *
+     * @param name The name of the loot table which should be the Item.
+     * @return The loot item into ItemStack form.
+     */
+    fun createItemStackFromItemTable(name: String): ItemStack {
         return singleItemFromResource("item/$name", "odyssey")
     }
 
+    /**
+     * This creates a bukkit LootTable to use from a loot namespace.
+     *
+     * @param name The name of the loot table which should be the Item.
+     * @param namespace The namespace to look for the loot. Defaults to "odyssey".
+     * @return The bukkit representation of the loot table.
+     */
     fun getResourceLootTable(name: String, namespace: String = "odyssey"): LootTable? {
         val lootTableKey: ResourceKey<NmsLootTable> = newLootKey(name, namespace)
         val lootTable = CraftLootTable.minecraftToBukkit(lootTableKey)
         return lootTable
     }
 
-    fun getOdysseyLoot(name: String): ItemStack {
-        return singleItemFromResource(name, "odyssey")
+    /**
+     * This creates an itemStack from the odyssey namespace loot table.
+     *
+     * e.g. name="chests/sunken_library/common", namespace="odyssey" generates an item
+     * from that loot table.
+     *
+     * @param name The name of the loot table to get the item from.
+     * @param namespace The namespace to look for the loot. Defaults to "odyssey".
+     * @return The loot item into ItemStack form.
+     */
+    fun generateItemFromLootTable(name: String, namespace: String = "odyssey"): ItemStack {
+        return singleItemFromResource(name, namespace)
     }
 
-    fun getMinecraftLoot(name: String): ItemStack {
+    private fun getMinecraftLoot(name: String): ItemStack {
         return singleItemFromResource(name, "minecraft")
     }
 
-    fun getCustomLoot(name: String, namespace: String): ItemStack {
+    private fun getCustomLoot(name: String, namespace: String): ItemStack {
         return singleItemFromResource(name, namespace)
     }
 

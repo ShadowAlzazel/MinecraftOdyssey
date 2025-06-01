@@ -2,14 +2,13 @@ package me.shadowalzazel.mcodyssey.datagen.recipes.creators
 
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.CustomModelData
+import me.shadowalzazel.mcodyssey.api.LootTableManager
 import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
 import me.shadowalzazel.mcodyssey.common.items.ToolType
 import me.shadowalzazel.mcodyssey.util.EquipmentGenerator
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.Merchant
 import org.bukkit.inventory.MerchantRecipe
-import kotlin.math.exp
 
 @Suppress("UnstableApiUsage")
 class MerchantRecipeCreator : EquipmentGenerator {
@@ -79,7 +78,7 @@ class MerchantRecipeCreator : EquipmentGenerator {
         PARTS_CUSTOM_MODEL_DATA.forEachIndexed { index, part ->
             // If part matches with custom_model_data, create the part Data
             if (part in partsToCustomize) {
-                weaponPartsData[index] = randomPartPattern("blade")
+                weaponPartsData[index] = randomPartPattern(part)
             }
             // Else, just keep fall back
         }
@@ -95,5 +94,16 @@ class MerchantRecipeCreator : EquipmentGenerator {
         return trade
     }
 
+
+    fun createPartUpgradeTemplateTrade(): MerchantRecipe {
+        val result = LootTableManager.generateItemFromLootTable("loot/random_part_upgrade_template")
+        // Create the trade
+        val trade = MerchantRecipe(result, 3).apply {
+            villagerExperience = (7..14).random()
+            addIngredient(ItemStack(Material.EMERALD, (6..11).random()))
+        }
+        return trade
+
+    }
 
 }

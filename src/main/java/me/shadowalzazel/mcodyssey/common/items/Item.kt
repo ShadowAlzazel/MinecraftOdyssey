@@ -18,7 +18,7 @@ open class Item(
 
     open fun newItemStack(amount: Int=1, withBukkitId: Boolean=false): ItemStack {
         val item = when(this) {
-            is DataItem -> LootTableManager.createItemStackFromLoot(this.location ?: this.name)
+            is DataItem -> LootTableManager.createItemStackFromItemTable(this.location ?: this.name)
             is GeneratedItem -> this.constructor.createItemStack(this.name, amount, withBukkitId)
             else -> ItemStack(Material.AIR)
         }
