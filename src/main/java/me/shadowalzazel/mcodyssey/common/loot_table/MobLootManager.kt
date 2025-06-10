@@ -30,7 +30,7 @@ interface MobLootManager : RegistryTagManager {
             EntityType.ENDERMAN -> listOf(OdysseyEnchantments.VOID_STRIKE)
             EntityType.VEX -> listOf(OdysseyEnchantments.INVOCATIVE)
             EntityType.WARDEN -> listOf(OdysseyEnchantments.SCULK_SENSITIVE)
-            EntityType.WITHER -> listOf(OdysseyEnchantments.BLACK_ROSE)
+            EntityType.WITHER -> listOf(OdysseyEnchantments.STYX_ROSE)
             else -> null
         }
     }

@@ -146,6 +146,7 @@ object EntityTags {
     const val AMBUSH_MARKED: String = "odyssey.ambush_marked"
     const val CLOUD_STRIDER_IS_JUMPING: String = "odyssey.cloud_strider_is_jumping"
     const val CLOUD_STRIDER_JUMPS: String = "odyssey.cloud_strider_jumps"
+    const val LODESIGHT_BLOCK: String = "odyssey.lodesight_block"
 
     // WEAPONS
     const val COMBOED: String = "odyssey.comboed"
@@ -157,6 +158,7 @@ object EntityTags {
     const val THROWABLE_DAMAGE: String = "odyssey.throwable_damage"
     const val THROWABLE_ATTACK_HIT: String = "odyssey.throwable_attack_hit"
     const val MAGIC_MISSILE: String = "odyssey.magic_missile"
+
 
     /*-----------------------------------------------------------------------------------------------*/
     /*--------------------------------------------FUNCTIONS------------------------------------------*/

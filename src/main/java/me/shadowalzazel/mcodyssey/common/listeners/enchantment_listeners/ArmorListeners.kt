@@ -651,7 +651,7 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
     ) {
         // Starting variables
         val maxJumps = level
-        val jumpSpeed = 0.5
+        val jumpSpeed = 0.75
 
         println("Detected ${jumper} is trying to jump")
         // If player is on ground, reset jump count
@@ -665,7 +665,7 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         else if (currentCloudJumps < maxJumps) {
             println("Player has cloud jumped")
             currentCloudJumps += 1
-            jumper.velocity = jumper.velocity.add(Vector(0.0, jumpSpeed, 0.0)) // Add Y
+            jumper.velocity = jumper.velocity.setY(0.0).add(Vector(0.0, jumpSpeed, 0.0)) // Add Y
             jumper.setIntTag(EntityTags.CLOUD_STRIDER_JUMPS, currentCloudJumps)
         }
     }

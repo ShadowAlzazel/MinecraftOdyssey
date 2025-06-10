@@ -1,11 +1,12 @@
 package me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners
 
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent
+import io.papermc.paper.command.brigadier.argument.ArgumentTypes.world
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.common.effects.EffectsManager
-import me.shadowalzazel.mcodyssey.common.tasks.enchantment_tasks.*
 import me.shadowalzazel.mcodyssey.common.combat.AttackHelper
+import me.shadowalzazel.mcodyssey.common.effects.EffectsManager
 import me.shadowalzazel.mcodyssey.common.enchantments.EnchantmentManager
+import me.shadowalzazel.mcodyssey.common.tasks.enchantment_tasks.*
 import me.shadowalzazel.mcodyssey.util.constants.EffectTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags.getIntTag
@@ -13,6 +14,7 @@ import me.shadowalzazel.mcodyssey.util.constants.EntityTags.removeTag
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags.setIntTag
 import org.bukkit.*
 import org.bukkit.attribute.Attribute
+import org.bukkit.block.Block
 import org.bukkit.damage.DamageSource
 import org.bukkit.damage.DamageType
 import org.bukkit.entity.*
@@ -29,6 +31,7 @@ import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
 import java.util.*
 import kotlin.math.pow
+
 
 object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManager {
 
@@ -213,6 +216,9 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
                 "metabolic" -> {
                     metabolicEnchantment(event, enchant.value)
                 }
+                "lodesight" -> {
+                    lodesightEnchantment(event, enchant.value)
+                }
             }
         }
 
@@ -228,6 +234,60 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         else {
             player.saturation = minOf(player.saturation + 0.5F, 20F)
         }
+    }
+
+    private fun lodesightEnchantment(event: BlockBreakEvent, level: Int) {
+        val player = event.player
+        val minedBlock = event.block
+
+        // Lists
+        val blockBlackList = listOf(Material.STONE, Material.COBBLESTONE, Material.DIRT, Material.GRASS_BLOCK)
+
+        // Want to skip common blocks
+        if (minedBlock.type in blockBlackList) {
+            return
+        }
+
+        // Delete Old Lodesight Blocks
+        player.getNearbyEntities(16.0, 16.0, 16.0).forEach {
+            if (it is BlockDisplay && it.scoreboardTags.contains(EntityTags.LODESIGHT_BLOCK)) {
+                it.remove()
+            }
+        }
+
+        val heldItem = player.inventory.itemInMainHand
+        var maxCount = 0
+        val r = 6 // Radius to scan
+        for (dx in -r..r) {
+            if (maxCount >= 8) break
+            for (dy in -r..r) {
+                if (maxCount >= 8) break
+                for (dz in -r..r) {
+                    if (maxCount >= 8) break
+                    // Check radial distance
+                    if (dx*dx + dy*dy + dz*dz <= r*r) {
+                        val scanBlock: Block = minedBlock.world.getBlockAt(minedBlock.x + dx, minedBlock.y + dy, minedBlock.z + dz)
+                        if (scanBlock.type in blockBlackList) continue
+                        // Skip if NOT matching
+                        if (scanBlock.type != minedBlock.type) continue
+                        // Do stuff
+                        val blockDisplay = player.world.spawnEntity(scanBlock.location, EntityType.BLOCK_DISPLAY) as BlockDisplay
+                        blockDisplay.also {
+                            it.block = minedBlock.blockData
+                            it.brightness = Display.Brightness(15, 15)
+                            it.isGlowing = true
+                            it.glowColorOverride = Color.YELLOW
+                            it.viewRange = 16F
+                            it.isPersistent = false
+                            it.addScoreboardTag(EntityTags.LODESIGHT_BLOCK)
+                        }
+                        heldItem.damage(4, player)
+                        maxCount += 1
+                    }
+                }
+            }
+        }
+
     }
 
     private fun pluckEnchantment(event: BlockDropItemEvent) {

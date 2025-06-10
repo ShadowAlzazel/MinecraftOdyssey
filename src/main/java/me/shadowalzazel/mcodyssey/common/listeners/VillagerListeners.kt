@@ -19,6 +19,16 @@ object VillagerListeners : Listener {
         }
     }
 
+    private fun cartographerVillagerHandler(event: VillagerAcquireTradeEvent) {
+        val villager = event.entity as Villager
+
+        if (villager.villagerLevel == 1) {
+            // 
+        }
+
+    }
+
+
     private fun weaponSmithVillagerHandler(event: VillagerAcquireTradeEvent) {
         val villager = event.entity as Villager
         // TEMP TODO -> Make this a weighted method later

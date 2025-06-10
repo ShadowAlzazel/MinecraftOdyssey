@@ -18,7 +18,7 @@ enum class ToolType(
     // Sword overrides
     KATANA("katana", "Katana", 3.0, 1.7, "sword", 0.2),
     CLAYMORE("claymore", "Claymore", 6.0, 0.9, "sword", 0.5),
-    DAGGER("dagger", "Dagger", 1.0, 3.0, "sword", -0.2),
+    DAGGER("dagger", "Dagger", 1.0, 3.0, "sword", -0.3),
     RAPIER("rapier", "Rapier", 1.5, 3.5, "sword"),
     CUTLASS("cutlass", "Cutlass", 2.5, 2.1, "sword"),
     SABER("saber", "Saber", 3.0, 1.8, "sword"),

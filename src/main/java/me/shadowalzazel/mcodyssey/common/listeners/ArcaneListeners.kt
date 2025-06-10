@@ -21,12 +21,12 @@ object ArcaneListeners: Listener, ArcaneEquipmentManager, DataTagManager {
 
     private fun leftClickHandler(event: PlayerInteractEvent) {
         val player = event.player
-        val offHand = player.equipment!!.itemInOffHand
+        val offHand = player.equipment.itemInOffHand
         //if (player.hasCooldown(offHand.type)) return
         //val model = offHand.getData(DataComponentTypes.ITEM_MODEL) ?: return
         val itemName = offHand.getItemIdentifier() ?: return
         //if (ARCANE_RANGES[itemName] == null) return
-        val book = player.equipment!!.itemInMainHand
+        val book = player.equipment.itemInMainHand
         if (book.type == Material.AIR) return
         val bookEnchantments = book.getData(DataComponentTypes.STORED_ENCHANTMENTS)
         // Sentries Passed

@@ -14,14 +14,13 @@ object OdysseyEnchantments : EnchantmentManager, RegistryTagManager {
     val ANALYSIS: Enchantment = getRegisteredEnchant("analysis")
     val ANTIBONK: Enchantment = getRegisteredEnchant("antibonk")
     val BEASTLY: Enchantment = getRegisteredEnchant("beastly")
-    val BLACK_ROSE: Enchantment = getRegisteredEnchant("black_rose")
+    val STYX_ROSE: Enchantment = getRegisteredEnchant("styx_rose")
     val BLURCISE: Enchantment = getRegisteredEnchant("blurcise")
     val BRAWLER: Enchantment = getRegisteredEnchant("brawler")
     val BULWARK: Enchantment = getRegisteredEnchant("bulwark")
     val CLAW_CLIMBING: Enchantment = getRegisteredEnchant("claw_climbing")
     val COWARDICE: Enchantment = getRegisteredEnchant("cowardice")
     val DEVASTATING_DROP: Enchantment = getRegisteredEnchant("devastating_drop")
-    val FRUITFUL_FARE: Enchantment = getRegisteredEnchant("fruitful_fare")
     val HEARTENED: Enchantment = getRegisteredEnchant("heartened")
     val IGNORE_PAIN: Enchantment = getRegisteredEnchant("ignore_pain")
     val ILLUMINEYE: Enchantment = getRegisteredEnchant("illumineye")
@@ -139,6 +138,6 @@ object OdysseyEnchantments : EnchantmentManager, RegistryTagManager {
 
     val meleeSet = inTableMelee + nonTableMelee
 
-    val EXOTIC_LIST = setOf(SINGULARITY_SHOT, GRAVITY_WELL, SCULK_SENSITIVE, BLACK_ROSE) // To exclude from enchantment table
+    val EXOTIC_LIST = setOf(SINGULARITY_SHOT, GRAVITY_WELL, SCULK_SENSITIVE, STYX_ROSE) // To exclude from enchantment table
 
 }

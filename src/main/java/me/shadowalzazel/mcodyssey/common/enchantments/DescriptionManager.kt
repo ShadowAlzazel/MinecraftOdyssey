@@ -267,6 +267,9 @@ interface DescriptionManager {
                 "If the attack is a crit, it is doubled, but the glowing is removed.")
             "invocative" -> listOf(
                 "- Increase damage to a new target by ${level * 10}%=[level x 10] of your previous attack.")
+            "lodesight" -> listOf(
+                "- Mining a block highlights ${level * 4}%=[level x 4] nearby blocks of the same type within an 8 block radius.",
+                "- Each detected block drains durability by 2.")
             "magic_aspect" -> listOf(
                 "- Convert ${level * 10}%=[level x 10] of melee damage into magic type damage.")
             "metabolic" -> listOf(
