@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.common.listeners
 
 import io.papermc.paper.datacomponent.DataComponentTypes
-import me.shadowalzazel.mcodyssey.common.combat.ArcaneEquipmentManager
+import me.shadowalzazel.mcodyssey.common.arcane.ArcaneEquipmentManager
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
@@ -31,7 +31,7 @@ object ArcaneListeners: Listener, ArcaneEquipmentManager, DataTagManager {
         val bookEnchantments = book.getData(DataComponentTypes.STORED_ENCHANTMENTS)
         // Sentries Passed
         when (itemName) {
-            "arcane_wand" -> arcaneWandUseHandler(event)
+            "arcane_wand" -> oldArcaneWandHandler(event)
             "arcane_blade" -> arcaneBladeHandler(event)
             "arcane_scepter" -> arcaneScepterHandler(event)
         }

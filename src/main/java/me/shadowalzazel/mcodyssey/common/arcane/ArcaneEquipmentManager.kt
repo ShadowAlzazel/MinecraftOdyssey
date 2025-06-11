@@ -1,6 +1,7 @@
-package me.shadowalzazel.mcodyssey.common.combat
+package me.shadowalzazel.mcodyssey.common.arcane
 
 import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.common.combat.AttackHelper
 import me.shadowalzazel.mcodyssey.util.VectorParticles
 import me.shadowalzazel.mcodyssey.common.tasks.arcane_tasks.MagicMissileLauncher
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
@@ -15,7 +16,7 @@ import org.bukkit.util.Vector
 @Suppress("UnstableApiUsage")
 interface ArcaneEquipmentManager : VectorParticles, AttackHelper {
 
-    fun arcaneWandUseHandler(event: PlayerInteractEvent) {
+    fun oldArcaneWandHandler(event: PlayerInteractEvent) {
         val attacker = event.player
         val equipment = attacker.equipment ?: return
         val arcaneHand = equipment.itemInOffHand
@@ -29,10 +30,10 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper {
         val range = 32.0
         val aimAssist = 0.5
         // Run
-        arcaneLine(attacker, damage, range, aimAssist)
+        arcaneBeam(attacker, damage, range, aimAssist)
     }
 
-    fun arcaneLine(user: LivingEntity, damage: Double, range: Double, aimAssist: Double) {
+    fun arcaneBeam(user: LivingEntity, damage: Double, range: Double, aimAssist: Double) {
         // Logic
         val endLocation: Location
         val target = getRayTraceEntity(user, range, aimAssist)
