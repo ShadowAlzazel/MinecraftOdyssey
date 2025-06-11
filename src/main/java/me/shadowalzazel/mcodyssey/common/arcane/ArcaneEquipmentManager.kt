@@ -1,6 +1,9 @@
 package me.shadowalzazel.mcodyssey.common.arcane
 
 import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.common.arcane.runes.ManifestationRune
+import me.shadowalzazel.mcodyssey.common.arcane.runes.ModifierRune
+import me.shadowalzazel.mcodyssey.common.arcane.util.ArcaneContext
 import me.shadowalzazel.mcodyssey.common.combat.AttackHelper
 import me.shadowalzazel.mcodyssey.util.VectorParticles
 import me.shadowalzazel.mcodyssey.common.tasks.arcane_tasks.MagicMissileLauncher
@@ -58,6 +61,33 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper {
             count = particleCount.toInt()
         )
         user.world.playSound(user.location, Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, 2F, 2F)
+    }
+
+    fun arcaneWandHandler(caster: LivingEntity) {
+        if (caster !is Player) return
+        val equipment = caster.equipment ?: return
+        val arcaneHand = equipment.itemInOffHand
+        // Cooldown
+        if (caster.getCooldown(arcaneHand) > 0) return
+        arcaneHand.damage(2, caster)
+        // Temp Context
+
+        // TODO: Create a general all purpose method to read RUNES from item.
+
+        val manifestRune = ManifestationRune.Beam()
+        val context = ArcaneContext(
+            caster = caster,
+            world = caster.world,
+            target = null,
+            targetLocation = null,
+            modifiers = listOf(
+                ModifierRune.Range(16.0),
+                //ModifierRune.Source(DamageType.IN_FIRE, Particle.FLAME)
+            )
+        )
+        manifestRune.cast(context)
+        // TODO: Set to get from gem quality
+        caster.setCooldown(arcaneHand, 20)
     }
 
 

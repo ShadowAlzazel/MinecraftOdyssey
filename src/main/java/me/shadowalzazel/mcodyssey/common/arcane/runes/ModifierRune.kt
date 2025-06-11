@@ -1,5 +1,9 @@
 package me.shadowalzazel.mcodyssey.common.arcane.runes
 
+import org.bukkit.Particle
+import org.bukkit.damage.DamageType
+
+@Suppress("UnstableApiUsage")
 sealed class ModifierRune : ArcaneRune() {
     abstract val value: Double
 
@@ -13,6 +17,36 @@ sealed class ModifierRune : ArcaneRune() {
         override val name = "speed"
         override val displayName = "speed"
         override val value = value ?: 0.0
+    }
+
+    // THIS IS A VARIABLE RUNE
+    // Requires a TARGET
+    class Vulnerability(value: Double?) : ModifierRune() {
+        override val name = "speed"
+        override val displayName = "speed"
+        override val value = value ?: 0.0
+    }
+
+    class Invert(value: Double?) : ModifierRune() {
+        override val name = "speed"
+        override val displayName = "speed"
+        override val value = value ?: 0.0
+    }
+
+    // ENVIRONMENT RUNES
+    class Light(value: Double?) : ModifierRune() {
+        override val name = "speed"
+        override val displayName = "speed"
+        override val value = value ?: 0.0
+    }
+
+    class Source(
+        val damageType: DamageType,
+        val particle: Particle
+    ) : ModifierRune() {
+        override val name = "source"
+        override val displayName = "source"
+        override val value = 0.0
     }
 
     // Is how potent the manifestation is i.e. DAMAGE

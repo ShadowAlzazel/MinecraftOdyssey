@@ -14,7 +14,14 @@ import org.bukkit.entity.LivingEntity
 // These runes determine the fundamental way magic is expressed
 @Suppress("UnstableApiUsage")
 sealed class ManifestationRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, VectorParticles {
+    // Abstract Methods for runes and their implementation
     abstract fun manifest(context: ArcaneContext)
+
+    // Class entry points for usage across systems
+    fun cast(context: ArcaneContext) {
+        this.manifest(context)
+    }
+
 
     // List of all manifestation runes
 
@@ -36,7 +43,8 @@ sealed class ManifestationRune : ArcaneRune(), RayTracerAndDetector, AttackHelpe
             val caster = context.caster
 
             // Core
-            val damageType = DamageType.MAGIC
+            var damageType = DamageType.MAGIC
+            var particle = Particle.WITCH
 
             // Vars for modifiers
             var totalRange = 16.0 // Default for NOW
@@ -48,6 +56,10 @@ sealed class ManifestationRune : ArcaneRune(), RayTracerAndDetector, AttackHelpe
                     is ModifierRune.Range -> totalRange += modifier.value
                     is ModifierRune.Convergence -> aimAssist += modifier.value
                     is ModifierRune.Amplify -> damage += modifier.value
+                    is ModifierRune.Source -> {
+                        damageType = modifier.damageType
+                        particle = modifier.particle
+                    }
                     else -> {}
                 }
             }
@@ -67,7 +79,7 @@ sealed class ManifestationRune : ArcaneRune(), RayTracerAndDetector, AttackHelpe
             // Particles in Line
             val particleCount = endLocation.distance(caster.location) * 6
             spawnLineParticles(
-                particle = Particle.WITCH,
+                particle = particle,
                 start = caster.location,
                 end = endLocation,
                 count = particleCount.toInt()

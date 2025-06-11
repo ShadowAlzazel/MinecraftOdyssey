@@ -8,8 +8,8 @@ import org.bukkit.entity.LivingEntity
 
 data class ArcaneContext(
     val caster: LivingEntity,
-    val target: Entity?,
-    val targetLocation: Location,
     val world: World,
+    val target: Entity?,
+    val targetLocation: Location?,
     val modifiers: List<ModifierRune> = emptyList()
     )
