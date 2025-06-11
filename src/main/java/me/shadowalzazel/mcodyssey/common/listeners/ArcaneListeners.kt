@@ -25,10 +25,10 @@ object ArcaneListeners: Listener, ArcaneEquipmentManager, DataTagManager {
         val player = event.player
         val equipment = player.equipment ?: return
         val mainhand = equipment.itemInMainHand
-        val itemName = mainhand.getItemIdentifier() ?: return
+        val itemName = mainhand.getItemNameId()
         // Detect magic items
         when (itemName) {
-            "scroll" -> arcaneWandHandler(player)
+            "scroll" -> arcaneSpellHandler(player)
         }
 
     }
@@ -39,7 +39,7 @@ object ArcaneListeners: Listener, ArcaneEquipmentManager, DataTagManager {
         val mainhand = equipment.itemInMainHand
         //if (player.hasCooldown(offHand.type)) return
         //val model = offHand.getData(DataComponentTypes.ITEM_MODEL) ?: return
-        val itemName = mainhand.getItemIdentifier() ?: return
+        val itemName = mainhand.getItemNameId()
         //if (ARCANE_RANGES[itemName] == null) return
         /*
         val book = equipment.itemInMainHand
@@ -51,7 +51,7 @@ object ArcaneListeners: Listener, ArcaneEquipmentManager, DataTagManager {
         when (itemName) {
             "arcane_wand" -> arcaneWandHandler(player)
             "arcane_blade" -> arcaneBladeHandler(event)
-            "arcane_scepter" -> arcaneScepterHandler(event)
+            "arcane_scepter" -> arcaneScepterHandler(player)
         }
 
     }

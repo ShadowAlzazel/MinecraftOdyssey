@@ -3,10 +3,11 @@ package me.shadowalzazel.mcodyssey.common.arcane
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.arcane.runes.ManifestationRune
 import me.shadowalzazel.mcodyssey.common.arcane.runes.ModifierRune
-import me.shadowalzazel.mcodyssey.common.arcane.util.ArcaneContext
+import me.shadowalzazel.mcodyssey.common.arcane.util.CastingContext
 import me.shadowalzazel.mcodyssey.common.combat.AttackHelper
 import me.shadowalzazel.mcodyssey.util.VectorParticles
 import me.shadowalzazel.mcodyssey.common.tasks.arcane_tasks.MagicMissileLauncher
+import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.util.constants.WeaponMaps.ARCANE_RANGES
 import org.bukkit.*
@@ -17,67 +18,65 @@ import org.bukkit.inventory.meta.Damageable
 import org.bukkit.util.Vector
 
 @Suppress("UnstableApiUsage")
-interface ArcaneEquipmentManager : VectorParticles, AttackHelper {
+interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager {
 
-    fun oldArcaneWandHandler(event: PlayerInteractEvent) {
-        val attacker = event.player
-        val equipment = attacker.equipment ?: return
+    fun arcaneSpellHandler(caster: LivingEntity) {
+        if (caster !is Player) return
+        val equipment = caster.equipment ?: return
         val arcaneHand = equipment.itemInOffHand
-        val bookHand = equipment.itemInMainHand
-        // Cooldown
-        if (attacker.getCooldown(arcaneHand) > 0) return
-        arcaneHand.damage(2, attacker)
-        attacker.setCooldown(arcaneHand, 20)
-        // Vars
-        val damage = 4.0
-        val range = 32.0
-        val aimAssist = 0.5
-        // Run
-        arcaneBeam(attacker, damage, range, aimAssist)
-    }
+        if (caster.getCooldown(arcaneHand) > 0) return
+        //equipment.itemInOffHand.damage(1, caster)
+        // ----------- BUILDING SPELL ----------
+        // CONTEXT DETECTION
+        // TODO: Read from items
 
-    fun arcaneBeam(user: LivingEntity, damage: Double, range: Double, aimAssist: Double) {
-        // Logic
-        val endLocation: Location
-        val target = getRayTraceEntity(user, range, aimAssist)
-        if (target is LivingEntity) {
-            // Run Attack
-            //player.attack(entity)
-            //attacker.attack(target)
-            val damageSource = createEntityDamageSource(user, null, type = DamageType.MAGIC)
-            target.damage(damage, damageSource)
+        // TEMP
+        var manifestRune: ManifestationRune = ManifestationRune.Zone()
+        // Spell and modifier building
+        val modifiers = mutableListOf<ModifierRune>()
 
-            endLocation = target.eyeLocation
-        } else {
-            endLocation = user.eyeLocation.clone().add(user.eyeLocation.direction.clone().normalize().multiply(range))
+        // read
+        // JUST TO SHOWCASE
+        if (equipment.itemInOffHand.type != Material.AIR) {
+            when (equipment.itemInOffHand.getItemNameId()) {
+                "ruby" -> modifiers.add(ModifierRune.Source(DamageType.IN_FIRE, Particle.FLAME))
+                "diamond" -> modifiers.add(ModifierRune.Wide(2.0))
+                "echo_shard" -> modifiers.add(ModifierRune.Source(DamageType.SONIC_BOOM, Particle.SONIC_BOOM))
+                "neptunian" -> modifiers.add(ModifierRune.Source(DamageType.FREEZE, Particle.SNOWFLAKE))
+                "alexandrite" -> manifestRune = ManifestationRune.Beam()
+            }
         }
 
-        // Particles in Line
-        val particleCount = endLocation.distance(user.location) * 6
-        spawnLineParticles(
-            particle = Particle.WITCH,
-            start = user.location,
-            end = endLocation,
-            count = particleCount.toInt()
+
+        val context = CastingContext(
+            caster = caster,
+            world = caster.world,
+            castingLocation = caster.location,
+            target = null,
+            targetLocation = null,
+            modifiers = modifiers
         )
-        user.world.playSound(user.location, Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, 2F, 2F)
+
+        manifestRune.cast(context)
     }
+
 
     fun arcaneWandHandler(caster: LivingEntity) {
         if (caster !is Player) return
         val equipment = caster.equipment ?: return
         val arcaneHand = equipment.itemInOffHand
-        // Cooldown
         if (caster.getCooldown(arcaneHand) > 0) return
-        arcaneHand.damage(2, caster)
-        // Temp Context
+        equipment.itemInOffHand.damage(1, caster)
 
+
+        // Temp Context
         // TODO: Create a general all purpose method to read RUNES from item.
 
         val manifestRune = ManifestationRune.Beam()
-        val context = ArcaneContext(
+        val context = CastingContext(
             caster = caster,
             world = caster.world,
+            castingLocation = caster.location,
             target = null,
             targetLocation = null,
             modifiers = listOf(
@@ -87,7 +86,32 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper {
         )
         manifestRune.cast(context)
         // TODO: Set to get from gem quality
-        caster.setCooldown(arcaneHand, 20)
+        caster.setCooldown(equipment.itemInOffHand, 20)
+    }
+
+    fun arcaneScepterHandler(caster: LivingEntity) {
+        if (caster !is Player) return
+        val equipment = caster.equipment ?: return
+        val arcaneHand = equipment.itemInOffHand
+        if (caster.getCooldown(arcaneHand) > 0) return
+        equipment.itemInOffHand.damage(1, caster)
+
+        // Create and use Casting Context
+        val manifestRune = ManifestationRune.Zone()
+        val context = CastingContext(
+            caster = caster,
+            world = caster.world,
+            castingLocation = caster.location,
+            target = null,
+            targetLocation = null,
+            modifiers = listOf(
+                ModifierRune.Range(16.0),
+                //ModifierRune.Source(DamageType.IN_FIRE, Particle.FLAME)
+            )
+        )
+        manifestRune.cast(context)
+
+        caster.setCooldown(equipment.itemInOffHand, 20)
     }
 
 
@@ -120,23 +144,6 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper {
             count = 55)
     }
 
-    fun arcaneScepterHandler(event: PlayerInteractEvent) {
-        val attacker = event.player
-        val equipment = attacker.equipment ?: return
-        val arcaneHand = equipment.itemInOffHand
-        val bookHand = equipment.itemInMainHand
-        // Cooldown
-        if (attacker.getCooldown(arcaneHand) > 0) return
-        arcaneHand.damage(2, attacker)
-        attacker.setCooldown(arcaneHand, 30)
-        // Vars
-        val damage = 4.0
-        val range = 32.0
-        val radius = 3.0
-        val aimAssist = 0.25
-        // Run
-        arcaneCircle(attacker, damage, range, radius, aimAssist)
-    }
 
     fun arcaneCircle(user: LivingEntity, damage: Double, range: Double, radius: Double, aimAssist: Double) {
         // Logic
