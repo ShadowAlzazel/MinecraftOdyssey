@@ -9,8 +9,8 @@ import org.bukkit.entity.LivingEntity
 data class CastingContext(
     val caster: LivingEntity,
     val world: World,
-    val castingLocation: Location,
-    val target: Entity?,
-    val targetLocation: Location?,
+    var castingLocation: Location,
+    var target: Entity?,
+    var targetLocation: Location?,
     val modifiers: List<ModifierRune> = emptyList()
     )

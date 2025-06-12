@@ -33,8 +33,23 @@ sealed class ModifierRune : ArcaneRune() {
         override val value = value ?: 0.0
     }
 
+    // CHange the ORIGIN of the casting
+    // THis is a variable RUNE
+    class Origin(value: Double?) : ModifierRune() {
+        override val name = "delay"
+        override val displayName = "delay"
+        override val value = value ?: 0.0
+    }
+
+    // delay
+    class Delay(value: Double?) : ModifierRune() {
+        override val name = "delay"
+        override val displayName = "delay"
+        override val value = value ?: 0.0
+    }
+
     // ENVIRONMENT RUNES
-    class Light(value: Double?) : ModifierRune() {
+    class Light(value: Double?)  : ModifierRune() {
         override val name = "speed"
         override val displayName = "speed"
         override val value = value ?: 0.0
