@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.common.arcane.util
 
-import me.shadowalzazel.mcodyssey.common.arcane.runes.ModifierRune
+import me.shadowalzazel.mcodyssey.common.arcane.runes.ArcaneRune
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.entity.Entity
@@ -12,5 +12,5 @@ data class CastingContext(
     var castingLocation: Location,
     var target: Entity?,
     var targetLocation: Location?,
-    val modifiers: List<ModifierRune> = emptyList()
+    val runes: List<ArcaneRune> = emptyList()
     )

@@ -64,14 +64,14 @@ sealed class ManifestationRune : ArcaneRune(), RayTracerAndDetector,
             var damageType = DamageType.MAGIC
             var particle = Particle.WITCH
             // Modifier Variables
-            var range = 16.0
+            var range = 8.0
             var radius = 3.0
             var aimAssist = 0.25
             var delay = 0.0
             // Apply modifiers (exhaustive List)
             // FOR NOW is NOTE Sequential
             // TODO: Priority and cyclic order
-            context.modifiers.forEachIndexed { i, modifier ->
+            context.runes.forEachIndexed { i, modifier ->
                 when(modifier) {
                     is ModifierRune.Range -> range += modifier.value
                     is ModifierRune.Convergence -> aimAssist += modifier.value
@@ -136,11 +136,11 @@ sealed class ManifestationRune : ArcaneRune(), RayTracerAndDetector,
         override val displayName = "Beam"
 
         override fun formulate(context: CastingContext): ManifestBuild {
-            // Start Build
-            val build = ManifestBuild()
+            // Start Build with default
+            val build = ManifestBuild(range = 16.0)
 
             // Apply modifiers to build (exhaustive List)
-            context.modifiers.forEach { modifier ->
+            context.runes.forEach { modifier ->
                 when(modifier) {
                     is ModifierRune.Range -> build.range += modifier.value
                     is ModifierRune.Convergence -> build.aimAssist += modifier.value
