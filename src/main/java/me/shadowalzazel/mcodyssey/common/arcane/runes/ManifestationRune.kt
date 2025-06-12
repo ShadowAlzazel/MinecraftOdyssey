@@ -217,5 +217,17 @@ sealed class ManifestationRune : ArcaneRune(), RayTracerAndDetector,
         }
     }
 
+    class Aura : ManifestationRune() {
+        override val name = "aura"
+        override val displayName = "aura"
+
+        override fun formulate(context: CastingContext): ManifestBuild {
+            TODO("Not yet implemented")
+        }
+        override fun manifest(context: CastingContext, build: ManifestBuild) {
+            TODO("Not yet implemented")
+        }
+    }
+
 
 }

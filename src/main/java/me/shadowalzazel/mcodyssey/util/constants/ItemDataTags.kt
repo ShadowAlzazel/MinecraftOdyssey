@@ -69,8 +69,12 @@ object ItemDataTags {
 
     const val RUNE_IDENTIFIER: String = "odyssey.rune_identifier"
 
+    // Musket
     const val MUSKET_LOADED_STAGE_1: String = "odyssey.musket_loaded_stage_1"
     const val MUSKET_LOADED_STAGE_2: String = "odyssey.musket_loaded_stage_2"
+
+    // Arcane and runes
+    const val STORED_ARCANE_RUNE: String = "odyssey.stored_arcane_rune"
 
     // Compasses
     const val IS_SCULK_FINDER: String = "odyssey.is_sculk_finder"
