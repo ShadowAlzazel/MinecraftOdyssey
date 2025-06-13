@@ -3,13 +3,11 @@ package me.shadowalzazel.mcodyssey.common.arcane.runes
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.arcane.util.CastingContext
 import me.shadowalzazel.mcodyssey.common.arcane.util.RayTracerAndDetector
-import me.shadowalzazel.mcodyssey.common.arcane.util.ManifestBuild
+import me.shadowalzazel.mcodyssey.common.arcane.util.ManifestBuilder
 import me.shadowalzazel.mcodyssey.common.combat.AttackHelper
 import me.shadowalzazel.mcodyssey.util.VectorParticles
 import org.bukkit.Location
-import org.bukkit.Particle
 import org.bukkit.Sound
-import org.bukkit.damage.DamageType
 import org.bukkit.entity.LivingEntity
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
@@ -24,29 +22,51 @@ sealed class ManifestationRune : ArcaneRune(), RayTracerAndDetector,
     class ManifestAsyncRunner(
         val rune: ManifestationRune,
         val context: CastingContext,
-        val build: ManifestBuild) : BukkitRunnable() {
+        val build: ManifestBuilder) : BukkitRunnable() {
         override fun run() {
             rune.manifest(context, build)
         }
     }
 
     // Abstract Methods for runes and their implementation
-    abstract fun formulate(context: CastingContext): ManifestBuild
 
-    abstract fun manifest(context: CastingContext, build: ManifestBuild)
+    // A function that prepares modifiers and other runes before the spell is manifested
+    abstract fun build(context: CastingContext): ManifestBuilder
 
-    // Class entry points for usage across systems
-    fun cast(context: CastingContext) {
-        //this.manifest(context)
-        val build = formulate(context)
+    abstract fun manifest(context: CastingContext, builder: ManifestBuilder)
+
+
+    /**
+     * Class entry points for usage across systems
+     */
+    fun cast(context: CastingContext, builder: ManifestBuilder) {
         // Delay
-        if (build.delayInTicks > 0) {
-            val runner = ManifestAsyncRunner(this, context, build)
-            runner.runTaskLater(Odyssey.instance, build.delayInTicks)
+        if (builder.delayInTicks > 0) {
+            val runner = ManifestAsyncRunner(this, context, builder)
+            runner.runTaskLater(Odyssey.instance, builder.delayInTicks)
         } else {
-            this.manifest(context, build)
+            this.manifest(context, builder)
         }
 
+    }
+
+    /**
+     * This function is to use with the builder to add other runes
+     */
+    fun modify(builder: ManifestBuilder, runeAddOn: ArcaneRune) {
+        // Apply modifiers (exhaustive List)
+        when(runeAddOn) {
+            is ModifierRune.Range -> builder.range += runeAddOn.value
+            is ModifierRune.Convergence -> builder.aimAssist += runeAddOn.value
+            is ModifierRune.Amplify -> builder.damage += runeAddOn.value
+            is ModifierRune.Wide -> builder.radius += runeAddOn.value
+            is ModifierRune.Source -> {
+                builder.damageType = runeAddOn.damageType
+                builder.particle = runeAddOn.particle
+            }
+            is ModifierRune.Delay -> builder.delayInTicks += (runeAddOn.value * 20).toLong()
+            else -> {}
+        }
     }
 
 
@@ -56,63 +76,43 @@ sealed class ManifestationRune : ArcaneRune(), RayTracerAndDetector,
         override val name = "zone"
         override val displayName = "Zone"
 
-        // A function that prepares modifiers and other runes before the spell is manifested
-        override fun formulate(context: CastingContext): ManifestBuild {
-            // ------------ Formulate --------------
-            // Core
-            var damage = 4.0
-            var damageType = DamageType.MAGIC
-            var particle = Particle.WITCH
-            // Modifier Variables
-            var range = 8.0
-            var radius = 3.0
-            var aimAssist = 0.25
-            var delay = 0.0
-            // Apply modifiers (exhaustive List)
-            // FOR NOW is NOTE Sequential
-            // TODO: Priority and cyclic order
-            context.runes.forEachIndexed { i, modifier ->
-                when(modifier) {
-                    is ModifierRune.Range -> range += modifier.value
-                    is ModifierRune.Convergence -> aimAssist += modifier.value
-                    is ModifierRune.Amplify -> damage += modifier.value
-                    is ModifierRune.Wide -> radius += modifier.value
-                    is ModifierRune.Source -> {
-                        damageType = modifier.damageType
-                        particle = modifier.particle
-                    }
-                    is ModifierRune.Delay -> delay += modifier.value
-                    else -> {}
-                }
-                // TODO: STOP!! if we reach another manifestation rune
-            }
-            // Create Build
-            delay *= 20 // convert delay to Ticks
-            return ManifestBuild(
+
+        override fun build(context: CastingContext): ManifestBuilder {
+            // DEFAULT build parameters
+            val damage = 3.0
+            val range = 16.0
+            val radius = 3.0
+            val aimAssist = 0.1
+            // Return the default builder for this rune
+            return ManifestBuilder(
                 damage = damage,
-                damageType = damageType,
                 radius = radius,
                 range = range,
-                aimAssist = aimAssist,
-                delayInTicks = delay.toLong(),
-                particle = particle
+                aimAssist = aimAssist
             )
-            // TODO also return index of used RUNES
-
         }
 
-        override fun manifest(context: CastingContext, build: ManifestBuild) {
+        override fun manifest(context: CastingContext, builder: ManifestBuilder) {
             // Unpack build
-            val range = build.range
-            val aimAssist = build.aimAssist
-            val radius = build.radius
-            val damage = build.damage
-            val damageType = build.damageType
-            val particle = build.particle
+            val range = builder.range
+            val aimAssist = builder.aimAssist
+            val radius = builder.radius
+            val damage = builder.damage
+            val damageType = builder.damageType
+            val particle = builder.particle
 
-            // Circle Logic
-            // TODO: Move detection and location logic to the FORMULATE stage
-            val circleCenter = getRayTraceLocation(context.caster, range, aimAssist) ?: return
+            // Circle Location and Detection Logic
+            //val circleCenter = getRayTraceLocation(context.caster, range, aimAssist) ?: return
+            val traceLocation = getPathTraceLocation(
+                context.castingLocation,
+                context.direction,
+                listOf(context.caster),
+                range,
+                raySize = aimAssist)
+            val circleCenter = traceLocation ?: context.targetLocation
+            circleCenter ?: return
+
+            // Damage Logic
             val damageSource = createEntityDamageSource(context.caster, null, damageType)
             circleCenter.getNearbyLivingEntities(radius).forEach {
                 it.damage(damage, damageSource)
@@ -135,60 +135,58 @@ sealed class ManifestationRune : ArcaneRune(), RayTracerAndDetector,
         override val name = "beam"
         override val displayName = "Beam"
 
-        override fun formulate(context: CastingContext): ManifestBuild {
-            // Start Build with default
-            val build = ManifestBuild(range = 16.0)
-
-            // Apply modifiers to build (exhaustive List)
-            context.runes.forEach { modifier ->
-                when(modifier) {
-                    is ModifierRune.Range -> build.range += modifier.value
-                    is ModifierRune.Convergence -> build.aimAssist += modifier.value
-                    is ModifierRune.Amplify -> build.damage += modifier.value
-                    is ModifierRune.Source -> { // TODO: TEMP
-                        build.damageType = modifier.damageType
-                        build.particle = modifier.particle
-                    }
-                    else -> {}
-                }
-            }
-            // TODO: STOP!! if we reach another manifestation rune
-            return build
+        override fun build(context: CastingContext): ManifestBuilder {
+            // DEFAULT build parameters
+            val damage = 4.0
+            val range = 16.0
+            val aimAssist = 0.25
+            // Return the default builder for this rune
+            return ManifestBuilder(
+                damage = damage,
+                range = range,
+                aimAssist = aimAssist
+            )
         }
 
-        override fun manifest(context: CastingContext, build: ManifestBuild) {
-            // Unpack context
-            val caster = context.caster
-            val castLocation = context.castingLocation
+        override fun manifest(context: CastingContext, builder: ManifestBuilder) {
             // Unpack build
-            val totalRange = build.range
-            val aimAssist = build.aimAssist
-            val damageType = build.damageType
-            val damage = build.damage
-            val particle = build.particle
+            val totalRange = builder.range
+            val aimAssist = builder.aimAssist
+            val damageType = builder.damageType
+            val damage = builder.damage
+            val particle = builder.particle
 
-            // Temporary ray trace func
-            val endLocation: Location
-            val target = getRayTraceEntity(caster, totalRange, aimAssist)
+            // Temporary locations for beam
+            val startLocation: Location = context.castingLocation ?: return
+            var endLocation: Location = context.targetLocation ?: return
+
+            //val target = getRayTraceEntity(context.caster, totalRange, aimAssist)
+            val target = getPathTraceEntity(
+                startLocation,
+                endLocation,
+                listOf(context.caster),
+                totalRange,
+                aimAssist)
+
             // After running target checks
             if (target is LivingEntity) {
-                val damageSource = createEntityDamageSource(caster, null, damageType)
+                val damageSource = createEntityDamageSource(context.caster, null, damageType)
                 target.damage(damage, damageSource)
                 endLocation = target.eyeLocation
             }
             else {
-                endLocation = caster.eyeLocation.clone().add(caster.eyeLocation.direction.clone().normalize().multiply(totalRange))
+                endLocation = context.castingLocation.clone().add(context.direction.clone().normalize().multiply(totalRange))
             }
 
             // Particles in Line
-            val particleCount = endLocation.distance(castLocation) * 6
+            val particleCount = endLocation.distance(context.castingLocation) * 6
             spawnLineParticles(
                 particle = particle,
-                start = castLocation,
+                start = context.castingLocation,
                 end = endLocation,
                 count = particleCount.toInt()
             )
-            context.world.playSound(caster.location, Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, 2F, 2F)
+            context.world.playSound(context.castingLocation, Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, 2F, 2F)
         }
 
     }
@@ -197,10 +195,10 @@ sealed class ManifestationRune : ArcaneRune(), RayTracerAndDetector,
         override val name = "projectile"
         override val displayName = "Projectile"
 
-        override fun formulate(context: CastingContext): ManifestBuild {
+        override fun build(context: CastingContext): ManifestBuilder {
             TODO("Not yet implemented")
         }
-        override fun manifest(context: CastingContext, build: ManifestBuild) {
+        override fun manifest(context: CastingContext, builder: ManifestBuilder) {
             TODO("Not yet implemented")
         }
     }
@@ -209,10 +207,10 @@ sealed class ManifestationRune : ArcaneRune(), RayTracerAndDetector,
         override val name = "slice"
         override val displayName = "Slice"
 
-        override fun formulate(context: CastingContext): ManifestBuild {
+        override fun build(context: CastingContext): ManifestBuilder {
             TODO("Not yet implemented")
         }
-        override fun manifest(context: CastingContext, build: ManifestBuild) {
+        override fun manifest(context: CastingContext, builder: ManifestBuilder) {
             TODO("Not yet implemented")
         }
     }
@@ -221,10 +219,10 @@ sealed class ManifestationRune : ArcaneRune(), RayTracerAndDetector,
         override val name = "aura"
         override val displayName = "aura"
 
-        override fun formulate(context: CastingContext): ManifestBuild {
+        override fun build(context: CastingContext): ManifestBuilder {
             TODO("Not yet implemented")
         }
-        override fun manifest(context: CastingContext, build: ManifestBuild) {
+        override fun manifest(context: CastingContext, builder: ManifestBuilder) {
             TODO("Not yet implemented")
         }
     }

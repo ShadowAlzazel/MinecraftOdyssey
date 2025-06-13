@@ -4,7 +4,7 @@ import org.bukkit.Particle
 import org.bukkit.damage.DamageType
 
 @Suppress("UnstableApiUsage")
-data class ManifestBuild(
+data class ManifestBuilder(
     var damage: Double = 0.0,
     var damageType: DamageType = DamageType.MAGIC,
     var radius: Double = 1.0,

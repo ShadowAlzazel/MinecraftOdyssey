@@ -6,6 +6,7 @@ import me.shadowalzazel.mcodyssey.common.arcane.runes.ArcaneRune
 import me.shadowalzazel.mcodyssey.common.arcane.runes.ManifestationRune
 import me.shadowalzazel.mcodyssey.common.arcane.runes.ModifierRune
 import me.shadowalzazel.mcodyssey.common.arcane.util.CastingContext
+import me.shadowalzazel.mcodyssey.common.arcane.util.RayTracerAndDetector
 import me.shadowalzazel.mcodyssey.common.combat.AttackHelper
 import me.shadowalzazel.mcodyssey.util.VectorParticles
 import me.shadowalzazel.mcodyssey.common.tasks.arcane_tasks.MagicMissileLauncher
@@ -20,7 +21,7 @@ import org.bukkit.inventory.meta.Damageable
 import org.bukkit.util.Vector
 
 @Suppress("UnstableApiUsage")
-interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager {
+interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager, RayTracerAndDetector {
 
     private fun checkOffhandRunes(caster: LivingEntity, runes: MutableList<ArcaneRune>) {
         if (caster !is Player) return
@@ -74,6 +75,42 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
 
     }
 
+    fun arcanePenCastingHandler(caster: LivingEntity) {
+        if (caster !is Player) return
+        // ----------- BUILDING SPELL ----------
+        val equipment = caster.equipment ?: return
+        val arcanePen = equipment.itemInOffHand ?: return
+        val scrolls = equipment.itemInMainHand ?: return
+        val bundleContents = arcanePen.getData(DataComponentTypes.BUNDLE_CONTENTS) ?: return
+
+        // Check if we can build spell
+        val spellBuilder = ArcaneSpellBuilder(itemSource = arcanePen, additionalItems = bundleContents.contents())
+        val canBuildSpell = spellBuilder.canBuildSpell()
+        if (!canBuildSpell) return
+
+        // Context params based on initial conditions
+        val direction = caster.eyeLocation.direction.clone()
+        val target = getRayTraceEntity(caster, 16.0, 0.15)
+        val targetLocation: Location = if (target != null) {
+            if (target is LivingEntity) target.eyeLocation else target.location
+        } else {
+            caster.eyeLocation.clone().add(direction.clone().normalize().multiply(32.0))
+        }
+
+        // Form the starting spell context
+        val spellContext = CastingContext(
+            caster = caster,
+            world = caster.world,
+            castingLocation = caster.location,
+            direction = direction,
+            target = target,
+            targetLocation = targetLocation,
+            runes = spellBuilder.runeSequence
+        )
+
+        val spell = spellBuilder.formSpell(spellContext)
+
+    }
 
     fun arcaneSpellHandler(caster: LivingEntity) {
         if (caster !is Player) return
@@ -99,17 +136,20 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
                 manifestRune = r
             }
         }
-
+        /*
         val context = CastingContext(
             caster = caster,
             world = caster.world,
             castingLocation = caster.location,
+            direction = ,
             target = null,
             targetLocation = null,
             runes = runes
         )
 
         manifestRune.cast(context)
+
+         */
     }
 
 
@@ -131,6 +171,7 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
         checkOffhandRunes(caster, wandRunes)
         // TODO: Set to get from gem quality
 
+        /*
         val context = CastingContext(
             caster = caster,
             world = caster.world,
@@ -141,6 +182,8 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
         )
         manifestRune.cast(context)
         caster.setCooldown(equipment.itemInMainHand, 20)
+
+         */
     }
 
     fun arcaneScepterHandler(caster: LivingEntity) {
@@ -159,6 +202,7 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
         // Check runes
         checkOffhandRunes(caster, scepterRunes)
 
+        /*
         val context = CastingContext(
             caster = caster,
             world = caster.world,
@@ -169,6 +213,8 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
         )
         manifestRune.cast(context)
         caster.setCooldown(equipment.itemInMainHand, 30)
+
+         */
     }
 
 
@@ -303,31 +349,5 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
 
     }
 
-    private fun getRayTraceLocation(entity: LivingEntity, range: Double, raySize: Double): Location? {
-        val entityPredicate = { e: Entity -> e != entity}
-        val result = entity.world.rayTrace(
-            entity.eyeLocation, entity.eyeLocation.direction, range,
-            FluidCollisionMode.NEVER, true, raySize, entityPredicate)
-        if (result == null) return null
-        return result.hitEntity?.location ?: result.hitBlock?.location?.add(0.0, 1.0, 0.0)
-    }
-
-    private fun getRayTraceEntity(entity: LivingEntity, range: Double, raySize: Double): Entity? {
-        val entityPredicate = { e: Entity -> e != entity}
-        val result = entity.world.rayTrace(
-            entity.eyeLocation, entity.eyeLocation.direction, range,
-            FluidCollisionMode.NEVER, true, raySize, entityPredicate)
-        val target = result?.hitEntity ?: return null
-        val distance = entity.eyeLocation.distance(target.location)
-        if (range < distance) return null
-        return target
-    }
-
-    private fun getRayTraceBlock(player: Player, model: String): Location? {
-        val reach = ARCANE_RANGES[model] ?: return null
-        val result = player.rayTraceBlocks(reach, FluidCollisionMode.NEVER) ?: return null
-        val location = result.hitPosition.toLocation(player.world)
-        return location
-    }
 
 }
