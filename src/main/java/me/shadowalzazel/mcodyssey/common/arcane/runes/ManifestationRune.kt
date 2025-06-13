@@ -6,6 +6,7 @@ import me.shadowalzazel.mcodyssey.common.arcane.util.RayTracerAndDetector
 import me.shadowalzazel.mcodyssey.common.arcane.util.ManifestBuilder
 import me.shadowalzazel.mcodyssey.common.combat.AttackHelper
 import me.shadowalzazel.mcodyssey.util.VectorParticles
+import org.bukkit.FluidCollisionMode
 import org.bukkit.Location
 import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
@@ -161,10 +162,15 @@ sealed class ManifestationRune : ArcaneRune(), RayTracerAndDetector,
             val endLocation: Location
 
             //val target = getRayTraceEntity(context.caster, totalRange, aimAssist)
+            val filterEntities = mutableListOf(context.caster)
+            for (e in context.ignoredTargets) {
+                if (e is LivingEntity) filterEntities.add(e)
+            }
+
             val target = getPathTraceEntity(
                 startLocation,
                 context.direction,
-                listOf(context.caster),
+                filterEntities,
                 totalRange,
                 aimAssist)
 
@@ -175,7 +181,19 @@ sealed class ManifestationRune : ArcaneRune(), RayTracerAndDetector,
                 endLocation = target.eyeLocation
             }
             else {
-                endLocation = context.castingLocation.clone().add(context.direction.clone().normalize().multiply(totalRange))
+                // TODO: BUGGED probably not me Fix using a small offset vector
+                val rayTraceBlock = context.world.rayTraceBlocks(
+                    context.castingLocation,
+                    context.direction,
+                    totalRange,
+                    FluidCollisionMode.NEVER)?.hitBlock
+
+                if (rayTraceBlock != null) {
+                    endLocation = rayTraceBlock.location.toCenterLocation()
+                }
+                else {
+                    endLocation = context.castingLocation.clone().add(context.direction.clone().normalize().multiply(totalRange))
+                }
             }
 
             // Particles in Line
@@ -186,6 +204,7 @@ sealed class ManifestationRune : ArcaneRune(), RayTracerAndDetector,
                 end = endLocation,
                 count = particleCount.toInt()
             )
+            context.targetLocation = endLocation
             context.world.playSound(context.castingLocation, Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, 2F, 2F)
         }
 
@@ -218,6 +237,18 @@ sealed class ManifestationRune : ArcaneRune(), RayTracerAndDetector,
     class Aura : ManifestationRune() {
         override val name = "aura"
         override val displayName = "aura"
+
+        override fun build(context: CastingContext): ManifestBuilder {
+            TODO("Not yet implemented")
+        }
+        override fun manifest(context: CastingContext, builder: ManifestBuilder) {
+            TODO("Not yet implemented")
+        }
+    }
+
+    class Point : ManifestationRune() {
+        override val name = "point"
+        override val displayName = "point"
 
         override fun build(context: CastingContext): ManifestBuilder {
             TODO("Not yet implemented")

@@ -82,7 +82,7 @@ class ArcaneSpellBuilder(
             "arcane_blade" -> ArcaneSource.Magic
             "arcane_book" -> ArcaneSource.Magic
             "arcane_wand" -> ArcaneSource.Magic
-            "arcane_pen" -> ArcaneSource.Magic
+            "arcane_pen" -> ArcaneSource.Radiant
             "arcane_scepter" -> ArcaneSource.Magic
             "arcane_orb" -> ArcaneSource.Magic
             else -> null
@@ -114,20 +114,28 @@ class ArcaneSpellBuilder(
         // TODO: Temporary item_name reader for testing
         if (readRune == null) {
             val directRune = when(item.getItemNameId()) {
-                "clock" -> ModifierRune.Delay(2.0)
-                "heart_of_the_sea" -> DomainRune.Target
+                // Manifest
+                "alexandrite" -> ManifestationRune.Beam()
+                "snowball" -> ManifestationRune.Zone()
+                // Domain
+                "heart_of_the_sea" -> DomainRune.Next
                 "ender_eye" -> DomainRune.Nearby
                 "nether_star" -> DomainRune.Origin
                 "popped_chorus_fruit" -> DomainRune.Invert
+                "coal" -> DomainRune.Differ
+                // Augment
+                "cactus" -> AugmentRune.Break(2.0)
+                "gold_ingot" -> AugmentRune.Coda
+                // Modifier
                 "diamond" -> ModifierRune.Amplify(4.0)
-                "ruby" -> ModifierRune.Source(DamageType.IN_FIRE, Particle.FLAME)
                 "emerald" -> ModifierRune.Wide(2.0)
-                "echo_shard" -> ModifierRune.Source(DamageType.SONIC_BOOM, Particle.SONIC_BOOM)
-                "alexandrite" -> ManifestationRune.Beam()
-                "snowball" -> ManifestationRune.Zone()
-                "neptunian" -> ModifierRune.Source(DamageType.FREEZE, Particle.SNOWFLAKE)
+                "clock" -> ModifierRune.Delay(2.0)
                 "kunzite" -> ModifierRune.Convergence(1.0)
                 "amethyst_shard" -> ModifierRune.Range(16.0)
+                // Modifier Special
+                "ruby" -> ModifierRune.Source(DamageType.IN_FIRE, Particle.FLAME)
+                "echo_shard" -> ModifierRune.Source(DamageType.SONIC_BOOM, Particle.SONIC_BOOM)
+                "neptunian" -> ModifierRune.Source(DamageType.FREEZE, Particle.SNOWFLAKE)
                 "jovianite" -> ModifierRune.Source(DamageType.MAGIC, Particle.WAX_OFF)
                 else -> null
             }
@@ -181,7 +189,7 @@ class ArcaneSpellBuilder(
         var availableCasts = runes.count { it is ManifestationRune }
         var availableModifiers = runes.count { it is ModifierRune }
         var availableKernels = runes.count { it is DomainRune }
-        var availableVars = runes.count { it is VariableRune }
+        var availableVars = runes.count { it is AugmentRune }
 
         val modifiersPerCast = availableModifiers / availableCasts
         val overflowModifiers = availableModifiers % availableCasts

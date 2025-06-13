@@ -23,13 +23,15 @@ class ArcaneSpell(
         val runeCount = runeSequence.count()
 
         // Algo variables
-        var currentContext = originContext.clone()
+        val currentContext = originContext.clone()
         var currentManifestRune: ManifestationRune? = null
         var currentBuilder: ManifestBuilder = ManifestBuilder()
-        var callingManifest = false
+
+        // Casting
+        var triggerCast = false
+        val runesToRun = mutableListOf<ArcaneRune>()
 
         for ((index, rune) in runeSequence.withIndex()) { // up to runeCount - 1
-
             // Look for the manifest rune
             if (rune is ManifestationRune) {
                 currentManifestRune = rune
@@ -39,10 +41,7 @@ class ArcaneSpell(
                     damageType = source.damageType
                     particle = source.particle
                 }
-                continue
-            }
-            else if (rune is VariableRune) {
-                // LATER
+                runesToRun.add(rune)
             }
             // Has manifest rune, look for other rune types
             if (currentManifestRune != null) {
@@ -50,27 +49,71 @@ class ArcaneSpell(
                     // Each manifest rune has its own builder
                     currentManifestRune.modify(currentBuilder, rune)
                 }
-
-            }
-            // Change context with Domain Runes
-            // Call the DomainRune super method to change context
-
-            // When reaches the end OR a new KERNEL Rune CALL the rune
-            if (index == runeCount - 1) {
-                callingManifest = true
+                else if (rune is AugmentRune) {
+                    runesToRun.add(rune)
+                }
             }
 
-            // If we get the call, run the manifest cast
-            if (callingManifest || rune is DomainRune) {
-                currentManifestRune?.cast(currentContext, currentBuilder)
-                callingManifest = false
+
+            // IMPORTANT: Domain Runes trigger the CAST of the current stored sub-sequence
+            if (rune is DomainRune) {
+                triggerCast = true
             }
+            // When reaches the end
+            else if (index == runeCount - 1) {
+                triggerCast = true
+            }
+
+            if (triggerCast) {
+                println("Running Cast of runes")
+                castRunes(runesToRun, currentContext, currentBuilder)
+                currentManifestRune = null
+                runesToRun.removeAll { true }
+                triggerCast = false
+            }
+
+            // Effects of domain runes last
             if (rune is DomainRune) {
                 rune.change(originContext, currentContext)
             }
 
         }
 
+    }
+
+    /**
+     * Calls the manifest rune and subsequent augments
+     */
+    private fun castRunes(runes: List<ArcaneRune>, context: CastingContext, builder: ManifestBuilder) {
+        if (runes.isEmpty()) return
+        // Run this subsequence of cast + augments
+        for (rune in runes) {
+            // This HAS to be true
+            if (rune is ManifestationRune) {
+                rune.cast(context, builder)
+            }
+
+            else if (rune is AugmentRune) {
+                when (rune) {
+                    is AugmentRune.Break -> {
+                        val block = context.targetLocation?.block
+                        if (block != null) {
+                            // Use the wiki to find the values to break
+                            // https://minecraft.wiki/w/Module:Blast_resistance_values
+                            block.breakNaturally()
+                            // TODO: Fix Order!!!
+                        }
+                    }
+                    is AugmentRune.Coda -> {
+                        // CHANGE INDEX !!!
+                        // Maybe repeat in this loop?
+                    }
+                    else -> {
+
+                    }
+                }
+            }
+        }
 
     }
 

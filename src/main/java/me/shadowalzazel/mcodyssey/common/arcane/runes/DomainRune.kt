@@ -1,37 +1,83 @@
 package me.shadowalzazel.mcodyssey.common.arcane.runes
 
 import me.shadowalzazel.mcodyssey.common.arcane.util.CastingContext
+import org.bukkit.entity.LivingEntity
 
 
 sealed class DomainRune: ArcaneRune() {
     // Domain runes change the casting context of the spell.
     // Changes like the location or entity where it originates or targets
 
-    fun change(original: CastingContext, current: CastingContext) {
+    fun change(original: CastingContext, context: CastingContext) {
+
+        val changing = context.clone()
+        var successful = true
+
+        // Want to change context
         when (this) {
             is Origin -> {
-                current.castingLocation = original.castingLocation
+                changing.castingLocation = original.castingLocation
             }
-            is Target -> {
-                if (current.targetLocation != null) {
-                    current.castingLocation = current.targetLocation!!
+            is Next -> {
+                val target = changing.target
+                if (target != null) {
+                    // Move to eye height
+                    changing.castingLocation = if (target is LivingEntity) {
+                        target.eyeLocation
+                    } else {
+                        target.location.clone().add(0.0, 0.5, 0.0)
+                    }
+                }
+                else if (changing.targetLocation != null) {
+                    changing.castingLocation = changing.targetLocation!!
+                }
+                else {
+                    successful = false
                 }
             }
             is Nearby -> {
-                val nearby = current.castingLocation.getNearbyLivingEntities(16.0)
-                if (nearby.isEmpty()) return
-                val nearest = nearby.sortedBy { it.location.distance(current.castingLocation) }
-                current.target = nearest.first()
-                current.targetLocation = current.target!!.location
+                // Get Nearby entities if not target or ignored
+                val nearby = changing.castingLocation.getNearbyLivingEntities(8.0)
+                nearby.remove(changing.target) // Remove self
+                nearby.removeIf { it in changing.ignoredTargets } // Remove if in the `ignore` list
+                if (nearby.isEmpty()) {  // Ignore empty list
+                    successful = false
+                }
+                // Sort list to nearest
+                val sortedNearby = nearby.sortedBy { it.location.distance(changing.castingLocation) }
+                val nearestTarget = sortedNearby.first()
+                // Set Target, Location and Direction
+                changing.target = nearestTarget
+                changing.targetLocation = nearestTarget.eyeLocation
+                changing.direction = nearestTarget.eyeLocation.clone().subtract(changing.castingLocation).toVector()
             }
             is Invert -> {
-                if (current.targetLocation == null) return
-                val temp = current.castingLocation
-                current.castingLocation = current.targetLocation!!
-                current.targetLocation = temp
+                // Swap domains
+                if (changing.targetLocation == null) successful = false
+                val temp = changing.castingLocation
+                changing.castingLocation = changing.targetLocation!!
+                changing.targetLocation = temp
             }
-            else -> {}
+            is Differ -> {
+                if (changing.target != null) changing.ignoredTargets.add(changing.target!!)
+                else successful = false
+            }
+            else -> successful = false
         }
+        // Apply changes to the context
+        if (successful) {
+            context.apply {
+                castingLocation = changing.castingLocation
+                direction = changing.direction
+                target = changing.target
+                targetLocation = changing.targetLocation
+                // ignore targets
+                for (e in changing.ignoredTargets) {
+                    if (e !in ignoredTargets) ignoredTargets.add(e)
+                }
+            }
+        }
+
     }
 
     // Sets the cast location back to the ORIGINAL cast
@@ -40,8 +86,8 @@ sealed class DomainRune: ArcaneRune() {
         override val displayName = "Origin"
     }
 
-    // This changes the castingLocation to the CURRENT targetLocation
-    data object Target : DomainRune() {
+    // This changes the `castingLocation` to the CURRENT `targetLocation`
+    data object Next : DomainRune() {
         override val name = "target"
         override val displayName = "Target"
     }
@@ -52,6 +98,7 @@ sealed class DomainRune: ArcaneRune() {
     }
 
     // This `returns` the nearest entity. Can stack with other variable runes
+    // Sets the `target` to the nearest `entity`
     data object Nearby : DomainRune() {
         override val name = "nearby"
         override val displayName = "nearby"

@@ -1,7 +1,5 @@
 package me.shadowalzazel.mcodyssey.common.arcane.util
 
-import me.shadowalzazel.mcodyssey.common.arcane.runes.ArcaneRune
-import me.shadowalzazel.mcodyssey.common.arcane.runes.ArcaneSource
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.entity.Entity
@@ -15,7 +13,7 @@ data class CastingContext(
     var direction: Vector,
     var target: Entity? = null,
     var targetLocation: Location? = null,
-    val runes: List<ArcaneRune> = emptyList()
+    val ignoredTargets: MutableList<Entity> = mutableListOf()
     ) {
 
     fun clone(): CastingContext {
@@ -26,7 +24,7 @@ data class CastingContext(
             this.direction,
             this.target,
             this.targetLocation,
-            this.runes
+            this.ignoredTargets
         )
 
     }

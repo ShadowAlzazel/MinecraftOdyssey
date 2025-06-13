@@ -52,8 +52,7 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
             castingLocation = caster.eyeLocation,
             direction = direction,
             target = target,
-            targetLocation = targetLocation,
-            runes = spellBuilder.runeSequence
+            targetLocation = targetLocation
         )
 
         val spell = spellBuilder.formSpell(spellContext)
@@ -76,7 +75,7 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
         val wandRunes = listOf<ArcaneRune>(
             ManifestationRune.Beam(),
             ModifierRune.Range(16.0),
-            ModifierRune.Amplify(2.0), // Default(2.0) + 2.0
+            ModifierRune.Amplify(4.0), // Default(2.0) + 4.0
             ModifierRune.Convergence(0.35)
         )
         spellBuilder.insertSequence(wandRunes)
@@ -97,8 +96,7 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
             castingLocation = caster.eyeLocation,
             direction = direction,
             target = target,
-            targetLocation = targetLocation,
-            runes = spellBuilder.runeSequence
+            targetLocation = targetLocation
         )
 
         val spell = spellBuilder.formSpell(spellContext)
@@ -122,7 +120,7 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
         val scepterRunes = listOf<ArcaneRune>(
             ManifestationRune.Zone(),
             ModifierRune.Range(16.0),
-            ModifierRune.Amplify(2.0), // Default(1.0) + 2.0
+            ModifierRune.Amplify(3.0), // Default(1.0) + 3.0
             ModifierRune.Convergence(0.1)
         )
         spellBuilder.insertSequence(scepterRunes)
@@ -143,8 +141,7 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
             castingLocation = caster.eyeLocation,
             direction = direction,
             target = target,
-            targetLocation = targetLocation,
-            runes = spellBuilder.runeSequence
+            targetLocation = targetLocation
         )
 
         val spell = spellBuilder.formSpell(spellContext)
