@@ -3,7 +3,7 @@ package me.shadowalzazel.mcodyssey.common.arcane
 import io.papermc.paper.datacomponent.DataComponentTypes
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.arcane.runes.ArcaneRune
-import me.shadowalzazel.mcodyssey.common.arcane.runes.ManifestationRune
+import me.shadowalzazel.mcodyssey.common.arcane.runes.CastingRune
 import me.shadowalzazel.mcodyssey.common.arcane.runes.ModifierRune
 import me.shadowalzazel.mcodyssey.common.arcane.util.CastingContext
 import me.shadowalzazel.mcodyssey.common.arcane.util.RayTracerAndDetector
@@ -57,6 +57,7 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
 
         val spell = spellBuilder.formSpell(spellContext)
         spell.castSpell()
+        //caster.world.playSound(caster.location, Sound.ENTITY_VILLAGER_WORK_CARTOGRAPHER, 1F, 0.5F)
     }
 
     fun arcaneWandHandler(caster: LivingEntity) {
@@ -73,7 +74,7 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
 
         // Insert a default sequence
         val wandRunes = listOf<ArcaneRune>(
-            ManifestationRune.Beam(),
+            CastingRune.Beam(),
             ModifierRune.Range(16.0),
             ModifierRune.Amplify(4.0), // Default(2.0) + 4.0
             ModifierRune.Convergence(0.35)
@@ -118,7 +119,7 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
 
         // Insert a default sequence
         val scepterRunes = listOf<ArcaneRune>(
-            ManifestationRune.Zone(),
+            CastingRune.Zone(),
             ModifierRune.Range(16.0),
             ModifierRune.Amplify(3.0), // Default(1.0) + 3.0
             ModifierRune.Convergence(0.1)
@@ -298,7 +299,7 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
                     "emerald" -> runes.add(ModifierRune.Wide(2.0))
                     "echo_shard" -> runes.add(ModifierRune.Source(DamageType.SONIC_BOOM, Particle.SONIC_BOOM))
                     "neptunian" -> runes.add(ModifierRune.Source(DamageType.FREEZE, Particle.SNOWFLAKE))
-                    "alexandrite" -> runes.add(ManifestationRune.Beam()) // overwrite or ADD!!!
+                    "alexandrite" -> runes.add(CastingRune.Beam()) // overwrite or ADD!!!
                     "kunzite" -> runes.add(ModifierRune.Convergence(1.0))
                     "amethyst_shard" -> runes.add(ModifierRune.Range(16.0))
                     "jovianite" -> runes.add(ModifierRune.Source(DamageType.MAGIC, Particle.WAX_OFF))
@@ -317,7 +318,7 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
                 "emerald" -> runes.add(ModifierRune.Wide(2.0))
                 "echo_shard" -> runes.add(ModifierRune.Source(DamageType.SONIC_BOOM, Particle.SONIC_BOOM))
                 "neptunian" -> runes.add(ModifierRune.Source(DamageType.FREEZE, Particle.SNOWFLAKE))
-                "alexandrite" -> runes.add(ManifestationRune.Beam()) // overwrite or ADD!!!
+                "alexandrite" -> runes.add(CastingRune.Beam()) // overwrite or ADD!!!
                 "kunzite" -> runes.add(ModifierRune.Convergence(1.0))
                 "amethyst_shard" -> runes.add(ModifierRune.Range(16.0))
                 "jovianite" -> runes.add(ModifierRune.Source(DamageType.MAGIC, Particle.WAX_OFF))

@@ -103,11 +103,11 @@ class ArcaneSpellBuilder(
             "range" -> ModifierRune.Range(16.0)
             "delay" -> ModifierRune.Delay(2.0)
             "speed" -> ModifierRune.Speed(1.0)
-            "beam" -> ManifestationRune.Beam()
-            "slice" -> ManifestationRune.Slice()
-            "zone" -> ManifestationRune.Zone()
-            "projectile" -> ManifestationRune.Projectile()
-            "aura" -> ManifestationRune.Aura()
+            "beam" -> CastingRune.Beam()
+            "slice" -> CastingRune.Slice()
+            "zone" -> CastingRune.Zone()
+            "projectile" -> CastingRune.Ball()
+            "aura" -> CastingRune.Aura()
             else -> null
         }
         // -------------------------------------
@@ -115,8 +115,8 @@ class ArcaneSpellBuilder(
         if (readRune == null) {
             val directRune = when(item.getItemNameId()) {
                 // Manifest
-                "alexandrite" -> ManifestationRune.Beam()
-                "snowball" -> ManifestationRune.Zone()
+                "alexandrite" -> CastingRune.Beam()
+                "snowball" -> CastingRune.Zone()
                 // Domain
                 "heart_of_the_sea" -> DomainRune.Next
                 "ender_eye" -> DomainRune.Nearby
@@ -187,7 +187,7 @@ class ArcaneSpellBuilder(
      */
     fun decompressUnorderedRunes(runes: MutableList<ArcaneRune>) {
         val runeSequence = mutableListOf<ArcaneRune>()
-        var availableCasts = runes.count { it is ManifestationRune }
+        var availableCasts = runes.count { it is CastingRune }
         var availableModifiers = runes.count { it is ModifierRune }
         var availableKernels = runes.count { it is DomainRune }
         var availableVars = runes.count { it is AugmentRune }

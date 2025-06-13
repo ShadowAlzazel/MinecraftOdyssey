@@ -2,7 +2,7 @@ package me.shadowalzazel.mcodyssey.common.arcane
 
 import me.shadowalzazel.mcodyssey.common.arcane.runes.*
 import me.shadowalzazel.mcodyssey.common.arcane.util.CastingContext
-import me.shadowalzazel.mcodyssey.common.arcane.util.ManifestBuilder
+import me.shadowalzazel.mcodyssey.common.arcane.util.CastingBuilder
 import org.bukkit.entity.Item
 
 class ArcaneSpell(
@@ -18,7 +18,8 @@ class ArcaneSpell(
      * do AFTER you change the domain.
      * - Context is preserved across the entire read. Meaning it is single channel and global. NOT local.
      *
-     * - Manifest CREATES new target CONTEXT
+     * - Manifest CREATES new target CONTEXT.
+     * - Manifest consumes all the modifiers.
      */
 
     fun castSpell() {
@@ -27,8 +28,14 @@ class ArcaneSpell(
 
         // Algo variables
         val currentContext = originContext.clone()
-        var currentManifestRune: ManifestationRune? = null
-        var currentBuilder: ManifestBuilder = ManifestBuilder()
+        var currentManifestRune: CastingRune? = null
+
+        // Create a builder
+        var currentBuilder: CastingBuilder = CastingBuilder()
+        currentBuilder.apply {
+            damageType = source.damageType
+            particle = source.particle
+        }
 
         // Casting
         var triggerCast = false
@@ -37,33 +44,33 @@ class ArcaneSpell(
         currentContext.ignoredTargets.add(currentContext.caster)
 
         for ((index, rune) in runeSequence.withIndex()) { // up to runeCount - 1
-            // Look for the manifest rune
-            if (rune is ManifestationRune) {
-                currentManifestRune = rune
-                // Create the builder using the build and install default params
-                currentBuilder = currentManifestRune.build(currentContext)
-                currentBuilder.apply {
-                    damageType = source.damageType
-                    particle = source.particle
-                }
+            // Look for runes
+            if (rune is ModifierRune) {
+                currentBuilder.storeRune(rune)
+            }
+            // Augments depend on run-time
+            else if (rune is AugmentRune) {
                 runesToRun.add(rune)
             }
-            // Has manifest rune, look for other rune types
-            if (currentManifestRune != null) {
-                if (rune is ModifierRune) {
-                    // Each manifest rune has its own builder
-                    currentManifestRune.modify(currentBuilder, rune)
-                }
-                else if (rune is AugmentRune) {
-                    runesToRun.add(rune)
-                }
+            // Domain runes change context
+            else if (rune is DomainRune) {
+                rune.change(originContext, currentContext)
             }
 
-
-            // IMPORTANT: Domain Runes trigger the CAST of the current stored sub-sequence
-            if (rune is DomainRune) {
+            // Look for the manifest rune
+            if (rune is CastingRune) {
+                currentManifestRune = rune
+                // Create the casting spell with the builder
+                currentManifestRune.build(currentBuilder)
+                // IMPORTANT
+                // This adds the rune to the FIRST in the list, so it is the first rune called
+                // Ideas: Maybe can change the calling index
+                // or maybe can change the calling sequence
+                val callingIndex = 0
+                runesToRun.add(0, rune)
                 triggerCast = true
             }
+
             // When reaches the end
             else if (index == runeCount - 1) {
                 triggerCast = true
@@ -71,26 +78,28 @@ class ArcaneSpell(
 
             // Cast the runes BEFORE changing context
             if (triggerCast && currentManifestRune != null) {
+                // Call casting run function
                 println("Running Cast of runes")
                 castRunes(runesToRun, currentContext, currentBuilder)
+                // Reset variables
+                currentBuilder = CastingBuilder()
+                currentBuilder.apply {
+                    damageType = source.damageType
+                    particle = source.particle
+                }
                 currentManifestRune = null
-                runesToRun.removeAll { true }
                 triggerCast = false
-            }
+                runesToRun.removeAll { true }
 
-            // Effects of domain runes last
-            if (rune is DomainRune) {
-                rune.change(originContext, currentContext)
             }
 
         }
-
     }
 
     /**
      * Calls the manifest rune and subsequent augments
      */
-    private fun castRunes(runes: List<ArcaneRune>, context: CastingContext, builder: ManifestBuilder) {
+    private fun castRunes(runes: List<ArcaneRune>, context: CastingContext, builder: CastingBuilder) {
         if (runes.isEmpty()) return
         // Run this subsequence of cast + augments
         val runeCount = runes.count()
@@ -102,7 +111,8 @@ class ArcaneSpell(
             val rune = runes[i]
 
             // This HAS to be true
-            if (rune is ManifestationRune) {
+            // rune[0] in the call is ALWAYS the casting rune
+            if (rune is CastingRune) {
                 rune.cast(context, builder)
             }
 
@@ -146,49 +156,6 @@ class ArcaneSpell(
             // Counter
             i++
         }
-
-
-        /*
-        for (rune in runes) {
-            // This HAS to be true
-            if (rune is ManifestationRune) {
-                rune.cast(context, builder)
-            }
-
-            else if (rune is AugmentRune) {
-                when (rune) {
-                    is AugmentRune.Break -> {
-                        val block = context.targetLocation?.block
-                        if (block != null) {
-                            // Use the wiki to find the values to break
-                            // https://minecraft.wiki/w/Module:Blast_resistance_values
-                            block.breakNaturally()
-                            // TODO: Fix Order!!!
-                        }
-                    }
-                    is AugmentRune.Coda -> {
-                        // CHANGE INDEX !!!
-                        // Maybe repeat in this loop?
-                    }
-                    is AugmentRune.PickUp -> {
-                        val pickUpLocation = context.targetLocation ?: continue
-                        val nearby = pickUpLocation.getNearbyEntities(1.0, 1.0, 1.0)
-                        if (nearby.isEmpty()) continue
-                        val items = nearby.filter { it is Item }
-                        if (items.isEmpty()) continue
-                        val itemToPickUp = items.first()
-                        if (itemToPickUp is Item) {
-                            itemToPickUp.teleport(context.castingLocation)
-                        }
-                    }
-                    else -> {
-
-                    }
-                }
-            }
-        }
-
-         */
 
     }
 
