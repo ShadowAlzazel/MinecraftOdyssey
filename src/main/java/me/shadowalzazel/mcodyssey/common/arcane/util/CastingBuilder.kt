@@ -11,6 +11,7 @@ data class CastingBuilder(
     var damageType: DamageType = DamageType.MAGIC,
     var radius: Double = 0.0,
     var range: Double = 0.0,
+    var speed: Double = 0.5,
     var aimAssist: Double = 0.0,
     var delayInTicks: Long = 0L,
     var particle: Particle = Particle.WITCH,

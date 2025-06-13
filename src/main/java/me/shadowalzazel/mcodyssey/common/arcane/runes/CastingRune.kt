@@ -4,12 +4,18 @@ import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.arcane.util.CastingContext
 import me.shadowalzazel.mcodyssey.common.arcane.util.RayTracerAndDetector
 import me.shadowalzazel.mcodyssey.common.arcane.util.CastingBuilder
+import me.shadowalzazel.mcodyssey.common.arcane.util.ArcaneBallTimer
 import me.shadowalzazel.mcodyssey.common.combat.AttackHelper
 import me.shadowalzazel.mcodyssey.util.VectorParticles
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import org.bukkit.FluidCollisionMode
 import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.Sound
+import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Snowball
+import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
 
@@ -215,10 +221,47 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
         override val displayName = "ball"
 
         override fun build(builder: CastingBuilder) {
-            TODO("Not yet implemented")
+            // DEFAULT build parameters
+            val damage = 5.0
+            val range = 16.0
+            val aimAssist = 0.1
+            val speed = 0.5
+            // Modify the builder
+            builder.also {
+                it.damage = damage
+                it.range = range
+                it.aimAssist = aimAssist
+                it.speed = speed
+            }
+
         }
         override fun manifest(context: CastingContext, builder: CastingBuilder) {
-            TODO("Not yet implemented")
+            // Unpack build
+            val totalRange = builder.range
+            val aimAssist = builder.aimAssist
+            val damageType = builder.damageType
+            val damage = builder.damage
+            val particle = builder.particle
+            val speed = builder.speed
+
+            // Set vectors and velocity
+            val direction = context.direction
+            val velocity = direction.clone().normalize().multiply(speed)
+
+            val ball = context.world.spawnEntity(context.castingLocation, EntityType.SNOWBALL) as Snowball
+            ball.also {
+                it.item = ItemStack(Material.ENDER_PEARL)
+                it.addScoreboardTag(EntityTags.MAGIC_BALL)
+                it.velocity = velocity
+                it.shooter = context.caster
+                it.setHasLeftShooter(false)
+                it.setGravity(false)
+            }
+
+            // Particles and Timer
+            val ballEffects = ArcaneBallTimer(ball, particle)
+            ballEffects.runTaskTimer(Odyssey.instance, 1, 2)
+
         }
     }
 

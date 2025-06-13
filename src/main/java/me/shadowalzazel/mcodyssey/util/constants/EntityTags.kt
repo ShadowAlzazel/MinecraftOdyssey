@@ -157,7 +157,10 @@ object EntityTags {
     const val CHAKRAM_HAS_BOUNCED: String = "odyssey.chakram_has_bounced"
     const val THROWABLE_DAMAGE: String = "odyssey.throwable_damage"
     const val THROWABLE_ATTACK_HIT: String = "odyssey.throwable_attack_hit"
+
+    // Magic
     const val MAGIC_MISSILE: String = "odyssey.magic_missile"
+    const val MAGIC_BALL: String = "odyssey.magic_ball"
 
 
     /*-----------------------------------------------------------------------------------------------*/

@@ -106,7 +106,7 @@ class ArcaneSpellBuilder(
             "beam" -> CastingRune.Beam()
             "slice" -> CastingRune.Slice()
             "zone" -> CastingRune.Zone()
-            "projectile" -> CastingRune.Ball()
+            "ball" -> CastingRune.Ball()
             "aura" -> CastingRune.Aura()
             else -> null
         }
@@ -117,6 +117,7 @@ class ArcaneSpellBuilder(
                 // Manifest
                 "alexandrite" -> CastingRune.Beam()
                 "snowball" -> CastingRune.Zone()
+                "arrow" -> CastingRune.Ball()
                 // Domain
                 "heart_of_the_sea" -> DomainRune.Next
                 "ender_eye" -> DomainRune.Nearby
