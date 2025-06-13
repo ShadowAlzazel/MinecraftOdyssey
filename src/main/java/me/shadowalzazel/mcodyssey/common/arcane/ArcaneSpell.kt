@@ -28,7 +28,7 @@ class ArcaneSpell(
 
         // Algo variables
         val currentContext = originContext.clone()
-        var currentManifestRune: CastingRune? = null
+        var castingRune: CastingRune? = null
 
         // Create a builder
         var currentBuilder: CastingBuilder = CastingBuilder()
@@ -59,9 +59,10 @@ class ArcaneSpell(
 
             // Look for the manifest rune
             if (rune is CastingRune) {
-                currentManifestRune = rune
-                // Create the casting spell with the builder
-                currentManifestRune.build(currentBuilder)
+                castingRune = rune
+                // Assemble the casting rune with the builder
+                castingRune.assemble(currentBuilder)
+                currentBuilder.buildStored()
                 // IMPORTANT
                 // This adds the rune to the FIRST in the list, so it is the first rune called
                 // Ideas: Maybe can change the calling index
@@ -72,14 +73,14 @@ class ArcaneSpell(
             }
 
             // When reaches the end
-            else if (index == runeCount - 1) {
+            if (index == runeCount - 1) {
                 triggerCast = true
             }
 
             // Cast the runes BEFORE changing context
-            if (triggerCast && currentManifestRune != null) {
+            if (triggerCast && castingRune != null) {
                 // Call casting run function
-                println("Running Cast of runes")
+                println("----- CASTING RUNES --------")
                 castRunes(runesToRun, currentContext, currentBuilder)
                 // Reset variables
                 currentBuilder = CastingBuilder()
@@ -87,7 +88,7 @@ class ArcaneSpell(
                     damageType = source.damageType
                     particle = source.particle
                 }
-                currentManifestRune = null
+                castingRune = null
                 triggerCast = false
                 runesToRun.removeAll { true }
 
@@ -109,6 +110,7 @@ class ArcaneSpell(
         var i = 0
         while (i < runeCount) {
             val rune = runes[i]
+            println("Rune [${i}] [${rune.name}] \n")
 
             // This HAS to be true
             // rune[0] in the call is ALWAYS the casting rune

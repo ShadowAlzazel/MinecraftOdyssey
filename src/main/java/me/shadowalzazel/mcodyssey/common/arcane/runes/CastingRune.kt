@@ -34,7 +34,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
     // Abstract Methods for runes and their implementation
 
     // A function that prepares modifiers and other runes before the spell is manifested
-    abstract fun build(builder: CastingBuilder?): CastingBuilder
+    abstract fun build(builder: CastingBuilder)
 
     abstract fun manifest(context: CastingContext, builder: CastingBuilder)
 
@@ -54,12 +54,12 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
     }
 
     /**
-     * This function is to use with the builder to add other runes
+     * Assembles the rune using the builder or creates a new one
      */
-    fun modifyBuilder(builder: CastingBuilder, runeAddOn: ArcaneRune) {
-        builder.modify(runeAddOn)
+    fun assemble(provided: CastingBuilder) {
+        // Get a builder from the default builder or build with provided
+        build(provided)
     }
-
 
     // List of all manifestation runes
 
@@ -68,29 +68,19 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
         override val displayName = "Zone"
 
 
-        override fun build(builder: CastingBuilder?): CastingBuilder {
+        override fun build(builder: CastingBuilder) {
             // DEFAULT build parameters
             val damage = 1.0
             val range = 16.0
             val radius = 3.0
             val aimAssist = 0.1
-            // Modify or create the builder
-            return if (builder == null) {
-                CastingBuilder(
-                    damage = damage,
-                    range = range,
-                    radius = radius,
-                    aimAssist = aimAssist)
+            // Modify the builder
+            builder.also {
+                it.damage = damage
+                it.range = range
+                it.radius = radius
+                it.aimAssist = aimAssist
             }
-            else {
-                builder.also {
-                    it.damage = damage
-                    it.range = range
-                    it.radius = radius
-                    it.aimAssist = aimAssist
-                }
-            }
-
         }
 
         override fun manifest(context: CastingContext, builder: CastingBuilder) {
@@ -112,11 +102,21 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
                 raySize = aimAssist)
             val circleCenter = traceLocation ?: context.targetLocation
             circleCenter ?: return
+            // Change context
+            context.targetLocation = circleCenter
+
+            val filterEntities = mutableListOf(context.caster)
+            for (e in context.ignoredTargets) {
+                if (e is LivingEntity) filterEntities.add(e)
+            }
 
             // Damage Logic
             val damageSource = createEntityDamageSource(context.caster, null, damageType)
             circleCenter.getNearbyLivingEntities(radius).forEach {
-                it.damage(damage, damageSource)
+                if (it !in filterEntities) {
+                    it.damage(damage, damageSource)
+                    context.target = it
+                }
             }
             // Particles and effects
             spawnCircleParticles(
@@ -136,24 +136,16 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
         override val name = "beam"
         override val displayName = "Beam"
 
-        override fun build(builder: CastingBuilder?): CastingBuilder {
+        override fun build(builder: CastingBuilder) {
             // DEFAULT build parameters
             val damage = 2.0
             val range = 16.0
             val aimAssist = 0.25
-            // Modify or create the builder
-            return if (builder == null) {
-                CastingBuilder(
-                    damage = damage,
-                    range = range,
-                    aimAssist = aimAssist)
-            }
-            else {
-                builder.also {
-                    it.damage = damage
-                    it.range = range
-                    it.aimAssist = aimAssist
-                }
+            // Modify the builder
+            builder.also {
+                it.damage = damage
+                it.range = range
+                it.aimAssist = aimAssist
             }
         }
 
@@ -222,7 +214,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
         override val name = "ball"
         override val displayName = "ball"
 
-        override fun build(builder: CastingBuilder?): CastingBuilder {
+        override fun build(builder: CastingBuilder) {
             TODO("Not yet implemented")
         }
         override fun manifest(context: CastingContext, builder: CastingBuilder) {
@@ -234,7 +226,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
         override val name = "missile"
         override val displayName = "missile"
 
-        override fun build(builder: CastingBuilder?): CastingBuilder {
+        override fun build(builder: CastingBuilder) {
             TODO("Not yet implemented")
         }
         override fun manifest(context: CastingContext, builder: CastingBuilder) {
@@ -246,7 +238,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
         override val name = "slice"
         override val displayName = "Slice"
 
-        override fun build(builder: CastingBuilder?): CastingBuilder {
+        override fun build(builder: CastingBuilder) {
             TODO("Not yet implemented")
         }
         override fun manifest(context: CastingContext, builder: CastingBuilder) {
@@ -258,7 +250,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
         override val name = "aura"
         override val displayName = "aura"
 
-        override fun build(builder: CastingBuilder?): CastingBuilder {
+        override fun build(builder: CastingBuilder) {
             TODO("Not yet implemented")
         }
         override fun manifest(context: CastingContext, builder: CastingBuilder) {
@@ -270,7 +262,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
         override val name = "point"
         override val displayName = "point"
 
-        override fun build(builder: CastingBuilder?): CastingBuilder {
+        override fun build(builder: CastingBuilder) {
             TODO("Not yet implemented")
         }
         override fun manifest(context: CastingContext, builder: CastingBuilder) {

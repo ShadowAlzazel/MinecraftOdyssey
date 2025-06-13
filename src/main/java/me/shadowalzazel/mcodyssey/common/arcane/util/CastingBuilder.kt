@@ -22,7 +22,11 @@ data class CastingBuilder(
         this.storedRunes.add(rune)
     }
 
-    fun modify(rune: ArcaneRune) {
+    /**
+     * This function is to use with the builder to add other runes.
+     * This adds the runes modifiers to the builder.
+     */
+    fun addRune(rune: ArcaneRune) {
         // Apply modifiers (exhaustive List)
         when(rune) {
             is ModifierRune.Range -> this.range += rune.value
@@ -37,6 +41,18 @@ data class CastingBuilder(
             else -> {}
         }
     }
+
+    /**
+     * This function uses all stored runes to build class
+     */
+    fun buildStored() {
+        if (storedRunes.isEmpty()) return
+        for (r in storedRunes) {
+            addRune(r)
+        }
+        storedRunes.removeAll { true } // Remove all runes
+    }
+
 
 
 }

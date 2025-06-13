@@ -8,28 +8,28 @@ sealed class DomainRune: ArcaneRune() {
     // Domain runes change the casting context of the spell.
     // Changes like the location or entity where it originates or targets
 
-    fun change(original: CastingContext, context: CastingContext) {
+    fun change(kernel: CastingContext, context: CastingContext) {
 
-        val changing = context.clone()
+        val domain = context.clone()
         var successful = true
 
         // Want to change context
         when (this) {
             is Origin -> {
-                changing.castingLocation = original.castingLocation
+                domain.castingLocation = kernel.castingLocation
             }
             is Next -> {
-                val target = changing.target
+                val target = domain.target
                 if (target != null) {
                     // Move to eye height
-                    changing.castingLocation = if (target is LivingEntity) {
+                    domain.castingLocation = if (target is LivingEntity) {
                         target.eyeLocation
                     } else {
                         target.location.clone().add(0.0, 0.5, 0.0)
                     }
                 }
-                else if (changing.targetLocation != null) {
-                    changing.castingLocation = changing.targetLocation!!
+                else if (domain.targetLocation != null) {
+                    domain.castingLocation = domain.targetLocation!!
                 }
                 else {
                     successful = false
@@ -37,18 +37,18 @@ sealed class DomainRune: ArcaneRune() {
             }
             is Nearby -> {
                 // Get Nearby entities if not target or ignored
-                val nearby = changing.castingLocation.getNearbyLivingEntities(4.0)
-                nearby.remove(changing.target) // Remove self
-                nearby.removeAll { it in changing.ignoredTargets } // Remove if in the `ignore` list
+                val nearby = domain.castingLocation.getNearbyLivingEntities(4.0)
+                nearby.remove(domain.target) // Remove self
+                nearby.removeAll { it in domain.ignoredTargets } // Remove if in the `ignore` list
                 // Continue without errors
                 if (nearby.isNotEmpty()) {  // Ignore empty list
                     // Sort list to nearest
-                    val sortedNearby = nearby.sortedBy { it.location.distance(changing.castingLocation) }
+                    val sortedNearby = nearby.sortedBy { it.location.distance(domain.castingLocation) }
                     val nearestTarget = sortedNearby.first()
                     // Set Target, Location and Direction
-                    changing.target = nearestTarget
-                    changing.targetLocation = nearestTarget.eyeLocation
-                    changing.direction = nearestTarget.eyeLocation.clone().subtract(changing.castingLocation).toVector()
+                    domain.target = nearestTarget
+                    domain.targetLocation = nearestTarget.eyeLocation
+                    domain.direction = nearestTarget.eyeLocation.clone().subtract(domain.castingLocation).toVector()
                 }
                 else {
                     successful = false
@@ -56,31 +56,31 @@ sealed class DomainRune: ArcaneRune() {
             }
             is Invert -> {
                 // Swap domains
-                if (context.targetLocation != null) {
-                    val temp = changing.castingLocation
-                    changing.castingLocation = changing.targetLocation!!
-                    changing.targetLocation = temp
+                if (domain.targetLocation != null) {
+                    val temp = domain.castingLocation
+                    domain.castingLocation = domain.targetLocation!!
+                    domain.targetLocation = temp
                 }
                 else {
                     successful = false
                 }
             }
             is Differ -> {
-                if (context.target != null) changing.ignoredTargets.add(changing.target!!)
+                if (domain.target != null) domain.ignoredTargets.add(domain.target!!)
                 else successful = false
             }
             else -> successful = false
         }
         // Apply changes to the context
         if (successful) {
-            context.apply {
-                castingLocation = changing.castingLocation
-                direction = changing.direction
-                target = changing.target
-                targetLocation = changing.targetLocation
+            context.also {
+                it.castingLocation = domain.castingLocation
+                it.direction = domain.direction
+                it.target = domain.target
+                it.targetLocation = domain.targetLocation
                 // ignore targets
-                for (e in changing.ignoredTargets) {
-                    if (e !in ignoredTargets) ignoredTargets.add(e)
+                for (e in domain.ignoredTargets) {
+                    if (e !in it.ignoredTargets) it.ignoredTargets.add(e)
                 }
             }
         }
