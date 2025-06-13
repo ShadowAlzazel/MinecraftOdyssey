@@ -3,6 +3,7 @@ package me.shadowalzazel.mcodyssey.common.arcane
 import me.shadowalzazel.mcodyssey.common.arcane.runes.*
 import me.shadowalzazel.mcodyssey.common.arcane.util.CastingContext
 import me.shadowalzazel.mcodyssey.common.arcane.util.ManifestBuilder
+import org.bukkit.entity.Item
 
 class ArcaneSpell(
     val source: ArcaneSource,
@@ -16,6 +17,8 @@ class ArcaneSpell(
      * This context could have been changes by other runes. So when chaining new manifests,
      * do AFTER you change the domain.
      * - Context is preserved across the entire read. Meaning it is single channel and global. NOT local.
+     *
+     * - Manifest CREATES new target CONTEXT
      */
 
     fun castSpell() {
@@ -30,6 +33,8 @@ class ArcaneSpell(
         // Casting
         var triggerCast = false
         val runesToRun = mutableListOf<ArcaneRune>()
+        // Default Ignore self
+        currentContext.ignoredTargets.add(currentContext.caster)
 
         for ((index, rune) in runeSequence.withIndex()) { // up to runeCount - 1
             // Look for the manifest rune
@@ -64,7 +69,8 @@ class ArcaneSpell(
                 triggerCast = true
             }
 
-            if (triggerCast) {
+            // Cast the runes BEFORE changing context
+            if (triggerCast && currentManifestRune != null) {
                 println("Running Cast of runes")
                 castRunes(runesToRun, currentContext, currentBuilder)
                 currentManifestRune = null
@@ -87,6 +93,62 @@ class ArcaneSpell(
     private fun castRunes(runes: List<ArcaneRune>, context: CastingContext, builder: ManifestBuilder) {
         if (runes.isEmpty()) return
         // Run this subsequence of cast + augments
+        val runeCount = runes.count()
+        var usedCodas = 0
+        val maxCodas = runes.count { it is AugmentRune.Coda }
+
+        var i = 0
+        while (i < runeCount) {
+            val rune = runes[i]
+
+            // This HAS to be true
+            if (rune is ManifestationRune) {
+                rune.cast(context, builder)
+            }
+
+            else if (rune is AugmentRune) {
+                when (rune) {
+                    is AugmentRune.Break -> {
+                        val block = context.targetLocation?.block
+                        if (block != null) {
+                            // Use the wiki to find the values to break
+                            // https://minecraft.wiki/w/Module:Blast_resistance_values
+                            block.breakNaturally()
+                        }
+                    }
+                    is AugmentRune.Coda -> {
+                        // TODO: kinda useless, MOVE to main loop?
+                        // Go back to 0
+                        if (usedCodas >= maxCodas) {
+                            continue
+                        } else {
+                            usedCodas++
+                            i = 0
+                        }
+                    }
+                    is AugmentRune.PickUp -> {
+                        val pickUpLocation = context.targetLocation ?: continue
+                        val nearby = pickUpLocation.getNearbyEntities(1.0, 1.0, 1.0)
+                        if (nearby.isEmpty()) continue
+                        val items = nearby.filter { it is Item }
+                        if (items.isEmpty()) continue
+                        val itemToPickUp = items.first()
+                        if (itemToPickUp is Item) {
+                            itemToPickUp.teleport(context.castingLocation)
+                        }
+                    }
+                    else -> {
+
+                    }
+                }
+            }
+
+            // Counter
+            i++
+        }
+
+
+        /*
         for (rune in runes) {
             // This HAS to be true
             if (rune is ManifestationRune) {
@@ -108,12 +170,25 @@ class ArcaneSpell(
                         // CHANGE INDEX !!!
                         // Maybe repeat in this loop?
                     }
+                    is AugmentRune.PickUp -> {
+                        val pickUpLocation = context.targetLocation ?: continue
+                        val nearby = pickUpLocation.getNearbyEntities(1.0, 1.0, 1.0)
+                        if (nearby.isEmpty()) continue
+                        val items = nearby.filter { it is Item }
+                        if (items.isEmpty()) continue
+                        val itemToPickUp = items.first()
+                        if (itemToPickUp is Item) {
+                            itemToPickUp.teleport(context.castingLocation)
+                        }
+                    }
                     else -> {
 
                     }
                 }
             }
         }
+
+         */
 
     }
 

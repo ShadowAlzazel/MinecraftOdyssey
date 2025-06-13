@@ -37,29 +37,36 @@ sealed class DomainRune: ArcaneRune() {
             }
             is Nearby -> {
                 // Get Nearby entities if not target or ignored
-                val nearby = changing.castingLocation.getNearbyLivingEntities(8.0)
+                val nearby = changing.castingLocation.getNearbyLivingEntities(4.0)
                 nearby.remove(changing.target) // Remove self
-                nearby.removeIf { it in changing.ignoredTargets } // Remove if in the `ignore` list
-                if (nearby.isEmpty()) {  // Ignore empty list
+                nearby.removeAll { it in changing.ignoredTargets } // Remove if in the `ignore` list
+                // Continue without errors
+                if (nearby.isNotEmpty()) {  // Ignore empty list
+                    // Sort list to nearest
+                    val sortedNearby = nearby.sortedBy { it.location.distance(changing.castingLocation) }
+                    val nearestTarget = sortedNearby.first()
+                    // Set Target, Location and Direction
+                    changing.target = nearestTarget
+                    changing.targetLocation = nearestTarget.eyeLocation
+                    changing.direction = nearestTarget.eyeLocation.clone().subtract(changing.castingLocation).toVector()
+                }
+                else {
                     successful = false
                 }
-                // Sort list to nearest
-                val sortedNearby = nearby.sortedBy { it.location.distance(changing.castingLocation) }
-                val nearestTarget = sortedNearby.first()
-                // Set Target, Location and Direction
-                changing.target = nearestTarget
-                changing.targetLocation = nearestTarget.eyeLocation
-                changing.direction = nearestTarget.eyeLocation.clone().subtract(changing.castingLocation).toVector()
             }
             is Invert -> {
                 // Swap domains
-                if (changing.targetLocation == null) successful = false
-                val temp = changing.castingLocation
-                changing.castingLocation = changing.targetLocation!!
-                changing.targetLocation = temp
+                if (context.targetLocation != null) {
+                    val temp = changing.castingLocation
+                    changing.castingLocation = changing.targetLocation!!
+                    changing.targetLocation = temp
+                }
+                else {
+                    successful = false
+                }
             }
             is Differ -> {
-                if (changing.target != null) changing.ignoredTargets.add(changing.target!!)
+                if (context.target != null) changing.ignoredTargets.add(changing.target!!)
                 else successful = false
             }
             else -> successful = false

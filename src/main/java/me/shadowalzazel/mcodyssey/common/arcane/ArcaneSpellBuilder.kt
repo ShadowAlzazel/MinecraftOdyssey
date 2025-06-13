@@ -126,6 +126,7 @@ class ArcaneSpellBuilder(
                 // Augment
                 "cactus" -> AugmentRune.Break(2.0)
                 "gold_ingot" -> AugmentRune.Coda
+                "iron_ingot" -> AugmentRune.PickUp
                 // Modifier
                 "diamond" -> ModifierRune.Amplify(4.0)
                 "emerald" -> ModifierRune.Wide(2.0)

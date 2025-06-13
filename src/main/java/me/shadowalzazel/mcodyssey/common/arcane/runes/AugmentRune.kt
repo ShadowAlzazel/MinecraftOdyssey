@@ -34,6 +34,11 @@ sealed class AugmentRune : ArcaneRune() {
     }
 
 
+    data object PickUp : AugmentRune() {
+        override val name = "pick_up"
+        override val displayName = "pick_up"
+    }
+
     class Vulnerability() : AugmentRune() {
         override val name = "vulnerability"
         override val displayName = "vulnerability"
