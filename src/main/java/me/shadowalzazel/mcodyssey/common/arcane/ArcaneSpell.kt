@@ -25,44 +25,48 @@ class ArcaneSpell(
         // Algo variables
         var currentContext = originContext.clone()
         var currentManifestRune: ManifestationRune? = null
-        var currentManifestBuilder: ManifestBuilder = ManifestBuilder()
-        var calledManifestRune = false
+        var currentBuilder: ManifestBuilder = ManifestBuilder()
+        var callingManifest = false
 
-        for (i in 0..runeCount) {
-            val runeAtI = runeSequence[i]
+        for ((index, rune) in runeSequence.withIndex()) { // up to runeCount - 1
+
             // Look for the manifest rune
-            if (runeAtI is ManifestationRune) {
-                calledManifestRune = true
-                currentManifestRune = runeAtI
+            if (rune is ManifestationRune) {
+                currentManifestRune = rune
                 // Create the builder using the build and install default params
-                currentManifestBuilder = currentManifestRune.build(currentContext)
-                currentManifestBuilder.apply {
+                currentBuilder = currentManifestRune.build(currentContext)
+                currentBuilder.apply {
                     damageType = source.damageType
                     particle = source.particle
                 }
                 continue
             }
-            // Call the DomainRune super method to change context
-            else if (runeAtI is DomainRune) {
-                runeAtI.change(originContext, currentContext)
-            }
-            else if (runeAtI is VariableRune) {
+            else if (rune is VariableRune) {
                 // LATER
             }
-
             // Has manifest rune, look for other rune types
             if (currentManifestRune != null) {
-                if (runeAtI is ModifierRune) {
+                if (rune is ModifierRune) {
                     // Each manifest rune has its own builder
-                    currentManifestRune.modify(currentManifestBuilder, runeAtI)
+                    currentManifestRune.modify(currentBuilder, rune)
                 }
 
             }
             // Change context with Domain Runes
+            // Call the DomainRune super method to change context
 
-            // When reaches the end OR a new KERNEL Rune
-            if (i >= runeCount - 1) {
+            // When reaches the end OR a new KERNEL Rune CALL the rune
+            if (index == runeCount - 1) {
+                callingManifest = true
+            }
 
+            // If we get the call, run the manifest cast
+            if (callingManifest || rune is DomainRune) {
+                currentManifestRune?.cast(currentContext, currentBuilder)
+                callingManifest = false
+            }
+            if (rune is DomainRune) {
+                rune.change(originContext, currentContext)
             }
 
         }

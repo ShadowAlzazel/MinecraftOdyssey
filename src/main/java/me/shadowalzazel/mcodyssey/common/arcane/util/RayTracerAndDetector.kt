@@ -36,14 +36,14 @@ interface RayTracerAndDetector {
 
     fun getPathTraceEntity(
         start: Location,
-        end: Location,
+        direction: Vector,
         filter: List<LivingEntity>,
         range: Double,
         raySize: Double): Entity? {
         val entityPredicate = { e: Entity -> e !in filter}
         val result = start.world.rayTrace(
             start,
-            end.clone().subtract(start).toVector(),
+            direction,
             range,
             FluidCollisionMode.NEVER,
             true,

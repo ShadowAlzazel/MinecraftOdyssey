@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack
 @Suppress("UnstableApiUsage")
 class ArcaneSpellBuilder(
     val itemSource: ItemStack,
-    val additionalItems: MutableList<ItemStack>
+    val additionalItems: List<ItemStack>
 ) {
 
     private var arcaneSource: ArcaneSource? = null
@@ -44,10 +44,23 @@ class ArcaneSpellBuilder(
 
         // If pass
         //arcaneSource ?: return
+        println("Making Spell with this sequence: \n")
+        var index = 0
+        for (r in runeSequence) {
+            println("Rune [${index}] [${r.name}] $r \n")
+            index += 1
+        }
+
         val spell = ArcaneSpell(arcaneSource!!, context, runeSequence)
         return spell
     }
 
+
+    fun insertSequence(runeList: List<ArcaneRune>) {
+        for (r in runeList) {
+            runeSequence.add(r)
+        }
+    }
 
 
     // ----------------------------------------------------------
@@ -68,6 +81,7 @@ class ArcaneSpellBuilder(
             // TOOL-SOURCES
             "arcane_blade" -> ArcaneSource.Magic
             "arcane_book" -> ArcaneSource.Magic
+            "arcane_wand" -> ArcaneSource.Magic
             "arcane_pen" -> ArcaneSource.Magic
             "arcane_scepter" -> ArcaneSource.Magic
             "arcane_orb" -> ArcaneSource.Magic
@@ -191,6 +205,7 @@ class ArcaneSpellBuilder(
         // readRunesUnordered -> decompress Unordered Runes
 
         val runesRead = readRunesSerial(additionalItems)
+        if (runesRead.isEmpty()) return
 
         // Go from left to right, and insert into sequence
         for (r in runesRead) {

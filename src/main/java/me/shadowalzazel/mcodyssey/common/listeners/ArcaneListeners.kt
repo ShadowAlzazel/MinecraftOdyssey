@@ -1,9 +1,7 @@
 package me.shadowalzazel.mcodyssey.common.listeners
 
-import io.papermc.paper.datacomponent.DataComponentTypes
 import me.shadowalzazel.mcodyssey.common.arcane.ArcaneEquipmentManager
 import me.shadowalzazel.mcodyssey.util.DataTagManager
-import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -28,7 +26,7 @@ object ArcaneListeners: Listener, ArcaneEquipmentManager, DataTagManager {
         val itemName = mainhand.getItemNameId()
         // Detect magic items
         when (itemName) {
-            "scroll" -> arcaneSpellHandler(player)
+            "scroll" -> arcanePenWithScrollCastingHandler(player)
         }
 
     }
@@ -37,16 +35,7 @@ object ArcaneListeners: Listener, ArcaneEquipmentManager, DataTagManager {
         val player = event.player
         val equipment = player.equipment ?: return
         val mainhand = equipment.itemInMainHand
-        //if (player.hasCooldown(offHand.type)) return
-        //val model = offHand.getData(DataComponentTypes.ITEM_MODEL) ?: return
         val itemName = mainhand.getItemNameId()
-        //if (ARCANE_RANGES[itemName] == null) return
-        /*
-        val book = equipment.itemInMainHand
-        if (book.type == Material.AIR) return
-        val bookEnchantments = book.getData(DataComponentTypes.STORED_ENCHANTMENTS)
-
-         */
         // Sentries Passed
         when (itemName) {
             "arcane_wand" -> arcaneWandHandler(player)

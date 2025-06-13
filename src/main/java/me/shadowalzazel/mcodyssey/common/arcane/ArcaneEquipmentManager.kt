@@ -12,7 +12,6 @@ import me.shadowalzazel.mcodyssey.util.VectorParticles
 import me.shadowalzazel.mcodyssey.common.tasks.arcane_tasks.MagicMissileLauncher
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
-import me.shadowalzazel.mcodyssey.util.constants.WeaponMaps.ARCANE_RANGES
 import org.bukkit.*
 import org.bukkit.damage.DamageType
 import org.bukkit.entity.*
@@ -23,59 +22,8 @@ import org.bukkit.util.Vector
 @Suppress("UnstableApiUsage")
 interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager, RayTracerAndDetector {
 
-    private fun checkOffhandRunes(caster: LivingEntity, runes: MutableList<ArcaneRune>) {
-        if (caster !is Player) return
-        val equipment = caster.equipment ?: return
 
-        // read
-        // TODO: Bundle reader
-        // JUST TO SHOWCASE
-        if (equipment.itemInOffHand.type == Material.BUNDLE) { // Temp bundle reader
-            // TODO: Temporary reader
-            val bundleContents = equipment.itemInOffHand.getData(DataComponentTypes.BUNDLE_CONTENTS) ?: return
-            if (bundleContents.contents().isEmpty()) return
-            val items = bundleContents.contents()
-            for (item in items) {
-                when (item.getItemNameId()) {
-                    "ruby" -> runes.add(ModifierRune.Source(DamageType.IN_FIRE, Particle.FLAME))
-                    "diamond" -> runes.add(ModifierRune.Amplify(4.0))
-                    "emerald" -> runes.add(ModifierRune.Wide(2.0))
-                    "echo_shard" -> runes.add(ModifierRune.Source(DamageType.SONIC_BOOM, Particle.SONIC_BOOM))
-                    "neptunian" -> runes.add(ModifierRune.Source(DamageType.FREEZE, Particle.SNOWFLAKE))
-                    "alexandrite" -> runes.add(ManifestationRune.Beam()) // TODO: overwrite or ADD!!!
-                    "kunzite" -> runes.add(ModifierRune.Convergence(1.0))
-                    "amethyst_shard" -> runes.add(ModifierRune.Range(16.0))
-                    "jovianite" -> runes.add(ModifierRune.Source(DamageType.MAGIC, Particle.WAX_OFF))
-                    "clock" -> runes.addAll(listOf(
-                        ModifierRune.Delay(3.0),
-                        ModifierRune.Source(DamageType.MAGIC, Particle.WAX_ON))
-                    )
-                }
-            }
-
-        }// TEMP offhand reader
-        else if (equipment.itemInOffHand.type != Material.AIR) {
-            when (equipment.itemInOffHand.getItemNameId()) {
-                "ruby" -> runes.add(ModifierRune.Source(DamageType.IN_FIRE, Particle.FLAME))
-                "diamond" -> runes.add(ModifierRune.Amplify(2.0))
-                "emerald" -> runes.add(ModifierRune.Wide(2.0))
-                "echo_shard" -> runes.add(ModifierRune.Source(DamageType.SONIC_BOOM, Particle.SONIC_BOOM))
-                "neptunian" -> runes.add(ModifierRune.Source(DamageType.FREEZE, Particle.SNOWFLAKE))
-                "alexandrite" -> runes.add(ManifestationRune.Beam()) // TODO: overwrite or ADD!!!
-                "kunzite" -> runes.add(ModifierRune.Convergence(1.0))
-                "amethyst_shard" -> runes.add(ModifierRune.Range(16.0))
-                "jovianite" -> runes.add(ModifierRune.Source(DamageType.MAGIC, Particle.WAX_OFF))
-                "clock" -> runes.addAll(listOf(
-                    ModifierRune.Delay(3.0),
-                    ModifierRune.Source(DamageType.MAGIC, Particle.WAX_ON))
-                )
-
-            }
-        }
-
-    }
-
-    fun arcanePenCastingHandler(caster: LivingEntity) {
+    fun arcanePenWithScrollCastingHandler(caster: LivingEntity) {
         if (caster !is Player) return
         // ----------- BUILDING SPELL ----------
         val equipment = caster.equipment ?: return
@@ -94,14 +42,14 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
         val targetLocation: Location = if (target != null) {
             if (target is LivingEntity) target.eyeLocation else target.location
         } else {
-            caster.eyeLocation.clone().add(direction.clone().normalize().multiply(32.0))
+            caster.eyeLocation.clone().add(direction.clone().normalize().multiply(16.0))
         }
 
         // Form the starting spell context
         val spellContext = CastingContext(
             caster = caster,
             world = caster.world,
-            castingLocation = caster.location,
+            castingLocation = caster.eyeLocation,
             direction = direction,
             target = target,
             targetLocation = targetLocation,
@@ -109,112 +57,99 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
         )
 
         val spell = spellBuilder.formSpell(spellContext)
-
+        spell.castSpell()
     }
-
-    fun arcaneSpellHandler(caster: LivingEntity) {
-        if (caster !is Player) return
-        val equipment = caster.equipment ?: return
-        val arcaneHand = equipment.itemInMainHand
-        if (caster.getCooldown(arcaneHand) > 0) return
-        //equipment.itemInOffHand.damage(1, caster)
-        // ----------- BUILDING SPELL ----------
-        // CONTEXT DETECTION
-        // TODO: Read from items
-
-        // Spell and modifier building
-        val runes = mutableListOf<ArcaneRune>()
-
-        // SCROLL DEFAULT
-        var manifestRune: ManifestationRune = ManifestationRune.Zone()
-        runes.add(ModifierRune.Range(10.0))
-
-        // Get modifiers
-        checkOffhandRunes(caster, runes)
-        for (r in runes) {
-            if (r is ManifestationRune) {
-                manifestRune = r
-            }
-        }
-        /*
-        val context = CastingContext(
-            caster = caster,
-            world = caster.world,
-            castingLocation = caster.location,
-            direction = ,
-            target = null,
-            targetLocation = null,
-            runes = runes
-        )
-
-        manifestRune.cast(context)
-
-         */
-    }
-
 
     fun arcaneWandHandler(caster: LivingEntity) {
         if (caster !is Player) return
         val equipment = caster.equipment ?: return
-        val arcaneHand = equipment.itemInMainHand
-        if (caster.getCooldown(arcaneHand) > 0) return
+        val arcaneTool = equipment.itemInMainHand
+        val offHandItem = equipment.itemInOffHand
+        if (caster.getCooldown(arcaneTool) > 0) return
         equipment.itemInMainHand.damage(1, caster)
+        // ----------- BUILDING DEFAULT SPELL ----------
+        val spellBuilder = ArcaneSpellBuilder(arcaneTool, listOf(offHandItem))
+        val canBuildSpell = spellBuilder.canBuildSpell()
+        if (!canBuildSpell) return
 
-        // DEFAULT WAND
-        val manifestRune = ManifestationRune.Beam()
-        val wandRunes = mutableListOf<ArcaneRune>(
-            ModifierRune.Range(32.0),
-            ModifierRune.Amplify(4.0),
-            ModifierRune.Convergence(0.5))
+        // Insert a default sequence
+        val wandRunes = listOf<ArcaneRune>(
+            ManifestationRune.Beam(),
+            ModifierRune.Range(16.0),
+            ModifierRune.Amplify(2.0), // Default(2.0) + 2.0
+            ModifierRune.Convergence(0.35)
+        )
+        spellBuilder.insertSequence(wandRunes)
 
-        // Check runes
-        checkOffhandRunes(caster, wandRunes)
-        // TODO: Set to get from gem quality
+        // Context params based on initial conditions
+        val direction = caster.eyeLocation.direction.clone()
+        val target = getRayTraceEntity(caster, 16.0, 0.15)
+        val targetLocation: Location = if (target != null) {
+            if (target is LivingEntity) target.eyeLocation else target.location
+        } else {
+            caster.eyeLocation.clone().add(direction.clone().normalize().multiply(16.0))
+        }
 
-        /*
-        val context = CastingContext(
+        // Form the starting spell context
+        val spellContext = CastingContext(
             caster = caster,
             world = caster.world,
-            castingLocation = caster.location,
-            target = null,
-            targetLocation = null,
-            runes = wandRunes
+            castingLocation = caster.eyeLocation,
+            direction = direction,
+            target = target,
+            targetLocation = targetLocation,
+            runes = spellBuilder.runeSequence
         )
-        manifestRune.cast(context)
-        caster.setCooldown(equipment.itemInMainHand, 20)
 
-         */
+        val spell = spellBuilder.formSpell(spellContext)
+        spell.castSpell()
+        caster.setCooldown(equipment.itemInMainHand, 20)
     }
 
     fun arcaneScepterHandler(caster: LivingEntity) {
         if (caster !is Player) return
         val equipment = caster.equipment ?: return
-        val arcaneHand = equipment.itemInMainHand
-        if (caster.getCooldown(arcaneHand) > 0) return
+        val arcaneTool = equipment.itemInMainHand
+        val offHandItem = equipment.itemInOffHand
+        if (caster.getCooldown(arcaneTool) > 0) return
         equipment.itemInMainHand.damage(1, caster)
+        // ----------- BUILDING DEFAULT SPELL ----------
+        val spellBuilder = ArcaneSpellBuilder(arcaneTool, listOf(offHandItem))
+        val canBuildSpell = spellBuilder.canBuildSpell()
+        if (!canBuildSpell) return
 
-        // DEFAULT SCEPTER
-        val manifestRune = ManifestationRune.Zone()
-        val scepterRunes = mutableListOf<ArcaneRune>(
+        // Insert a default sequence
+        val scepterRunes = listOf<ArcaneRune>(
+            ManifestationRune.Zone(),
             ModifierRune.Range(16.0),
-            ModifierRune.Convergence(0.1))
+            ModifierRune.Amplify(2.0), // Default(1.0) + 2.0
+            ModifierRune.Convergence(0.1)
+        )
+        spellBuilder.insertSequence(scepterRunes)
 
-        // Check runes
-        checkOffhandRunes(caster, scepterRunes)
+        // Context params based on initial conditions
+        val direction = caster.eyeLocation.direction.clone()
+        val target = getRayTraceEntity(caster, 16.0, 0.15)
+        val targetLocation: Location = if (target != null) {
+            if (target is LivingEntity) target.eyeLocation else target.location
+        } else {
+            caster.eyeLocation.clone().add(direction.clone().normalize().multiply(16.0))
+        }
 
-        /*
-        val context = CastingContext(
+        // Form the starting spell context
+        val spellContext = CastingContext(
             caster = caster,
             world = caster.world,
-            castingLocation = caster.location,
-            target = null,
-            targetLocation = null,
-            runes = scepterRunes
+            castingLocation = caster.eyeLocation,
+            direction = direction,
+            target = target,
+            targetLocation = targetLocation,
+            runes = spellBuilder.runeSequence
         )
-        manifestRune.cast(context)
-        caster.setCooldown(equipment.itemInMainHand, 30)
 
-         */
+        val spell = spellBuilder.formSpell(spellContext)
+        spell.castSpell()
+        caster.setCooldown(equipment.itemInMainHand, 30)
     }
 
 
@@ -349,5 +284,54 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
 
     }
 
+    private fun checkOffhandRunes(caster: LivingEntity, runes: MutableList<ArcaneRune>) {
+        if (caster !is Player) return
+        val equipment = caster.equipment ?: return
+
+        // read
+        // JUST TO SHOWCASE
+        if (equipment.itemInOffHand.type == Material.BUNDLE) { // Temp bundle reader
+            val bundleContents = equipment.itemInOffHand.getData(DataComponentTypes.BUNDLE_CONTENTS) ?: return
+            if (bundleContents.contents().isEmpty()) return
+            val items = bundleContents.contents()
+            for (item in items) {
+                when (item.getItemNameId()) {
+                    "ruby" -> runes.add(ModifierRune.Source(DamageType.IN_FIRE, Particle.FLAME))
+                    "diamond" -> runes.add(ModifierRune.Amplify(4.0))
+                    "emerald" -> runes.add(ModifierRune.Wide(2.0))
+                    "echo_shard" -> runes.add(ModifierRune.Source(DamageType.SONIC_BOOM, Particle.SONIC_BOOM))
+                    "neptunian" -> runes.add(ModifierRune.Source(DamageType.FREEZE, Particle.SNOWFLAKE))
+                    "alexandrite" -> runes.add(ManifestationRune.Beam()) // overwrite or ADD!!!
+                    "kunzite" -> runes.add(ModifierRune.Convergence(1.0))
+                    "amethyst_shard" -> runes.add(ModifierRune.Range(16.0))
+                    "jovianite" -> runes.add(ModifierRune.Source(DamageType.MAGIC, Particle.WAX_OFF))
+                    "clock" -> runes.addAll(listOf(
+                        ModifierRune.Delay(3.0),
+                        ModifierRune.Source(DamageType.MAGIC, Particle.WAX_ON))
+                    )
+                }
+            }
+
+        }// TEMP offhand reader
+        else if (equipment.itemInOffHand.type != Material.AIR) {
+            when (equipment.itemInOffHand.getItemNameId()) {
+                "ruby" -> runes.add(ModifierRune.Source(DamageType.IN_FIRE, Particle.FLAME))
+                "diamond" -> runes.add(ModifierRune.Amplify(2.0))
+                "emerald" -> runes.add(ModifierRune.Wide(2.0))
+                "echo_shard" -> runes.add(ModifierRune.Source(DamageType.SONIC_BOOM, Particle.SONIC_BOOM))
+                "neptunian" -> runes.add(ModifierRune.Source(DamageType.FREEZE, Particle.SNOWFLAKE))
+                "alexandrite" -> runes.add(ManifestationRune.Beam()) // overwrite or ADD!!!
+                "kunzite" -> runes.add(ModifierRune.Convergence(1.0))
+                "amethyst_shard" -> runes.add(ModifierRune.Range(16.0))
+                "jovianite" -> runes.add(ModifierRune.Source(DamageType.MAGIC, Particle.WAX_OFF))
+                "clock" -> runes.addAll(listOf(
+                    ModifierRune.Delay(3.0),
+                    ModifierRune.Source(DamageType.MAGIC, Particle.WAX_ON))
+                )
+
+            }
+        }
+
+    }
 
 }

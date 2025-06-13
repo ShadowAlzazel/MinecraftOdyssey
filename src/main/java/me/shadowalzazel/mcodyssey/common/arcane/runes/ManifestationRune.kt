@@ -79,7 +79,7 @@ sealed class ManifestationRune : ArcaneRune(), RayTracerAndDetector,
 
         override fun build(context: CastingContext): ManifestBuilder {
             // DEFAULT build parameters
-            val damage = 3.0
+            val damage = 1.0
             val range = 16.0
             val radius = 3.0
             val aimAssist = 0.1
@@ -137,7 +137,7 @@ sealed class ManifestationRune : ArcaneRune(), RayTracerAndDetector,
 
         override fun build(context: CastingContext): ManifestBuilder {
             // DEFAULT build parameters
-            val damage = 4.0
+            val damage = 2.0
             val range = 16.0
             val aimAssist = 0.25
             // Return the default builder for this rune
@@ -158,12 +158,12 @@ sealed class ManifestationRune : ArcaneRune(), RayTracerAndDetector,
 
             // Temporary locations for beam
             val startLocation: Location = context.castingLocation ?: return
-            var endLocation: Location = context.targetLocation ?: return
+            val endLocation: Location
 
             //val target = getRayTraceEntity(context.caster, totalRange, aimAssist)
             val target = getPathTraceEntity(
                 startLocation,
-                endLocation,
+                context.direction,
                 listOf(context.caster),
                 totalRange,
                 aimAssist)
