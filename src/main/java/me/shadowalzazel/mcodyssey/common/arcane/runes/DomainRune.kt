@@ -1,10 +1,11 @@
 package me.shadowalzazel.mcodyssey.common.arcane.runes
 
 import me.shadowalzazel.mcodyssey.common.arcane.util.CastingContext
+import me.shadowalzazel.mcodyssey.common.arcane.util.RayTracerAndDetector
 import org.bukkit.entity.LivingEntity
 
 
-sealed class DomainRune: ArcaneRune() {
+sealed class DomainRune: ArcaneRune(), RayTracerAndDetector {
     // Domain runes change the casting context of the spell.
     // Changes like the location or entity where it originates or targets
 
@@ -17,6 +18,42 @@ sealed class DomainRune: ArcaneRune() {
         when (this) {
             is Origin -> {
                 domain.castingLocation = kernel.castingLocation
+            }
+            is Trace -> {
+                val traceEntity = getEntityRayTrace(
+                    domain.castingLocation,
+                    domain.direction,
+                    listOf(context.caster),
+                    20.0,
+                    0.05)
+
+                // Check if target
+                if (traceEntity is LivingEntity) {
+                    domain.targetLocation = traceEntity.location
+                    domain.target = traceEntity
+                }
+                // If not try ray trace again
+                else {
+                    val traceLocation = getHitLocationRayTrace(
+                        domain.castingLocation,
+                        domain.direction,
+                        listOf(context.caster),
+                        32.0,
+                        0.05)
+                    if (traceLocation != null) {
+                        domain.targetLocation = traceLocation
+                    } else {
+                        successful = false
+                    }
+                }
+
+            }
+            is Self -> {
+                // Add self to target-able entities
+                if (domain.caster in domain.ignoredTargets) {
+                    domain.ignoredTargets.remove(domain.caster)
+                }
+                domain.target = domain.caster
             }
             is Next -> {
                 val target = domain.target
@@ -95,13 +132,23 @@ sealed class DomainRune: ArcaneRune() {
 
     // This changes the `castingLocation` to the CURRENT `targetLocation`
     data object Next : DomainRune() {
-        override val name = "target"
-        override val displayName = "Target"
+        override val name = "next"
+        override val displayName = "next"
+    }
+
+    data object Trace : DomainRune() {
+        override val name = "trace"
+        override val displayName = "trace"
     }
 
     data object Link : DomainRune() {
         override val name = "link"
         override val displayName = "link"
+    }
+
+    data object Self : DomainRune() {
+        override val name = "self"
+        override val displayName = "self"
     }
 
     // This `returns` the nearest entity. Can stack with other variable runes

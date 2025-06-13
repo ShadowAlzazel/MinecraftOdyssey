@@ -4,10 +4,12 @@ import me.shadowalzazel.mcodyssey.common.arcane.runes.*
 import me.shadowalzazel.mcodyssey.common.arcane.util.CastingContext
 import me.shadowalzazel.mcodyssey.common.arcane.util.CastingBuilder
 import org.bukkit.entity.Item
+import org.bukkit.entity.LivingEntity
+import org.bukkit.event.entity.EntityRegainHealthEvent
 
 class ArcaneSpell(
     val source: ArcaneSource,
-    val originContext: CastingContext,
+    val kernelContext: CastingContext,
     val runeSequence: List<ArcaneRune>
 ) {
 
@@ -27,7 +29,7 @@ class ArcaneSpell(
         val runeCount = runeSequence.count()
 
         // Algo variables
-        val currentContext = originContext.clone()
+        val currentContext = kernelContext.clone()
         var castingRune: CastingRune? = null
 
         // Create a builder
@@ -54,7 +56,7 @@ class ArcaneSpell(
             }
             // Domain runes change context
             else if (rune is DomainRune) {
-                rune.change(originContext, currentContext)
+                rune.change(kernelContext, currentContext)
             }
 
             // Look for the manifest rune
@@ -147,6 +149,12 @@ class ArcaneSpell(
                         val itemToPickUp = items.first()
                         if (itemToPickUp is Item) {
                             itemToPickUp.teleport(context.castingLocation)
+                        }
+                    }
+                    is AugmentRune.Heal -> {
+                        val target = context.target
+                        if (target is LivingEntity) {
+                            target.heal(rune.value)
                         }
                     }
                     else -> {

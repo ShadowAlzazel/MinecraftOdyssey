@@ -76,6 +76,22 @@ interface VectorParticles {
         }
     }
 
+    fun spawnPointParticles(
+        particle: Particle,
+        center: Location,
+        count: Int,
+        jitterStrength: Double = 0.05) {
+        // Jitter/offsets the input value by a small amount
+        val jitter: (Double) -> Double = { original ->
+            original + kotlin.random.Random.nextDouble(-jitterStrength, jitterStrength)
+        }
+        // Particles
+        repeat(count) {
+            val particleLocation = center.clone().add(jitter(0.0), jitter(0.0), jitter(0.0))
+            center.world.spawnParticle(particle, particleLocation, 1, 0.0, 0.0, 0.0)
+        }
+    }
+
 
     fun spawnArcParticles(
         particle: Particle, center: Location, directionVector: Vector, pitchAngle: Double,

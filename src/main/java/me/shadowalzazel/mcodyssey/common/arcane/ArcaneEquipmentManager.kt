@@ -4,6 +4,7 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.arcane.runes.ArcaneRune
 import me.shadowalzazel.mcodyssey.common.arcane.runes.CastingRune
+import me.shadowalzazel.mcodyssey.common.arcane.runes.DomainRune
 import me.shadowalzazel.mcodyssey.common.arcane.runes.ModifierRune
 import me.shadowalzazel.mcodyssey.common.arcane.util.CastingContext
 import me.shadowalzazel.mcodyssey.common.arcane.util.RayTracerAndDetector
@@ -38,12 +39,6 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
 
         // Context params based on initial conditions
         val direction = caster.eyeLocation.direction.clone()
-        val target = getRayTraceEntity(caster, 16.0, 0.15)
-        val targetLocation: Location = if (target != null) {
-            if (target is LivingEntity) target.eyeLocation else target.location
-        } else {
-            caster.eyeLocation.clone().add(direction.clone().normalize().multiply(16.0))
-        }
 
         // Form the starting spell context
         val spellContext = CastingContext(
@@ -51,8 +46,8 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
             world = caster.world,
             castingLocation = caster.eyeLocation,
             direction = direction,
-            target = target,
-            targetLocation = targetLocation
+            target = null,
+            targetLocation = null
         )
 
         val spell = spellBuilder.formSpell(spellContext)
@@ -74,16 +69,23 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
 
         // Insert a default sequence
         val wandRunes = listOf<ArcaneRune>(
-            CastingRune.Beam(),
             ModifierRune.Range(16.0),
             ModifierRune.Amplify(4.0), // Default(2.0) + 4.0
-            ModifierRune.Convergence(0.35)
+            ModifierRune.Convergence(0.35),
+            CastingRune.Beam(),
         )
         spellBuilder.insertSequence(wandRunes)
 
         // Context params based on initial conditions
         val direction = caster.eyeLocation.direction.clone()
-        val target = getRayTraceEntity(caster, 16.0, 0.15)
+        //val target = getRayTraceEntity(caster, 16.0, 0.15)
+        val target = getEntityRayTrace(
+            caster.eyeLocation,
+            caster.eyeLocation.direction,
+            listOf(caster),
+            16.0,
+            0.15
+        )
         val targetLocation: Location = if (target != null) {
             if (target is LivingEntity) target.eyeLocation else target.location
         } else {
@@ -119,30 +121,22 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
 
         // Insert a default sequence
         val scepterRunes = listOf<ArcaneRune>(
-            CastingRune.Zone(),
+            DomainRune.Trace,
             ModifierRune.Range(16.0),
             ModifierRune.Amplify(3.0), // Default(1.0) + 3.0
-            ModifierRune.Convergence(0.1)
+            ModifierRune.Convergence(0.1),
+            CastingRune.Zone()
         )
         spellBuilder.insertSequence(scepterRunes)
-
-        // Context params based on initial conditions
-        val direction = caster.eyeLocation.direction.clone()
-        val target = getRayTraceEntity(caster, 16.0, 0.15)
-        val targetLocation: Location = if (target != null) {
-            if (target is LivingEntity) target.eyeLocation else target.location
-        } else {
-            caster.eyeLocation.clone().add(direction.clone().normalize().multiply(16.0))
-        }
 
         // Form the starting spell context
         val spellContext = CastingContext(
             caster = caster,
             world = caster.world,
             castingLocation = caster.eyeLocation,
-            direction = direction,
-            target = target,
-            targetLocation = targetLocation
+            direction = caster.eyeLocation.direction,
+            target = null,
+            targetLocation = null
         )
 
         val spell = spellBuilder.formSpell(spellContext)
@@ -183,7 +177,16 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
 
     fun arcaneCircle(user: LivingEntity, damage: Double, range: Double, radius: Double, aimAssist: Double) {
         // Logic
-        val circleLocation = getRayTraceLocation(user, range, aimAssist) ?: return
+        //val circleLocation = getRayTraceLocation(user, range, aimAssist) ?: return
+        val circleLocation = getHitLocationRayTrace(
+            user.location,
+            user.eyeLocation.direction,
+            listOf(user),
+            range,
+            aimAssist
+        ) ?: return
+
+
         val damageSource = createEntityDamageSource(user, null, type = DamageType.MAGIC)
         circleLocation.getNearbyLivingEntities(radius).forEach {
             it.damage(damage, damageSource)
@@ -216,7 +219,7 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
         val launchDirection = eyeDirection.multiply(1.3)
         //val arcDirection = eyeDirection.clone().setY(0.0).normalize().setY(0.8).normalize().multiply(1.3) // PRESET OR OVERRIDE MODES
         // Get Target from block ray trace or vector addition
-        val targetLocation = getRayTraceBlock(player, model) ?: eyeDirection.clone().multiply(48.0).toLocation(player.world)
+        val targetLocation = oldBlockRayTrace(player, model) ?: eyeDirection.clone().multiply(48.0).toLocation(player.world)
         // Spawn Missile
         val missile = (player.world.spawnEntity(player.eyeLocation, EntityType.SNOWBALL) as Snowball).also {
             it.item = mainHand.clone()

@@ -21,19 +21,6 @@ sealed class AugmentRune : ArcaneRune() {
         override val displayName = "coda"
     }
 
-
-    // ENVIRONMENT RUNES
-    class Light()  : AugmentRune() {
-        override val name = "light"
-        override val displayName = "light"
-    }
-
-    class Break(val value: Double = 0.0)  : AugmentRune() {
-        override val name = "break"
-        override val displayName = "break"
-    }
-
-
     data object PickUp : AugmentRune() {
         override val name = "pick_up"
         override val displayName = "pick_up"
@@ -43,6 +30,23 @@ sealed class AugmentRune : ArcaneRune() {
         override val name = "vulnerability"
         override val displayName = "vulnerability"
     }
+
+    // ENVIRONMENT RUNES
+    class Light()  : AugmentRune() {
+        override val name = "light"
+        override val displayName = "light"
+    }
+
+    class Heal(val value: Double)  : AugmentRune() {
+        override val name = "heal"
+        override val displayName = "heal"
+    }
+
+    class Break(val value: Double = 0.0)  : AugmentRune() {
+        override val name = "break"
+        override val displayName = "break"
+    }
+
 
     // MAYBE ITEM runes
     // detects if ITEM

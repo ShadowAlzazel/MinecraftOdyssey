@@ -10,31 +10,9 @@ import org.bukkit.util.Vector
 
 interface RayTracerAndDetector {
 
-    fun getRayTraceLocation(
-        entity: LivingEntity,
-        range: Double,
-        raySize: Double): Location? {
-        val entityPredicate = { e: Entity -> e != entity}
-        // TODO: start and end locations AND Nullable entity
-        val result = entity.world.rayTrace(
-            entity.eyeLocation, entity.eyeLocation.direction, range,
-            FluidCollisionMode.NEVER, true, raySize, entityPredicate)
-        if (result == null) return null
-        return result.hitEntity?.location ?: result.hitBlock?.location?.add(0.0, 1.0, 0.0)
-    }
+    // ---------- Newer --------
 
-    fun getRayTraceEntity(entity: LivingEntity, range: Double, raySize: Double): Entity? {
-        val entityPredicate = { e: Entity -> e != entity}
-        val result = entity.world.rayTrace(
-            entity.eyeLocation, entity.eyeLocation.direction, range,
-            FluidCollisionMode.NEVER, true, raySize, entityPredicate)
-        val target = result?.hitEntity ?: return null
-        val distance = entity.eyeLocation.distance(target.location)
-        if (range < distance) return null
-        return target
-    }
-
-    fun getPathTraceEntity(
+    fun getEntityRayTrace(
         start: Location,
         direction: Vector,
         filter: List<LivingEntity>,
@@ -56,13 +34,48 @@ interface RayTracerAndDetector {
         return target
     }
 
-    fun getPathTraceLocation(
+    fun getHitLocationRayTrace(
+        start: Location,
+        direction: Vector,
+        filter: List<LivingEntity>,
+        maxRange: Double,
+        raySize: Double): Location? {
+        // Setup
+        val filterPredicate = { e: Entity -> e !in filter}
+        // Do a ray trace for entities first
+        val entity = getEntityRayTrace(
+            start,
+            direction,
+            filter,
+            maxRange,
+            raySize)
+        if (entity is LivingEntity) {
+            return entity.location
+        } else {
+            val rayTraceBlock = start.world.rayTraceBlocks(
+                start,
+                direction,
+                maxRange,
+                FluidCollisionMode.NEVER)?.hitBlock
+            return if (rayTraceBlock != null) {
+                rayTraceBlock.location.toCenterLocation().add(0.0, 0.5, 0.0)
+            } else {
+                start.clone().add(direction.clone().normalize().multiply(maxRange))
+            }
+        }
+
+    }
+
+    @Deprecated("Not Used")
+    fun oldHitRayTrace(
         start: Location,
         direction: Vector,
         filter: List<LivingEntity>,
         range: Double,
         raySize: Double): Location? {
+        // Setup
         val entityPredicate = { e: Entity -> e !in filter}
+        // Do a ray trace for entities first
         val result = start.world.rayTrace(
             start,
             direction,
@@ -71,12 +84,13 @@ interface RayTracerAndDetector {
             true,
             raySize,
             entityPredicate)
+
         if (result == null) return null
         return result.hitEntity?.location ?: result.hitBlock?.location?.add(0.0, 1.0, 0.0)
     }
 
-
-    fun getRayTraceBlock(player: Player, model: String): Location? {
+    @Deprecated("Is bad kek")
+    fun oldBlockRayTrace(player: Player, model: String): Location? {
         val reach = WeaponMaps.ARCANE_RANGES[model] ?: return null
         val result = player.rayTraceBlocks(reach, FluidCollisionMode.NEVER) ?: return null
         val location = result.hitPosition.toLocation(player.world)

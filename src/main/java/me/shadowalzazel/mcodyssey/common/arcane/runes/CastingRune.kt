@@ -67,7 +67,56 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
         build(provided)
     }
 
-    // List of all manifestation runes
+    // List of all Casting runes
+
+    class Point : CastingRune() {
+        override val name = "point"
+        override val displayName = "point"
+
+        override fun build(builder: CastingBuilder) {
+            // DEFAULT build parameters
+            val damage = 0.0
+            // Modify the builder
+            builder.also {
+                it.damage = damage
+            }
+        }
+        override fun manifest(context: CastingContext, builder: CastingBuilder) {
+            // Unpack build
+            val damage = builder.damage
+            val damageType = builder.damageType
+            val particle = builder.particle
+
+            val filterEntities = mutableListOf(context.caster)
+            for (e in context.ignoredTargets) {
+                if (e is LivingEntity) filterEntities.add(e)
+            }
+
+
+            //  Point Logic
+            val pointLocation: Location
+            val target = context.target
+            if (target is LivingEntity) {
+                // Damage Logic
+                val damageSource = createEntityDamageSource(context.caster, null, damageType)
+                target.damage(damage, damageSource)
+                // Set point to target
+                pointLocation = target.eyeLocation
+            } else {
+                val targetLocation = context.targetLocation
+                pointLocation = targetLocation ?: context.castingLocation
+            }
+            // Particles
+            spawnPointParticles(
+                particle,
+                pointLocation,
+                10,
+                0.05
+            )
+
+        }
+    }
+
 
     class Zone : CastingRune() {
         override val name = "zone"
@@ -99,7 +148,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
             val particle = builder.particle
 
             // Circle Location and Detection Logic
-            //val circleCenter = getRayTraceLocation(context.caster, range, aimAssist) ?: return
+            /*
             val traceLocation = getPathTraceLocation(
                 context.castingLocation,
                 context.direction,
@@ -109,7 +158,10 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
             val circleCenter = traceLocation ?: context.targetLocation
             circleCenter ?: return
             // Change context
+
             context.targetLocation = circleCenter
+             */
+            val circleCenter = context.targetLocation ?: context.castingLocation
 
             val filterEntities = mutableListOf(context.caster)
             for (e in context.ignoredTargets) {
@@ -120,6 +172,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
             val damageSource = createEntityDamageSource(context.caster, null, damageType)
             circleCenter.getNearbyLivingEntities(radius).forEach {
                 if (it !in filterEntities) {
+                    // Detect if damage or heal
                     it.damage(damage, damageSource)
                     context.target = it
                 }
@@ -164,7 +217,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
             val particle = builder.particle
 
             // Temporary locations for beam
-            val startLocation: Location = context.castingLocation ?: return
+            val startLocation: Location = context.castingLocation
             val endLocation: Location
 
             //val target = getRayTraceEntity(context.caster, totalRange, aimAssist)
@@ -173,7 +226,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
                 if (e is LivingEntity) filterEntities.add(e)
             }
 
-            val target = getPathTraceEntity(
+            val target = getEntityRayTrace(
                 startLocation,
                 context.direction,
                 filterEntities,
@@ -187,18 +240,15 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
                 endLocation = target.eyeLocation
             }
             else {
-                // TODO: BUGGED probably not me Fix using a small offset vector
                 val rayTraceBlock = context.world.rayTraceBlocks(
                     context.castingLocation,
                     context.direction,
                     totalRange,
                     FluidCollisionMode.NEVER)?.hitBlock
-
-                if (rayTraceBlock != null) {
-                    endLocation = rayTraceBlock.location.toCenterLocation()
-                }
-                else {
-                    endLocation = context.castingLocation.clone().add(context.direction.clone().normalize().multiply(totalRange))
+                endLocation = if (rayTraceBlock != null) {
+                    rayTraceBlock.location.toCenterLocation()
+                } else {
+                    context.castingLocation.clone().add(context.direction.clone().normalize().multiply(totalRange))
                 }
             }
 
@@ -301,17 +351,6 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
         }
     }
 
-    class Point : CastingRune() {
-        override val name = "point"
-        override val displayName = "point"
-
-        override fun build(builder: CastingBuilder) {
-            TODO("Not yet implemented")
-        }
-        override fun manifest(context: CastingContext, builder: CastingBuilder) {
-            TODO("Not yet implemented")
-        }
-    }
 
 
 }
