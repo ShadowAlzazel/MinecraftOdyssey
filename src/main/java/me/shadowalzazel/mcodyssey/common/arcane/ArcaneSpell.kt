@@ -5,7 +5,6 @@ import me.shadowalzazel.mcodyssey.common.arcane.util.CastingContext
 import me.shadowalzazel.mcodyssey.common.arcane.util.CastingBuilder
 import org.bukkit.entity.Item
 import org.bukkit.entity.LivingEntity
-import org.bukkit.event.entity.EntityRegainHealthEvent
 
 class ArcaneSpell(
     val source: ArcaneSource,

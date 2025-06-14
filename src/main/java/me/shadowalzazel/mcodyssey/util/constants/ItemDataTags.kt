@@ -75,6 +75,7 @@ object ItemDataTags {
 
     // Arcane and runes
     const val STORED_ARCANE_RUNE: String = "odyssey.stored_arcane_rune"
+    const val INSCRIBED_RUNES: String = "odyssey.inscribed_runes"
 
     // Compasses
     const val IS_SCULK_FINDER: String = "odyssey.is_sculk_finder"

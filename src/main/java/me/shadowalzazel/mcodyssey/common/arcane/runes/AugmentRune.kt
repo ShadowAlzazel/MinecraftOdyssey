@@ -5,8 +5,6 @@ sealed class AugmentRune : ArcaneRune() {
     // Variable runes CHANGE how the sequence is READ
     // How the loop/run time behaves
 
-
-
     // Mimics/Clones the original casting context conditions
     // different from the ORIGIN rune, as that can have the `target` change
     data object Repeat : AugmentRune() {

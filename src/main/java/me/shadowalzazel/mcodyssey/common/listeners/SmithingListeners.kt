@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.common.listeners
 
+import me.shadowalzazel.mcodyssey.common.arcane.RuneInscribing
 import me.shadowalzazel.mcodyssey.common.smithing.ArmorUpgrading
 import me.shadowalzazel.mcodyssey.common.smithing.CustomTrimming
 import me.shadowalzazel.mcodyssey.common.smithing.SmithingMaps
@@ -11,7 +12,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.inventory.FurnaceSmeltEvent
 import org.bukkit.event.inventory.PrepareSmithingEvent
 
-object SmithingListeners : Listener, CustomTrimming, ToolUpgrading, ArmorUpgrading {
+object SmithingListeners : Listener, CustomTrimming, ToolUpgrading, ArmorUpgrading, RuneInscribing {
 
     //private val TOOL_UPGRADING = ToolUpgrading()
     //private val CUSTOM_TRIMMING = CustomTrimming()
@@ -46,6 +47,12 @@ object SmithingListeners : Listener, CustomTrimming, ToolUpgrading, ArmorUpgradi
         // Engraving
         else if (addition.type == Material.AMETHYST_SHARD && template.type == Material.PAPER) {
             customEngraving(event)
+        }
+        // Rune Inscribing
+        else if (addition.type == Material.INK_SAC
+            && template.type == Material.PAPER
+            && equipment.type == Material.BUNDLE) {
+            smithingRuneInscribing(event)
         }
     }
 

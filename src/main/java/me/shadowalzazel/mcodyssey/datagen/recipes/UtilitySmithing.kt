@@ -1,14 +1,17 @@
 package me.shadowalzazel.mcodyssey.datagen.recipes
 
 import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.common.items.Item
+import me.shadowalzazel.mcodyssey.datagen.ChoiceManager
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.*
 
-class UtilitySmithing { // USE THIS CLASS TO CREATE RECIPE WHICH ARE AVAILABLE TO BE MODIFIED
+class UtilitySmithing : ChoiceManager { // USE THIS CLASS TO CREATE RECIPE WHICH ARE AVAILABLE TO BE MODIFIED
 
     fun getRecipes(): List<Recipe> {
         return listOf(
+            runeInscribing(),
             bookCombining(),
             bookSmithing(),
             toolUpgrading(),
@@ -20,6 +23,19 @@ class UtilitySmithing { // USE THIS CLASS TO CREATE RECIPE WHICH ARE AVAILABLE T
     }
 
     /*-----------------------------------------------------------------------------------------------*/
+    // TODO: Test method to write runes and create a spell_scroll
+    private fun runeInscribing(): SmithingTransformRecipe {
+        val result = Item.SPELL_SCROLL.newItemStack()
+        val template = Item.SPELL_SCROLL.toRecipeChoice()
+        return SmithingTransformRecipe(
+            NamespacedKey(Odyssey.instance, "rune_inscribing"),
+            result,
+            template,
+            RecipeChoice.MaterialChoice(Material.BUNDLE),
+            RecipeChoice.MaterialChoice(Material.INK_SAC)
+        )
+    }
+
     // Book/Tome + Book/Tome
     private fun bookCombining(): SmithingTransformRecipe {
         val result = ItemStack(Material.ENCHANTED_BOOK)
