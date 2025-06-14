@@ -134,7 +134,7 @@ class ArcaneSpellBuilder(
                 "honeycomb" -> AugmentRune.Heal(4.0)
                 // Modifier
                 "diamond" -> ModifierRune.Amplify(4.0)
-                "emerald" -> ModifierRune.Wide(2.0)
+                "emerald" -> ModifierRune.Wide(1.0)
                 "clock" -> ModifierRune.Delay(2.0)
                 "kunzite" -> ModifierRune.Convergence(1.0)
                 "amethyst_shard" -> ModifierRune.Range(16.0)

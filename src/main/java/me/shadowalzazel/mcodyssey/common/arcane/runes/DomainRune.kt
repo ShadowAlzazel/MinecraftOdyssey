@@ -20,11 +20,12 @@ sealed class DomainRune: ArcaneRune(), RayTracerAndDetector {
                 domain.castingLocation = kernel.castingLocation
             }
             is Trace -> {
+                val range = 16.0
                 val traceEntity = getEntityRayTrace(
                     domain.castingLocation,
                     domain.direction,
                     listOf(context.caster),
-                    20.0,
+                    range,
                     0.05)
 
                 // Check if target
@@ -38,12 +39,12 @@ sealed class DomainRune: ArcaneRune(), RayTracerAndDetector {
                         domain.castingLocation,
                         domain.direction,
                         listOf(context.caster),
-                        32.0,
+                        range,
                         0.05)
                     if (traceLocation != null) {
                         domain.targetLocation = traceLocation
                     } else {
-                        successful = false
+                        domain.targetLocation = domain.castingLocation.clone().add(domain.direction.clone().normalize().multiply(range))
                     }
                 }
 
