@@ -2,59 +2,94 @@ package me.shadowalzazel.mcodyssey.common.arcane
 
 import me.shadowalzazel.mcodyssey.common.arcane.runes.*
 import me.shadowalzazel.mcodyssey.common.arcane.util.CastingContext
-import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
-import org.bukkit.Particle
-import org.bukkit.damage.DamageType
 import org.bukkit.inventory.ItemStack
 
+/**
+ * The init method handles the building of the runeSequence
+ */
 @Suppress("UnstableApiUsage")
 class ArcaneSpellBuilder(
-    val itemSource: ItemStack,
-    val additionalItems: List<ItemStack>
-) : DataTagManager {
+    arcaneItem: ItemStack,
+    additionalItems: List<ItemStack> = listOf(),
+    providedRunes: List<ArcaneRune>? = null,
+    providedSource: ArcaneSource? = null
+) : RuneDataManager {
 
     private var arcaneSource: ArcaneSource? = null
-    private var isBuildable: Boolean = false
-    val runeSequence: MutableList<ArcaneRune> = mutableListOf()
+    private var isBuildable: Boolean = true
+    private val runeSequence: MutableList<ArcaneRune> = mutableListOf()
+
+    // ------------ INIT METHODS -------------------
+
+    init {
+        // ----------- SOURCE -----------
+        // check Arcane Item and see if it has a source
+        val itemSource = getSourceFromItem(arcaneItem)
+        if (providedSource != null) {
+            arcaneSource = providedSource
+        }
+        else if (itemSource != null) {
+            arcaneSource = itemSource
+        }
+        else {
+            isBuildable = false
+        }
+        // Check Name
+        val itemName = arcaneItem.getItemNameId()
+        // ----------- INSCRIBED OR ITEM RUNES -----------
+        if (itemName == "spell_scroll") {
+            // Scroll read inscribed
+            val inscribedRunes = readInscribedRunes(arcaneItem)
+            if (inscribedRunes == null) {
+                isBuildable = false
+            }
+            else {
+                insertSequence(inscribedRunes)
+            }
+        }
+        else { // ADDITIONAL ITEMS IS USUALLY PEN
+            readRunesFromItemList(additionalItems)
+        }
+        // ----------- PROVIDED RUNES -----------
+        if (providedRunes != null) {
+            insertSequence(providedRunes)
+        }
+    }
+
+    /**
+     * Create the rune sequence by READING from additional items
+     */
+    private fun readRunesFromItemList(items: List<ItemStack>) {
+        val runeList = mutableListOf<ArcaneRune>()
+        // TODO: Method HERE! To deconstruct a PACKED bundle of items
+        val unPackedItems = items
+
+        // End
+        for (item in unPackedItems) {
+            val itemRune = getRuneFromItem(item) ?: continue
+            runeList.add(itemRune)
+        }
+        if (runeList.isEmpty()) {
+            return
+        }
+        // Go from left to right, and insert into sequence
+        insertSequence(runeList)
+    }
+
+
+    // ------------ GLOBAL METHODS -------------------
 
     /**
      * Basic function to detect if a spell can even be built
      */
     fun canBuildSpell(): Boolean {
-        // TODO: seperate logic and areas of concern
-        val possibleSource = getSourceFromItem(itemSource)
-        if (possibleSource != null) {
-            arcaneSource = possibleSource
-        } else {
-            return false
-        }
-
-        isBuildable = true
-        return true
+        return isBuildable
     }
 
-
-
-    /**
-     * This starts the build process for the spell
-     */
-    fun formSpell(context: CastingContext): ArcaneSpell {
-        createRuneSequence()
-
-        // If pass
-        //arcaneSource ?: return
-        println("Making Spell with this sequence: \n")
-        var index = 0
-        for (r in runeSequence) {
-            println("Rune [${index}] [${r.name}] $r \n")
-            index += 1
-        }
-
-        val spell = ArcaneSpell(arcaneSource!!, context, runeSequence)
-        return spell
+    fun getRuneSequence(): List<ArcaneRune> {
+        return runeSequence
     }
-
 
     fun insertSequence(runeList: List<ArcaneRune>) {
         for (r in runeList) {
@@ -62,6 +97,23 @@ class ArcaneSpellBuilder(
         }
     }
 
+    /**
+     * This starts the build process for the spell
+     */
+    fun buildSpell(context: CastingContext): ArcaneSpell {
+        // If pass
+        //arcaneSource ?: return
+        println("Making Spell with this sequence:")
+        var index = 0
+        for (r in runeSequence) {
+            println("Rune [${index}] [${r.name}] $r")
+            index += 1
+        }
+        println("")
+
+        val spell = ArcaneSpell(arcaneSource!!, context, runeSequence)
+        return spell
+    }
 
     // ----------------------------------------------------------
     // These methods and functions are for BUILDING the spell
@@ -69,7 +121,7 @@ class ArcaneSpellBuilder(
     /**
      * This gets an Arcane source from an item
      */
-    fun getSourceFromItem(item: ItemStack): ArcaneSource? {
+    private fun getSourceFromItem(item: ItemStack): ArcaneSource? {
         return when (item.getItemNameId()) {
             // GEM-SOURCES
             "ruby" -> ArcaneSource.Fire
@@ -82,9 +134,11 @@ class ArcaneSpellBuilder(
             "arcane_blade" -> ArcaneSource.Magic
             "arcane_book" -> ArcaneSource.Magic
             "arcane_wand" -> ArcaneSource.Magic
-            "arcane_pen" -> ArcaneSource.Radiant
             "arcane_scepter" -> ArcaneSource.Magic
-            "arcane_orb" -> ArcaneSource.Magic
+            // Special
+            "arcane_pen" -> ArcaneSource.Radiant
+            // Scrolls
+            "spell_scroll" -> ArcaneSource.Radiant
             else -> null
         }
 
@@ -98,7 +152,6 @@ class ArcaneSpellBuilder(
         val runeName = item.getStringTag(ItemDataTags.STORED_ARCANE_RUNE)
         val readRune = ArcaneRune.fromName(runeName ?: "none")
         // -------------------------------------
-        // TODO: Temporary item_name reader for testing
         if (readRune == null) {
             val directRune = ArcaneRune.fromItem(item)
             return directRune
@@ -121,19 +174,6 @@ class ArcaneSpellBuilder(
         for (item in items) {
             val itemRune = getRuneFromItem(item) ?: continue
             addRunes(itemRune, items.size)
-        }
-        return runes
-    }
-
-
-    /**
-     * This is a serial method. This reads runes 1 at a time, and executes in that order.
-     */
-    fun readRunesSerial(items: List<ItemStack>): MutableList<ArcaneRune> {
-        val runes = mutableListOf<ArcaneRune>()
-        for (item in items) {
-            val itemRune = getRuneFromItem(item) ?: continue
-            runes.add(itemRune)
         }
         return runes
     }
@@ -167,24 +207,5 @@ class ArcaneSpellBuilder(
 
         }
     }
-
-
-    fun createRuneSequence() {
-        // TODO: Temporary Logic
-        // IF pen or scroll
-        // readRunesUnordered -> decompress Unordered Runes
-
-        val runesRead = readRunesSerial(additionalItems)
-        if (runesRead.isEmpty()) return
-
-        // Go from left to right, and insert into sequence
-        for (r in runesRead) {
-            // ADD algorithm checks later
-            runeSequence.add(r)
-        }
-
-    }
-
-
 
 }

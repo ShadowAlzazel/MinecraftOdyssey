@@ -31,9 +31,12 @@ object ArcaneListeners: Listener, ArcaneEquipmentManager, DataTagManager {
         when (itemName) {
             "scroll" -> arcanePenWithScrollCastingHandler(player)
             "spell_scroll" -> {
+                // Scroll damage
                 val scroll = mainhand.clone()
                 scroll.damage(1, player)
                 event.replacement = scroll
+                // do spell
+                spellScrollCastingHandler(player, mainhand)
             }
         }
 

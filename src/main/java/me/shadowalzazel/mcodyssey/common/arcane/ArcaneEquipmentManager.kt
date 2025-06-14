@@ -2,10 +2,7 @@ package me.shadowalzazel.mcodyssey.common.arcane
 
 import io.papermc.paper.datacomponent.DataComponentTypes
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.common.arcane.runes.ArcaneRune
-import me.shadowalzazel.mcodyssey.common.arcane.runes.CastingRune
-import me.shadowalzazel.mcodyssey.common.arcane.runes.DomainRune
-import me.shadowalzazel.mcodyssey.common.arcane.runes.ModifierRune
+import me.shadowalzazel.mcodyssey.common.arcane.runes.*
 import me.shadowalzazel.mcodyssey.common.arcane.util.CastingContext
 import me.shadowalzazel.mcodyssey.common.arcane.util.RayTracerAndDetector
 import me.shadowalzazel.mcodyssey.common.combat.AttackHelper
@@ -17,6 +14,7 @@ import org.bukkit.*
 import org.bukkit.damage.DamageType
 import org.bukkit.entity.*
 import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
 import org.bukkit.util.Vector
 
@@ -33,7 +31,9 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
         val bundleContents = arcanePen.getData(DataComponentTypes.BUNDLE_CONTENTS) ?: return
 
         // Check if we can build spell
-        val spellBuilder = ArcaneSpellBuilder(itemSource = arcanePen, additionalItems = bundleContents.contents())
+        val spellBuilder = ArcaneSpellBuilder(
+            arcaneItem = arcanePen,
+            additionalItems = bundleContents.contents())
         val canBuildSpell = spellBuilder.canBuildSpell()
         if (!canBuildSpell) return
 
@@ -50,10 +50,37 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
             targetLocation = null
         )
 
-        val spell = spellBuilder.formSpell(spellContext)
+        val spell = spellBuilder.buildSpell(spellContext)
         spell.castSpell()
         //caster.world.playSound(caster.location, Sound.ENTITY_VILLAGER_WORK_CARTOGRAPHER, 1F, 0.5F)
     }
+
+    fun spellScrollCastingHandler(caster: LivingEntity, spellScroll: ItemStack) {
+        if (caster !is Player) return
+        // ----------- BUILDING SPELL ----------
+
+        // Check if we can build spell
+        val spellBuilder = ArcaneSpellBuilder(arcaneItem = spellScroll)
+        val canBuildSpell = spellBuilder.canBuildSpell()
+        if (!canBuildSpell) return
+
+        // Context params based on initial conditions
+        val direction = caster.eyeLocation.direction.clone()
+
+        // Form the starting spell context
+        val spellContext = CastingContext(
+            caster = caster,
+            world = caster.world,
+            castingLocation = caster.eyeLocation,
+            direction = direction,
+            target = null,
+            targetLocation = null
+        )
+
+        val spell = spellBuilder.buildSpell(spellContext)
+        spell.castSpell()
+    }
+
 
     fun arcaneWandHandler(caster: LivingEntity) {
         if (caster !is Player) return
@@ -63,18 +90,22 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
         if (caster.getCooldown(arcaneTool) > 0) return
         equipment.itemInMainHand.damage(1, caster)
         // ----------- BUILDING DEFAULT SPELL ----------
-        val spellBuilder = ArcaneSpellBuilder(arcaneTool, listOf(offHandItem))
-        val canBuildSpell = spellBuilder.canBuildSpell()
-        if (!canBuildSpell) return
 
-        // Insert a default sequence
+        // Create a default sequence
         val wandRunes = listOf<ArcaneRune>(
             ModifierRune.Range(16.0),
             ModifierRune.Amplify(4.0), // Default(2.0) + 4.0
             ModifierRune.Convergence(0.35),
             CastingRune.Beam(),
         )
-        spellBuilder.insertSequence(wandRunes)
+        // Build the spell
+        val spellBuilder = ArcaneSpellBuilder(
+            arcaneItem = arcaneTool,
+            additionalItems = listOf(offHandItem),
+            providedRunes = wandRunes,
+            providedSource = ArcaneSource.Magic)
+        val canBuildSpell = spellBuilder.canBuildSpell()
+        if (!canBuildSpell) return
 
         // Context params based on initial conditions
         val direction = caster.eyeLocation.direction.clone()
@@ -102,7 +133,7 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
             targetLocation = targetLocation
         )
 
-        val spell = spellBuilder.formSpell(spellContext)
+        val spell = spellBuilder.buildSpell(spellContext)
         spell.castSpell()
         caster.setCooldown(equipment.itemInMainHand, 20)
     }
@@ -115,11 +146,8 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
         if (caster.getCooldown(arcaneTool) > 0) return
         equipment.itemInMainHand.damage(1, caster)
         // ----------- BUILDING DEFAULT SPELL ----------
-        val spellBuilder = ArcaneSpellBuilder(arcaneTool, listOf(offHandItem))
-        val canBuildSpell = spellBuilder.canBuildSpell()
-        if (!canBuildSpell) return
 
-        // Insert a default sequence
+        // Create a default sequence
         val scepterRunes = listOf<ArcaneRune>(
             DomainRune.Trace,
             ModifierRune.Range(16.0),
@@ -127,7 +155,14 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
             ModifierRune.Convergence(0.1),
             CastingRune.Zone()
         )
-        spellBuilder.insertSequence(scepterRunes)
+        // Build the spell
+        val spellBuilder = ArcaneSpellBuilder(
+            arcaneItem = arcaneTool,
+            additionalItems = listOf(offHandItem),
+            providedRunes = scepterRunes,
+            providedSource = ArcaneSource.Magic)
+        val canBuildSpell = spellBuilder.canBuildSpell()
+        if (!canBuildSpell) return
 
         // Form the starting spell context
         val spellContext = CastingContext(
@@ -139,7 +174,7 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
             targetLocation = null
         )
 
-        val spell = spellBuilder.formSpell(spellContext)
+        val spell = spellBuilder.buildSpell(spellContext)
         spell.castSpell()
         caster.setCooldown(equipment.itemInMainHand, 30)
     }

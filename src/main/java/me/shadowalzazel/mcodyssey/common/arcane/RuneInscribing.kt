@@ -45,8 +45,6 @@ interface RuneInscribing : RuneDataManager {
 
         event.result = spellScroll
         event.inventory.result = spellScroll
-        println("3 Runes smith Here")
-
         /*
         // Was going to use persistent data containers here
 
