@@ -157,6 +157,9 @@ class ArcaneSpell(
                             target.heal(rune.value)
                         }
                     }
+                    is AugmentRune.Teleport -> {
+                        context.target?.teleport(context.castingLocation)
+                    }
                     else -> {
 
                     }

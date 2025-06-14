@@ -9,15 +9,23 @@ sealed class DomainRune: ArcaneRune(), RayTracerAndDetector {
     // Domain runes change the casting context of the spell.
     // Changes like the location or entity where it originates or targets
 
-    fun change(kernel: CastingContext, context: CastingContext) {
+    fun change(original: CastingContext, context: CastingContext) {
 
         val domain = context.clone()
         var successful = true
 
         // Want to change context
         when (this) {
+            is Kernel -> {
+                domain.castingLocation = original.castingLocation
+            }
             is Origin -> {
-                domain.castingLocation = kernel.castingLocation
+                val originLocation = context.caster.origin
+                if (originLocation != null) {
+                    domain.castingLocation = originLocation
+                } else {
+                    successful = false
+                }
             }
             is Trace -> {
                 val range = 16.0
@@ -129,6 +137,11 @@ sealed class DomainRune: ArcaneRune(), RayTracerAndDetector {
     data object Origin : DomainRune() {
         override val name = "origin"
         override val displayName = "Origin"
+    }
+
+    data object Kernel : DomainRune() {
+        override val name = "kernel"
+        override val displayName = "kernel"
     }
 
     // This changes the `castingLocation` to the CURRENT `targetLocation`

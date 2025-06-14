@@ -123,6 +123,7 @@ class ArcaneSpellBuilder(
                 "heart_of_the_sea" -> DomainRune.Next
                 "ender_eye" -> DomainRune.Nearby
                 "nether_star" -> DomainRune.Origin
+                "oak_sapling" -> DomainRune.Kernel
                 "popped_chorus_fruit" -> DomainRune.Invert
                 "coal" -> DomainRune.Differ
                 "stick" -> DomainRune.Trace
@@ -131,6 +132,7 @@ class ArcaneSpellBuilder(
                 "cactus" -> AugmentRune.Break(2.0)
                 "gold_ingot" -> AugmentRune.Coda
                 "iron_ingot" -> AugmentRune.PickUp
+                "ender_pearl" -> AugmentRune.Teleport
                 "honeycomb" -> AugmentRune.Heal(4.0)
                 // Modifier
                 "diamond" -> ModifierRune.Amplify(4.0)

@@ -47,6 +47,11 @@ sealed class AugmentRune : ArcaneRune() {
         override val displayName = "break"
     }
 
+    data object Teleport : AugmentRune() {
+        override val name = "teleport"
+        override val displayName = "teleport"
+    }
+
 
     // MAYBE ITEM runes
     // detects if ITEM
