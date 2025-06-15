@@ -44,6 +44,7 @@ class ArcaneSpellBuilder(
             if (inscribedRunes == null) {
                 isBuildable = false
             }
+            // For ARCANE TOOLS
             else {
                 insertSequence(inscribedRunes)
             }

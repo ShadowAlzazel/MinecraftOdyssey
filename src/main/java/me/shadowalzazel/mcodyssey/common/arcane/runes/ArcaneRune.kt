@@ -13,12 +13,12 @@ sealed class ArcaneRune {
 
     companion object {
         fun fromName(name: String, value: Double? = null): ArcaneRune? = when (name) {
-            // Casting
+            // Casting (The form of the spell, a ray or a zone)
             "beam" -> CastingRune.Beam()
             "zone" -> CastingRune.Zone()
             "ball" -> CastingRune.Ball()
             "point" -> CastingRune.Point()
-            // Domain
+            // Domain (change the casting context like location or target)
             "next" -> DomainRune.Next
             "nearby" -> DomainRune.Nearby
             "origin" -> DomainRune.Origin
@@ -27,13 +27,13 @@ sealed class ArcaneRune {
             "differ" -> DomainRune.Differ
             "trace" -> DomainRune.Trace
             "self" -> DomainRune.Self
-            // Augment
+            // Augment (effects like breaking blocks or TP)
             "break" -> AugmentRune.Break(value ?: 2.0)
             "coda" -> AugmentRune.Coda
             "pick_up" -> AugmentRune.PickUp
             "teleport" -> AugmentRune.Teleport
             "heal" -> AugmentRune.Heal(value ?: 4.0)
-            // Modifier
+            // Modifier (stat modifiers for other runes)
             "amplify" -> ModifierRune.Amplify(4.0)
             "wide" -> ModifierRune.Wide(value ?: 1.0)
             "delay" -> ModifierRune.Delay(2.0)

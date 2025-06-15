@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.common.arcane
 
 import io.papermc.paper.datacomponent.DataComponentTypes
+import io.papermc.paper.datacomponent.item.ItemLore
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.arcane.runes.*
 import me.shadowalzazel.mcodyssey.common.arcane.util.CastingContext
@@ -10,16 +11,61 @@ import me.shadowalzazel.mcodyssey.util.VectorParticles
 import me.shadowalzazel.mcodyssey.common.tasks.arcane_tasks.MagicMissileLauncher
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
+import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.TextComponent
 import org.bukkit.*
 import org.bukkit.damage.DamageType
 import org.bukkit.entity.*
 import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.event.player.PlayerItemConsumeEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
 import org.bukkit.util.Vector
 
 @Suppress("UnstableApiUsage")
 interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager, RayTracerAndDetector {
+
+
+    fun scrollConsumingHandler(event: PlayerItemConsumeEvent) {
+        val player = event.player
+        val equipment = player.equipment ?: return
+        val offhandName = equipment.itemInOffHand.getItemNameId()
+        when (offhandName) {
+            "arcane_pen" -> arcanePenWithScrollCastingHandler(player)
+            "enchanted_book" -> decryptingWithScrollHandler(event)
+        }
+
+    }
+
+    fun decryptingWithScrollHandler(event: PlayerItemConsumeEvent) {
+        val player = event.player
+        val equipment = player.equipment ?: return
+        val enchantedBook = equipment.itemInOffHand ?: return
+        val scrolls = equipment.itemInMainHand ?: return
+        // Check book enchants
+        val storedEnchants = enchantedBook.getData(DataComponentTypes.STORED_ENCHANTMENTS) ?: return
+        val enchantments = storedEnchants.enchantments()
+
+        if (enchantments.isEmpty()) return
+        val randomEnchant = enchantments.entries.random()
+
+        val decryptedRune = EnchantingRuneDecrypter.decryptEnchantSimple(randomEnchant.key)
+
+        val paperRune = ItemStack(Material.PAPER).apply {
+            val displayTextLore = mutableListOf<TextComponent>()
+            displayTextLore.add(Component.text(decryptedRune.displayName))
+            setData(DataComponentTypes.LORE, ItemLore.lore(displayTextLore))
+            setStringTag(ItemDataTags.STORED_ARCANE_RUNE, decryptedRune.name)
+            val itemName = "${decryptedRune.name}_rune"
+            setData(DataComponentTypes.ITEM_MODEL, NamespacedKey("odyssey", itemName))
+            setData(DataComponentTypes.ITEM_NAME, Component.text(itemName))
+        }
+
+        equipment.setItemInOffHand(ItemStack(Material.AIR))
+        player.inventory.addItem(paperRune)
+
+    }
 
 
     fun arcanePenWithScrollCastingHandler(caster: LivingEntity) {
