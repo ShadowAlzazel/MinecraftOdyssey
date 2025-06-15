@@ -1,9 +1,50 @@
 package me.shadowalzazel.mcodyssey.common.arcane.runes
 
+import me.shadowalzazel.mcodyssey.common.arcane.util.CastingContext
+import org.bukkit.entity.Item
+import org.bukkit.entity.LivingEntity
+
 @Suppress("UnstableApiUsage")
 sealed class AugmentRune : ArcaneRune() {
     // Variable runes CHANGE how the sequence is READ
     // How the loop/run time behaves
+
+    fun effect(context: CastingContext) {
+        when (this) {
+            is Coda -> {
+                // TODO: Special Case
+            }
+            is Break -> {
+                val block = context.targetLocation?.block
+                if (block != null) {
+                    // Use the wiki to find the values to break
+                    // https://minecraft.wiki/w/Module:Blast_resistance_values
+                    block.breakNaturally()
+                }
+            }
+            is PickUp -> {
+                val pickUpLocation = context.targetLocation ?: return
+                val nearby = pickUpLocation.getNearbyEntities(1.0, 1.0, 1.0)
+                if (nearby.isEmpty()) return
+                val items = nearby.filter { it is Item }
+                if (items.isEmpty()) return
+                val itemToPickUp = items.first()
+                if (itemToPickUp is Item) {
+                    itemToPickUp.teleport(context.castingLocation)
+                }
+            }
+            is Heal -> {
+                val target = context.target
+                if (target is LivingEntity) {
+                    target.heal(this.value)
+                }
+            }
+            is Teleport -> {
+                context.target?.teleport(context.castingLocation)
+            }
+            else -> {}
+        }
+    }
 
     // Mimics/Clones the original casting context conditions
     // different from the ORIGIN rune, as that can have the `target` change

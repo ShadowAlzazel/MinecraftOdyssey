@@ -28,7 +28,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
     AttackHelper, VectorParticles {
 
     // Helper class to run async calls later for runes
-    class ManifestAsyncRunner(
+    class DelayedCastRunner(
         val rune: CastingRune,
         val context: CastingContext,
         val build: CastingBuilder) : BukkitRunnable() {
@@ -51,7 +51,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
     fun cast(context: CastingContext, builder: CastingBuilder) {
         // Delay
         if (builder.delayInTicks > 0) {
-            val runner = ManifestAsyncRunner(this, context, builder)
+            val runner = DelayedCastRunner(this, context, builder)
             runner.runTaskLater(Odyssey.instance, builder.delayInTicks)
         } else {
             this.manifest(context, builder)
@@ -262,6 +262,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
             )
             context.targetLocation = endLocation
             context.world.playSound(context.castingLocation, Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, 2F, 2F)
+            context.world.playSound(endLocation, Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, 2F, 2F)
         }
 
     }
@@ -311,7 +312,6 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
             // Particles and Timer
             val ballEffects = ArcaneBallTimer(ball, particle)
             ballEffects.runTaskTimer(Odyssey.instance, 1, 2)
-
         }
     }
 

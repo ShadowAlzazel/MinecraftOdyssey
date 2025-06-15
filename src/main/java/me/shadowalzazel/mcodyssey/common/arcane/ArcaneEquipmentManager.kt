@@ -149,10 +149,10 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
 
         // Create a default sequence
         val scepterRunes = listOf<ArcaneRune>(
-            DomainRune.Trace,
             ModifierRune.Range(16.0),
             ModifierRune.Amplify(3.0), // Default(1.0) + 3.0
             ModifierRune.Convergence(0.1),
+            DomainRune.Trace,
             CastingRune.Zone()
         )
         // Build the spell
