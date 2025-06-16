@@ -21,7 +21,10 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerItemConsumeEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
+import org.bukkit.util.Transformation
 import org.bukkit.util.Vector
+import org.joml.Quaternionf
+import kotlin.math.abs
 
 @Suppress("UnstableApiUsage")
 interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager, RayTracerAndDetector {
@@ -79,6 +82,65 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
 
         val interactedBlock = event.clickedBlock
         println("BLOCK: $interactedBlock")
+        if (interactedBlock == null) return
+
+        // Math
+        val blockPerpendicularVector = event.blockFace.direction
+        val normalVector = blockPerpendicularVector.clone().normalize()
+
+        val blockCenterLocation = interactedBlock.location.toCenterLocation()
+
+        // This should get us right on the surface
+        val normalLocation = blockCenterLocation.clone().add(normalVector.clone().multiply(0.5))
+        // Set direction to normal
+        normalLocation.direction = normalVector
+
+        // Sneaking while using pen can rotate the item display
+        if (!player.isSneaking) {
+            // Get nearby
+            val nearby = normalLocation.getNearbyEntities(0.01, 0.01, 0.01)
+            if (nearby.isEmpty()) return
+            // Get item display
+            val displayRuneEntity = nearby.first { it is ItemDisplay }
+            if (displayRuneEntity !is ItemDisplay) return
+            // rotate using transformation
+            val spinVector = when {
+                // Top/bottom faces
+                abs(normalVector.y) > 0.9f -> Vector(0f, 0f, 1f)
+                // North/south faces
+                abs(normalVector.z) > 0.9f -> Vector(0f, 0f, 1f)
+                // East/west faces
+                abs(normalVector.x) > 0.9f -> Vector(0f, 0f, 1f)
+
+                else -> Vector(0f, 1f, 0f) // Default to Y-up
+            }
+            println("--------------------")
+            println("Normal Vector: $normalVector}")
+            println("Spin Vector: $spinVector}")
+
+            val angleRadians = Math.toRadians(45.0).toFloat()
+            val deltaRotation = Quaternionf().fromAxisAngleRad(spinVector.toVector3f(), angleRadians)
+            println("Delta Rotation: $deltaRotation")
+
+            // Get previous
+            val previousTransformation = displayRuneEntity.transformation
+            val rightRotationQ = previousTransformation.rightRotation
+            println("Previous RQ-Rotation: ${previousTransformation.rightRotation}")
+
+            val newRightRotationQ = deltaRotation.mul(Quaternionf(rightRotationQ))
+
+            val newTransformation = Transformation(
+                previousTransformation.translation,
+                previousTransformation.leftRotation,
+                previousTransformation.scale,
+                newRightRotationQ
+            )
+
+            println("New RQ-Rotation: ${newTransformation.rightRotation}")
+            displayRuneEntity.transformation = newTransformation
+
+            return
+        }
 
         // Get the top item
         val bundleContents = arcaneStylus.getData(DataComponentTypes.BUNDLE_CONTENTS) ?: return
@@ -87,7 +149,7 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
 
         // Try and get a rune
         val rune = ArcaneRune.getRuneFromItem(topItem) ?: return
-        val displayRune = ItemStack(Material.PAPER).also {
+        val displayRuneItem = ItemStack(Material.PAPER).also {
             val itemName = "${rune.name}_rune_mark"
             it.setData(DataComponentTypes.ITEM_MODEL, NamespacedKey("odyssey", "rune_mark"))
             // The selector DEPENDS on this
@@ -96,9 +158,9 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
 
         // TODO: Quaternion matrix transformation based on block face
         // TODO: The item will have a facing direction
-        val itemDisplay = player.world.spawnEntity(pointLocation, EntityType.ITEM_DISPLAY) as ItemDisplay
+        val itemDisplay = player.world.spawnEntity(normalLocation, EntityType.ITEM_DISPLAY) as ItemDisplay
         itemDisplay.also {
-            it.setItemStack(displayRune)
+            it.setItemStack(displayRuneItem)
             it.brightness = Display.Brightness(15, 15)
             it.isGlowing = false
             it.viewRange = 32F
