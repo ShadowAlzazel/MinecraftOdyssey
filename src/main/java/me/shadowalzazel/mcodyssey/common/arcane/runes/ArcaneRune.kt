@@ -23,16 +23,18 @@ sealed class ArcaneRune {
             "nearby" -> DomainRune.Nearby
             "origin" -> DomainRune.Origin
             "kernel" -> DomainRune.Kernel
-            "invert" -> DomainRune.Invert
+            "swap" -> DomainRune.Swap
             "differ" -> DomainRune.Differ
             "trace" -> DomainRune.Trace
             "self" -> DomainRune.Self
+            // "UP" -> targets 1 block up?
             // Augment (effects like breaking blocks or TP)
             "break" -> AugmentRune.Break(value ?: 2.0)
             "coda" -> AugmentRune.Coda
             "pick_up" -> AugmentRune.PickUp
             "teleport" -> AugmentRune.Teleport
             "heal" -> AugmentRune.Heal(value ?: 4.0)
+            // "levitation" -> If target is a block, move 1 up! if target is entity -> levitate?
             // Modifier (stat modifiers for other runes)
             "amplify" -> ModifierRune.Amplify(4.0)
             "wide" -> ModifierRune.Wide(value ?: 1.0)
@@ -53,7 +55,7 @@ sealed class ArcaneRune {
             "ender_eye" -> DomainRune.Nearby
             "nether_star" -> DomainRune.Origin
             "oak_sapling" -> DomainRune.Kernel
-            "popped_chorus_fruit" -> DomainRune.Invert
+            "popped_chorus_fruit" -> DomainRune.Swap
             "coal" -> DomainRune.Differ
             "stick" -> DomainRune.Trace
             "paper" -> DomainRune.Self

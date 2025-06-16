@@ -100,7 +100,7 @@ sealed class DomainRune: ArcaneRune(), RayTracerAndDetector {
                     successful = false
                 }
             }
-            is Invert -> {
+            is Swap -> {
                 // Swap domains
                 if (domain.targetLocation != null) {
                     val temp = domain.castingLocation
@@ -179,9 +179,9 @@ sealed class DomainRune: ArcaneRune(), RayTracerAndDetector {
     }
 
     // Switches the `cast` and `target` locations/entities in the context
-    data object Invert : DomainRune() {
-        override val name = "invert"
-        override val displayName = "Invert"
+    data object Swap : DomainRune() {
+        override val name = "swap"
+        override val displayName = "swap"
     }
 
 }

@@ -75,8 +75,11 @@ object EnchantingRuneDecrypter : EnchantmentManager, RuneDataManager {
     fun getRuneNamesFromEnchantment(enchant: Enchantment): List<String> = when(enchant.getNameId()) {
         "unbreaking" -> listOf("point", "amplify")
         "sharpness" -> listOf("point", "amplify")
-        "power" -> listOf("ball", "trace")
-        "efficiency" -> listOf("next", "Convergence")
+        "lure" -> listOf("beam", "amplify")
+        "power" -> listOf("beam", "trace")
+        "efficiency" -> listOf("break", "convergence")
+        "fortune" -> listOf("origin", "pick_up")
+        "looting" -> listOf("kernel", "pick_up")
         "riptide" -> listOf("next", "next")
         "mending" -> listOf("heal", "point", "self")
         "thorns" -> listOf("next", "nearby")

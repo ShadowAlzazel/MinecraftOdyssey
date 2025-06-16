@@ -4,7 +4,7 @@ import me.shadowalzazel.mcodyssey.common.arcane.util.CastingContext
 import org.bukkit.entity.Item
 import org.bukkit.entity.LivingEntity
 
-@Suppress("UnstableApiUsage")
+
 sealed class AugmentRune : ArcaneRune() {
     // Variable runes CHANGE how the sequence is READ
     // How the loop/run time behaves

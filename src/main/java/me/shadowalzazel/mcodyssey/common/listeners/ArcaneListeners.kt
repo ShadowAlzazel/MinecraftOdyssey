@@ -11,7 +11,6 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerItemConsumeEvent
 import org.bukkit.inventory.ItemStack
 
-@Suppress("UnstableApiUsage")
 object ArcaneListeners: Listener, ArcaneEquipmentManager, DataTagManager {
 
     @EventHandler(priority = EventPriority.LOW)
