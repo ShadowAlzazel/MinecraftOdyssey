@@ -161,6 +161,7 @@ object EntityTags {
     // Magic
     const val MAGIC_MISSILE: String = "odyssey.magic_missile"
     const val MAGIC_BALL: String = "odyssey.magic_ball"
+    const val RUNE_MARK: String = "odyssey:rune_mark"
 
 
     /*-----------------------------------------------------------------------------------------------*/

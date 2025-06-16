@@ -62,9 +62,12 @@ object ArcaneListeners: Listener, ArcaneEquipmentManager, DataTagManager {
         val itemName = mainhand.getItemNameId()
         // Sentries Passed
         when (itemName) {
+            // Tools
             "arcane_wand" -> arcaneWandHandler(player)
             "arcane_blade" -> arcaneBladeHandler(event)
             "arcane_scepter" -> arcaneScepterHandler(player)
+            // Others
+            "arcane_stylus" -> arcaneStylusDrawingHandler(event)
         }
 
     }

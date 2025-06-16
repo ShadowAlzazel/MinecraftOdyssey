@@ -48,7 +48,7 @@ interface RuneDataManager : DataTagManager {
         // Now create list of Arcane Rune
         val runes = mutableListOf<ArcaneRune>()
         for (runeName in listRunesNames) {
-            val rune = ArcaneRune.fromName(runeName) ?: continue
+            val rune = ArcaneRune.fromNameID(runeName) ?: continue
             runes.add(rune)
         }
 
@@ -81,9 +81,9 @@ interface RuneDataManager : DataTagManager {
 
         for (i in runeItems) {
             val runeID = i.getStringTag(ItemDataTags.STORED_ARCANE_RUNE)
-            val namedRune = ArcaneRune.fromName(runeID ?: "none")
+            val namedRune = ArcaneRune.fromNameID(runeID ?: "none")
             if (namedRune == null) {
-                val directRune = ArcaneRune.fromItem(i) ?: continue
+                val directRune = ArcaneRune.fromRawItem(i) ?: continue
                 runes.add(directRune)
             } else {
                 runes.add(namedRune)

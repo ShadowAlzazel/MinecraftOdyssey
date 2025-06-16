@@ -32,6 +32,7 @@ open class Item(
         // ---------------------------------- GENERIC DATA ITEMS -----------------------------------
         val ARCANE_BOOK = DataItem("arcane_book")
         val ARCANE_PEN = DataItem("arcane_pen")
+        val ARCANE_STYLUS = DataItem("arcane_stylus")
         val SPELL_SCROLL = DataItem("spell_scroll")
         val ANODIZED_TITANIUM_INGOT = DataItem("anodized_titanium_ingot")
         val COAGULATED_BLOOD = DataItem("coagulated_blood")

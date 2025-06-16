@@ -68,7 +68,7 @@ class ArcaneSpellBuilder(
 
         // End
         for (item in unPackedItems) {
-            val itemRune = getRuneFromItem(item) ?: continue
+            val itemRune = ArcaneRune.getRuneFromItem(item) ?: continue
             runeList.add(itemRune)
         }
         if (runeList.isEmpty()) {
@@ -147,21 +147,6 @@ class ArcaneSpellBuilder(
 
 
     /**
-     * This gets an arcane runes from an item
-     */
-    private fun getRuneFromItem(item: ItemStack): ArcaneRune? {
-        val runeName = item.getStringTag(ItemDataTags.STORED_ARCANE_RUNE)
-        val readRune = ArcaneRune.fromName(runeName ?: "none")
-        // -------------------------------------
-        if (readRune == null) {
-            val directRune = ArcaneRune.fromItem(item)
-            return directRune
-        }
-        return readRune
-    }
-
-
-    /**
      *  This reads runes, but does not care for the order.
      *  This does NOT preserve the original sequence.
      */
@@ -173,7 +158,7 @@ class ArcaneSpellBuilder(
             }
         }
         for (item in items) {
-            val itemRune = getRuneFromItem(item) ?: continue
+            val itemRune = ArcaneRune.getRuneFromItem(item) ?: continue
             addRunes(itemRune, items.size)
         }
         return runes

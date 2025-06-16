@@ -67,6 +67,48 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
 
     }
 
+    fun arcaneStylusDrawingHandler(event: PlayerInteractEvent) {
+        val player = event.player
+
+        // When using the player location, it takes the direction as well.
+        // So the rune is placed in the players direction
+        val pointLocation = event.interactionPoint ?: player.location
+
+        val equipment = player.equipment ?: return
+        val arcaneStylus = equipment.itemInMainHand ?: return
+
+        val interactedBlock = event.clickedBlock
+        println("BLOCK: $interactedBlock")
+
+        // Get the top item
+        val bundleContents = arcaneStylus.getData(DataComponentTypes.BUNDLE_CONTENTS) ?: return
+        if (bundleContents.contents().isEmpty()) return
+        val topItem = bundleContents.contents().first()
+
+        // Try and get a rune
+        val rune = ArcaneRune.getRuneFromItem(topItem) ?: return
+        val displayRune = ItemStack(Material.PAPER).also {
+            val itemName = "${rune.name}_rune_mark"
+            it.setData(DataComponentTypes.ITEM_MODEL, NamespacedKey("odyssey", "rune_mark"))
+            // The selector DEPENDS on this
+            it.setData(DataComponentTypes.ITEM_NAME, Component.text(itemName))
+        }
+
+        // TODO: Quaternion matrix transformation based on block face
+        // TODO: The item will have a facing direction
+        val itemDisplay = player.world.spawnEntity(pointLocation, EntityType.ITEM_DISPLAY) as ItemDisplay
+        itemDisplay.also {
+            it.setItemStack(displayRune)
+            it.brightness = Display.Brightness(15, 15)
+            it.isGlowing = false
+            it.viewRange = 32F
+            it.isPersistent = false
+            it.addScoreboardTag(EntityTags.RUNE_MARK)
+        }
+
+    }
+
+
 
     fun arcanePenWithScrollCastingHandler(caster: LivingEntity) {
         if (caster !is Player) return

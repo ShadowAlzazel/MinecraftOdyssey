@@ -15,6 +15,7 @@ class EquipmentRecipes : ChoiceManager {
         return listOf(
             chainHookRecipe(), tinkeredMusketRecipe(), tinkeredBowRecipe(), autoCrossbowRecipe(), warpingWandRecipe(),
             arcaneWandRecipe(), arcaneBladeRecipe(), arcaneScepterRecipe(), explosiveArrowRecipe(), alchemicalDriverRecipe(),
+            arcanePenRecipe(), arcaneStylusRecipe(),
             compactCrossbowRecipe(), voidLinkedKunaiRecipe(), alchemicalDiffuserRecipe()
         )
     }
@@ -155,6 +156,32 @@ class EquipmentRecipes : ChoiceManager {
         }
         return recipe
     }
+
+
+    private fun arcaneStylusRecipe(): ShapedRecipe {
+        val result = Item.ARCANE_STYLUS.newItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "arcane_stylus"), result).apply {
+            shape(" R ", " X ", "QAQ")
+            setIngredient('R', Material.RABBIT_HIDE)
+            setIngredient('Q', Material.RESIN_CLUMP)
+            setIngredient('X', Material.STICK)
+            setIngredient('A', Item.CRYSTAL_ALLOY_INGOT.toRecipeChoice())
+        }
+        return recipe
+    }
+
+    private fun arcanePenRecipe(): ShapedRecipe {
+        val result = Item.ARCANE_PEN.newItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "arcane_pen"), result).apply {
+            shape("SR", "X ", "A ")
+            setIngredient('R', Material.RABBIT_HIDE)
+            setIngredient('S', Item.SILVER_NUGGET.toRecipeChoice())
+            setIngredient('X', Material.STICK)
+            setIngredient('A', Item.CRYSTAL_ALLOY_INGOT.toRecipeChoice())
+        }
+        return recipe
+    }
+
 
     private fun warpingWandRecipe(): ShapedRecipe {
         val result = Item.WARPING_WAND.newItemStack(1)

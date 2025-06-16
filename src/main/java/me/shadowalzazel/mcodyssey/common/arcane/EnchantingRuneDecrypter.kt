@@ -92,7 +92,7 @@ object EnchantingRuneDecrypter : EnchantmentManager, RuneDataManager {
 
     fun decryptEnchantSimple(enchant: Enchantment): ArcaneRune {
         val runeName = getRuneNamesFromEnchantment(enchant).random()
-        return ArcaneRune.fromName(runeName) ?: ModifierRune.Amplify(4.0)
+        return ArcaneRune.fromNameID(runeName) ?: ModifierRune.Amplify(4.0)
     }
 
 

@@ -1,18 +1,21 @@
 package me.shadowalzazel.mcodyssey.common.arcane.runes
 
-import me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners.MiscListeners.getItemNameId
+import me.shadowalzazel.mcodyssey.common.arcane.RuneDataManager
+import me.shadowalzazel.mcodyssey.common.arcane.runes.DomainRune.Kernel.getItemNameId
+import me.shadowalzazel.mcodyssey.common.arcane.runes.DomainRune.Kernel.getStringTag
+import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import org.bukkit.Particle
 import org.bukkit.damage.DamageType
 import org.bukkit.inventory.ItemStack
 
 // Base sealed class for all runes
 @Suppress("UnstableApiUsage")
-sealed class ArcaneRune {
+sealed class ArcaneRune : RuneDataManager {
     abstract val name: String
     abstract val displayName: String
 
     companion object {
-        fun fromName(name: String, value: Double? = null): ArcaneRune? = when (name) {
+        fun fromNameID(name: String, value: Double? = null): ArcaneRune? = when (name) {
             // Casting (The form of the spell, a ray or a zone)
             "beam" -> CastingRune.Beam()
             "zone" -> CastingRune.Zone()
@@ -44,7 +47,7 @@ sealed class ArcaneRune {
             else -> null
         }
 
-        fun fromItem(item: ItemStack): ArcaneRune? = when (item.getItemNameId()) {
+        fun fromRawItem(item: ItemStack): ArcaneRune? = when (item.getItemNameId()) {
             // Casting
             "alexandrite" -> CastingRune.Beam()
             "snowball" -> CastingRune.Zone()
@@ -78,6 +81,21 @@ sealed class ArcaneRune {
             "jovianite" -> ModifierRune.Source(DamageType.MAGIC, Particle.WAX_OFF)
             else -> null
         }
+
+        /**
+         * This gets an arcane runes from an item
+         */
+        fun getRuneFromItem(item: ItemStack): ArcaneRune? {
+            val runeName = item.getStringTag(ItemDataTags.STORED_ARCANE_RUNE)
+            val readRune = fromNameID(runeName ?: "none")
+            // -------------------------------------
+            if (readRune == null) {
+                val directRune = fromRawItem(item)
+                return directRune
+            }
+            return readRune
+        }
+
 
     }
 

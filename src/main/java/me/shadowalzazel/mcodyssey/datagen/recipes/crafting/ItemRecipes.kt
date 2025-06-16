@@ -15,7 +15,7 @@ class ItemRecipes : ChoiceManager {
         return listOf(
             soulSteelUpgradeTemplateRecipe(), titaniumUpgradeTemplateRecipe(), iridiumUpgradeTemplateRecipe(),
             mithrilUpgradeTemplateRecipe(), blankTomeRecipe(), clayTotemRecipe(), clayOrbRecipe(), claySkullRecipe(), clayDowelRecipe(),
-            clayKeyRecipe(), clayRodsRecipe(), scrollRecipe(), arcanePenRecipe(),
+            clayKeyRecipe(), clayRodsRecipe(), scrollRecipe(),
             pommelPartUpgradeTemplateRecipe(), hiltPartUpgradeTemplateRecipe(), bladePartUpgradeTemplateRecipe(), handlePartUpgradeTemplateRecipe(),
             mastercraftedToolTemplateRecipe(), crystalAlloyIngotRecipe(), crystalAlloyUpgradeTemplateRecipe()
         )
@@ -91,19 +91,6 @@ class ItemRecipes : ChoiceManager {
         }
         return recipe
     }
-
-    private fun arcanePenRecipe(): ShapedRecipe {
-        val result = Item.ARCANE_PEN.newItemStack(1)
-        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "arcane_pen"), result).apply {
-            shape("SR", "X ", "A ")
-            setIngredient('R', Material.RABBIT_HIDE)
-            setIngredient('S', Item.SILVER_NUGGET.toRecipeChoice())
-            setIngredient('X', Material.STICK)
-            setIngredient('A', Item.CRYSTAL_ALLOY_INGOT.toRecipeChoice())
-        }
-        return recipe
-    }
-
 
     // Glyphic
     private fun clayOrbRecipe(): ShapedRecipe {

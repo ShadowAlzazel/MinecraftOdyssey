@@ -8,6 +8,7 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import org.bukkit.Material
 import org.bukkit.event.inventory.PrepareSmithingEvent
+import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 
 @Suppress("UnstableApiUsage")
@@ -45,19 +46,8 @@ interface RuneInscribing : RuneDataManager {
 
         event.result = spellScroll
         event.inventory.result = spellScroll
-        /*
-        // Was going to use persistent data containers here
-
-        var counter = 0
-        val runeMap: MutableMap<String, String> = mutableMapOf()
-        for (r in runeSequence) {
-            val key = "$counter"
-            runeMap[key] = r.name
-            counter++
-        }
-
-         */
-
     }
+
+
 
 }
