@@ -24,6 +24,7 @@ import org.bukkit.inventory.meta.Damageable
 import org.bukkit.util.Transformation
 import org.bukkit.util.Vector
 import org.joml.Quaternionf
+import org.joml.Vector3f
 import kotlin.math.abs
 
 @Suppress("UnstableApiUsage")
@@ -114,18 +115,18 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
 
                 else -> Vector(0f, 1f, 0f) // Default to Y-up
             }
-            println("--------------------")
-            println("Normal Vector: $normalVector}")
-            println("Spin Vector: $spinVector}")
+            //println("--------------------")
+            //println("Normal Vector: $normalVector}")
+            //println("Spin Vector: $spinVector}")
 
             val angleRadians = Math.toRadians(45.0).toFloat()
             val deltaRotation = Quaternionf().fromAxisAngleRad(spinVector.toVector3f(), angleRadians)
-            println("Delta Rotation: $deltaRotation")
+            //println("Delta Rotation: $deltaRotation")
 
             // Get previous
             val previousTransformation = displayRuneEntity.transformation
             val rightRotationQ = previousTransformation.rightRotation
-            println("Previous RQ-Rotation: ${previousTransformation.rightRotation}")
+            //println("Previous RQ-Rotation: ${previousTransformation.rightRotation}")
 
             val newRightRotationQ = deltaRotation.mul(Quaternionf(rightRotationQ))
 
@@ -136,9 +137,24 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
                 newRightRotationQ
             )
 
-            println("New RQ-Rotation: ${newTransformation.rightRotation}")
+            //println("New RQ-Rotation: ${newTransformation.rightRotation}")
             displayRuneEntity.transformation = newTransformation
+            //println("FINAL Transformation")
+            //println(displayRuneEntity.transformation)
 
+            /*
+            // DOESNT WORK
+            val pointVector = Vector3f(normalVector.x.toFloat(), normalVector.y.toFloat(), normalVector.z.toFloat())
+            newTransformation.rightRotation.transform(pointVector)
+
+            println("Pointing Vector: ${pointVector.normalize()}")
+
+            normalLocation.world.spawnParticle(
+                Particle.WITCH,
+                normalLocation.clone().add(pointVector.x.toDouble(), pointVector.y.toDouble(), pointVector.z.toDouble()),
+                15)
+
+             */
             return
         }
 
