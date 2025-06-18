@@ -93,7 +93,6 @@ class ArcaneSpell(
      */
     fun createCastingCycle() {
         // Local Cycle Variables
-        val cycleContext = sharedContext
         var castingRune: CastingRune? = null
         var triggerCast = false
         // Create a builder

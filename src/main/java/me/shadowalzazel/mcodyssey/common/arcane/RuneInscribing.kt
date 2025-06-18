@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.common.arcane
 
 import io.papermc.paper.datacomponent.DataComponentTypes
+import io.papermc.paper.datacomponent.item.Consumable
 import io.papermc.paper.datacomponent.item.ItemLore
 import me.shadowalzazel.mcodyssey.common.arcane.runes.ArcaneRune
 import me.shadowalzazel.mcodyssey.common.items.Item
@@ -36,10 +37,21 @@ interface RuneInscribing : RuneDataManager {
 
         val runesToInscribe = mutableListOf<ArcaneRune>()
         val displayTextLore = mutableListOf<TextComponent>()
+        var runeCount = 0
         for (r in penRunes) {
             runesToInscribe.add(r)
             displayTextLore.add(Component.text(r.displayName))
+            runeCount++
         }
+
+        val spellScrollCast = spellScroll.getData(DataComponentTypes.CONSUMABLE)!!
+        val newCastConsumable = Consumable.consumable()
+        newCastConsumable.animation(spellScrollCast.animation())
+        newCastConsumable.sound(spellScrollCast.sound())
+        newCastConsumable.consumeSeconds(runeCount * 0.4F)
+
+        spellScroll.setData(DataComponentTypes.CONSUMABLE, newCastConsumable.build())
+
 
         storeInscribedRunes(spellScroll, runesToInscribe)
         spellScroll.setData(DataComponentTypes.LORE, ItemLore.lore(displayTextLore))
