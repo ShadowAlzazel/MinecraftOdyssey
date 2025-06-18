@@ -5,7 +5,7 @@
  */
 
 group = "me.shadowalzazel"
-version = "1.0.3-ALPHA-1.21.5"
+version = "1.0.4-ALPHA-1.21.6"
 description = "A server side expansion pack for a new minecraft adventure!"
 
 plugins {
@@ -35,10 +35,10 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.5-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.6-R0.1-SNAPSHOT")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
     //implementation(kotlin("stdlib-jdk21"))
-    paperweight.paperDevBundle("1.21.5-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.21.6-R0.1-SNAPSHOT")
 }
 
 publishing {
@@ -50,7 +50,7 @@ publishing {
 tasks {
     // Configure reobfJar to run when invoking the build task
     assemble {
-        dependsOn(reobfJar)
+        //dependsOn(reobfJar)
     }
 
     compileJava {
@@ -68,7 +68,7 @@ tasks {
             "name" to project.name,
             "version" to project.version,
             "description" to project.description,
-            "apiVersion" to "1.21.5"
+            "apiVersion" to "1.21.6"
         )
         inputs.properties(props)
         filesMatching("plugin.yml") {
