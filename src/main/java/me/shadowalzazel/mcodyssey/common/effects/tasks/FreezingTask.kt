@@ -10,7 +10,11 @@ import org.bukkit.scheduler.BukkitRunnable
 
 // FREEZING task
 @Suppress("UnstableApiUsage")
-class FreezingTask(private val entity: LivingEntity, private val amplifier: Int, private val maxCount: Int) : BukkitRunnable() {
+class FreezingTask(
+    private val entity: LivingEntity,
+    private val amplifier: Int,
+    private val maxCount: Int) : BukkitRunnable()
+{
     private var timer = System.currentTimeMillis()
     private var counter = 0
 

@@ -28,7 +28,7 @@ sealed class ArcaneRune : RuneDataManager {
             "kernel" -> DomainRune.Kernel
             "swap" -> DomainRune.Swap
             "differ" -> DomainRune.Differ
-            "trace" -> DomainRune.Trace
+            "direct" -> DomainRune.Direct
             "self" -> DomainRune.Self
             // "UP" -> targets 1 block up?
             // Augment (effects like breaking blocks or TP)
@@ -60,7 +60,7 @@ sealed class ArcaneRune : RuneDataManager {
             "oak_sapling" -> DomainRune.Kernel
             "popped_chorus_fruit" -> DomainRune.Swap
             "coal" -> DomainRune.Differ
-            "stick" -> DomainRune.Trace
+            "stick" -> DomainRune.Direct
             "paper" -> DomainRune.Self
             // Augment
             "cactus" -> AugmentRune.Break(2.0)

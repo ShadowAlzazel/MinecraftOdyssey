@@ -8,9 +8,11 @@ import me.shadowalzazel.mcodyssey.common.smithing.ToolUpgrading
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.FurnaceSmeltEvent
 import org.bukkit.event.inventory.PrepareSmithingEvent
+import org.bukkit.event.inventory.SmithItemEvent
 
 object SmithingListeners : Listener, CustomTrimming, ToolUpgrading, ArmorUpgrading, RuneInscribing {
 
@@ -56,6 +58,23 @@ object SmithingListeners : Listener, CustomTrimming, ToolUpgrading, ArmorUpgradi
         }
     }
 
+    @EventHandler(priority = EventPriority.HIGH)
+    fun smithingDoneHandler(event: SmithItemEvent) {
+        val smithingInventory = event.inventory
+        val result = smithingInventory.result ?: return
+        val template = smithingInventory.inputTemplate ?: return
+        val mineral = smithingInventory.inputMineral ?: return
+        val equipment = smithingInventory.inputEquipment ?: return
+        val player = event.whoClicked
+
+        if (equipment.getItemNameId() == "arcane_pen") {
+            val overflow = player.inventory.addItem(equipment.clone())
+            if (overflow.isNotEmpty()) {
+                player.world.dropItem(player.location, overflow[0]!!)
+            }
+        }
+
+    }
 
     @EventHandler
     fun furnaceFinishTemperItem(event: FurnaceSmeltEvent) {

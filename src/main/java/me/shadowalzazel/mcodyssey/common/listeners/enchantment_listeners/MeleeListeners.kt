@@ -1,7 +1,6 @@
 package me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners
 
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent
-import io.papermc.paper.command.brigadier.argument.ArgumentTypes.world
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.combat.AttackHelper
 import me.shadowalzazel.mcodyssey.common.effects.EffectsManager
@@ -282,6 +281,9 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
                             it.addScoreboardTag(EntityTags.LODESIGHT_BLOCK)
                         }
                         heldItem.damage(4, player)
+                        // Set to remove
+                        val removerTask = RemoveEntityLater(blockDisplay)
+                        removerTask.runTaskLater(Odyssey.instance, 20 * 4)
                         maxCount += 1
                     }
                 }

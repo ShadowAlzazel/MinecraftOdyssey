@@ -22,7 +22,10 @@ interface AttackHelper {
         val sweepRadius = radius ?: attacker.location.distance(victim.location)
         val targets = attacker.getNearbyEntities(sweepRadius, sweepRadius, sweepRadius).filter {
             it != victim && it != attacker && it is LivingEntity
-        }
+        }.toMutableList()
+        // Remove passengers
+        targets.removeAll { it.passengers.contains(attacker) }
+
         val originDirection = victim.location.subtract(attacker.location).toVector()
         victim.scoreboardTags.add(EntityTags.HIT_BY_AOE_SWEEP)
         for (entity in targets) {

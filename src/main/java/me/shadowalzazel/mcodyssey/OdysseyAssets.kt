@@ -22,11 +22,12 @@ import java.net.URI
 object OdysseyAssets : Listener, RegistryTagManager, DataTagManager {
 
     // Put hash into resource-pack-sha1 WITHIN server.properties
-    private const val RESOURCE_PACK_HASH = "990e197c33f1e0e64f8f2f3a7680df58285a9889"
+    private const val RESOURCE_PACK_HASH = "ceb2e1091a8e9304beab4fb0a4e2fdfa59c41c69"
 
     private fun resourcePackHandler(player: Player) {
         // ----------------------------------------------------------------------------------------
-        val packString = "https://www.dropbox.com/scl/fi/jo1myyt0fih0qk13qoh6u/OdysseyResourcePack-1.21.6.zip?dl=1"
+        //https://www.dropbox.com/scl/fi/jo1myyt0fih0qk13qoh6u/OdysseyResourcePack-1.21.6.zip?rlkey=9odhbvk2zh3w1ai15yqu2al5z&st=m5d8my0x&dl=0
+        val packString = "https://www.dropbox.com/s/2sdfqy76ym39h44/odyssey-resource-pack.zip?dl=1"
 
         // Request to add resource pack
         val text = Component.text("Please allow Odyssey to download a server side resource pack!", TextColor.color(255, 170, 0))
@@ -35,7 +36,7 @@ object OdysseyAssets : Listener, RegistryTagManager, DataTagManager {
             uri(packURI)
             hash(RESOURCE_PACK_HASH)
         }
-
+        // Request
         val requestBuilder = ResourcePackRequest.resourcePackRequest().apply {
             packs(packInfoBuilder)
             prompt(text)

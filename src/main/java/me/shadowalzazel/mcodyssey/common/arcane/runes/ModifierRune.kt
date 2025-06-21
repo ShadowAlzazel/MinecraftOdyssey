@@ -27,7 +27,6 @@ sealed class ModifierRune : ArcaneRune() {
         override val value = value ?: 0.0
     }
 
-
     class Source(
         val damageType: DamageType,
         val particle: Particle

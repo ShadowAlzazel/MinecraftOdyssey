@@ -182,7 +182,7 @@ object EnchantingListeners : Listener, TomeEnchanting, RegistryTagManager {
     }
 
     @EventHandler(priority = EventPriority.HIGH)
-    fun smithingDoneHandler(event: SmithItemEvent) {
+    fun smithingEnchantDoneHandler(event: SmithItemEvent) {
         val smithingInventory = event.inventory
         val result = smithingInventory.result ?: return
         val template = smithingInventory.inputTemplate ?: return
@@ -195,7 +195,7 @@ object EnchantingListeners : Listener, TomeEnchanting, RegistryTagManager {
         val isTome = (template.type == Material.ENCHANTED_BOOK)
         // When for tomes
         if (hasLapis && isTome) {
-            when(template.getItemIdentifier()) {
+            when(template.getItemNameId()) {
                 "tome_of_avarice" -> {
                     tomeOfAvaricePostEffect(equipment, event.viewers)
                 }

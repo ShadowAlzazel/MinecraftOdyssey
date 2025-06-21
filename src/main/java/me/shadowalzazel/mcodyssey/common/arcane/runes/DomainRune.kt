@@ -27,7 +27,7 @@ sealed class DomainRune: ArcaneRune(), RayTracerAndDetector {
                     successful = false
                 }
             }
-            is Trace -> {
+            is Direct -> {
                 val range = 16.0
                 val traceEntity = getEntityRayTrace(
                     domain.castingLocation,
@@ -141,47 +141,53 @@ sealed class DomainRune: ArcaneRune(), RayTracerAndDetector {
 
     data object Kernel : DomainRune() {
         override val name = "kernel"
-        override val displayName = "kernel"
+        override val displayName = "Kernel"
     }
 
     // This changes the `castingLocation` to the CURRENT `targetLocation`
     data object Next : DomainRune() {
         override val name = "next"
-        override val displayName = "next"
+        override val displayName = "Next"
     }
 
-    data object Trace : DomainRune() {
+    data object Direct : DomainRune() {
         override val name = "trace"
-        override val displayName = "trace"
+        override val displayName = "Trace"
     }
 
     data object Link : DomainRune() {
         override val name = "link"
-        override val displayName = "link"
+        override val displayName = "Link"
     }
 
     data object Self : DomainRune() {
         override val name = "self"
-        override val displayName = "self"
+        override val displayName = "Self"
     }
 
     // This `returns` the nearest entity. Can stack with other variable runes
     // Sets the `target` to the nearest `entity`
     data object Nearby : DomainRune() {
         override val name = "nearby"
-        override val displayName = "nearby"
+        override val displayName = "Nearby"
     }
 
     // Looks for a new entity/location that is NOT the same
     data object Differ : DomainRune() {
         override val name = "differ"
-        override val displayName = "differ"
+        override val displayName = "Differ"
+    }
+
+    // Looks for a new entity/location that is NOT the same
+    data object Omni : DomainRune() {
+        override val name = "omni"
+        override val displayName = "Omni"
     }
 
     // Switches the `cast` and `target` locations/entities in the context
     data object Swap : DomainRune() {
         override val name = "swap"
-        override val displayName = "swap"
+        override val displayName = "Swap"
     }
 
 }

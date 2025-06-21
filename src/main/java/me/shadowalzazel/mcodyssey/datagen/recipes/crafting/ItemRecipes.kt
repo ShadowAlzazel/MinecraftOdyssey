@@ -7,6 +7,7 @@ import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.Recipe
 import org.bukkit.inventory.ShapedRecipe
+import org.bukkit.inventory.ShapelessRecipe
 import org.bukkit.inventory.recipe.CraftingBookCategory
 
 class ItemRecipes : ChoiceManager {
@@ -14,6 +15,7 @@ class ItemRecipes : ChoiceManager {
     fun getRecipes(): List<Recipe> {
         return listOf(
             soulSteelUpgradeTemplateRecipe(), titaniumUpgradeTemplateRecipe(), iridiumUpgradeTemplateRecipe(),
+            silverIngotRecipe(), silverNuggetRecipe(),
             mithrilUpgradeTemplateRecipe(), blankTomeRecipe(), clayTotemRecipe(), clayOrbRecipe(), claySkullRecipe(), clayDowelRecipe(),
             clayKeyRecipe(), clayRodsRecipe(), scrollRecipe(),
             pommelPartUpgradeTemplateRecipe(), hiltPartUpgradeTemplateRecipe(), bladePartUpgradeTemplateRecipe(), handlePartUpgradeTemplateRecipe(),
@@ -65,6 +67,25 @@ class ItemRecipes : ChoiceManager {
             setIngredient('C', silverChoices())
             setIngredient('E', Material.DIAMOND)
             setIngredient('S', Material.COBBLED_DEEPSLATE)
+            category = CraftingBookCategory.MISC
+        }
+        return recipe
+    }
+
+    private fun silverIngotRecipe(): ShapedRecipe {
+        val result = Item.SILVER_INGOT.newItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "silver_ingot"), result).apply {
+            shape("NNN", "NNN", "NNN")
+            setIngredient('N', Item.SILVER_NUGGET.toRecipeChoice())
+            category = CraftingBookCategory.MISC
+        }
+        return recipe
+    }
+
+    private fun silverNuggetRecipe(): ShapelessRecipe {
+        val result = Item.SILVER_NUGGET.newItemStack(9)
+        val recipe = ShapelessRecipe(NamespacedKey(Odyssey.instance, "silver_nugget"), result).apply {
+            addIngredient(Item.SILVER_INGOT.newItemStack(1))
             category = CraftingBookCategory.MISC
         }
         return recipe

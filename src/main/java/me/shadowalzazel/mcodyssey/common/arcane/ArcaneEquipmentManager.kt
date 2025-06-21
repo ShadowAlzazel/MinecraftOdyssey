@@ -24,7 +24,6 @@ import org.bukkit.inventory.meta.Damageable
 import org.bukkit.util.Transformation
 import org.bukkit.util.Vector
 import org.joml.Quaternionf
-import org.joml.Vector3f
 import kotlin.math.abs
 
 @Suppress("UnstableApiUsage")
@@ -68,7 +67,6 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
 
         equipment.setItemInOffHand(ItemStack(Material.AIR))
         player.inventory.addItem(paperRune)
-
     }
 
     fun arcaneStylusDrawingHandler(event: PlayerInteractEvent) {
@@ -318,7 +316,7 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
             ModifierRune.Range(16.0),
             ModifierRune.Amplify(3.0), // Default(1.0) + 3.0
             ModifierRune.Convergence(0.1),
-            DomainRune.Trace,
+            DomainRune.Direct,
             CastingRune.Zone()
         )
         // Build the spell

@@ -15,7 +15,7 @@ class EquipmentRecipes : ChoiceManager {
         return listOf(
             chainHookRecipe(), tinkeredMusketRecipe(), tinkeredBowRecipe(), autoCrossbowRecipe(), warpingWandRecipe(),
             arcaneWandRecipe(), arcaneBladeRecipe(), arcaneScepterRecipe(), explosiveArrowRecipe(), alchemicalDriverRecipe(),
-            arcanePenRecipe(), arcaneStylusRecipe(),
+            arcanePenRecipe(), arcaneStylusRecipe(), arcanePointyHatRecipe(), arcaneWitchHatRecipe(),
             compactCrossbowRecipe(), voidLinkedKunaiRecipe(), alchemicalDiffuserRecipe()
         )
     }
@@ -117,6 +117,30 @@ class EquipmentRecipes : ChoiceManager {
             setIngredient('G', Material.GUNPOWDER)
             setIngredient('A', Material.ARROW)
             group = "arrows"
+            category = CraftingBookCategory.EQUIPMENT
+        }
+        return recipe
+    }
+
+    private fun arcaneWitchHatRecipe(): ShapedRecipe {
+        val result = Item.ARCANE_WITCH_HAT.newItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "arcane_witch_hat"), result).apply {
+            shape(" L ", "LAL")
+            setIngredient('A', Item.CRYSTAL_ALLOY_INGOT.toRecipeChoice())
+            setIngredient('L', Material.RABBIT_HIDE)
+            category = CraftingBookCategory.EQUIPMENT
+
+        }
+        return recipe
+    }
+
+    private fun arcanePointyHatRecipe(): ShapedRecipe {
+        val result = Item.ARCANE_POINTY_HAT.newItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "arcane_pointy_hat"), result).apply {
+            shape("G", "L", "A")
+            setIngredient('A', Item.CRYSTAL_ALLOY_INGOT.toRecipeChoice())
+            setIngredient('L', Material.RABBIT_HIDE)
+            setIngredient('G', Material.GOLD_NUGGET)
             category = CraftingBookCategory.EQUIPMENT
         }
         return recipe

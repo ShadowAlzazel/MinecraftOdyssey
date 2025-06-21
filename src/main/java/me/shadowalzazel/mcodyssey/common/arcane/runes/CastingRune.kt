@@ -71,7 +71,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
 
     class Point : CastingRune() {
         override val name = "point"
-        override val displayName = "point"
+        override val displayName = "Point"
 
         override fun build(builder: CastingBuilder) {
             // DEFAULT build parameters
@@ -91,7 +91,6 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
             for (e in context.ignoredTargets) {
                 if (e is LivingEntity) filterEntities.add(e)
             }
-
 
             //  Point Logic
             val pointLocation: Location
@@ -147,27 +146,12 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
             val damageType = builder.damageType
             val particle = builder.particle
 
-            // Circle Location and Detection Logic
-            /*
-            val traceLocation = getPathTraceLocation(
-                context.castingLocation,
-                context.direction,
-                listOf(context.caster),
-                range,
-                raySize = aimAssist)
-            val circleCenter = traceLocation ?: context.targetLocation
-            circleCenter ?: return
-            // Change context
-
-            context.targetLocation = circleCenter
-             */
             val circleCenter = context.targetLocation ?: context.castingLocation
 
             val filterEntities = mutableListOf(context.caster)
             for (e in context.ignoredTargets) {
                 if (e is LivingEntity) filterEntities.add(e)
             }
-
             // Damage Logic
             val damageSource = createEntityDamageSource(context.caster, null, damageType)
             circleCenter.getNearbyLivingEntities(radius).forEach {
@@ -217,7 +201,11 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
             val particle = builder.particle
 
             // Temporary locations for beam
-            val startLocation: Location = context.castingLocation
+            val castLocation: Location = context.castingLocation
+            val targetLocation: Location? = context.targetLocation
+            val beamDirection = targetLocation?.clone()?.subtract(castLocation)?.toVector() ?: context.direction
+
+            // What the NEW target location will be
             val endLocation: Location
 
             //val target = getRayTraceEntity(context.caster, totalRange, aimAssist)
@@ -227,8 +215,8 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
             }
 
             val target = getEntityRayTrace(
-                startLocation,
-                context.direction,
+                castLocation,
+                beamDirection,
                 filterEntities,
                 totalRange,
                 aimAssist)
@@ -269,7 +257,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
 
     class Ball : CastingRune() {
         override val name = "ball"
-        override val displayName = "ball"
+        override val displayName = "Ball"
 
         override fun build(builder: CastingBuilder) {
             // DEFAULT build parameters
@@ -317,7 +305,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
 
     class Missile : CastingRune() {
         override val name = "missile"
-        override val displayName = "missile"
+        override val displayName = "Missile"
 
         override fun build(builder: CastingBuilder) {
             TODO("Not yet implemented")
@@ -341,7 +329,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
 
     class Aura : CastingRune() {
         override val name = "aura"
-        override val displayName = "aura"
+        override val displayName = "Aura"
 
         override fun build(builder: CastingBuilder) {
             TODO("Not yet implemented")
