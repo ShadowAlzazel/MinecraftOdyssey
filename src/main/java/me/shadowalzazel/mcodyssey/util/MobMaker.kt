@@ -98,7 +98,7 @@ interface MobMaker : EquipmentGenerator {
     }
 
     private fun toStringList(matList: List<ToolMaterial>): List<String> {
-        return matList.map { it.namePre }
+        return matList.map { it.nameId }
     }
 
     /*-----------------------------------------------------------------------------------------------*/

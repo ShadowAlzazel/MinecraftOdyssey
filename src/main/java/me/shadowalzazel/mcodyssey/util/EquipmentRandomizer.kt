@@ -25,7 +25,7 @@ class EquipmentRandomizer(
         toolMaterial = weaponMaterials.random()
         toolType = weaponList.random()
         toolPattern = partList.random()
-        armorMaterial = armorMaterials?.random() ?: toolMaterial.namePre
+        armorMaterial = armorMaterials?.random() ?: toolMaterial.nameId
         armorTrim = ArmorTrim(armorTrimMaterials.random(), armorTrimPatterns.random())
     }
 

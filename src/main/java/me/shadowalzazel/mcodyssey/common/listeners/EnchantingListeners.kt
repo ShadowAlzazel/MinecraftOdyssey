@@ -92,6 +92,7 @@ object EnchantingListeners : Listener, TomeEnchanting, RegistryTagManager {
                 result.itemMeta = resultMeta
             }
         }
+        // Default
         else if (resultIsRepairable && second != null) {
             val resultMeta = result.itemMeta as Repairable
             val cost = result.enchantments.size + 1
@@ -123,22 +124,18 @@ object EnchantingListeners : Listener, TomeEnchanting, RegistryTagManager {
     /*-----------------------------------------------------------------------------------------------*/
     @EventHandler
     fun grindstoneHandler(event: PrepareResultEvent) {
+        // Get grindstone
         if (event.inventory !is GrindstoneInventory) return
         val inventory: GrindstoneInventory = event.inventory as GrindstoneInventory
+        // Get result
         if (inventory.result == null) return
-        val item = inventory.upperItem ?: inventory.lowerItem ?: return
         val result = inventory.result ?: return
-        // Change name for arcane book
-        if (result.type == Material.BOOK) {
-            val itemName = item.getItemIdentifier()
-            if (itemName == "arcane_book") {
-                val newMeta = result.itemMeta
-                val newName = Component.text("Arcane Book").decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-                newMeta.displayName(newName)
-                result.itemMeta = newMeta
-            }
+        // Update points
+        val newItem = result.clone().also {
+            it.updateEnchantPoints(resetLore = true)
         }
-        event.result = result.clone().also { it.updateEnchantPoints() }
+        inventory.result = newItem
+        event.result = newItem
     }
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -326,7 +323,7 @@ object EnchantingListeners : Listener, TomeEnchanting, RegistryTagManager {
         val item = event.item
         val newEnchants = event.enchantsToAdd
         // Can get OVER-MAXED ITEMS if lucky
-        item.updateItemPoints(newEnchants, toggleToolTip = true)
+        item.updateEnchantPoints(newEnchants = newEnchants, toggleToolTip = true)
         event.item = item
     }
 

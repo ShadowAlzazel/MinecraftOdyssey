@@ -134,7 +134,8 @@ class Odyssey : JavaPlugin() {
             PetListener,
             InventoryListeners,
             WorldEventsListener,
-            StructureListeners
+            StructureListeners,
+            RecipeListeners
         ).forEach {
             registerEventListeners(it)
         }

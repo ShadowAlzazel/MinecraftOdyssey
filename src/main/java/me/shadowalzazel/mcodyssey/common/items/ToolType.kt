@@ -5,9 +5,10 @@ enum class ToolType(
     val fullName: String, // 'custom_name' component
     val baseDamage: Double,
     val baseSpeed: Double,
-    val itemOverrideName: String,  // for finding the item id
+    val vanillaBase: String,  // for finding the item id
     val bonusRange: Double? = null
 ) {
+
     // Vanilla
     SWORD("sword", "Sword", 3.0, 1.6, "sword"),
     PICKAXE("pickaxe", "Pickaxe", 1.0, 1.2,  "pickaxe"),
@@ -43,7 +44,57 @@ enum class ToolType(
     // Hoe Overrides
     SCYTHE("scythe", "Scythe", 3.0, 1.1, "hoe", 1.0),
     // Others
-    SHURIKEN("shuriken", "Shuriken", 0.5, 1.0, "iron_nugget")
+    SHURIKEN("shuriken", "Shuriken", 0.5, 1.0, "iron_nugget");
+
+    companion object {
+
+        fun getVanillaTypes(): List<ToolType> {
+            return listOf(
+                SWORD,
+                AXE,
+                PICKAXE,
+                SHOVEL,
+                HOE
+            )
+        }
+
+        fun getSwordVariants(): List<ToolType> {
+            return listOf(
+                KATANA,
+                CLAYMORE,
+                DAGGER,
+                RAPIER,
+                SABER,
+                SICKLE,
+                CHAKRAM,
+                KUNAI,
+                LONGSWORD,
+                ZWEIHANDER,
+                KRIEGSMESSER
+            )
+        }
+
+        fun getAxeVariants(): List<ToolType> {
+            return listOf(
+                LONGAXE,
+                POLEAXE,
+                GLAIVE
+            )
+        }
+
+        fun getPolearmVariants(): List<ToolType> {
+            return listOf(
+                SPEAR,
+                HALBERD,
+                WARHAMMER,
+                SCYTHE
+            )
+        }
+
+        fun fromRecipeName(name: String): ToolType? = entries.find { name.contains(it.toolName) }
+
+
+    }
 
 }
 

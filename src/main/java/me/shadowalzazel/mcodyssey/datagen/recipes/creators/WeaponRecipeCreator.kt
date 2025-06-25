@@ -157,7 +157,7 @@ class WeaponRecipeCreator : DataTagManager, ChoiceManager, ToolMaker {
         // Get Pattern/Shape
         val pattern = weaponPatterns[type.toolName]!!
         // Create Recipe keys and ingredients
-        val ingredientMap = materialKeys[material.namePre]!!.toMutableMap()
+        val ingredientMap = materialKeys[material.nameId]!!.toMutableMap()
         val extraIngredientMap = weaponSpecialMaterialKeys[type.toolName]
         if (extraIngredientMap != null) {
             ingredientMap.putAll(extraIngredientMap)

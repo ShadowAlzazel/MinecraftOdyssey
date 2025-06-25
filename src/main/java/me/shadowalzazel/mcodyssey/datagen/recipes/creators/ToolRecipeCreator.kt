@@ -45,7 +45,7 @@ class ToolRecipeCreator : DataTagManager, ChoiceManager, ToolMaker {
         // Get Pattern/Shape
         val pattern = toolPatterns[type.toolName]!!
         // Create Recipe keys and ingredients
-        val ingredientMap = materialKeys[material.namePre]!!.toMutableMap()
+        val ingredientMap = materialKeys[material.nameId]!!.toMutableMap()
         // Assemble recipe
         val recipe = ShapedRecipe(resultKey, result).apply {
             shape(*pattern.toTypedArray())

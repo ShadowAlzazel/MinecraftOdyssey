@@ -1,10 +1,10 @@
 package me.shadowalzazel.mcodyssey.common.items
 
 enum class ToolMaterial(
-    val namePre: String, // 'item_name' component
-    val customNamePre: String, // 'custom_name' component
+    val nameId: String, // 'item_name' component
+    val customName: String, // 'custom_name' component
     val attackDamage: Double,
-    val itemOverridePre: String, // for finding the item id
+    val vanillaBase: String, // for finding the item id
     val maxDurability: Int? = null
 ) {
 

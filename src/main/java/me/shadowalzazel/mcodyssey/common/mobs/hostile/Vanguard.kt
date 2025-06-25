@@ -54,7 +54,7 @@ object Vanguard : OdysseyMob("Vanguard", "vanguard", EntityType.SKELETON, 25.0) 
                     addEnchantment(enchant.key, enchant.value)
                 }
             }
-            updateItemPoints()
+            updateEnchantPoints()
         }
         val offHand = ItemStack(Material.SHIELD)
 

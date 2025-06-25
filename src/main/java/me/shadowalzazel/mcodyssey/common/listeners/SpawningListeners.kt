@@ -186,7 +186,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
                         addEnchantment(enchant.key, enchant.value)
                     }
                 }
-                updateItemPoints()
+                updateEnchantPoints()
             }
             val offHand = ItemStack(Material.SHIELD)
 

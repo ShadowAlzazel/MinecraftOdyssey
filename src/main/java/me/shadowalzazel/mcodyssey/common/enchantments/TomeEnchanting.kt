@@ -9,6 +9,7 @@ import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.Sound
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
@@ -20,37 +21,57 @@ import org.bukkit.inventory.meta.Repairable
 internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager {
 
     fun tomeOfDischargeOnItem(item: ItemStack, viewers: List<HumanEntity>): ItemStack? {
+
         val itemEnchants = item.getData(DataComponentTypes.ENCHANTMENTS)
+        val hasItemEnchants = itemEnchants != null && itemEnchants.enchantments().isNotEmpty()
         val storedEnchants = item.getData(DataComponentTypes.STORED_ENCHANTMENTS)
-        if (itemEnchants == null && storedEnchants == null) {
-            viewers.forEach { it.sendBarMessage("This item needs to be enchanted to use this tome.") }
-            return null
-        }
-        // Find an enchant to remove
-        val enchantToRemove = storedEnchants?.enchantments()?.toList()?.random() ?: itemEnchants?.enchantments()?.toList()?.random()
-        if (enchantToRemove == null) {
+        val hasStoredEnchants = storedEnchants != null && storedEnchants.enchantments().isNotEmpty()
+
+        // This item has no enchants
+        if (!hasStoredEnchants && !hasItemEnchants) {
             viewers.forEach { it.sendBarMessage("This item needs to have enchantments to use this tome.") }
             return null
         }
-        // Advancement
-        if (enchantToRemove.first.isCursed) {
-            rewardAdvancement(viewers, "odyssey:odyssey/discharge_a_curse")
-        }
-        // Remove enchantment
-        if (itemEnchants != null) {
+
+        var dischargeEnchant: Enchantment? = null
+
+        // ITEM ENCHANTMENTS
+        if (itemEnchants != null && hasItemEnchants) {
+            // add to remove enchant
+            val enchantToRemove = itemEnchants.enchantments().toList().random()
+            dischargeEnchant = enchantToRemove.first
+            // Remove enchantment
             val enchantmentMap = itemEnchants.enchantments().toMutableMap()
             enchantmentMap.remove(enchantToRemove.first)
             val enchantmentBuilder = ItemEnchantments.itemEnchantments().addAll(enchantmentMap)
             item.setData(DataComponentTypes.ENCHANTMENTS, enchantmentBuilder)
+            item.updateEnchantPoints()
         }
-        if (storedEnchants != null) {
+        // STORED ENCHANTMENTS
+        else if (storedEnchants != null && hasStoredEnchants) {
+            // add to remove enchant
+            val enchantToRemove = storedEnchants.enchantments().toList().random()
+            dischargeEnchant = enchantToRemove.first
+            // Remove enchantment
             val enchantmentMap = storedEnchants.enchantments().toMutableMap()
             enchantmentMap.remove(enchantToRemove.first)
             val enchantmentBuilder = ItemEnchantments.itemEnchantments().addAll(enchantmentMap)
             item.setData(DataComponentTypes.ENCHANTMENTS, enchantmentBuilder)
+            item.updateEnchantPoints()
         }
 
-        item.updateEnchantPoints()
+        // Advancement
+        if (dischargeEnchant?.isCursed == true) {
+            for (v in viewers) {
+                if (v !is Player) continue
+                val advancement = v.server.getAdvancement(NamespacedKey.fromString("odyssey:odyssey/discharge_a_curse")!!)
+                if (advancement != null) {
+                    v.getAdvancementProgress(advancement).awardCriteria("requirement")
+                }
+            }
+
+        }
+
         return item
     }
 

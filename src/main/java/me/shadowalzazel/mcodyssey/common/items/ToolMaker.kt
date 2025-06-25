@@ -17,15 +17,15 @@ interface ToolMaker : AttributeManager, DataTagManager, ToolComponentHelper {
     fun createToolStack(material: ToolMaterial, type: ToolType, amount: Int = 1): ItemStack {
         val otherTools = listOf(ToolType.SHURIKEN)
         val minecraftItemKey = if (type in otherTools) {
-            type.itemOverrideName // Get item key from tool
+            type.vanillaBase // Get item key from tool
         } else {
-            "${material.itemOverridePre}_${type.itemOverrideName}"
+            "${material.vanillaBase}_${type.vanillaBase}"
         }
         val minecraftMaterial = Material.matchMaterial(minecraftItemKey) ?: return ItemStack(Material.AIR)
         val itemStack = ItemStack(minecraftMaterial, amount).apply {
             // Create Variables
-            val itemName = "${material.namePre}_${type.toolName}"
-            val upperName = "${material.customNamePre} ${type.fullName}"
+            val itemName = "${material.nameId}_${type.toolName}"
+            val upperName = "${material.customName} ${type.fullName}"
             val customName = Component.text(upperName).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
             val damage = material.attackDamage + type.baseDamage
             val maxDurability = material.maxDurability
@@ -42,7 +42,7 @@ interface ToolMaker : AttributeManager, DataTagManager, ToolComponentHelper {
             // Tools with mining ToolComponent
             val mineableTags = getMiningTags(type.toolName)
             if (mineableTags != null) {
-                val newToolComponent = newToolComponent(material.namePre, type.toolName)
+                val newToolComponent = newToolComponent(material.nameId, type.toolName)
                 if (newToolComponent != null) {
                     this.resetData(DataComponentTypes.TOOL)
                     this.setData(DataComponentTypes.TOOL, newToolComponent)
@@ -60,7 +60,7 @@ interface ToolMaker : AttributeManager, DataTagManager, ToolComponentHelper {
             //this.itemMeta = meta
             this.setStringTag("item", itemName) // ItemKey
             this.setStringTag(ItemDataTags.TOOL_TYPE, type.toolName)
-            this.setStringTag(ItemDataTags.MATERIAL_TYPE, material.namePre)
+            this.setStringTag(ItemDataTags.MATERIAL_TYPE, material.nameId)
             // Assign Base attributes
             this.addAttackDamageAttribute(damage, AttributeTags.ITEM_BASE_ATTACK_DAMAGE)
             this.setNewAttackSpeedAttribute(speed)

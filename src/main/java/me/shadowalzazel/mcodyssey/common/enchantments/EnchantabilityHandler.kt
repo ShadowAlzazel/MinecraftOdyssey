@@ -42,7 +42,7 @@ interface EnchantabilityHandler : EnchantmentManager, DescriptionManager, DataTa
 
     /*-----------------------------------------------------------------------------------------------*/
     // Mains
-    fun ItemStack.updateItemPoints(
+    private fun ItemStack.updateItemPoints(
         newEnchants: MutableMap<Enchantment, Int>? = null,
         enchantsToRemove: MutableMap<Enchantment, Int>? = null,
         resetLore: Boolean = true,
@@ -140,7 +140,7 @@ interface EnchantabilityHandler : EnchantmentManager, DescriptionManager, DataTa
         }
     }
 
-    fun ItemStack.updateStoredEnchantmentPoints(
+    private fun ItemStack.updateStoredEnchantmentPoints(
         toggleToolTip: Boolean = true,
         newEnchants: MutableMap<Enchantment, Int>? = null) {
         // Enchantments

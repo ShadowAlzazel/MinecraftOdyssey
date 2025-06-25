@@ -22,7 +22,7 @@ object EnchantWithOdyssey : CommandExecutor, EnchantabilityHandler {
         // Passed Checks
         val item = sender.equipment!!.itemInMainHand
         item.addEnchantment(enchant, level)
-        item.updateItemPoints()
+        item.updateEnchantPoints()
         return true
     }
 }
