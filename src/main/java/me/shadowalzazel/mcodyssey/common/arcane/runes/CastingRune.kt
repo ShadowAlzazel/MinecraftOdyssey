@@ -1,10 +1,7 @@
 package me.shadowalzazel.mcodyssey.common.arcane.runes
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.common.arcane.util.CastingContext
-import me.shadowalzazel.mcodyssey.common.arcane.util.RayTracerAndDetector
-import me.shadowalzazel.mcodyssey.common.arcane.util.CastingBuilder
-import me.shadowalzazel.mcodyssey.common.arcane.util.ArcaneBallTimer
+import me.shadowalzazel.mcodyssey.common.arcane.util.*
 import me.shadowalzazel.mcodyssey.common.combat.AttackHelper
 import me.shadowalzazel.mcodyssey.util.VectorParticles
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
@@ -30,10 +27,11 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
     // Helper class to run async calls later for runes
     class DelayedCastRunner(
         val rune: CastingRune,
+        val source: ArcaneSource,
         val context: CastingContext,
         val build: CastingBuilder) : BukkitRunnable() {
         override fun run() {
-            rune.manifest(context, build)
+            rune.manifest(source, context, build)
         }
     }
 
@@ -42,19 +40,19 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
     // A function that prepares modifiers and other runes before the spell is manifested
     abstract fun build(builder: CastingBuilder)
 
-    abstract fun manifest(context: CastingContext, builder: CastingBuilder)
+    abstract fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder)
 
 
     /**
      * Class entry points for usage across systems
      */
-    fun cast(context: CastingContext, builder: CastingBuilder) {
+    fun cast(source: ArcaneSource, context: CastingContext, builder: CastingBuilder) {
         // Delay
         if (builder.delayInTicks > 0) {
-            val runner = DelayedCastRunner(this, context, builder)
+            val runner = DelayedCastRunner(this, source, context, builder)
             runner.runTaskLater(Odyssey.instance, builder.delayInTicks)
         } else {
-            this.manifest(context, builder)
+            this.manifest(source, context, builder)
         }
 
     }
@@ -81,26 +79,27 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
                 it.damage = damage
             }
         }
-        override fun manifest(context: CastingContext, builder: CastingBuilder) {
+
+        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder) {
+            val target = context.target
+            val caster = context.caster
             // Unpack build
             val damage = builder.damage
             val damageType = builder.damageType
             val particle = builder.particle
-
-            val filterEntities = mutableListOf(context.caster)
-            for (e in context.ignoredTargets) {
-                if (e is LivingEntity) filterEntities.add(e)
-            }
-
             //  Point Logic
             val pointLocation: Location
-            val target = context.target
-            if (target is LivingEntity) {
-                // Damage Logic
-                val damageSource = createEntityDamageSource(context.caster, null, damageType)
-                target.damage(damage, damageSource)
+
+            if (target?.entityTarget is LivingEntity) {
+                // DO Effect
+                source.invoke(
+                    target = target,
+                    caster = caster,
+                    direction = context.direction,
+                    bonus = builder.damage
+                )
                 // Set point to target
-                pointLocation = target.eyeLocation
+                pointLocation = target.entityTarget.eyeLocation
             } else {
                 val targetLocation = context.targetLocation
                 pointLocation = targetLocation ?: context.castingLocation
@@ -121,10 +120,9 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
         override val name = "zone"
         override val displayName = "Zone"
 
-
         override fun build(builder: CastingBuilder) {
             // DEFAULT build parameters
-            val damage = 1.0
+            val damage = 0.0
             val range = 16.0
             val radius = 3.0
             val aimAssist = 0.1
@@ -137,7 +135,10 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
             }
         }
 
-        override fun manifest(context: CastingContext, builder: CastingBuilder) {
+        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder) {
+            // Context
+            val caster = context.caster
+
             // Unpack build
             val range = builder.range
             val aimAssist = builder.aimAssist
@@ -148,19 +149,26 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
 
             val circleCenter = context.targetLocation ?: context.castingLocation
 
-            val filterEntities = mutableListOf(context.caster)
+            // Filter out caster and ignore list
+            val filterEntities: MutableList<LivingEntity> = mutableListOf()
+            //if (caster.entityCaster is LivingEntity) filterEntities.add(caster.entityCaster)
             for (e in context.ignoredTargets) {
-                if (e is LivingEntity) filterEntities.add(e)
+                if (e.entityTarget is LivingEntity) filterEntities.add(e.entityTarget)
             }
-            // Damage Logic
-            val damageSource = createEntityDamageSource(context.caster, null, damageType)
+
+            // DO EFFECT,
             circleCenter.getNearbyLivingEntities(radius).forEach {
                 if (it !in filterEntities) {
-                    // Detect if damage or heal
-                    it.damage(damage, damageSource)
-                    context.target = it
+                    val zoneDirection = context.direction // TODO: Different directions from center or from outside
+                    source.invoke(
+                        target = ArcaneTarget(it),
+                        caster = caster,
+                        direction = zoneDirection,
+                        bonus = damage
+                    )
                 }
             }
+
             // Particles and effects
             spawnCircleParticles(
                 particle = particle,
@@ -181,7 +189,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
 
         override fun build(builder: CastingBuilder) {
             // DEFAULT build parameters
-            val damage = 2.0
+            val damage = 1.0
             val range = 16.0
             val aimAssist = 0.25
             // Modify the builder
@@ -192,7 +200,10 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
             }
         }
 
-        override fun manifest(context: CastingContext, builder: CastingBuilder) {
+        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder) {
+            // Context
+            val caster = context.caster
+
             // Unpack build
             val totalRange = builder.range
             val aimAssist = builder.aimAssist
@@ -208,13 +219,14 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
             // What the NEW target location will be
             val endLocation: Location
 
-            //val target = getRayTraceEntity(context.caster, totalRange, aimAssist)
-            val filterEntities = mutableListOf(context.caster)
+            // Filter out caster and ignore list
+            val filterEntities: MutableList<LivingEntity> = mutableListOf()
+            //if (caster.entityCaster is LivingEntity) filterEntities.add(caster.entityCaster)
             for (e in context.ignoredTargets) {
-                if (e is LivingEntity) filterEntities.add(e)
+                if (e.entityTarget is LivingEntity) filterEntities.add(e.entityTarget)
             }
 
-            val target = getEntityRayTrace(
+            val rayTraceEntity = getEntityRayTrace(
                 castLocation,
                 beamDirection,
                 filterEntities,
@@ -222,10 +234,14 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
                 aimAssist)
 
             // After running target checks
-            if (target is LivingEntity) {
-                val damageSource = createEntityDamageSource(context.caster, null, damageType)
-                target.damage(damage, damageSource)
-                endLocation = target.eyeLocation
+            if (rayTraceEntity is LivingEntity) {
+                source.invoke(
+                    target = ArcaneTarget(rayTraceEntity),
+                    caster = caster,
+                    direction = beamDirection,
+                    bonus = damage
+                )
+                endLocation = rayTraceEntity.eyeLocation
             }
             else {
                 val rayTraceBlock = context.world.rayTraceBlocks(
@@ -261,7 +277,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
 
         override fun build(builder: CastingBuilder) {
             // DEFAULT build parameters
-            val damage = 5.0
+            val damage = 3.0
             val range = 16.0
             val aimAssist = 0.1
             val speed = 0.5
@@ -274,7 +290,8 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
             }
 
         }
-        override fun manifest(context: CastingContext, builder: CastingBuilder) {
+        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder) {
+            val caster = context.caster
             // Unpack build
             val totalRange = builder.range
             val aimAssist = builder.aimAssist
@@ -292,7 +309,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
                 it.item = ItemStack(Material.ENDER_PEARL)
                 it.addScoreboardTag(EntityTags.MAGIC_BALL)
                 it.velocity = velocity
-                it.shooter = context.caster
+                if (caster.entityCaster is LivingEntity) it.shooter = caster.entityCaster
                 it.setHasLeftShooter(false)
                 it.setGravity(false)
             }
@@ -310,7 +327,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
         override fun build(builder: CastingBuilder) {
             TODO("Not yet implemented")
         }
-        override fun manifest(context: CastingContext, builder: CastingBuilder) {
+        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder) {
             TODO("Not yet implemented")
         }
     }
@@ -322,7 +339,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
         override fun build(builder: CastingBuilder) {
             TODO("Not yet implemented")
         }
-        override fun manifest(context: CastingContext, builder: CastingBuilder) {
+        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder) {
             TODO("Not yet implemented")
         }
     }
@@ -334,7 +351,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
         override fun build(builder: CastingBuilder) {
             TODO("Not yet implemented")
         }
-        override fun manifest(context: CastingContext, builder: CastingBuilder) {
+        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder) {
             TODO("Not yet implemented")
         }
     }

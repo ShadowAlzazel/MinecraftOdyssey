@@ -8,6 +8,7 @@ import org.bukkit.attribute.Attribute
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.inventory.ItemStack
 
 interface WeaponCombatHandler : AttackHelper, DataTagManager {
 
@@ -20,6 +21,14 @@ interface WeaponCombatHandler : AttackHelper, DataTagManager {
     // Moving in one direction check -> then multiply attack by 50%
 
     // PARRY MECHANIC -> if block within < 1 seconds of taking damage negate?
+
+    // TODO: more robust
+    private fun getWeaponType(item: ItemStack): String? {
+        val toolType = item.getStringTag(ItemDataTags.TOOL_TYPE)
+        if (toolType != null) return toolType
+        val itemName = item.getItemNameId()
+        return null
+    }
 
     fun weaponBonusEffectsHandler(event: EntityDamageByEntityEvent) {
         val player = event.damager as Player

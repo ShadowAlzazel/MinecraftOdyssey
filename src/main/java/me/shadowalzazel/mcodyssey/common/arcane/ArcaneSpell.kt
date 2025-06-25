@@ -2,6 +2,7 @@ package me.shadowalzazel.mcodyssey.common.arcane
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.arcane.runes.*
+import me.shadowalzazel.mcodyssey.common.arcane.util.ArcaneTarget
 import me.shadowalzazel.mcodyssey.common.arcane.util.AsyncCastingManager
 import me.shadowalzazel.mcodyssey.common.arcane.util.CastingContext
 import me.shadowalzazel.mcodyssey.common.arcane.util.CastingBuilder
@@ -35,7 +36,9 @@ class ArcaneSpell(
         runeCount = runeSequence.count()
 
         // Default Ignore self
-        orginalContext.ignoredTargets.add(orginalContext.caster)
+        // VERY IMPORTANT convert to TARGET class and add to ignore list
+        val caster = orginalContext.caster
+        orginalContext.ignoredTargets.add(caster.convertToTarget())
         // Finish Context
         sharedContext = orginalContext.clone()
 
@@ -160,10 +163,11 @@ class ArcaneSpell(
                 is CastingRune -> {
                     castingRune = rune
                     // Assemble the casting rune with the builder
+                    // CALL assemble BEFORE buildStored
                     castingRune.assemble(builder)
                     builder.buildStored()
                     // Run the cast
-                    castingRune.cast(context, builder)
+                    castingRune.cast(source, context, builder)
                 }
             }
         }

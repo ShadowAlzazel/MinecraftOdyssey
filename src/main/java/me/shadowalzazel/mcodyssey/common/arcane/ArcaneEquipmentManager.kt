@@ -4,6 +4,8 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.ItemLore
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.arcane.runes.*
+import me.shadowalzazel.mcodyssey.common.arcane.util.ArcaneCaster
+import me.shadowalzazel.mcodyssey.common.arcane.util.ArcaneTarget
 import me.shadowalzazel.mcodyssey.common.arcane.util.CastingContext
 import me.shadowalzazel.mcodyssey.common.arcane.util.RayTracerAndDetector
 import me.shadowalzazel.mcodyssey.common.combat.AttackHelper
@@ -206,7 +208,7 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
 
         // Form the starting spell context
         val spellContext = CastingContext(
-            caster = caster,
+            caster = ArcaneCaster(entityCaster = caster),
             world = caster.world,
             castingLocation = caster.eyeLocation,
             direction = direction,
@@ -233,7 +235,7 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
 
         // Form the starting spell context
         val spellContext = CastingContext(
-            caster = caster,
+            caster = ArcaneCaster(entityCaster = caster),
             world = caster.world,
             castingLocation = caster.eyeLocation,
             direction = direction,
@@ -258,16 +260,18 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
         // Create a default sequence
         val wandRunes = listOf<ArcaneRune>(
             ModifierRune.Range(16.0),
-            ModifierRune.Amplify(4.0), // Default(2.0) + 4.0
+            ModifierRune.Amplify(4.0), // 4.0
             ModifierRune.Convergence(0.35),
             CastingRune.Beam(),
         )
+
+        val offHandSource = ArcaneSource.getSourceFromRawItem(offHandItem)
         // Build the spell
         val spellBuilder = ArcaneSpellBuilder(
             arcaneItem = arcaneTool,
             additionalItems = listOf(offHandItem),
             providedRunes = wandRunes,
-            providedSource = ArcaneSource.Magic)
+            providedSource = offHandSource ?: ArcaneSource.Magic)
         val canBuildSpell = spellBuilder.canBuildSpell()
         if (!canBuildSpell) return
 
@@ -289,11 +293,11 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
 
         // Form the starting spell context
         val spellContext = CastingContext(
-            caster = caster,
+            caster = ArcaneCaster(entityCaster = caster),
             world = caster.world,
             castingLocation = caster.eyeLocation,
             direction = direction,
-            target = target,
+            target = ArcaneTarget(entityTarget = target),
             targetLocation = targetLocation
         )
 
@@ -319,18 +323,19 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
             DomainRune.Direct,
             CastingRune.Zone()
         )
+        val offHandSource = ArcaneSource.getSourceFromRawItem(offHandItem)
         // Build the spell
         val spellBuilder = ArcaneSpellBuilder(
             arcaneItem = arcaneTool,
             additionalItems = listOf(offHandItem),
             providedRunes = scepterRunes,
-            providedSource = ArcaneSource.Magic)
+            providedSource = offHandSource ?: ArcaneSource.Magic)
         val canBuildSpell = spellBuilder.canBuildSpell()
         if (!canBuildSpell) return
 
         // Form the starting spell context
         val spellContext = CastingContext(
-            caster = caster,
+            caster = ArcaneCaster(entityCaster = caster),
             world = caster.world,
             castingLocation = caster.eyeLocation,
             direction = caster.eyeLocation.direction,

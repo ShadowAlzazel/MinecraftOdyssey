@@ -11,6 +11,8 @@ import org.bukkit.World
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerTeleportEvent
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
 
 object StructureListeners : Listener, StructureHelper {
@@ -36,7 +38,7 @@ object StructureListeners : Listener, StructureHelper {
             }
         }
         if (!obeliskTp) return
-        val offset = Vector((-3..3).random(), 0, (-3..3).random())
+        val offset = Vector(0, 10, 0)
         val location = player.location.clone()
         // Teleport
         val newWorld: World = when (player.world) {
@@ -55,8 +57,14 @@ object StructureListeners : Listener, StructureHelper {
         location.add(offset)
         //val final = location.toHighestLocation(HeightMap.WORLD_SURFACE)
         val final = location.toHighestLocation(HeightMap.WORLD_SURFACE).toLocation(newWorld)
+        if (final.y <= 16) {
+            final.y = 32.0
+        }
         event.to = final
         //println(event.to)
+        player.addPotionEffect(
+            PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 10, 0)
+        )
         player.teleport(final)
         event.isCancelled = true
         return

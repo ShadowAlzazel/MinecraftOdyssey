@@ -2,7 +2,6 @@ package me.shadowalzazel.mcodyssey.common.arcane
 
 import me.shadowalzazel.mcodyssey.common.arcane.runes.*
 import me.shadowalzazel.mcodyssey.common.arcane.util.CastingContext
-import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import org.bukkit.inventory.ItemStack
 
 /**
@@ -25,7 +24,7 @@ class ArcaneSpellBuilder(
     init {
         // ----------- SOURCE -----------
         // check Arcane Item and see if it has a source
-        val itemSource = getSourceFromItem(arcaneItem)
+        val itemSource = ArcaneSource.getSourceFromRawItem(arcaneItem)
         if (providedSource != null) {
             arcaneSource = providedSource
         }
@@ -118,32 +117,6 @@ class ArcaneSpellBuilder(
 
     // ----------------------------------------------------------
     // These methods and functions are for BUILDING the spell
-
-    /**
-     * This gets an Arcane source from an item
-     */
-    private fun getSourceFromItem(item: ItemStack): ArcaneSource? {
-        return when (item.getItemNameId()) {
-            // GEM-SOURCES
-            "ruby" -> ArcaneSource.Fire
-            "neptunian" -> ArcaneSource.Frost
-            "amethyst_shard" -> ArcaneSource.Magic
-            "jovianite" -> ArcaneSource.Radiant
-            "ender_eye" -> ArcaneSource.Void
-            "soul_quartz" -> ArcaneSource.Soul
-            // TOOL-SOURCES
-            "arcane_blade" -> ArcaneSource.Magic
-            "arcane_book" -> ArcaneSource.Magic
-            "arcane_wand" -> ArcaneSource.Magic
-            "arcane_scepter" -> ArcaneSource.Magic
-            // Special
-            "arcane_pen" -> ArcaneSource.Radiant
-            // Scrolls
-            "spell_scroll" -> ArcaneSource.Radiant
-            else -> null
-        }
-
-    }
 
 
     /**

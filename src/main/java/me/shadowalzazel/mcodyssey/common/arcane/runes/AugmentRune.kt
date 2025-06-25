@@ -10,6 +10,9 @@ sealed class AugmentRune : ArcaneRune() {
     // How the loop/run time behaves
 
     fun effect(context: CastingContext) {
+        val target = context.target
+        val caster = context.caster
+
         when (this) {
             is Coda -> {
                 // TODO: Special Case
@@ -19,7 +22,8 @@ sealed class AugmentRune : ArcaneRune() {
                 if (block != null) {
                     // Use the wiki to find the values to break
                     // https://minecraft.wiki/w/Module:Blast_resistance_values
-                    block.breakNaturally()
+                    // TODO: Disabled for now
+                    //block.breakNaturally()
                 }
             }
             is PickUp -> {
@@ -34,13 +38,14 @@ sealed class AugmentRune : ArcaneRune() {
                 }
             }
             is Heal -> {
-                val target = context.target
-                if (target is LivingEntity) {
-                    target.heal(this.value)
+                if (target?.entityTarget is LivingEntity) {
+                    target.entityTarget.heal(this.value)
                 }
             }
             is Teleport -> {
-                context.target?.teleport(context.castingLocation)
+                if (target?.entityTarget is LivingEntity) {
+                    target.entityTarget.teleport(context.castingLocation)
+                }
             }
             else -> {}
         }

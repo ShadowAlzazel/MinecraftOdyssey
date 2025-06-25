@@ -172,9 +172,9 @@ class EquipmentRecipes : ChoiceManager {
     private fun arcaneScepterRecipe(): ShapedRecipe {
         val result = Item.ARCANE_SCEPTER.newItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "arcane_scepter"), result).apply {
-            shape(" Q ", "ASA", " S ")
+            shape("QQQ", "ASA", " S ")
             setIngredient('A', Item.CRYSTAL_ALLOY_INGOT.toRecipeChoice())
-            setIngredient('Q', Material.AMETHYST_CLUSTER)
+            setIngredient('Q', Material.AMETHYST_SHARD)
             setIngredient('S', Material.STICK)
             category = CraftingBookCategory.EQUIPMENT
         }
