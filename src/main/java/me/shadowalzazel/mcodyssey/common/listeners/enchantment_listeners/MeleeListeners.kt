@@ -117,8 +117,8 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
                 "invocative" -> {
                     invocativeEnchantment(attacker, victim, event.damage, enchant.value)
                 }
-                "magic_touch" -> {
-                    event.damage -= magicTouchEnchantment(attacker, victim, event.damage, enchant.value)
+                "magic_aspect" -> {
+                    event.damage -= magicAspectEnchantment(attacker, victim, event.damage, enchant.value)
                 }
                 "pestilence" -> {
                     pestilenceEnchantment(attacker, victim, enchant.value)
@@ -653,8 +653,8 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
     }
 
     @Suppress("UnstableApiUsage")
-    private fun magicTouchEnchantment(attacker: LivingEntity, victim: LivingEntity, damage: Double, level: Int): Double {
-        val potency = 0.1 * level
+    private fun magicAspectEnchantment(attacker: LivingEntity, victim: LivingEntity, damage: Double, level: Int): Double {
+        val potency = 0.05 * level
         val damageSource = DamageSource.builder(DamageType.MAGIC).build()
         val magicDamage = damage * potency
         victim.damage(magicDamage, damageSource)

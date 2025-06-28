@@ -9,6 +9,7 @@ import me.shadowalzazel.mcodyssey.util.EquipmentGenerator
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.MerchantRecipe
+import kotlin.random.Random
 
 @Suppress("UnstableApiUsage")
 class MerchantRecipeCreator : EquipmentGenerator {
@@ -57,6 +58,8 @@ class MerchantRecipeCreator : EquipmentGenerator {
         // Set the custom model data
         val customData = CustomModelData.customModelData().addStrings(weaponPartsData)
         weaponResult.setData(DataComponentTypes.CUSTOM_MODEL_DATA, customData)
+        val randomSeed = java.util.Random((0L..100000L).random())
+        weaponResult.enchantWithLevels((10..20).random(), false, randomSeed)
 
         // Create the trade
         val trade = MerchantRecipe(weaponResult, 3).apply {
@@ -85,6 +88,8 @@ class MerchantRecipeCreator : EquipmentGenerator {
         // Set the custom model data
         val customData = CustomModelData.customModelData().addStrings(weaponPartsData)
         weaponResult.setData(DataComponentTypes.CUSTOM_MODEL_DATA, customData)
+        val randomSeed = java.util.Random((0L..100000L).random())
+        weaponResult.enchantWithLevels((20..30).random(), false, randomSeed)
 
         // Create the trade
         val trade = MerchantRecipe(weaponResult, 3).apply {

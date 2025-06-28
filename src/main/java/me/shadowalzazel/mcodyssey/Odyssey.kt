@@ -165,7 +165,7 @@ class Odyssey : JavaPlugin() {
         structureDetector.runTaskTimer(this, 20L, 20 * 10)
 
         // Wiki
-        val wikiLink = "https://minecraftodyssey.fandom.com/wiki/MinecraftOdyssey_Wiki"
+        val wikiLink = "https://odyssey-wiki.netlify.app/"
         val wikiLinkDisplay = Component.text("Odyssey Wiki")
         server.serverLinks.addLink(wikiLinkDisplay, URI(wikiLink))
         // Github

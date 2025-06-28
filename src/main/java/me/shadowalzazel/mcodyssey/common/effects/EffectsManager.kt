@@ -119,6 +119,8 @@ interface EffectsManager : EffectTagsManager {
             addPotionEffect(freezingPotionEffect)
             addScoreboardTag(EffectTags.FREEZING)
             FreezingTask(this, amplifier, durationInTicks / 20).runTaskTimer(Odyssey.instance, 0, 20)
+        } else if (freezeTicks <= 0) {
+            removeScoreboardTag(EffectTags.FREEZING)
         }
     }
 

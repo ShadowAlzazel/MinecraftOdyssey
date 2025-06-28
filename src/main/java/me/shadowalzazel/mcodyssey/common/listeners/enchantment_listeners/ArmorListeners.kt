@@ -22,6 +22,7 @@ import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.*
+import org.bukkit.event.player.PlayerInputEvent
 import org.bukkit.event.player.PlayerItemConsumeEvent
 import org.bukkit.event.player.PlayerToggleSneakEvent
 import org.bukkit.event.vehicle.VehicleEnterEvent
@@ -88,7 +89,7 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
             for (enchant in chestplate.enchantments) {
                 when (enchant.key.getNameId()) {
                     "black_rose" -> {
-                        blackRoseEnchantment(enemy, enchant.value)
+                        stxRoseHitEnchantment(enemy, enchant.value)
                     }
                     "beastly" -> {
                         event.damage -= beastlyArmorEnchantment(defender, enemy, originalAmount, enchant.value)
@@ -204,8 +205,8 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
             val chestplate = defender.equipment?.chestplate!!
             for (enchant in chestplate.enchantments) {
                 when (enchant.key.getNameId()) {
-                    "black_rose" -> {
-                        blackRoseProjectileEnchantment(event, defender, enchant.value)
+                    "styx_rose" -> {
+                        styxRoseProjectileEnchantment(event, defender, enchant.value)
                     }
                 }
             }
@@ -421,6 +422,22 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         }
     }
 
+    // UNUSED
+    fun playerInputHandler(event: PlayerInputEvent) {
+        val player = event.player
+        // Start of ifs
+        if (player.equipment!!.boots?.hasItemMeta() == true) {
+            val boots = player.equipment!!.boots!!
+            for (enchant in boots.enchantments) {
+                when (enchant.key.getNameId()) {
+                    "cloud_strider" -> {
+                        cloudStriderEnchantment(player, enchant.value)
+                    }
+                }
+            }
+        }
+    }
+
     // Function for sneaking
     @EventHandler
     fun sneakHandler(event: PlayerToggleSneakEvent) {
@@ -485,7 +502,7 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
             for (enchant in leggingEnchants) {
                 when (enchant.key.getNameId()) {
                     "leap_frog" -> {
-                        leapFrogEnchantment(jumper, enchant.value)
+                        leapFrogEnchantment(event, enchant.value)
                     }
                 }
             }
@@ -547,7 +564,7 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         return 0.0
     }
 
-    private fun blackRoseEnchantment(
+    private fun stxRoseHitEnchantment(
         attacker: LivingEntity,
         level: Int
     ) {
@@ -560,7 +577,7 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         )
     }
 
-    private fun blackRoseProjectileEnchantment(
+    private fun styxRoseProjectileEnchantment(
         event: ProjectileHitEvent,
         defender: LivingEntity,
         level: Int
@@ -657,13 +674,11 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         // If player is on ground, reset jump count
         var currentCloudJumps = jumper.getIntTag(EntityTags.CLOUD_STRIDER_JUMPS) ?: 0
         if (jumper.isOnGround) {
-            println("Is ON Ground")
             currentCloudJumps = 0
             jumper.setIntTag(EntityTags.CLOUD_STRIDER_JUMPS, currentCloudJumps)
         }
         // Else if not max jumps, do cloud stride jump
         else if (currentCloudJumps < maxJumps) {
-            println("Player has cloud jumped")
             currentCloudJumps += 1
             jumper.velocity = jumper.velocity.setY(0.0).add(Vector(0.0, jumpSpeed, 0.0)) // Add Y
             jumper.setIntTag(EntityTags.CLOUD_STRIDER_JUMPS, currentCloudJumps)
@@ -776,9 +791,10 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
     }
 
     private fun leapFrogEnchantment(
-        jumper: LivingEntity,
+        event: PlayerJumpEvent,
         level: Int
     ) {
+        val jumper = event.player
         val location = jumper.location.clone().toBlockLocation().apply {
             y -= 0.75
         }
@@ -793,10 +809,11 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         val validBlock = jumper.location.block.type in jumpBlocks || isWaterLeaf
 
         if (validBlock) {
-            jumper.velocity = jumper.velocity.multiply(1.0 + (0.4 * level))
-        }
-        if (jumper.scoreboardTags.contains(EntityTags.LEAP_FROG_READY)) {
-            jumper.velocity = jumper.velocity.multiply(1.0 + 1)
+            jumper.velocity = jumper.velocity.multiply(1.0 + (1.0 * level))
+        } // Tag not working?
+        if (jumper.scoreboardTags.contains(EntityTags.LEAP_FROG_READY) || jumper.isSneaking) {
+            //jumper.velocity = jumper.velocity.no.multiply(1.0 + (2.5 * level))
+            jumper.velocity.add(Vector(0.0, (1.0 * level), 0.0))
             jumper.scoreboardTags.remove(EntityTags.LEAP_FROG_READY)
         }
 

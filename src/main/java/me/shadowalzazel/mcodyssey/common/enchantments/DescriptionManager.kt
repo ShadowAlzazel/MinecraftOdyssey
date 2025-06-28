@@ -150,7 +150,7 @@ interface DescriptionManager {
             "impetus" -> listOf(
                 "- While moving, deal ${5 + level * 5}%=[5 + (level x 5)] increased damage.")
             "leap_frog" -> listOf(
-                "- Increase jump height by ${level * 35}%=[level x 35]; the jump strength is doubled when sneaking.")
+                "- Increase jump height by ${level * 25}%=[level x 25]; the jump strength is doubled when sneaking.")
             "mandiblemania" -> listOf(
                 "- Dealing damage increases your saturation by ${level * 2}%=[level * 2].")
             "molten_core" -> listOf(
@@ -271,7 +271,7 @@ interface DescriptionManager {
                 "- Mining a block highlights ${level * 4}%=[level x 4] nearby blocks of the same type within an 8 block radius.",
                 "- Each detected block drains durability by 2.")
             "magic_aspect" -> listOf(
-                "- Convert ${level * 10}%=[level x 10] of melee damage into magic type damage.")
+                "- Convert ${level * 5}%=[level x 5] of melee damage into magic type damage.")
             "metabolic" -> listOf(
                 "- Have a ${level * 10}%=[level x 10] chance to regain food levels when breaking a block.")
             "pestilence" -> listOf(

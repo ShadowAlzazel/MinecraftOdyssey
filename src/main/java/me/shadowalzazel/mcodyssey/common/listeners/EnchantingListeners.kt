@@ -131,11 +131,16 @@ object EnchantingListeners : Listener, TomeEnchanting, RegistryTagManager {
         if (inventory.result == null) return
         val result = inventory.result ?: return
         // Update points
-        val newItem = result.clone().also {
-            it.updateEnchantPoints(resetLore = true)
+        if (event.result?.type == Material.BOOK) {
+            inventory.result = ItemStack(Material.BOOK)
+            event.result = ItemStack(Material.BOOK)
+        } else {
+            val newItem = result.clone().also {
+                it.updateEnchantPoints(resetLore = true)
+            }
+            inventory.result = newItem
+            event.result = newItem
         }
-        inventory.result = newItem
-        event.result = newItem
     }
 
     /*-----------------------------------------------------------------------------------------------*/

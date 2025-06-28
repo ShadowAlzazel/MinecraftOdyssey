@@ -43,6 +43,26 @@ object RecipeListeners : Listener {
 
                 }
         }
+
+        if (baseMaterial == ToolMaterial.DIAMOND) {
+            val crystalAlloyIngotRecipe = odysseyKey("crystal_alloy_ingot")
+            if (!player.hasDiscoveredRecipe(crystalAlloyIngotRecipe)) {
+                player.discoverRecipe(crystalAlloyIngotRecipe)
+            }
+            val arcanePenRecipe = odysseyKey("arcane_pen")
+            if (!player.hasDiscoveredRecipe(arcanePenRecipe)) {
+                player.discoverRecipe(arcanePenRecipe)
+            }
+            val arcaneScepterIngotRecipe = odysseyKey("arcane_scepter")
+            if (!player.hasDiscoveredRecipe(arcaneScepterIngotRecipe)) {
+                player.discoverRecipe(arcaneScepterIngotRecipe)
+            }
+            val arcaneWandIngotRecipe = odysseyKey("arcane_wan")
+            if (!player.hasDiscoveredRecipe(arcaneWandIngotRecipe)) {
+                player.discoverRecipe(arcaneWandIngotRecipe)
+            }
+        }
+
     }
 
     @EventHandler(priority = EventPriority.HIGH)

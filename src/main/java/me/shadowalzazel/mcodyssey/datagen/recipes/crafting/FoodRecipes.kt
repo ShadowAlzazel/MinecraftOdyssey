@@ -145,7 +145,7 @@ class FoodRecipes {
     private fun shoyuRamenRecipe(): ShapelessRecipe {
         val result = Item.SHOYU_RAMEN.newItemStack(1)
         return ShapelessRecipe(NamespacedKey(Odyssey.instance, "shoyu_ramen"), result).apply {
-            addIngredient(Material.COOKED_PORKCHOP)
+            addIngredient(Material.COOKED_CHICKEN)
             addIngredient(Material.WHEAT)
             addIngredient(Material.EGG)
             category = CraftingBookCategory.MISC
