@@ -1,13 +1,17 @@
+@file:Suppress("UnstableApiUsage")
+
 package me.shadowalzazel.mcodyssey.common.listeners
 
 import me.shadowalzazel.mcodyssey.util.AttributeManager
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.Material
+import org.bukkit.attribute.Attribute
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
+import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
@@ -22,13 +26,29 @@ object PetListener : Listener, AttributeManager, DataTagManager {
         // Make Permanent
         when (mainHand.getItemIdTag()) {
             "dog_spinach" -> {
-                entity.addPotionEffect(PotionEffect(PotionEffectType.STRENGTH, 10 * 20, 0))
+                entity.setAttributeModifier(
+                    2.0,
+                    "odyssey.item.dog_spinach.attack_damage",
+                    Attribute.ATTACK_DAMAGE,
+                    slotGroup = EquipmentSlotGroup.ANY
+                )
             }
             "dog_sizzle_crisp" -> {
-                entity.addPotionEffect(PotionEffect(PotionEffectType.FIRE_RESISTANCE,12 * 60 * 20, 0))
+                entity.setAttributeModifier(
+                    0.1,
+                    "odyssey.item.dog_sizzle_crisp.scale",
+                    Attribute.BURNING_TIME,
+                    slotGroup = EquipmentSlotGroup.ANY
+                )
             }
             "dog_milk_bone" -> {
                 entity.addHealthAttribute(10.0)
+                entity.setAttributeModifier(
+                    0.8,
+                    "odyssey.item.milk_bone.scale",
+                    Attribute.SCALE,
+                    slotGroup = EquipmentSlotGroup.ANY
+                )
             }
         }
     }

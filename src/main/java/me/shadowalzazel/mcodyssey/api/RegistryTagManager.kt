@@ -27,6 +27,9 @@ interface RegistryTagManager {
         return TagKey.create(registryKey, namespacedKey)
     }
 
+    /**
+     *
+     */
     fun <T: Keyed> getTagFromRegistry(registryKey: RegistryKey<T>, location: String, namespace: String="odyssey"): Tag<T> {
         //val blockRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.BLOCK)
         //val tagKey = TagKey.create(RegistryKey.BLOCK, NamespacedKey.minecraft("mineable/axe"))
@@ -37,9 +40,17 @@ interface RegistryTagManager {
         return paperRegistry.getTag(tagKey)
     }
 
-    fun <T: Keyed> getCollectionFromTag(registryKey: RegistryKey<T>, location: String, namespace: String="odyssey"): Collection<T> {
+    /**
+     *
+     *
+     *
+     * Example: val armorSet = getCollectionFromTag(RegistryKey.ENCHANTMENT, "in_table/armor")
+     */
+    fun <T: Keyed> getCollectionFromKey(registryKey: RegistryKey<T>, location: String, namespace: String="odyssey"): Collection<T> {
+        // Create a tag with given registry key and location
         val registry = getPaperRegistry(registryKey)
         val tag = getTagFromRegistry(registryKey, location, namespace)
+        // Get Collection
         val listOfValues: MutableList<T> = mutableListOf()
         for (tagEntry in tag.values()) {
             val value = registry.get(tagEntry.key()) ?: continue
@@ -48,5 +59,18 @@ interface RegistryTagManager {
         return listOfValues.toSet()
     }
 
+
+    fun <T: Keyed> getCollectionFromTag(
+        registryKey: RegistryKey<T>,
+        tag: Tag<T>): Collection<T> {
+        // Get Collection
+        val registry = getPaperRegistry(registryKey)
+        val listOfValues: MutableList<T> = mutableListOf()
+        for (tagEntry in tag.values()) {
+            val value = registry.get(tagEntry.key()) ?: continue
+            listOfValues.add(value)
+        }
+        return listOfValues.toSet()
+    }
 
 }

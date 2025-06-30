@@ -32,6 +32,20 @@ interface AttributeManager : ItemComponentsManager, RegistryTagManager {
         }
     }
 
+    fun LivingEntity.removeAttributeModifier(
+        name: String,
+        attribute: Attribute,
+        namespace: String = "odyssey"
+    ) {
+        val nameKey = NamespacedKey(namespace, name)
+        val entityAttribute = this.getAttribute(attribute) ?: return
+        val matchingModifier = entityAttribute.modifiers.find { it.key == nameKey }
+        if (matchingModifier != null) {
+            entityAttribute.removeModifier(nameKey)
+        }
+    }
+
+
     fun LivingEntity.addReachAttribute(
         value: Double,
         name: String)
