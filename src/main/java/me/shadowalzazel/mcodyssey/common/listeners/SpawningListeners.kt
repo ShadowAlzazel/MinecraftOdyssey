@@ -51,7 +51,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
         val inEdge = mob.location.world == Odyssey.instance.edge
         if (inEdge) {
             mob.addAttackAttribute(3.0, AttributeTags.MOB_EDGE_ATTACK_BONUS)
-            mob.addHealthAttribute(15.0, AttributeTags.MOB_EDGE_HEALTH_BONUS)
+            mob.setHealthAttribute(15.0, AttributeTags.MOB_EDGE_HEALTH_BONUS)
             mob.heal(15.0)
         }
     }
@@ -164,7 +164,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
         // Giant Spider,
         if (mob.scoreboardTags.contains("odyssey.giant")) {
             mob.apply {
-                addHealthAttribute(40.0, AttributeTags.MOB_HEALTH)
+                setHealthAttribute(40.0, AttributeTags.MOB_HEALTH)
                 heal(40.0)
                 addReachAttribute(0.5,  AttributeTags.MOB_REACH)
                 addAttackAttribute(10.0, AttributeTags.MOB_ATTACK_DAMAGE)
@@ -202,7 +202,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             // Apply Stats and weapon
             mob.apply {
                 // Stats
-                addHealthAttribute(15.0, AttributeTags.MOB_HEALTH)
+                setHealthAttribute(15.0, AttributeTags.MOB_HEALTH)
                 heal(15.0)
                 addAttackAttribute(4.0, AttributeTags.MOB_ATTACK_DAMAGE)
                 addScaleAttribute(0.1, AttributeTags.MOB_SCALE)
@@ -232,7 +232,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             createRandomizedMob(mob, equipmentRandomizer, enchanted = true, newWeapon = true)
             // Stats
             mob.addAttackAttribute(4.0, AttributeTags.MOB_ATTACK_DAMAGE)
-            mob.addHealthAttribute(10.0, AttributeTags.MOB_HEALTH)
+            mob.setHealthAttribute(10.0, AttributeTags.MOB_HEALTH)
             mob.addArmorAttribute(2.0, AttributeTags.MOB_ARMOR)
             mob.heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
         }
@@ -242,7 +242,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             addScoreboardTag(EntityTags.HANDLED)
             addScoreboardTag(EntityTags.SHADOW_MOB)
             // Stats
-            addHealthAttribute(10.0, AttributeTags.SHADOW_CHAMBERS_HEALTH_BONUS)
+            setHealthAttribute(10.0, AttributeTags.SHADOW_CHAMBERS_HEALTH_BONUS)
             heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
             addAttackAttribute(2.0, AttributeTags.SHADOW_CHAMBERS_ATTACK_BONUS)
             addArmorAttribute(2.0, AttributeTags.SHADOW_CHAMBERS_ARMOR_BONUS)
@@ -257,7 +257,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
         // Handle mob customization
         val mob = event.entity
         if (mob is Creaking) {
-            mob.addHealthAttribute(40.0, AttributeTags.MOB_HEALTH)
+            mob.setHealthAttribute(40.0, AttributeTags.MOB_HEALTH)
             mob.addSpeedAttribute(0.03, AttributeTags.MOB_MOVEMENT_SPEED)
             mob.heal(40.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
             mob.addAttackAttribute(8.0, AttributeTags.MOB_ATTACK_DAMAGE)
@@ -275,7 +275,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             createRandomizedMob(mob, equipmentRandomizer, enchanted = true, newWeapon = true)
             // Stats
             mob.addAttackAttribute(2.0, AttributeTags.MOB_ATTACK_DAMAGE)
-            mob.addHealthAttribute(10.0, AttributeTags.MOB_HEALTH)
+            mob.setHealthAttribute(10.0, AttributeTags.MOB_HEALTH)
             mob.addArmorAttribute(2.0, AttributeTags.MOB_ARMOR)
             mob.heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
         }
@@ -284,7 +284,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             // handlers
             addScoreboardTag(EntityTags.HANDLED)
             // Stats
-            addHealthAttribute(10.0, AttributeTags.TERMINAL_GRID_HEALTH_BONUS)
+            setHealthAttribute(10.0, AttributeTags.TERMINAL_GRID_HEALTH_BONUS)
             heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
             addAttackAttribute(2.0, AttributeTags.TERMINAL_GRID_ATTACK_BONUS)
             addArmorAttribute(2.0, AttributeTags.TERMINAL_GRID_ARMOR_BONUS)
@@ -313,7 +313,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             createRandomizedMob(mob, equipmentRandomizer, enchanted = true, newWeapon = true)
             // Stats
             mob.addAttackAttribute(2.0, AttributeTags.MOB_ATTACK_DAMAGE)
-            mob.addHealthAttribute(10.0, AttributeTags.MOB_HEALTH)
+            mob.setHealthAttribute(10.0, AttributeTags.MOB_HEALTH)
             mob.addArmorAttribute(2.0, AttributeTags.MOB_ARMOR)
             mob.heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
         }
@@ -322,7 +322,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             // handlers
             addScoreboardTag(EntityTags.HANDLED)
             // Stats
-            addHealthAttribute(10.0, AttributeTags.HYPERCUBIC_CHAMBER_HEALTH_BONUS)
+            setHealthAttribute(10.0, AttributeTags.HYPERCUBIC_CHAMBER_HEALTH_BONUS)
             heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
             addAttackAttribute(2.0, AttributeTags.HYPERCUBIC_CHAMBER_ATTACK_BONUS)
             addArmorAttribute(2.0, AttributeTags.HYPERCUBIC_CHAMBER_ARMOR_BONUS)
@@ -350,20 +350,20 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             createRandomizedMob(mob, equipmentRandomizer, enchanted = true, newWeapon = true)
             // Stats
             mob.addAttackAttribute(2.0, AttributeTags.MOB_ATTACK_DAMAGE)
-            mob.addHealthAttribute(10.0, AttributeTags.MOB_HEALTH)
+            mob.setHealthAttribute(10.0, AttributeTags.MOB_HEALTH)
             mob.addArmorAttribute(2.0, AttributeTags.MOB_ARMOR)
             mob.heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
         }
         // Creaking
         if (mob is Creaking) {
-            mob.addHealthAttribute(40.0, AttributeTags.MOB_HEALTH)
+            mob.setHealthAttribute(40.0, AttributeTags.MOB_HEALTH)
             mob.heal(40.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
             mob.addAttackAttribute(8.0, AttributeTags.MOB_ATTACK_DAMAGE)
         }
         // Spider
         if (mob.scoreboardTags.contains("odyssey.giant") && mob is Spider) {
             mob.apply {
-                addHealthAttribute(40.0, AttributeTags.MOB_HEALTH)
+                setHealthAttribute(40.0, AttributeTags.MOB_HEALTH)
                 heal(40.0)
                 addAttackAttribute(10.0, AttributeTags.MOB_ATTACK_DAMAGE)
                 addScaleAttribute(0.7, AttributeTags.MOB_SCALE)
@@ -375,7 +375,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             // handlers
             addScoreboardTag(EntityTags.HANDLED)
             // Stats
-            addHealthAttribute(10.0, AttributeTags.SUNKEN_LIBRARY_HEALTH_BONUS)
+            setHealthAttribute(10.0, AttributeTags.SUNKEN_LIBRARY_HEALTH_BONUS)
             heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
             addAttackAttribute(2.0, AttributeTags.SUNKEN_LIBRARY_ATTACK_BONUS)
             addArmorAttribute(2.0, AttributeTags.SUNKEN_LIBRARY_ARMOR_BONUS)
@@ -488,7 +488,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             }
             val bonusHealth = (rank * 3.0) + 4.0
             val bonusDamage = (rank * 2.0) + 1.0
-            addHealthAttribute(bonusHealth)
+            setHealthAttribute(bonusHealth)
             addAttackAttribute(bonusDamage)
         }
     }

@@ -228,7 +228,7 @@ interface MobMaker : EquipmentGenerator {
 
     private fun LivingEntity.setEliteAttributes(difficulty: Double = 1.0, modifier: Double = 1.0) {
         val value = difficulty * 1.0
-        addHealthAttribute((20.0 + (10.0 * value)) * modifier, AttributeTags.ELITE_HEALTH)
+        setHealthAttribute((20.0 + (10.0 * value)) * modifier, AttributeTags.ELITE_HEALTH)
         health += (20.0 + (10.0 * value)) * modifier
         addAttackAttribute((4 + (1.0 * value)) * modifier, AttributeTags.ELITE_ATTACK_DAMAGE)
         addArmorAttribute((2 + (1 * value)) * modifier, AttributeTags.ELITE_ARMOR)

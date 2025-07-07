@@ -19,7 +19,7 @@ internal interface ArmorUpgrading : EquipmentDataManager, AttributeManager, Adva
         if (recipe?.result?.type == Material.ENCHANTED_BOOK) return
         val inputMaterial = event.inventory.inputMineral ?: return
         val equipment = event.inventory.inputEquipment ?: return
-        if (getEquipmentMaterial(equipment) in SmithingMaps.NOT_UPGRADEABLE) return
+        if (getItemMaterialType(equipment) in SmithingMaps.NOT_UPGRADEABLE) return
         // Switch case
         when (inputMaterial.type) {
             Material.NETHERITE_INGOT -> return
@@ -71,7 +71,7 @@ internal interface ArmorUpgrading : EquipmentDataManager, AttributeManager, Adva
 
     // Main method to upgrade
     private fun armorUpgrader(item: ItemStack, upgradeMaterial: String): ItemStack {
-        val armorType = getDefaultType(item.type)!!
+        val armorType = getItemBaseToolName(item.type)!!
         val itemName = "${upgradeMaterial}_${armorType}"
         item.setStringTag(ItemDataTags.MATERIAL_TYPE, upgradeMaterial)
         // Copy Attributes

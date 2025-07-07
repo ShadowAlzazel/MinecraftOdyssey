@@ -4,7 +4,6 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.api.AdvancementManager
 import me.shadowalzazel.mcodyssey.api.EquipmentDataManager
-import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.util.ToolComponentHelper
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
@@ -26,7 +25,7 @@ internal interface ToolUpgrading : EquipmentDataManager, ToolComponentHelper, Ad
         if (recipe?.result?.type == Material.ENCHANTED_BOOK) return
         val inputMaterial = event.inventory.inputMineral ?: return
         val equipment = event.inventory.inputEquipment ?: return
-        if (getEquipmentMaterial(equipment) in SmithingMaps.NOT_UPGRADEABLE) return
+        if (getItemMaterialType(equipment) in SmithingMaps.NOT_UPGRADEABLE) return
         // Switch case
         when (inputMaterial.type) {
             Material.NETHERITE_INGOT -> netheriteUpgrading(event)
@@ -86,7 +85,7 @@ internal interface ToolUpgrading : EquipmentDataManager, ToolComponentHelper, Ad
             }
         }
         // Add ToolComponent
-        val mineableTags = getMiningTags(getEquipmentType(upgradedItem) ?: "none")
+        val mineableTags = getMiningTags(getItemToolType(upgradedItem) ?: "none")
         if (mineableTags != null) toolMiningUpgrader(upgradedItem, upgradeMaterial)
         // Finish
         event.result = upgradedItem
@@ -101,7 +100,7 @@ internal interface ToolUpgrading : EquipmentDataManager, ToolComponentHelper, Ad
 
     // Main method to upgrade
     private fun toolUpgrader(item: ItemStack, upgradeMaterial: String): ItemStack {
-        val toolType = getEquipmentType(item)!!
+        val toolType = getItemToolType(item)!!
         val itemName = "${upgradeMaterial}_${toolType}"
         val newModel = createOdysseyKey(itemName)
         item.setStringTag(ItemDataTags.MATERIAL_TYPE, upgradeMaterial)
@@ -114,7 +113,7 @@ internal interface ToolUpgrading : EquipmentDataManager, ToolComponentHelper, Ad
     }
 
     private fun toolMiningUpgrader(item: ItemStack, upgradeMaterial: String) {
-        val toolType = getEquipmentType(item) ?: return
+        val toolType = getItemToolType(item) ?: return
         val newToolComponent = newToolComponent(upgradeMaterial, toolType)
         if (newToolComponent != null) {
             item.resetData(DataComponentTypes.TOOL)

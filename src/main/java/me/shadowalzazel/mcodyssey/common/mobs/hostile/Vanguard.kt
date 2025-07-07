@@ -29,7 +29,7 @@ object Vanguard : OdysseyMob("Vanguard", "vanguard", EntityType.SKELETON, 25.0) 
         val mount = (world.spawnEntity(location, EntityType.SKELETON_HORSE) as SkeletonHorse).apply {
             isTamed = false
             addPassenger(knight)
-            addHealthAttribute(100.0, AttributeTags.MOB_HEALTH)
+            setHealthAttribute(100.0, AttributeTags.MOB_HEALTH)
             addSpeedAttribute(0.13, AttributeTags.MOB_MOVEMENT_SPEED)
             addStepAttribute(2.5)
             heal(100.0)
@@ -72,7 +72,7 @@ object Vanguard : OdysseyMob("Vanguard", "vanguard", EntityType.SKELETON, 25.0) 
 
         // Apply Stats and weapon
         mob.apply {
-            addHealthAttribute(25.0, AttributeTags.MOB_HEALTH)
+            setHealthAttribute(25.0, AttributeTags.MOB_HEALTH)
             heal(25.0)
             addAttackAttribute(10.0, AttributeTags.MOB_ATTACK_DAMAGE)
             addScaleAttribute(0.1, AttributeTags.MOB_SCALE)

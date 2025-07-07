@@ -5,7 +5,7 @@
  */
 
 group = "me.shadowalzazel"
-version = "1.0.4-ALPHA-1.21.6"
+version = "1.0.5-ALPHA-1.21.7"
 description = "A server side expansion pack for a new minecraft adventure!"
 
 plugins {
@@ -35,10 +35,10 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.6-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.7-R0.1-SNAPSHOT")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
     //implementation(kotlin("stdlib-jdk21"))
-    paperweight.paperDevBundle("1.21.6-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.21.7-R0.1-SNAPSHOT")
 }
 
 publishing {
@@ -68,7 +68,7 @@ tasks {
             "name" to project.name,
             "version" to project.version,
             "description" to project.description,
-            "apiVersion" to "1.21.6"
+            "apiVersion" to "1.21.7"
         )
         inputs.properties(props)
         filesMatching("plugin.yml") {

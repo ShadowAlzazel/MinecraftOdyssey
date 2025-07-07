@@ -118,7 +118,7 @@ class TheAmbassador(location: Location) : OdysseyBoss(
             equipment.boots = ItemStack(Material.DIAMOND_BOOTS)
             equipment.itemInMainHandDropChance = 100F
             // Health
-            addHealthAttribute(930.0, "boss.health")
+            setHealthAttribute(930.0, "boss.health")
             addArmorAttribute(6.0, "boss.armor")
             health = 950.0
             // Add Kinetic Blaster

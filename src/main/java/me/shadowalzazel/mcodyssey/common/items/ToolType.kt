@@ -51,11 +51,15 @@ enum class ToolType(
         fun getVanillaTypes(): List<ToolType> {
             return listOf(
                 SWORD,
-                AXE,
                 PICKAXE,
                 SHOVEL,
-                HOE
+                HOE,
+                AXE
             )
+        }
+
+        fun getOdysseyTypes(): List<ToolType> {
+            return getSwordVariants() + getAxeVariants() +  getPolearmVariants()
         }
 
         fun getSwordVariants(): List<ToolType> {
@@ -91,7 +95,8 @@ enum class ToolType(
             )
         }
 
-        fun fromRecipeName(name: String): ToolType? = entries.find { name.contains(it.toolName) }
+        fun getFromName(name: String): ToolType? = entries.find { name == it.toolName }
+
 
 
     }

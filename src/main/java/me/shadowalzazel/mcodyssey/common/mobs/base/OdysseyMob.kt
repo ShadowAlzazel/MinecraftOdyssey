@@ -24,7 +24,7 @@ open class OdysseyMob(
             addScoreboardTag("odyssey.$tagName")
             // Health
             if (this is LivingEntity) {
-                addHealthAttribute(bonusHealth, AttributeTags.MOB_HEALTH)
+                setHealthAttribute(bonusHealth, AttributeTags.MOB_HEALTH)
                 heal(bonusHealth)
             }
         }

@@ -1,5 +1,7 @@
 package me.shadowalzazel.mcodyssey.api
 
+import io.papermc.paper.datacomponent.DataComponentTypes
+import me.shadowalzazel.mcodyssey.common.items.ToolType
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import org.bukkit.Material
@@ -7,15 +9,29 @@ import org.bukkit.inventory.ItemStack
 
 interface EquipmentDataManager : DataTagManager {
 
-    fun getEquipmentType(item: ItemStack): String? {
-        return item.getStringTag(ItemDataTags.TOOL_TYPE) ?: getDefaultType(item.type)
+    fun getItemToolType(item: ItemStack): String? {
+        return getItemToolTypeFromName(item) ?: getItemBaseToolName(item.type)
     }
 
-    fun getEquipmentMaterial(item: ItemStack): String? {
+    private fun getItemToolTypeFromName(item: ItemStack): String? {
+        val toolTypeTag = item.getStringTag(ItemDataTags.TOOL_TYPE)
+        if (toolTypeTag != null) return toolTypeTag
+
+        val nameId = item.getItemNameId()
+        //val modelId = item.getData(DataComponentTypes.ITEM_MODEL)
+        val odysseyTools = ToolType.getOdysseyTypes()
+        val vanillaTools = ToolType.getVanillaTypes()
+        val toolType = odysseyTools.find { nameId.contains(it.toolName) }
+        val vanillaToolType = vanillaTools.find { nameId.contains(it.toolName) }
+        return toolType?.toolName ?: vanillaToolType?.toolName
+    }
+
+
+    fun getItemMaterialType(item: ItemStack): String? {
         return item.getStringTag(ItemDataTags.MATERIAL_TYPE)
     }
 
-    fun getDefaultType(material: Material): String? {
+    fun getItemBaseToolName(material: Material): String? {
         return when(material) {
             Material.WOODEN_SWORD, Material.GOLDEN_SWORD, Material.STONE_SWORD,
             Material.IRON_SWORD, Material.DIAMOND_SWORD, Material.NETHERITE_SWORD -> {
@@ -60,7 +76,7 @@ interface EquipmentDataManager : DataTagManager {
     }
 
     fun itemIsArmor(material: Material): Boolean {
-        return getDefaultType(material) in listOf("helmet", "chestplate", "leggings", "boots")
+        return getItemBaseToolName(material) in listOf("helmet", "chestplate", "leggings", "boots")
     }
 
     fun equipmentIsIron(material: Material): Boolean {

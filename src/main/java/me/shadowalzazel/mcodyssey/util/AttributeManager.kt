@@ -60,7 +60,7 @@ interface AttributeManager : ItemComponentsManager, RegistryTagManager {
         this.setAttributeModifier(value, name, Attribute.SCALE)
     }
 
-     fun LivingEntity.addHealthAttribute(
+     fun LivingEntity.setHealthAttribute(
         value: Double,
         name: String = AttributeTags.EXTRA_HEALTH_GENERIC)
     {

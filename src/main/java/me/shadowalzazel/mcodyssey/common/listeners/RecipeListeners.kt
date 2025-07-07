@@ -57,7 +57,7 @@ object RecipeListeners : Listener {
             if (!player.hasDiscoveredRecipe(arcaneScepterIngotRecipe)) {
                 player.discoverRecipe(arcaneScepterIngotRecipe)
             }
-            val arcaneWandIngotRecipe = odysseyKey("arcane_wan")
+            val arcaneWandIngotRecipe = odysseyKey("arcane_wand")
             if (!player.hasDiscoveredRecipe(arcaneWandIngotRecipe)) {
                 player.discoverRecipe(arcaneWandIngotRecipe)
             }

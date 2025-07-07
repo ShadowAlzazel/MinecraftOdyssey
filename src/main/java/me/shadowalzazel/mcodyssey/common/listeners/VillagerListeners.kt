@@ -74,7 +74,8 @@ object VillagerListeners : Listener, RegistryTagManager {
         }
     }
 
-    @EventHandler
+    //@EventHandler
+    // DISABLED FOR NOW
     fun villagerSpawn(event: CreatureSpawnEvent) {
         val mob = event.entity
         // Only care for custom biomes

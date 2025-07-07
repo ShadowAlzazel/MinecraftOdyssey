@@ -46,9 +46,8 @@ object ArcaneListeners: Listener, ArcaneEquipmentManager, DataTagManager {
         val dispensedItem = event.item
         val itemName = dispensedItem.getItemNameId()
         if (itemName == "spell_scroll") {
-            // Triggered
+            // Triggered for block
             val direction = event.velocity
-            println("triggered spell scroll dispense")
             event.item = ItemStack(Material.AIR)
         }
 

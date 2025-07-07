@@ -12,8 +12,6 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.bukkit.inventory.EquipmentSlotGroup
-import org.bukkit.potion.PotionEffect
-import org.bukkit.potion.PotionEffectType
 
 object PetListener : Listener, AttributeManager, DataTagManager {
     @EventHandler
@@ -24,7 +22,7 @@ object PetListener : Listener, AttributeManager, DataTagManager {
         val mainHand = event.player.inventory.itemInMainHand
         val entity = event.rightClicked as LivingEntity
         // Make Permanent
-        when (mainHand.getItemIdTag()) {
+        when (mainHand.getItemNameId()) {
             "dog_spinach" -> {
                 entity.setAttributeModifier(
                     2.0,
@@ -42,7 +40,7 @@ object PetListener : Listener, AttributeManager, DataTagManager {
                 )
             }
             "dog_milk_bone" -> {
-                entity.addHealthAttribute(10.0)
+                entity.setHealthAttribute(10.0)
                 entity.setAttributeModifier(
                     0.8,
                     "odyssey.item.milk_bone.scale",

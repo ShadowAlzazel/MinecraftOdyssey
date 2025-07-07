@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.common.listeners
 
+import me.shadowalzazel.mcodyssey.common.items.Item
 import me.shadowalzazel.mcodyssey.common.listeners.utility.LootLogic
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import org.bukkit.Particle
@@ -18,17 +19,21 @@ object LootListeners : Listener {
         val mob = event.entity
         if (!mob.hasAI()) return
         val killer = mob.killer!!
-        // Mineshaft
-        if (mob.scoreboardTags.contains(EntityTags.IN_MINESHAFT)) {
-            val mobLootLogic = LootLogic(1.0, mob, killer)
-            if (mobLootLogic.roll(33.0)) {
-                //mob.world.dropItem(mob.location, Ingredients.SILVER_NUGGET.createStack(1)) TODO: Finish
+        // Ectoplasm
+        if (killer.location.block.biome.key.key == "soul_sand_valley"
+            && mob.location.block.biome.key.key == "soul_sand_valley") {
+            val mobLootLogic = LootLogic(50.0, mob, killer)
+            if (mobLootLogic.roll(0.0)) {
+                mob.world.dropItem(mob.location, Item.ECTOPLASM.newItemStack(1))
             }
         }
+
         // Arcane Book Handler
+        /*
         if (mob.hasLineOfSight(killer)) {
             mobArcaneBookLoot(mob, killer)
         }
+         */
     }
 
 
