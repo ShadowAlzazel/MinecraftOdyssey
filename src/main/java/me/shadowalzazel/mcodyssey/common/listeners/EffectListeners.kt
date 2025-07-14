@@ -98,7 +98,8 @@ object EffectListeners : Listener, EffectsManager {
         if (item.getData(DataComponentTypes.POTION_CONTENTS) == null) return
         // Task
         val effects = getPotionEffects(item) ?: return
-        val task = AuraPotionEffect(event.player, effects, 20, Color.GREEN) // TEMP: TODO
+        val task = AuraPotionEffect(event.player, effects, 20, Color.GREEN)
+        // TODO: Stacking Aura Effects
         task.runTaskTimer(Odyssey.instance, 0, 20)
     }
 

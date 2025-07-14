@@ -834,7 +834,7 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         level: Int
     ) {
         // Fire
-        if (defender.fireTicks > 20) {
+        if (defender.fireTicks > 20 && defender.fireTicks <= (20 * 20)) {
             attacker.fireTicks += ((level * 4) * 20) * 2
         } else {
             attacker.fireTicks += (level * 4) * 20

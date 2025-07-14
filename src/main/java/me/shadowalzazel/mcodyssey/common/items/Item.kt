@@ -184,6 +184,7 @@ open class Item(
         val WARPING_WAND = DataItem("warping_wand")
         val VOID_LINKED_KUNAI = DataItem("void_linked_kunai")
         val SCROLL = DataItem("scroll")
+        val WARDEN_ENTRAILS = DataItem("scroll") // TODO -> change to 'warden_entrails'
         // ---------------------------------- ODYSSEY GENERATED -----------------------------------
         // Potions
         val POTION_VIAL = GeneratedItem("potion_vial", Potions.POTION_VIAL)

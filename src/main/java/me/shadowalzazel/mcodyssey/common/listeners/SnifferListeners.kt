@@ -79,9 +79,7 @@ object SnifferListeners : Listener, DataTagManager {
         }
         event.itemDrop.itemStack = drop
         println(event.entity.type.toString() + " Drops " + event.itemDrop)
-
          */
-
     }
 
     @EventHandler

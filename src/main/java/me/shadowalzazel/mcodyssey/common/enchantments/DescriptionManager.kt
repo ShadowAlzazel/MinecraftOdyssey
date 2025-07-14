@@ -239,7 +239,7 @@ interface DescriptionManager {
             "execution" -> listOf(
                 "- Execute an enemy if it is below ${level * 2}%=[level x 2] max health.")
             "expedite" -> listOf(
-                "- Increase base mining speed by ${level * 5}%=[level x 5].")
+                "- Increase base mining speed by ${level * 25}%=[level x 25].")
             "exploding" -> listOf(
                 "- Killing an enemy creates an explosion that damages enemies",
                 "for a maximum of ${(level * 1.0).pow(2)}=[level ^ 2] at the center.")

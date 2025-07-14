@@ -1,16 +1,24 @@
 package me.shadowalzazel.mcodyssey.common.listeners
 
+import io.papermc.paper.datacomponent.DataComponentTypes
+import io.papermc.paper.datacomponent.item.ItemEnchantments
+import me.shadowalzazel.mcodyssey.common.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.common.items.Item
 import me.shadowalzazel.mcodyssey.common.listeners.utility.LootLogic
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
+import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
+import org.bukkit.entity.Warden
+import org.bukkit.entity.Wither
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDeathEvent
+import org.bukkit.inventory.ItemStack
 
+@Suppress("UnstableApiUsage")
 object LootListeners : Listener {
 
     @EventHandler
@@ -27,13 +35,21 @@ object LootListeners : Listener {
                 mob.world.dropItem(mob.location, Item.ECTOPLASM.newItemStack(1))
             }
         }
-
-        // Arcane Book Handler
-        /*
-        if (mob.hasLineOfSight(killer)) {
-            mobArcaneBookLoot(mob, killer)
+        // Boss drops
+        when(mob) {
+            is Warden -> {
+                mob.world.dropItem(mob.location, Item.WARDEN_ENTRAILS.newItemStack(1))
+            }
+            is Wither -> {
+                val book = ItemStack(Material.ENCHANTED_BOOK)
+                val enchantments = ItemEnchantments.itemEnchantments().add(
+                    OdysseyEnchantments.STYX_ROSE,
+                    2
+                )
+                book.setData(DataComponentTypes.STORED_ENCHANTMENTS, enchantments)
+                mob.world.dropItem(mob.location, book)
+            }
         }
-         */
     }
 
 

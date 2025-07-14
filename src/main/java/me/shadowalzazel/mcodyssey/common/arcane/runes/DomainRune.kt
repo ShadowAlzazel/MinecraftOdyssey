@@ -57,12 +57,6 @@ sealed class DomainRune: ArcaneRune(), RayTracerAndDetector {
             }
             is Self -> {
                 // Add self to target-able entities
-                /*
-                if (domain.caster in domain.ignoredTargets) {
-                    domain.ignoredTargets.remove(domain.caster)
-                }
-                 */
-
                 val ignoredTargets = domain.ignoredTargets.toList()
                 for (n in ignoredTargets) {
                     // Look for self in ignoredTargets, then remove
@@ -96,6 +90,7 @@ sealed class DomainRune: ArcaneRune(), RayTracerAndDetector {
                     successful = false
                 }
             }
+            // Sets TARGET to NEAREST entity from the CastingLocation
             is Nearby -> {
                 // Get Nearby entities if not target or ignored
                 val nearby = domain.castingLocation.getNearbyLivingEntities(6.0)
@@ -117,12 +112,15 @@ sealed class DomainRune: ArcaneRune(), RayTracerAndDetector {
                     val nearestEntity = sortedNearby.first()
                     // Set Target, Location and Direction
                     domain.target = ArcaneTarget(entityTarget = nearestEntity)
-                    domain.targetLocation = nearestEntity.eyeLocation
-                    domain.direction = nearestEntity.eyeLocation.clone().subtract(domain.castingLocation).toVector()
+                    //domain.targetLocation = nearestEntity.eyeLocation
+                    //domain.direction = nearestEntity.eyeLocation.clone().subtract(domain.castingLocation).toVector()
                 }
                 else {
                     successful = false
                 }
+            }
+            is Trace -> {
+                // New Direction?
             }
             is Swap -> {
                 // Swap domains
@@ -144,6 +142,7 @@ sealed class DomainRune: ArcaneRune(), RayTracerAndDetector {
         // Apply changes to the context
         if (successful) {
             context.also {
+                // apply domain changes
                 it.castingLocation = domain.castingLocation
                 it.direction = domain.direction
                 it.target = domain.target
@@ -194,6 +193,11 @@ sealed class DomainRune: ArcaneRune(), RayTracerAndDetector {
     data object Nearby : DomainRune() {
         override val name = "nearby"
         override val displayName = "Nearby"
+    }
+
+    data object Trace : DomainRune() {
+        override val name = "trace"
+        override val displayName = "Trace"
     }
 
     // Looks for a new entity/location that is NOT the same

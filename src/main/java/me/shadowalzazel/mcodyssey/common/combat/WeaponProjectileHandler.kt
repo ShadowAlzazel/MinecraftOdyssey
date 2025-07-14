@@ -47,6 +47,7 @@ interface WeaponProjectileHandler : DataTagManager, EnchantmentManager, AttackHe
         val crossbow = event.bow ?: return
         // Offhand
         val offhand = event.entity.equipment?.itemInOffHand ?: return
+        if (offhand.type != Material.ARROW) return
         // Auto Crossbow
         if (crossbow.itemMeta is CrossbowMeta) {
             // Check if match

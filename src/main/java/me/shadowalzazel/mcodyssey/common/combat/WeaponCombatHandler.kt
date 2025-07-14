@@ -30,6 +30,11 @@ interface WeaponCombatHandler : AttackHelper, DataTagManager {
         return null
     }
 
+    // TODO: Blocking
+    // Have weapons have shield blocking component to block/parry attacks
+    // TODO: PARRY
+    // Parry weapons have a window to block 4 ticks (0.2 seconds)
+
     fun weaponBonusEffectsHandler(event: EntityDamageByEntityEvent) {
         val player = event.damager as Player
         val victim = event.entity as LivingEntity

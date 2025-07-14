@@ -23,7 +23,7 @@ sealed class AugmentRune : ArcaneRune() {
                     // Use the wiki to find the values to break
                     // https://minecraft.wiki/w/Module:Blast_resistance_values
                     // TODO: Disabled for now
-                    //block.breakNaturally()
+                    block.breakNaturally()
                 }
             }
             is PickUp -> {

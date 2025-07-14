@@ -4,8 +4,11 @@ import me.shadowalzazel.mcodyssey.common.arcane.RuneDataManager
 import me.shadowalzazel.mcodyssey.common.arcane.util.ArcaneCaster
 import me.shadowalzazel.mcodyssey.common.arcane.util.ArcaneTarget
 import me.shadowalzazel.mcodyssey.common.combat.AttackHelper
+import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.damage.DamageType
+import org.bukkit.entity.EntityType
+import org.bukkit.entity.FallingBlock
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.Vector
@@ -78,6 +81,12 @@ sealed class ArcaneSource(
             Void -> 3.0
         }
 
+        val world = if (caster.isEntity) {
+            caster.entityCaster!!.world
+        } else {
+            caster.blockCaster!!.world
+        }
+
         // Damage Logic for Entity Caster -> Entity Target
         if (target.isEntity && target.entityTarget is LivingEntity) {
             // Damage Logic FOR Entity Damage source
@@ -98,6 +107,21 @@ sealed class ArcaneSource(
                     val magnitude = 2.0
                     val push = target.entityTarget.velocity.add(direction.normalize()).multiply(magnitude)
                     target.entityTarget.velocity = push
+                }
+                else -> {}
+            }
+        }
+        // Logic for when target is a block
+        if (target.isBlock && target.blockTarget != null) {
+            when(this@ArcaneSource) {
+                Aero -> {
+                    val magnitude = 1.0
+                    //val blockEntity = world.spawnEntity(target.getLocation(), EntityType.FALLING_BLOCK) as FallingBlock
+                    //blockEntity.blockData = target.blockTarget.blockData.clone()
+                    //blockEntity.blockState = target.blockTarget.state
+                    //val push = blockEntity.velocity.add(direction.normalize()).multiply(magnitude)
+                    // CHECK if movable here
+                    //blockEntity.velocity = push
                 }
                 else -> {}
             }

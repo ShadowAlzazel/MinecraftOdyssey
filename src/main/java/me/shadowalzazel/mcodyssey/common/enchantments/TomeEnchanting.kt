@@ -56,7 +56,7 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager {
             val enchantmentMap = storedEnchants.enchantments().toMutableMap()
             enchantmentMap.remove(enchantToRemove.first)
             val enchantmentBuilder = ItemEnchantments.itemEnchantments().addAll(enchantmentMap)
-            item.setData(DataComponentTypes.ENCHANTMENTS, enchantmentBuilder)
+            item.setData(DataComponentTypes.STORED_ENCHANTMENTS, enchantmentBuilder)
             item.updateEnchantPoints()
         }
 
@@ -69,7 +69,6 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager {
                     v.getAdvancementProgress(advancement).awardCriteria("requirement")
                 }
             }
-
         }
 
         return item

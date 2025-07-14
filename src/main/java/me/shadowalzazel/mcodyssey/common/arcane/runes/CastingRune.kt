@@ -235,24 +235,38 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
 
             // After running target checks
             if (rayTraceEntity is LivingEntity) {
+                val newTarget = ArcaneTarget(entityTarget = rayTraceEntity)
+                context.target = newTarget
                 source.invoke(
-                    target = ArcaneTarget(rayTraceEntity),
+                    target = newTarget,
                     caster = caster,
                     direction = beamDirection,
                     bonus = damage
                 )
                 endLocation = rayTraceEntity.eyeLocation
             }
+            // Is Not a Living Entity
             else {
                 val rayTraceBlock = context.world.rayTraceBlocks(
                     context.castingLocation,
                     context.direction,
                     totalRange,
                     FluidCollisionMode.NEVER)?.hitBlock
-                endLocation = if (rayTraceBlock != null) {
-                    rayTraceBlock.location.toCenterLocation()
-                } else {
-                    context.castingLocation.clone().add(context.direction.clone().normalize().multiply(totalRange))
+                // Set end location
+                if (rayTraceBlock != null) {
+                    val newTarget = ArcaneTarget(blockTarget = rayTraceBlock)
+                    context.target = newTarget
+                    source.invoke(
+                        target = newTarget,
+                        caster = caster,
+                        direction = beamDirection,
+                        bonus = damage
+                    )
+                    endLocation = rayTraceBlock.location.toCenterLocation()
+                }
+                // Fallback is just a line to max range
+                else {
+                    endLocation = context.castingLocation.clone().add(context.direction.clone().normalize().multiply(totalRange))
                 }
             }
 
