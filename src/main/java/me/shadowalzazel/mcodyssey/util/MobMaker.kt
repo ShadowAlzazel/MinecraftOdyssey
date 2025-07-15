@@ -6,10 +6,7 @@ import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
 import me.shadowalzazel.mcodyssey.common.items.ToolType
-import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
-import me.shadowalzazel.mcodyssey.util.constants.CustomColors
-import me.shadowalzazel.mcodyssey.util.constants.EntityTags
-import me.shadowalzazel.mcodyssey.util.constants.MobData
+import me.shadowalzazel.mcodyssey.util.constants.*
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.entity.*
@@ -133,6 +130,7 @@ interface MobMaker : EquipmentGenerator {
             if (!mainHand.hasData(DataComponentTypes.ENCHANTMENTS)) enchantItemsRandomly(listOf(mainHand), 10 + difficulty.toInt())
             enchantItemsRandomly(armorList, 10 + difficulty.toInt())
         }
+        mainHand.setIntTag(ItemDataTags.EXTRA_ENCHANTABILITY_POINTS, (1..3).random())
 
         // Apply to Mob
         mob.apply {
@@ -183,6 +181,7 @@ interface MobMaker : EquipmentGenerator {
         mainHand.apply {
             addShinyEnchant(shinyEnchant, checkedMax)
             addEnchantment(OdysseyEnchantments.O_SHINY, 1)
+            setIntTag(ItemDataTags.EXTRA_ENCHANTABILITY_POINTS, (2..5).random())
             updateEnchantPoints()
         }
         enchantItemsRandomly(armorList, 25 + difficulty.toInt())
@@ -215,13 +214,6 @@ interface MobMaker : EquipmentGenerator {
             addScaleAttribute(0.2)
             setEliteAttributes(difficulty)
             setArmorDropChances(0.085F)
-            // Persistent
-            /*
-            if (mob.location.block.lightFromSky > 5) {
-                isPersistent = true
-            }
-
-             */
         }
     }
 
@@ -246,7 +238,7 @@ interface MobMaker : EquipmentGenerator {
             it.distance(it.clone().zero()).absoluteValue
         }
         // Formula
-        val scaleDist = 1.0 / 10000.0
+        val scaleDist = 1.0 / 12000.0
         return (scaleDist * distanceFromZero) + (scaleDist * distanceFromZero).pow(2)
     }
 

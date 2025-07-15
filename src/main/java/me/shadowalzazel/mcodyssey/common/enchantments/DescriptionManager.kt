@@ -373,6 +373,11 @@ interface DescriptionManager {
                 "to damage the user instead.")
             "fealty" -> listOf(
                 "- When the wearer dies, this item is kept when respawning.")
+            // New
+            "cloud_jumper" -> listOf( // boots
+                "- Have ${level}=[level] more jumps.")
+            "moon_walker" -> listOf( // boots
+                "- Reduce gravity by ${level * 10}%=[level x 10].")
             // Fallback
             else -> listOf("No description for $name")
         }

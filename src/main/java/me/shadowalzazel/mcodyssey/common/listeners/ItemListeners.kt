@@ -42,12 +42,42 @@ object ItemListeners : Listener, DataTagManager {
     fun deathHandler(event: EntityDeathEvent) {
         if (event.entity.killer != null && event.droppedExp > 0) {
             val killer = event.entity.killer ?: return
-            if (killer.inventory.itemInMainHand.getStringTag(ItemDataTags.MATERIAL_TYPE) != "soul_steel") return
-            // Soul steel
-            var expDrop = 0.0
-            val hasSoulSteel = true
-            if (hasSoulSteel) expDrop += 0.15
-            event.droppedExp += (event.droppedExp * (1 + expDrop)).toInt()
+            val inventory = killer.inventory
+            // Check each slot for soul steel
+            var bonusSoulSteelExp = 0.0
+            inventory.also {
+                // Helmet
+                if (it.boots?.getStringTag(ItemDataTags.MATERIAL_TYPE) == "soul_steel"
+                    || it.boots?.getItemNameId()?.contains("soul_steel") == true) {
+                    bonusSoulSteelExp += 0.1
+                }
+                // Chestplate
+                if (it.chestplate?.getStringTag(ItemDataTags.MATERIAL_TYPE) == "soul_steel"
+                    || it.chestplate?.getItemNameId()?.contains("soul_steel") == true) {
+                    bonusSoulSteelExp += 0.1
+                }
+                // Leggings
+                if (it.leggings?.getStringTag(ItemDataTags.MATERIAL_TYPE) == "soul_steel"
+                    || it.leggings?.getItemNameId()?.contains("soul_steel") == true) {
+                    bonusSoulSteelExp += 0.1
+                }
+                // Boots
+                if (it.boots?.getStringTag(ItemDataTags.MATERIAL_TYPE) == "soul_steel"
+                    || it.boots?.getItemNameId()?.contains("soul_steel") == true) {
+                    bonusSoulSteelExp += 0.1
+                }
+                // Mainhand
+                if (it.itemInMainHand.getStringTag(ItemDataTags.MATERIAL_TYPE) == "soul_steel"
+                    || it.itemInMainHand.getItemNameId().contains("soul_steel")) {
+                    bonusSoulSteelExp += 0.15
+                }
+            }
+            // Dont care if no soul steel
+            if (bonusSoulSteelExp <= 0.0) return
+            // Soul steel bonus
+            var expBonusPercent = 0.0
+            expBonusPercent += bonusSoulSteelExp
+            event.droppedExp += (event.droppedExp * (1 + expBonusPercent)).toInt()
             with(killer.world) {
                 spawnParticle(Particle.SOUL, killer.location, 2, 0.05, 0.25, 0.05)
                 spawnParticle(Particle.SCULK_SOUL, killer.location, 3, 0.15, 0.25, 0.15)

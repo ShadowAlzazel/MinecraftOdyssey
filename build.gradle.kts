@@ -13,7 +13,7 @@ plugins {
     `maven-publish`
     kotlin("jvm") version "2.0.21"
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("io.papermc.paperweight.userdev") version "2.0.0-beta.17" // Check for new versions at https://plugins.gradle.org/plugin/io.papermc.paperweight.userdev
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.18" // Check for new versions at https://plugins.gradle.org/plugin/io.papermc.paperweight.userdev
 }
 
 java {

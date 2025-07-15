@@ -251,8 +251,6 @@ interface EnchantabilityHandler : EnchantmentManager, DescriptionManager, DataTa
     /*-----------------------------------------------------------------------------------------------*/
     // Point Default
     fun itemEnchantabilityPoints(item: ItemStack): Int {
-        // do: ALL variations
-        // Make map of material type i.e. gold
         // And tool/armor type
         val baseMaterialPoints = when(item.type) {
             Material.NETHERITE_HELMET, Material.DIAMOND_HELMET, Material.IRON_HELMET, Material.CHAINMAIL_HELMET,
@@ -261,6 +259,9 @@ interface EnchantabilityHandler : EnchantmentManager, DescriptionManager, DataTa
             }
             Material.NETHERITE_BOOTS, Material.DIAMOND_BOOTS, Material.IRON_BOOTS,
             Material.CHAINMAIL_BOOTS, Material.GOLDEN_BOOTS, Material.LEATHER_BOOTS -> {
+                40
+            }
+            Material.BOW -> {
                 40
             }
             Material.NETHERITE_LEGGINGS, Material.DIAMOND_LEGGINGS, Material.IRON_LEGGINGS,
@@ -282,6 +283,7 @@ interface EnchantabilityHandler : EnchantmentManager, DescriptionManager, DataTa
         if (isEnchantMaterial || isEnchantName) {
             bonusPoints += 5
         }
+        // Extra points
         val extraPoints = item.getIntTag(ItemDataTags.EXTRA_ENCHANTABILITY_POINTS) ?: 0
         bonusPoints += extraPoints
 
