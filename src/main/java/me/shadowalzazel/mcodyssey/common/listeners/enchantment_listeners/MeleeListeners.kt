@@ -31,10 +31,13 @@ import org.bukkit.util.Vector
 import java.util.*
 import kotlin.math.pow
 
-
+@Suppress("UnstableApiUsage")
 object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManager {
 
     private val recallTargets: MutableMap<UUID, LivingEntity> = mutableMapOf()
+    private val invocativePreviousDamage: MutableMap<UUID, Double> = mutableMapOf()
+    private val invocativeLastTarget: MutableMap<UUID, UUID> = mutableMapOf()
+    private val vengefulTargets: MutableMap<UUID, UUID> = mutableMapOf()
 
     // Main function for enchantments relating to entity damage
     @Suppress("UnstableApiUsage")
@@ -48,6 +51,12 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         } else {
             event.damageSource.causingEntity
         }
+        // Set tags like vengeful (FOR now Players)
+        if (event.entity is Player) {
+            vengefulTargets[event.entity.uniqueId] = event.damager.uniqueId
+        }
+
+        // Do Enchant checks
         if (event.damage <= 0.0) return // Prevent going through shields
         if (attacker !is LivingEntity) return
         if (attacker.equipment?.itemInMainHand?.hasItemMeta() == false) return
@@ -115,7 +124,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
                     event.damage += illucidationEnchantment(victim, enchant.value, event.isCritical) * power
                 }
                 "invocative" -> {
-                    invocativeEnchantment(attacker, victim, event.damage, enchant.value)
+                    invocativeEnchantment(event, enchant.value)
                 }
                 "magic_aspect" -> {
                     event.damage -= magicAspectEnchantment(attacker, victim, event.damage, enchant.value)
@@ -134,6 +143,9 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
                 }
                 "void_strike" -> {
                     event.damage += voidStrikeEnchantment(attacker, victim, enchant.value) * power
+                }
+                "vengeful" -> {
+                    vengefulEnchantment(event, enchant.value)
                 }
                 "whirlwind" -> {
                     whirlwindEnchantment(attacker, victim, event.damage, enchant.value)
@@ -371,13 +383,6 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         val distance = attackerLocation.distance(victimLocation)
 
         attacker.teleport(victimLocation)
-        /*
-        if (attacker is HumanEntity) {
-            val log2Amount = maxOf(log2(distance).toInt() - 1, 0)
-            attacker.foodLevel = maxOf(attacker.foodLevel - log2Amount, 0)
-        }
-
-         */
         victim.teleport(attackerLocation)
     }
 
@@ -544,11 +549,10 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
     }
 
     private fun freezingAspectEnchantment(victim: LivingEntity, level: Int) {
-        with(victim) {
-            if (freezeTicks <= 50) {
-                addOdysseyEffect(EffectTags.FREEZING, (level * 4) * 20, level)
-                world.spawnParticle(Particle.SNOWFLAKE, this@with.location, 5, 0.05, 0.05, 0.05)
-            }
+        victim.addOdysseyEffect(EffectTags.FREEZING, (level * 4) * 20, level)
+        if (victim.freezeTicks <= 20 * ((4 * level) + 2)) {
+            victim.world.spawnParticle(Particle.SNOWFLAKE, victim.location, 5, 0.05, 0.05, 0.05)
+            victim.freezeTicks += 40
         }
     }
 
@@ -734,8 +738,8 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
 
     }
 
-    @Suppress("UnstableApiUsage")
-    private fun invocativeEnchantment(attacker: LivingEntity, victim: LivingEntity, damage: Double, level: Int) {
+    // Old Invocative
+    private fun recallEnchantment(attacker: LivingEntity, victim: LivingEntity, damage: Double, level: Int) {
         val lastTarget = recallTargets[attacker.uniqueId]
         if (lastTarget == null) {
             recallTargets[attacker.uniqueId] = victim
@@ -751,6 +755,37 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         else if (lastTarget == victim) {
             return
         }
+    }
+
+    private fun invocativeEnchantment(
+        event: EntityDamageByEntityEvent,
+        level: Int) {
+        val attacker = event.damager
+        val victim = event.entity
+        val damage = event.damage
+        // Invocative Vars
+        val lastTargetId = invocativeLastTarget[attacker.uniqueId]
+        val storedDamage = invocativePreviousDamage[attacker.uniqueId]
+
+        // Set new last target and store damage
+        if (lastTargetId == null) {
+            invocativeLastTarget[attacker.uniqueId] = victim.uniqueId
+            invocativePreviousDamage[attacker.uniqueId] = damage * (level * 0.1)
+            return
+        }
+        // Store damage
+        else if (lastTargetId == victim.uniqueId) {
+            invocativePreviousDamage[attacker.uniqueId] = damage * (level * 0.1)
+            return
+        }
+        // If new target run new damage
+        else if (lastTargetId != victim.uniqueId) {
+            val bonusDamage = storedDamage ?: (damage * (level * 0.1))
+            invocativeLastTarget[attacker.uniqueId] = victim.uniqueId
+            victim.world.spawnParticle(Particle.TRIAL_SPAWNER_DETECTION_OMINOUS, victim.location, 15, 0.02, 0.5, 0.02)
+            event.damage += bonusDamage
+        }
+
     }
 
     private fun ruptureEnchantment(attacker: LivingEntity, victim: LivingEntity, damage: Double, level: Int): Double {
@@ -786,6 +821,16 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
             return 1.0 * level
         }
         return 0.0
+    }
+
+    private fun vengefulEnchantment(
+        event: EntityDamageByEntityEvent,
+        level: Int) {
+        val attacker = event.damager
+        val victim = event.entity
+        if (victim.uniqueId == vengefulTargets[attacker.uniqueId]) {
+            event.damage += level
+        }
     }
 
     private fun voidStrikeEnchantment(

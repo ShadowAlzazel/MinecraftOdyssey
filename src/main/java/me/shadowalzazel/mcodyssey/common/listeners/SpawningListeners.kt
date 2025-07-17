@@ -257,9 +257,9 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
         // Handle mob customization
         val mob = event.entity
         if (mob is Creaking) {
-            mob.setHealthAttribute(40.0, AttributeTags.MOB_HEALTH)
-            mob.addSpeedAttribute(0.03, AttributeTags.MOB_MOVEMENT_SPEED)
-            mob.heal(40.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
+            mob.setHealthAttribute(20.0, AttributeTags.MOB_HEALTH)
+            mob.addSpeedAttribute(0.05, AttributeTags.MOB_MOVEMENT_SPEED)
+            mob.heal(20.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
             mob.addAttackAttribute(8.0, AttributeTags.MOB_ATTACK_DAMAGE)
         } else {
             // Get Equipment Randomizer
@@ -274,9 +274,8 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             // Creator
             createRandomizedMob(mob, equipmentRandomizer, enchanted = true, newWeapon = true)
             // Stats
-            mob.addAttackAttribute(2.0, AttributeTags.MOB_ATTACK_DAMAGE)
+            mob.addAttackAttribute(1.0, AttributeTags.MOB_ATTACK_DAMAGE)
             mob.setHealthAttribute(10.0, AttributeTags.MOB_HEALTH)
-            mob.addArmorAttribute(2.0, AttributeTags.MOB_ARMOR)
             mob.heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
         }
         // All Mobs
@@ -286,9 +285,8 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             // Stats
             setHealthAttribute(10.0, AttributeTags.TERMINAL_GRID_HEALTH_BONUS)
             heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
-            addAttackAttribute(2.0, AttributeTags.TERMINAL_GRID_ATTACK_BONUS)
-            addArmorAttribute(2.0, AttributeTags.TERMINAL_GRID_ARMOR_BONUS)
-            addSpeedAttribute(0.02, AttributeTags.TERMINAL_GRID_SPEED_BONUS)
+            addAttackAttribute(1.0, AttributeTags.TERMINAL_GRID_ATTACK_BONUS)
+            addSpeedAttribute(0.01, AttributeTags.TERMINAL_GRID_SPEED_BONUS)
             addStepAttribute(0.5, AttributeTags.TERMINAL_GRID_STEP_HEIGHT)
         }
         // Finish
@@ -312,9 +310,8 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             // Creator
             createRandomizedMob(mob, equipmentRandomizer, enchanted = true, newWeapon = true)
             // Stats
-            mob.addAttackAttribute(2.0, AttributeTags.MOB_ATTACK_DAMAGE)
+            mob.addAttackAttribute(1.0, AttributeTags.MOB_ATTACK_DAMAGE)
             mob.setHealthAttribute(10.0, AttributeTags.MOB_HEALTH)
-            mob.addArmorAttribute(2.0, AttributeTags.MOB_ARMOR)
             mob.heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
         }
         // All Mobs
@@ -325,7 +322,6 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             setHealthAttribute(10.0, AttributeTags.HYPERCUBIC_CHAMBER_HEALTH_BONUS)
             heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
             addAttackAttribute(2.0, AttributeTags.HYPERCUBIC_CHAMBER_ATTACK_BONUS)
-            addArmorAttribute(2.0, AttributeTags.HYPERCUBIC_CHAMBER_ARMOR_BONUS)
             addSpeedAttribute(0.02, AttributeTags.HYPERCUBIC_CHAMBER_SPEED_BONUS)
             addStepAttribute(0.5, AttributeTags.HYPERCUBIC_CHAMBER_STEP_HEIGHT)
         }

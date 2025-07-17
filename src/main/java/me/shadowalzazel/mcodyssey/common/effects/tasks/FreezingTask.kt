@@ -22,7 +22,7 @@ class FreezingTask(
         counter += 1
         // Check tag
         val noTag = EffectTags.FREEZING !in entity.scoreboardTags
-        if (!noTag) {
+        if (noTag) {
             this.cancel()
             return
         }
@@ -53,8 +53,7 @@ class FreezingTask(
         // Timing
         val timeElapsed = System.currentTimeMillis() - timer
         if (maxCount < counter || timeElapsed > maxCount * 1000) {
-            entity.freezeTicks = 0
-            if (!entity.isDead) entity.removeScoreboardTag(EffectTags.FREEZING)
+            entity.removeScoreboardTag(EffectTags.FREEZING)
             this.cancel()
         }
     }

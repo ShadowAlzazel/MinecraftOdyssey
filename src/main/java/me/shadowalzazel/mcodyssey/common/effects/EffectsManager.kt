@@ -3,10 +3,12 @@ package me.shadowalzazel.mcodyssey.common.effects
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.effects.tasks.*
 import me.shadowalzazel.mcodyssey.util.constants.EffectTags
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags.setIntTag
 import org.bukkit.Particle
 import org.bukkit.entity.LivingEntity
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import java.util.UUID
 
 interface EffectsManager : EffectTagsManager {
 
@@ -118,9 +120,8 @@ interface EffectsManager : EffectTagsManager {
         if (EffectTags.FREEZING !in scoreboardTags) {
             addPotionEffect(freezingPotionEffect)
             addScoreboardTag(EffectTags.FREEZING)
-            FreezingTask(this, amplifier, durationInTicks / 20).runTaskTimer(Odyssey.instance, 0, 20)
-        } else if (freezeTicks <= 0) {
-            removeScoreboardTag(EffectTags.FREEZING)
+            val task = FreezingTask(this, amplifier, durationInTicks / 20)
+            task.runTaskTimer(Odyssey.instance, 0, 20)
         }
     }
 
@@ -131,17 +132,9 @@ interface EffectsManager : EffectTagsManager {
     ) {
         if (EffectTags.HEMORRHAGING !in scoreboardTags) {
             addScoreboardTag(EffectTags.HEMORRHAGING)
-            addScoreboardTag(EffectTags.HEMORRHAGE_MODIFIER + 1)
-            HemorrhageTask(this, amplifier, 9).runTaskTimer(Odyssey.instance, 0, 20)
-        }
-        else {
-            for (x in 1..5) {
-                if (scoreboardTags.contains(EffectTags.HEMORRHAGE_MODIFIER + x)) {
-                    scoreboardTags.remove(EffectTags.HEMORRHAGE_MODIFIER + x)
-                    scoreboardTags.add(EffectTags.HEMORRHAGE_MODIFIER + (x + 1))
-                    break
-                }
-            }
+            setIntTag(EffectTags.HEMORRHAGE_MODIFIER, amplifier)
+            val task = HemorrhageTask(this, amplifier, 9)
+            task.runTaskTimer(Odyssey.instance, 0, 20)
         }
     }
 

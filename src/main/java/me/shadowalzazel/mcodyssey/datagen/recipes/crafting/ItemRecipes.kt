@@ -18,6 +18,7 @@ class ItemRecipes : ChoiceManager {
             silverIngotRecipe(), silverNuggetRecipe(),
             mithrilUpgradeTemplateRecipe(), blankTomeRecipe(), clayTotemRecipe(), clayOrbRecipe(), claySkullRecipe(), clayDowelRecipe(),
             clayKeyRecipe(), clayRodsRecipe(), scrollRecipe(),
+            imperialTrimReplicateRecipe(), voyagerTrimReplicateRecipe(), dangerTrimReplicateRecipe(), leafTrimReplicateRecipe(), ringTrimReplicateRecipe(),
             pommelPartUpgradeTemplateRecipe(), hiltPartUpgradeTemplateRecipe(), bladePartUpgradeTemplateRecipe(), handlePartUpgradeTemplateRecipe(),
             mastercraftedToolTemplateRecipe(), crystalAlloyIngotRecipe(), crystalAlloyUpgradeTemplateRecipe()
         )
@@ -86,6 +87,67 @@ class ItemRecipes : ChoiceManager {
         val result = Item.SILVER_NUGGET.newItemStack(9)
         val recipe = ShapelessRecipe(NamespacedKey(Odyssey.instance, "silver_nugget"), result).apply {
             addIngredient(Item.SILVER_INGOT.newItemStack(1))
+            category = CraftingBookCategory.MISC
+        }
+        return recipe
+    }
+
+    // Trims
+    private fun imperialTrimReplicateRecipe(): ShapedRecipe {
+        val result = Item.IMPERIAL_ARMOR_TRIM_SMITHING_TEMPLATE.newItemStack(2)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "imperial_armor_trim_template_replicate"), result).apply {
+            shape("DTD", "DXD", "DDD")
+            setIngredient('D', Material.DIAMOND)
+            setIngredient('X', Material.TUFF_BRICKS)
+            setIngredient('T', Item.IMPERIAL_ARMOR_TRIM_SMITHING_TEMPLATE.toRecipeChoice())
+            category = CraftingBookCategory.MISC
+        }
+        return recipe
+    }
+
+    private fun voyagerTrimReplicateRecipe(): ShapedRecipe {
+        val result = Item.VOYAGER_ARMOR_TRIM_SMITHING_TEMPLATE.newItemStack(2)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "voyager_armor_trim_template_replicate"), result).apply {
+            shape("DTD", "DXD", "DDD")
+            setIngredient('D', Material.DIAMOND)
+            setIngredient('X', Material.COBBLED_DEEPSLATE)
+            setIngredient('T', Item.VOYAGER_ARMOR_TRIM_SMITHING_TEMPLATE.toRecipeChoice())
+            category = CraftingBookCategory.MISC
+        }
+        return recipe
+    }
+
+    private fun ringTrimReplicateRecipe(): ShapedRecipe {
+        val result = Item.RING_ARMOR_TRIM_SMITHING_TEMPLATE.newItemStack(2)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "ring_armor_trim_template_replicate"), result).apply {
+            shape("DTD", "DXD", "DDD")
+            setIngredient('D', Material.DIAMOND)
+            setIngredient('X', Material.COPPER_BLOCK)
+            setIngredient('T', Item.RING_ARMOR_TRIM_SMITHING_TEMPLATE.toRecipeChoice())
+            category = CraftingBookCategory.MISC
+        }
+        return recipe
+    }
+
+    private fun leafTrimReplicateRecipe(): ShapedRecipe {
+        val result = Item.LEAF_ARMOR_TRIM_SMITHING_TEMPLATE.newItemStack(2)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "leaf_armor_trim_template_replicate"), result).apply {
+            shape("DTD", "DXD", "DDD")
+            setIngredient('D', Material.DIAMOND)
+            setIngredient('X', Material.PACKED_MUD)
+            setIngredient('T', Item.LEAF_ARMOR_TRIM_SMITHING_TEMPLATE.toRecipeChoice())
+            category = CraftingBookCategory.MISC
+        }
+        return recipe
+    }
+
+    private fun dangerTrimReplicateRecipe(): ShapedRecipe {
+        val result = Item.DANGER_ARMOR_TRIM_SMITHING_TEMPLATE.newItemStack(2)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "danger_armor_trim_template_replicate"), result).apply {
+            shape("DTD", "DXD", "DDD")
+            setIngredient('D', Material.DIAMOND)
+            setIngredient('X', Material.MOSSY_COBBLESTONE)
+            setIngredient('T', Item.DANGER_ARMOR_TRIM_SMITHING_TEMPLATE.toRecipeChoice())
             category = CraftingBookCategory.MISC
         }
         return recipe

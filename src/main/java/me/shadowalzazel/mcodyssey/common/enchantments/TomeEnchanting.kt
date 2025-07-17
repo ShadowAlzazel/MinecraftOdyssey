@@ -14,6 +14,7 @@ import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.Damageable
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.inventory.meta.Repairable
 
@@ -76,8 +77,12 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager {
 
     fun tomeOfHarmonyOnItem(item: ItemStack): ItemStack? {
         val meta = item.itemMeta
-        if (meta !is Repairable) return null
-        meta.repairCost = 1
+        if (meta is Repairable) {
+            meta.repairCost = 1
+        }
+        if (meta is Damageable) {
+            meta.damage = 0
+        }
         item.itemMeta = meta
         item.updateEnchantPoints()
         return item

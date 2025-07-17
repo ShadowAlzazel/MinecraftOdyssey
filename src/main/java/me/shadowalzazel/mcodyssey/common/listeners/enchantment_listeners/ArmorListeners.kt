@@ -632,7 +632,7 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
             durationOnUse = 5 //
             radiusOnUse = 0.05F
             if (potionMeta.color != null) {
-                color = potionMeta.color!!
+                setColor(potionMeta.color!!)
             }
             radius = 0.5F + (0.5F * level)
             radiusPerTick = -0.05F

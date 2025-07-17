@@ -28,7 +28,7 @@ interface MobMaker : EquipmentGenerator {
         val inEdge = mob.location.world == Odyssey.instance.edge
         // random roll
         val roll = (0..1000).random()
-        val difficulty = getScaledDifficulty(mob)
+        val difficulty = getDistanceDifficulty(mob)
 
         // Roll Elite - Base 2% + 1.5% for zombie/skeleton
         val elitePreferenceBonus = if (mob is Zombie && mob !is PigZombie || mob is Skeleton) 15 else 0
@@ -114,7 +114,7 @@ interface MobMaker : EquipmentGenerator {
         newWeapon: Boolean = false)
     {
         // Difficulty
-        val difficulty = getScaledDifficulty(mob)
+        val difficulty = getDistanceDifficulty(mob)
 
         // Methods to create customized equipment
         val mainHand: ItemStack = if (newWeapon) {
@@ -161,7 +161,7 @@ interface MobMaker : EquipmentGenerator {
         if (mob is Creeper) return
         val shinyColor = CustomColors.SHINY.color
         // Difficulty
-        val difficulty = getScaledDifficulty(mob)
+        val difficulty = getDistanceDifficulty(mob)
 
         // Methods to create customized equipment
         val mainHand: ItemStack = if (newWeapon) {
@@ -222,15 +222,15 @@ interface MobMaker : EquipmentGenerator {
         val value = difficulty * 1.0
         setHealthAttribute((20.0 + (10.0 * value)) * modifier, AttributeTags.ELITE_HEALTH)
         health += (20.0 + (10.0 * value)) * modifier
-        addAttackAttribute((4 + (1.0 * value)) * modifier, AttributeTags.ELITE_ATTACK_DAMAGE)
-        addArmorAttribute((2 + (1 * value)) * modifier, AttributeTags.ELITE_ARMOR)
+        addAttackAttribute((3 + (0.5 * value)) * modifier, AttributeTags.ELITE_ATTACK_DAMAGE)
+        addArmorAttribute((0.5 + (0.25 * value)) * modifier, AttributeTags.ELITE_ARMOR)
         addSpeedAttribute((0.015 + (0.015 * value)) * modifier, AttributeTags.ELITE_SPEED)
         addStepAttribute(2.0, AttributeTags.ELITE_STEP_HEIGHT)
         addScoreboardTag(EntityTags.ELITE_MOB)
     }
 
 
-    fun getScaledDifficulty(entity: Entity): Double {
+    fun getDistanceDifficulty(entity: Entity): Double {
         // Find the XY distance from zero
         val distanceFromZero = entity.location.clone().let {
             it.toBlockLocation()
@@ -238,7 +238,7 @@ interface MobMaker : EquipmentGenerator {
             it.distance(it.clone().zero()).absoluteValue
         }
         // Formula
-        val scaleDist = 1.0 / 12000.0
+        val scaleDist = 1.0 / 14000.0
         return (scaleDist * distanceFromZero) + (scaleDist * distanceFromZero).pow(2)
     }
 

@@ -165,7 +165,7 @@ object EffectListeners : Listener, EffectsManager {
             it.radius = 3F
             it.radiusOnUse = -0.5F
             it.radiusPerTick = -0.005F
-            it.color = Color.fromRGB(155, 155, 155)
+            it.setColor(Color.fromRGB(155, 155, 155))
             it.reapplicationDelay = 20
             it.durationOnUse = 0
             it.duration = 600

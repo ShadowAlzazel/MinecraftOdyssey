@@ -183,7 +183,8 @@ interface EffectTagsManager : DataTagManager {
         }
         // Add Tags, PDT and Effects to potion cloud
         cloud.apply {
-            color = Color.fromRGB(cloudColor)
+            //color = Color.fromRGB(cloudColor)
+            setColor(Color.fromRGB(cloudColor))
             //(potion.item.itemMeta as PotionMeta).addCustomEffect(effectToAdd, true)
             addScoreboardTag(cloudTag)
             addScoreboardTag(EntityTags.CUSTOM_EFFECT_CLOUD)

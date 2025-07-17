@@ -5,11 +5,16 @@ import me.shadowalzazel.mcodyssey.util.constants.EntityTags.getIntTag
 import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.Particle
+import org.bukkit.damage.DamageSource
+import org.bukkit.damage.DamageType
 import org.bukkit.entity.LivingEntity
 import org.bukkit.scheduler.BukkitRunnable
 
 // HEMORRHAGE task
-class HemorrhageTask(private val entity: LivingEntity, private val amplifier: Int, private val maxCount: Int) : BukkitRunnable() {
+class HemorrhageTask(
+    private val entity: LivingEntity,
+    private val amplifier: Int,
+    private val maxCount: Int) : BukkitRunnable() {
     private var timer = System.currentTimeMillis()
     private var counter = 0
 
@@ -17,7 +22,7 @@ class HemorrhageTask(private val entity: LivingEntity, private val amplifier: In
         counter += 1
         // Check tag
         val noTag = EffectTags.HEMORRHAGING !in entity.scoreboardTags
-        if (!noTag) {
+        if (noTag) {
             this.cancel()
             return
         }
@@ -39,12 +44,13 @@ class HemorrhageTask(private val entity: LivingEntity, private val amplifier: In
             spawnParticle(Particle.FALLING_DUST, location, 25, 0.75, 0.25, 0.75, bloodBlockDust)
         }
         // Damage
-        val modifier = entity.getIntTag(EffectTags.HEMORRHAGE_MODIFIER) ?: 1
-        entity.damage(amplifier.toDouble() * modifier)
+        //val modifier = entity.getIntTag(EffectTags.HEMORRHAGE_MODIFIER) ?: 1
+        val taskDamage = amplifier.toDouble() * 2.0
+        entity.damage(taskDamage)
         // Timing
         val timeElapsed = System.currentTimeMillis() - timer
         if (maxCount < counter || timeElapsed > maxCount * 1000) {
-            if (!entity.isDead) entity.removeScoreboardTag(EffectTags.HEMORRHAGING)
+            entity.removeScoreboardTag(EffectTags.HEMORRHAGING)
             this.cancel()
         }
     }
