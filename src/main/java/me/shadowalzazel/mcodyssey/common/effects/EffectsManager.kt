@@ -3,12 +3,12 @@ package me.shadowalzazel.mcodyssey.common.effects
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.effects.tasks.*
 import me.shadowalzazel.mcodyssey.util.constants.EffectTags
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags.setIntTag
 import org.bukkit.Particle
 import org.bukkit.entity.LivingEntity
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import java.util.UUID
 
 interface EffectsManager : EffectTagsManager {
 
@@ -19,45 +19,48 @@ interface EffectsManager : EffectTagsManager {
     fun LivingEntity.addOdysseyEffect(
         effect: String,
         durationInTicks: Int,
-        amplifier: Int = 1,
+        level: Int = 1,
         intensity: Double = 1.0 // 0.0 -> 1.0
     ) {
         val modifiedDuration = (durationInTicks * intensity).toInt()
         val hasEffect = scoreboardTags.contains(effect)
         // switch
         when(effect) {
+            EffectTags.AEROSION -> {
+                aerosionAssigner(modifiedDuration, level)
+            }
             EffectTags.ABLAZE -> {
-                ablazeAssigner(modifiedDuration, amplifier)
+                ablazeAssigner(modifiedDuration, level)
             }
             EffectTags.ACCURSED -> {
-                accursedAssigner(modifiedDuration, amplifier)
+                accursedAssigner(modifiedDuration, level)
             }
             EffectTags.BARRIER -> {
                 barrierAssigner(modifiedDuration)
             }
             EffectTags.CORRODING-> {
-                corrodingAssigner(modifiedDuration, amplifier)
+                corrodingAssigner(modifiedDuration, level)
             }
             EffectTags.FREEZING -> {
-                freezingAssigner(modifiedDuration, amplifier)
+                freezingAssigner(modifiedDuration, level)
             }
             EffectTags.HEMORRHAGING -> {
-                hemorrhageAssigner(modifiedDuration, amplifier)
+                hemorrhageAssigner(modifiedDuration, level)
             }
             EffectTags.HONEYED -> {
-                honeyedAssigner(modifiedDuration, amplifier)
+                honeyedAssigner(modifiedDuration, level)
             }
             EffectTags.IRRADIATED -> {
-                irradiatedAssigner(modifiedDuration, amplifier)
+                irradiatedAssigner(modifiedDuration, level)
             }
             EffectTags.MIASMA -> {
-                miasmaAssigner(modifiedDuration, amplifier)
+                miasmaAssigner(modifiedDuration, level)
             }
             EffectTags.ROTTING -> {
-                buddingAssigner(modifiedDuration, amplifier)
+                buddingAssigner(modifiedDuration, level)
             }
             EffectTags.SOUL_DAMAGE -> {
-                soulDamageAssigner(modifiedDuration, amplifier)
+                soulDamageAssigner(modifiedDuration, level)
             }
             else -> {
             }
@@ -65,6 +68,24 @@ interface EffectsManager : EffectTagsManager {
     }
 
     /*-----------------------------------------------------------------------------------------------*/
+
+    private fun LivingEntity.aerosionAssigner(
+        durationInTicks: Int = 300,
+        level: Int = 1,
+        amplifier: Double = 1.0
+    ) {
+        if (EffectTags.AEROSION !in scoreboardTags) {
+            val count = durationInTicks / 30
+            addScoreboardTag(EffectTags.AEROSION)
+            setIntTag(EntityTags.AEROSION_STACKS, 1)
+            val task = AerosionTask(
+                this,
+                amplifier = amplifier,
+                maxCount = count)
+            // Run every 1.5 seconds for 15 seconds
+            task.runTaskTimer(Odyssey.instance, 0, 15)
+        }
+    }
 
     // Ablaze
     private fun LivingEntity.ablazeAssigner(

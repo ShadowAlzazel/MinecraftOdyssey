@@ -19,6 +19,7 @@ object EffectTags {
     const val SHIMMER: String = "odyssey.shimmer" // No effect
     const val VULNERABLE: String = "odyssey.vulnerable" // Reduce immunity time by 0.5 seconds
     const val BARRIER: String = "odyssey.barrier" // Reduce damage
+    const val AEROSION: String = "odyssey.aerosion" // Damage over time
 
     // Crowd Control
     const val ROOTED: String = "odyssey.rooted" // Can not jump (use entityJumpEvent?)

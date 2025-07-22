@@ -147,6 +147,7 @@ object EntityTags {
     const val CLOUD_STRIDER_IS_JUMPING: String = "odyssey.cloud_strider_is_jumping"
     const val CLOUD_STRIDER_JUMPS: String = "odyssey.cloud_strider_jumps"
     const val LODESIGHT_BLOCK: String = "odyssey.lodesight_block"
+    const val AEROSION_STACKS: String = "odyssey.aerosion_stacks"
 
     // WEAPONS
     const val COMBOED: String = "odyssey.comboed"

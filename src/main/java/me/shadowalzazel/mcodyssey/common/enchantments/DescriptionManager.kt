@@ -378,6 +378,16 @@ interface DescriptionManager {
                 "- Have ${level}=[level] more jumps.")
             "moon_walker" -> listOf( // boots
                 "- Reduce gravity by ${level * 10}%=[level x 10].")
+            "unyielding" -> listOf( // Armor
+                "- Increase damage by ${level * 10}%=[level x 10] while below 40% health.")
+            "aerosion_aspect" -> listOf( // Melee
+                "- Apply a stack of Aerosion on hit. Up to a max of ${level}=[level].",
+                "- Aerosion deals 3.0 wind damage per stack every 1.5 seconds")
+            "tempest_splitter" -> listOf( // Armor
+                "- FINISH")
+            // Curses
+            "brutality_curse" -> listOf(
+                "- Increase damage by ${level * 20}%=[level * 20] but take ${level * 1}=[level] when hitting.")
             // Fallback
             else -> listOf("No description for $name")
         }

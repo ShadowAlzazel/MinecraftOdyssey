@@ -14,40 +14,61 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.bukkit.inventory.EquipmentSlotGroup
 
 object PetListener : Listener, AttributeManager, DataTagManager {
+
+    private val PETS = listOf(
+        EntityType.WOLF,
+        EntityType.HORSE,
+        EntityType.PARROT,
+        EntityType.HAPPY_GHAST,
+        EntityType.LLAMA,
+        EntityType.TRADER_LLAMA,
+        EntityType.CAMEL)
+
     @EventHandler
     fun eatingPetFoods(event: PlayerInteractAtEntityEvent) {
-        if (event.rightClicked.type != EntityType.WOLF) return
+        if (event.rightClicked.type !in PETS) return
         if (event.player.inventory.itemInMainHand.type == Material.AIR) return
         if (event.rightClicked !is LivingEntity) return
         val mainHand = event.player.inventory.itemInMainHand
         val entity = event.rightClicked as LivingEntity
-        // Make Permanent
-        when (mainHand.getItemNameId()) {
-            "dog_spinach" -> {
-                entity.setAttributeModifier(
-                    2.0,
-                    "odyssey.item.dog_spinach.attack_damage",
-                    Attribute.ATTACK_DAMAGE,
-                    slotGroup = EquipmentSlotGroup.ANY
-                )
-            }
-            "dog_sizzle_crisp" -> {
-                entity.setAttributeModifier(
-                    0.1,
-                    "odyssey.item.dog_sizzle_crisp.scale",
-                    Attribute.BURNING_TIME,
-                    slotGroup = EquipmentSlotGroup.ANY
-                )
-            }
-            "dog_milk_bone" -> {
-                entity.setHealthAttribute(10.0)
-                entity.setAttributeModifier(
-                    0.8,
-                    "odyssey.item.milk_bone.scale",
-                    Attribute.SCALE,
-                    slotGroup = EquipmentSlotGroup.ANY
-                )
+        val pet = event.rightClicked
+
+        // Wolf
+        if (pet.type == EntityType.WOLF) {
+            // Permanent
+            when (mainHand.getItemNameId()) {
+                "dog_spinach" -> {
+                    entity.setAttributeModifier(
+                        2.0,
+                        "odyssey.item.dog_spinach.attack_damage",
+                        Attribute.ATTACK_DAMAGE,
+                        slotGroup = EquipmentSlotGroup.ANY
+                    )
+                }
+                "dog_sizzle_crisp" -> {
+                    entity.setAttributeModifier(
+                        0.1,
+                        "odyssey.item.dog_sizzle_crisp.scale",
+                        Attribute.BURNING_TIME,
+                        slotGroup = EquipmentSlotGroup.ANY
+                    )
+                }
+                "dog_milk_bone" -> {
+                    entity.setHealthAttribute(10.0)
+                    entity.setAttributeModifier(
+                        0.8,
+                        "odyssey.item.milk_bone.scale",
+                        Attribute.SCALE,
+                        slotGroup = EquipmentSlotGroup.ANY
+                    )
+                }
             }
         }
+        // Horse
+        if (pet.type == EntityType.HORSE) {
+            // CHANGE BASE STAT
+            // so parent can get it
+        }
+
     }
 }

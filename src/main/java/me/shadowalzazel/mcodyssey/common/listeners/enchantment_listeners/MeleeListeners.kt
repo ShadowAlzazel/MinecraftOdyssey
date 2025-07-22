@@ -66,6 +66,9 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         // Loop for all enchants
         for (enchant in weapon.enchantments) {
             when (enchant.key.getNameId()) {
+                "aerosion_aspect" -> {
+                    aerosionAspectEnchantment(victim, enchant.value)
+                }
                 "arcane_cell" -> {
                     arcaneCellEnchantment(victim, enchant.value)
                 }
@@ -116,6 +119,12 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
                 }
                 "guarding_strike" -> {
                     guardingStrikeEnchantment(attacker, enchant.value)
+                }
+                "brutality_curse" -> {
+                    brutalityCurseEnchantment(event, enchant.value)
+                }
+                "tempest_splitter" -> {
+                    tempestSplitterEnchantment(event, enchant.value)
                 }
                 "hemorrhage" -> {
                     hemorrhageEnchantment(victim, enchant.value) // MORE STACKS -> MORE DAMAGE PER INSTANCE
@@ -233,6 +242,45 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
             }
         }
 
+    }
+
+    private fun aerosionAspectEnchantment(
+        victim: LivingEntity,
+        level: Int) {
+        // Effects
+        victim.addOdysseyEffect(EffectTags.AEROSION, 15 * 20, level)
+        with(victim.world) {
+            playSound(victim.location, Sound.ENTITY_WIND_CHARGE_THROW, 2.5F, 0.9F)
+            spawnParticle(Particle.SMALL_GUST, victim.location, 35, 1.0, 0.5, 1.0)
+        }
+        // Set Stacks
+        val stacks = victim.getIntTag(EntityTags.AEROSION_STACKS) ?: 0
+        if (stacks < level) {
+            victim.setIntTag(EntityTags.AEROSION_STACKS, stacks + 1)
+        }
+    }
+
+    private fun tempestSplitterEnchantment(
+        event: EntityDamageByEntityEvent,
+        level: Int) {
+        val victim = event.entity
+        if (victim !is LivingEntity) return
+        // Effects
+        with(victim.world) {
+            playSound(victim.location, Sound.BLOCK_HEAVY_CORE_BREAK, 2.5F, 0.9F)
+        }
+        // Set Stacks
+        val stacks = victim.getIntTag(EntityTags.AEROSION_STACKS) ?: 0
+
+        // Damage
+        if (event.isCritical) {
+            val critDamageAmp = (0.5 * level) * stacks
+            event.damage *= (1.0 + (critDamageAmp))
+            victim.setIntTag(EntityTags.AEROSION_STACKS, 0)
+        } else {
+            val damageAmp = (0.2 * level) * stacks
+            event.damage *= (1.0 + (damageAmp))
+        }
     }
 
     private fun metabolicEnchantment(event: BlockBreakEvent, level: Int) {
@@ -624,6 +672,17 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         val upVector = vector.normalize().clone()
         val newVector = upVector.setX(0.0).setY(1.0).setZ(0.0).multiply(mag * level)
         return newVector
+    }
+
+    private fun brutalityCurseEnchantment(
+        event: EntityDamageByEntityEvent,
+        level: Int
+    ) {
+        event.damage *= (1 + (0.2 * level))
+        val attacker = event.damager
+        if (attacker is LivingEntity) {
+            attacker.damage(level * 1.0)
+        }
     }
 
     private fun hemorrhageEnchantment(

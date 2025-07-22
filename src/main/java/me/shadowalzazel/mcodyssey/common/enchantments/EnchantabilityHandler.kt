@@ -283,6 +283,17 @@ interface EnchantabilityHandler : EnchantmentManager, DescriptionManager, DataTa
         if (isEnchantMaterial || isEnchantName) {
             bonusPoints += 5
         }
+        // Exotics
+        when(nameId) {
+            "excalibur" -> bonusPoints += 5
+            "frost_fang", "knight_breaker", "abzu_blade", "elucidator", "shogun_lightning" -> {
+                bonusPoints += 5
+            }
+            "laplace_spear", "flaming_wolf_spear", "blade_broken_by_storms", "shogun_pulse" -> {
+                bonusPoints += 5
+            }
+        }
+
         // Extra points
         val extraPoints = item.getIntTag(ItemDataTags.EXTRA_ENCHANTABILITY_POINTS) ?: 0
         bonusPoints += extraPoints
