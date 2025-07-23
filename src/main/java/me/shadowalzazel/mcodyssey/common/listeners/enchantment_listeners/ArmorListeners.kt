@@ -61,7 +61,7 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
                         event.damage -= beastlyArmorEnchantment(defender, enemy, originalAmount, enchant.value)
                     }
                     "brawler" -> {
-                        event.damage -= brawlerArmorEnchantment(defender, originalAmount, enchant.value)
+                        brawlerArmorEnchantment(event, originalAmount, enchant.value)
                     }
                     "illumineye" -> {
                         illumineyeEnchantment(enemy, defender, enchant.value)
@@ -95,7 +95,7 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
                         event.damage -= beastlyArmorEnchantment(defender, enemy, originalAmount, enchant.value)
                     }
                     "brawler" -> {
-                        event.damage -= brawlerArmorEnchantment(defender, originalAmount, enchant.value)
+                        brawlerArmorEnchantment(event, originalAmount, enchant.value)
                     }
                     "ignore_pain" -> {
                         ignorePainEnchantment(defender, enchant.value)
@@ -129,7 +129,7 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
                         event.damage -= beastlyArmorEnchantment(defender, enemy, originalAmount, enchant.value)
                     }
                     "brawler" -> {
-                        event.damage -= brawlerArmorEnchantment(defender, originalAmount, enchant.value)
+                        brawlerArmorEnchantment(event, originalAmount, enchant.value)
                     }
                     "blurcise" -> {
                         event.damage -= blurciseEnchantment(defender, enchant.value, originalAmount)
@@ -157,10 +157,14 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
             for (enchant in boots.enchantments) {
                 when (enchant.key.getNameId()) {
                     "beastly" -> {
-                        event.damage -= beastlyArmorEnchantment(defender, enemy, originalAmount, enchant.value)
+                        event.damage -= beastlyArmorEnchantment(
+                            defender,
+                            enemy,
+                            originalAmount,
+                            enchant.value)
                     }
                     "brawler" -> {
-                        event.damage -= brawlerArmorEnchantment(defender, originalAmount, enchant.value)
+                        brawlerArmorEnchantment(event, originalAmount, enchant.value)
                     }
                     "reckless" -> {
                         event.damage += recklessDefenderEnchantment(originalAmount, enchant.value)
@@ -183,13 +187,6 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
             defender.maximumNoDamageTicks = 20 + immunityTicks
             defender.noDamageTicks = 10 + immunityTicks
         }
-        /*
-        println("Immunity")
-        println(defender.maximumNoDamageTicks)
-        println(defender.noDamageTicks)
-
-         */
-
         // Check
         if (event.damage < 0.0) {
             event.damage = 0.0
@@ -235,6 +232,9 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
                     }
                     "opticalization" -> {
                         opticalizationHitEnchantment(enemy, attacker, enchant.value)
+                    }
+                    "illumineye" -> {
+                        illumineyeEnchantment(enemy, attacker, enchant.value)
                     }
                     "reckless" -> {
                         event.damage += recklessAttackerEnchantment(originalAmount, enchant.value)
@@ -547,21 +547,23 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         damage: Double,
         level: Int
     ): Double {
-        if (defender != enemy) { // 3 + self
-            return damage * (level * 0.2)
+        if (defender != enemy) {
+            return damage * (level * 0.05)
         }
         return 0.0
     }
 
     private fun brawlerArmorEnchantment(
-        defender: LivingEntity,
-        damage: Double,
+        event: EntityDamageByEntityEvent,
+        originalDamage: Double,
         level: Int
-    ): Double {
-        if (defender.location.getNearbyLivingEntities(6.0).size >= 4) { // 3 + self
-            return damage * (level * 0.5)
+    ) {
+        val defender = event.entity
+        // If surrounded
+        if (defender.location.getNearbyLivingEntities(5.0).size >= 4) { // 3 + self
+            val reducedDamage = originalDamage * (1.0 - (0.05 * level))
+            event.damage = reducedDamage
         }
-        return 0.0
     }
 
     private fun stxRoseHitEnchantment(
@@ -752,15 +754,13 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
     }
 
     private fun illumineyeEnchantment(
-        attacker: LivingEntity,
-        defender: LivingEntity,
+        entity: LivingEntity,
+        glower: LivingEntity,
         level: Int) {
-        if (!attacker.hasLineOfSight(defender)) return
-        if (!defender.hasLineOfSight(attacker)) return
-        if (!defender.hasLineOfSight(attacker.eyeLocation)) return
-        // val angle = attacker.eyeLocation.direction.angle(defender.eyeLocation.direction)
-        //if (angle < 1.74533) return
-        attacker.addPotionEffect(
+        if (!entity.hasLineOfSight(glower)) return
+        if (!glower.hasLineOfSight(entity)) return
+        if (!glower.hasLineOfSight(entity.eyeLocation)) return
+        glower.addPotionEffect(
             PotionEffect(PotionEffectType.GLOWING, (3 + (level * 2)) * 20, 0))
     }
 
@@ -1097,16 +1097,6 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         defender: LivingEntity,
         bonusImmunityTime: MutableList<Int>
     ) {
-        /*
-        if (defender.noDamageTicks < 20) {
-            defender.noDamageTicks = 20 // Add more immunity time
-        } else {
-            defender.noDamageTicks += 10 // Add more immunity time
-        }
-        defender.noDamageTicks += 10 // Add more immunity time
-         */
-        //defender.noDamageTicks += 10
-        //defender.maximumNoDamageTicks = defender.noDamageTicks
         bonusImmunityTime[0] += 10
     }
 
@@ -1114,14 +1104,23 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         defender: LivingEntity,
         level: Int,
         bonusImmunityTime: MutableList<Int>) {
+        val location = defender.location
         val shadowLevelBlock = 10 + level - defender.location.block.lightFromBlocks
-        val shadowLevelSky = if (!defender.world.isDayTime) { 10 + level }
-        else { 10 + level - defender.location.block.lightFromSky}
-        val shadowTicks = maxOf(minOf(shadowLevelBlock, shadowLevelSky), 0)
+        val shadowLevelSky = 10 + level - defender.location.block.lightFromSky
+
+        val lightLevel = if (location.world == Odyssey.instance.overworld) {
+            if (location.world.isDayTime) {
+                minOf(shadowLevelSky, shadowLevelBlock) // Get the lowest light level
+            } else {
+                shadowLevelBlock
+            }
+        } else {
+            shadowLevelBlock
+        }
+
+        val shadowTicks = maxOf(lightLevel, 0)
         // gain at most 15 ticks of extra immunity when in full darkness with lvl 5
         if (shadowTicks > 0) {
-            //defender.noDamageTicks += shadowTicks
-            //defender.maximumNoDamageTicks = defender.noDamageTicks
             bonusImmunityTime[0] += shadowTicks
         }
     }

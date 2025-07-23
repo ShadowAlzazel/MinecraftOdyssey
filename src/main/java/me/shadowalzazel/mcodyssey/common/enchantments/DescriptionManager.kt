@@ -121,7 +121,7 @@ interface DescriptionManager {
             "antibonk" -> listOf(
                 "- Reduce critical hit damage by ${level * 10}%=[level x 10].")
             "beastly" -> listOf(
-                "- Take reduced damage from living mobs or creatures by ${2 * level}%=[level x 2].")
+                "- Take reduced damage from living mobs or creatures by ${5 * level}%=[level x 5].")
             "black_rose" -> listOf(
                 "- Applies Wither II for ${level * 4}=[level x 4] seconds to enemies",
                 "that attacked the wearer.",
@@ -129,7 +129,7 @@ interface DescriptionManager {
             "blurcise" -> listOf(
                 "- While moving, take ${level * 10}%=[level x 10] reduced damage.")
             "brawler" -> listOf(
-                "- When surrounded (by 3 or more enemies within a 6 block radius),",
+                "- When surrounded (by 3 or more enemies within a block radius),",
                 "take ${level * 5}%=[level x 5] reduced damage.")
             "bulwark" -> listOf(
                 "- Increase armor by ${2 * level}%=[level x 2].")
