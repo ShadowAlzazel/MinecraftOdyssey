@@ -16,13 +16,12 @@ import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
+import org.bukkit.damage.DamageSource
+import org.bukkit.damage.DamageType
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.EntityDamageByEntityEvent
-import org.bukkit.event.entity.EntityDamageEvent
-import org.bukkit.event.entity.EntityShootBowEvent
-import org.bukkit.event.entity.ProjectileHitEvent
+import org.bukkit.event.entity.*
 import org.bukkit.event.player.PlayerSwapHandItemsEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
@@ -33,6 +32,7 @@ import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.sin
 
+@Suppress("UnstableApiUsage")
 object RangedListeners : Listener, EnchantmentManager {
 
     private val currentOverchargeTasks = mutableMapOf<UUID, OverchargeTask>()
@@ -75,6 +75,9 @@ object RangedListeners : Listener, EnchantmentManager {
                 }
                 "death_from_above" -> {
                     deathFromAboveEnchantmentShoot(projectile, enchant.value)
+                }
+                "dynamo" -> {
+                    dynamoEnchantmentShoot(projectile, enchant.value)
                 }
                 "double_tap" -> {
                     doubleTapEnchantmentShoot(projectile, shooter)
@@ -162,6 +165,9 @@ object RangedListeners : Listener, EnchantmentManager {
                 EntityTags.OVERCHARGE_ARROW -> {
                     event.damage += overchargeEnchantmentHit(projectile)
                 }
+                EntityTags.DYNAMO_ARROW -> {
+                    dynamoEnchantmentHit(projectile, victim)
+                }
                 EntityTags.RICOCHET_ARROW -> {
                     event.damage += ricochetEnchantmentEntityHit(projectile)
                 }
@@ -206,6 +212,25 @@ object RangedListeners : Listener, EnchantmentManager {
         else if (event.hitBlock != null) {
             if (projectile.scoreboardTags.contains(EntityTags.RICOCHET_ARROW)) {
                 ricochetEnchantmentBlockHit(projectile, event.hitBlockFace!!.direction)
+            }
+        }
+    }
+
+    // Main function for enchantments relating to entity deaths
+    @EventHandler
+    fun mainProjectileDeathHandler(event: EntityDeathEvent) {
+        if (event.entity.killer !is LivingEntity) return
+        if (event.damageSource.damageType != DamageType.ARROW) return
+        val projectile = event.damageSource.directEntity ?: return
+        if (projectile !is Projectile) return
+        val victim: LivingEntity = event.entity
+        // Loop for all enchants
+        val tags = projectile.scoreboardTags.toSet() // Prevent async problems
+        for (tag in tags) {
+            when (tag) {
+                "THERMO_TEST" -> {
+                    dynamoEnchantmentKill(projectile, victim)
+                }
             }
         }
     }
@@ -354,6 +379,73 @@ object RangedListeners : Listener, EnchantmentManager {
             projectile.velocity.multiply(1 + (0.1 * level))
         }
 
+    }
+
+    private fun dynamoEnchantmentShoot(projectile: Entity, level: Int) {
+        with(projectile) {
+            addScoreboardTag(EntityTags.DYNAMO_ARROW)
+            setIntTag(EntityTags.DYNAMO_MODIFIER, level)
+        }
+    }
+
+    private fun dynamoEnchantmentHit(projectile: Projectile, victim: LivingEntity) {
+        if (victim.scoreboardTags.contains(EntityTags.DYNAMO_ARROW)) return
+        val modifier = projectile.getIntTag(EntityTags.DYNAMO_MODIFIER) ?: return
+        val arrowSpeed = projectile.velocity.length()
+
+        if (arrowSpeed > 0) {
+            victim.world.spawnParticle(Particle.ELECTRIC_SPARK, victim.location, 10 * modifier, 0.75, 0.5, 0.75)
+            val dynamoDamage = (0.4 * modifier) * arrowSpeed
+            val damageSource = DamageSource.builder(DamageType.LIGHTNING_BOLT).build()
+            victim.damage(dynamoDamage, damageSource) // Create Damage Source
+        }
+        return
+    }
+
+    private fun oldDynamoEnchantmentKill(projectile: Projectile, victim: LivingEntity) {
+        if (victim.scoreboardTags.contains(EntityTags.DYNAMO_ARROW)) return
+        val modifier = projectile.getIntTag(EntityTags.DYNAMO_MODIFIER) ?: return
+        if (victim.fireTicks > 10) {
+            victim.world.spawnParticle(Particle.ELECTRIC_SPARK, victim.location, 10, 0.15, 0.15, 0.15)
+            val dynamoDamage = ((victim.fireTicks / 20) + 1) * (modifier * 0.4)
+            val nearby = victim.location.getNearbyLivingEntities(3.0).filter { it != victim }
+            if (nearby.isNotEmpty()) {
+                nearby.forEach {
+                    it.world.spawnParticle(Particle.ELECTRIC_SPARK, it.location, 15, 0.25, 0.25, 0.25)
+                    val damageSource = DamageSource.builder(DamageType.LIGHTNING_BOLT).build()
+                    it.damage(dynamoDamage, damageSource) // Create Damage Source
+                }
+            }
+        }
+        return
+    }
+
+    private fun oldDdynamoEnchantmentHit(projectile: Projectile, victim: LivingEntity): Double {
+        if (victim.scoreboardTags.contains(EntityTags.DYNAMO_ARROW)) return 0.0
+        val modifier = projectile.getIntTag(EntityTags.DYNAMO_MODIFIER) ?: return 0.0
+        if (victim.fireTicks > 0) {
+            victim.world.spawnParticle(Particle.LAVA, victim.location, 10, 0.15, 0.15, 0.15)
+            return modifier * 1.0
+        }
+        return 0.0
+    }
+
+    private fun dynamoEnchantmentKill(projectile: Projectile, victim: LivingEntity) {
+        if (victim.scoreboardTags.contains(EntityTags.DYNAMO_ARROW)) return
+        val modifier = projectile.getIntTag(EntityTags.DYNAMO_MODIFIER) ?: return
+        if (victim.fireTicks > 10) {
+            victim.world.spawnParticle(Particle.ELECTRIC_SPARK, victim.location, 10, 0.15, 0.15, 0.15)
+            val dynamoDamage = ((victim.fireTicks / 20) + 1) * (modifier * 0.4)
+            val nearby = victim.location.getNearbyLivingEntities(3.0).filter { it != victim }
+            if (nearby.isNotEmpty()) {
+                nearby.forEach {
+                    it.world.spawnParticle(Particle.ELECTRIC_SPARK, it.location, 15, 0.25, 0.25, 0.25)
+                    val damageSource = DamageSource.builder(DamageType.LIGHTNING_BOLT).build()
+                    it.damage(dynamoDamage, damageSource) // Create Damage Source
+                }
+            }
+        }
+        return
     }
 
     private fun ambushEnchantmentShoot(projectile: Entity, level: Int) {

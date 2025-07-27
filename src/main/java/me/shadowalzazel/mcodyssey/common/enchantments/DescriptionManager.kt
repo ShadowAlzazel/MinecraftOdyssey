@@ -383,8 +383,13 @@ interface DescriptionManager {
             "aerosion_aspect" -> listOf( // Melee
                 "- Apply a stack of Aerosion on hit. Up to a max of ${level}=[level].",
                 "- Aerosion deals 3.0 wind damage per stack every 1.5 seconds")
-            "tempest_splitter" -> listOf( // Armor
+            "tempest_splitter" -> listOf( // Melee
                 "- FINISH")
+            "dynamo" -> listOf( // Bow
+                "- Converts ${level * 40}%=[level x 40] of projectile speed into shock damage")
+            "life_force" -> listOf( // Melee
+                "- Increase damage based on ${level * 5}%=[level x 5] max health.",
+                "- This effect is doubled while below 50% max health.")
             // Curses
             "brutality_curse" -> listOf(
                 "- Increase damage by ${level * 20}%=[level * 20] but take ${level * 1}=[level] when hitting.")

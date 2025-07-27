@@ -123,6 +123,9 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
                 "brutality_curse" -> {
                     brutalityCurseEnchantment(event, enchant.value)
                 }
+                "life_force" -> {
+                    event.damage += lifeForceEnchantment(attacker, enchant.value)
+                }
                 "tempest_splitter" -> {
                     tempestSplitterEnchantment(event, enchant.value)
                 }
@@ -375,6 +378,14 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         victim.velocity = victim.velocity.multiply(0.0)
         if (victim.remainingAir < 20) return level * 1.0
         return 0.0
+    }
+
+    private fun lifeForceEnchantment(
+        attacker: LivingEntity,
+        level: Int
+    ): Double {
+        val maxHealth = attacker.getAttribute(Attribute.MAX_HEALTH)?.value ?: 20.0
+        return (maxHealth * (level * 0.05))
     }
 
     private fun arcaneCellEnchantment(victim: LivingEntity, level: Int) {

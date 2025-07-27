@@ -82,6 +82,7 @@ object EntityTags {
     const val SOUL_REND_ARROW: String = "odyssey.soul_rend_arrow"
     const val TEMPORAL_ARROW: String = "odyssey.temporal_arrow"
     const val VULNEROCITY_ARROW: String = "odyssey.vulnerocity_arrow"
+    const val DYNAMO_ARROW: String = "odyssey.dynamo_arrow"
 
     const val ORIGINAL_ARROW: String = "odyssey.original_arrow"
     const val REPLICATED_ARROW: String = "odyssey.replicated_arrow"
@@ -113,6 +114,7 @@ object EntityTags {
     const val SOUL_RENDED_BY: String = "odyssey.soul_rended_by"
     const val TORRENT_MODIFIER: String = "odyssey.temporal_modifier"
     const val VULNEROCITY_MODIFIER: String = "odyssey.vulnerocity_modifier"
+    const val DYNAMO_MODIFIER: String = "odyssey.dynamo_modifier"
 
     // CONSUMABLE ARROWS
     const val EXPLOSIVE_ARROW: String = "odyssey.explosive_arrow"
