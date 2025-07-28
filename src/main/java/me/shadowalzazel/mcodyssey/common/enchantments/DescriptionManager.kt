@@ -121,7 +121,8 @@ interface DescriptionManager {
             "antibonk" -> listOf(
                 "- Reduce critical hit damage by ${level * 10}%=[level x 10].")
             "beastly" -> listOf(
-                "- Take reduced damage from living mobs or creatures by ${5 * level}%=[level x 5].")
+                "- Increase health by ${level}=[level].",
+                "- Increase size by ${level * 3}%=[level x 3].")
             "black_rose" -> listOf(
                 "- Applies Wither II for ${level * 4}=[level x 4] seconds to enemies",
                 "that attacked the wearer.",
@@ -129,8 +130,8 @@ interface DescriptionManager {
             "blurcise" -> listOf(
                 "- While moving, take ${level * 10}%=[level x 10] reduced damage.")
             "brawler" -> listOf(
-                "- When surrounded (by 3 or more enemies within a block radius),",
-                "take ${level * 5}%=[level x 5] reduced damage.")
+                "- When surrounded (by 3 or more enemies within a 4 block radius),",
+                "take ${level * 3}%=[level x 3] reduced damage.")
             "bulwark" -> listOf(
                 "- Increase armor by ${2 * level}%=[level x 2].")
             "claw_climbing" -> listOf(
@@ -165,7 +166,7 @@ interface DescriptionManager {
                 "- Drinking a potion grants resistance for 10 seconds.",
                 "- Negative effect timers are reduced by ${level * 25}%=[level x 25].")
             "reckless" -> listOf(
-                "- Deal ${level * 5}%=[level x 5] increased damage but receive ${level * 5}%=[level x 5] more damage.")
+                "- Deal ${level * 10}%=[level x 10] increased damage but receive ${level * 5}%=[level x 5] more damage.")
             "relentless" -> listOf(
                 "- While below 40% health, take ${level * 5}%=[level x 5] reduced damage.")
             "revitalize" -> listOf(
@@ -194,7 +195,7 @@ interface DescriptionManager {
                 "- Gain invulnerable time negatively proportional to light level.",
                 "Reduce required light level by $level=[level].")
             "vigor" -> listOf( // All Armor
-                "- Deal ${level * 5}%=[level x 5] increased damage while above 40% health.")
+                "- Deal ${level * 15}%=[level x 15] increased damage while above 60% health.")
             // Odyssey - Melee
             "agile" -> listOf(
                 "- Increase attack speed by ${level * 5}%=[level x 5].")

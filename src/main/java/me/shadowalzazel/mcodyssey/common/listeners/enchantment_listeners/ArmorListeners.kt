@@ -57,9 +57,6 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
                     "antibonk" -> {
                         event.damage -= antibonkEnchantment(event.isCritical, originalAmount, enchant.value)
                     }
-                    "beastly" -> {
-                        event.damage -= beastlyArmorEnchantment(defender, enemy, originalAmount, enchant.value)
-                    }
                     "brawler" -> {
                         brawlerArmorEnchantment(event, originalAmount, enchant.value)
                     }
@@ -90,9 +87,6 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
                 when (enchant.key.getNameId()) {
                     "black_rose" -> {
                         stxRoseHitEnchantment(enemy, enchant.value)
-                    }
-                    "beastly" -> {
-                        event.damage -= beastlyArmorEnchantment(defender, enemy, originalAmount, enchant.value)
                     }
                     "brawler" -> {
                         brawlerArmorEnchantment(event, originalAmount, enchant.value)
@@ -125,9 +119,6 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
                     "cowardice" -> {
                         cowardiceEnchantment(enemy, defender, enchant.value)
                     }
-                    "beastly" -> {
-                        event.damage -= beastlyArmorEnchantment(defender, enemy, originalAmount, enchant.value)
-                    }
                     "brawler" -> {
                         brawlerArmorEnchantment(event, originalAmount, enchant.value)
                     }
@@ -156,13 +147,6 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
             val boots = defender.equipment?.boots!!
             for (enchant in boots.enchantments) {
                 when (enchant.key.getNameId()) {
-                    "beastly" -> {
-                        event.damage -= beastlyArmorEnchantment(
-                            defender,
-                            enemy,
-                            originalAmount,
-                            enchant.value)
-                    }
                     "brawler" -> {
                         brawlerArmorEnchantment(event, originalAmount, enchant.value)
                     }
@@ -541,6 +525,7 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         return amount * (level * 0.1)
     }
 
+    /*
     private fun beastlyArmorEnchantment(
         defender: LivingEntity,
         enemy: LivingEntity,
@@ -553,6 +538,8 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         return 0.0
     }
 
+     */
+
     private fun brawlerArmorEnchantment(
         event: EntityDamageByEntityEvent,
         originalDamage: Double,
@@ -560,8 +547,8 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
     ) {
         val defender = event.entity
         // If surrounded
-        if (defender.location.getNearbyLivingEntities(5.0).size >= 4) { // 3 + self
-            val reducedDamage = originalDamage * (1.0 - (0.05 * level))
+        if (defender.location.getNearbyLivingEntities(4.0).size >= 4) { // 3 + self
+            val reducedDamage = originalDamage * (1.0 - (0.03 * level))
             event.damage = reducedDamage
         }
     }
@@ -597,7 +584,7 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         level: Int,
         amount: Double,
     ): Double {
-        if (defender.velocity.length() > 0.5) {
+        if (defender.velocity.length() > 0.05) {
             return amount * (level * 0.1)
         }
         return 0.0
@@ -769,7 +756,7 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         level: Int,
         amount: Double
     ): Double {
-        if (wearer.velocity.length() > 0.5) {
+        if (wearer.velocity.length() > 0.05) {
             return amount * (0.05 + (level * 0.05))
         }
         return 0.0
@@ -927,7 +914,7 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         damage: Double,
         level: Int
     ): Double {
-        return damage * (level * 0.05)
+        return damage * (level * 0.1)
     }
 
     private fun recklessDefenderEnchantment(
@@ -1128,11 +1115,11 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
     private fun vigorEnchantment(
         attacker: LivingEntity,
         level: Int,
-        amount: Double): Double {
+        originalDamage: Double): Double {
         val maxHealth = attacker.getAttribute(Attribute.MAX_HEALTH)?.value ?: return 0.0
         val currentHealthPercent = attacker.health / maxHealth
-        if (currentHealthPercent >= 0.40) {
-            return amount * (level * 0.5)
+        if (currentHealthPercent >= 0.60) {
+            return originalDamage * (level * 0.15)
         }
         return 0.0
     }
