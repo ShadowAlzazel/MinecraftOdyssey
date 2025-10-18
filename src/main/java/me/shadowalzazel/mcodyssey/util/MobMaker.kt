@@ -174,9 +174,14 @@ interface MobMaker : EquipmentGenerator {
 
 
         // Create shiny enchant and enchant main weapon
-        val shinyEnchant = OdysseyEnchantments.meleeSet.random()
+        val shinyEnchant = getCollectionFromKey(RegistryKey.ENCHANTMENT, "enchantable/melee").random()
+
         val checkedMax = if (shinyEnchant.maxLevel != 1) { shinyEnchant.maxLevel + 1 } else { 1 }
-        val enchantTagSet = getTagFromRegistry(RegistryKey.ENCHANTMENT, "in_table/melee")
+
+        // The List of enchantment from tags
+        val enchantTagSet = getTagFromRegistry(RegistryKey.ENCHANTMENT, "enchantable/melee")
+
+        // Enchant Item With Tag List
         enchantItemsWithTagSet(listOf(mainHand), enchantTagSet, 20 + difficulty.toInt())
         mainHand.apply {
             addShinyEnchant(shinyEnchant, checkedMax)

@@ -125,7 +125,6 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager {
             storedMeta.removeStoredEnchant(enchantToUpgrade.first)
             storedMeta.addStoredEnchant(enchantToUpgrade.first, checkedMaxLevel, false)
             item.itemMeta = storedMeta
-            // Set advancement from datapack
         } else {
             // Remove and re-add
             item.removeEnchantment(enchantToUpgrade.first)

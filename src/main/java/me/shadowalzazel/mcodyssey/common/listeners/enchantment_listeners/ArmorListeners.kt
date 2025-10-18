@@ -584,7 +584,7 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         level: Int,
         amount: Double,
     ): Double {
-        if (defender.velocity.length() > 0.05) {
+        if (defender.velocity.length() > 0.08) {
             return amount * (level * 0.1)
         }
         return 0.0
@@ -757,7 +757,7 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         amount: Double
     ): Double {
         if (wearer.velocity.length() > 0.05) {
-            return amount * (0.05 + (level * 0.05))
+            return amount * (0.05 + (level * 0.08))
         }
         return 0.0
     }

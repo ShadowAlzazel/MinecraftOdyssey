@@ -38,7 +38,13 @@ object LootListeners : Listener {
         // Boss drops
         when(mob) {
             is Warden -> {
-                mob.world.dropItem(mob.location, Item.WARDEN_ENTRAILS.newItemStack(1))
+                val book = ItemStack(Material.ENCHANTED_BOOK)
+                val enchantments = ItemEnchantments.itemEnchantments().add(
+                    OdysseyEnchantments.SCULK_SENSITIVE,
+                    1
+                )
+                book.setData(DataComponentTypes.STORED_ENCHANTMENTS, enchantments)
+                mob.world.dropItem(mob.location, book)
             }
             is Wither -> {
                 val book = ItemStack(Material.ENCHANTED_BOOK)

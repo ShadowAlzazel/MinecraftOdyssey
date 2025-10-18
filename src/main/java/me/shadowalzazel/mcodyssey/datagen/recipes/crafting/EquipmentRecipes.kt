@@ -27,7 +27,7 @@ class EquipmentRecipes : ChoiceManager {
             setIngredient('X', titaniumChoices())
             setIngredient('C', Material.COPPER_INGOT)
             setIngredient('S', Material.STRING)
-            setIngredient('T', Material.CHAIN)
+            setIngredient('T', Material.IRON_CHAIN)
             setIngredient('L', Material.STICK)
             category = CraftingBookCategory.EQUIPMENT
         }
