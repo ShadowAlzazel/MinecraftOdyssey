@@ -5,7 +5,7 @@
  */
 
 group = "me.shadowalzazel"
-version = "1.0.6-ALPHA-1.21.10"
+version = "1.0.7-ALPHA-1.21.11"
 description = "A server side expansion pack for a new minecraft adventure!"
 
 plugins {
@@ -36,10 +36,10 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.10-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
     //implementation(kotlin("stdlib-jdk21"))
-    paperweight.paperDevBundle("1.21.10-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.21.11-R0.1-SNAPSHOT")
 }
 
 publishing {
