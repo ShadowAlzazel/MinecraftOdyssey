@@ -11,17 +11,17 @@ description = "A server side expansion pack for a new minecraft adventure!"
 plugins {
     `java-library`
     `maven-publish`
-    kotlin("jvm") version "2.2.0"
+    kotlin("jvm") version "2.3.0"
     id("com.gradleup.shadow") version "9.2.2"
-    id("io.papermc.paperweight.userdev") version "2.0.0-beta.21" // Check for new versions at https://plugins.gradle.org/plugin/io.papermc.paperweight.userdev
+    //id("io.papermc.paperweight.userdev") version "2.0.0-beta.21" // Check for new versions at https://plugins.gradle.org/plugin/io.papermc.paperweight.userdev
 }
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(25))
 }
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(25)
 }
 
 repositories {
@@ -33,17 +33,19 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:26.1.2.build.+")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
     // Use a specific version instead of .build.+
-    paperweight.paperDevBundle("1.21.1-R0.1-SNAPSHOT")
+    //paperweight.paperDevBundle("26.1.2.build.+")
 }
-
+/*
 paperweight {
     javaLauncher = javaToolchains.launcherFor {
         languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
+
+ */
 
 publishing {
     publications.create<MavenPublication>("maven") {
@@ -61,7 +63,7 @@ tasks {
         options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
         // Set the release flag. This configures what version bytecode the compiler will emit, as well as what JDK APIs are usable.
         // See https://openjdk.java.net/jeps/247 for more information.
-        options.release.set(21)
+        options.release.set(25)
     }
     javadoc {
         options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
