@@ -11,7 +11,6 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.MerchantRecipe
 import kotlin.random.Random
 
-@Suppress("UnstableApiUsage")
 class MerchantRecipeCreator : EquipmentGenerator {
 
     // Weapon Customization

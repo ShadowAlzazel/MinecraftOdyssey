@@ -5,7 +5,7 @@
  */
 
 group = "me.shadowalzazel"
-version = "1.0.7-ALPHA-1.21.11"
+version = "1.1-ALPHA (26.1.2)"
 description = "A server side expansion pack for a new minecraft adventure!"
 
 plugins {
@@ -13,8 +13,7 @@ plugins {
     `maven-publish`
     kotlin("jvm") version "2.2.0"
     id("com.gradleup.shadow") version "9.2.2"
-    //id("com.github.johnrengelman.shadow") version "9.3.0"
-    id("io.papermc.paperweight.userdev") version "2.0.0-beta.19" // Check for new versions at https://plugins.gradle.org/plugin/io.papermc.paperweight.userdev
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.21" // Check for new versions at https://plugins.gradle.org/plugin/io.papermc.paperweight.userdev
 }
 
 java {
@@ -31,15 +30,19 @@ repositories {
         name = "papermc"
         url = uri("https://repo.papermc.io/repository/maven-public/")
     }
-    //maven("https://repo.papermc.io/repository/maven-public/")
-    //maven("https://oss.sonatype.org/content/groups/public/")
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
-    //implementation(kotlin("stdlib-jdk21"))
-    paperweight.paperDevBundle("1.21.11-R0.1-SNAPSHOT")
+    // Use a specific version instead of .build.+
+    paperweight.paperDevBundle("1.21.1-R0.1-SNAPSHOT")
+}
+
+paperweight {
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
 }
 
 publishing {
@@ -69,7 +72,7 @@ tasks {
             "name" to project.name,
             "version" to project.version,
             "description" to project.description,
-            "apiVersion" to "1.21.10"
+            "apiVersion" to "26.1.2"
         )
         inputs.properties(props)
         filesMatching("plugin.yml") {

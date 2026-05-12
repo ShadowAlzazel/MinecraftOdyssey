@@ -14,3 +14,7 @@ Notes to Self:
 
 When updating the build, CHECK the `gradle` version and the `gradle wrapper` version.
 Usually just delete the old gradle folder.
+
+Run gradle
+`gradle build`
+

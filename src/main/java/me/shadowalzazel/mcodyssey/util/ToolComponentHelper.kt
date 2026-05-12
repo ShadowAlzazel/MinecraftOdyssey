@@ -3,7 +3,8 @@
 package me.shadowalzazel.mcodyssey.util
 
 import io.papermc.paper.datacomponent.item.Tool
-import io.papermc.paper.registry.keys.tags.BlockTypeTagKeys
+import io.papermc.paper.registry.keys.BlockTypeKeys
+import io.papermc.paper.registry.keys.tags.ItemTypeTagKeys
 import io.papermc.paper.registry.tag.Tag
 import me.shadowalzazel.mcodyssey.api.RegistryTagManager
 import net.kyori.adventure.util.TriState
@@ -24,7 +25,7 @@ interface ToolComponentHelper : RegistryTagManager {
         }
     }
 
-    fun newToolComponent(toolMaterial: String, toolType: String): Tool? {
+    fun newToolComponent(toolMaterial: String, toolType: String): DataCom {
         val builder = Tool.tool()
         val speed = when (toolMaterial) {
             "copper" -> 4.5F

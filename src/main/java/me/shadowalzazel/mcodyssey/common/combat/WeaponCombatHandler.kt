@@ -129,7 +129,7 @@ interface WeaponCombatHandler : AttackHelper, DataTagManager {
         if (victim.isDead) return
         if (victim !is LivingEntity) return
         // Get victim attributes
-        val armor = victim.getAttribute(Attribute.ARMOR)?.value ?: 0.0
+        val armor = victim.getAttribute(Attribute.GENERIC_ARMOR)?.value ?: 0.0
         val health = victim.health
         // Get bonuses from maps
         val bludgeoningDamage = WeaponMaps.BLUDGEON_MAP[weapon]?.let { minOf(it, armor.div(2))} ?: 0.0 // Dmg = x < armor / 2

@@ -120,6 +120,7 @@ interface WeaponProjectileHandler : DataTagManager, EnchantmentManager, AttackHe
         // Potion Data
         val potionContents = crossbow.getData(DataComponentTypes.POTION_CONTENTS) ?: return
         val chargedProjectiles = crossbow.getData(DataComponentTypes.CHARGED_PROJECTILES) ?: return
+
         // Entity Data
         val shooter = event.entity
         val projectile = event.projectile
