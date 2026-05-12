@@ -13,7 +13,7 @@ plugins {
     `maven-publish`
     kotlin("jvm") version "2.3.0"
     id("com.gradleup.shadow") version "9.2.2"
-    //id("io.papermc.paperweight.userdev") version "2.0.0-beta.21" // Check for new versions at https://plugins.gradle.org/plugin/io.papermc.paperweight.userdev
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.21" // Check for new versions at https://plugins.gradle.org/plugin/io.papermc.paperweight.userdev
 }
 
 java {
@@ -36,16 +36,14 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:26.1.2.build.+")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
     // Use a specific version instead of .build.+
-    //paperweight.paperDevBundle("26.1.2.build.+")
-}
-/*
-paperweight {
-    javaLauncher = javaToolchains.launcherFor {
-        languageVersion.set(JavaLanguageVersion.of(21))
-    }
+    paperweight.paperDevBundle("26.1.2.build.+")
 }
 
- */
+paperweight {
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion.set(JavaLanguageVersion.of(25))
+    }
+}
 
 publishing {
     publications.create<MavenPublication>("maven") {

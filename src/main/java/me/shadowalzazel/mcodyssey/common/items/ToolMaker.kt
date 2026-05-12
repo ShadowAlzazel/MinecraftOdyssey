@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.common.items
 
+import io.papermc.paper.datacomponent.DataComponentTypes
 import me.shadowalzazel.mcodyssey.util.AttributeManager
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.util.ToolComponentHelper
@@ -10,6 +11,7 @@ import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
+@Suppress("UnstableApiUsage")
 interface ToolMaker : AttributeManager, DataTagManager, ToolComponentHelper {
 
     fun createToolStack(material: ToolMaterial, type: ToolType, amount: Int = 1): ItemStack {

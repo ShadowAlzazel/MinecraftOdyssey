@@ -2,6 +2,7 @@
 
 package me.shadowalzazel.mcodyssey.util
 
+import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.Tool
 import io.papermc.paper.registry.keys.BlockTypeKeys
 import io.papermc.paper.registry.keys.tags.ItemTypeTagKeys
@@ -10,6 +11,7 @@ import me.shadowalzazel.mcodyssey.api.RegistryTagManager
 import net.kyori.adventure.util.TriState
 import org.bukkit.Registry
 import org.bukkit.block.BlockType
+import org.bukkit.inventory.meta.components.ToolComponent
 
 @Suppress("UnstableApiUsage")
 interface ToolComponentHelper : RegistryTagManager {
@@ -25,7 +27,7 @@ interface ToolComponentHelper : RegistryTagManager {
         }
     }
 
-    fun newToolComponent(toolMaterial: String, toolType: String): DataCom {
+    fun newToolComponent(toolMaterial: String, toolType: String): Tool? {
         val builder = Tool.tool()
         val speed = when (toolMaterial) {
             "copper" -> 4.5F

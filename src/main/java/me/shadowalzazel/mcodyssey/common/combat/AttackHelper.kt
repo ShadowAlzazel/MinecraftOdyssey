@@ -68,7 +68,7 @@ interface AttackHelper {
 
     fun getWeaponAttack(item: ItemStack): Double {
         var damage = 0.0
-        val attackModifiers = item.itemMeta.attributeModifiers?.get(Attribute.GENERIC_ATTACK_DAMAGE)
+        val attackModifiers = item.itemMeta.attributeModifiers?.get(Attribute.ATTACK_DAMAGE)
         if (!attackModifiers.isNullOrEmpty()) {
             for (modifier in attackModifiers) {
                 damage += modifier.amount
