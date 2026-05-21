@@ -28,13 +28,23 @@ interface RegistryTagManager {
     }
 
     /**
-     *
+     * Gets a custom collection from a custom DataPack data tag registry.
      */
     fun <T: Keyed> getTagFromRegistry(registryKey: RegistryKey<T>, location: String, namespace: String="odyssey"): Tag<T> {
         //val blockRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.BLOCK)
         //val tagKey = TagKey.create(RegistryKey.BLOCK, NamespacedKey.minecraft("mineable/axe"))
         //return blockRegistry.getTag(tagKey)
         val namespacedKey = if (namespace == "odyssey") createOdysseyKey(location) else createMinecraftKey(location)
+        val paperRegistry = RegistryAccess.registryAccess().getRegistry(registryKey)
+        val tagKey = TagKey.create(registryKey, namespacedKey)
+        return paperRegistry.getTag(tagKey)
+    }
+
+    /**
+     * Gets a collection from a Minecraft data tag registry.
+     */
+    fun <T: Keyed> getTagFromMinecraftRegistry(registryKey: RegistryKey<T>, location: String): Tag<T> {
+        val namespacedKey = createMinecraftKey(location)
         val paperRegistry = RegistryAccess.registryAccess().getRegistry(registryKey)
         val tagKey = TagKey.create(registryKey, namespacedKey)
         return paperRegistry.getTag(tagKey)

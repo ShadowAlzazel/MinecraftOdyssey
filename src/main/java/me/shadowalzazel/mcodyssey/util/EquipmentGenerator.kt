@@ -128,10 +128,10 @@ interface EquipmentGenerator : ToolMaker, EnchantabilityHandler {
     fun LivingEntity.setArmor(list: List<ItemStack>) {
         // Apply
         this.equipment?.also {
-            it.helmet = list[0]
-            it.chestplate = list[1]
-            it.leggings = list[2]
-            it.boots = list[3]
+            it.setHelmet(list[0])
+            it.setChestplate(list[1])
+            it.setLeggings(list[2])
+            it.setBoots(list[3])
         }
     }
 

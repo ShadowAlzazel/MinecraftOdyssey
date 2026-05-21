@@ -108,11 +108,11 @@ class HogRiderBoss : OdysseyBoss(
         // Add Item
         val hogRiderWeapon: ItemStack = createHogRiderWeapon()
         hogRider.clearActiveItem()
-        hogRider.equipment.setItemInMainHand(hogRiderWeapon)
-        hogRider.equipment.boots = ItemStack(Material.NETHERITE_BOOTS, 1)
-        hogRider.equipment.helmet = ItemStack(Material.NETHERITE_HELMET, 1)
-        hogRider.equipment.leggings = ItemStack(Material.NETHERITE_LEGGINGS, 1)
-        hogRider.equipment.chestplate = ItemStack(Material.NETHERITE_CHESTPLATE, 1)
+        //hogRider.equipment.setItemInMainHand(hogRiderWeapon)
+        //hogRider.equipment.boots = ItemStack(Material.NETHERITE_BOOTS, 1)
+        //hogRider.equipment.helmet = ItemStack(Material.NETHERITE_HELMET, 1)
+        //hogRider.equipment.leggings = ItemStack(Material.NETHERITE_LEGGINGS, 1)
+        //hogRider.equipment.chestplate = ItemStack(Material.NETHERITE_CHESTPLATE, 1)
 
         // Change boss class
         bossEntityRider = hogRider

@@ -71,9 +71,9 @@ object Savage : OdysseyMob("Savage", "savage", EntityType.ZOMBIE, 30.0) {
                 it.setItemInMainHand(weapon)
                 it.setItemInOffHand(weapon.clone())
                // it.helmet = Equipment.HORNED_HELMET.newItemStack(1)
-                it.chestplate = ItemStack(Material.IRON_CHESTPLATE, 1)
-                it.leggings = ItemStack(Material.CHAINMAIL_LEGGINGS, 1)
-                it.boots = ItemStack(Material.CHAINMAIL_BOOTS, 1)
+                //it.chestplate = ItemStack(Material.IRON_CHESTPLATE, 1)
+                //it.leggings = ItemStack(Material.CHAINMAIL_LEGGINGS, 1)
+                //it.boots = ItemStack(Material.CHAINMAIL_BOOTS, 1)
                 it.itemInMainHandDropChance = 0F
                 it.itemInOffHandDropChance = 0F
                 it.helmetDropChance = 0F

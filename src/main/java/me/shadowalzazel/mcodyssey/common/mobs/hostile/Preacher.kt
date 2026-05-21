@@ -33,10 +33,10 @@ object Preacher : OdysseyMob("Preacher", "preacher", EntityType.WITHER_SKELETON,
             val weapon = createToolStack(ToolMaterial.NETHERITE, ToolType.CLAYMORE) // ADD SLOTS AND ENCHANTS
             equipment.also {
                 it.setItemInMainHand(weapon) // ADD TRIMS
-                it.helmet = ItemStack(Material.NETHERITE_HELMET, 1)
-                it.chestplate = ItemStack(Material.NETHERITE_CHESTPLATE, 1)
-                it.leggings = ItemStack(Material.NETHERITE_LEGGINGS, 1)
-                it.boots = ItemStack(Material.NETHERITE_BOOTS, 1)
+                //it.helmet = ItemStack(Material.NETHERITE_HELMET, 1)
+                //it.chestplate = ItemStack(Material.NETHERITE_CHESTPLATE, 1)
+                //it.leggings = ItemStack(Material.NETHERITE_LEGGINGS, 1)
+                //it.boots = ItemStack(Material.NETHERITE_BOOTS, 1)
                 it.itemInMainHandDropChance = 100F
                 it.itemInOffHandDropChance = 0F
                 it.helmetDropChance = 0F

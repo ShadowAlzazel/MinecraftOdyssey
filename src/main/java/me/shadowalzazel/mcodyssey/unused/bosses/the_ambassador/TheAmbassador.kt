@@ -112,10 +112,10 @@ class TheAmbassador(location: Location) : OdysseyBoss(
             isCanJoinRaid = false
             isAware = false
             canPickupItems = true
-            equipment.helmet = ItemStack(Material.DIAMOND_HELMET)
-            equipment.chestplate = ItemStack(Material.DIAMOND_CHESTPLATE)
-            equipment.leggings = ItemStack(Material.DIAMOND_LEGGINGS)
-            equipment.boots = ItemStack(Material.DIAMOND_BOOTS)
+            //equipment.helmet = ItemStack(Material.DIAMOND_HELMET)
+            //equipment.chestplate = ItemStack(Material.DIAMOND_CHESTPLATE)
+            //equipment.leggings = ItemStack(Material.DIAMOND_LEGGINGS)
+            //equipment.boots = ItemStack(Material.DIAMOND_BOOTS)
             equipment.itemInMainHandDropChance = 100F
             // Health
             setHealthAttribute(930.0, "boss.health")

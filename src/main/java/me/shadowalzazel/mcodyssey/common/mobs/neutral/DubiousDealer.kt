@@ -26,10 +26,10 @@ object DubiousDealer : OdysseyMob("Dubious Dealer", "dubious_dealer", EntityType
             customName(Component.text(this@DubiousDealer.displayName))
             // Add Items
             equipment.also {
-                it.helmet = ItemStack(Material.CHAINMAIL_HELMET, 1)
-                it.chestplate = ItemStack(Material.CHAINMAIL_CHESTPLATE, 1)
-                it.leggings = ItemStack(Material.CHAINMAIL_LEGGINGS, 1)
-                it.boots = ItemStack(Material.CHAINMAIL_BOOTS, 1)
+                //it.helmet = ItemStack(Material.CHAINMAIL_HELMET, 1)
+                //it.chestplate = ItemStack(Material.CHAINMAIL_CHESTPLATE, 1)
+                //it.leggings = ItemStack(Material.CHAINMAIL_LEGGINGS, 1)
+                //it.boots = ItemStack(Material.CHAINMAIL_BOOTS, 1)
                 it.helmetDropChance = 0F
                 it.chestplateDropChance = 0F
                 it.leggingsDropChance = 0F
