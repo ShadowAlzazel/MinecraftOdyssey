@@ -16,6 +16,14 @@ interface EffectsManager : EffectTagsManager {
     //    get() = mutableMapOf()
     // Create player uuid task manager
 
+    // Effect Notes:
+    /*
+    AFTERSHOCK: Electric based attack, when moving too much, charges static, then deals damage.
+    AFTERSHOCK is an effect, 10F. Moving 1 block adds 1 unit. Getting Attacked adds 1 unit.
+
+     */
+
+
     fun LivingEntity.addOdysseyEffect(
         effect: String,
         durationInTicks: Int,

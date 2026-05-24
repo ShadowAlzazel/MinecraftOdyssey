@@ -115,20 +115,23 @@ interface DescriptionManager {
                 "- Increase arrow knockback by ${level * 3}=[level x 3] blocks.")
             "power" -> listOf(
                 "- Increase arrow damage by ${25 + level * 25}%=[25 + (level x 25)].")
+
             // Odyssey - Armor
+            "adaptive_protection" -> listOf( // Max 4, Incompatible with other protection
+                "- Getting damaged by the same source reduces its amount by 4% up to ${5 * level}%=[level x 5]")
             "analysis" -> listOf(
                 "- Increase experience gained by ${level * 10}%=[level x 10].")
             "antibonk" -> listOf(
                 "- Reduce critical hit damage by ${level * 10}%=[level x 10].")
             "beastly" -> listOf(
-                "- Increase health by ${level}=[level].",
+                "- Increase health by ${level * 0.5}=[level x 0.5] hearts.",
                 "- Increase size by ${level * 3}%=[level x 3].")
             "black_rose" -> listOf(
                 "- Applies Wither II for ${level * 4}=[level x 4] seconds to enemies",
                 "that attacked the wearer.",
-                "- While below ${level * 20}%=[level x 20] health, projectiles miss the wearer.")
+                "- While below ${level * 15}%=[level x 15] health, projectiles miss the wearer.")
             "blurcise" -> listOf(
-                "- While moving, take ${level * 10}%=[level x 10] reduced damage.")
+                "- While moving, take ${level * 8}%=[level x 8] reduced damage.")
             "brawler" -> listOf(
                 "- When surrounded (by 3 or more enemies within a 4 block radius),",
                 "take ${level * 3}%=[level x 3] reduced damage.")
@@ -137,11 +140,11 @@ interface DescriptionManager {
             "claw_climbing" -> listOf(
                 "- Increase automatic step height by $level=[level] blocks.")
             "cowardice" -> listOf(
-                "- Get knock backed further and get speed $level=[level] for 6 seconds when hit.")
+                "- Get knock backed further and gain speed $level=[level] for 6 seconds when hit.")
             "devastating_drop" -> listOf(
-                "- Converts fall damage to AOE damage at ${40 * level}%=[level x 40]")
-            "fruitful_fare" -> listOf(
-                "- Eating a fruit recovers $level=[level] Health. Adds a 3 second cooldown to the fruit.")
+                "- Converts fall damage to AOE damage at ${25 * level}%=[level x 25]")
+            "fairy_fare" -> listOf( // Renamed from fruitful_fare
+                "- Eating food recovers ${10 * level}%=[level x 10] of its hunger as health.")
             "ignore_pain" -> listOf(
                 "- Decrease Invulnerable time when hit by ${(level * 0.1).format(2)}=[level x 0.1] seconds",
                 "but gain absorption for ${5 - level}=[5 - level] seconds.")
@@ -153,36 +156,42 @@ interface DescriptionManager {
             "leap_frog" -> listOf(
                 "- Increase jump height by ${level * 25}%=[level x 25]; the jump strength is doubled when sneaking.")
             "mandiblemania" -> listOf(
-                "- Dealing damage increases your saturation by ${level * 2}%=[level * 2].")
+                "- Dealing damage restores your saturation by ${level * 2}%=[level * 2].")
             "molten_core" -> listOf(
                 "- Enemies that attack the wearer are set on fire for ${4 * level}=[4 x level] seconds.",
-                "This effect is doubled when on fire or in lava.")
-            "opticalization" -> listOf(
+                "This effect is doubled when on fire, magma or in lava.")
+            "opticalization" -> listOf( // From multi-level to 1
                 "- Getting damaged by an entity or attacking an entity within",
-                "${2 * level}=[2 x level] blocks forces the wearer and entity to target each other.")
+                "forces the wearer and entity to target each other.")
             "heartened" -> listOf(
                 "- Increase max health by ${level * 10}%=[level x 10].")
+            /*
             "potion_barrier" -> listOf(
                 "- Drinking a potion grants resistance for 10 seconds.",
                 "- Negative effect timers are reduced by ${level * 25}%=[level x 25].")
+             */
             "reckless" -> listOf(
-                "- Deal ${level * 10}%=[level x 10] increased damage but receive ${level * 5}%=[level x 5] more damage.")
+                "- Deal ${level * 5}%=[level x 5] increased damage but receive ${level * 5}%=[level x 5] more damage.")
             "relentless" -> listOf(
                 "- While below 40% health, take ${level * 5}%=[level x 5] reduced damage.")
+            "reinforced_plating" -> listOf( // Chestplate
+                "- Increase armor toughness by ${level * 10}%=[level x 10].")
             "revitalize" -> listOf(
-                "- Increase health regeneration amount by ${(10 * level)}=[level x 10]%")
+                "- Increase health regeneration amount by ${(level * 5)}=[level x 5]%")
             "root_boots" -> listOf(
-                "- Reduce knockback by ${30 * level}%=[30 x level]. This is doubled when standing still.")
+                "- Reduce knockback by ${20 * level}%=[20 x level]. This is doubled when crouching.")
             "sculk_sensitive" -> listOf(
-                "- On sneak, sense moving entities within a ${5 + (level * 5)}=[5 + (level * 5)] block radius.")
+                "- On sneak, sense moving entities within a ${5 + (level * 5)}=[5 + (level x 5)] block radius.")
             "speedy_spurs" -> listOf(
-                "- Gives speed $level=[level] to ridden entities.")
+                "- Increases the speed  of ridden mounts by ${level * 0.1}%=[level x 10]")
+            /*
             "sporeful" -> listOf(
                 "- Getting hit applies Poison I for ${2 + (level * 2)}=[2 + (level x 2)] seconds",
                 "and Nausea II to enemies for ${2 + (level * 2)}=[2 + (level x 2)] seconds.")
             "squidify" -> listOf(
                 "- Getting hit applies Blindness I for ${level * 2}=[level x 2] seconds",
                 "and Slowness II to enemies for ${level * 2}=[level x 2] seconds.")
+             */
             "sslither_ssight" -> listOf(
                 "- Taking damage by an entity within line of sight disables",
                 "their movement for ${0.5 * level}=[0.5 x level] seconds." )
@@ -194,9 +203,11 @@ interface DescriptionManager {
             "veiled_in_shadow" -> listOf(
                 "- Gain invulnerable time negatively proportional to light level.",
                 "Reduce required light level by $level=[level].")
-            "vigor" -> listOf( // All Armor
-                "- Deal ${level * 15}%=[level x 15] increased damage while above 60% health.")
-            // Odyssey - Melee
+
+            // ──────────────────────────────────────────────────────────────────────────────
+            // ──────────────────────────────── MELEE ───────────────────────────────────────
+            // ──────────────────────────────────────────────────────────────────────────────
+
             "agile" -> listOf(
                 "- Increase attack speed by ${level * 5}%=[level x 5].")
             "arcane_cell" -> listOf(
@@ -206,7 +217,7 @@ interface DescriptionManager {
                 "- Reduce target breath by ${2 * level}=[2 x level] seconds.",
                 "- Deal $level=[level] damage to enemies without air.")
             "backstabber" -> listOf(
-                "- Deal ${2 + (level * 2)}=[2 + (level x 2)] damage against targets",
+                "- Deal ${level * 20}%=[level x 20] damage against targets",
                 "that are looking away from you or while you are invisible.")
             "bane_of_the_illager" -> listOf(
                 "- Increase Melee Damage to illagers by ${2.5 * level}=[2.5 x level]")
@@ -216,60 +227,67 @@ interface DescriptionManager {
                 "- Increase Melee Damage to piglins by ${2.5 * level}=[2.5 x level]")
             "swap" -> listOf(
                 "- Directly attacking a target swaps location.")
+            /*
             "budding" -> listOf(
                 "- Applies Budding ${level}=[level] for 12 seconds.")
+             */
             "buzzy_bees" -> listOf(
                 "- Summons an angered bee to attack most recent target.")
             "cleave" -> listOf(
                 "- Deals ${level}=[level] item damage to armor.",
                 "- Shield disables last for ${level}=[level] more seconds.")
             "committed" -> listOf(
-                "- Increase damage against enemies with less than 40% health by ${1 + level}=[1 + level].")
+                "- Increase damage against enemies with less than 40% health by ${level * 15}%=[level x 15].")
             "cull_the_weak" -> listOf(
-                "- Deal $level=[level] bonus damage to enemies that are slowed,",
-                "weak, or fatigued. These effects can stack.")
+                "- Deal ${level * 15}%=[level x 15] bonus damage to enemies that are impaired by the following:",
+                "Slowness, Weakness, Blindness, or Nausea. These effects can stack individually.")
             "conflagrate" -> listOf(
-                "- After 1.5 second delay, the target takes ${level * 20}%=[level x 20] fire damage",
+                "- After a 1.5 second delay, the target takes ${level * 20}%=[level x 20] fire damage",
                 "based on the original damage amount.")
+            /*
             "decay" -> listOf(
                 "- Apply Wither I for ${level * 4}=[level x 4] seconds.")
+             */
             "douse" -> listOf(
-                "- Deal bonus damage to enemies that are on fire, or susceptible to water.")
+                "- Deal ${level * 15}%=[level x 15] bonus damage to enemies that are on fire",
+                "are susceptible o weak to water.")
             "echo" -> listOf(
                 "- Attacking has a ${20 * level}%=[20 x level] chance to attack again. (Can not re-apply).")
             "execution" -> listOf(
                 "- Execute an enemy if it is below ${level * 2}%=[level x 2] max health.")
             "expedite" -> listOf(
-                "- Increase base mining speed by ${level * 25}%=[level x 25].")
+                "- Increase base mining speed by ${level * 5}%=[level x 5].")
             "exploding" -> listOf(
-                "- Killing an enemy creates an explosion that damages enemies",
-                "for a maximum of ${(level * 1.0).pow(2)}=[level ^ 2] at the center.")
+                "- Killing an enemy causes an explosion that damages nearby entities.",
+                "Damage is ${level * 30}%=[level x 30] of the original amount, falling of from the center.")
             "fearful_finisher" -> listOf(
                 "- Killing an enemy causes nearby enemies to flee for ${level * 4}=[level x 4] blocks.",
                 "- Nearby enemies also have their immunity time reduced by ${level * 0.1}=[level x 0.1] seconds.")
             "freezing_aspect" -> listOf(
-                "- Applies Freezing I for ${level * 4}=[level x 4] seconds.")
-            "frog_fright" -> listOf(
-                "- Attacking enemy pulls them back and damages them for ${level}=[level] after a 0.5 second delay.")
+                "- Applies Freezing for ${level * 4}=[level x 4] seconds.")
+            "frog_fright" -> listOf( // Utility
+                "- Attacking enemy pulls them back after a 0.5 second delay.")
             "frosty_fuse" -> listOf(
                 "- Applies a ticking frost bomb to the target that detonates after 5 seconds.")
             "grasp" -> listOf(
                 "- Gain ${1 + level * 0.5}=[1 + (level x 0.5)] block interaction range.")
             "gravity_well" -> listOf(
                 "- Spawn a black hole at the target hit.")
-            "guarding_strike" -> listOf(
+            /*
+            "guarding_strike" -> listOf( // Moved to shield
                 "- Attacking while sneaking applies Resistance I for ${level * 5}=[level x 5] seconds.")
+             */
             "gust" -> listOf(
-                "- Targets are knocked-up for ${level * 100}%=[level x 100] force.")
+                "- Targets are knocked-up for ${level * 75}%=[level x 75] of knockback force.")
             "hemorrhage" -> listOf(
-                "- Applies ${level}=[level] stacks of bleeding DoT to the target for 9 seconds.")
+                "- Applies a Bleeding effect that ignores defense for 8 seconds.")
             "illucidation" -> listOf(
-                "- Deal ${level}=[level] bonus damage to enemies that are glowing.",
+                "- Deal ${level * 15}%=[level x 15] bonus damage to enemies that are glowing.",
                 "If the attack is a crit, it is doubled, but the glowing is removed.")
-            "invocative" -> listOf(
-                "- Deal bonus damage to a new target by ${level * 10}%=[level x 10] of your previous attack.")
+            "invocative" -> listOf( // The previous enemy you have damaged
+                "- Attacking deals ${level * 10}%=[level x 10] damage to the previous enemy you have attacked.")
             "lodesight" -> listOf(
-                "- Mining a block highlights ${level * 4}%=[level x 4] nearby blocks of the same type within an 8 block radius.",
+                "- Mining a block highlights ${level * 4}=[level x 4] nearby blocks of the same type within an 8 block radius.",
                 "- Each detected block drains durability by 2.")
             "magic_aspect" -> listOf(
                 "- Convert ${level * 5}%=[level x 5] of melee damage into magic type damage.")
@@ -283,44 +301,47 @@ interface DescriptionManager {
             "plunder" -> listOf(
                 "- Items that dropped from mobs are directly added to the players inventory.")
             "rupture" -> listOf(
-                "- Every third attack against a target deals ${level}=[level] true damage.")
+                "- Every third attack against a target has ${level * 5}%=[level x 5] of its damage converted to true damage.")
             "vengeful" -> listOf(
-                "- Deal $level=[level] more damage to enemies that have damaged the wearer.")
+                "- Deal ${level * 5}%=[level x 5] more damage to enemies that have damaged the wearer.")
             "vital" -> listOf(
-                "- Increase melee damage by ${level}=[level] if the attack is a crit.")
+                "- Increase critical damage by ${level * 10}%=[level x 10].")
             "void_strike" -> listOf(
                 "- Apply a stack of Void each attack; up to 10.",
-                "- Attacks deal ${level}=[level] per Void stack. At 10, all the stacks are removed.")
-            "whirlwind" -> listOf(
-                "- Attacks knock nearby away in a cone. Enemies are damaged at ${level * 30}%=[level x 30] efficiency.")
+                "- Attacks deal ${level * 10}%=[level x 10] bonus damage per Void stack. At 10, all stacks are removed.")
+            "whirlwind" -> listOf( // For non swords -> spears, axes
+                "- Attacks knock nearby away in a cone. Enemies are damaged at ${level * 40}%=[level x 40] efficiency.")
+
+            // ──────────────────────────────────────────────────────────────────────────────
+            // ─────────────────────────────── PROJECTILE ───────────────────────────────────
+            // ──────────────────────────────────────────────────────────────────────────────
+
             // Odyssey - Ranged
             "alchemy_artillery" -> listOf(
                 "- Potion effect projectiles have their effect timers increased",
                 "by ${(0.2 * level).format(2)}=[0.2 x level]%. These projectiles also have their",
                 "speed increased by ${(0.1 * level).format(2)}%=[0.1 x level]")
             "ambush" -> listOf(
-                "- The first projectile to hit an enemy deals ${level * 2}=[level x 2] more damage.")
+                "- The first projectile to hit an enemy deals ${25 * level}%=[level x 25] more damage.")
             "ballistics" -> listOf(
-                "- Crossbow projectiles deal $level=[level] more damage.")
+                "- Crossbow projectiles deal ${10 * level}%=[level x 10] more damage.")
             "bola_shot" -> listOf(
                 "- Applies Slowness I on the target for ${3 + level}=[3 + level] seconds",
                 "- Places a cobweb at the target's location.")
             "burst_barrage" -> listOf(
-                "- Shoot ${level}=[2 + level] consecutive arrows. (This does not bypass immunity).")
-            "chain_reaction" -> listOf(
-                "- Shoots the projectile in all directions upon impact on a target.")
-            "cluster_shot" -> listOf(
-                "- After a brief 0.5 seconds delay, the projectiles spreads into sub munitions in a cone.")
+                "- Shoot ${level + 2}=[2 + level] consecutive arrows. (Projectiles do not bypass immunity).")
+            "cluster_shot" -> listOf( // A circle attack
+                "- Shoots ${(level * 4)}=[level x 4] projectiles radially from the target.")
             "deadeye" -> listOf(
-                "- Projectiles deal ${3 + level * 2}=[3 + (level x 2)] more damage if it hits the target's eye.")
+                "- Projectiles deal ${20 * level}%=[level x 20] more damage if it hits the target's eye.")
             "death_from_above" -> listOf(
-                "- Increase damage by ${1.5 + (level * 1.5)}=[1.5+ (level x 1.5)] if the projectile",
-                "was launched from ${4 + level * 4}=[4 + (level x 4)] blocks high.")
+                "- Increase damage by ${20 * level}%=[level x 20] if the projectile",
+                "was launched from ${level * 5}=[level x 5] blocks high.")
             "double_tap" -> listOf(
-                "- When you shoot a projectile, another is automatically created.")
+                "- When you shoot a projectile, an identical one is automatically fired.")
             "entanglement" -> listOf(
-                "- On projectile hit, the target is tagged. If another target is tagged",
-                "within 10 blocks, they are pulled together and damaged for ${level}=[level].")
+                "- On projectile hit, the target is Entangled. If a nearby target is",
+                "Entangled within 10 blocks, they are pulled together.")
             "fan_fire" -> listOf(
                 "- On projectile shoot, shoot ${level}=[level] extra projectiles",
                 "at the nearest enemies within line of sight. (Velocity reduced by 50%).")
@@ -329,22 +350,22 @@ interface DescriptionManager {
             "lucky_draw" -> listOf(
                 "- There is a ${7 + (10 * level)}=[7 + (level x 10)]% chance to not consume ammo.")
             "luxpose" -> listOf(
-                "- Projectiles deal ${level}=[level] more damage to glowing targets.")
+                "- Projectiles deal ${level * 10}%=[level x 10] more damage to glowing targets.")
             "overcharge" -> listOf(
                 "- Holding a fully drown applies a charge to a max of ${level}=[level].",
-                "Each charge increase damage by ${level}=[level] and velocity.")
+                "Each charge increase damage and velocity by ${level * 10}%=[level x 10].")
             "perpetual" -> listOf(
-                "- Projectiles ignore gravity for ${10 + (level * 5)}=[10 + (level x 5)] seconds.")
-            "rain_of_arrows" -> listOf(
-                "- After an arrow hits a target, more arrows shoot upward then fall downwards.")
+                "- Projectiles ignore gravity for ${5 + (level * 5)}=[5 + (level x 5)] seconds.")
+            "rain_of_arrows" -> listOf( // A timed rain
+                "- After a 0.5 delay, ${level + 2}=[2 + level] projectiles shoot up and come down from the target location.")
             "ricochet" -> listOf(
                 "- Projectiles ricochet off entities/block up to a max of ${level}=[level].",
-                "Each bounce increases damage by 2.")
+                "Each bounce increases damage by 10%")
             "sharpshooter" -> listOf(
-                "- Critical arrows gain ${level * 10}%=[level * 0.1] speed",
-                "and deal ${level * 0.5}=[level x 0.5] extra damage.")
+                "- Critical arrows gain ${level * 10}%=[level x 10] speed",
+                "and deal ${level * 5}%=[level x 5] extra damage.")
             "single_out" -> listOf(
-                "- Isolated targets more than 16 blocks away from another entity take ${level * 2}=[level x 2] more damage.")
+                "- Isolated targets more than 16 blocks away from another entity take ${level * 20}%=[level x 20] more damage.")
             "singularity_shot" -> listOf(
                 "- The projectile has a black hole that sucks nearby entities.")
             "rend" -> listOf(
@@ -359,41 +380,51 @@ interface DescriptionManager {
                 "increased to ${level * 10}%=[level x 10] of the original velocity.")
             "vulnerocity" -> listOf(
                 "- On projectile hit, reduce entity immunity time by ${level * 0.1}=[level * 0.1] seconds.")
+
             // Odyssey - Misc
             "moonpatch" -> listOf(
                 "- Regenerates $level=[level] durability per second",
                 "at night when the moon is visible.")
             "chitin" -> listOf(
                 "- Regenerate durability when the holder regenerates.")
+
             "o_shiny" -> listOf(
                 "- The item glistens when hold or worn.")
-            "encumbering_curse" -> listOf(
-                "- Increase gravity by ${level * 10}%=[level x 10].")
-            "parasitic_curse" -> listOf(
-                "- When the item takes damage, instead have a ${level * 10}%=[level x 10] chance",
-                "to damage the user instead.")
             "fealty" -> listOf(
                 "- When the wearer dies, this item is kept when respawning.")
+
             // New
+
             "cloud_jumper" -> listOf( // boots
                 "- Have ${level}=[level] more jumps.")
             "moon_walker" -> listOf( // boots
                 "- Reduce gravity by ${level * 10}%=[level x 10].")
-            "unyielding" -> listOf( // Armor
-                "- Increase damage by ${level * 10}%=[level x 10] while below 40% health.")
-            "aerosion_aspect" -> listOf( // Melee
-                "- Apply a stack of Aerosion on hit. Up to a max of ${level}=[level].",
-                "- Aerosion deals 3.0 wind damage per stack every 1.5 seconds")
-            "tempest_splitter" -> listOf( // Melee
-                "- FINISH")
+
             "dynamo" -> listOf( // Bow
                 "- Converts ${level * 40}%=[level x 40] of projectile speed into shock damage")
+
+            "unyielding" -> listOf( // Melee
+                "- Increase damage by ${level * 10}%=[level x 10] while below 40% health.")
+            "vigor" -> listOf( // Melee
+                "- Deal ${level * 10}%=[level x 10] increased damage while above 60% health.")
+            "nullifying" -> listOf( // melee
+                "- Damaging an enemy reduces the damage it does to you by ${10 * level}%=[level x 10].")
             "life_force" -> listOf( // Melee
                 "- Increase damage based on ${level * 5}%=[level x 5] max health.",
                 "- This effect is doubled while below 50% max health.")
+
             // Curses
+            "encumbering_curse" -> listOf(
+                "- Increase weight by ${level * 10}%=[level x 10].")
+            "parasitic_curse" -> listOf(
+                "- When the item takes damage there is a ${level * 25}%=[level x 25] chance",
+                "to damage the user instead.")
             "brutality_curse" -> listOf(
-                "- Increase damage by ${level * 20}%=[level * 20] but take ${level * 1}=[level] when hitting.")
+                "- Increase damage by ${level * 10}%=[level * 10] but take ${level * 1}=[level] damage per attack.")
+            "midas_curse" -> listOf(
+                "- Converts all mob drop types into golden nuggets.")
+
+
             // Fallback
             else -> listOf("No description for $name")
         }
@@ -401,23 +432,9 @@ interface DescriptionManager {
 
     private fun ideas(level: Int, name: String) {
         val enchantIdeas = when(name) {
-            // LIKELY
-            "unyielding" -> listOf( // Armor
-                "- Reduce damage by ${level * 10}%=[level x 10] if the attacker has more health than you.")
-            "cloud_jumper" -> listOf( // boots
-                "- Have ${level}=[level] more jumps.")
-            "moon_walker" -> listOf( // boots
-                "- Reduce gravity by ${level * 10}%=[level x 10].")
-            "plunder" -> listOf( // melee
-                "- When an enemy is killed, collect its drops directly.")
-            "execution" -> listOf( // Max 5, [3] per level (melee)
-                "- Execute an enemy if it is below ${level * 2}%=[level x 2] max health.")
-            "adaptive_protection" -> listOf( // Max 4
-                "- The more damage you take from a single source, the up to (5 * level)")
-            "nullifying" -> listOf( // melee
-                "- Damaging an enemy reduces the damage it does to you by ${10 * level}%=[level x 10].")
-            "reinforced_plating" -> listOf( // Chestplate
-                "- Increase armor toughness by ${level * 10}%=[level x 10].")
+            "Aerosion" -> listOf(
+                "- Applies Aerosion. Targets have their movement impaired."
+            )
 
 
             // idea -> When damaged, after 1.0 seconds apply that damage, taking damage resets this cooldown but stacks the damage.
@@ -426,6 +443,9 @@ interface DescriptionManager {
                 "Taking damage resets this cooldown but stacks the damage up to your [%] max health."
             )
 
+            "shocking_impact" -> listOf(
+                "Applies Shock Charge to a target. If the target moves more than 10 blocks, it takes shock damage."
+            )
             // Other
             "magistrate" -> listOf( // Helmet
                 "- TODO: Sounds cool though"
@@ -433,9 +453,34 @@ interface DescriptionManager {
             "chain_reaction_old" -> listOf(
                 "- On projectile hit, spawn an arrow that targets the closest",
                 "enemy. This can happen ${2 + level}=[2 + level] amount of times")
+
+            // Chain Lightning
+            "chain_lightning" -> listOf(
+                "- Attacks bounces to nearby up to ${2 + level}=[2 + level] targets dealing 25% damage."
+            )
+
             // PROBABLY NOT
             "??" -> listOf(
                 "- Enemies that you attack have their current speed reduced by ${20 * level}%=[level x 20].")
+
+            "enshrouded" -> listOf()
+
+            // SHIELDS
+            "mirror_force" -> listOf(
+                "- Reflect enemy projectiles at ${30 * level}%=[level x 30] the original speed.")
+            "guarding_strike" -> listOf(
+                "- After blocking, your next attack deals ${15 * level}%=[level x 15] more damage.")
+
+            // PARRY
+            "riposte" -> listOf(
+                "- After a parry, your next attack deals ${15 * level}%=[level x 15] more damage.")
+
+            // Removed
+            "aerosion_aspect" -> listOf( // Melee
+                "- Apply a stack of Aerosion on hit. Up to a max of ${level}=[level].",
+                "- Aerosion deals 3.0 wind damage per stack every 1.5 seconds")
+            "tempest_splitter" -> listOf( // Melee
+                "- FINISH")
 
             else -> listOf(name)
         }

@@ -32,7 +32,6 @@ import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.sin
 
-@Suppress("UnstableApiUsage")
 object RangedListeners : Listener, EnchantmentManager {
 
     private val currentOverchargeTasks = mutableMapOf<UUID, OverchargeTask>()
@@ -580,12 +579,13 @@ object RangedListeners : Listener, EnchantmentManager {
         }
     }
 
+    // Shoots in a radial
     private fun clusterShotEnchantmentHit(projectile: Projectile, victim: LivingEntity) {
         if (!projectile.scoreboardTags.contains(EntityTags.ORIGINAL_ARROW)) return
         val modifier = projectile.getIntTag(EntityTags.CLUSTER_SHOT_MODIFIER) ?: return
         // Radius
-        val radiusAmount = 2 + (modifier * 2)
-        for (x in 1..radiusAmount) { // 4/6/8/10/12
+        val radiusAmount = (modifier * 4)
+        for (x in 1..radiusAmount) { // 4/8/12/16
             // Math
             val angle = Math.PI * 2 * (x / (radiusAmount * 1.0))
             val angularCoordinates: Pair<Double, Double> = Pair(5 * cos(angle), 5 * sin(angle))

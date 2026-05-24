@@ -140,4 +140,6 @@ object OdysseyEnchantments : EnchantmentManager, RegistryTagManager {
 
     val EXOTIC_LIST = setOf(SINGULARITY_SHOT, GRAVITY_WELL, SCULK_SENSITIVE, STYX_ROSE) // To exclude from enchantment table
 
+
+
 }

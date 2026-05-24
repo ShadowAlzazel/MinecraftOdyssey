@@ -259,10 +259,10 @@ interface EnchantabilityHandler : EnchantmentManager, DescriptionManager, DataTa
             }
             Material.NETHERITE_BOOTS, Material.DIAMOND_BOOTS, Material.IRON_BOOTS,
             Material.CHAINMAIL_BOOTS, Material.GOLDEN_BOOTS, Material.LEATHER_BOOTS -> {
-                40
+                35
             }
             Material.BOW -> {
-                40
+                35
             }
             Material.NETHERITE_LEGGINGS, Material.DIAMOND_LEGGINGS, Material.IRON_LEGGINGS,
             Material.CHAINMAIL_LEGGINGS, Material.GOLDEN_LEGGINGS, Material.LEATHER_LEGGINGS -> {
