@@ -1,5 +1,9 @@
 package me.shadowalzazel.mcodyssey.common.items
 
+/**
+ * All the tool and weapon type classes that can be made
+ *
+ */
 enum class ToolType(
     val toolName: String, // 'item_name' component
     val fullName: String, // 'custom_name' component
@@ -16,12 +20,14 @@ enum class ToolType(
     // Throwable -> Like chakram
     // Dual Wield -> Can be offhanded
     // No Skill -> Shield
+    // Mineable -> Can be used for mining
 
     // PASSIVE SKILLS
-    // Disable Shields
-    // Dismount
+    // Disable Shields [axes, scythe, sickle]
+    // Dismount [spears]
     // AoE (Sweep, Pierce, Smash)
-    // Bypass Armor
+    // Bypass Armor [piercing polearms, rapier, dagger]
+    // Bonus Unarmored Damage [Katana, Chakram, Scythe]
 
     // 3 DAMAGE ARCHETYPES
     // Pierce -> Piercing Weapon
@@ -134,8 +140,6 @@ enum class ToolType(
         }
 
         fun getFromName(name: String): ToolType? = entries.find { name == it.toolName }
-
-
 
     }
 

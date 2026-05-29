@@ -237,16 +237,6 @@ interface EnchantabilityHandler : EnchantmentManager, DescriptionManager, DataTa
         )
     }
 
-    /*-----------------------------------------------------------------------------------------------*/
-    // Fail Message
-    private fun LivingEntity.sendBarMessage(reason: String, color: TextColor = CustomColors.ENCHANT.color) {
-        this.sendActionBar(
-            Component.text(
-                reason,
-                color
-            )
-        )
-    }
 
     /*-----------------------------------------------------------------------------------------------*/
     // Point Default

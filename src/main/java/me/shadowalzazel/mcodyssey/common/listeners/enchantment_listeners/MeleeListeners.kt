@@ -419,6 +419,20 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
             return (2 + (level * 2))
         }
         return 0
+
+    }
+
+
+    private fun killingSpreeEnchantment(
+        attacker: LivingEntity,
+        victim: LivingEntity,
+        level: Int
+    ): Int {
+        if (attacker is Player) {
+            attacker.attackCooldown
+        }
+        return 0
+
     }
 
     private fun conflagrateEnchantment(

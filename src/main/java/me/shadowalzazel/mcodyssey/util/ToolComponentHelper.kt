@@ -35,10 +35,10 @@ interface ToolComponentHelper : RegistryTagManager {
     fun newToolComponent(toolMaterial: String, toolType: String): Tool? {
         val builder = Tool.tool()
         val speed = when (toolMaterial) {
-            "iridium" -> 8.5F
+            "iridium" -> 8.0F
             "titanium", "anodized_titanium" -> 9.0F
-            "mithril", "silver" -> 10.0F
-            "crystal_alloy" -> 11.0F
+            "silver" -> 10.0F
+            "mithril", "crystal_alloy" -> 13.0F
             else -> null
         }
         if (speed != null) {
