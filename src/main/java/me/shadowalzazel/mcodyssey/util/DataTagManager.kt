@@ -82,6 +82,19 @@ interface DataTagManager {
         return itemMeta.persistentDataContainer[tagKey, PersistentDataType.INTEGER]
     }
 
+    fun ItemStack.setBoolTag(tag: String, bool: Boolean) {
+        val tagKey = NamespacedKey(Odyssey.instance, tag)
+        itemMeta = itemMeta.also {
+            it.persistentDataContainer.set(tagKey, PersistentDataType.BOOLEAN, bool)
+        }
+    }
+
+    fun ItemStack.getBoolTag(tag: String): Boolean? {
+        if (!hasItemMeta()) return null
+        val tagKey = NamespacedKey(Odyssey.instance, tag)
+        return itemMeta.persistentDataContainer[tagKey, PersistentDataType.BOOLEAN]
+    }
+
     fun ItemStack.setStringTag(tag: String, text: String) {
         val tagKey = NamespacedKey(Odyssey.instance, tag)
         itemMeta = itemMeta.also {

@@ -5,7 +5,6 @@ import io.papermc.paper.datacomponent.item.CustomModelData
 import io.papermc.paper.datacomponent.item.ItemArmorTrim
 import io.papermc.paper.registry.set.RegistryKeySet
 import me.shadowalzazel.mcodyssey.api.LootTableManager
-import me.shadowalzazel.mcodyssey.common.enchantments.EnchantabilityHandler
 import me.shadowalzazel.mcodyssey.common.items.ToolMaker
 import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
 import me.shadowalzazel.mcodyssey.common.items.ToolType
@@ -21,7 +20,7 @@ import org.bukkit.inventory.meta.trim.TrimPattern
 import java.util.*
 
 @Suppress("UnstableApiUsage")
-interface EquipmentGenerator : ToolMaker, EnchantabilityHandler {
+interface EquipmentGenerator : ToolMaker, ItemToolTipManager {
 
     // Equipment Randomizer
     fun EquipmentRandomizer.newWeapon(randomParts: Boolean = true): ItemStack {
@@ -41,7 +40,7 @@ interface EquipmentGenerator : ToolMaker, EnchantabilityHandler {
         items.forEach {
             val copy = it.enchantWithLevels(minOf(30, level), keySet, Random())
             it.setData(DataComponentTypes.ENCHANTMENTS, copy.getData(DataComponentTypes.ENCHANTMENTS)!!)
-            it.updateEnchantPoints()
+            it.updateToolTip()
         }
     }
 
@@ -49,7 +48,7 @@ interface EquipmentGenerator : ToolMaker, EnchantabilityHandler {
         items.forEach {
             val copy = it.enchantWithLevels(minOf(30, level), false, Random())
             it.setData(DataComponentTypes.ENCHANTMENTS, copy.getData(DataComponentTypes.ENCHANTMENTS)!!)
-            it.updateEnchantPoints()
+            it.updateToolTip()
         }
     }
 

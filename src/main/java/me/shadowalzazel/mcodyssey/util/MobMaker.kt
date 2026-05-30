@@ -187,7 +187,7 @@ interface MobMaker : EquipmentGenerator {
             addShinyEnchant(shinyEnchant, checkedMax)
             addEnchantment(OdysseyEnchantments.O_SHINY, 1)
             setIntTag(ItemDataTags.EXTRA_ENCHANTABILITY_POINTS, (2..5).random())
-            updateEnchantPoints()
+            updateToolTip()
         }
         enchantItemsRandomly(armorList, 25 + difficulty.toInt())
 

@@ -3,6 +3,7 @@ package me.shadowalzazel.mcodyssey.common.enchantments
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.ItemEnchantments
 import me.shadowalzazel.mcodyssey.api.AdvancementManager
+import me.shadowalzazel.mcodyssey.util.ItemToolTipManager
 import me.shadowalzazel.mcodyssey.util.constants.CustomColors
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -19,7 +20,7 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.inventory.meta.Repairable
 
 @Suppress("UnstableApiUsage")
-internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager {
+internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager, ItemToolTipManager {
 
     fun tomeOfDischargeOnItem(item: ItemStack, viewers: List<HumanEntity>): ItemStack? {
 
@@ -46,7 +47,6 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager {
             enchantmentMap.remove(enchantToRemove.first)
             val enchantmentBuilder = ItemEnchantments.itemEnchantments().addAll(enchantmentMap)
             item.setData(DataComponentTypes.ENCHANTMENTS, enchantmentBuilder)
-            item.updateEnchantPoints()
         }
         // STORED ENCHANTMENTS
         else if (storedEnchants != null && hasStoredEnchants) {
@@ -58,7 +58,6 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager {
             enchantmentMap.remove(enchantToRemove.first)
             val enchantmentBuilder = ItemEnchantments.itemEnchantments().addAll(enchantmentMap)
             item.setData(DataComponentTypes.STORED_ENCHANTMENTS, enchantmentBuilder)
-            item.updateEnchantPoints()
         }
 
         // Advancement
@@ -84,7 +83,6 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager {
             meta.damage = 0
         }
         item.itemMeta = meta
-        item.updateEnchantPoints()
         return item
     }
 
@@ -129,7 +127,6 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager {
             // Remove and re-add
             item.removeEnchantment(enchantToUpgrade.first)
             item.addEnchantment(enchantToUpgrade.first, checkedMaxLevel)
-            item.updateEnchantPoints()
         }
         // Advancement
         if (checkedMaxLevel >= enchantToUpgrade.first.maxLevel) {
@@ -204,7 +201,6 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager {
             val bookEnchantment = ItemEnchantments.itemEnchantments().add(extractedEnchant.first, checkMax)
             extractedBook.setData(DataComponentTypes.STORED_ENCHANTMENTS, bookEnchantment)
             // Return book
-            extractedBook.updateEnchantPoints()
             return extractedBook
         }
         else if (!storedEnchantments.isNullOrEmpty()) {
@@ -216,7 +212,6 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager {
             val bookEnchantment = ItemEnchantments.itemEnchantments().add(extractedEnchant.first, checkMax)
             extractedBook.setData(DataComponentTypes.STORED_ENCHANTMENTS, bookEnchantment)
             // Return book
-            extractedBook.updateEnchantPoints()
             return extractedBook
         }
         return null
@@ -241,7 +236,6 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager {
             val enchantmentBuilder = ItemEnchantments.itemEnchantments().addAll(enchantmentMap)
             item.setData(DataComponentTypes.ENCHANTMENTS, enchantmentBuilder)
         }
-        item.updateEnchantPoints()
         return item
     }
 

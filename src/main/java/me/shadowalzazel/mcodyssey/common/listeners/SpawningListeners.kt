@@ -10,6 +10,7 @@ import me.shadowalzazel.mcodyssey.common.trims.TrimPatterns
 import me.shadowalzazel.mcodyssey.util.EquipmentRandomizer
 import me.shadowalzazel.mcodyssey.util.MobMaker
 import me.shadowalzazel.mcodyssey.api.RegistryTagManager
+import me.shadowalzazel.mcodyssey.util.ItemToolTipManager
 import me.shadowalzazel.mcodyssey.util.StructureHelper
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
@@ -32,7 +33,7 @@ import org.bukkit.loot.Lootable
 import java.util.*
 
 @Suppress("UnstableApiUsage")
-object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManager {
+object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManager, ItemToolTipManager {
 
     @EventHandler(priority = EventPriority.LOW)
     fun mobNaturalSpawningHandler(event: CreatureSpawnEvent) {
@@ -186,7 +187,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
                         addEnchantment(enchant.key, enchant.value)
                     }
                 }
-                updateEnchantPoints()
+                updateToolTip()
             }
             val offHand = ItemStack(Material.SHIELD)
 

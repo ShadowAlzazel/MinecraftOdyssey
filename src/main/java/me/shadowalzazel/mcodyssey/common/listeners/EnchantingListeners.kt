@@ -112,8 +112,9 @@ object EnchantingListeners : Listener, TomeEnchanting, RegistryTagManager {
         // Update
         val finalHasEnchants = (result.getData(DataComponentTypes.ENCHANTMENTS) != null) || (result.getData(DataComponentTypes.STORED_ENCHANTMENTS) != null)
         if (finalHasEnchants) {
-            result.updateEnchantPoints()
+            //  update points
         }
+        result.updateToolTip()
 
         // IF empty name
         if (second == null) {
@@ -136,7 +137,7 @@ object EnchantingListeners : Listener, TomeEnchanting, RegistryTagManager {
             event.result = ItemStack(Material.BOOK)
         } else {
             val newItem = result.clone().also {
-                it.updateEnchantPoints(resetLore = true)
+                it.updateToolTip()
             }
             inventory.result = newItem
             event.result = newItem
@@ -178,7 +179,7 @@ object EnchantingListeners : Listener, TomeEnchanting, RegistryTagManager {
                 }
             }
             // Change result to air if null result
-            result?.updateEnchantPoints()
+            result?.updateToolTip()
             event.result = result ?: ItemStack(Material.AIR)
         }
     }
@@ -317,7 +318,7 @@ object EnchantingListeners : Listener, TomeEnchanting, RegistryTagManager {
             newEnchants[enchant.key] = enchant.value
         }
         // update
-        book.updateEnchantPoints(resetLore = true, toggleToolTip = true, newEnchants = newEnchants) // Not full trigger since its passed as a book
+        book.updateToolTip() // Not full trigger since its passed as a book
         event.item = book
     }
 
@@ -328,7 +329,7 @@ object EnchantingListeners : Listener, TomeEnchanting, RegistryTagManager {
         val item = event.item
         val newEnchants = event.enchantsToAdd
         // Can get OVER-MAXED ITEMS if lucky
-        item.updateEnchantPoints(newEnchants = newEnchants, toggleToolTip = true)
+        item.updateToolTip()
         event.item = item
     }
 

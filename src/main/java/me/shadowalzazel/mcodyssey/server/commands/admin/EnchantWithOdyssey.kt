@@ -1,13 +1,13 @@
 package me.shadowalzazel.mcodyssey.server.commands.admin
 
-import me.shadowalzazel.mcodyssey.common.enchantments.EnchantabilityHandler
+import me.shadowalzazel.mcodyssey.util.ItemToolTipManager
 import org.bukkit.Material
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-object EnchantWithOdyssey : CommandExecutor, EnchantabilityHandler {
+object EnchantWithOdyssey : CommandExecutor, ItemToolTipManager {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender !is Player) return false
@@ -22,7 +22,7 @@ object EnchantWithOdyssey : CommandExecutor, EnchantabilityHandler {
         // Passed Checks
         val item = sender.equipment!!.itemInMainHand
         item.addEnchantment(enchant, level)
-        item.updateEnchantPoints()
+        item.updateToolTip()
         return true
     }
 }

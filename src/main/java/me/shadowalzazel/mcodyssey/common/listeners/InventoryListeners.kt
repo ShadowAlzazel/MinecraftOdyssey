@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.common.listeners
 
-import me.shadowalzazel.mcodyssey.common.enchantments.EnchantabilityHandler
+import me.shadowalzazel.mcodyssey.util.ItemToolTipManager
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -8,7 +8,7 @@ import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 
-object InventoryListeners : Listener, EnchantabilityHandler {
+object InventoryListeners : Listener, ItemToolTipManager {
 
     @EventHandler
     fun mainClickEvent(event: InventoryClickEvent) {
@@ -23,11 +23,11 @@ object InventoryListeners : Listener, EnchantabilityHandler {
         if (!item.hasItemMeta() && item.type != Material.ENCHANTED_BOOK) return
         // Check if Enchanted Item
         if (item.itemMeta.hasEnchants()) {
-            item.updateEnchantPoints(resetLore = true, toggleToolTip = true)
+            item.updateToolTip()
             return
         }
         if (item.itemMeta is EnchantmentStorageMeta) {
-            item.updateEnchantPoints(resetLore = true, toggleToolTip = true)
+            item.updateToolTip()
             return
         }
     }

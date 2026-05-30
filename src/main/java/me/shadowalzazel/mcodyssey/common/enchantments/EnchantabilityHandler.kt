@@ -34,9 +34,13 @@ interface EnchantabilityHandler : EnchantmentManager, DescriptionManager, DataTa
 
     fun ItemStack.getUsedEnchantabilityPoints(): Int {
         var usedEnchantabilityPoints = 0
-        for (enchant in this.enchantments) {
-            usedEnchantabilityPoints += enchant.key.enchantabilityCost(enchant.value)
+
+        if (this.enchantments.isNotEmpty()) {
+            for (enchant in this.enchantments) {
+                usedEnchantabilityPoints += enchant.key.enchantabilityCost(enchant.value)
+            }
         }
+
         return usedEnchantabilityPoints
     }
 
@@ -189,6 +193,7 @@ interface EnchantabilityHandler : EnchantmentManager, DescriptionManager, DataTa
         }
     }
 
+    // Deprecated
     fun ItemStack.updateEnchantPoints(
         resetLore: Boolean = true,
         toggleToolTip: Boolean = true,
@@ -200,8 +205,14 @@ interface EnchantabilityHandler : EnchantmentManager, DescriptionManager, DataTa
         }
     }
 
+    fun ItemStack.updateEnchantabilityPoints() {
+
+    }
+
+
+
     // Create the lore component for item
-    fun createEnchantLoreComponent(enchantment: Enchantment, level: Int, pointCost: Int): Component {
+    private fun createEnchantLoreComponent(enchantment: Enchantment, level: Int, pointCost: Int): Component {
         val color = if (enchantment.isCursed) {
             CustomColors.CURSED.color
         }
@@ -219,19 +230,19 @@ interface EnchantabilityHandler : EnchantmentManager, DescriptionManager, DataTa
 
     /*-----------------------------------------------------------------------------------------------*/
     // Components
-    val loreSeperator: TextComponent
+    private val loreSeperator: TextComponent
         get() = Component.text("-----------*-----------", CustomColors.DARK_GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
 
-    val loreFooter: TextComponent
+    private val loreFooter: TextComponent
         get() = Component.text("                       ", CustomColors.DARK_GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
 
-    val emptyGildedSlot: TextComponent
+    private val emptyGildedSlot: TextComponent
         get() = Component.text("+ Empty Gilded Slot", CustomColors.GILDED.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
 
-    val emptyEnchantSlot: TextComponent
+    private val emptyEnchantSlot: TextComponent
         get() = Component.text("+ Empty Enchant Slot", CustomColors.GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
 
-    fun createEnchantHeader(used: Int = 0, total: Int = 0): TextComponent {
+    private fun createEnchantHeader(used: Int = 0, total: Int = 0): TextComponent {
         return Component.text("Enchantability Points: ", CustomColors.GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE).append(
             Component.text("[$used/$total]", CustomColors.ENCHANT.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
         )

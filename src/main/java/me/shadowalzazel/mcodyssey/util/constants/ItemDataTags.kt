@@ -59,6 +59,7 @@ object ItemDataTags {
 
     const val EXTRA_ENCHANTABILITY_POINTS: String = "odyssey.enchantability_points"
     const val HAS_ENCHANT_TOOL_TIP: String = "odyssey.has_enchant_tool_tip"
+    const val SHOW_TOOL_TIP_DESCRIPTIONS: String = "odyssey.show_tool_tip_descriptions"
 
     // Glyphs
     const val IS_GLYPHIC_ITEM: String = "odyssey.is_glyphic_item"
