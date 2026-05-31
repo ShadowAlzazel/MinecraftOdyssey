@@ -2,15 +2,19 @@ package me.shadowalzazel.mcodyssey.util
 
 import io.papermc.paper.datacomponent.DataComponentTypes
 import me.shadowalzazel.mcodyssey.common.enchantments.EnchantabilityHandler
+import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.util.constants.CustomColors
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import me.shadowalzazel.mcodyssey.util.constants.WeaponMaps
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.TextDecoration
+import org.bukkit.attribute.Attribute
+import org.bukkit.attribute.AttributeModifier
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
+import kotlin.math.round
 
 @Suppress("UnstableApiUsage")
 interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
@@ -127,9 +131,9 @@ interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
             //newToolTip.add(toolTipIndex++, emptyEnchantSlot)
         }
 
-        // Weapon data and attributes
+        // Custom weapon data and skills
         if (isCustomWeapon && showDescriptions && weaponType != null) {
-            newToolTip.add(toolTipIndex++, Component.text(""))
+            newToolTip.add(toolTipIndex++, smallToolTipSeperator) // Add Another Seperator
             newToolTip.add(toolTipIndex++, createWeaponHeader(weaponType))
             // Base Damage Type
             if (weaponType in WeaponMaps.PIERCING_WEAPONS) {
@@ -165,8 +169,80 @@ interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
                     darkGrayTextComponent("- Chargeable (Hold weapon to do a charge attack)"))
             }
             // Passives
+        }
 
-            // Attributes
+        // Hide Attribute Modifiers on simple Screen
+        if (isCustomWeapon) {
+            // Damage vars
+            var flatAttackSpeed = 0.0
+            var percentAttackSpeed = 0.0
+            var flatAttackDamage = 0.0
+            var percentAttackDamage = 0.0
+            // Damage Calculations
+            var attacksPerSecond = 0.0
+            var damagePerSecond = 0.0
+            var attackRange = 3.0
+
+            val modifiers = this.getData(DataComponentTypes.ATTRIBUTE_MODIFIERS)
+            if (modifiers != null) {
+                for (x in modifiers.modifiers()) {
+                    // Get Attack Speeed
+                    if (x.attribute() == Attribute.ATTACK_SPEED) {
+                        // Skip Reset Speed
+                        if (x.modifier().key.key == AttributeTags.ITEM_RESET_ATTACK_SPEED) continue
+                        // Get the modifiers
+                        if (x.modifier().operation == AttributeModifier.Operation.ADD_NUMBER) {
+                            flatAttackSpeed += x.modifier().amount
+                        }
+                        else if (x.modifier().operation == AttributeModifier.Operation.ADD_SCALAR) {
+                            percentAttackSpeed += x.modifier().amount
+                        }
+                    }
+                    // Get Attack Damage
+                    if (x.attribute() == Attribute.ATTACK_DAMAGE) {
+                        if (x.modifier().operation == AttributeModifier.Operation.ADD_NUMBER) {
+                            flatAttackDamage += x.modifier().amount
+                        }
+                        else if (x.modifier().operation == AttributeModifier.Operation.ADD_SCALAR) {
+                            percentAttackDamage += x.modifier().amount
+                        }
+                    }
+                    // Attack Range Attribute
+                    if (x.attribute() == Attribute.ENTITY_INTERACTION_RANGE) {
+                        if (x.modifier().operation == AttributeModifier.Operation.ADD_NUMBER) {
+                            attackRange += x.modifier().amount
+                        }
+                    }
+                }
+            }
+            // Calculate Per Seconds
+            val speedFinal = flatAttackSpeed * (1 + percentAttackSpeed)
+            attacksPerSecond = (20 / (round(20 / speedFinal))) // APS = 20 / (round (20 / speed))
+            val attackFinal = flatAttackDamage * (1 + percentAttackDamage)
+            damagePerSecond = ((0.2 + 0.8) * flatAttackDamage) * attacksPerSecond
+
+            newToolTip.add(toolTipIndex++,darkGrayTextComponent("")) // Add Another Seperator
+            newToolTip.add(
+                toolTipIndex++,
+                grayTextComponent("When in Main Hand: "))
+            newToolTip.add(
+                toolTipIndex++,
+                blueTextComponent("${"%.1f".format(damagePerSecond)} Damage Per Second"))
+            newToolTip.add(
+                toolTipIndex++,
+                darkGrayTextComponent(" | ${"%.1f".format(attackFinal)} Damage per Hit"))
+            newToolTip.add(
+                toolTipIndex++,
+                darkGrayTextComponent(" | ${"%.2f".format(attacksPerSecond)} Attacks per Second"))
+            // Toggleable
+            if (showDescriptions) {
+                newToolTip.add(
+                    toolTipIndex++,
+                    darkGrayTextComponent(" | ${"%.2f".format(attackRange)} Attack Range"))
+            }
+
+            // Flags
+            this.addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
         }
 
         // add the footer
@@ -203,6 +279,9 @@ interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
     private val toolTipSeperator: TextComponent
         get() = Component.text("-----------*-----------", CustomColors.DARK_GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
 
+    private val smallToolTipSeperator: TextComponent
+        get() = Component.text("---------------*", CustomColors.DARK_GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+
     private val toolTipFooter: TextComponent
         get() = Component.text("                       ", CustomColors.DARK_GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
 
@@ -221,6 +300,10 @@ interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
 
     private fun grayTextComponent(text: String): TextComponent {
         return Component.text(text, CustomColors.GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+    }
+
+    private fun blueTextComponent(text: String): TextComponent {
+        return Component.text(text, CustomColors.BLUE.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
     }
 
     private fun createEnchantHeader(used: Int, total: Int = 35): TextComponent {

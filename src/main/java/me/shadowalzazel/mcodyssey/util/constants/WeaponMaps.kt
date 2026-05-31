@@ -63,6 +63,7 @@ object WeaponMaps {
     )
 
     val CAN_KINETIC_CHARGE = setOf(
+        "spear",
         "lance"
     )
 
@@ -80,6 +81,9 @@ object WeaponMaps {
     val MINIMUM_CHARGE = mapOf(
         "halberd" to 0.5,
         "longaxe" to 0.5,
+        "claymore" to 0.3,
+        "kriegsmesser" to 0.3,
+        "zweihander" to 0.3,
     )
 
     val HITBOX_ASSIST = mapOf(
@@ -118,7 +122,8 @@ object WeaponMaps {
         "chakram" to 8,
         "zweihander" to 16,
         "kriegsmesser" to 13,
-        "glaive" to 12
+        "glaive" to 12,
+        "longaxe" to 14,
     )
 
     // FOR MAGIC WEAPONS

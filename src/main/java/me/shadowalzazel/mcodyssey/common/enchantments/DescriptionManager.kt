@@ -151,8 +151,6 @@ interface DescriptionManager {
             "illumineye" -> listOf( // Helmet
                 "- Taking or dealing damage to an entity within line of sight applies",
                 "Glowing I for ${3 + (level * 2)}=[3 + (level x 2)] seconds.")
-            "impetus" -> listOf( // Leggings
-                "- While moving, deal ${5 + level * 5}%=[5 + (level x 5)] increased damage.")
             "leap_frog" -> listOf( // Leggings
                 "- Increase jump height by ${level * 25}%=[level x 25]; the jump strength is doubled when sneaking.")
             "mandiblemania" -> listOf( // Helmet
@@ -282,6 +280,8 @@ interface DescriptionManager {
             "illucidation" -> listOf(
                 "- Deal ${level * 15}%=[level x 15] bonus damage to enemies that are glowing.",
                 "If the attack is a crit, it is doubled, but the glowing is removed.")
+            "impetus" -> listOf( // Moved from Leggings
+                "- While moving, deal ${5 + level * 5}%=[5 + (level x 5)] increased damage.")
             "invocative" -> listOf( // The previous enemy you have damaged
                 "- Attacking deals ${level * 10}%=[level x 10] damage to the previous enemy you have attacked.")
             "magic_aspect" -> listOf(
@@ -458,6 +458,12 @@ interface DescriptionManager {
             "laceration" -> listOf(
                 "- Deals bonus damage to unarmored targets."
             )
+            "back_pedal" -> listOf(
+                "- When attacking, lunge backwards."
+            )
+            "miscalibrate" -> listOf( // Melee (2 cost, max 5)
+                "- On a successful attack, lower immunity by ${level}=[level] ticks."
+            )
 
             "shocking_impact" -> listOf(
                 "Applies Shock Charge to a target. If the target moves more than 10 blocks, it takes shock damage.")
@@ -519,6 +525,18 @@ interface DescriptionManager {
                 "- Aerosion deals 3.0 wind damage per stack every 1.5 seconds")
             "tempest_splitter" -> listOf( // Melee
                 "- FINISH")
+
+            // When in moon do more attack damage,
+            // A curse that makes you hunger
+            "enchant" -> listOf( // Cost 5
+                "Each Free Point increases damage by 2%"
+            )
+            "insatiable_curse" -> listOf(
+                "Drain more hunger on use"
+            )
+
+            // More cursed enchantments and more curses
+            // Maybe a CURSED material
 
             else -> listOf(name)
         }

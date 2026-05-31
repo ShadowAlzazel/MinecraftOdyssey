@@ -4,10 +4,14 @@ import io.papermc.paper.datacomponent.DataComponentBuilder
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.AttackRange
 import io.papermc.paper.datacomponent.item.BlocksAttacks
+import io.papermc.paper.datacomponent.item.Consumable
+import io.papermc.paper.datacomponent.item.KineticWeapon
 import io.papermc.paper.datacomponent.item.PiercingWeapon
 import io.papermc.paper.datacomponent.item.SwingAnimation
+import io.papermc.paper.datacomponent.item.UseEffects
 import io.papermc.paper.datacomponent.item.Weapon
 import io.papermc.paper.datacomponent.item.blocksattacks.DamageReduction
+import io.papermc.paper.datacomponent.item.consumable.ItemUseAnimation
 import io.papermc.paper.registry.RegistryKey
 import io.papermc.paper.registry.TypedKey
 import io.papermc.paper.registry.keys.DamageTypeKeys
@@ -84,14 +88,6 @@ interface ToolMaker : AttributeManager, DataTagManager, ToolComponentHelper {
             this.addAttackDamageAttribute(damage, AttributeTags.ITEM_BASE_ATTACK_DAMAGE)
             this.setNewAttackSpeedAttribute(speed)
 
-            // ---------------------------------------------------------
-            // Assign Special Combat Components
-
-            // Damage Types one of (Slash, Pierce, Blunt)
-            val damageType = DamageType.PLAYER_ATTACK
-            this.setData(DataComponentTypes.DAMAGE_TYPE, damageType)
-
-
             // Pure weapons cant mine any blocks
             if (mineableTags == null) {
                 if (!this.hasData(DataComponentTypes.TOOL)) {
@@ -100,6 +96,25 @@ interface ToolMaker : AttributeManager, DataTagManager, ToolComponentHelper {
                         .build()
                     this.setData(DataComponentTypes.WEAPON, weaponData)
                 }
+            }
+
+            // ---------------------------------------------------------
+            // Assign Special Combat Components
+
+            // Damage Types one of (Slash, Pierce, Blunt)
+            val damageType = DamageType.PLAYER_ATTACK
+            this.setData(DataComponentTypes.DAMAGE_TYPE, damageType)
+            if (type.toolName in WeaponMaps.PIERCING_WEAPONS) {
+                val piercingData = PiercingWeapon.piercingWeapon()
+                    .dealsKnockback(true)
+                    .build()
+                this.setData(DataComponentTypes.PIERCING_WEAPON, piercingData)
+            }
+            else if (type.toolName in WeaponMaps.SLASHING_WEAPONS) {
+
+            }
+            else if (type.toolName in WeaponMaps.BLUNT_WEAPONS) {
+
             }
 
             // Change swing animation
@@ -119,14 +134,6 @@ interface ToolMaker : AttributeManager, DataTagManager, ToolComponentHelper {
                     .duration(animationDuration) // In Ticks
                     .build()
                 this.setData(DataComponentTypes.SWING_ANIMATION, swingAnimation)
-
-                // TODO: TEMPORARY, move to dedicated damage type
-                if (animationType == SwingAnimation.Animation.STAB) {
-                    val piercingData = PiercingWeapon.piercingWeapon()
-                        .dealsKnockback(true)
-                        .build()
-                    this.setData(DataComponentTypes.PIERCING_WEAPON, piercingData)
-                }
             }
 
             // Interaction and Attack Ranges
@@ -166,6 +173,40 @@ interface ToolMaker : AttributeManager, DataTagManager, ToolComponentHelper {
                 this.setData(DataComponentTypes.BLOCKS_ATTACKS, blockingAttacks)
             }
 
+            // Minimum Charge (noob protection)
+            if (WeaponMaps.MINIMUM_CHARGE.containsKey(type.toolName)) {
+                val minCharge = WeaponMaps.MINIMUM_CHARGE[type.toolName]!!
+                this.setData(DataComponentTypes.MINIMUM_ATTACK_CHARGE, minCharge.toFloat())
+            }
+
+            // Unique
+            if (type.toolName == "battlesaw") { //BATTLESAW
+                // Special Block Mechanic
+                val kineticWeapon = KineticWeapon.kineticWeapon()
+                    .delayTicks(16)
+                    .damageConditions(
+                        KineticWeapon.condition(
+                            100,
+                            0.0F,
+                            0.0F
+                        )
+                    )
+                    .knockbackConditions(
+                        KineticWeapon.condition(
+                            60,
+                            0.0F,
+                            0.0F
+                        )
+                    )
+                    .build()
+                this.setData(DataComponentTypes.KINETIC_WEAPON, kineticWeapon)
+                // Speed
+                val useEffects = UseEffects.useEffects()
+                    .canSprint(true)
+                    .speedMultiplier(0.6F)
+                    .build()
+                this.setData(DataComponentTypes.USE_EFFECTS, useEffects)
+            }
 
             // Finish
         }
