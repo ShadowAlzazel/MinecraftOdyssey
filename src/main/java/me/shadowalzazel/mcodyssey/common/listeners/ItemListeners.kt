@@ -15,12 +15,12 @@ import org.bukkit.potion.PotionEffectType
 
 object ItemListeners : Listener, DataTagManager {
 
-    @EventHandler
+    /*
     fun itemUseOnDropHandler(event: PlayerDropItemEvent) {
         if (!event.itemDrop.itemStack.hasItemIdTag()) return
         // For all Item on Drop Uses
         when (event.itemDrop.itemStack.getItemIdentifier()) {
-            "soul_spice" -> {
+            "soul_spice" -> { //TODO: Move to seperate item consumable
                 soulSpiceItemHandler(event)
             }
             else -> {
@@ -28,6 +28,7 @@ object ItemListeners : Listener, DataTagManager {
             }
         }
     }
+     */
 
     @EventHandler
     fun eatingFood(event: PlayerItemConsumeEvent) {

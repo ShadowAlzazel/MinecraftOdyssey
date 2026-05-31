@@ -3,7 +3,52 @@ package me.shadowalzazel.mcodyssey.util.constants
 
 object WeaponMaps {
 
-    // ACTIVE SKILLS AND ARCHETYPES (these are mainly exclusive)
+    // WEAPON ARCHETYPE DAMAGERS
+    val PIERCING_WEAPONS = setOf(
+        "rapier",
+        "dagger",
+        "kunai",
+        "spear",
+        "halberd",
+        "lance",
+        "poleaxe",
+    )
+
+    val SLASHING_WEAPONS = setOf(
+        "katana",
+        "longsword",
+        "claymore",
+        "cutlass",
+        "saber",
+        "sickle",
+        "chakram",
+        "zweihander",
+        "kriegsmesser",
+        "glaive",
+        "longaxe",
+        "scythe",
+        "shuriken"
+    )
+
+    val BLUNT_WEAPONS = setOf(
+        "warhammer"
+    )
+
+    // ACTIVE SKILLS (these are mainly exclusive)
+    val CAN_PARRY = setOf(
+        "katana",
+        "claymore",
+        "longsword",
+        "rapier",
+        "cutlass",
+        "saber",
+        "sickle",
+        "dagger",
+        "zweihander",
+        "poleaxe",
+        "glaive"
+    )
+
     val DUAL_WIELDABLE = setOf(
         "dagger",
         "cutlass",
@@ -15,19 +60,6 @@ object WeaponMaps {
         "kunai",
         "chakram",
         "shuriken"
-    )
-
-    val CAN_PARRY = setOf(
-        "katana",
-        "claymore",
-        "longsword",
-        "rapier",
-        "cutlass",
-        "saber",
-        "sickle",
-        "dagger",
-        "poleaxe",
-        "glaive"
     )
 
     val CAN_KINETIC_CHARGE = setOf(
@@ -57,6 +89,12 @@ object WeaponMaps {
         "cutlass" to 0.4F,
         "sickle" to 0.5F,
         "scythe" to 0.7F,
+    )
+
+    val REQUIRES_TWO_HANDS = setOf(
+        "zweihander",
+        "claymore",
+        "halberd"
     )
 
     // ANIMATIONS (Defaults to SWING)

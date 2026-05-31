@@ -455,6 +455,9 @@ interface DescriptionManager {
                 "- If you and the target are the only entities within 10 blocks.",
                 "Damage is increased by ${10 * level}%=[level x 10] and blocking/parrying is 25% more effective."
             )
+            "laceration" -> listOf(
+                "- Deals bonus damage to unarmored targets."
+            )
 
             "shocking_impact" -> listOf(
                 "Applies Shock Charge to a target. If the target moves more than 10 blocks, it takes shock damage.")

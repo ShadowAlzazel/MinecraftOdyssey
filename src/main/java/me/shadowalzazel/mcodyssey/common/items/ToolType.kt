@@ -49,7 +49,6 @@ enum class ToolType(
     HOE("hoe", "Hoe", 0.0, 1.6, "hoe"),
 
     // Sword overrides
-    // Parry Weapons
     KATANA("katana", "Katana", 3.0, 1.7, "sword", 0.2),
     CLAYMORE("claymore", "Claymore", 6.0, 0.9, "sword", 0.5),
     LONGSWORD("longsword", "Longsword", 4.0, 1.5, "sword", 0.3),
@@ -57,14 +56,14 @@ enum class ToolType(
     CUTLASS("cutlass", "Cutlass", 2.5, 2.1, "sword"),
     SABER("saber", "Saber", 3.0, 1.8, "sword"),
 
-    // Small Arm
+    // Small Slashing Weapons
     SICKLE("sickle", "Sickle", 1.5, 2.7, "sword", -0.2),
     CHAKRAM("chakram", "Chakram", 1.5, 2.5, "sword", -0.3),
     DAGGER("dagger", "Dagger", 1.0, 3.0, "sword", -0.3),
     KUNAI("kunai", "Kunai", 1.0, 2.5, "sword"),
     //ARM_BLADE("arm_blade", "Arm Blade", 2.0, 3.0, "sword", -0.3),
 
-    // Heavy Weapons
+    // Heavy Slashing Weapons
     ZWEIHANDER("zweihander", "Zweihander", 7.0, 0.7, "sword", 0.8),
     KRIEGSMESSER("kriegsmesser", "Kriegsmesser", 6.0, 0.8, "sword", 0.6),
 

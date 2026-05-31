@@ -4,6 +4,7 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import me.shadowalzazel.mcodyssey.common.enchantments.EnchantabilityHandler
 import me.shadowalzazel.mcodyssey.util.constants.CustomColors
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
+import me.shadowalzazel.mcodyssey.util.constants.WeaponMaps
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.TextDecoration
@@ -26,11 +27,13 @@ interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
         var usedEnchantabilityPoints = 0
         val enchantabilityMax = 35
         // Logic and ToolTip Vars
-        var toolTipIndex = 0
         var hasEnchantToolTip: Boolean = false
         var hasDescriptionToolTip: Boolean = false
         var showDescriptions: Boolean = false
+        var isCustomWeapon: Boolean = false
+        var toolTipIndex = 0
         var startingIndex = 0
+
 
         // Local Helper Functions
         fun addEnchantToolTip(
@@ -57,6 +60,9 @@ interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
                 }
             }
         }
+
+        val weaponType = getWeaponType()
+        isCustomWeapon = weaponType != null
 
         // Get all enchantments
         val enchantments = this.getData(DataComponentTypes.ENCHANTMENTS)?.enchantments()
@@ -118,13 +124,55 @@ interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
 
         // Add an Empty Slot if there is points available
         if (usedEnchantabilityPoints < enchantabilityMax) {
-            newToolTip.add(toolTipIndex, emptyEnchantSlot)
-            toolTipIndex++
+            //newToolTip.add(toolTipIndex++, emptyEnchantSlot)
+        }
+
+        // Weapon data and attributes
+        if (isCustomWeapon && showDescriptions && weaponType != null) {
+            newToolTip.add(toolTipIndex++, Component.text(""))
+            newToolTip.add(toolTipIndex++, createWeaponHeader(weaponType))
+            // Base Damage Type
+            if (weaponType in WeaponMaps.PIERCING_WEAPONS) {
+                newToolTip.add(toolTipIndex++,
+                    darkGrayTextComponent("- Piercing Damage (Can do AoE damage along a ray)"))
+            } else if (weaponType in WeaponMaps.SLASHING_WEAPONS) {
+                newToolTip.add(toolTipIndex++,
+                    darkGrayTextComponent("- Slashing Damage (Can do AoE slashes)"))
+            } else if (weaponType in WeaponMaps.BLUNT_WEAPONS) {
+                newToolTip.add(toolTipIndex++,
+                    darkGrayTextComponent("- Blunt Damage (Can do AoE from impact)"))
+            }
+
+            // Active Skills
+            if (weaponType in WeaponMaps.CAN_PARRY) {
+                newToolTip.add(
+                    toolTipIndex++,
+                    darkGrayTextComponent("- Parry (Hold to mitigate 50% incoming melee damage)"))
+            }
+            if (weaponType in WeaponMaps.DUAL_WIELDABLE) {
+                newToolTip.add(
+                    toolTipIndex++,
+                    darkGrayTextComponent("- Dual Wieldable (Can attack from Off-Hand)"))
+            }
+            if (weaponType in WeaponMaps.THROWABLE) {
+                newToolTip.add(
+                    toolTipIndex++,
+                    darkGrayTextComponent("- Throwable (Can throw weapon as projectile)"))
+            }
+            if (weaponType in WeaponMaps.CAN_KINETIC_CHARGE) {
+                newToolTip.add(
+                    toolTipIndex++,
+                    darkGrayTextComponent("- Chargeable (Hold weapon to do a charge attack)"))
+            }
+            // Passives
+
+            // Attributes
         }
 
         // add the footer
-        newToolTip.add(toolTipIndex, toolTipFooter)
+        //newToolTip.add(toolTipIndex, toolTipFooter)
 
+        // Method to inject and replace the old Odyssey Tool Tip, to keep other flavor text
         // Delete old ToolTip within the header and footer and add the new one
         if (oldLore != null && !oldLore.contains(toolTipSeperator)) { //TEMP CHECK!!!!!!
             var end = oldLore.indexOf(toolTipFooter)
@@ -142,6 +190,11 @@ interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
         this.lore(newToolTip)
     }
 
+    /*-----------------------------------------------------------------------------------------------*/
+    // Helper Functions
+    private fun ItemStack.getWeaponType(): String? {
+       return this.getStringTag(ItemDataTags.TOOL_TYPE)
+    }
 
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -159,14 +212,25 @@ interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
     private val emptyEnchantSlot: TextComponent
         get() = Component.text("+ Empty Enchant Slot", CustomColors.GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
 
-
     /*-----------------------------------------------------------------------------------------------*/
     // Variable Components
 
+    private fun darkGrayTextComponent(text: String): TextComponent {
+        return Component.text(text, CustomColors.DARK_GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+    }
+
+    private fun grayTextComponent(text: String): TextComponent {
+        return Component.text(text, CustomColors.GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+    }
+
     private fun createEnchantHeader(used: Int, total: Int = 35): TextComponent {
-        return Component.text("Enchantability Points: ", CustomColors.GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE).append(
-            Component.text("[$used/$total]", CustomColors.ENCHANT.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-        )
+        return Component.text("Enchantability Points: ", CustomColors.GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+            .append(Component.text("[$used/$total]", CustomColors.ENCHANT.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))
+    }
+
+    private fun createWeaponHeader(text: String): TextComponent {
+        return Component.text("Weapon Attributes: ", CustomColors.GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+            .append(Component.text("[${text.replaceFirstChar { it.titlecase() }}]", CustomColors.BLUE.color))
     }
 
     private fun createEnchantComponent(enchantment: Enchantment, level: Int, pointCost: Int): Component {

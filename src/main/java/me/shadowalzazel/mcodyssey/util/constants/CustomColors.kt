@@ -13,6 +13,7 @@ enum class CustomColors(val color: TextColor) {
     AMETHYST(TextColor.color(141, 109, 209)),
     CURSED(TextColor.color(255, 85, 85)),
     SOUL(TextColor.color(94, 210, 215)),
-    SHINY(TextColor.color(191, 255, 255))
+    SHINY(TextColor.color(191, 255, 255)),
+    BLUE(TextColor.color(85, 85, 255))
 
 }
