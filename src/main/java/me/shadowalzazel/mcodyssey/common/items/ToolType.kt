@@ -1,5 +1,7 @@
 package me.shadowalzazel.mcodyssey.common.items
 
+import me.shadowalzazel.mcodyssey.util.constants.WeaponMaps
+
 /**
  * All the tool and weapon type classes that can be made
  *
@@ -10,7 +12,7 @@ enum class ToolType(
     val baseDamage: Double,
     val baseSpeed: Double,
     val vanillaBase: String,  // for finding the item id
-    val bonusRange: Double? = null
+    val bonusRange: Double? = null // Default is range 3.0, bonus can be negative to lower range
 ) {
 
     // ---------------
@@ -67,9 +69,9 @@ enum class ToolType(
     KRIEGSMESSER("kriegsmesser", "Kriegsmesser", 6.0, 0.8, "sword", 0.6),
 
     // Spear Overrides
-    SPEAR("spear", "Spear", 3.0, 1.2, "shovel", 2.0),
-    HALBERD("halberd", "Halberd", 5.0, 0.9, "shovel",3.0),
-    LANCE("lance", "Lance", 3.0, 0.8, "shovel", 3.0),
+    SPEAR("spear", "Heavy Spear", 3.0, 1.2, "spear", 2.0),
+    HALBERD("halberd", "Halberd", 5.0, 0.9, "spear",3.0),
+    LANCE("lance", "Lance", 3.0, 0.8, "spear", 3.0),
     POLEAXE("poleaxe", "Poleaxe", 4.0, 1.1, "axe", 1.0),
     GLAIVE("glaive", "Glaive", 4.0, 1.3, "axe", 1.0),
 
@@ -90,8 +92,11 @@ enum class ToolType(
     // Others
     SHURIKEN("shuriken", "Shuriken", 0.5, 1.0, "iron_nugget");
 
+
+    // Use companion object to get lists and maps
     companion object {
 
+        // Types Methods
         fun getVanillaTypes(): List<ToolType> {
             return listOf(
                 SWORD,
@@ -103,10 +108,6 @@ enum class ToolType(
         }
 
         fun getOdysseyTypes(): List<ToolType> {
-            return getSwordVariants() + getAxeVariants() +  getPolearmVariants()
-        }
-
-        fun getSwordVariants(): List<ToolType> {
             return listOf(
                 KATANA,
                 CLAYMORE,
@@ -118,20 +119,11 @@ enum class ToolType(
                 KUNAI,
                 LONGSWORD,
                 ZWEIHANDER,
-                KRIEGSMESSER
-            )
-        }
-
-        fun getAxeVariants(): List<ToolType> {
-            return listOf(
+                KRIEGSMESSER,
+                // Non-Swords
                 LONGAXE,
                 POLEAXE,
-                GLAIVE
-            )
-        }
-
-        fun getPolearmVariants(): List<ToolType> {
-            return listOf(
+                GLAIVE,
                 SPEAR,
                 HALBERD,
                 WARHAMMER,
@@ -140,8 +132,27 @@ enum class ToolType(
         }
 
         fun getFromName(name: String): ToolType? = entries.find { name == it.toolName }
-
     }
+
+
+    // Skills, Damage Types, Passives, Maps
+
+    fun canParry(): Boolean {
+        return WeaponMaps.CAN_PARRY.contains(this.toolName)
+    }
+
+    fun isThrowable(): Boolean {
+        return WeaponMaps.THROWABLE.contains(this.toolName)
+    }
+
+    fun isDualWieldable(): Boolean {
+        return WeaponMaps.DUAL_WIELDABLE.contains(this.toolName)
+    }
+
+    fun hasSwingAnimation(): Boolean {
+        return WeaponMaps.STAB_ANIMATION.contains(this.toolName) || WeaponMaps.WHACK_ANIMATION.contains(this.toolName)
+    }
+
 
 }
 

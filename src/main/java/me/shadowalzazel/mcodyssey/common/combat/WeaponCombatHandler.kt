@@ -132,9 +132,9 @@ interface WeaponCombatHandler : AttackHelper, DataTagManager {
         val armor = victim.getAttribute(Attribute.ARMOR)?.value ?: 0.0
         val health = victim.health
         // Get bonuses from maps
-        val bludgeoningDamage = WeaponMaps.BLUDGEON_MAP[weapon]?.let { minOf(it, armor.div(2))} ?: 0.0 // Dmg = x < armor / 2
-        val laceratingDamage = WeaponMaps.LACERATE_MAP[weapon]?.let { maxOf(it - armor, 0.0) } ?: 0.0 // Dmg = x - armor
-        val piercingDamage = WeaponMaps.PIERCE_MAP[weapon]?.let { minOf(armor, it) } ?: 0.0
+        val bludgeoningDamage = WeaponMaps.BLUNT_DAMAGE_MAP[weapon]?.let { minOf(it, armor.div(2))} ?: 0.0 // Dmg = x < armor / 2
+        val laceratingDamage = WeaponMaps.LACERATE_DAMAGE_MAP[weapon]?.let { maxOf(it - armor, 0.0) } ?: 0.0 // Dmg = x - armor
+        val piercingDamage = WeaponMaps.PIERCE_DAMAGE_MAP[weapon]?.let { minOf(armor, it) } ?: 0.0
         val cleavingDamage = WeaponMaps.CLEAVE_MAP[weapon] ?: 0.0
         // Piercing
         val trueDamage = piercingDamage * attackPower

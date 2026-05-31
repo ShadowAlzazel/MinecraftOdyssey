@@ -18,15 +18,17 @@ interface ToolComponentHelper : RegistryTagManager {
 
     fun getMiningTags(toolType: String): Tag<BlockType>? {
         val registryKey = RegistryKey.BLOCK
+        /*
         val blockTagRegistry = RegistryAccess.registryAccess().getRegistry(registryKey)
         val tagKey = TagKey.create(registryKey, createMinecraftKey("mineable/pickaxe"))
         val pickAxeMineableTag = blockTagRegistry.getTag(tagKey)
+        "warhammer" -> pickAxeMineableTag
+         */
 
         return when(toolType) {
-            //"pickaxe", "warhammer" -> Registry.BLOCK.getTag(BlockTypeTagKeys.MINEABLE_PICKAXE)
-            "pickaxe", "warhammer" -> pickAxeMineableTag
-            "axe", "longaxe", "poleaxe", "glaive" -> getTagFromMinecraftRegistry(registryKey, "mineable/axe")
-            "shovel", "spear", "halberd", "lance" -> getTagFromMinecraftRegistry(registryKey, "mineable/shovel")
+            "pickaxe", "warhammer" -> getTagFromMinecraftRegistry(registryKey, "mineable/pickaxe")
+            "axe", "longaxe", -> getTagFromMinecraftRegistry(registryKey, "mineable/axe")
+            "shovel" -> getTagFromMinecraftRegistry(registryKey, "mineable/shovel")
             "hoe", "scythe" -> getTagFromMinecraftRegistry(registryKey, "mineable/hoe")
             else -> null
         }

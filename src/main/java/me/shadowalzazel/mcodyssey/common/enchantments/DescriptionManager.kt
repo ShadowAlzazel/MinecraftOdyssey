@@ -298,8 +298,8 @@ interface DescriptionManager {
             "vital" -> listOf(
                 "- Increase critical damage by ${level * 10}%=[level x 10].")
             "void_strike" -> listOf(
-                "- Apply a stack of Void each attack; up to 10.",
-                "- Attacks deal ${level * 10}%=[level x 10] bonus damage per Void stack. At 10, all stacks are removed.")
+                "- Apply a stack of Void each attack; up to 10. At 10 all stacks are removed.",
+                "Attacks deal ${level * 10}%=[level x 10] bonus damage per Void stack.")
             "whirlwind" -> listOf( // For non swords -> spears, axes
                 "- Attacks knock nearby away in a cone. Enemies are damaged at ${level * 40}%=[level x 40] efficiency.")
 
