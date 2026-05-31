@@ -101,6 +101,11 @@ object WeaponMaps {
         "halberd"
     )
 
+    val BONUS_CRIT_DAMAGE = mapOf(
+        "katana" to 0.1F,
+        "longaxe" to 0.25F
+    )
+
     // ANIMATIONS (Defaults to SWING)
     val STAB_ANIMATION = mapOf(
         "rapier" to 8,

@@ -6,6 +6,7 @@ import me.shadowalzazel.mcodyssey.common.combat.AttackHelper
 import me.shadowalzazel.mcodyssey.common.effects.EffectsManager
 import me.shadowalzazel.mcodyssey.common.enchantments.EnchantmentManager
 import me.shadowalzazel.mcodyssey.common.tasks.enchantment_tasks.*
+import me.shadowalzazel.mcodyssey.util.VectorParticles
 import me.shadowalzazel.mcodyssey.util.constants.EffectTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags.getIntTag
@@ -31,8 +32,7 @@ import org.bukkit.util.Vector
 import java.util.*
 import kotlin.math.pow
 
-@Suppress("UnstableApiUsage")
-object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManager {
+object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManager, VectorParticles {
 
     private val recallTargets: MutableMap<UUID, LivingEntity> = mutableMapOf()
     private val invocativePreviousDamage: MutableMap<UUID, Double> = mutableMapOf()
@@ -40,7 +40,6 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
     private val vengefulTargets: MutableMap<UUID, UUID> = mutableMapOf()
 
     // Main function for enchantments relating to entity damage
-    @Suppress("UnstableApiUsage")
     @EventHandler
     fun mainMeleeDamageHandler(event: EntityDamageByEntityEvent) {
         if (event.entity !is LivingEntity) return
@@ -105,6 +104,12 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
                 "echo" -> {
                     echoEnchantment(attacker, victim, enchant.value)
                 }
+                "chain_lightning" -> {
+                    chainLightningEnchantment(attacker, victim, event.damage, enchant.value)
+                }
+                "flame_edge" -> {
+                    event.damage -= flameEdgeEnchantment(attacker, victim, event.damage, enchant.value)
+                }
                 "freezing_aspect" -> {
                     freezingAspectEnchantment(victim, enchant.value)
                 }
@@ -140,6 +145,9 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
                 }
                 "magic_aspect" -> {
                     event.damage -= magicAspectEnchantment(attacker, victim, event.damage, enchant.value)
+                }
+                "miscalibrate" -> {
+                    miscalibrateEnchantment(victim, enchant.value)
                 }
                 "pestilence" -> {
                     pestilenceEnchantment(attacker, victim, enchant.value)
@@ -422,19 +430,6 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
 
     }
 
-
-    private fun killingSpreeEnchantment(
-        attacker: LivingEntity,
-        victim: LivingEntity,
-        level: Int
-    ): Int {
-        if (attacker is Player) {
-            attacker.attackCooldown
-        }
-        return 0
-
-    }
-
     private fun conflagrateEnchantment(
         attacker: LivingEntity,
         victim: LivingEntity,
@@ -498,23 +493,16 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
     }
 
     private fun cleaveEnchantment(victim: LivingEntity, level: Int) {
-        val equipment = victim.equipment ?: return
-        /*
-        if (equipment.chestplate.hasItemMeta()) {
-            equipment.chestplate.damage(level, victim)
-        }
-        if (equipment.leggings.hasItemMeta()) {
-            equipment.leggings.damage(level, victim)
-        }
-        if (equipment.helmet.hasItemMeta()) {
-            equipment.helmet.damage(level, victim)
-        }
-        if (equipment.chestplate.hasItemMeta()) {
-            equipment.chestplate.damage(level, victim)
-        }
-         */
-        // Check slots contents of ARMOR then damage a random one
-        victim.shieldBlockingDelay += level * 20
+        //victim.shieldBlockingDelay += level * 20
+    }
+
+    private fun flameEdgeEnchantment(attacker: LivingEntity, victim: LivingEntity, damage: Double, level: Int): Double {
+        val potency = 0.1 * level
+        val damageSource = DamageSource.builder(DamageType.ON_FIRE).build()
+        val fireDamage = damage * potency
+        victim.damage(fireDamage, damageSource)
+        victim.world.spawnParticle(Particle.FLAME, victim.location, 10, 0.25, 0.15, 0.25)
+        return fireDamage
     }
 
     private fun committedEnchantment(victim: LivingEntity, level: Int): Int {
@@ -740,7 +728,12 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         return illucidationDamage
     }
 
-    @Suppress("UnstableApiUsage")
+    private fun miscalibrateEnchantment(victim: LivingEntity, level: Int) {
+        victim.maximumNoDamageTicks
+        victim.noDamageTicks = 10 - level
+        victim.world.spawnParticle(Particle.ENCHANT, victim.location, 10, 0.25, 0.25, 0.25)
+    }
+
     private fun magicAspectEnchantment(attacker: LivingEntity, victim: LivingEntity, damage: Double, level: Int): Double {
         val potency = 0.05 * level
         val damageSource = DamageSource.builder(DamageType.MAGIC).build()
@@ -750,8 +743,52 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         return magicDamage
     }
 
+    private fun chainLightningEnchantment(
+        attacker: LivingEntity,
+        victim: LivingEntity,
+        damage: Double,
+        level: Int): Double {
+        val maxTargets = 2 + level
+        val chainDamage = damage * 0.25
+        val chainRadius = 5.0
+
+        // Build the chain: start from the initial victim, bounce to nearby entities
+        val chainTargets = mutableListOf<LivingEntity>()
+        chainTargets.add(victim)
+
+        var lastTarget: LivingEntity = victim
+        repeat(maxTargets - 1) {
+            val nextTarget = lastTarget.world
+                .getNearbyLivingEntities(lastTarget.location, chainRadius)
+                .filter { entity ->
+                    entity != attacker && entity !is ArmorStand && entity !in chainTargets
+                }
+                .minByOrNull { it.location.distanceSquared(lastTarget.location) }
+                ?: return@repeat
+
+            chainTargets.add(nextTarget)
+            lastTarget = nextTarget
+        }
+
+        // Deal electric (lightning) damage to all chained targets except the first
+        // (the first victim already received the base hit)
+        val damageSource = DamageSource.builder(DamageType.LIGHTNING_BOLT).build()
+        for (i in 1 until chainTargets.size) {
+            chainTargets[i].damage(chainDamage, damageSource)
+        }
+
+        // Draw particle lightning lines between each chained entity pair
+        for (i in 0 until chainTargets.size - 1) {
+            val from = chainTargets[i].eyeLocation
+            val to = chainTargets[i + 1].eyeLocation
+            spawnZigZagLine(Particle.ELECTRIC_SPARK, from, to)
+        }
+        //attacker.location.world.playSound(attacker.location, Sound.LIGH, 3.5F, 0.4F)
+
+        return chainDamage
+    }
+
     // PLAGUE BRINGER
-    @Suppress("UnstableApiUsage")
     private fun plagueBringerEnchantment(victim: LivingEntity, level: Int) {
         if (!victim.hasPotionEffect(PotionEffectType.POISON)) return
         val potionEffect = victim.getPotionEffect(PotionEffectType.POISON) ?: return

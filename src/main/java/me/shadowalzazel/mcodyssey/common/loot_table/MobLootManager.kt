@@ -24,7 +24,7 @@ interface MobLootManager : RegistryTagManager {
             EntityType.VINDICATOR -> listOf(OdysseyEnchantments.BANE_OF_THE_ILLAGER)
             EntityType.PILLAGER -> listOf(OdysseyEnchantments.BURST_BARRAGE)
             EntityType.RAVAGER -> listOf(OdysseyEnchantments.WHIRLWIND)
-            EntityType.SQUID -> listOf(OdysseyEnchantments.SQUIDIFY)
+            //EntityType.SQUID -> listOf(OdysseyEnchantments.SQUIDIFY)
             //EntityType.SHULKER -> listOf(OdysseyEnchantments.)
             //EntityType.ENDERMITE -> listOf()
             EntityType.ENDERMAN -> listOf(OdysseyEnchantments.VOID_STRIKE)

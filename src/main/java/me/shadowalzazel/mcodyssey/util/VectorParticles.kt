@@ -186,6 +186,43 @@ interface VectorParticles {
         }
     }
 
+    fun spawnZigZagLine(particle: Particle, start: Location, end: Location) {
+        val world = start.world ?: return
+        val steps = 20
+        val direction = end.toVector().subtract(start.toVector())
+        val segmentLength = direction.length() / steps
+        val stepVec = direction.normalize().multiply(segmentLength)
+
+        val random = Random()
+        val zigzagAmount = 0.15 // How wild the zig-zag is
+
+        var current = start.clone()
+        for (i in 0 until steps) {
+            // Perpendicular offset for zig-zag
+            val perp = if (i % 2 == 0) {
+                Vector(
+                    (random.nextDouble() - 0.5) * zigzagAmount,
+                    (random.nextDouble() - 0.5) * zigzagAmount,
+                    (random.nextDouble() - 0.5) * zigzagAmount
+                )
+            } else {
+                Vector(
+                    -(random.nextDouble() - 0.5) * zigzagAmount,
+                    -(random.nextDouble() - 0.5) * zigzagAmount,
+                    -(random.nextDouble() - 0.5) * zigzagAmount
+                )
+            }
+
+            val particleLoc = current.clone().add(perp)
+            world.spawnParticle(particle, particleLoc, 3, 0.0, 0.0, 0.0, 0.0)
+
+            current = current.add(stepVec)
+        }
+
+        // Burst at the destination target
+        world.spawnParticle(particle, end, 12, 0.2, 0.2, 0.2, 0.1)
+    }
+
     private fun getPerpendicularVector(vector: Vector, axis: Vector): Vector {
         // Find a perpendicular vector by picking a default axis and calculating the cross product
         return vector.clone().crossProduct(axis).normalize()
