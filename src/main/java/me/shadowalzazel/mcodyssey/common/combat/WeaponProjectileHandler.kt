@@ -47,30 +47,22 @@ interface WeaponProjectileHandler : DataTagManager, EnchantmentManager, AttackHe
         val crossbow = event.bow ?: return
         // Offhand
         val offhand = event.entity.equipment?.itemInOffHand ?: return
-        if (offhand.type != Material.ARROW) return
         // Auto Crossbow
-        if (crossbow.itemMeta is CrossbowMeta) {
-            // Check if match
-            //val crossbowMeta = crossbow.itemMeta as CrossbowMeta
-            val item = event.consumable ?: return
-            val itemMeta = item.itemMeta
-            val loadedItems = mutableListOf<ItemStack>()
-            // Matches
-            val matchingArrows = offhand.type == Material.ARROW && item.type == Material.ARROW
-            if (offhand.itemMeta == itemMeta || matchingArrows) {
-                if (!crossbow.hasTag(ItemDataTags.AUTO_LOADER_LOADING)) {
-                    loadedItems.add(item)
-                    if (crossbow.hasEnchantment(Enchantment.MULTISHOT)) {
-                        loadedItems.add(item.clone())
-                        loadedItems.add(item.clone())
-                    }
-                    offhand.subtract(1)
-                    val task = LoadAutoCrossbow(event.entity, crossbow, loadedItems)
-                    task.runTaskLater(Odyssey.instance, 1)
-                }
-                crossbow.addTag(ItemDataTags.AUTO_LOADER_LOADING)
-            }
+        val itemConsumed = event.consumable ?: return
+        val matchingAmmo = offhand.type == itemConsumed.type
+        if (!matchingAmmo) return
+        // Auto loader
+        if (crossbow.hasTag(ItemDataTags.AUTO_LOADER_LOADING)) return
+        // Load the items
+        val loadedItems = mutableListOf<ItemStack>()
+        loadedItems.add(itemConsumed.clone())
+        if (crossbow.hasEnchantment(Enchantment.MULTISHOT)) {
+            loadedItems.add(itemConsumed.clone())
+            loadedItems.add(itemConsumed.clone())
         }
+        offhand.subtract(1)
+        val task = LoadAutoCrossbow(event.entity, crossbow, loadedItems)
+        task.runTaskLater(Odyssey.instance, 1)
     }
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -335,7 +327,6 @@ interface WeaponProjectileHandler : DataTagManager, EnchantmentManager, AttackHe
             val location = entity.location
             location.world.playSound(location, Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, SoundCategory.BLOCKS, 0.8F, 1.7F)
         }
-
 
     }
 

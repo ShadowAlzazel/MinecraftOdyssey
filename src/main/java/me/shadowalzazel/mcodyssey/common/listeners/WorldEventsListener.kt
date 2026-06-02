@@ -9,7 +9,6 @@ import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.player.PlayerItemConsumeEvent
 import org.bukkit.inventory.meta.OminousBottleMeta
 
-@Suppress("UnstableApiUsage")
 object WorldEventsListener : Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)

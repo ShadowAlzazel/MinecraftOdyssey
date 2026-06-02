@@ -404,9 +404,11 @@ interface DescriptionManager {
             "brutality_curse" -> listOf(
                 "- Increase damage by ${level * 10}%=[level x 10] but take ${level * 1}=[level] damage per attack.")
             "midas_curse" -> listOf(
-                "- Converts all mob drop types into golden nuggets.")
+                "- Converts all mob drop types into golden nuggets (or ingots).")
             "frailty_curse" -> listOf(
                 "- Decrease wearer invulnerable time by $level=[level] ticks.")
+            "obfuscation_curse" -> listOf( // 2 cost
+                "- This curse obfuscates what enchantments are on this item")
 
 
             // ──────────────────────────────────────────────────────────────────────────────

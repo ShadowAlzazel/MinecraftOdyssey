@@ -198,6 +198,9 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
                 "plunder" -> {
                     plunderEnchantment(event)
                 }
+                "midas_curse" -> {
+                    midasCurseEnchantment(event)
+                }
             }
         }
     }
@@ -254,6 +257,10 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         }
 
     }
+
+    // ──────────────────────────────────────────────────────────────────────────────
+    // ─────────────────────────────── ENCHANTMENTS ─────────────────────────────────
+    // ──────────────────────────────────────────────────────────────────────────────
 
     private fun aerosionAspectEnchantment(
         victim: LivingEntity,
@@ -573,7 +580,6 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         }
     }
 
-    @Suppress("UnstableApiUsage")
     private fun explodingEnchantment(killer: LivingEntity, victim: LivingEntity, level: Int) {
         val location = victim.location
         // Effects
@@ -693,8 +699,12 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
     ) {
         event.damage *= (1 + (0.2 * level))
         val attacker = event.damager
+
+        val damageSource = DamageSource.builder(DamageType.MAGIC).build()
+        val feedbackDamage = level * 1.0
+
         if (attacker is LivingEntity) {
-            attacker.damage(level * 1.0)
+            attacker.damage(feedbackDamage, damageSource)
         }
     }
 
@@ -731,7 +741,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
     private fun miscalibrateEnchantment(victim: LivingEntity, level: Int) {
         victim.maximumNoDamageTicks
         victim.noDamageTicks = 10 - level
-        victim.world.spawnParticle(Particle.ENCHANT, victim.location, 10, 0.25, 0.25, 0.25)
+        victim.world.spawnParticle(Particle.ENCHANTED_HIT, victim.location, 10, 0.25, 0.25, 0.25)
     }
 
     private fun magicAspectEnchantment(attacker: LivingEntity, victim: LivingEntity, damage: Double, level: Int): Double {
@@ -833,6 +843,20 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         for (entity in nearbyEntities) {
             entity.addPotionEffects(spreadingEffects)
         }
+    }
+
+    private fun midasCurseEnchantment(event: EntityDeathEvent) {
+        val items = event.drops
+        val victim = event.entity
+        if (victim is HumanEntity) return // Ignore players
+        if (items.isEmpty()) return
+
+        for (x in 0..<items.size) {
+            val item = items[x]
+            val newDrop = ItemStack(Material.GOLD_NUGGET, item.amount)
+            items[x] = newDrop
+        }
+
     }
 
     private fun plunderEnchantment(event: EntityDeathEvent) {

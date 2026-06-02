@@ -8,7 +8,6 @@ import org.bukkit.entity.LivingEntity
 
 interface MobLootManager : RegistryTagManager {
 
-
     fun getMobLootableEnchantments(mob: LivingEntity): List<Enchantment>? {
         return when(mob.type) {
             EntityType.SKELETON -> OdysseyEnchantments.rangedSet.toList()

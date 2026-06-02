@@ -71,6 +71,22 @@ internal object Potions {
         effects = listOf(PotionEffect(PotionEffectType.GLOWING, 3 * 60 * 20, 0)),
         color = Color.fromRGB(0, 255, 179))
 
+    val POTION_OF_BLINDNESS = PotionConstructor(
+        material = Material.POTION,
+        itemModel = "alchemy_potion",
+        bottleModel = "pearshape_bottle",
+        capModel = "potion_cap",
+        effects = listOf(PotionEffect(PotionEffectType.BLINDNESS, 30 * 20, 0)),
+        color = Color.fromRGB(22, 22, 49))
+
+    val POTION_OF_NAUSEA = PotionConstructor(
+        material = Material.POTION,
+        itemModel = "alchemy_potion",
+        bottleModel = "pearshape_bottle",
+        capModel = "potion_cap",
+        effects = listOf(PotionEffect(PotionEffectType.NAUSEA, 30 * 20, 0)),
+        color = Color.fromRGB(128, 209, 49))
+
     val POTION_OF_CONSTITUTION = PotionConstructor(
         material = Material.POTION,
         itemModel = "alchemy_potion",
@@ -99,7 +115,7 @@ internal object Potions {
             PotionEffect(PotionEffectType.HUNGER, 2 * 60 * 20 , 1)),
         color = Color.fromRGB(250, 60, 17))
 
-    val POTION_OF_RECOUP = PotionConstructor(
+    val POTION_OF_RECOVERY = PotionConstructor(
         material = Material.POTION,
         itemModel = "alchemy_potion",
         bottleModel = "standard_bottle",

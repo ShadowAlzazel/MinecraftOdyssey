@@ -17,30 +17,14 @@ interface WeaponCombatHandler : AttackHelper, DataTagManager {
     //println("Event Damage: ${event.damage}")
     //println("Final Damage: ${event.finalDamage}")
 
-    // MAYBE ADD CHARGING MECHANIC
-    // Moving in one direction check -> then multiply attack by 50%
-
-    // PARRY MECHANIC -> if block within < 1 seconds of taking damage negate?
-
-    // TODO: more robust
-    private fun getWeaponType(item: ItemStack): String? {
-        val toolType = item.getStringTag(ItemDataTags.TOOL_TYPE)
-        if (toolType != null) return toolType
-        val itemName = item.getItemNameId()
-        return null
-    }
-
-    // TODO: Blocking
-    // Have weapons have shield blocking component to block/parry attacks
-    // TODO: PARRY
-    // Parry weapons have a window to block 4 ticks (0.2 seconds)
+    // PERFECT PARRY?
 
     fun weaponBonusEffectsHandler(event: EntityDamageByEntityEvent) {
         val player = event.damager as Player
         val victim = event.entity as LivingEntity
         // Further checks
-        val mainWeapon = player.equipment!!.itemInMainHand
-        val offHandWeapon = player.equipment!!.itemInOffHand
+        val mainWeapon = player.equipment.itemInMainHand
+        val offHandWeapon = player.equipment.itemInOffHand
         // Get weapon type
         val mainWeaponType = mainWeapon.getStringTag(ItemDataTags.TOOL_TYPE)
         //val mainWeaponMaterial = mainWeapon.getStringTag(ItemDataTags.MATERIAL_TYPE)
@@ -55,23 +39,23 @@ interface WeaponCombatHandler : AttackHelper, DataTagManager {
         when(mainWeaponType) {    // ??? If Crouching more damage
             "sickle" -> {
                 val rads = (100 * Math.PI) / 180 // Always hits in a circle around player
-                doWeaponAOESweep(player, victim, event.damage, rads, 2.0)
+                //doWeaponAOESweep(player, victim, event.damage, rads, 2.0)
             }
             "dagger" -> {
-                val rads = (80 * Math.PI) / 180 // Always hits in a circle around player
-                doWeaponAOESweep(player, victim, event.damage, rads, 1.75)
+                val rads = (80 * Math.PI) / 180
+                //doWeaponAOESweep(player, victim, event.damage, rads, 1.75)
             }
             "katana" -> {
                 if (isCrit) event.damage += 3
                 if (twoHanded) {
                     val rads = (80 * Math.PI) / 180 // Hits enemies near contact
-                    doWeaponAOESweep(player, victim, event.damage * 0.75, rads)
+                    //doWeaponAOESweep(player, victim, event.damage * 0.75, rads)
                 }
             }
             "claymore" -> {
                 if (isSneaking) {
                     val rads = (90 * Math.PI) / 180 // Hits enemies near contact
-                    doWeaponAOESweep(player, victim, event.damage, rads)
+                    //doWeaponAOESweep(player, victim, event.damage, rads)
                 }
             }
             "saber" -> {
@@ -91,7 +75,7 @@ interface WeaponCombatHandler : AttackHelper, DataTagManager {
             }
             "poleaxe" -> {
                 val rads = (25 * Math.PI) / 180 // Hits enemies near contact
-                doWeaponAOESweep(player, victim, event.damage, rads)
+                //doWeaponAOESweep(player, victim, event.damage, rads)
             }
             "glaive" -> {
                 val rads = (65 * Math.PI) / 180   // Hits enemies near contact
@@ -105,15 +89,15 @@ interface WeaponCombatHandler : AttackHelper, DataTagManager {
             }
             "halberd" -> {
                 if (isSneaking) event.damage += 2.0
-                if (hasShield) event.damage += 1.0
+                //if (hasShield) event.damage += 1.0
             }
             "lance" -> {
                 if (isMounted && fullAttack) event.damage *= 2.50
             }
             "longaxe" -> {
                 if (twoHanded && isCrit) {
-                    event.damage += 0.5 // Weird bug
-                    val extraCrit = (7.0 / 6.0) // Translates to 1.75 Damage
+                    //event.damage += 0.5 // Weird bug
+                    val extraCrit = (7.0 / 6.0) // Translates to 1.75X Damage
                     event.damage *= extraCrit
                 }
             }
