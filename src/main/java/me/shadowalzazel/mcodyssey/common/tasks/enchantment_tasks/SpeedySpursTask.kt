@@ -9,7 +9,6 @@ import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
 
 // SPEEDY_SPURS TASK
-@Suppress("UnstableApiUsage")
 class SpeedySpursTask(
     private val player: LivingEntity,
     private val mount: LivingEntity,

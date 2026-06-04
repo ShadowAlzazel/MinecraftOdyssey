@@ -67,11 +67,11 @@ interface DescriptionManager {
             "soul_speed" -> listOf(
                 "- Increase player speed on soul sand and soul soil by ${30 + (level * 10.5)}%=[30 + (level x 10.5)].")
             "sharpness" -> listOf(
-                "- Increase Melee Damage by ${0.5 * level + 0.5}=[0.5 + (0.5 x level)].")
+                "- Increase Base Melee Damage by ${0.5 * level + 0.5}=[0.5 + (0.5 x level)].")
             "smite" -> listOf(
-                "- Increase Melee Damage to undead mobs by ${2.5 * level}=[2.5 x level]")
+                "- Increase Base Melee Damage to undead mobs by ${2.5 * level}=[2.5 x level]")
             "bane_of_arthropods" -> listOf(
-                "- Increase Melee Damage to arthropod mobs by ${2.5 * level}=[2.5 x level]",
+                "- Increase Base Melee Damage to arthropod mobs by ${2.5 * level}=[2.5 x level]",
                 "- Inflicts Slowness IV to an arthropod for around 1-${1 + (0.5 * level)}=[1 + 0.5 x level] seconds.")
             "knockback" -> listOf(
                 "- The target is knock backed further by around ${(1.6 + (2.6 * level)).format(2)}=[1.6 + 2.6 x level] blocks.")
@@ -204,7 +204,7 @@ interface DescriptionManager {
             // ──────────────────────────────────────────────────────────────────────────────
 
             "agile" -> listOf(
-                "- Increase attack speed by ${level * 5}%=[level x 5].")
+                "- Increase Base Attack Speed by ${level * 5}%=[level x 5].")
             "arcane_cell" -> listOf(
                 "- Create a circular zone with a radius of 5 for ${2 + (level * 2)}=[2 + (level x 2)] seconds;",
                 "The target are teleported to the center if they leave.")
@@ -215,11 +215,11 @@ interface DescriptionManager {
                 "- Deal ${level * 20}%=[level x 20] damage against targets",
                 "that are looking away from you or while you are invisible.")
             "bane_of_the_illager" -> listOf(
-                "- Increase Melee Damage to illagers by ${2.5 * level}=[2.5 x level]")
+                "- Increase Base Melee Damage to illagers by ${2.5 * level}=[2.5 x level]")
             "bane_of_the_sea" -> listOf(
-                "- Increase Melee Damage to ocean mobs by ${2.5 * level}=[2.5 x level]")
+                "- Increase Base Melee Damage to ocean mobs by ${2.5 * level}=[2.5 x level]")
             "bane_of_the_swine" -> listOf(
-                "- Increase Melee Damage to piglins by ${2.5 * level}=[2.5 x level]")
+                "- Increase Base Melee Damage to piglins by ${2.5 * level}=[2.5 x level]")
             "swap" -> listOf(
                 "- Directly attacking a target swaps location.")
             "buzzy_bees" -> listOf(
@@ -236,7 +236,7 @@ interface DescriptionManager {
                 "- After a 1.5 second delay, the target takes ${level * 20}%=[level x 20] Fire damage",
                 "based on the original damage amount.")
             "douse" -> listOf(
-                "- Deal ${level * 15}%=[level x 15] bonus damage to enemies that are on fire",
+                "- Deal ${level * 20}%=[level x 20] bonus damage to enemies that are on fire",
                 "or are susceptible/weak to water.")
             "echo" -> listOf(
                 "- Attacking has a ${20 * level}%=[20 x level] chance to attack again. (Can not re-apply).")
@@ -251,7 +251,7 @@ interface DescriptionManager {
             "freezing_aspect" -> listOf(
                 "- Applies Freezing for ${level * 4}=[level x 4] seconds.")
             "frog_fright" -> listOf( // Utility
-                "- Attacking enemy pulls them back after a 0.5 second delay.")
+                "- Attacking a target pulls them back after a 0.5 second delay.")
             "frosty_fuse" -> listOf(
                 "- Applies a ticking frost bomb to the target that detonates after 5 seconds.",
                 "The blast Freezes targets for ${level * 3}=[level x 3] seconds.")
@@ -264,24 +264,24 @@ interface DescriptionManager {
                 "Bleeding deals 5% of the original damage every second.")
             "illucidation" -> listOf(
                 "- Deal ${level * 15}%=[level x 15] bonus damage to enemies that are glowing.",
-                "If the attack is a crit, it is doubled, but the glowing is removed.")
+                "On a Critical Hit, the damage bonus is doubled and the glowing is removed.")
             "impetus" -> listOf( // Moved from Leggings -> Melee
                 "- While moving, deal ${5 + level * 5}%=[5 + (level x 5)] increased damage.")
             "invocative" -> listOf( // The previous enemy you have damaged
                 "- Attacking deals ${level * 10}%=[level x 10] damage to the previous enemy you have attacked.")
             "magic_aspect" -> listOf(
-                "- Convert ${level * 5}%=[level x 5] of melee damage into Magic type damage.")
+                "- Convert ${level * 5}%=[level x 5] of Final damage into Magic type damage.")
             "pestilence" -> listOf(
                 "- Killing an enemy that is afflicted by a potion effect, spreads the effect",
                 "at ${level * 20}%=[level x 20] potency within a 4 block radius.")
             "plunder" -> listOf(
                 "- Items that dropped from mobs are directly added to the players inventory.")
             "rupture" -> listOf(
-                "- Every third attack against a target has ${level * 5}%=[level x 5] of its damage converted to true damage.")
+                "- Every third attack against a target has ${level * 10}%=[level x 10] of its damage converted to true damage.")
             "vengeful" -> listOf(
                 "- Deal ${level * 15}%=[level x 15] more damage to enemies that have damaged you.")
             "vital" -> listOf(
-                "- Increase critical damage by ${level * 10}%=[level x 10].")
+                "- On a Critical Hit increase damage by ${level * 10}%=[level x 10].")
             "void_strike" -> listOf(
                 "- Apply a stack of Void each attack; up to 10. At 10 all stacks are removed.",
                 "Attacks deal ${level * 10}%=[level x 10] bonus damage per Void stack.")
@@ -420,13 +420,13 @@ interface DescriptionManager {
 
             // Elemental damages, 2 cost, up to 5 levels
             "flame_edge" -> listOf(
-                "- Convert ${level * 10}%=[level x 10] of attack damage into Fire type damage.")
+                "- Convert ${level * 10}%=[level x 10] of Final damage into Fire type damage.")
             "frosty_edge" -> listOf(
-                "- Convert ${level * 10}%=[level x 10] of attack damage into Freeze type damage.")
+                "- Convert ${level * 10}%=[level x 10] of Final damage into Freeze type damage.")
             "electric_edge" -> listOf(
-                "- Convert ${level * 10}%=[level x 10] of attack damage into Electric type damage.")
+                "- Convert ${level * 10}%=[level x 10] of Final damage into Electric type damage.")
             "void_edge" -> listOf(
-                "- Convert ${level * 10}%=[level x 10] of attack damage into Void type damage.")
+                "- Convert ${level * 10}%=[level x 10] of Final damage into Void type damage.")
 
             // New Melee
             "duelist" -> listOf( // Melee (2 cost, max 5)
@@ -447,7 +447,7 @@ interface DescriptionManager {
             "shocking_impact" -> listOf(
                 "Applies Shock Charge to a target. If the target moves more than 10 blocks, it takes Electric damage.")
             "chain_lightning" -> listOf( // Melee
-                "- Attacks bounces up to ${2 + level}=[2 + level] nearby targets dealing 25% Electric damage.")
+                "- Attacks bounces up to ${2 + level}=[2 + level] nearby targets dealing 20% Electric damage.")
             "dynamo" -> listOf( // Bow
                 "- Converts ${level * 40}%=[level x 40] of projectile speed into Electric damage")
 
@@ -458,9 +458,11 @@ interface DescriptionManager {
 
             // SHIELDS
             "mirror_force" -> listOf(
-                "- Reflect enemy projectiles at ${30 * level}%=[level x 30] the original speed.")
+                "- Reflect enemy projectiles at ${40 * level}%=[level x 40] the original speed.")
             "guarding_strike" -> listOf(
                 "- After a shield block, your next attack deals ${10 * level}%=[level x 10] more damage.")
+            "blowback" -> listOf(
+                "- Enemies that attack the shield, are knocked back.")
 
             // Mining
             "soul_miner" -> listOf( // Incompatible with mending
@@ -483,6 +485,54 @@ interface DescriptionManager {
 
     private fun ideas(level: Int, name: String) {
         val enchantIdeas = when(name) {
+            // TUNE BREAK POTION -> breaks I-frames
+            // More cursed enchantments and more curses
+            // Maybe a CURSED material that scales of curses
+            // Maybe SOLARIUM, in sunlight, more stats
+
+            // Other
+            "magistrate" -> listOf( // Helmet
+                "- TODO: Sounds cool though")
+
+            "enshrouded" -> listOf(
+                "- ")
+            "enchantment_based_enchant" -> listOf( // 5 cost,
+                "- Per each available enchantment point, increase Base Melee Damage by 0.25"
+            )
+            "enchantment_based_enchant_p2" -> listOf( // Cost 5
+                "Each Free Point increases damage by 2%"
+            )
+
+            "press_the_attack" -> listOf(
+                "- The first 3 Attacks on a target has its damage increased by ${20 * level}%=[level x 20]."
+            )
+
+            // Names for void:
+            // Evocation, Invocation, Invocative, Spectral Slash, void rift.
+            // Eldritch
+
+            "invocative" -> listOf( // Maybe can be another damage type
+                "- Attacking deals ${level * 20}%=[level x 20] Void Damage to the last enemy you have damaged.")
+            "evocation" -> listOf( // The previous enemy you have damaged
+                "- Attacking an enemy leaves behind a Void Rift. When ever you attack",
+                "any target within 1 block of the Rift also gets attacked.")
+
+            // When in moon do more attack damage,
+            // A curse that makes you hunger
+
+            "insatiable_curse" -> listOf(
+                "Drain more hunger on use"
+            )
+
+            "bloodthirsty" -> listOf(
+                "- Increase Base Melee Damage by ${level * 0.1}=[level x 0.1] for each kill.",
+                "This effects stacks up to 50 times ${level * 0.1 * 50}"
+                // Every 30 seconds removes 1 stack
+            )
+
+            // PROBABLY NOT
+            "??" -> listOf(
+                "- Enemies that you attack have their current speed reduced by ${20 * level}%=[level x 20].")
 
             // OLD/OUTDATED
             "new_expedite" -> listOf( // 1 cost, Up to 5
@@ -491,40 +541,17 @@ interface DescriptionManager {
             "grit" -> listOf(
                 "Mitigate any damage taken; after [0.5 x level] seconds apply the stored damage to yourself and nearby entities.",
                 "Taking damage resets this cooldown but stacks the damage up to your [%] max health.")
-            // Other
-            "magistrate" -> listOf( // Helmet
-                "- TODO: Sounds cool though")
-            "chain_reaction_old" -> listOf(
-                "- On projectile hit, spawn an arrow that targets the closest",
-                "enemy. This can happen ${2 + level}=[2 + level] amount of times")
-
-            "enshrouded" -> listOf(
-                "- ")
-
-            // PROBABLY NOT
-            "??" -> listOf(
-                "- Enemies that you attack have their current speed reduced by ${20 * level}%=[level x 20].")
 
             // Removed
             "old_aerosion_aspect" -> listOf( // Melee
                 "- Apply a stack of Aerosion on hit. Up to a max of ${level}=[level].",
                 "- Aerosion deals 3.0 wind damage per stack every 1.5 seconds")
             "tempest_splitter" -> listOf( // Melee
-                "- FINISH")
+                "- REMOVED")
 
-            // When in moon do more attack damage,
-            // A curse that makes you hunger
-            "enchant" -> listOf( // Cost 5
-                "Each Free Point increases damage by 2%"
-            )
-            "insatiable_curse" -> listOf(
-                "Drain more hunger on use"
-            )
-
-            // TUNE BREAK POTION -> breaks I-frames
-            // More cursed enchantments and more curses
-            // Maybe a CURSED material that scales of curses
-            // Maybe SOLARIUM, in sunlight, more stats
+            "chain_reaction_old" -> listOf(
+                "- On projectile hit, spawn an arrow that targets the closest",
+                "enemy. This can happen ${2 + level}=[2 + level] amount of times")
 
             else -> listOf(name)
         }

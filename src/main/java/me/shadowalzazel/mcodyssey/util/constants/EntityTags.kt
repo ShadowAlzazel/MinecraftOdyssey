@@ -132,8 +132,7 @@ object EntityTags {
     const val FALLING_SINGULARITY: String = "odyssey.falling_singularity"
     const val MOVING_SINGULARITY: String = "odyssey.moving_singularity"
     const val MARKED_FOR_VENGEANCE: String = "odyssey.marked_for_vengeance"
-    const val VENGEFUL_MODIFIER: String = "odyssey.vengeful_modifier"
-    const val MARKED_BY: String = "odyssey.marked_by."
+    const val VENGEFUL_MARK: String = "odyssey.vengeful_mark"
     const val ECHO_STRUCK: String = "odyssey.echo_struck"
     const val BREATH_CLOUD: String = "odyssey.breath_cloud"
     const val BREATH_BY: String = "odyssey.breath_by."
@@ -144,12 +143,13 @@ object EntityTags {
     const val LEAP_FROG_READY: String = "odyssey.leap_frog_ready"
     const val VOID_TOUCHED: String = "odyssey.void_touched"
     const val VOID_STRUCK_BY: String = "odyssey.void_struck_by"
-    const val VOID_STRIKE_MODIFIER: String = "odyssey.void_strike_modifier"
+    const val VOID_STRIKE_STACKS: String = "odyssey.void_strike_stacks"
     const val AMBUSH_MARKED: String = "odyssey.ambush_marked"
     const val CLOUD_STRIDER_IS_JUMPING: String = "odyssey.cloud_strider_is_jumping"
     const val CLOUD_STRIDER_JUMPS: String = "odyssey.cloud_strider_jumps"
     const val LODESIGHT_BLOCK: String = "odyssey.lodesight_block"
     const val AEROSION_STACKS: String = "odyssey.aerosion_stacks"
+    const val GUARDING_STRIKE_READY: String = "odyssey.guarding_strike_ready"
 
     // WEAPONS
     const val COMBOED: String = "odyssey.comboed"
@@ -171,9 +171,9 @@ object EntityTags {
     /*--------------------------------------------FUNCTIONS------------------------------------------*/
     /*-----------------------------------------------------------------------------------------------*/
 
-    fun Entity.setIntTag(tag: String, count: Int) {
+    fun Entity.setIntTag(tag: String, value: Int) {
         val tagKey = NamespacedKey(Odyssey.instance, tag)
-        persistentDataContainer.set(tagKey, PersistentDataType.INTEGER, count)
+        persistentDataContainer.set(tagKey, PersistentDataType.INTEGER, value)
     }
 
     fun Entity.getIntTag(tag: String): Int? {

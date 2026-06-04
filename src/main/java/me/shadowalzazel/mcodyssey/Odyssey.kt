@@ -115,6 +115,7 @@ class Odyssey : JavaPlugin() {
             HogRiderListeners,
             ArmorListeners,
             MeleeListeners,
+            ToolListeners,
             OtherListeners,
             RangedListeners,
             MiscListeners,

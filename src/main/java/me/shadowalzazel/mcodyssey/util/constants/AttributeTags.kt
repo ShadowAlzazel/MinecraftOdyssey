@@ -82,7 +82,6 @@ object AttributeTags {
     // Glyphs
     const val GLYPH_SLOT = "glyph.slot"
 
-
     // Items - Weapons
     const val ITEM_BASE_ATTACK_DAMAGE = "item.base_attack_damage"
     const val ITEM_BASE_ATTACK_SPEED = "item.base_attack_speed"

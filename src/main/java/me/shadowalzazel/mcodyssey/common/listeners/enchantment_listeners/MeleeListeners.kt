@@ -14,14 +14,11 @@ import me.shadowalzazel.mcodyssey.util.constants.EntityTags.removeTag
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags.setIntTag
 import org.bukkit.*
 import org.bukkit.attribute.Attribute
-import org.bukkit.block.Block
 import org.bukkit.damage.DamageSource
 import org.bukkit.damage.DamageType
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.block.BlockBreakEvent
-import org.bukkit.event.block.BlockDropItemEvent
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityDeathEvent
@@ -43,6 +40,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
     @EventHandler
     fun mainMeleeDamageHandler(event: EntityDamageByEntityEvent) {
         if (event.entity !is LivingEntity) return
+        // Caused by entity attack
         if (event.cause != EntityDamageEvent.DamageCause.ENTITY_ATTACK &&
             event.cause != EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) return
         val attacker = if (event.damager is LivingEntity) {
@@ -50,19 +48,73 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         } else {
             event.damageSource.causingEntity
         }
-        // Set tags like vengeful (FOR now Players)
-        if (event.entity is Player) {
-            vengefulTargets[event.entity.uniqueId] = event.damager.uniqueId
-        }
-
-        // Do Enchant checks
-        if (event.damage <= 0.0) return // Prevent going through shields
+        // Do Item and power checks
+        if (event.damage < 0.0) return // Prevent going through shields
         if (attacker !is LivingEntity) return
         if (attacker.equipment?.itemInMainHand?.hasItemMeta() == false) return
         val victim = event.entity as LivingEntity
         val weapon = attacker.equipment!!.itemInMainHand
         val power = if (attacker is Player) { attacker.attackCooldown.toDouble() } else { 1.0 }
-        // Loop for all enchants
+
+        // Set tags like vengeful (FOR now Players)
+        if (event.entity is Player) {
+            vengefulTargets[event.entity.uniqueId] = event.damager.uniqueId
+        }
+
+        // (Base Damage + Base Flat Modifiers) * (1 + Percentage Modifiers) * postPercent
+        var flatDamageModifier = 0.0F // For adding raw base damage
+        var percentDamageModifier = 0.0F // For adding percent modifiers
+        var postPercentDamage = 1.0F // For changing damage percent modifiers like magic
+
+        // Damage Increases take priority
+        for (enchant in weapon.enchantments) {
+            when (enchant.key.getNameId()) {
+                "backstabber" -> {
+                    percentDamageModifier += backstabberEnchantment(attacker, victim, enchant.value)
+                }
+                "brutality_curse" -> {
+                    percentDamageModifier += brutalityCurseEnchantment(attacker, enchant.value)
+                }
+                "committed" -> {
+                    percentDamageModifier += committedEnchantment(victim, enchant.value)
+                }
+                "cull_the_weak" -> {
+                    percentDamageModifier += cullTheWeakEnchantment(victim, enchant.value)
+                }
+                "douse" -> {
+                    percentDamageModifier += douseEnchantment(victim, enchant.value)
+                }
+                "flame_edge" -> {
+                    postPercentDamage -= flameEdgeEnchantment(attacker, victim, event.damage, enchant.value)
+                }
+                "guarding_strike" -> {
+                    percentDamageModifier += guardingStrikeEnchantment(attacker, enchant.value)
+                }
+                "life_force" -> {
+                    percentDamageModifier += lifeForceEnchantment(attacker, enchant.value)
+                }
+                "illucidation" -> {
+                    percentDamageModifier += illucidationEnchantment(victim, enchant.value, event.isCritical)
+                }
+                "magic_aspect" -> {
+                    postPercentDamage -= magicAspectEnchantment(attacker, victim, event.damage, enchant.value)
+                }
+                "rupture" -> {
+                    postPercentDamage -= ruptureEnchantment(attacker, victim, event.damage, enchant.value)
+                }
+                "vital" -> {
+                    percentDamageModifier += vitalEnchantment(event.isCritical, enchant.value)
+                }
+                "void_strike" -> {
+                    percentDamageModifier += voidStrikeEnchantment(attacker, victim, enchant.value)
+                }
+                "vengeful" -> {
+                    percentDamageModifier += vengefulEnchantment(attacker, victim, enchant.value)
+                }
+            }
+        }
+
+        // Effect Enchantments are next
         for (enchant in weapon.enchantments) {
             when (enchant.key.getNameId()) {
                 "aerosion_aspect" -> {
@@ -72,10 +124,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
                     arcaneCellEnchantment(victim, enchant.value)
                 }
                 "asphyxiate" -> {
-                    event.damage += asphyxiateEnchantment(victim, enchant.value) * power
-                }
-                "backstabber" -> {
-                    event.damage += backstabberEnchantment(attacker, victim, enchant.value) * power
+                    asphyxiateEnchantment(victim, enchant.value)
                 }
                 "budding" -> {
                     buddingEnchantment(victim, enchant.value) // MORE STACKS -> MORE INSTANCES
@@ -86,29 +135,17 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
                 "cleave" -> {
                     cleaveEnchantment(victim, enchant.value)
                 }
-                "committed" -> {
-                    event.damage += committedEnchantment(victim, enchant.value) * power
-                }
                 "conflagrate" -> {
                     conflagrateEnchantment(attacker, victim, enchant.value, event.damage)
                 }
-                "cull_the_weak" -> {
-                    event.damage += cullTheWeakEnchantment(victim, enchant.value)  * power
-                }
                 "decay" -> {
                     decayEnchantment(victim, enchant.value)
-                }
-                "douse" -> {
-                    event.damage += douseEnchantment(victim, enchant.value) * power
                 }
                 "echo" -> {
                     echoEnchantment(attacker, victim, enchant.value)
                 }
                 "chain_lightning" -> {
                     chainLightningEnchantment(attacker, victim, event.damage, enchant.value)
-                }
-                "flame_edge" -> {
-                    event.damage -= flameEdgeEnchantment(attacker, victim, event.damage, enchant.value)
                 }
                 "freezing_aspect" -> {
                     freezingAspectEnchantment(victim, enchant.value)
@@ -122,29 +159,14 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
                 "gravity_well" -> {
                     gravityWellEnchantment(attacker, victim, enchant.value)
                 }
-                "guarding_strike" -> {
-                    guardingStrikeEnchantment(attacker, enchant.value)
-                }
-                "brutality_curse" -> {
-                    brutalityCurseEnchantment(event, enchant.value)
-                }
-                "life_force" -> {
-                    event.damage += lifeForceEnchantment(attacker, enchant.value)
-                }
                 "tempest_splitter" -> {
                     tempestSplitterEnchantment(event, enchant.value)
                 }
                 "hemorrhage" -> {
                     hemorrhageEnchantment(victim, enchant.value) // MORE STACKS -> MORE DAMAGE PER INSTANCE
                 }
-                "illucidation" -> {
-                    event.damage += illucidationEnchantment(victim, enchant.value, event.isCritical) * power
-                }
                 "invocative" -> {
                     invocativeEnchantment(event, enchant.value)
-                }
-                "magic_aspect" -> {
-                    event.damage -= magicAspectEnchantment(attacker, victim, event.damage, enchant.value)
                 }
                 "miscalibrate" -> {
                     miscalibrateEnchantment(victim, enchant.value)
@@ -152,26 +174,19 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
                 "pestilence" -> {
                     pestilenceEnchantment(attacker, victim, enchant.value)
                 }
-                "rupture" -> {
-                    ruptureEnchantment(attacker, victim, event.damage, enchant.value)
-                }
                 "swap" -> {
                     swapEnchantment(attacker, victim, enchant.value)
-                }
-                "vital" -> {
-                    event.damage += vitalEnchantment(event.isCritical, enchant.value) * power
-                }
-                "void_strike" -> {
-                    event.damage += voidStrikeEnchantment(attacker, victim, enchant.value) * power
-                }
-                "vengeful" -> {
-                    vengefulEnchantment(event, enchant.value)
                 }
                 "whirlwind" -> {
                     whirlwindEnchantment(attacker, victim, event.damage, enchant.value)
                 }
             }
         }
+
+        // Final Calculation Step
+        // (Base Damage + Base Flat Modifiers) * (1 + Percentage Modifiers) * postPercent
+        event.damage = (event.damage + flatDamageModifier) * (1 + percentDamageModifier) * postPercentDamage
+
         // Check
         if (event.damage < 0.0) {
             event.damage = 0.0
@@ -181,9 +196,9 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
     // Main function for enchantments relating to entity deaths
     @EventHandler
     fun mainMeleeDeathHandler(event: EntityDeathEvent) {
-        if (event.entity.killer !is LivingEntity) { return }
+        if (event.entity.killer !is LivingEntity) return
         val killer = event.entity.killer as LivingEntity
-        if (killer.equipment?.itemInMainHand?.hasItemMeta() == false) { return }
+        if (killer.equipment?.itemInMainHand?.hasItemMeta() == false) return
         val victim: LivingEntity = event.entity
         val weapon = killer.equipment?.itemInMainHand ?: return
         // Loop for all enchants
@@ -205,6 +220,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         }
     }
 
+    // Main function for enchantments relating to knockbacks
     @EventHandler
     fun entityKnockBackHandler(event: EntityKnockbackByEntityEvent) {
         if (event.hitBy !is LivingEntity) return
@@ -216,46 +232,11 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
                 "gust" -> {
                     event.knockback = gustEnchantment(event.knockback, enchant.value)
                 }
-            }
-        }
-    }
+                "thunderous" -> {
 
-    @EventHandler
-    fun mainBLockDropHandler(event: BlockDropItemEvent) {
-        if (event.items.isEmpty()) return
-        val player = event.player
-        if (!player.inventory.itemInMainHand.hasItemMeta()) return
-        if (!player.inventory.itemInMainHand.itemMeta.hasEnchants()) return
-        val hand = player.inventory.itemInMainHand
-        // Loop
-        for (enchant in hand.enchantments) {
-            when (enchant.key.getNameId()) {
-                "pluck" -> {
-                    pluckEnchantment(event)
                 }
             }
         }
-    }
-
-    @EventHandler
-    fun mainBlockBreakHandler(event: BlockBreakEvent) {
-        if (!event.isDropItems) return
-        val player = event.player
-        if (!player.inventory.itemInMainHand.hasItemMeta()) return
-        if (!player.inventory.itemInMainHand.itemMeta.hasEnchants()) return
-        val hand = player.inventory.itemInMainHand
-        // Loop
-        for (enchant in hand.enchantments) {
-            when (enchant.key.getNameId()) {
-                "metabolic" -> {
-                    metabolicEnchantment(event, enchant.value)
-                }
-                "lodesight" -> {
-                    lodesightEnchantment(event, enchant.value)
-                }
-            }
-        }
-
     }
 
     // ──────────────────────────────────────────────────────────────────────────────
@@ -301,107 +282,8 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         }
     }
 
-    private fun metabolicEnchantment(event: BlockBreakEvent, level: Int) {
-        if (level < (0..9).random()) return
-
-        val player = event.player
-        if (player.foodLevel < 20) {
-            player.foodLevel = minOf(player.foodLevel + (0..1).random(), 20)
-        }
-        else {
-            player.saturation = minOf(player.saturation + 0.5F, 20F)
-        }
-    }
-
-    private fun lodesightEnchantment(event: BlockBreakEvent, level: Int) {
-        val player = event.player
-        val minedBlock = event.block
-
-        // Lists
-        val blockBlackList = listOf(Material.STONE, Material.COBBLESTONE, Material.DIRT, Material.GRASS_BLOCK)
-
-        // Want to skip common blocks
-        if (minedBlock.type in blockBlackList) {
-            return
-        }
-
-        // Delete Old Lodesight Blocks
-        player.getNearbyEntities(16.0, 16.0, 16.0).forEach {
-            if (it is BlockDisplay && it.scoreboardTags.contains(EntityTags.LODESIGHT_BLOCK)) {
-                it.remove()
-            }
-        }
-
-        val heldItem = player.inventory.itemInMainHand
-        var maxCount = 0
-        val r = 6 // Radius to scan
-        for (dx in -r..r) {
-            if (maxCount >= 8) break
-            for (dy in -r..r) {
-                if (maxCount >= 8) break
-                for (dz in -r..r) {
-                    if (maxCount >= 8) break
-                    // Check radial distance
-                    if (dx*dx + dy*dy + dz*dz <= r*r) {
-                        val scanBlock: Block = minedBlock.world.getBlockAt(minedBlock.x + dx, minedBlock.y + dy, minedBlock.z + dz)
-                        if (scanBlock.type in blockBlackList) continue
-                        // Skip if NOT matching
-                        if (scanBlock.type != minedBlock.type) continue
-                        // Do stuff
-                        val blockDisplay = player.world.spawnEntity(scanBlock.location, EntityType.BLOCK_DISPLAY) as BlockDisplay
-                        blockDisplay.also {
-                            it.block = minedBlock.blockData
-                            it.brightness = Display.Brightness(15, 15)
-                            it.isGlowing = true
-                            it.glowColorOverride = Color.YELLOW
-                            it.viewRange = 16F
-                            it.isPersistent = false
-                            it.addScoreboardTag(EntityTags.LODESIGHT_BLOCK)
-                        }
-                        heldItem.damage(4, player)
-                        // Set to remove
-                        val removerTask = RemoveEntityLater(blockDisplay)
-                        removerTask.runTaskLater(Odyssey.instance, 20 * 4)
-                        maxCount += 1
-                    }
-                }
-            }
-        }
-
-    }
-
-    private fun pluckEnchantment(event: BlockDropItemEvent) {
-        val items = event.items
-        val player = event.player
-        for (drop in items) {
-            val overflow = player.inventory.addItem(drop.itemStack.clone())
-            // Empty -> Success
-            if (overflow.isEmpty()) {
-                drop.remove()
-            }
-        }
-    }
-
 
     /*-----------------------------------------------------------------------------------------------*/
-    private fun asphyxiateEnchantment(
-        victim: LivingEntity,
-        level: Int
-    ): Double {
-        victim.remainingAir -= 20 * (level * 2)
-        victim.world.spawnParticle(Particle.BUBBLE_POP, victim.location, 10, 0.25, 0.25, 0.25)
-        victim.velocity = victim.velocity.multiply(0.0)
-        if (victim.remainingAir < 20) return level * 1.0
-        return 0.0
-    }
-
-    private fun lifeForceEnchantment(
-        attacker: LivingEntity,
-        level: Int
-    ): Double {
-        val maxHealth = attacker.getAttribute(Attribute.MAX_HEALTH)?.value ?: 20.0
-        return (maxHealth * (level * 0.05))
-    }
 
     private fun arcaneCellEnchantment(victim: LivingEntity, level: Int) {
         if (victim.scoreboardTags.contains(EffectTags.ARCANE_JAILED)) return
@@ -414,11 +296,25 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         }
     }
 
+
+    private fun asphyxiateEnchantment(
+        victim: LivingEntity,
+        level: Int
+    ) {
+        victim.remainingAir -= 20 * (level * 2)
+        victim.world.spawnParticle(Particle.BUBBLE_POP, victim.location, 10, 0.25, 0.25, 0.25)
+        victim.velocity = victim.velocity.multiply(0.0) // Also reset their speed
+        if (victim.remainingAir < 20) {
+            val damageSource = DamageSource.builder(DamageType.DROWN).build()
+            val fireDamage = level * 1.0
+        }
+    }
+
     private fun backstabberEnchantment(
         attacker: LivingEntity,
         victim: LivingEntity,
         level: Int
-    ): Int {
+    ): Float {
         val victimTarget = victim.getTargetEntity(4)
         val isInvisible = attacker.isInvisible || attacker.hasPotionEffect(PotionEffectType.INVISIBILITY)
         // Looking more than 90-deg (1.57-rads) away from attacker
@@ -431,10 +327,20 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
                 playSound(victim.location, Sound.BLOCK_HONEY_BLOCK_FALL, 2.5F, 0.9F)
             }
             // Damage
-            return (2 + (level * 2))
+            return level * 0.2F
         }
-        return 0
+        return 0.0F
 
+    }
+
+    private fun brutalityCurseEnchantment(
+        attacker: LivingEntity,
+        level: Int,
+    ) : Float {
+        val damageSource = DamageSource.builder(DamageType.GENERIC).build()
+        val feedbackDamage = level * 1.0
+        attacker.damage(feedbackDamage, damageSource)
+        return 0.1F * level
     }
 
     private fun conflagrateEnchantment(
@@ -446,19 +352,6 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         val extraDamage = damage * (level * 0.2)
         val task = ConflagrateTask(victim, extraDamage)
         task.runTaskLater(Odyssey.instance, 30)
-    }
-
-    private fun swapEnchantment(
-        attacker: LivingEntity,
-        victim: LivingEntity,
-        level: Int
-    ) {
-        val attackerLocation = attacker.location.clone()
-        val victimLocation = victim.location.clone()
-        val distance = attackerLocation.distance(victimLocation)
-
-        attacker.teleport(victimLocation)
-        victim.teleport(attackerLocation)
     }
 
     // Other enchant ideas
@@ -499,56 +392,94 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         }
     }
 
+    private fun chainLightningEnchantment(
+        attacker: LivingEntity,
+        victim: LivingEntity,
+        damage: Double,
+        level: Int): Double {
+        val maxTargets = 2 + level
+        val chainDamage = damage * 0.20
+        val chainRadius = 5.0
+
+        // Build the chain: start from the initial victim, bounce to nearby entities
+        val chainTargets = mutableListOf<LivingEntity>()
+        chainTargets.add(victim)
+
+        var lastTarget: LivingEntity = victim
+        repeat(maxTargets - 1) {
+            val nextTarget = lastTarget.world
+                .getNearbyLivingEntities(lastTarget.location, chainRadius)
+                .filter { entity ->
+                    entity != attacker && entity !is ArmorStand && entity !in chainTargets
+                }
+                .minByOrNull { it.location.distanceSquared(lastTarget.location) }
+                ?: return@repeat
+
+            chainTargets.add(nextTarget)
+            lastTarget = nextTarget
+        }
+
+        // Deal electric (lightning) damage to all chained targets except the first
+        // (the first victim already received the base hit)
+        val damageSource = DamageSource.builder(DamageType.LIGHTNING_BOLT).build()
+        for (i in 1 until chainTargets.size) {
+            chainTargets[i].damage(chainDamage, damageSource)
+        }
+
+        // Draw particle lightning lines between each chained entity pair
+        for (i in 0 until chainTargets.size - 1) {
+            val from = chainTargets[i].eyeLocation
+            val to = chainTargets[i + 1].eyeLocation
+            spawnZigZagLine(Particle.ELECTRIC_SPARK, from, to)
+        }
+        //attacker.location.world.playSound(attacker.location, Sound.LIGH, 3.5F, 0.4F)
+
+        return chainDamage
+    }
+
     private fun cleaveEnchantment(victim: LivingEntity, level: Int) {
         //victim.shieldBlockingDelay += level * 20
     }
 
-    private fun flameEdgeEnchantment(attacker: LivingEntity, victim: LivingEntity, damage: Double, level: Int): Double {
-        val potency = 0.1 * level
-        val damageSource = DamageSource.builder(DamageType.ON_FIRE).build()
-        val fireDamage = damage * potency
-        victim.damage(fireDamage, damageSource)
-        victim.world.spawnParticle(Particle.FLAME, victim.location, 10, 0.25, 0.15, 0.25)
-        return fireDamage
-    }
 
-    private fun committedEnchantment(victim: LivingEntity, level: Int): Int {
+    private fun committedEnchantment(victim: LivingEntity, level: Int): Float {
         val maxHealth = victim.getAttribute(Attribute.MAX_HEALTH)?.value ?: 20.0
         return if (victim.health < maxHealth * 0.4) {
             victim.world.spawnParticle(Particle.TRIAL_SPAWNER_DETECTION, victim.location, 10, 0.25, 0.25, 0.25)
-            level + 1
+            level * 0.15F
         } else {
-            0
+            0.0F
         }
     }
 
-    private fun cullTheWeakEnchantment(victim: LivingEntity, level: Int): Double {
+    private fun cullTheWeakEnchantment(victim: LivingEntity, level: Int): Float {
+        var modifier = 0.0F
         val hasSlowness = victim.hasPotionEffect(PotionEffectType.SLOWNESS)
         val hasWeakness = victim.hasPotionEffect(PotionEffectType.WEAKNESS)
         val hasFatigue = victim.hasPotionEffect(PotionEffectType.MINING_FATIGUE)
-        return if (hasSlowness || hasWeakness || hasFatigue) {
+        val hasNausea = victim.hasPotionEffect(PotionEffectType.NAUSEA)
+
+        if (hasSlowness || hasWeakness || hasFatigue || hasNausea) {
             victim.world.spawnParticle(Particle.TRIAL_SPAWNER_DETECTION_OMINOUS, victim.location, 10, 0.25, 0.25, 0.25)
-            var damage = 0.0
-            if (hasSlowness) { damage += 1.0 }
-            if (hasWeakness) { damage += 1.0 }
-            if (hasFatigue) { damage += 1.0 }
-            level * (damage)
-        } else {
-            0.0
+            if (hasSlowness) modifier += (0.15F * level)
+            if (hasWeakness) modifier += (0.15F * level)
+            if (hasFatigue) modifier += (0.15F * level)
+            if (hasNausea) modifier += (0.15F * level)
         }
+        return modifier
     }
 
     private fun decayEnchantment(victim: LivingEntity, level: Int) {
        victim.addPotionEffect(PotionEffect(PotionEffectType.WITHER, (20 * (level * 4)), 0))
     }
 
-    private fun douseEnchantment(victim: LivingEntity, level: Int): Double {
-        if (victim is Blaze || victim is MagmaCube || victim is Enderman || victim.fireTicks > 0) {
+    private fun douseEnchantment(victim: LivingEntity, level: Int): Float {
+        if (victim.fireTicks > 0 || victim is Blaze || victim is MagmaCube || victim is Enderman) {
             victim.fireTicks = 0
-            return (level * 2.5) + 2.5
+            return 0.2F * level
         }
         victim.fireTicks = 0
-        return 0.0
+        return 0.0F
     }
 
     private fun echoEnchantment(attacker: LivingEntity, victim: LivingEntity, level: Int) {
@@ -615,6 +546,21 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         }
     }
 
+    private fun flameEdgeEnchantment(
+        attacker: LivingEntity,
+        victim: LivingEntity,
+        damage: Double,
+        level: Int): Float {
+        val modifier = 0.1F * level
+        val damageSource = DamageSource.builder(DamageType.ON_FIRE).build()
+        val fireDamage = damage * modifier
+        victim.damage(fireDamage, damageSource)
+        victim.world.spawnParticle(Particle.FLAME, victim.location, 10, 0.02, 0.02, 0.02)
+
+        return modifier
+    }
+
+
     private fun freezingAspectEnchantment(victim: LivingEntity, level: Int) {
         victim.addOdysseyEffect(EffectTags.FREEZING, (level * 4) * 20, level)
         if (victim.freezeTicks <= 20 * ((4 * level) + 2)) {
@@ -670,17 +616,16 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
 
     private fun guardingStrikeEnchantment(
         attacker: LivingEntity,
-        level: Int) {
-        with(attacker) {
-            val isCrouching = attacker is Player && attacker.isSneaking
-            if (velocity.length() < 0.3 || isCrouching) {
-                addPotionEffect(PotionEffect(PotionEffectType.RESISTANCE, (level * 5) * 20, 0))
-                // Particles and Sounds
-                world.spawnParticle(Particle.ENCHANTED_HIT, location, 35, 1.0, 0.5, 1.0)
-                world.playSound(location, Sound.ENTITY_IRON_GOLEM_ATTACK, 1.5F, 0.5F)
-                world.playSound(location, Sound.BLOCK_DEEPSLATE_BREAK, 1.5F, 0.5F)
-            }
-        }
+        level: Int) : Float {
+
+        // ADD TAG on block
+        // -> add scheduler that removes tag
+        // if still has tag, then damage
+
+        attacker.world.playSound(attacker.location, Sound.BLOCK_DEEPSLATE_BREAK, 1.5F, 0.5F)
+
+        if (!attacker.scoreboardTags.contains(EntityTags.GUARDING_STRIKE_READY)) return 0.0F
+        return 0.1F * level
     }
 
     private fun gustEnchantment(
@@ -691,21 +636,6 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         val upVector = vector.normalize().clone()
         val newVector = upVector.setX(0.0).setY(1.0).setZ(0.0).multiply(mag * level)
         return newVector
-    }
-
-    private fun brutalityCurseEnchantment(
-        event: EntityDamageByEntityEvent,
-        level: Int
-    ) {
-        event.damage *= (1 + (0.2 * level))
-        val attacker = event.damager
-
-        val damageSource = DamageSource.builder(DamageType.MAGIC).build()
-        val feedbackDamage = level * 1.0
-
-        if (attacker is LivingEntity) {
-            attacker.damage(feedbackDamage, damageSource)
-        }
     }
 
     private fun hemorrhageEnchantment(
@@ -719,24 +649,68 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         }
     }
 
-    private fun illucidationEnchantment(victim: LivingEntity, level: Int, isCrit: Boolean): Int {
-        var illucidationDamage = 0
+    private fun illucidationEnchantment(
+        victim: LivingEntity,
+        level: Int,
+        isCrit: Boolean): Float {
+        var damageBonus = 0.0F
+        val isGlowing = victim.hasPotionEffect(PotionEffectType.GLOWING)
+
         if (victim.isGlowing) {
-            illucidationDamage += (level * 1)
-            if (isCrit) {
-                illucidationDamage * 2
-                victim.isGlowing = false
-                if (victim.hasPotionEffect(PotionEffectType.GLOWING)) {
-                    victim.removePotionEffect(PotionEffectType.GLOWING)
-                }
-            }
-            with(victim.world) {
-                playSound(victim.location, Sound.BLOCK_AMETHYST_CLUSTER_PLACE, 2.5F, 1.5F)
-                spawnParticle(Particle.END_ROD, victim.location, 55, 1.0, 0.5, 1.0)
+            damageBonus += (level * 0.15F)
+            victim.world.playSound(victim.location, Sound.BLOCK_AMETHYST_CLUSTER_PLACE, 2.5F, 1.5F)
+            victim.world.spawnParticle(Particle.END_ROD, victim.location, 25, 1.0, 0.5, 1.0)
+        }
+
+        if (isCrit && isGlowing) {
+            victim.removePotionEffect(PotionEffectType.GLOWING)
+            damageBonus *= 2.0F
+        }
+        return damageBonus
+    }
+
+
+    private fun invocativeEnchantment(
+        event: EntityDamageByEntityEvent,
+        level: Int) {
+        val attacker = event.damager
+        val victim = event.entity
+        val damage = event.damage
+        // Invocative Vars
+        val lastTargetId = invocativeLastTarget[attacker.uniqueId]
+        // Set the lastTarget to this current victim
+        if (lastTargetId == null) {
+            invocativeLastTarget[attacker.uniqueId] = victim.uniqueId
+            return
+        }
+        else {
+            invocativeLastTarget[attacker.uniqueId] = victim.uniqueId
+        }
+
+        // If new target is entity run new damage on last victim
+        val lastVictim = attacker.world.getEntity(lastTargetId)
+        if (lastVictim != victim && lastVictim != null) {
+            lastVictim.world.spawnParticle(Particle.TRIAL_SPAWNER_DETECTION_OMINOUS, lastVictim.location, 15, 0.02, 0.5, 0.02)
+            // Damage last living target
+            if (lastVictim is LivingEntity && !lastVictim.isDead) {
+                val damageSource = DamageSource.builder(DamageType.MAGIC).build()
+                val voidDamage = damage * 0.1F * level
+                lastVictim.damage(voidDamage, damageSource)
             }
         }
-        return illucidationDamage
     }
+
+
+    private fun lifeForceEnchantment(
+        attacker: LivingEntity,
+        level: Int
+    ): Float {
+        val maxHealth = attacker.getAttribute(Attribute.MAX_HEALTH)?.value ?: 20.0
+        val isBelowHalf = attacker.health / maxHealth < 0.5
+        if (isBelowHalf) return ((maxHealth * (0.05F * level)) * 2.0F).toFloat()
+        return (maxHealth * (0.05F * level)).toFloat()
+    }
+
 
     private fun miscalibrateEnchantment(victim: LivingEntity, level: Int) {
         victim.maximumNoDamageTicks
@@ -744,59 +718,20 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         victim.world.spawnParticle(Particle.ENCHANTED_HIT, victim.location, 10, 0.25, 0.25, 0.25)
     }
 
-    private fun magicAspectEnchantment(attacker: LivingEntity, victim: LivingEntity, damage: Double, level: Int): Double {
-        val potency = 0.05 * level
-        val damageSource = DamageSource.builder(DamageType.MAGIC).build()
-        val magicDamage = damage * potency
-        victim.damage(magicDamage, damageSource)
-        victim.world.spawnParticle(Particle.WITCH, victim.location, 10, 0.25, 0.25, 0.25)
-        return magicDamage
-    }
-
-    private fun chainLightningEnchantment(
+    private fun magicAspectEnchantment(
         attacker: LivingEntity,
         victim: LivingEntity,
         damage: Double,
-        level: Int): Double {
-        val maxTargets = 2 + level
-        val chainDamage = damage * 0.25
-        val chainRadius = 5.0
-
-        // Build the chain: start from the initial victim, bounce to nearby entities
-        val chainTargets = mutableListOf<LivingEntity>()
-        chainTargets.add(victim)
-
-        var lastTarget: LivingEntity = victim
-        repeat(maxTargets - 1) {
-            val nextTarget = lastTarget.world
-                .getNearbyLivingEntities(lastTarget.location, chainRadius)
-                .filter { entity ->
-                    entity != attacker && entity !is ArmorStand && entity !in chainTargets
-                }
-                .minByOrNull { it.location.distanceSquared(lastTarget.location) }
-                ?: return@repeat
-
-            chainTargets.add(nextTarget)
-            lastTarget = nextTarget
-        }
-
-        // Deal electric (lightning) damage to all chained targets except the first
-        // (the first victim already received the base hit)
-        val damageSource = DamageSource.builder(DamageType.LIGHTNING_BOLT).build()
-        for (i in 1 until chainTargets.size) {
-            chainTargets[i].damage(chainDamage, damageSource)
-        }
-
-        // Draw particle lightning lines between each chained entity pair
-        for (i in 0 until chainTargets.size - 1) {
-            val from = chainTargets[i].eyeLocation
-            val to = chainTargets[i + 1].eyeLocation
-            spawnZigZagLine(Particle.ELECTRIC_SPARK, from, to)
-        }
-        //attacker.location.world.playSound(attacker.location, Sound.LIGH, 3.5F, 0.4F)
-
-        return chainDamage
+        level: Int): Float {
+        val modifier = 0.05F * level
+        val damageSource = DamageSource.builder(DamageType.MAGIC).build()
+        val magicDamage = damage * modifier
+        victim.damage(magicDamage, damageSource)
+        victim.world.spawnParticle(Particle.WITCH, victim.location, 10, 0.25, 0.25, 0.25)
+        return modifier
     }
+
+
 
     // PLAGUE BRINGER
     private fun plagueBringerEnchantment(victim: LivingEntity, level: Int) {
@@ -862,16 +797,13 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
     private fun plunderEnchantment(event: EntityDeathEvent) {
         val items = event.drops
         val killer = event.entity.killer as LivingEntity
-
         val dropsToRemove = mutableListOf<ItemStack>()
-
+        // Loop per drop then add to killer inventory
         for (drop in items) {
             if (killer is Player) {
                 val overflow = killer.inventory.addItem(drop.clone())
                 // Empty -> Success
-                if (overflow.isEmpty()) {
-                    dropsToRemove.add(drop)
-                }
+                if (overflow.isEmpty()) dropsToRemove.add(drop)
             }
             else {
                 // Do Nothing
@@ -882,6 +814,8 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         }
 
     }
+
+
 
     // Old Invocative
     private fun recallEnchantment(attacker: LivingEntity, victim: LivingEntity, damage: Double, level: Int) {
@@ -902,53 +836,28 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         }
     }
 
-    private fun invocativeEnchantment(
-        event: EntityDamageByEntityEvent,
-        level: Int) {
-        val attacker = event.damager
-        val victim = event.entity
-        val damage = event.damage
-        // Invocative Vars
-        val lastTargetId = invocativeLastTarget[attacker.uniqueId]
-        val storedDamage = invocativePreviousDamage[attacker.uniqueId]
 
-        // Set new last target and store damage
-        if (lastTargetId == null) {
-            invocativeLastTarget[attacker.uniqueId] = victim.uniqueId
-            invocativePreviousDamage[attacker.uniqueId] = damage * (level * 0.1)
-            return
-        }
-        // Store damage
-        else if (lastTargetId == victim.uniqueId) {
-            invocativePreviousDamage[attacker.uniqueId] = damage * (level * 0.1)
-            return
-        }
-        // If new target run new damage
-        else if (lastTargetId != victim.uniqueId) {
-            val bonusDamage = storedDamage ?: (damage * (level * 0.1))
-            invocativeLastTarget[attacker.uniqueId] = victim.uniqueId
-            victim.world.spawnParticle(Particle.TRIAL_SPAWNER_DETECTION_OMINOUS, victim.location, 15, 0.02, 0.5, 0.02)
-            event.damage += bonusDamage
-        }
+    private fun ruptureEnchantment(
+        attacker: LivingEntity,
+        victim: LivingEntity,
+        damage: Double,
+        level: Int): Float {
+        if (victim.isDead) return 0.0F
+        // Prevent spam
 
-    }
-
-    private fun ruptureEnchantment(attacker: LivingEntity, victim: LivingEntity, damage: Double, level: Int): Double {
-        if (victim.isDead) return 0.0
-        val fullCharge = if ((attacker is Player) && attacker.attackCooldown > 0.99) { true } else attacker !is Player
-        // Prevent Spam
-        if (!fullCharge) return 0.0
-        var rupturingDamage = 0.0
+        val rupturingModifier = 0.1F * level
         with(victim) {
             if (scoreboardTags.contains(EffectTags.FULLY_RUPTURED)) {
                 removeScoreboardTag(EffectTags.FULLY_RUPTURED)
                 if (damage > level) {
-                    rupturingDamage += level
-                    health -= minOf(health, rupturingDamage)
+                    // True Damage bypasses the damage layer
+                    val trueDamage = damage * rupturingModifier
+                    health -= minOf(health, trueDamage)
                 }
                 world.playSound(victim.location, Sound.ITEM_CROSSBOW_QUICK_CHARGE_2, 2.5F, 1.7F)
                 val blockData = Material.TUFF_BRICKS.createBlockData()
                 world.spawnParticle(Particle.BLOCK, victim.location, 15, 0.45, 0.8, 0.45, blockData)
+                return rupturingModifier
             }
             else if (scoreboardTags.contains(EffectTags.PARTLY_RUPTURED)) {
                 removeScoreboardTag(EffectTags.PARTLY_RUPTURED)
@@ -958,31 +867,46 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
                 addScoreboardTag(EffectTags.PARTLY_RUPTURED)
             }
         }
-        return rupturingDamage
+        return 0.0F
     }
 
-    private fun vitalEnchantment(isCrit: Boolean, level: Int): Double {
+    private fun swapEnchantment(
+        attacker: LivingEntity,
+        victim: LivingEntity,
+        level: Int
+    ) {
+        val attackerLocation = attacker.location.clone()
+        val victimLocation = victim.location.clone()
+        val distance = attackerLocation.distance(victimLocation)
+
+        attacker.teleport(victimLocation)
+        victim.teleport(attackerLocation)
+    }
+
+    private fun vitalEnchantment(isCrit: Boolean, level: Int): Float {
         if (isCrit) {
-            return 1.0 * level
+            return 0.1F * level
         }
-        return 0.0
+        return 0.0F
     }
 
     private fun vengefulEnchantment(
-        event: EntityDamageByEntityEvent,
-        level: Int) {
-        val attacker = event.damager
-        val victim = event.entity
-        if (victim.uniqueId == vengefulTargets[attacker.uniqueId]) {
-            event.damage += level
-        }
+        attacker: LivingEntity,
+        victim: LivingEntity,
+        level: Int
+    ) : Float {
+        val attackerId = attacker.entityId
+
+        victim.setIntTag(EntityTags.VENGEFUL_MARK, attackerId)
+
+        return 0.0F
     }
 
     private fun voidStrikeEnchantment(
         attacker: LivingEntity,
         victim: LivingEntity,
         level: Int
-    ): Double {
+    ): Float {
         // Skip if not matching
         val voidStruckBy = victim.getIntTag(EntityTags.VOID_STRUCK_BY)
         if (voidStruckBy == null) {
@@ -990,29 +914,29 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         }
         else if (voidStruckBy != attacker.entityId) {
             victim.setIntTag(EntityTags.VOID_STRUCK_BY, attacker.entityId)
-            return 0.0
+            return 0.0F
         }
-        // Get modifier and set voidDamage
-        val modifier = victim.getIntTag(EntityTags.VOID_STRIKE_MODIFIER) ?: 0
-        victim.setIntTag(EntityTags.VOID_STRIKE_MODIFIER, modifier + 1)
-        val voidDamage = modifier * level
+        // Get void stacks
+        val stacks = victim.getIntTag(EntityTags.VOID_STRIKE_STACKS) ?: 0
+        victim.setIntTag(EntityTags.VOID_STRIKE_STACKS, stacks + 1)
+        val voidDamageModifier = stacks * (level * 0.1F)
         // Reset void strike modifier
-        if (modifier > 10) {
-            victim.setIntTag(EntityTags.VOID_STRIKE_MODIFIER, 0)
+        if (stacks > 10) {
+            victim.setIntTag(EntityTags.VOID_STRIKE_STACKS, 0)
             victim.removeTag(EntityTags.VOID_STRUCK_BY)
         }
         // Particles and Sounds
         with(victim.world) {
             val location = victim.location
-            spawnParticle(Particle.PORTAL, location, (modifier + 1) * 8, 1.15, 0.85, 1.15)
-            spawnParticle(Particle.WAX_OFF, location, (modifier + 1) * 2, 1.0, 0.75, 1.0)
-            spawnParticle(Particle.WITCH, location, (modifier + 1) * 5, 1.0, 0.75, 1.0)
+            spawnParticle(Particle.PORTAL, location, (stacks + 1) * 8, 1.15, 0.85, 1.15)
+            //spawnParticle(Particle.WAX_OFF, location, (modifier + 1) * 2, 1.0, 0.75, 1.0)
+            spawnParticle(Particle.WITCH, location, (stacks + 1) * 5, 1.0, 0.75, 1.0)
             playSound(location, Sound.BLOCK_BEACON_DEACTIVATE, 1.5F, 0.5F)
-            playSound(location, Sound.BLOCK_AMETHYST_BLOCK_BREAK, 1.7F, 0.2F)
+            //playSound(location, Sound.BLOCK_AMETHYST_BLOCK_BREAK, 1.7F, 0.2F)
             playSound(location, Sound.ENTITY_ENDER_EYE_DEATH, 3.5F, 0.4F)
         }
         // Damage
-        return voidDamage * 1.0
+        return voidDamageModifier
     }
 
     private fun whirlwindEnchantment(
@@ -1028,13 +952,15 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         // Particles
         with(attacker.world) {
             spawnParticle(Particle.GUST, attacker.location, 10, 0.04, 0.04, 0.04)
-            playSound(attacker.location, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1.2F, 0.7F)
+            //playSound(attacker.location, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1.2F, 0.7F)
             playSound(attacker.location, Sound.ENTITY_WIND_CHARGE_THROW, 1.2F, 0.6F)
         }
+
         // Damage Calculation
-        val whirlDamage = damage * (level * 0.3)
+        val damageSource = DamageSource.builder(DamageType.WIND_CHARGE).build()
+        val whirlDamage = damage * (level * 0.4)
         nearbyEntities.forEach {
-            it.damage(whirlDamage)
+            it.damage(whirlDamage, damageSource)
             val speed = 0.8 + (0.2 * level)
             val direction = it.location.clone().subtract(attacker.location).toVector().normalize()
             it.velocity = direction.multiply(speed)
