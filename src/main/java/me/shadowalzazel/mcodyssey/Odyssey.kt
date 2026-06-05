@@ -34,6 +34,7 @@ class Odyssey : JavaPlugin() {
     // Overworld
     lateinit var overworld: World
     lateinit var edge: World
+    var seed: Long = 0
 
     companion object {
         lateinit var instance : Odyssey
@@ -76,6 +77,7 @@ class Odyssey : JavaPlugin() {
                 continue
             }
         }
+        seed = overworld.seed
 
         // Find the Odyssey Datapack as it is required
         logger.info("Finding Odyssey Datapack...")

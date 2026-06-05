@@ -17,6 +17,7 @@ import org.bukkit.event.block.BlockDropItemEvent
 
 object ToolListeners : Listener, EnchantmentManager {
 
+
     @EventHandler
     fun mainBLockDropHandler(event: BlockDropItemEvent) {
         if (event.items.isEmpty()) return

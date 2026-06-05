@@ -18,6 +18,7 @@ import org.bukkit.damage.DamageSource
 import org.bukkit.damage.DamageType
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
@@ -37,7 +38,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
     private val vengefulTargets: MutableMap<UUID, UUID> = mutableMapOf()
 
     // Main function for enchantments relating to entity damage
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     fun mainMeleeDamageHandler(event: EntityDamageByEntityEvent) {
         if (event.entity !is LivingEntity) return
         // Caused by entity attack
@@ -54,7 +55,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         if (attacker.equipment?.itemInMainHand?.hasItemMeta() == false) return
         val victim = event.entity as LivingEntity
         val weapon = attacker.equipment!!.itemInMainHand
-        val power = if (attacker is Player) { attacker.attackCooldown.toDouble() } else { 1.0 }
+        val attackPower = if (attacker is Player) { attacker.attackCooldown.toDouble() } else { 1.0 }
 
         // Set tags like vengeful (FOR now Players)
         if (event.entity is Player) {
@@ -193,6 +194,35 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         }
     }
 
+    // Main function for shields/blocks
+    @EventHandler
+    fun mainMeleeBlockHandler(event: EntityDamageByEntityEvent) {
+        val attacker = if (event.damager is LivingEntity) {
+            event.damager as LivingEntity
+        } else {
+            event.damageSource.causingEntity
+        }
+        val directEntity = event.damageSource.directEntity
+        // Check if defender is alive
+        val defender = event.entity
+        if (event.entity !is LivingEntity) return
+        defender as LivingEntity
+        val mainHand = defender.equipment?.itemInMainHand ?: return
+
+
+        // Effect Enchantments are next
+        for (enchant in mainHand.enchantments) {
+            when (enchant.key.getNameId()) {
+                "mirror_force" -> {
+                    mirrorForceEnchantment(defender, directEntity, enchant.value)
+                }
+            }
+        }
+
+
+    }
+
+
     // Main function for enchantments relating to entity deaths
     @EventHandler
     fun mainMeleeDeathHandler(event: EntityDeathEvent) {
@@ -302,11 +332,12 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         level: Int
     ) {
         victim.remainingAir -= 20 * (level * 2)
-        victim.world.spawnParticle(Particle.BUBBLE_POP, victim.location, 10, 0.25, 0.25, 0.25)
+        victim.world.spawnParticle(Particle.BUBBLE_POP, victim.location, 14, 0.25, 0.25, 0.25)
         victim.velocity = victim.velocity.multiply(0.0) // Also reset their speed
         if (victim.remainingAir < 20) {
             val damageSource = DamageSource.builder(DamageType.DROWN).build()
-            val fireDamage = level * 1.0
+            val drownDamage = level * 1.0
+            victim.damage(drownDamage, damageSource)
         }
     }
 
@@ -341,17 +372,6 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         val feedbackDamage = level * 1.0
         attacker.damage(feedbackDamage, damageSource)
         return 0.1F * level
-    }
-
-    private fun conflagrateEnchantment(
-        attacker: LivingEntity,
-        victim: LivingEntity,
-        level: Int,
-        damage: Double,
-    ) {
-        val extraDamage = damage * (level * 0.2)
-        val task = ConflagrateTask(victim, extraDamage)
-        task.runTaskLater(Odyssey.instance, 30)
     }
 
     // Other enchant ideas
@@ -451,6 +471,18 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
             0.0F
         }
     }
+
+    private fun conflagrateEnchantment(
+        attacker: LivingEntity,
+        victim: LivingEntity,
+        level: Int,
+        damage: Double,
+    ) {
+        val extraDamage = damage * (level * 0.2)
+        val task = ConflagrateTask(victim, extraDamage)
+        task.runTaskLater(Odyssey.instance, 30)
+    }
+
 
     private fun cullTheWeakEnchantment(victim: LivingEntity, level: Int): Float {
         var modifier = 0.0F
@@ -694,12 +726,11 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
             // Damage last living target
             if (lastVictim is LivingEntity && !lastVictim.isDead) {
                 val damageSource = DamageSource.builder(DamageType.MAGIC).build()
-                val voidDamage = damage * 0.1F * level
+                val voidDamage = damage * 0.15F * level
                 lastVictim.damage(voidDamage, damageSource)
             }
         }
     }
-
 
     private fun lifeForceEnchantment(
         attacker: LivingEntity,
@@ -711,11 +742,39 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         return (maxHealth * (0.05F * level)).toFloat()
     }
 
+    private fun mirrorForceEnchantment(
+        defender: LivingEntity,
+        projectile: Entity?,
+        level: Int
+    ) {
+        if (projectile == null) return
+        // Vectors
+        val currentVelocity = projectile.velocity
+        val currentSpeed = projectile.velocity.length()
+        if (currentSpeed <= 0.0) return // Ignore divide 0
+        //println("Projectile Velocity: $currentVelocity")
+        //println("Projectile Speed: $currentSpeed")
 
-    private fun miscalibrateEnchantment(victim: LivingEntity, level: Int) {
-        victim.maximumNoDamageTicks
-        victim.noDamageTicks = 10 - level
-        victim.world.spawnParticle(Particle.ENCHANTED_HIT, victim.location, 10, 0.25, 0.25, 0.25)
+        val hasShield = defender.equipment?.itemInMainHand?.type == Material.SHIELD
+        val isBlocking = if (defender is Player) defender.isBlocking && hasShield else hasShield
+        // Run has shield
+        if (projectile is Projectile && isBlocking) {
+            // get shield normal
+            val shieldNormal = defender.location.direction.normalize()
+
+            // Reflect across
+            val dot = currentVelocity.dot(shieldNormal)
+            val reflectedVelocity = currentVelocity.clone()
+                .subtract(shieldNormal.multiply(2.0 * dot))
+                .normalize()
+
+            val newSpeed = currentSpeed * (level * 0.4F)
+            projectile.velocity = reflectedVelocity.multiply(newSpeed)
+            projectile.shooter = defender
+
+            //println("New Velocity: $newVelocity")
+            //println("New Speed: $newSpeed")
+        }
     }
 
     private fun magicAspectEnchantment(
@@ -731,7 +790,11 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         return modifier
     }
 
-
+    private fun miscalibrateEnchantment(victim: LivingEntity, level: Int) {
+        victim.maximumNoDamageTicks
+        victim.noDamageTicks = 10 - level
+        victim.world.spawnParticle(Particle.ENCHANTED_HIT, victim.location, 10, 0.25, 0.25, 0.25)
+    }
 
     // PLAGUE BRINGER
     private fun plagueBringerEnchantment(victim: LivingEntity, level: Int) {
@@ -815,8 +878,6 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
 
     }
 
-
-
     // Old Invocative
     private fun recallEnchantment(attacker: LivingEntity, victim: LivingEntity, damage: Double, level: Int) {
         val lastTarget = recallTargets[attacker.uniqueId]
@@ -854,9 +915,9 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
                     val trueDamage = damage * rupturingModifier
                     health -= minOf(health, trueDamage)
                 }
-                world.playSound(victim.location, Sound.ITEM_CROSSBOW_QUICK_CHARGE_2, 2.5F, 1.7F)
-                val blockData = Material.TUFF_BRICKS.createBlockData()
-                world.spawnParticle(Particle.BLOCK, victim.location, 15, 0.45, 0.8, 0.45, blockData)
+                world.playSound(victim.location, Sound.ITEM_SPEAR_HIT, 1.2F, 1.3F)
+                val blockData = Material.IRON_BLOCK.createBlockData()
+                world.spawnParticle(Particle.BLOCK, victim.location, 15, 0.45, 0.8, 0.35, blockData)
                 return rupturingModifier
             }
             else if (scoreboardTags.contains(EffectTags.PARTLY_RUPTURED)) {
@@ -951,7 +1012,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         }
         // Particles
         with(attacker.world) {
-            spawnParticle(Particle.GUST, attacker.location, 10, 0.04, 0.04, 0.04)
+            spawnParticle(Particle.GUST, attacker.location, 20, 0.04, 0.04, 0.04)
             //playSound(attacker.location, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1.2F, 0.7F)
             playSound(attacker.location, Sound.ENTITY_WIND_CHARGE_THROW, 1.2F, 0.6F)
         }
@@ -966,5 +1027,5 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
             it.velocity = direction.multiply(speed)
         }
     }
-    /*-----------------------------------------------------------------------------------------------*/
+
 }

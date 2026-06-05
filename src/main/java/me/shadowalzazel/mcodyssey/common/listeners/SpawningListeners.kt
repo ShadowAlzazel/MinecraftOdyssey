@@ -25,7 +25,6 @@ import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.entity.EntityRegainHealthEvent
 import org.bukkit.event.world.ChunkPopulateEvent
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.ArmorMeta
 import org.bukkit.inventory.meta.trim.ArmorTrim
 import org.bukkit.inventory.meta.trim.TrimMaterial
 import org.bukkit.inventory.meta.trim.TrimPattern
@@ -41,7 +40,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
         if (event.entity !is Enemy) return
         if (event.entity is Guardian) return
         val mob = event.entity
-        if (mob.scoreboardTags.contains(EntityTags.HANDLED)) return // Do not handle twice
+        if (mob.scoreboardTags.contains(EntityTags.SPAWN_HANDLED)) return // Do not handle twice
         // Handle natural spawning inside Structures
         mobNaturalStructureSpawning(event)
 
@@ -62,7 +61,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
     fun mobStructureSpawningHandler(event: CreatureSpawnEvent) {
         //println(event.spawnReason) // -> DEFAULT
         val mob = event.entity
-        if (mob.scoreboardTags.contains(EntityTags.HANDLED)) return // Do not handle twice
+        if (mob.scoreboardTags.contains(EntityTags.SPAWN_HANDLED)) return // Do not handle twice
         // Get from registry
         val boundedStructures = getBoundedStructures(mob) ?: return
         val structureRegistry = getPaperRegistry(RegistryKey.STRUCTURE)
@@ -88,6 +87,52 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
         }
     }
 
+    @EventHandler(priority = EventPriority.LOWEST)
+    fun mobStructureInitialPopulateHandler(event: ChunkPopulateEvent) {
+        // Skip non structure  chunk
+        if (event.chunk.structures.isEmpty()) return
+        // Get all structures
+        val structures = event.chunk.structures
+        if (structures.isEmpty()) return
+        val structureRegistry = getPaperRegistry(RegistryKey.STRUCTURE)
+
+        // Get mobs
+        val mobs = event.chunk.entities.filterIsInstance<LivingEntity>()
+
+        event.chunk.structures.forEach { s ->
+            val name = structureRegistry.getKey(s.structure)?.key ?: return@forEach
+            val entitiesInStructure = mobs.filter { entityInsideStructure(it, s.structure) }
+
+            when (name) {
+                "forbidden_castle" -> entitiesInStructure.filterIsInstance<PiglinBrute>().forEach {
+                    if (!it.scoreboardTags.contains(EntityTags.CLONED)) {
+                        clonePiglinBrute(it)
+                        // 30% chance to spawn a third knight
+                        if ((0..10).random() > 3 && it.scoreboardTags.contains("in.knight")) {
+                            clonePiglinBrute(it)
+                        }
+                    }
+                }
+                "sanctum" -> entitiesInStructure.filterIsInstance<Illager>().forEach {
+                    //scoreboardTags.contains("in.sanctum")
+                    if (!it.scoreboardTags.contains(EntityTags.CLONED)) {
+                        cloneIllagerSanctum(it)
+                        // 30% chance to spawn a third vindicator
+                        if ((0..10).random() > 3 && it is Vindicator) {
+                            cloneIllagerSanctum(it)
+                        }
+                    }
+                }
+            }
+
+        }
+        // End structure populate
+
+    }
+
+
+    /*-----------------------------------------------------------------------------------------------*/
+
     private fun mobNaturalStructureSpawning(event: CreatureSpawnEvent) {
         val mob = event.entity
         // Get from registry
@@ -108,8 +153,6 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             }
         }
     }
-
-    /*-----------------------------------------------------------------------------------------------*/
 
     private fun mineshaftSpawning(event: CreatureSpawnEvent) {
         val mob = event.entity
@@ -240,7 +283,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
         // All Shadow Chamber Mobs
         mob.apply {
             // handlers
-            addScoreboardTag(EntityTags.HANDLED)
+            addScoreboardTag(EntityTags.SPAWN_HANDLED)
             addScoreboardTag(EntityTags.SHADOW_MOB)
             // Stats
             setHealthAttribute(10.0, AttributeTags.SHADOW_CHAMBERS_HEALTH_BONUS)
@@ -282,7 +325,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
         // All Mobs
         mob.apply {
             // handlers
-            addScoreboardTag(EntityTags.HANDLED)
+            addScoreboardTag(EntityTags.SPAWN_HANDLED)
             // Stats
             setHealthAttribute(10.0, AttributeTags.TERMINAL_GRID_HEALTH_BONUS)
             heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
@@ -318,7 +361,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
         // All Mobs
         mob.apply {
             // handlers
-            addScoreboardTag(EntityTags.HANDLED)
+            addScoreboardTag(EntityTags.SPAWN_HANDLED)
             // Stats
             setHealthAttribute(10.0, AttributeTags.HYPERCUBIC_CHAMBER_HEALTH_BONUS)
             heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
@@ -370,7 +413,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
         // All Mobs
         mob.apply {
             // handlers
-            addScoreboardTag(EntityTags.HANDLED)
+            addScoreboardTag(EntityTags.SPAWN_HANDLED)
             // Stats
             setHealthAttribute(10.0, AttributeTags.SUNKEN_LIBRARY_HEALTH_BONUS)
             heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
@@ -383,112 +426,82 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
         return
     }
 
+
     /*-----------------------------------------------------------------------------------------------*/
-    // OLD
-    fun mobStructureSpawning(event: ChunkPopulateEvent) {
-        val pigList = event.chunk.entities.filter { it.type == EntityType.PIGLIN_BRUTE }
-        if (pigList.isNotEmpty()) {
-            pigList.forEach { brute ->
-                // Incendium
-                if (!brute.scoreboardTags.contains("in.pyro") && !brute.scoreboardTags.contains(EntityTags.CLONED)) {
-                    handlePiglinBruteSpawn(brute as PiglinBrute)
-                    if (brute.scoreboardTags.contains("in.knight")) {
-                        handlePiglinBruteSpawn(brute)
-                    }
-                }
-            }
-        }
-
-        // Incendium
-        val illagerList = event.chunk.entities.filter { it.scoreboardTags.contains("in.sanctum") && it is Illager }
-        if(illagerList.isNotEmpty()) {
-            illagerList.forEach { illager ->
-                handleSanctumSpawn(illager as Illager)
-                if (illager is Vindicator) {
-                    handleSanctumSpawn(illager as Illager)
-                }
-            }
-        }
-
-    }
-
     // INCENDIUM
-    private fun handleSanctumSpawn(illager: Illager) {
-        (illager.world.spawnEntity(illager.location, illager.type, CreatureSpawnEvent.SpawnReason.CUSTOM) as Illager).apply {
+
+    private fun cloneIllagerSanctum(illager: Illager) : Illager {
+        return (illager.world.spawnEntity(
+            illager.location,
+            illager.type,
+            CreatureSpawnEvent.SpawnReason.CUSTOM) as Illager).apply {
+            // Set data
             isPersistent = true
             removeWhenFarAway = false
             scoreboardTags.addAll(illager.scoreboardTags)
             scoreboardTags.add(EntityTags.CLONED)
-            equipment.armorContents = illager.equipment.armorContents
-            equipment.helmetDropChance = illager.equipment.helmetDropChance
-            equipment.chestplateDropChance = illager.equipment.chestplateDropChance
-            equipment.bootsDropChance = illager.equipment.bootsDropChance
-            equipment.itemInMainHandDropChance = illager.equipment.itemInMainHandDropChance
-            equipment.itemInOffHandDropChance = illager.equipment.itemInOffHandDropChance
-            equipment.setItemInMainHand(illager.equipment.itemInMainHand)
-            equipment.setItemInOffHand(illager.equipment.itemInOffHand)
+            // Copy equipment
+            copyMobEquipment(this, illager)
         }
     }
 
-    internal fun handlePiglinBruteSpawn(brute: PiglinBrute) : PiglinBrute {
-        return (brute.world.spawnEntity(brute.location, brute.type, CreatureSpawnEvent.SpawnReason.CUSTOM) as PiglinBrute).apply {
+    internal fun clonePiglinBrute(brute: PiglinBrute) : PiglinBrute {
+        return (brute.world.spawnEntity(
+            brute.location,
+            brute.type,
+            CreatureSpawnEvent.SpawnReason.CUSTOM) as PiglinBrute).apply {
+            // Set Data
             isPersistent = true
             removeWhenFarAway = false
             scoreboardTags.addAll(brute.scoreboardTags)
             scoreboardTags.add(EntityTags.CLONED)
             server.scoreboardManager.mainScoreboard.getEntityTeam(brute)?.addEntity(this)
             customName(brute.customName())
-            equipment.armorContents = brute.equipment.armorContents
-            equipment.helmetDropChance = brute.equipment.helmetDropChance
-            equipment.chestplateDropChance = brute.equipment.chestplateDropChance
-            equipment.bootsDropChance = brute.equipment.bootsDropChance
-            equipment.itemInMainHandDropChance = brute.equipment.itemInMainHandDropChance
-            equipment.itemInOffHandDropChance = brute.equipment.itemInOffHandDropChance
-            equipment.setItemInMainHand(brute.equipment.itemInMainHand)
-            equipment.setItemInOffHand(brute.equipment.itemInOffHand)
+
+            // Copy equipment
+            copyMobEquipment(this, brute)
+
             // Roll for trim
             var promoted = true
-            var rank = 2
+            var rank = 0
             var trimMaterial: TrimMaterial? = null
-            when((0..100).random()) {
-                in 0..5 -> {
+            when((0..110).random()) {
+                in 0..9 -> {
                     trimMaterial = TrimMaterial.NETHERITE
                     rank = 4
                 }
-                in 6..30 -> {
-                    trimMaterial = TrimMaterial.GOLD
+                in 10..29 -> {
+                    trimMaterial = TrimMaterial.DIAMOND
                     rank = 3
                 }
-                else -> {
-                    promoted = false
+                in 30..59 -> {
+                    trimMaterial = TrimMaterial.GOLD
+                    rank = 2
                 }
+                in 60..100 -> {
+                    trimMaterial = TrimMaterial.COPPER
+                    rank = 1
+                }
+                else -> promoted = false
             }
             if (promoted) {
                 // TrimMaterials
                 val newTrim = ArmorTrim(trimMaterial!!, TrimPattern.SNOUT)
-                if (equipment.helmet.itemMeta is ArmorMeta) {
-                    val newMeta = (equipment.helmet.itemMeta as ArmorMeta)
-                    newMeta.trim = newTrim
-                }
-                if (equipment.chestplate.itemMeta is ArmorMeta) {
-                    val newMeta = (equipment.chestplate.itemMeta as ArmorMeta)
-                    newMeta.trim = newTrim
-                }
-                if (equipment.leggings.itemMeta is ArmorMeta) {
-                    val newMeta = (equipment.leggings.itemMeta as ArmorMeta)
-                    newMeta.trim = newTrim
-                }
-                if (equipment.boots.itemMeta is ArmorMeta) {
-                    val newMeta = (equipment.boots.itemMeta as ArmorMeta)
-                    newMeta.trim = newTrim
-                }
+                trimMobArmor(this, newTrim)
+                // New stats based on rank
+                val bonusHealth = (rank * 4.0)
+                val bonusDamage = (rank * 1.0)
+                setHealthAttribute(bonusHealth)
+                addAttackAttribute(bonusDamage)
             }
-            val bonusHealth = (rank * 3.0) + 4.0
-            val bonusDamage = (rank * 2.0) + 1.0
-            setHealthAttribute(bonusHealth)
-            addAttackAttribute(bonusDamage)
+            // Random Enchant
+            val eMax = maxOf((rank * 5), 1) // Clamp from 1..x
+            enchantRandomMobArmor(this, 1..eMax)
+
         }
     }
+
+
 
 
 }

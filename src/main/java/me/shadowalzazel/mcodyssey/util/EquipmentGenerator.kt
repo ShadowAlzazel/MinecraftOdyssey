@@ -113,25 +113,4 @@ interface EquipmentGenerator : ToolMaker, ItemToolTipManager {
         return dataItems
     }
 
-    /*-----------------------------------------------------------------------------------------------*/
-
-    fun LivingEntity.setArmorDropChances(chance: Float) {
-        this.equipment?.also {
-            it.helmetDropChance = chance
-            it.chestplateDropChance = chance
-            it.leggingsDropChance = chance
-            it.bootsDropChance = chance
-        }
-    }
-
-    fun LivingEntity.setArmor(list: List<ItemStack>) {
-        // Apply
-        this.equipment?.also {
-            it.setHelmet(list[0])
-            it.setChestplate(list[1])
-            it.setLeggings(list[2])
-            it.setBoots(list[3])
-        }
-    }
-
 }

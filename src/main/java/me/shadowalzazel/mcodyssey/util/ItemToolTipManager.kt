@@ -215,6 +215,28 @@ interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
                     }
                 }
             }
+            // Check enchantments that modify base stats.
+            if (hasEnchants) {
+                for (enchant in enchantments) {
+                    when(enchant.key.getNameId()) {
+                        "sharpness" -> {
+                            flatAttackDamage += (0.5 * enchant.value + 0.5)
+                        }
+                        "agile" -> {
+                            percentAttackSpeed += (0.05 * enchant.value)
+                        }
+                    }
+                }
+
+                /*
+                if (enchantments.contains(getNamedEnchantment("sharpness"))) {
+                    val level = enchantments[getNamedEnchantment("sharpness")!!]!!
+                    flatAttackDamage += (0.5 * level + 0.5)
+                }
+                 */
+            }
+
+
             // Calculate Per Seconds
             val speedFinal = flatAttackSpeed * (1 + percentAttackSpeed)
             attacksPerSecond = (20 / (round(20 / speedFinal))) // APS = 20 / (round (20 / speed))

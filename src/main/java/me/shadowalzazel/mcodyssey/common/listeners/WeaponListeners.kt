@@ -62,7 +62,6 @@ import java.util.*
 // can tp if throw another
 // Offhand DeprecatedWeapon
 
-@Suppress("UnstableApiUsage")
 object WeaponListeners : Listener, WeaponCombatHandler, WeaponProjectileHandler, EnchantmentManager {
 
     private val markedVoidTargets = mutableMapOf<UUID, Entity>()
@@ -80,7 +79,7 @@ object WeaponListeners : Listener, WeaponCombatHandler, WeaponProjectileHandler,
         val player = event.damager as Player
         val victim = event.entity as LivingEntity
         // Further checks
-        val mainWeapon = player.equipment!!.itemInMainHand
+        val mainWeapon = player.equipment.itemInMainHand
         //val offHandWeapon = player.equipment.itemInOffHand
         // Get weapon type
         val mainWeaponType = mainWeapon.getStringTag(ItemDataTags.TOOL_TYPE)
@@ -132,7 +131,7 @@ object WeaponListeners : Listener, WeaponCombatHandler, WeaponProjectileHandler,
 
     private fun leftClickHandler(event: PlayerInteractEvent) {
         val player = event.player
-        val mainWeapon = player.equipment!!.itemInMainHand
+        val mainWeapon = player.equipment.itemInMainHand
         // Sentries
         if (!mainWeapon.hasItemMeta()) return
         if (!mainWeapon.itemMeta!!.hasCustomModelData()) return
@@ -146,8 +145,8 @@ object WeaponListeners : Listener, WeaponCombatHandler, WeaponProjectileHandler,
     // For dual wielding weapons or special attacks
     private fun rightClickHandler(event: PlayerInteractEvent) {
         val player = event.player
-        val mainWeapon = player.equipment!!.itemInMainHand
-        val offHandWeapon = player.equipment!!.itemInOffHand
+        val mainWeapon = player.equipment.itemInMainHand
+        val offHandWeapon = player.equipment.itemInOffHand
         // Offhand Dual Weldable
         when(val offWeaponType = offHandWeapon.getStringTag(ItemDataTags.TOOL_TYPE)) {
             "dagger", "sickle", "chakram", "cutlass" -> {
@@ -179,7 +178,7 @@ object WeaponListeners : Listener, WeaponCombatHandler, WeaponProjectileHandler,
 
     private fun kunaiThrowableHandler(event: PlayerInteractEvent) {
         val player = event.player
-        val weapon = player.equipment!!.itemInMainHand
+        val weapon = player.equipment.itemInMainHand
         if (player.getCooldown(weapon.type) > 0) return
         // Spawn Kunai
         (player.world.spawnEntity(player.eyeLocation, EntityType.SNOWBALL) as Snowball).also {
@@ -198,10 +197,10 @@ object WeaponListeners : Listener, WeaponCombatHandler, WeaponProjectileHandler,
 
     private fun chakramThrowableHandler(event: PlayerInteractEvent) {
         val player = event.player
-        val mainWeapon = player.equipment!!.itemInMainHand // Is chakram
+        val mainWeapon = player.equipment.itemInMainHand // Is chakram
         chakramWeaponThrown(mainWeapon, player)
         // Check if dual wielding chakram
-        val offhand = player.equipment!!.itemInOffHand
+        val offhand = player.equipment.itemInOffHand
         if (offhand.getStringTag(ItemDataTags.TOOL_TYPE) == "chakram") {
             chakramWeaponThrown(offhand, player)
         }
@@ -234,7 +233,7 @@ object WeaponListeners : Listener, WeaponCombatHandler, WeaponProjectileHandler,
 
     private fun shurikenThrowableHandler(event: PlayerInteractEvent) {
         val player = event.player
-        val throwable = player.equipment!!.itemInMainHand
+        val throwable = player.equipment.itemInMainHand
         if (player.getCooldown(throwable.type) > 0) return
         // Spawn Shuriken
         (player.world.spawnEntity(player.eyeLocation, EntityType.SNOWBALL) as Snowball).also {
@@ -315,7 +314,6 @@ object WeaponListeners : Listener, WeaponCombatHandler, WeaponProjectileHandler,
     }
 
     // For thrown kunai hitting target
-    @Suppress("UnstableApiUsage")
     private fun kunaiHitEntityHandler(event: ProjectileHitEvent) {
         val projectile: Projectile = event.entity
         if (projectile !is ThrowableProjectile) return

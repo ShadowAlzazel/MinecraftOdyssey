@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.util
 
 import io.papermc.paper.datacomponent.DataComponentTypes
+import io.papermc.paper.datacomponent.item.ItemArmorTrim
 import io.papermc.paper.registry.RegistryKey
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.enchantments.OdysseyEnchantments
@@ -9,20 +10,35 @@ import me.shadowalzazel.mcodyssey.common.items.ToolType
 import me.shadowalzazel.mcodyssey.util.constants.*
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
+import org.bukkit.Material
 import org.bukkit.entity.*
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.trim.ArmorTrim
+import java.util.Random
 import kotlin.math.absoluteValue
 import kotlin.math.pow
 
 @Suppress("UnstableApiUsage")
 interface MobMaker : EquipmentGenerator {
 
+    fun getDistanceDifficulty(entity: Entity): Double {
+        // Find the XY distance from zero
+        val distanceFromZero = entity.location.clone().let {
+            it.toBlockLocation()
+            it.y = 0.0
+            it.distance(it.clone().zero()).absoluteValue
+        }
+        // Formula
+        val scaleDist = 1.0 / 14000.0
+        return (scaleDist * distanceFromZero) + (scaleDist * distanceFromZero).pow(2)
+    }
+
 
     fun eliteMobCreator(event: CreatureSpawnEvent) {
         val mob = event.entity
         if (mob is Creeper) return
-        if (mob.scoreboardTags.contains(EntityTags.HANDLED)) return
+        if (mob.scoreboardTags.contains(EntityTags.SPAWN_HANDLED)) return
         // Surface Spawns for now -> fix for mob farms
         //if (mob.location.block.lightFromSky < 1) return
         val inEdge = mob.location.world == Odyssey.instance.edge
@@ -136,9 +152,9 @@ interface MobMaker : EquipmentGenerator {
         mob.apply {
             canPickupItems = true
             isPersistent = false
-            addScoreboardTag(EntityTags.HANDLED)
+            addScoreboardTag(EntityTags.SPAWN_HANDLED)
             // Add Items
-            setArmor(armorList)
+            setNewArmor(armorList)
             equipment?.also {
                 it.setItemInMainHand(mainHand)
                 it.itemInMainHandDropChance = (0.15F * (difficulty)).toFloat()  + 0.025F
@@ -202,11 +218,11 @@ interface MobMaker : EquipmentGenerator {
             // Options
             isPersistent = false
             customName(newName)
-            addScoreboardTag(EntityTags.HANDLED)
+            addScoreboardTag(EntityTags.SPAWN_HANDLED)
             isCustomNameVisible = true
             canPickupItems = true
             // Add Items
-            setArmor(armorList)
+            setNewArmor(armorList)
             equipment?.also {
                 it.setItemInMainHand(mainHand)
                 it.itemInMainHandDropChance = (0.15F * (difficulty)).toFloat() + 0.05F
@@ -234,17 +250,96 @@ interface MobMaker : EquipmentGenerator {
         addScoreboardTag(EntityTags.ELITE_MOB)
     }
 
+    /*-----------------------------------------------------------------------------------------------*/
 
-    fun getDistanceDifficulty(entity: Entity): Double {
-        // Find the XY distance from zero
-        val distanceFromZero = entity.location.clone().let {
-            it.toBlockLocation()
-            it.y = 0.0
-            it.distance(it.clone().zero()).absoluteValue
-        }
-        // Formula
-        val scaleDist = 1.0 / 14000.0
-        return (scaleDist * distanceFromZero) + (scaleDist * distanceFromZero).pow(2)
+    fun trimMobArmor(entity: LivingEntity, armorTrim: ArmorTrim) {
+        val equipment = entity.equipment ?: return
+        // Get Armor and add Trim
+        val armor = getArmorItems(entity) ?: return
+        armor.forEach { it.addDataTrim(armorTrim) }
+        // Set new equipment
+        entity.setNewArmor(armor)
     }
+
+
+    fun enchantRandomMobArmor(entity: LivingEntity, levelRange: IntRange) {
+        val equipment = entity.equipment ?: return
+        // Random levels
+        val random = Random(Odyssey.instance.seed) //WORLD SEED
+        // Get Armor and enchant
+        val armor = getArmorItems(entity) ?: return
+        for (x in 0..3) {
+            // Enchant with levels returns a copy DOES NOT change original
+            val item = armor[x]
+            if (item.isEmpty) continue
+            if (item.type == Material.AIR) continue
+            // Ignore if already enchanted
+            val hasEnchants = !item.getData(DataComponentTypes.ENCHANTMENTS)?.enchantments().isNullOrEmpty()
+            if (hasEnchants) continue
+            // Enchant and copy
+            val enchanted = item.enchantWithLevels(levelRange.random(), false, random)
+            armor[x] = enchanted
+        }
+        entity.setNewArmor(armor)
+    }
+
+    /*
+    * Copies the equipment and equipment chances from one mob to another
+    */
+    fun copyMobEquipment(entity: LivingEntity, provider: LivingEntity) {
+        val providerEquipment = provider.equipment ?: return
+        entity.equipment?.apply {
+            armorContents = providerEquipment.armorContents
+            setItemInMainHand(providerEquipment.itemInMainHand)
+            setItemInOffHand(providerEquipment.itemInOffHand)
+            // Copy Chances
+            helmetDropChance = providerEquipment.helmetDropChance
+            chestplateDropChance = providerEquipment.chestplateDropChance
+            leggingsDropChance = providerEquipment.leggingsDropChance
+            bootsDropChance = providerEquipment.bootsDropChance
+            itemInMainHandDropChance = providerEquipment.itemInMainHandDropChance
+            itemInOffHandDropChance = providerEquipment.itemInOffHandDropChance
+        }
+    }
+
+
+    private fun ItemStack.addDataTrim(armorTrim: ArmorTrim) {
+        if (this.type != Material.AIR) {
+            val newArmorTrim = ItemArmorTrim.itemArmorTrim(armorTrim)
+            this.setData(DataComponentTypes.TRIM, newArmorTrim)
+        }
+    }
+
+
+    fun LivingEntity.setArmorDropChances(chance: Float) {
+        this.equipment?.also {
+            it.helmetDropChance = chance
+            it.chestplateDropChance = chance
+            it.leggingsDropChance = chance
+            it.bootsDropChance = chance
+        }
+    }
+
+    fun LivingEntity.setNewArmor(list: List<ItemStack>) {
+        // Apply
+        this.equipment?.also {
+            it.setHelmet(list[0])
+            it.setChestplate(list[1])
+            it.setLeggings(list[2])
+            it.setBoots(list[3])
+        }
+    }
+
+    fun getArmorItems(entity: LivingEntity): MutableList<ItemStack>? {
+        val equipment = entity.equipment ?: return null
+        val armorContents = mutableListOf(
+            equipment.helmet,
+            equipment.chestplate,
+            equipment.leggings,
+            equipment.boots,
+        )
+        return armorContents
+    }
+
 
 }

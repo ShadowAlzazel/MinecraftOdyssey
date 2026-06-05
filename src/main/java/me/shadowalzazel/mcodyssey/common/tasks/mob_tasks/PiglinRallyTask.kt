@@ -15,7 +15,7 @@
 
          brute.getNearbyEntities(7.0, 6.0, 7.0).forEach {
              if (it is PiglinBrute && it != brute) {
-                 val new = SpawningListeners.handlePiglinBruteSpawn(it)
+                 val new = SpawningListeners.clonePiglinBrute(it)
                  new.addScoreboardTag(EntityTags.STARTED_RALLYING)
              }
              it.addScoreboardTag(EntityTags.STARTED_RALLYING)

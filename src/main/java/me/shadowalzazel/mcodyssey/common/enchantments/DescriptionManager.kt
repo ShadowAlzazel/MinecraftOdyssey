@@ -268,7 +268,7 @@ interface DescriptionManager {
             "impetus" -> listOf( // Moved from Leggings -> Melee
                 "- While moving, deal ${5 + level * 5}%=[5 + (level x 5)] increased damage.")
             "invocative" -> listOf( // The previous enemy you have damaged
-                "- Attacking deals ${level * 10}%=[level x 10] damage to the previous enemy you have attacked.")
+                "- Attacking deals ${level * 15}%=[level x 15] Void Damage to the last enemy you have damaged.")
             "magic_aspect" -> listOf(
                 "- Convert ${level * 5}%=[level x 5] of Final damage into Magic type damage.")
             "pestilence" -> listOf(
@@ -506,13 +506,16 @@ interface DescriptionManager {
             "press_the_attack" -> listOf(
                 "- The first 3 Attacks on a target has its damage increased by ${20 * level}%=[level x 20]."
             )
+            "bastion/fortify" -> listOf(
+                "- Standing still increases damage."
+            )
 
             // Names for void:
             // Evocation, Invocation, Invocative, Spectral Slash, void rift.
             // Eldritch
 
             "invocative" -> listOf( // Maybe can be another damage type
-                "- Attacking deals ${level * 20}%=[level x 20] Void Damage to the last enemy you have damaged.")
+                "- Attacking deals ${level * 15}%=[level x 15] Void Damage to the last enemy you have damaged.")
             "evocation" -> listOf( // The previous enemy you have damaged
                 "- Attacking an enemy leaves behind a Void Rift. When ever you attack",
                 "any target within 1 block of the Rift also gets attacked.")

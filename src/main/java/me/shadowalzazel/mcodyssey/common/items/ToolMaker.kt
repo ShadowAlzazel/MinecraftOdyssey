@@ -101,6 +101,9 @@ interface ToolMaker : AttributeManager, DataTagManager, ToolComponentHelper {
             // ---------------------------------------------------------
             // Assign Special Combat Components
 
+            // Remove old data first
+            this.unsetData(DataComponentTypes.KINETIC_WEAPON)
+
             // Damage Types one of (Slash, Pierce, Blunt)
             val damageType = DamageType.PLAYER_ATTACK
             this.setData(DataComponentTypes.DAMAGE_TYPE, damageType)

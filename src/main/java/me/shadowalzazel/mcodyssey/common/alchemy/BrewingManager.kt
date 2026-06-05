@@ -42,36 +42,39 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
         for (x in 0..2) {
             val input = brewerSlots[x]?.clone() ?: continue
             if (input.type == Material.AIR) continue
-            val oldPotionData = input.getData(DataComponentTypes.POTION_CONTENTS) ?: continue
+            val oldPotionComponent = input.getData(DataComponentTypes.POTION_CONTENTS) ?: continue
             // Create Enhanced Potions
             var enhancedRecipe = true
-            if (inputIsGeneric(input)) { // Enhanced Potions can not be upgraded
+            var isPotionVial = false
+            if (inputIsNotEnhanced(input)) { // Enhanced Potions can not be upgraded
                 when(ingredient.type) {
-                    Material.GLOW_BERRIES ->  event.results[x] = createUpgradedPlusPotion(input) // Maybe move to Cauldron?
-                    Material.HONEY_BOTTLE ->  event.results[x] = createExtendedPlusPotion(input) // Maybe move to Cauldron?
+                    Material.GLOW_BERRIES -> event.results[x] = createUpgradedPlusPotion(input)
+                    Material.HONEY_BOTTLE -> event.results[x] = createExtendedPlusPotion(input)
                     Material.EXPERIENCE_BOTTLE -> event.results[x] = createAuraPotion(input)
                     Material.FIRE_CHARGE -> event.results[x] = createBlastPotion(input)
                     Material.PRISMARINE_CRYSTALS ->  {
                         event.results[x] = createPotionVials(input)
-                        continue
+                        isPotionVial = true
                     }
                     // Maybe create a sticky/spreading potion?
                     else -> enhancedRecipe = false
                 }
-                // Update models for non vials
-                if (enhancedRecipe) { // Continue if created a new Enhanced Type
+                // Update models for non vials and vanilla potions
+                if (!isPotionVial && !enhancedRecipe) { // For Vanilla Potions
                     event.results[x].updatePotionModel(bottleModel, capModel, "alchemy_potion")
+                    event.results[x].setData(DataComponentTypes.MAX_STACK_SIZE, 8)
+                    // Continue to next potion
                     continue
                 }
             }
-            // Get result
+            // Get The result BEFORE the logic
             var result = event.results[x] // Result != Input item in Brewer
-            if (result.hasTag(ItemDataTags.IS_POTION_VIAL)) {
-                continue
+            if (result.hasTag(ItemDataTags.IS_POTION_VIAL) || isPotionVial) {
+                continue // Skip all potion vials
             }
             // Checking for potion data and effects
-            val hadBasePotion = oldPotionData.potion() != null
-            val hadCustomEffects = oldPotionData.customEffects().isNotEmpty()
+            val hadBasePotion = oldPotionComponent.potion() != null
+            val hadCustomEffects = oldPotionComponent.customEffects().isNotEmpty()
             val hadCustomModel = input.getData(DataComponentTypes.ITEM_MODEL) != null
             //val hasOdysseyPotionEffects = item.hasOdysseyEffectTag() -> eventually add support for odyssey effects
             // Model Customization
@@ -81,11 +84,11 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
                 result.updatePotionModel(bottleModel, capModel, "alchemy_potion")
             }
             // Set stack size
-            result.setData(DataComponentTypes.MAX_STACK_SIZE, 16)
-            // Set Data from OLD item
+            result.setData(DataComponentTypes.MAX_STACK_SIZE, 8)
+            // Set Potion Data of old CUSTOM EFFECT item with bew modek
             if (hadCustomEffects) {
                 result = convertPotionType(result, getIngredientResult(ingredient))
-                result.setData(DataComponentTypes.POTION_CONTENTS, oldPotionData)
+                result.setData(DataComponentTypes.POTION_CONTENTS, oldPotionComponent)
                 // TODO: Do Non-vanilla upgrades
             }
             // Just set model for base potion
@@ -133,7 +136,7 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
     }
 
 
-    private fun inputIsGeneric(potion: ItemStack): Boolean {
+    private fun inputIsNotEnhanced(potion: ItemStack): Boolean {
         //val hasPotionTag: (String) -> Boolean = { tag: String -> potion.hasTag(tag)}
         if (potion.hasTag(ItemDataTags.IS_POTION_VIAL)) return false
         if (potion.hasTag(ItemDataTags.IS_EXTENDED_PLUS)) return false
