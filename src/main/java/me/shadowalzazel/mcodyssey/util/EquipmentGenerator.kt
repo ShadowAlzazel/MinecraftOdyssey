@@ -12,7 +12,6 @@ import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import me.shadowalzazel.mcodyssey.util.constants.MobData
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.trim.ArmorTrim
 import org.bukkit.inventory.meta.trim.TrimMaterial
@@ -23,7 +22,7 @@ import java.util.*
 interface EquipmentGenerator : ToolMaker, ItemToolTipManager {
 
     // Equipment Randomizer
-    fun EquipmentRandomizer.newWeapon(randomParts: Boolean = true): ItemStack {
+    fun EquipmentRandomBuilder.newWeapon(randomParts: Boolean = true): ItemStack {
         return if (randomParts) {
             generateCompositeWeapon(listOf(toolType), listOf(toolMaterial), MobData.ALL_PARTS)
         } else {
@@ -31,7 +30,7 @@ interface EquipmentGenerator : ToolMaker, ItemToolTipManager {
         }
     }
 
-    fun EquipmentRandomizer.newTrimmedArmor(): List<ItemStack> {
+    fun EquipmentRandomBuilder.newTrimmedArmor(): List<ItemStack> {
         return generateTrimmedArmorSet(armorMaterial, listOf(armorTrim.material), listOf(armorTrim.pattern))
     }
 

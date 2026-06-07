@@ -7,7 +7,7 @@ import org.bukkit.inventory.meta.trim.TrimMaterial
 import org.bukkit.inventory.meta.trim.TrimPattern
 
 @Suppress("JoinDeclarationAndAssignment")
-class EquipmentRandomizer(
+class EquipmentRandomBuilder(
     weaponMaterials: List<ToolMaterial>,
     weaponList: List<ToolType>,
     partList: List<String>,

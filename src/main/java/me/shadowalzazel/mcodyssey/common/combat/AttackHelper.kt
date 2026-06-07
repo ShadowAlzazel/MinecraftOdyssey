@@ -13,6 +13,7 @@ import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import kotlin.math.cos
 import kotlin.math.pow
 
 @Suppress("UnstableApiUsage")
@@ -133,6 +134,33 @@ interface AttackHelper {
         }
         player.resetCooldown()
         player.swingOffHand()
+    }
+
+
+    fun getEntitiesBehindConeFromAttack(
+        attacker: LivingEntity,
+        target: LivingEntity,
+        halfAngleDeg: Double = 30.0,
+        length: Double = 5.0
+    ): List<Entity> {
+        // Attacker's eye direction becomes the cone direction
+        val direction = attacker.eyeLocation.direction.normalize()
+        val halfAngleCos = cos(Math.toRadians(halfAngleDeg))
+
+        return target.world.getNearbyEntities(target.location, length, length, length)
+            .filter { it != target && it != attacker }
+            .filter { entity ->
+                val toEntity = entity.location.toVector()
+                    .subtract(target.location.toVector())
+
+                val dot = toEntity.dot(direction)
+                if (dot <= 0) return@filter false
+
+                if (toEntity.length() > length) return@filter false
+
+                val cosAngle = dot / toEntity.length()
+                cosAngle >= halfAngleCos
+            }
     }
 
 }

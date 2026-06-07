@@ -3,7 +3,7 @@ package me.shadowalzazel.mcodyssey.common.mobs.hostile
 import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
 import me.shadowalzazel.mcodyssey.common.items.ToolType
 import me.shadowalzazel.mcodyssey.common.mobs.base.OdysseyMob
-import me.shadowalzazel.mcodyssey.util.EquipmentRandomizer
+import me.shadowalzazel.mcodyssey.util.EquipmentRandomBuilder
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import net.kyori.adventure.text.Component
 import org.bukkit.Location
@@ -59,7 +59,7 @@ object Vanguard : OdysseyMob("Vanguard", "vanguard", EntityType.SKELETON, 25.0) 
         val offHand = ItemStack(Material.SHIELD)
 
         // Get Equipment Randomizer
-        val equipmentRandomizer = EquipmentRandomizer(
+        val equipmentRandomBuilder = EquipmentRandomBuilder(
             listOf(ToolMaterial.SILVER),
             listOf(ToolType.HALBERD),
             listOf("imperial"),
@@ -68,7 +68,7 @@ object Vanguard : OdysseyMob("Vanguard", "vanguard", EntityType.SKELETON, 25.0) 
             listOf(TrimPattern.WILD))
 
         // Do Custom mob
-        createRandomizedMob(mob, equipmentRandomizer, enchanted = true, newWeapon = false)
+        createRandomizedMob(mob, equipmentRandomBuilder, enchanted = true, newWeapon = false)
 
         // Apply Stats and weapon
         mob.apply {

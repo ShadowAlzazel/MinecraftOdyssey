@@ -978,7 +978,9 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         sneaking: Boolean
     ) {
         if (!sneaking) return
-        val nearby = sneaker.world.getNearbyLivingEntities(sneaker.location, 5.0 + (level * 5)).filter { it != sneaker }
+        val nearby = sneaker.world.getNearbyLivingEntities(sneaker.location, 5.0 + (level * 5))
+            .filter { it != sneaker }
+            .filter { it !is ArmorStand }
         nearby.forEach {
             val destination = EntityDestination(sneaker)
             val distance = it.location.distance(sneaker.location)

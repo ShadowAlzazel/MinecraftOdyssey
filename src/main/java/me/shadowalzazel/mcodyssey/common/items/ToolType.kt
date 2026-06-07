@@ -69,7 +69,7 @@ enum class ToolType(
 
     // Spear Overrides
     SPEAR("spear", "Heavy Spear", 3.0, 1.2, "spear", 2.0),
-    HALBERD("halberd", "Halberd", 5.0, 0.9, "spear",3.0),
+    HALBERD("halberd", "Halberd", 5.0, 0.8, "spear",3.0),
     LANCE("lance", "Lance", 3.0, 0.8, "spear", 3.0),
     POLEAXE("poleaxe", "Poleaxe", 4.0, 1.1, "axe", 1.0),
     GLAIVE("glaive", "Glaive", 4.0, 1.3, "axe", 1.0),

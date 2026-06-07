@@ -154,7 +154,7 @@ interface EffectsManager : EffectTagsManager {
         durationInTicks: Int,
         amplifier: Int
     ) {
-        val freezingPotionEffect = PotionEffect(PotionEffectType.SLOWNESS, durationInTicks, 1)
+        val freezingPotionEffect = PotionEffect(PotionEffectType.SLOWNESS, durationInTicks, 0)
         if (EffectTags.FREEZING !in scoreboardTags) {
             addPotionEffect(freezingPotionEffect)
             addScoreboardTag(EffectTags.FREEZING)

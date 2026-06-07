@@ -7,6 +7,7 @@ import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.*
 
+@Suppress("UnstableApiUsage")
 class UtilitySmithing : ChoiceManager { // USE THIS CLASS TO CREATE RECIPE WHICH ARE AVAILABLE TO BE MODIFIED
 
     fun getRecipes(): List<Recipe> {
@@ -67,6 +68,7 @@ class UtilitySmithing : ChoiceManager { // USE THIS CLASS TO CREATE RECIPE WHICH
                 Material.NETHERITE_LEGGINGS, Material.DIAMOND_LEGGINGS, Material.IRON_LEGGINGS, Material.GOLDEN_LEGGINGS, Material.CHAINMAIL_LEGGINGS, Material.LEATHER_LEGGINGS,
                 Material.NETHERITE_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.IRON_CHESTPLATE, Material.GOLDEN_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, Material.LEATHER_CHESTPLATE,
                 Material.NETHERITE_HELMET, Material.DIAMOND_HELMET, Material.IRON_HELMET, Material.GOLDEN_HELMET, Material.CHAINMAIL_HELMET, Material.LEATHER_HELMET,
+                Material.NETHERITE_SPEAR, Material.DIAMOND_SPEAR, Material.IRON_SPEAR, Material.GOLDEN_SPEAR, Material.STONE_SPEAR, Material.WOODEN_SPEAR,
                 Material.ELYTRA, Material.SHIELD, Material.BOW, Material.CROSSBOW, Material.TRIDENT, Material.FISHING_ROD
             ),
             RecipeChoice.MaterialChoice(Material.PRISMARINE_CRYSTALS, Material.LAPIS_LAZULI)
@@ -165,36 +167,37 @@ class UtilitySmithing : ChoiceManager { // USE THIS CLASS TO CREATE RECIPE WHICH
     /*-----------------------------------------------------------------------------------------------*/
     // For Custom Trims
     private fun customArmorTrimming(): SmithingTrimRecipe {
-        val template = RecipeChoice.MaterialChoice(
-            Material.DUNE_ARMOR_TRIM_SMITHING_TEMPLATE,
-            Material.EYE_ARMOR_TRIM_SMITHING_TEMPLATE,
-            Material.HOST_ARMOR_TRIM_SMITHING_TEMPLATE,
-            Material.COAST_ARMOR_TRIM_SMITHING_TEMPLATE,
-            Material.RAISER_ARMOR_TRIM_SMITHING_TEMPLATE,
-            Material.RIB_ARMOR_TRIM_SMITHING_TEMPLATE,
-            Material.SENTRY_ARMOR_TRIM_SMITHING_TEMPLATE,
-            Material.SHAPER_ARMOR_TRIM_SMITHING_TEMPLATE,
-            Material.SILENCE_ARMOR_TRIM_SMITHING_TEMPLATE,
-            Material.SNOUT_ARMOR_TRIM_SMITHING_TEMPLATE,
-            Material.SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE,
-            Material.TIDE_ARMOR_TRIM_SMITHING_TEMPLATE,
-            Material.VEX_ARMOR_TRIM_SMITHING_TEMPLATE,
-            Material.WARD_ARMOR_TRIM_SMITHING_TEMPLATE,
-            Material.WAYFINDER_ARMOR_TRIM_SMITHING_TEMPLATE,
-            Material.WILD_ARMOR_TRIM_SMITHING_TEMPLATE,
-            Material.FLOW_ARMOR_TRIM_SMITHING_TEMPLATE,
-            Material.BOLT_ARMOR_TRIM_SMITHING_TEMPLATE,
-            Material.PAPER
+        val templates = RecipeChoice.itemType(
+            ItemType.DUNE_ARMOR_TRIM_SMITHING_TEMPLATE,
+            ItemType.EYE_ARMOR_TRIM_SMITHING_TEMPLATE,
+            ItemType.HOST_ARMOR_TRIM_SMITHING_TEMPLATE,
+            ItemType.COAST_ARMOR_TRIM_SMITHING_TEMPLATE,
+            ItemType.RAISER_ARMOR_TRIM_SMITHING_TEMPLATE,
+            ItemType.RIB_ARMOR_TRIM_SMITHING_TEMPLATE,
+            ItemType.SENTRY_ARMOR_TRIM_SMITHING_TEMPLATE,
+            ItemType.SHAPER_ARMOR_TRIM_SMITHING_TEMPLATE,
+            ItemType.SILENCE_ARMOR_TRIM_SMITHING_TEMPLATE,
+            ItemType.SNOUT_ARMOR_TRIM_SMITHING_TEMPLATE,
+            ItemType.SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE,
+            ItemType.TIDE_ARMOR_TRIM_SMITHING_TEMPLATE,
+            ItemType.VEX_ARMOR_TRIM_SMITHING_TEMPLATE,
+            ItemType.WARD_ARMOR_TRIM_SMITHING_TEMPLATE,
+            ItemType.WAYFINDER_ARMOR_TRIM_SMITHING_TEMPLATE,
+            ItemType.WILD_ARMOR_TRIM_SMITHING_TEMPLATE,
+            ItemType.FLOW_ARMOR_TRIM_SMITHING_TEMPLATE,
+            ItemType.BOLT_ARMOR_TRIM_SMITHING_TEMPLATE,
+            ItemType.PAPER
         )
-        val armor = RecipeChoice.MaterialChoice(
-            Material.NETHERITE_BOOTS, Material.DIAMOND_BOOTS, Material.IRON_BOOTS, Material.GOLDEN_BOOTS, Material.CHAINMAIL_BOOTS, Material.LEATHER_BOOTS,
-            Material.NETHERITE_LEGGINGS, Material.DIAMOND_LEGGINGS, Material.IRON_LEGGINGS, Material.GOLDEN_LEGGINGS, Material.CHAINMAIL_LEGGINGS, Material.LEATHER_LEGGINGS,
-            Material.NETHERITE_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.IRON_CHESTPLATE, Material.GOLDEN_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, Material.LEATHER_CHESTPLATE,
-            Material.NETHERITE_HELMET, Material.DIAMOND_HELMET, Material.IRON_HELMET, Material.GOLDEN_HELMET, Material.CHAINMAIL_HELMET, Material.LEATHER_HELMET,
+
+        val armor = RecipeChoice.itemType(
+            ItemType.NETHERITE_BOOTS, ItemType.DIAMOND_BOOTS, ItemType.IRON_BOOTS, ItemType.GOLDEN_BOOTS, ItemType.CHAINMAIL_BOOTS, ItemType.LEATHER_BOOTS,
+            ItemType.NETHERITE_LEGGINGS, ItemType.DIAMOND_LEGGINGS, ItemType.IRON_LEGGINGS, ItemType.GOLDEN_LEGGINGS, ItemType.CHAINMAIL_LEGGINGS, ItemType.LEATHER_LEGGINGS,
+            ItemType.NETHERITE_CHESTPLATE, ItemType.DIAMOND_CHESTPLATE, ItemType.IRON_CHESTPLATE, ItemType.GOLDEN_CHESTPLATE, ItemType.CHAINMAIL_CHESTPLATE, ItemType.LEATHER_CHESTPLATE,
+            ItemType.NETHERITE_HELMET, ItemType.DIAMOND_HELMET, ItemType.IRON_HELMET, ItemType.GOLDEN_HELMET, ItemType.CHAINMAIL_HELMET, ItemType.LEATHER_HELMET,
         )
         return SmithingTrimRecipe(
             NamespacedKey(Odyssey.instance, "custom_armor_trimming"),
-            template,
+            templates,
             armor,
             RecipeChoice.MaterialChoice(
                 Material.IRON_INGOT,

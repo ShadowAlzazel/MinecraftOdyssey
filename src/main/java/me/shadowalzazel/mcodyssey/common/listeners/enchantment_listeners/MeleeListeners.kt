@@ -50,7 +50,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
             event.damageSource.causingEntity
         }
         // Do Item and power checks
-        if (event.damage < 0.0) return // Prevent going through shields
+        if (event.damage <= 0.0) return // Prevent going through shields
         if (attacker !is LivingEntity) return
         if (attacker.equipment?.itemInMainHand?.hasItemMeta() == false) return
         val victim = event.entity as LivingEntity
@@ -72,6 +72,9 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
             when (enchant.key.getNameId()) {
                 "backstabber" -> {
                     percentDamageModifier += backstabberEnchantment(attacker, victim, enchant.value)
+                }
+                "besiege" -> {
+                    percentDamageModifier += besiegeEnchantment(attacker, enchant.value)
                 }
                 "brutality_curse" -> {
                     percentDamageModifier += brutalityCurseEnchantment(attacker, enchant.value)
@@ -194,8 +197,9 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         }
     }
 
+    // TODO!!
     // Main function for shields/blocks
-    @EventHandler
+    //@EventHandler
     fun mainMeleeBlockHandler(event: EntityDamageByEntityEvent) {
         val attacker = if (event.damager is LivingEntity) {
             event.damager as LivingEntity
@@ -256,6 +260,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         if (event.hitBy !is LivingEntity) return
         val attacker = event.hitBy as LivingEntity
         val hitWeapon = attacker.equipment?.itemInMainHand ?: return
+        val originalKnockback = event.knockback.clone()
         // Loop
         for (enchant in hitWeapon.enchantments) {
             when (enchant.key.getNameId()) {
@@ -263,7 +268,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
                     event.knockback = gustEnchantment(event.knockback, enchant.value)
                 }
                 "thunderous" -> {
-
+                    thunderousEnchantment(attacker, event.entity, originalKnockback, enchant.value)
                 }
             }
         }
@@ -362,6 +367,23 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         }
         return 0.0F
 
+    }
+
+    private fun besiegeEnchantment(
+        attacker: LivingEntity,
+        level: Int): Float {
+
+        val isCrouching = attacker is Player && attacker.isSneaking
+        val isNotMoving = attacker.velocity.length() < 0.075
+        if (isCrouching || isNotMoving) {
+            // Effects
+            attacker.world.playSound(attacker.location, Sound.ITEM_SPEAR_ATTACK, 0.7F, 0.7F)
+            val blockData = Material.DEEPSLATE_BRICKS.createBlockData()
+            attacker.world.spawnParticle(Particle.BLOCK, attacker.location, 15, 0.45, 0.8, 0.35, blockData)
+            // Return damage
+            return 0.15F
+        }
+        return 0.0F
     }
 
     private fun brutalityCurseEnchantment(
@@ -594,7 +616,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
 
 
     private fun freezingAspectEnchantment(victim: LivingEntity, level: Int) {
-        victim.addOdysseyEffect(EffectTags.FREEZING, (level * 4) * 20, level)
+        victim.addOdysseyEffect(EffectTags.FREEZING, (level * 4) * 20, 1)
         if (victim.freezeTicks <= 20 * ((4 * level) + 2)) {
             victim.world.spawnParticle(Particle.SNOWFLAKE, victim.location, 5, 0.05, 0.05, 0.05)
             victim.freezeTicks += 40
@@ -942,6 +964,28 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
 
         attacker.teleport(victimLocation)
         victim.teleport(attackerLocation)
+    }
+
+    private fun thunderousEnchantment(
+        attacker: LivingEntity,
+        victim: LivingEntity,
+        knockback: Vector,
+        level: Int
+    ) {
+        val newKnockback = knockback.clone().normalize().multiply(level * 0.4)
+        val entitiesInCone = getEntitiesBehindConeFromAttack(
+            attacker = attacker,
+            target = victim, // or any vector
+            halfAngleDeg = 45.0, // 90deg total cone
+            length = 4.0
+        )
+        entitiesInCone.forEach {
+            it.velocity = newKnockback.clone()
+        }
+        if (entitiesInCone.isNotEmpty()) {
+            attacker.world.playSound(victim.location, Sound.BLOCK_HEAVY_CORE_BREAK, 0.5F, 0.3F)
+        }
+
     }
 
     private fun vitalEnchantment(isCrit: Boolean, level: Int): Float {

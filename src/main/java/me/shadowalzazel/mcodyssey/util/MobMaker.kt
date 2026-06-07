@@ -68,7 +68,7 @@ interface MobMaker : EquipmentGenerator {
             if (mob.location.world.key.key == "overworld") materials.add(ToolMaterial.IRIDIUM)
             if (mob.location.world.key.key == "the_nether") materials.add(ToolMaterial.NETHERITE)
             // Get Equipment Randomizer
-            val equipmentRandomizer = EquipmentRandomizer(
+            val equipmentRandomBuilder = EquipmentRandomBuilder(
                 materials,
                 MobData.ALL_WEAPONS,
                 MobData.ALL_PARTS,
@@ -76,14 +76,14 @@ interface MobMaker : EquipmentGenerator {
                 MobData.ELITE_ARMOR_TRIM_MATS,
                 MobData.SHINY_ARMOR_TRIM_PATTERNS)
             // Create
-            createShinyMob(mob, equipmentRandomizer)
+            createShinyMob(mob, equipmentRandomBuilder)
         }
         // Handle Elite
         else {
             // Equipment Randomizer
             val materials = listOf(ToolMaterial.SILVER, ToolMaterial.TITANIUM, ToolMaterial.ANODIZED_TITANIUM,
                 ToolMaterial.COPPER, ToolMaterial.IRON, ToolMaterial.GOLDEN)
-            val equipmentRandomizer = EquipmentRandomizer(
+            val equipmentRandomBuilder = EquipmentRandomBuilder(
                 materials,
                 MobData.ALL_WEAPONS,
                 MobData.ALL_PARTS,
@@ -103,7 +103,7 @@ interface MobMaker : EquipmentGenerator {
                 mobs.add(newMob)
             }
             mobs.forEach {
-                createRandomizedMob(it, equipmentRandomizer, enchanted=true, newWeapon=true)
+                createRandomizedMob(it, equipmentRandomBuilder, enchanted=true, newWeapon=true)
                 customizeName(it, "$prefix $name", CustomColors.CURSED.color)
             }
         }
@@ -125,7 +125,7 @@ interface MobMaker : EquipmentGenerator {
 
     fun createRandomizedMob(
         mob: LivingEntity,
-        equipmentRandomizer: EquipmentRandomizer,
+        equipmentRandomBuilder: EquipmentRandomBuilder,
         enchanted: Boolean = false,
         newWeapon: Boolean = false)
     {
@@ -134,12 +134,12 @@ interface MobMaker : EquipmentGenerator {
 
         // Methods to create customized equipment
         val mainHand: ItemStack = if (newWeapon) {
-            equipmentRandomizer.newWeapon()
+            equipmentRandomBuilder.newWeapon()
         } else {
-            mob.equipment?.itemInMainHand ?: equipmentRandomizer.newWeapon()
+            mob.equipment?.itemInMainHand ?: equipmentRandomBuilder.newWeapon()
         }
-        val armorList = equipmentRandomizer.newTrimmedArmor()
-        val dualWielding = equipmentRandomizer.toolType in listOf(ToolType.DAGGER, ToolType.CHAKRAM, ToolType.SICKLE, ToolType.CUTLASS)
+        val armorList = equipmentRandomBuilder.newTrimmedArmor()
+        val dualWielding = equipmentRandomBuilder.toolType in listOf(ToolType.DAGGER, ToolType.CHAKRAM, ToolType.SICKLE, ToolType.CUTLASS)
 
         // Enchant
         if (enchanted) {
@@ -171,7 +171,7 @@ interface MobMaker : EquipmentGenerator {
 
     fun createShinyMob(
         mob: LivingEntity,
-        equipmentRandomizer: EquipmentRandomizer,
+        equipmentRandomBuilder: EquipmentRandomBuilder,
         newWeapon: Boolean = true)
     {
         if (mob is Creeper) return
@@ -181,12 +181,12 @@ interface MobMaker : EquipmentGenerator {
 
         // Methods to create customized equipment
         val mainHand: ItemStack = if (newWeapon) {
-            equipmentRandomizer.newWeapon()
+            equipmentRandomBuilder.newWeapon()
         } else {
-            mob.equipment?.itemInMainHand ?: equipmentRandomizer.newWeapon()
+            mob.equipment?.itemInMainHand ?: equipmentRandomBuilder.newWeapon()
         }
-        val armorList = equipmentRandomizer.newTrimmedArmor()
-        val dualWielding = equipmentRandomizer.toolType in listOf(ToolType.DAGGER, ToolType.CHAKRAM, ToolType.SICKLE, ToolType.CUTLASS)
+        val armorList = equipmentRandomBuilder.newTrimmedArmor()
+        val dualWielding = equipmentRandomBuilder.toolType in listOf(ToolType.DAGGER, ToolType.CHAKRAM, ToolType.SICKLE, ToolType.CUTLASS)
 
 
         // Create shiny enchant and enchant main weapon
@@ -274,7 +274,7 @@ interface MobMaker : EquipmentGenerator {
             if (item.isEmpty) continue
             if (item.type == Material.AIR) continue
             // Ignore if already enchanted
-            val hasEnchants = !item.getData(DataComponentTypes.ENCHANTMENTS)?.enchantments().isNullOrEmpty()
+            val hasEnchants = item.getData(DataComponentTypes.ENCHANTMENTS)?.enchantments()?.isNotEmpty() == true
             if (hasEnchants) continue
             // Enchant and copy
             val enchanted = item.enchantWithLevels(levelRange.random(), false, random)

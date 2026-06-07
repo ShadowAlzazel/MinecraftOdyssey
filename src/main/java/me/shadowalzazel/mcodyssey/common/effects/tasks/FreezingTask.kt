@@ -9,7 +9,6 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.scheduler.BukkitRunnable
 
 // FREEZING task
-@Suppress("UnstableApiUsage")
 class FreezingTask(
     private val entity: LivingEntity,
     private val amplifier: Int,

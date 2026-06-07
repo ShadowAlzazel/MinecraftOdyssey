@@ -31,7 +31,7 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager, I
 
         // This item has no enchants
         if (!hasStoredEnchants && !hasItemEnchants) {
-            viewers.forEach { it.sendBarMessage("This item needs to have enchantments to use this tome.") }
+            viewers.forEach { it.broadcastBarMessage("This item needs to have enchantments to use this tome.") }
             return null
         }
 
@@ -71,6 +71,12 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager, I
             }
         }
 
+        // Broadcast what enchant to remove
+        if (dischargeEnchant != null) {
+            val name = dischargeEnchant.key.key
+            viewers.forEach { it.broadcastBarMessage("Removing Enchantment: $name") }
+        }
+
         return item
     }
 
@@ -90,7 +96,7 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager, I
         val meta = item.itemMeta
         val hasStoredEnchants = meta is EnchantmentStorageMeta && meta.storedEnchants.isNotEmpty()
         if (!meta.hasEnchants() && !hasStoredEnchants) {
-            viewers.forEach { it.sendBarMessage("This item needs to be enchanted to use this tome.") }
+            viewers.forEach { it.broadcastBarMessage("This item needs to be enchanted to use this tome.") }
             return null
         }
         // Get Enchant to Upgrade if available
@@ -102,7 +108,7 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager, I
         }
         // Return if no available enchants
         if (availableEnchants.isEmpty()) {
-            viewers.forEach { it.sendBarMessage("This item already has max level enchants!") }
+            viewers.forEach { it.broadcastBarMessage("This item already has max level enchants!") }
             return null
         }
         // Get Enchant
@@ -113,7 +119,7 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager, I
         val usedEnchantabilityPoints = item.getUsedEnchantabilityPoints()
         val potentialNewPoints = usedEnchantabilityPoints - getEnchantabilityCost(enchantToUpgrade) + getEnchantabilityCost(enchantToUpgrade, checkedMaxLevel)
         if (potentialNewPoints > maxEnchantabilityPoints && !hasStoredEnchants) {
-            viewers.forEach { it.sendBarMessage("The enchantment ${enchantToUpgrade.first.key} would be to expensive!") }
+            viewers.forEach { it.broadcastBarMessage("The enchantment ${enchantToUpgrade.first.key} would be to expensive!") }
             return null
         }
         // Upgrade Enchant
@@ -147,7 +153,7 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager, I
         val hasStoredEnchants = meta is EnchantmentStorageMeta && meta.storedEnchants.isNotEmpty()
         val isBook = item.type == Material.ENCHANTED_BOOK || item.type == Material.BOOK
         if (!hasStoredEnchants && !isBook) {
-            viewers.forEach { it.sendBarMessage("This tome can only be used on enchanted books with enchants!") }
+            viewers.forEach { it.broadcastBarMessage("This tome can only be used on enchanted books with enchants!") }
             return null
         }
         return item.clone()
@@ -158,7 +164,7 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager, I
         val hasStoredEnchants = meta is EnchantmentStorageMeta && meta.storedEnchants.isNotEmpty()
         val isBook = item.type == Material.ENCHANTED_BOOK || item.type == Material.BOOK
         if (!hasStoredEnchants && isBook) {
-            viewers.forEach { it.sendBarMessage("This tome can only be used on enchanted books with enchants!") }
+            viewers.forEach { it.broadcastBarMessage("This tome can only be used on enchanted books with enchants!") }
             return null
         }
         meta as EnchantmentStorageMeta
@@ -188,7 +194,7 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager, I
         val storedEnchantments = item.getData(DataComponentTypes.STORED_ENCHANTMENTS)?.enchantments()
         val itemEnchantments = item.getData(DataComponentTypes.ENCHANTMENTS)?.enchantments()
         if (itemEnchantments.isNullOrEmpty() && storedEnchantments.isNullOrEmpty()) {
-            viewers.forEach { it.sendBarMessage("This item needs to be enchanted to use this tome.") }
+            viewers.forEach { it.broadcastBarMessage("This item needs to be enchanted to use this tome.") }
             return null
         }
         // Depends on what data type
@@ -244,7 +250,7 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager, I
         val storedEnchantments = item.getData(DataComponentTypes.STORED_ENCHANTMENTS)?.enchantments()
         val itemEnchantments = item.getData(DataComponentTypes.ENCHANTMENTS)?.enchantments()
         if (itemEnchantments == null && storedEnchantments == null) {
-            viewers.forEach { it.sendBarMessage("This item needs to be enchanted to use this tome.") }
+            viewers.forEach { it.broadcastBarMessage("This item needs to be enchanted to use this tome.") }
             return null
         }
         // Get Extracted
@@ -263,7 +269,7 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager, I
         val meta = item.itemMeta
         val hasStoredEnchants = meta is EnchantmentStorageMeta && meta.storedEnchants.isNotEmpty()
         if (!meta.hasEnchants() && !hasStoredEnchants) {
-            viewers.forEach { it.sendBarMessage("This item needs to be enchanted to use this tome.") }
+            viewers.forEach { it.broadcastBarMessage("This item needs to be enchanted to use this tome.") }
             return null
         }
         return ItemStack(Material.BOOK, 1)
@@ -327,7 +333,7 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager, I
         val maxEnchantabilityPoints = result.getMaxEnchantabilityPoints()
         val usedEnchantabilityPoints = result.getUsedEnchantabilityPoints()
         if (usedEnchantabilityPoints > maxEnchantabilityPoints) {
-            viewers.forEach { it.sendBarMessage("There are too many enchantments to be applied!") }
+            viewers.forEach { it.broadcastBarMessage("There are too many enchantments to be applied!") }
             return null
         }
         return result
@@ -335,7 +341,7 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager, I
 
     /*-----------------------------------------------------------------------------------------------*/
     // Fail Message
-    private fun LivingEntity.sendBarMessage(reason: String, color: TextColor = CustomColors.ENCHANT.color) {
+    private fun LivingEntity.broadcastBarMessage(reason: String, color: TextColor = CustomColors.ENCHANT.color) {
         this.sendActionBar(
             Component.text(
                 reason,

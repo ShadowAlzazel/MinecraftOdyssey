@@ -7,7 +7,7 @@ import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
 import me.shadowalzazel.mcodyssey.common.items.ToolType
 import me.shadowalzazel.mcodyssey.common.trims.TrimMaterials
 import me.shadowalzazel.mcodyssey.common.trims.TrimPatterns
-import me.shadowalzazel.mcodyssey.util.EquipmentRandomizer
+import me.shadowalzazel.mcodyssey.util.EquipmentRandomBuilder
 import me.shadowalzazel.mcodyssey.util.MobMaker
 import me.shadowalzazel.mcodyssey.api.RegistryTagManager
 import me.shadowalzazel.mcodyssey.util.ItemToolTipManager
@@ -192,14 +192,14 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
         val mob = event.entity
         // Create shiny if trial elite
         if (mob.scoreboardTags.contains("odyssey.trial_elite")) {
-            val equipmentRandomizer = EquipmentRandomizer(
+            val equipmentRandomBuilder = EquipmentRandomBuilder(
                 listOf(ToolMaterial.MITHRIL),
                 MobData.ALL_WEAPONS,
                 MobData.ALL_PARTS,
                 null,
                 MobData.ELITE_ARMOR_TRIM_MATS,
                 MobData.SHINY_ARMOR_TRIM_PATTERNS)
-            createShinyMob(mob, equipmentRandomizer, true)
+            createShinyMob(mob, equipmentRandomBuilder, true)
             // Bonus Stats
             mob.addAttackAttribute(8.0, AttributeTags.MOB_ATTACK_DAMAGE)
             mob.addReachAttribute(0.5,  AttributeTags.MOB_REACH)
@@ -235,7 +235,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             val offHand = ItemStack(Material.SHIELD)
 
             // Get Equipment Randomizer
-            val equipmentRandomizer = EquipmentRandomizer(
+            val equipmentRandomBuilder = EquipmentRandomBuilder(
                 listOf(ToolMaterial.IRON),
                 listOf(ToolType.GLAIVE),
                 listOf("imperial", "fancy", "voyager"),
@@ -257,14 +257,14 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
                     it.itemInMainHandDropChance = 0.05F // Change to difficulty
                 }
                 // Do Custom mob
-                createRandomizedMob(this, equipmentRandomizer, enchanted = true, newWeapon = false)
+                createRandomizedMob(this, equipmentRandomBuilder, enchanted = true, newWeapon = false)
             }
         }
         // Basic Mob
         val basicMob = mob.scoreboardTags.isEmpty()
         if (basicMob) {
             // Get Equipment Randomizer
-            val equipmentRandomizer = EquipmentRandomizer(
+            val equipmentRandomBuilder = EquipmentRandomBuilder(
                 listOf(ToolMaterial.DIAMOND),
                 MobData.ALL_WEAPONS,
                 MobData.ALL_PARTS,
@@ -273,7 +273,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
                 MobData.SHADOW_MOB_TRIM_PATTERNS)
 
             // Creator
-            createRandomizedMob(mob, equipmentRandomizer, enchanted = true, newWeapon = true)
+            createRandomizedMob(mob, equipmentRandomBuilder, enchanted = true, newWeapon = true)
             // Stats
             mob.addAttackAttribute(4.0, AttributeTags.MOB_ATTACK_DAMAGE)
             mob.setHealthAttribute(10.0, AttributeTags.MOB_HEALTH)
@@ -307,7 +307,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             mob.addAttackAttribute(8.0, AttributeTags.MOB_ATTACK_DAMAGE)
         } else {
             // Get Equipment Randomizer
-            val equipmentRandomizer = EquipmentRandomizer(
+            val equipmentRandomBuilder = EquipmentRandomBuilder(
                 listOf(ToolMaterial.COPPER),
                 MobData.ALL_WEAPONS,
                 MobData.ALL_PARTS,
@@ -316,7 +316,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
                 listOf(TrimPatterns.VOYAGER))
 
             // Creator
-            createRandomizedMob(mob, equipmentRandomizer, enchanted = true, newWeapon = true)
+            createRandomizedMob(mob, equipmentRandomBuilder, enchanted = true, newWeapon = true)
             // Stats
             mob.addAttackAttribute(1.0, AttributeTags.MOB_ATTACK_DAMAGE)
             mob.setHealthAttribute(10.0, AttributeTags.MOB_HEALTH)
@@ -343,7 +343,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
         // Guard Skeletons and Wither Skeletons
         if (mob is Skeleton) {
             // Get Equipment Randomizer
-            val equipmentRandomizer = EquipmentRandomizer(
+            val equipmentRandomBuilder = EquipmentRandomBuilder(
                 listOf(ToolMaterial.IRON),
                 MobData.ALL_WEAPONS,
                 MobData.ALL_PARTS,
@@ -352,7 +352,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
                 listOf(TrimPatterns.VOYAGER, TrimPattern.BOLT, TrimPattern.RAISER))
 
             // Creator
-            createRandomizedMob(mob, equipmentRandomizer, enchanted = true, newWeapon = true)
+            createRandomizedMob(mob, equipmentRandomBuilder, enchanted = true, newWeapon = true)
             // Stats
             mob.addAttackAttribute(1.0, AttributeTags.MOB_ATTACK_DAMAGE)
             mob.setHealthAttribute(10.0, AttributeTags.MOB_HEALTH)
@@ -378,7 +378,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
         val mob = event.entity
         if (mob is Skeleton || mob is WitherSkeleton) {
             // Get Equipment Randomizer
-            val equipmentRandomizer = EquipmentRandomizer(
+            val equipmentRandomBuilder = EquipmentRandomBuilder(
                 listOf(ToolMaterial.SILVER, ToolMaterial.IRON),
                 MobData.ALL_WEAPONS,
                 MobData.ALL_PARTS,
@@ -387,7 +387,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
                 listOf(TrimPatterns.VOYAGER, TrimPattern.BOLT, TrimPattern.RAISER))
 
             // Creator
-            createRandomizedMob(mob, equipmentRandomizer, enchanted = true, newWeapon = true)
+            createRandomizedMob(mob, equipmentRandomBuilder, enchanted = true, newWeapon = true)
             // Stats
             mob.addAttackAttribute(2.0, AttributeTags.MOB_ATTACK_DAMAGE)
             mob.setHealthAttribute(10.0, AttributeTags.MOB_HEALTH)

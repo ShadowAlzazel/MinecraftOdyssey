@@ -429,6 +429,8 @@ interface DescriptionManager {
                 "- Convert ${level * 10}%=[level x 10] of Final damage into Void type damage.")
 
             // New Melee
+            "besiege" -> listOf( // Melee (2 cost, max 4)
+                "- Standing still or Crouching increases damage by ${15 * level}%=[level x 15].")
             "duelist" -> listOf( // Melee (2 cost, max 5)
                 "- If you and the target are the only entities within 10 blocks,",
                 "Damage is increased by ${10 * level}%=[level x 10] and blocking/parrying is 25% more effective.")
@@ -470,7 +472,8 @@ interface DescriptionManager {
 
             // Charge/Piercing weapons
             "thunderous" -> listOf(
-                "- Knockback is also applied to a cone behind the attacked target.")
+                "- Knockback is also applied at ${30 * level}%=[level x 30] potency",
+                "to targets in a cone behind the damaged target.")
 
             // BLOCKS/PARRY
             "riposte" -> listOf(
@@ -506,9 +509,7 @@ interface DescriptionManager {
             "press_the_attack" -> listOf(
                 "- The first 3 Attacks on a target has its damage increased by ${20 * level}%=[level x 20]."
             )
-            "bastion/fortify" -> listOf(
-                "- Standing still increases damage."
-            )
+
 
             // Names for void:
             // Evocation, Invocation, Invocative, Spectral Slash, void rift.
