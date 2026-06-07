@@ -3,6 +3,7 @@ package me.shadowalzazel.mcodyssey.common.mobs.hostile
 import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
 import me.shadowalzazel.mcodyssey.common.items.ToolType
 import me.shadowalzazel.mcodyssey.common.mobs.base.OdysseyMob
+import me.shadowalzazel.mcodyssey.common.trims.TrimPatterns
 import me.shadowalzazel.mcodyssey.util.EquipmentRandomBuilder
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import net.kyori.adventure.text.Component
@@ -15,7 +16,6 @@ import org.bukkit.entity.Skeleton
 import org.bukkit.entity.SkeletonHorse
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.trim.TrimMaterial
-import org.bukkit.inventory.meta.trim.TrimPattern
 import java.util.*
 
 object Vanguard : OdysseyMob("Vanguard", "vanguard", EntityType.SKELETON, 25.0) {
@@ -41,7 +41,7 @@ object Vanguard : OdysseyMob("Vanguard", "vanguard", EntityType.SKELETON, 25.0) 
     override fun createMob(world: World, location: Location): Skeleton {
         val mob = super.createMob(world, location) as Skeleton
         // Weapon
-        val mainHand = createToolStack(ToolMaterial.IRON, ToolType.POLEAXE)
+        val mainHand = createToolStack(ToolMaterial.IRON, ToolType.HALBERD)
         val weapon = mainHand.clone()
         // Add Enchantments
         val enchantItem = ItemStack(Material.NETHERITE_SWORD).enchantWithLevels(30, false, Random())
@@ -64,22 +64,22 @@ object Vanguard : OdysseyMob("Vanguard", "vanguard", EntityType.SKELETON, 25.0) 
             listOf(ToolType.HALBERD),
             listOf("imperial"),
             null,
-            listOf(TrimMaterial.DIAMOND),
-            listOf(TrimPattern.WILD))
+            listOf(TrimMaterial.GOLD),
+            listOf(TrimPatterns.VOYAGER))
 
         // Do Custom mob
-        createRandomizedMob(mob, equipmentRandomBuilder, enchanted = true, newWeapon = false)
+        createArmoredMob(mob, equipmentRandomBuilder, enchantWeapon = true, replaceOldWeapon = false)
 
         // Apply Stats and weapon
         mob.apply {
             setHealthAttribute(25.0, AttributeTags.MOB_HEALTH)
             heal(25.0)
-            addAttackAttribute(10.0, AttributeTags.MOB_ATTACK_DAMAGE)
+            addAttackAttribute(2.0, AttributeTags.MOB_ATTACK_DAMAGE)
             addScaleAttribute(0.1, AttributeTags.MOB_SCALE)
             equipment.also {
                 it.setItemInOffHand(offHand)
                 it.setItemInMainHand(weapon)
-                it.itemInMainHandDropChance = 0.05F // Change to difficulty
+                it.itemInMainHandDropChance = 0.01F
             }
         }
         return mob

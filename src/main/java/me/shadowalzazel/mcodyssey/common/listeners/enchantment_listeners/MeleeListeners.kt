@@ -95,7 +95,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
                     percentDamageModifier += guardingStrikeEnchantment(attacker, enchant.value)
                 }
                 "life_force" -> {
-                    percentDamageModifier += lifeForceEnchantment(attacker, enchant.value)
+                    flatDamageModifier += lifeForceEnchantment(attacker, enchant.value)
                 }
                 "illucidation" -> {
                     percentDamageModifier += illucidationEnchantment(victim, enchant.value, event.isCritical)
@@ -760,8 +760,9 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
     ): Float {
         val maxHealth = attacker.getAttribute(Attribute.MAX_HEALTH)?.value ?: 20.0
         val isBelowHalf = attacker.health / maxHealth < 0.5
-        if (isBelowHalf) return ((maxHealth * (0.05F * level)) * 2.0F).toFloat()
-        return (maxHealth * (0.05F * level)).toFloat()
+        val flatDamage = maxHealth * (0.05F * level)
+        if (isBelowHalf) return (flatDamage * 2.0F).toFloat()
+        return (flatDamage).toFloat()
     }
 
     private fun mirrorForceEnchantment(

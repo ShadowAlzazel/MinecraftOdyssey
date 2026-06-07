@@ -17,6 +17,7 @@ object AttributeTags {
     const val ELITE_SPEED = "mob.elite.speed"
     const val ELITE_ATTACK_DAMAGE = "mob.elite.attack_damage"
     const val ELITE_STEP_HEIGHT = "mob.elite.step_height"
+    const val ELITE_SPEED_NERF = "mob.elite.speed_nerf"
 
     // Edge Bonus
     const val MOB_EDGE_HEALTH_BONUS = "mob.edge.health_bonus"

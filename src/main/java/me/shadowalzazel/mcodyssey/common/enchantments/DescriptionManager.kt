@@ -392,7 +392,7 @@ interface DescriptionManager {
             "moon_walker" -> listOf( // boots
                 "- Reduce gravity by ${level * 10}%=[level x 10].")
             "life_force" -> listOf( // Melee
-                "- Increase damage based on ${level * 5}%=[level x 5] max health.",
+                "- Increase Base Damage based on ${level * 5}%=[level x 5] max health.",
                 "- This effect is doubled while below 50% max health.")
 
             // Curses
@@ -436,8 +436,8 @@ interface DescriptionManager {
                 "Damage is increased by ${10 * level}%=[level x 10] and blocking/parrying is 25% more effective.")
             "laceration" -> listOf(
                 "- Deals bonus damage to unarmored targets.")
-            "back_pedal" -> listOf(
-                "- On a successful attack, lunge backwards.")
+            "backdraft" -> listOf(
+                "- On a successful attack, get pushed backwards. ")
             "miscalibrate" -> listOf( // Melee (2 cost, max 5)
                 "- On a successful attack, lower immunity by ${level}=[level] ticks.")
             "unyielding" -> listOf( // Melee (2 cost) max 4

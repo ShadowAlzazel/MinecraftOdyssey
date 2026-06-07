@@ -30,7 +30,10 @@ interface RegistryTagManager {
     /**
      * Gets a custom collection from a custom DataPack data tag registry.
      */
-    fun <T: Keyed> getTagFromRegistry(registryKey: RegistryKey<T>, location: String, namespace: String="odyssey"): Tag<T> {
+    fun <T: Keyed> getTagFromRegistry(
+        registryKey: RegistryKey<T>,
+        location: String,
+        namespace: String): Tag<T> {
         //val blockRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.BLOCK)
         //val tagKey = TagKey.create(RegistryKey.BLOCK, NamespacedKey.minecraft("mineable/axe"))
         //return blockRegistry.getTag(tagKey)
@@ -56,7 +59,10 @@ interface RegistryTagManager {
      *
      * Example: val armorSet = getCollectionFromTag(RegistryKey.ENCHANTMENT, "in_table/armor")
      */
-    fun <T: Keyed> getCollectionFromKey(registryKey: RegistryKey<T>, location: String, namespace: String="odyssey"): Collection<T> {
+    fun <T: Keyed> getCollectionFromKey(
+        registryKey: RegistryKey<T>,
+        location: String,
+        namespace: String): Collection<T> {
         // Create a tag with given registry key and location
         val registry = getPaperRegistry(registryKey)
         val tag = getTagFromRegistry(registryKey, location, namespace)

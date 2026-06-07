@@ -83,6 +83,12 @@ object WeaponListeners : Listener, WeaponCombatHandler, WeaponProjectileHandler,
         //val offHandWeapon = player.equipment.itemInOffHand
         // Get weapon type
         val mainWeaponType = mainWeapon.getStringTag(ItemDataTags.TOOL_TYPE)
+        // If special custom weapon -1 damage because attribute bug
+        if (mainWeaponType != null) {
+            event.damage -= 1
+            event.damage = maxOf(0.0, event.damage)
+        }
+
         //val mainWeaponMaterial = mainWeapon.getStringTag(ItemDataTags.MATERIAL_TYPE)
         // Sweep damage should not? call other bonuses?
         if (event.cause == EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) {

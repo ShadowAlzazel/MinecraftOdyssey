@@ -6,7 +6,7 @@ import me.shadowalzazel.mcodyssey.common.trims.TrimPatterns
 import org.bukkit.inventory.meta.trim.TrimMaterial
 import org.bukkit.inventory.meta.trim.TrimPattern
 
-object MobData {
+object EliteMobsData {
 
     val DANGER_PREFIXES = setOf(
         "Deadly", "Magnificent", "Terrorizing", "Classic", "Potent", "Dominant", "Forceful", "Mighty",

@@ -9,7 +9,7 @@ import me.shadowalzazel.mcodyssey.common.items.ToolMaker
 import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
 import me.shadowalzazel.mcodyssey.common.items.ToolType
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
-import me.shadowalzazel.mcodyssey.util.constants.MobData
+import me.shadowalzazel.mcodyssey.util.constants.EliteMobsData
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -24,7 +24,7 @@ interface EquipmentGenerator : ToolMaker, ItemToolTipManager {
     // Equipment Randomizer
     fun EquipmentRandomBuilder.newWeapon(randomParts: Boolean = true): ItemStack {
         return if (randomParts) {
-            generateCompositeWeapon(listOf(toolType), listOf(toolMaterial), MobData.ALL_PARTS)
+            generateCompositeWeapon(listOf(toolType), listOf(toolMaterial), EliteMobsData.ALL_PARTS)
         } else {
             generateCompositeWeapon(listOf(toolType), listOf(toolMaterial), listOf(toolPattern))
         }

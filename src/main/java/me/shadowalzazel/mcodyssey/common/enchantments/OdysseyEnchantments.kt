@@ -124,12 +124,12 @@ object OdysseyEnchantments : EnchantmentManager, RegistryTagManager {
     //getTagFromRegistry(RegistryKey.ENCHANTMENT, "curse") -> returns enchants in datapack with curse
 
 
-    val inTableMelee = getCollectionFromKey(RegistryKey.ENCHANTMENT, "in_table/melee")
-    val nonTableMelee = getCollectionFromKey(RegistryKey.ENCHANTMENT, "non_table/melee")
+    val inTableMelee = getCollectionFromKey(RegistryKey.ENCHANTMENT, "in_table/melee", "odyssey")
+    val nonTableMelee = getCollectionFromKey(RegistryKey.ENCHANTMENT, "non_table/melee", "odyssey")
 
-    val rangedSet = getCollectionFromKey(RegistryKey.ENCHANTMENT, "in_table/range")
-    val armorSet = getCollectionFromKey(RegistryKey.ENCHANTMENT, "in_table/armor")
-    val MISC_SET = getCollectionFromKey(RegistryKey.ENCHANTMENT, "in_table/other")
+    val rangedSet = getCollectionFromKey(RegistryKey.ENCHANTMENT, "in_table/range", "odyssey")
+    val armorSet = getCollectionFromKey(RegistryKey.ENCHANTMENT, "in_table/armor", "odyssey")
+    val MISC_SET = getCollectionFromKey(RegistryKey.ENCHANTMENT, "in_table/other", "odyssey")
 
     val meleeSet = inTableMelee + nonTableMelee
 

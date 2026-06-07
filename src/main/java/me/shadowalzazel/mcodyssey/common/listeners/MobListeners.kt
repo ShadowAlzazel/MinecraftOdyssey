@@ -65,14 +65,19 @@ object MobListeners : Listener, DataTagManager {
     }
 
     @EventHandler
-    fun piglinDifficulty(event: EntityDamageByEntityEvent) {
+    fun piglinBattleCry(event: EntityDamageByEntityEvent) {
+        // Get piglin
         if (event.entity !is PiglinBrute) return
         if (event.damager !is Player) return
         if (event.cause != EntityDamageEvent.DamageCause.PROJECTILE) return
+        // Get brute
         val brute = event.entity as PiglinBrute
         brute.target = event.damager as Player
+
+        // Check if knight
         if (brute.scoreboardTags.contains("in.knight")) {
             val top = event.damager.location.clone().add(0.0, 10.0, 0.0)
+            // Get all brutes to target player
             top.getNearbyLivingEntities(5.0).forEach { if (it is PiglinBrute) { it.target = brute.target } }
         }
     }
@@ -86,7 +91,7 @@ object MobListeners : Listener, DataTagManager {
     }
 
     @EventHandler
-    private fun piglinHelp(event: EntityDamageByEntityEvent) {
+    private fun piglinReinforcements(event: EntityDamageByEntityEvent) {
         if (event.damager !is Player) return
         if (event.entity !is PiglinBrute) return
         val brute = event.entity as PiglinBrute
@@ -98,7 +103,7 @@ object MobListeners : Listener, DataTagManager {
         if (!roll) { return }
 
         brute.also {
-            // FIND
+            // Find reinforcements
             var far = 0.0
             var helper: PiglinBrute? = null
             it.getNearbyEntities(16.0, 6.0, 16.0).filterIsInstance<PiglinBrute>().forEach { piglin ->
