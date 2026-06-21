@@ -33,7 +33,11 @@ class ToolRecipeCreator : DataTagManager, ChoiceManager, ToolMaker {
         "sword" to listOf(
             "X",
             "X",
-            "|")
+            "|"),
+        "spear" to listOf(
+            "  X",
+            " | ",
+            "|  "),
     )
 
     private fun createToolRecipe(material: ToolMaterial, type: ToolType): Recipe {
@@ -64,9 +68,9 @@ class ToolRecipeCreator : DataTagManager, ChoiceManager, ToolMaker {
     fun generateToolRecipes(): List<Recipe> {
         val recipes = mutableListOf<Recipe>()
         // Get Base Tools
-        val baseTools = listOf(ToolType.SWORD, ToolType.PICKAXE, ToolType.AXE, ToolType.SHOVEL, ToolType.HOE)
+        val baseTools = listOf(ToolType.SWORD, ToolType.PICKAXE, ToolType.AXE, ToolType.SHOVEL, ToolType.HOE, ToolType.SPEAR)
         val baseMaterials = listOf(
-            ToolMaterial.WOODEN, ToolMaterial.GOLDEN, ToolMaterial.STONE,
+            ToolMaterial.WOODEN, ToolMaterial.GOLDEN, ToolMaterial.STONE, ToolMaterial.COPPER,
             ToolMaterial.IRON, ToolMaterial.DIAMOND, ToolMaterial.NETHERITE)
         val toolMaterialEntries = ToolMaterial.entries.toMutableList()
         toolMaterialEntries.removeAll(baseMaterials)

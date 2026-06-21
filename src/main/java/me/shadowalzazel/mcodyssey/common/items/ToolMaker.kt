@@ -101,23 +101,27 @@ interface ToolMaker : AttributeManager, DataTagManager, ToolComponentHelper {
             // ---------------------------------------------------------
             // Assign Special Combat Components
 
-            // Remove old data first
-            this.unsetData(DataComponentTypes.KINETIC_WEAPON)
-
             // Damage Types one of (Slash, Pierce, Blunt)
-            val damageType = DamageType.PLAYER_ATTACK
-            this.setData(DataComponentTypes.DAMAGE_TYPE, damageType)
+            val defaultDamageType = DamageType.PLAYER_ATTACK
             if (type.toolName in WeaponMaps.PIERCING_WEAPONS) {
+                // Set Damage type
+                val piercingDamageType = DamageType.SPEAR
+                this.setData(DataComponentTypes.DAMAGE_TYPE, piercingDamageType)
+                // Set piercing weapon
                 val piercingData = PiercingWeapon.piercingWeapon()
                     .dealsKnockback(true)
                     .build()
                 this.setData(DataComponentTypes.PIERCING_WEAPON, piercingData)
             }
             else if (type.toolName in WeaponMaps.SLASHING_WEAPONS) {
-
+                val slashingDamageType = DamageType.PLAYER_ATTACK
+                this.setData(DataComponentTypes.DAMAGE_TYPE, slashingDamageType)
             }
             else if (type.toolName in WeaponMaps.BLUNT_WEAPONS) {
-
+                val bluntDamageType = DamageType.MACE_SMASH
+                this.setData(DataComponentTypes.DAMAGE_TYPE, bluntDamageType)
+            } else {
+                this.setData(DataComponentTypes.DAMAGE_TYPE, defaultDamageType)
             }
 
             // Change swing animation
@@ -154,6 +158,13 @@ interface ToolMaker : AttributeManager, DataTagManager, ToolComponentHelper {
                 this.setData(DataComponentTypes.ATTACK_RANGE, attackRange)
             }
 
+            // Change Spear mechanics
+            if (type.vanillaBase == "spear" && type != ToolType.SPEAR) {
+                // Remove old spear data first
+                this.unsetData(DataComponentTypes.KINETIC_WEAPON)
+                // If Kinetic Charge
+            }
+
             // Assign parry/blocking
             if (type.canParry()) {
                 val damageReductions = DamageReduction.damageReduction()
@@ -185,11 +196,12 @@ interface ToolMaker : AttributeManager, DataTagManager, ToolComponentHelper {
             // Unique
             if (type.toolName == "battlesaw") { //BATTLESAW
                 // Special Block Mechanic
+                this.unsetData(DataComponentTypes.KINETIC_WEAPON)
                 val kineticWeapon = KineticWeapon.kineticWeapon()
                     .delayTicks(16)
                     .damageConditions(
                         KineticWeapon.condition(
-                            100,
+                            200,
                             0.0F,
                             0.0F
                         )

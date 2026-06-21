@@ -8,21 +8,19 @@ import me.shadowalzazel.mcodyssey.datagen.ChoiceManager
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
+import org.bukkit.inventory.ItemType
 import org.bukkit.inventory.Recipe
+import org.bukkit.inventory.RecipeChoice
 import org.bukkit.inventory.RecipeChoice.MaterialChoice
 import org.bukkit.inventory.ShapedRecipe
 import org.bukkit.inventory.recipe.CraftingBookCategory
 
+@Suppress("UnstableApiUsage")
 class WeaponRecipeCreator : DataTagManager, ChoiceManager, ToolMaker {
 
     // Patterns
     private val weaponPatterns = mapOf(
-        // Other Overrides
-        "shuriken" to listOf(
-            " X ",
-            "XCX",
-            " X "),
-        // Sword Overrides
+        // Sword Types
         "katana" to listOf(
             "  X",
             "CX ",
@@ -69,23 +67,15 @@ class WeaponRecipeCreator : DataTagManager, ChoiceManager, ToolMaker {
             " XX",
             "XX ",
             "|  "),
-        // Shovel Overrides
-        "spear" to listOf(
-            "  X",
+
+        // Polearms
+        "pike" to listOf(
+            " X|",
             " | ",
             "|  "),
         "halberd" to listOf(
             " XX",
             " |C",
-            "|  "),
-        "lance" to listOf(
-            "  X",
-            "C| ",
-            "|C "),
-        // Axe Overrides
-        "longaxe" to listOf(
-            "|XX",
-            "|XX",
             "|  "),
         "poleaxe" to listOf(
             "XXX",
@@ -95,56 +85,74 @@ class WeaponRecipeCreator : DataTagManager, ChoiceManager, ToolMaker {
             " XX",
             " |X",
             "|  "),
-        "battlesaw" to listOf(
-            "|CX",
+
+        // Axe Type Weapons
+        "longaxe" to listOf(
+            "|XX",
             "|XX",
             "|  "),
-        // Pickaxe Overrides
+        "double_axe" to listOf(
+            "X X",
+            "X|X",
+            " | "),
+
+        // Blunt Weapons
         "warhammer" to listOf(
             " X ",
             "X|X",
             " | "),
-        // Hoe Overrides
+
+        // Misc Weapons
         "scythe" to listOf(
             "CXX",
             "|  ",
-            "|  ")
+            "|  "),
+        "battlesaw" to listOf(
+            "|CX",
+            "|XX",
+            "|  "),
+
+        // Other
+        "shuriken" to listOf(
+            " X ",
+            "XCX",
+            " X "),
     )
 
     // Complementary Keys
     private val weaponSpecialMaterialKeys = mapOf(
         "shuriken" to mapOf(
-            'C' to MaterialChoice(Material.IRON_NUGGET)
+            'C' to RecipeChoice.itemType(ItemType.IRON_NUGGET)
         ),
         "katana" to mapOf(
-            'C' to MaterialChoice(Material.COPPER_INGOT)
+            'C' to RecipeChoice.itemType(ItemType.COPPER_INGOT)
         ),
         "cutlass" to mapOf(
-            'C' to MaterialChoice(Material.GOLD_INGOT)
+            'C' to RecipeChoice.itemType(ItemType.GOLD_INGOT)
         ),
         "kunai" to mapOf(
-            'C' to MaterialChoice(Material.IRON_NUGGET)
+            'C' to RecipeChoice.itemType(ItemType.IRON_NUGGET)
         ),
         "chakram" to mapOf(
-            'C' to MaterialChoice(Material.RABBIT_HIDE)
+            'C' to RecipeChoice.itemType(ItemType.RABBIT_HIDE)
         ),
         "halberd" to mapOf(
-            'C' to MaterialChoice(Material.PRISMARINE_SHARD)
+            'C' to RecipeChoice.itemType(ItemType.PRISMARINE_SHARD)
         ),
         "lance" to mapOf(
-            'C' to MaterialChoice(Material.RABBIT_HIDE)
+            'C' to RecipeChoice.itemType(ItemType.RABBIT_HIDE)
         ),
         "arm_blade" to mapOf(
-            'C' to MaterialChoice(Material.RABBIT_HIDE)
+            'C' to RecipeChoice.itemType(ItemType.RABBIT_HIDE)
         ),
         "zweihander" to mapOf(
-            'C' to MaterialChoice(Material.BREEZE_ROD)
+            'C' to RecipeChoice.itemType(ItemType.BREEZE_ROD)
         ),
         "battlesaw" to mapOf(
-            'C' to MaterialChoice(Material.HEAVY_CORE)
+            'C' to RecipeChoice.itemType(ItemType.HEAVY_CORE)
         ),
         "scythe" to mapOf(
-            'C' to MaterialChoice(Material.COPPER_INGOT)
+            'C' to RecipeChoice.itemType(ItemType.COPPER_INGOT)
         ),
     )
 
@@ -180,13 +188,13 @@ class WeaponRecipeCreator : DataTagManager, ChoiceManager, ToolMaker {
     fun generateWeaponRecipes(): List<Recipe> {
         val recipes = mutableListOf<Recipe>()
         // Get entries from enums
-        val baseTools = listOf(ToolType.SWORD, ToolType.PICKAXE, ToolType.AXE, ToolType.SHOVEL, ToolType.HOE)
-        val weaponTypeEntries = ToolType.entries.toMutableList()
-        weaponTypeEntries.removeAll(baseTools)
+        val baseTools = ToolType.getVanillaTypes()
+        val odysseyWeaponTypes = ToolType.entries.toMutableList()
+        odysseyWeaponTypes.removeAll(baseTools)
         val toolMaterialEntries = ToolMaterial.entries.toList()
         // Iterator For model type weapons
         for (mat in toolMaterialEntries) {
-            for (type in weaponTypeEntries) {
+            for (type in odysseyWeaponTypes) {
                 recipes.add(createWeaponRecipe(mat, type))
             }
         }

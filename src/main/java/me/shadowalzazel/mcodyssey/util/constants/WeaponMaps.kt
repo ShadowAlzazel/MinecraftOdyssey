@@ -26,6 +26,9 @@ object WeaponMaps {
         "kriegsmesser",
         "glaive",
         "longaxe",
+        "double_axe",
+        "battle_saw",
+        "arm_blade",
         "scythe",
         "shuriken"
     )
@@ -46,7 +49,7 @@ object WeaponMaps {
         "dagger",
         "zweihander",
         "poleaxe",
-        "glaive"
+        "glaive",
     )
 
     val DUAL_WIELDABLE = setOf(
@@ -63,8 +66,8 @@ object WeaponMaps {
     )
 
     val CAN_KINETIC_CHARGE = setOf(
-        "spear",
-        "lance"
+        "pike",
+        "lance",
     )
 
     // PASSIVES
@@ -87,12 +90,15 @@ object WeaponMaps {
     )
 
     val HITBOX_ASSIST = mapOf(
-        "katana" to 0.4F,
-        "claymore" to 0.5F,
-        "longsword" to 0.4F,
-        "cutlass" to 0.4F,
-        "sickle" to 0.5F,
+        "katana" to 0.35F,
+        "claymore" to 0.4F,
+        "longsword" to 0.35F,
+        "double_axe" to 0.35F,
+        "sickle" to 0.45F,
         "scythe" to 0.7F,
+        "battlesaw" to 0.45F,
+        "kriegsmesser" to 0.4F,
+        "zweihander" to 0.45F,
     )
 
     val REQUIRES_TWO_HANDS = setOf(
@@ -114,6 +120,7 @@ object WeaponMaps {
         "spear" to 12,
         "halberd" to 18,
         "lance" to 18,
+        "pike" to 18,
         "poleaxe" to 14,
     )
 
@@ -126,7 +133,7 @@ object WeaponMaps {
         "sickle" to 8,
         "chakram" to 8,
         "zweihander" to 16,
-        "kriegsmesser" to 13,
+        "kriegsmesser" to 14,
         "glaive" to 12,
         "longaxe" to 14,
     )
