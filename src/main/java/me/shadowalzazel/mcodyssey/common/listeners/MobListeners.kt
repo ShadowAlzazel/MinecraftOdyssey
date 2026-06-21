@@ -98,23 +98,29 @@ object MobListeners : Listener, DataTagManager {
         if (brute.scoreboardTags.contains(EntityTags.STARTED_RALLYING)) return
         if (event.cause == EntityDamageEvent.DamageCause.PROJECTILE) return
 
-        // RNG HERE
-        val roll = (1 > (0..40).random())
+        // 2% Chance to call Reinforcements
+        val roll = (2 > (0..100).random())
         if (!roll) { return }
 
         brute.also {
             // Find reinforcements
-            var far = 0.0
-            var helper: PiglinBrute? = null
-            it.getNearbyEntities(16.0, 6.0, 16.0).filterIsInstance<PiglinBrute>().forEach { piglin ->
-                val distance = piglin.location.distance(brute.location)
-                if (distance > far) {
-                    far = distance
-                    helper = piglin
+            val maxDistance = 16.0
+            var foundHelp = false
+            var retreatLocation = brute.location
+            it.getNearbyEntities(22.0, 6.0, 22.0).filterIsInstance<PiglinBrute>().forEach { helper ->
+                val helperDistance = helper.location.distance(it.location)
+                // If in range, set target to piglin target
+                if (helperDistance < maxDistance) {
+                    foundHelp = true
+                    helper.target = brute.target
+                }
+                // if farthest set new retreat there
+                if (retreatLocation.distance(it.location) < helperDistance) {
+                    retreatLocation = helper.location
                 }
             }
-            if (helper == null) return
-            // SOUNDS
+            if (!foundHelp) return
+            // Create Horn
             it.world.playSound(it.location, Sound.ITEM_GOAT_HORN_SOUND_5, 5.5F, 0.95F)
             val horn = ItemStack(Material.GOAT_HORN)
             val musicMeta = horn.itemMeta as MusicInstrumentMeta
@@ -122,14 +128,13 @@ object MobListeners : Listener, DataTagManager {
             horn.itemMeta = musicMeta
             it.equipment.setItemInOffHand(horn)
             it.swingOffHand()
-            // SCORE
+            // Add scoreboard tags and data
             it.addScoreboardTag(EntityTags.STARTED_RALLYING)
             it.addScoreboardTag(EntityTags.RUNNING_PIG)
-            // MOVEMENT
-            val newLocation = helper!!.location.clone()
+            // Pathfinder and retreating
             it.target = null
             it.pathfinder.stopPathfinding()
-            it.pathfinder.moveTo(newLocation, 1.2)
+            it.pathfinder.moveTo(retreatLocation, 1.2)
             it.addPotionEffect(PotionEffect(PotionEffectType.GLOWING, 20 * 8, 0))
         }
 

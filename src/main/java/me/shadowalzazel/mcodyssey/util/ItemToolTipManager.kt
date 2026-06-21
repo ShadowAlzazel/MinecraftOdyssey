@@ -31,8 +31,6 @@ interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
         var usedEnchantabilityPoints = 0
         val enchantabilityMax = 35
         // Logic and ToolTip Vars
-        var hasEnchantToolTip: Boolean = false
-        var hasDescriptionToolTip: Boolean = false
         var showDescriptions: Boolean = false
         var isCustomWeapon: Boolean = false
         var toolTipIndex = 0
@@ -74,18 +72,6 @@ interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
         val hasEnchants = enchantments != null && enchantments.isNotEmpty()
         val hasStoredEnchants = storedEnchantments != null && storedEnchantments.isNotEmpty()
         usedEnchantabilityPoints = this.getUsedEnchantabilityPoints()
-
-        // Get all tool tip tags, add tags if not present.
-        hasEnchantToolTip = this.hasTag(ItemDataTags.HAS_ENCHANT_TOOL_TIP)
-        if (!hasEnchantToolTip) {
-            this.addTag(ItemDataTags.HAS_ENCHANT_TOOL_TIP)
-            hasEnchantToolTip = true
-        }
-        hasDescriptionToolTip = this.hasTag(ItemDataTags.SHOW_TOOL_TIP_DESCRIPTIONS)
-        if (!hasDescriptionToolTip) {
-            this.setBoolTag(ItemDataTags.SHOW_TOOL_TIP_DESCRIPTIONS, true)
-            hasDescriptionToolTip = true
-        }
 
         // Check Toggles
         showDescriptions = this.getBoolTag(ItemDataTags.SHOW_TOOL_TIP_DESCRIPTIONS) ?: false
@@ -186,7 +172,7 @@ interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
             val modifiers = this.getData(DataComponentTypes.ATTRIBUTE_MODIFIERS)
             if (modifiers != null) {
                 for (x in modifiers.modifiers()) {
-                    // Get Attack Speeed
+                    // Get Attack Speed
                     if (x.attribute() == Attribute.ATTACK_SPEED) {
                         // Skip Reset Speed
                         if (x.modifier().key.key == AttributeTags.ITEM_RESET_ATTACK_SPEED) continue
@@ -228,12 +214,6 @@ interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
                     }
                 }
 
-                /*
-                if (enchantments.contains(getNamedEnchantment("sharpness"))) {
-                    val level = enchantments[getNamedEnchantment("sharpness")!!]!!
-                    flatAttackDamage += (0.5 * level + 0.5)
-                }
-                 */
             }
 
 
@@ -272,15 +252,15 @@ interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
 
         // Method to inject and replace the old Odyssey Tool Tip, to keep other flavor text
         // Delete old ToolTip within the header and footer and add the new one
-        if (oldLore != null && !oldLore.contains(toolTipSeperator)) { //TEMP CHECK!!!!!!
-            var end = oldLore.indexOf(toolTipFooter)
-            if (end == -1) end = oldLore.size + 1
-            val oldLoreList = oldLore.subList(startingIndex, end) // Removes list elements between two indexes
-            // Add new lore if oldLoreContains anything
-            if (oldLoreList.isNotEmpty()) {
-                for (x in oldLoreList) {
-                    newToolTip.add(x)
-                }
+        if (oldLore != null) { //TEMP CHECK!!!!!!
+            var oldSeperatorIndex = oldLore.indexOf(toolTipSeperator)
+            // If No Seperator
+            if (oldSeperatorIndex == -1) {
+
+            }
+            // If Seperator
+            else {
+
             }
         }
 

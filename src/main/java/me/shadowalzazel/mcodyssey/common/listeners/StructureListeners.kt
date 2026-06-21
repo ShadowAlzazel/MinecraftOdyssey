@@ -15,6 +15,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import org.bukkit.structure.Structure
 import org.bukkit.util.Vector
 
 object StructureListeners : Listener, StructureHelper {
@@ -24,40 +25,34 @@ object StructureListeners : Listener, StructureHelper {
         if (event.cause != PlayerTeleportEvent.TeleportCause.END_GATEWAY) return
         val player = event.player
         val boundedStructures = getBoundedStructures(player) ?: return
-        // Get from registry
+
         val structureRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.STRUCTURE)
         val obelisk = structureRegistry.get(NamespacedKey(Odyssey.instance, "obelisk")) ?: return
-        // Get dimension
+
         val edge = Odyssey.instance.edge
         val overworld = Odyssey.instance.overworld
-        // Check if inside
-        var obeliskTp = false
-        for (struct in boundedStructures) {
-            // Is Mesa
-            if (struct == obelisk) {
-                obeliskTp = true
+
+        var foundObeliskStructure = false
+        for (s in boundedStructures) {
+            if (s == obelisk) {
+                foundObeliskStructure = true
                 break
             }
         }
-        if (!obeliskTp) return
-        // Get the dimension to teleport to
+        if (!foundObeliskStructure) return
+
+        // Cancel the event FIRST to prevent the vanilla gateway teleport from firing
+        event.isCancelled = true
+
         val newWorld: World = when (player.world) {
-            edge -> {
-                overworld
-            }
-            overworld -> {
-                edge
-            }
-            else -> {
-                overworld
-            }
+            edge -> overworld
+            overworld -> edge
+            else -> overworld
         }
 
-        // Set new location in the other world
         val newLocation = player.location.clone()
         newLocation.world = newWorld
 
-        // Get the opposite obelisk
         val oppositeObelisk = newLocation.world.locateNearestStructure(
             newLocation,
             obelisk,
@@ -65,68 +60,51 @@ object StructureListeners : Listener, StructureHelper {
             false
         )
 
-        var tpInsideChamber = false
-        // Try to TP inside chamber
-        if (oppositeObelisk != null) {
-            val oLoc = oppositeObelisk.location.toHighestLocation(HeightMap.MOTION_BLOCKING)
-            var foundBlock = false
-            var tpBlock: Block? = null
-            // radius to search
-            println("starting obelisk search at $oLoc")
-            val r = 6 // Radius to scan
-            for (dy in -30..5) {
-                if (foundBlock) break
-                for (dz in -r..r) {
-                    if (foundBlock) break
-                    for (dx in -r..r) {
-                        if (foundBlock) break
-                        val scanBlock: Block = oLoc.world.getBlockAt(
-                            (oLoc.x + dx).toInt(),
-                            (oLoc.y + dy).toInt(),
-                            (oLoc.z + dz).toInt())
-                        if (scanBlock.type == Material.END_GATEWAY) {
-                            foundBlock = true
-                            tpBlock = scanBlock
+        // Defer the actual teleport by 1 tick to fully escape the event call stack
+        Odyssey.instance.server.scheduler.runTaskLater(Odyssey.instance, Runnable {
+            var tpInsideChamber = false
+
+            if (oppositeObelisk != null) {
+                val oLoc = oppositeObelisk.location.toHighestLocation(HeightMap.MOTION_BLOCKING)
+                var foundBlock = false
+                var tpBlock: Block? = null
+                val r = 6
+                outer@ for (dy in -30..5) {
+                    for (dz in -r..r) {
+                        for (dx in -r..r) {
+                            val scanBlock = oLoc.world.getBlockAt(
+                                (oLoc.x + dx).toInt(),
+                                (oLoc.y + dy).toInt(),
+                                (oLoc.z + dz).toInt()
+                            )
+                            if (scanBlock.type == Material.END_GATEWAY) {
+                                tpBlock = scanBlock
+                                foundBlock = true
+                                break@outer
+                            }
                         }
                     }
                 }
+
+                if (tpBlock != null) {
+                    tpInsideChamber = true
+                    val final = tpBlock.location.clone()
+                    final.y += 1.0
+                    final.x += listOf(-2.0, 0.0, 2.0).random()
+                    final.z += listOf(-2.0, 0.0, 2.0).random()
+                    player.addPotionEffect(PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 5, 0))
+                    player.teleport(final, PlayerTeleportEvent.TeleportCause.PLUGIN)
+                }
             }
-            // Found TP block run TP
-            if (tpBlock != null) {
-                println("Running Inside TP Chamber on $player")
-                tpInsideChamber = true
-                // Do tp logic
-                val final = tpBlock.location.clone()
-                final.y += 1.0
-                final.x += listOf(-2.0, 0.0, 2.0).random()
-                final.z += listOf(-2.0, 0.0, 2.0).random()
-                player.addPotionEffect(
-                    PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 5, 0)
-                )
-                event.to = final
-                player.teleport(final)
+
+            if (!tpInsideChamber) {
+                val final = newLocation.toHighestLocation(HeightMap.MOTION_BLOCKING)
+                final.y += 10.0
+                if (final.y < 0) final.y += 40
+                player.addPotionEffect(PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 30, 0))
+                player.teleport(final, PlayerTeleportEvent.TeleportCause.PLUGIN)
             }
-        }
-
-        // Fall back if obelisk finder fails
-        if (!tpInsideChamber) {
-            println("Running Fallback Obelisk TP on $player")
-            val final = newLocation.clone().toLocation(newWorld).toHighestLocation(HeightMap.MOTION_BLOCKING)
-            final.y += 10.0
-
-            player.addPotionEffect(
-                PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 30, 0)
-            )
-
-            if (final.y < 0) {
-                final.y += 40
-            }
-            event.to = final
-            player.teleport(final)
-        }
-
-        event.isCancelled = true
-        return
+        }, 1L)
     }
 
 }

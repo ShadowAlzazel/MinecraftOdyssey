@@ -5,7 +5,7 @@
  */
 
 group = "me.shadowalzazel"
-version = "1.1-ALPHA (26.1.2)"
+version = "1.1-ALPHA (26.2)"
 description = "A server side expansion pack for a new minecraft adventure!"
 
 plugins {
@@ -33,10 +33,10 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:26.1.2.build.+")
+    compileOnly("io.papermc.paper:paper-api:26.2.build.+")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
     // Use a specific version instead of .build.+
-    paperweight.paperDevBundle("26.1.2.build.+")
+    paperweight.paperDevBundle("26.2.build.+")
 }
 
 paperweight {

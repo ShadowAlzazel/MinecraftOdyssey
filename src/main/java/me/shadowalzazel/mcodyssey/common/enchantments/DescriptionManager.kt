@@ -228,7 +228,7 @@ interface DescriptionManager {
                 "- Deals ${level}=[level] item damage to armor.",
                 "- Shield disables last for ${level}=[level] more seconds.")
             "committed" -> listOf(
-                "- Increase damage against enemies with less than 40% health by ${level * 15}%=[level x 15].")
+                "- Deal ${level * 15}%=[level x 15] increased damage against enemies with less than 40% health.")
             "cull_the_weak" -> listOf(
                 "- Deal ${level * 15}%=[level x 15] bonus damage to enemies that are impaired by the following:",
                 "Slowness, Weakness, Blindness, or Nausea. These effects can stack individually.")
@@ -509,6 +509,11 @@ interface DescriptionManager {
             "press_the_attack" -> listOf(
                 "- The first 3 Attacks on a target has its damage increased by ${20 * level}%=[level x 20]."
             )
+
+
+            // 1 cost
+            "intrinsic" -> listOf(
+                "- ")
 
 
             // Names for void:

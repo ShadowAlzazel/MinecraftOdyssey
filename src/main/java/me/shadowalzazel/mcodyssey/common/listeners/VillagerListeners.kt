@@ -145,7 +145,6 @@ object VillagerListeners : Listener, RegistryTagManager {
         // level 1
         if (villager.villagerLevel == 1) {   // Apprentice -> Journeyman
             if ((0..10).random() <= 3) {
-                println("Changing Recipe to part Upgrade")
                 event.recipe = RecipeManager.merchantRecipes.createPartUpgradeTemplateTrade()
             }
         }
@@ -153,20 +152,17 @@ object VillagerListeners : Listener, RegistryTagManager {
         // Rank
         if (villager.villagerLevel == 3) {   // Apprentice -> Journeyman
             if ((0..10).random() <= 3) {
-                println("Changing Recipe to Iron Weapon")
                 event.recipe = RecipeManager.merchantRecipes.createIronWeaponTrade()
             }
         }
         else if (villager.villagerLevel == 4) { // Journeyman -> Expert
             if ((0..10).random() <= 4) {
-                println("Changing Recipe to Customized Iron Weapon")
                 val viableParts = listOf(listOf("blade", "hilt").random()) // Just 1 part
                 event.recipe = RecipeManager.merchantRecipes.createCustomizedIronWeaponTrade(viableParts)
             }
         }
         else if (villager.villagerLevel == 5) { // Expert -> Master
             if ((0..10).random() <= 5) {
-                println("Changing Recipe to Customized Diamond Weapon")
                 val viableParts = listOf("blade", "pommel", "hilt")
                 event.recipe = RecipeManager.merchantRecipes.createCustomizedDiamondWeaponTrade(viableParts)
             }
