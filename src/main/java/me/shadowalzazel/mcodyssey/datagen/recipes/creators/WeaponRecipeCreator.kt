@@ -70,8 +70,8 @@ class WeaponRecipeCreator : DataTagManager, ChoiceManager, ToolMaker {
 
         // Polearms
         "pike" to listOf(
-            " X|",
-            " | ",
+            "  X",
+            " C ",
             "|  "),
         "halberd" to listOf(
             " XX",
@@ -146,6 +146,9 @@ class WeaponRecipeCreator : DataTagManager, ChoiceManager, ToolMaker {
             'C' to RecipeChoice.itemType(ItemType.RABBIT_HIDE)
         ),
         "zweihander" to mapOf(
+            'C' to RecipeChoice.itemType(ItemType.BREEZE_ROD)
+        ),
+        "pike" to mapOf(
             'C' to RecipeChoice.itemType(ItemType.BREEZE_ROD)
         ),
         "battlesaw" to mapOf(

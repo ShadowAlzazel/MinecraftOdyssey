@@ -66,11 +66,11 @@ enum class ToolType(
 
     // Heavy Slashing Weapons
     KRIEGSMESSER("kriegsmesser", "Kriegsmesser", 6.0, 1.0, "sword", 0.6),
-    ZWEIHANDER("zweihander", "Zweihander", 7.0, 0.8, "sword", 0.8),
+    ZWEIHANDER("zweihander", "Zweihander", 7.0, 0.8, "sword", 1.0),
 
     // Polearms Weapons
     HALBERD("halberd", "Halberd", 4.0, 0.8, "spear",2.0),
-    PIKE("pike", "Pike", 5.0, 0.6, "spear", 3.0),
+    PIKE("pike", "Pike", 6.0, 0.6, "spear", 3.0),
     POLEAXE("poleaxe", "Poleaxe", 4.0, 1.1, "axe", 1.0),
     GLAIVE("glaive", "Glaive", 4.0, 1.3, "axe", 1.0),
     //JAVELIN("pike", "Pike", 3.0, 1.2, "spear", 2.0),

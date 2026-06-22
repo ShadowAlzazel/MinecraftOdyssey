@@ -47,6 +47,7 @@ object WeaponMaps {
         "saber",
         "sickle",
         "dagger",
+        "kriegsmesser",
         "zweihander",
         "poleaxe",
         "glaive",
@@ -72,18 +73,25 @@ object WeaponMaps {
 
     // PASSIVES
     val DISABLE_SHIELDS = mapOf( // In ticks
+        "longaxe" to 100,
+        "double_axe" to 100,
+        "poleaxe" to 80,
+        "glaive" to 80,
+        "halberd" to 60,
         "warhammer" to 60,
-        "sickle" to 30
+        "sickle" to 40
     )
 
     val CAN_DISMOUNT = setOf(
-        "spear",
-        "halberd"
+        "pike",
+        "halberd",
+        "zweihander",
     )
 
     val MINIMUM_CHARGE = mapOf(
         "halberd" to 0.5,
         "longaxe" to 0.5,
+        "pike" to 0.5,
         "claymore" to 0.3,
         "kriegsmesser" to 0.3,
         "zweihander" to 0.3,
@@ -99,6 +107,7 @@ object WeaponMaps {
         "battlesaw" to 0.45F,
         "kriegsmesser" to 0.4F,
         "zweihander" to 0.45F,
+        "pike" to 0.35F,
     )
 
     val REQUIRES_TWO_HANDS = setOf(

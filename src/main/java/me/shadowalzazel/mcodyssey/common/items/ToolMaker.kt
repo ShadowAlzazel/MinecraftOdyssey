@@ -93,8 +93,14 @@ interface ToolMaker : AttributeManager, DataTagManager, ToolComponentHelper {
                 if (!this.hasData(DataComponentTypes.TOOL)) {
                     val weaponData = Weapon.weapon()
                         .itemDamagePerAttack(1)
-                        .build()
-                    this.setData(DataComponentTypes.WEAPON, weaponData)
+
+                    // Check can disable blocking
+                    val disableBlockingTime = WeaponMaps.DISABLE_SHIELDS[type.toolName]  // Is In Ticks
+                    if (disableBlockingTime != null) {
+                        weaponData.disableBlockingForSeconds(disableBlockingTime / 20F)
+                    }
+                    // Build Weapon Data
+                    this.setData(DataComponentTypes.WEAPON, weaponData.build())
                 }
             }
 
@@ -162,7 +168,33 @@ interface ToolMaker : AttributeManager, DataTagManager, ToolComponentHelper {
             if (type.vanillaBase == "spear" && type != ToolType.SPEAR) {
                 // Remove old spear data first
                 this.unsetData(DataComponentTypes.KINETIC_WEAPON)
-                // If Kinetic Charge
+            }
+
+            // If kinetic charge
+            if (type.canKineticCharge()) {
+                this.unsetData(DataComponentTypes.KINETIC_WEAPON)
+                val kineticWeapon = KineticWeapon.kineticWeapon()
+                    .delayTicks(10)
+                    .damageConditions(
+                        KineticWeapon.condition(
+                            100,
+                            0.0F,
+                            0.0F
+                        )
+                    )
+                    .knockbackConditions(
+                        KineticWeapon.condition(
+                            60,
+                            0.0F,
+                            0.0F
+                        )
+                    )
+                // Check if Pike
+                if (type == ToolType.PIKE) {
+                    kineticWeapon.damageMultiplier(1.5F) // 50% Damage * Speed
+                }
+
+                this.setData(DataComponentTypes.KINETIC_WEAPON, kineticWeapon.build())
             }
 
             // Assign parry/blocking
@@ -195,7 +227,7 @@ interface ToolMaker : AttributeManager, DataTagManager, ToolComponentHelper {
 
             // Unique
             if (type.toolName == "battlesaw") { //BATTLESAW
-                // Special Block Mechanic
+                // Special Hitbox Mechanic
                 this.unsetData(DataComponentTypes.KINETIC_WEAPON)
                 val kineticWeapon = KineticWeapon.kineticWeapon()
                     .delayTicks(16)
