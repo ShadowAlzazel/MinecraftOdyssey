@@ -246,9 +246,6 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
                     "vigor" -> {
                         event.damage += vigorEnchantment(attacker, enchant.value, originalAmount)
                     }
-                    "impetus" -> {
-                        event.damage += impetusEnchantment(attacker, enchant.value, originalAmount)
-                    }
                     "reckless" -> {
                         event.damage += recklessAttackerEnchantment(originalAmount, enchant.value)
                     }
@@ -741,26 +738,15 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
     }
 
     private fun illumineyeEnchantment(
-        entity: LivingEntity,
-        glower: LivingEntity,
+        attacker: LivingEntity,
+        defender: LivingEntity,
         level: Int) {
-        if (!entity.hasLineOfSight(glower)) return
-        if (!glower.hasLineOfSight(entity)) return
-        if (!glower.hasLineOfSight(entity.eyeLocation)) return
-        glower.addPotionEffect(
+        if (!attacker.hasLineOfSight(defender)) return
+        if (!defender.hasLineOfSight(attacker)) return
+        attacker.addPotionEffect(
             PotionEffect(PotionEffectType.GLOWING, (3 + (level * 2)) * 20, 0))
     }
 
-    private fun impetusEnchantment(
-        wearer: LivingEntity,
-        level: Int,
-        amount: Double
-    ): Double {
-        if (wearer.velocity.length() > 0.05) {
-            return amount * (0.05 + (level * 0.08))
-        }
-        return 0.0
-    }
 
     private fun leapFrogSneakEnchantment(
         defender: LivingEntity,

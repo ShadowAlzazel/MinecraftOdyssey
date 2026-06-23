@@ -127,7 +127,8 @@ interface DescriptionManager {
             "analysis" -> listOf( // Helmet
                 "- Increase experience gained by ${level * 10}%=[level x 10].")
             "antibonk" -> listOf( // Helmet
-                "- Reduce critical hit damage by ${level * 10}%=[level x 10].")
+                "- Reduce critical hit damage by ${level * 10}%=[level x 10].",
+                "- Reduce smashing damage by ${level * 4}%=[level x 4].")
             "beastly" -> listOf(
                 "- Increase health by ${level * 0.5}=[level x 0.5] hearts.",
                 "- Increase size by ${level * 3}%=[level x 3].")
@@ -241,7 +242,7 @@ interface DescriptionManager {
             "echo" -> listOf(
                 "- Attacking has a ${20 * level}%=[20 x level] chance to attack again. (Can not re-apply).")
             "execution" -> listOf(
-                "- Execute an enemy if it is below ${level * 2}%=[level x 2] max health.")
+                "- Execute an enemy if it is below ${level * 3}%=[level x 3] max health.")
             "exploding" -> listOf(
                 "- Killing an enemy causes an explosion that damages nearby entities.",
                 "Damage is ${level * 30}%=[level x 30] of the original amount, falling of from the center.")
@@ -258,7 +259,7 @@ interface DescriptionManager {
             "gravity_well" -> listOf(
                 "- Spawn a black hole at the target hit.")
             "gust" -> listOf(
-                "- Targets are knocked-up for ${level * 75}%=[level x 75] of knockback force.")
+                "- Targets are knocked-up for ${level * 50}%=[level x 50] of knockback force.")
             "hemorrhage" -> listOf( // Simple DoT
                 "- Applies a Bleeding effect that ignores armor for 8 seconds.",
                 "Bleeding deals 5% of the original damage every second.")
@@ -466,9 +467,24 @@ interface DescriptionManager {
             "blowback" -> listOf(
                 "- Enemies that attack the shield, are knocked back.")
 
+            // Armor
+            "aerodynamic" -> listOf(
+                "- Reduce air drag by ${5 * level}%=[level x 5].")
+            "slip_n_slide" -> listOf(
+                "- Reduce surface friction by ${20 * level}%=[level x 20].")
+            "bouncy" -> listOf(
+                "- Increase bounciness by ${10 * level}%=[level x 10].")
+            "cloud_strider" -> listOf(
+                "- Crouching in the air causes a small jump. Can only be done $level times."
+            )
+
             // Mining
             "soul_miner" -> listOf( // Incompatible with mending
                 "- Mining a block gives experience.")
+            "strip_TODO" -> listOf(
+                "- Stripping a log, gives sticks 1-${level + 1} sticks.",
+                "- 10% chance to get saplings"
+            )
 
             // Charge/Piercing weapons
             "thunderous" -> listOf(

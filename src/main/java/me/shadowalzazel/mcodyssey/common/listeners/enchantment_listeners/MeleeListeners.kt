@@ -148,6 +148,9 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
                 "echo" -> {
                     echoEnchantment(attacker, victim, enchant.value)
                 }
+                "execution" -> {
+                    executionEnchantment(attacker, victim, enchant.value)
+                }
                 "chain_lightning" -> {
                     chainLightningEnchantment(attacker, victim, event.damage, enchant.value)
                 }
@@ -265,7 +268,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         for (enchant in hitWeapon.enchantments) {
             when (enchant.key.getNameId()) {
                 "gust" -> {
-                    event.knockback = gustEnchantment(event.knockback, enchant.value)
+                    event.knockback = gustEnchantment(originalKnockback, enchant.value)
                 }
                 "thunderous" -> {
                     thunderousEnchantment(attacker, event.entity, originalKnockback, enchant.value)
@@ -374,14 +377,14 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         level: Int): Float {
 
         val isCrouching = attacker is Player && attacker.isSneaking
-        val isNotMoving = attacker.velocity.length() < 0.075
+        val isNotMoving = attacker.velocity.length() < 0.125
         if (isCrouching || isNotMoving) {
             // Effects
             attacker.world.playSound(attacker.location, Sound.ITEM_SPEAR_ATTACK, 0.7F, 0.7F)
             val blockData = Material.DEEPSLATE_BRICKS.createBlockData()
             attacker.world.spawnParticle(Particle.BLOCK, attacker.location, 15, 0.45, 0.8, 0.35, blockData)
             // Return damage
-            return 0.15F
+            return 0.15F * level
         }
         return 0.0F
     }
@@ -484,6 +487,30 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
     }
 
 
+    private fun executionEnchantment(attacker: LivingEntity, victim: LivingEntity, level: Int) {
+        val maxHealth = victim.getAttribute(Attribute.MAX_HEALTH)?.value ?: 20.0
+        val threshHold = maxHealth * (0.03 * level)
+        if (victim.health < threshHold) {
+            victim.world.spawnParticle(Particle.TRIAL_SPAWNER_DETECTION, victim.location, 10, 0.25, 0.25, 0.25)
+            // Execute
+            victim.health = 0.0
+            val damageSource = DamageSource.builder(DamageType.GENERIC_KILL)
+                .withCausingEntity(attacker)
+                .withDirectEntity(attacker)
+                .withDamageLocation(victim.location)
+                .build()
+            victim.kill(damageSource)
+            victim.world.spawnParticle(
+                Particle.RAID_OMEN,
+                victim.location.clone().add(0.0, 0.5, 0.0),
+                20,
+                0.05,
+                0.05,
+                0.05
+            )
+        }
+    }
+
     private fun committedEnchantment(victim: LivingEntity, level: Int): Float {
         val maxHealth = victim.getAttribute(Attribute.MAX_HEALTH)?.value ?: 20.0
         return if (victim.health < maxHealth * 0.4) {
@@ -542,8 +569,6 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
             victim.scoreboardTags.remove(EntityTags.ECHO_STRUCK)
             return
         }
-        // Prevent Spam
-        if (attacker is Player && attacker.attackCooldown < 0.99) return
         if ((0..100).random() < level * 20) {
             if (!victim.isDead) {
                 // Swing
@@ -554,7 +579,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
                     spawnParticle(
                         Particle.SWEEP_ATTACK,
                         victim.location.clone().add(0.0, 0.25, 0.0),
-                        3,
+                        22,
                         0.05,
                         0.05,
                         0.05
@@ -686,9 +711,10 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         vector: Vector,
         level: Int
     ): Vector {
-        val mag = vector.length()
-        val upVector = vector.normalize().clone()
-        val newVector = upVector.setX(0.0).setY(1.0).setZ(0.0).multiply(mag * level)
+        val magnitude = vector.length() * (0.5 * level)
+        val oldVector = vector.normalize().clone()
+        val newVector = oldVector.setX(0.0).setY(1.0).setZ(0.0).normalize().multiply(magnitude)
+
         return newVector
     }
 
