@@ -12,8 +12,7 @@ class ArmorRecipeCreator : ChoiceManager {
     private val patterns = mapOf(
         "helmet" to listOf(
             "XXX",
-            "X X",
-            "   "),
+            "X X"),
         "chestplate" to listOf(
             "X X",
             "XXX",
@@ -24,8 +23,7 @@ class ArmorRecipeCreator : ChoiceManager {
             "X X"),
         "boots" to listOf(
             "X X",
-            "X X",
-            "   ")
+            "X X")
     )
 
     private val armorTypes = listOf(
@@ -41,11 +39,11 @@ class ArmorRecipeCreator : ChoiceManager {
         "soul_steel",
         "titanium",
         "anodized_titanium",
-        "copper",
+        "crystal_alloy",
         "silver"
     )
 
-    private fun createToolRecipe(material: String, type: String): Recipe {
+    private fun createArmorRecipe(material: String, type: String): Recipe {
         // Create Result
         val itemName = "${material}_${type}"
         val result = Item.DataItem(itemName).newItemStack(1)
@@ -71,7 +69,7 @@ class ArmorRecipeCreator : ChoiceManager {
         val recipes = mutableListOf<Recipe>()
         for (mat in armorMaterials) {
             for (type in armorTypes) {
-                recipes.add(createToolRecipe(mat, type))
+                recipes.add(createArmorRecipe(mat, type))
             }
         }
 

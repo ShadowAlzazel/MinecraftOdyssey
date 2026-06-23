@@ -18,6 +18,8 @@ import org.bukkit.Vibration
 import org.bukkit.Vibration.Destination.EntityDestination
 import org.bukkit.attribute.Attribute
 import org.bukkit.block.data.type.Leaves
+import org.bukkit.damage.DamageSource
+import org.bukkit.damage.DamageType
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -36,146 +38,122 @@ import java.util.*
 @Suppress("UnstableApiUsage")
 object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
 
-    // Main function for enchantments relating to entity damage for armor
+    // Everything any armor enchant might need .
+    private data class ArmorEnchantContext(
+        val event: EntityDamageByEntityEvent,
+        val holder: LivingEntity,    // the wearer whose enchant is firing
+        val opponent: LivingEntity,  // the other party in the hit
+        val level: Int,
+        val mods: DamageMods,
+        val bonusImmunityTime: MutableList<Int>,
+    )
+
+    private class DamageMods {
+        var flat: Float = 0.0f         // raw base added before percent
+        var percent: Float = 0.0f      // summed, applied as (1 + percent)
+        var postPercent: Float = 1.0f  // multiplied last (e.g. magic)
+    }
+
+    private val armorDefenseEnchantmentsMap: Map<String, (ArmorEnchantContext) -> Unit> = mapOf(
+        // --- percent reductions (subtract from percent) ---
+        "antibonk"   to { c -> c.mods.percent -= antibonkEnchantment(c.event.isCritical, c.level) },
+        "relentless" to { c -> c.mods.percent -= relentlessEnchantment(c.holder, c.level) },
+        "blurcise"   to { c -> c.mods.percent -= blurciseEnchantment(c.holder, c.level) },
+        "brawler"    to { c -> c.mods.percent -= brawlerArmorEnchantment(c.holder, c.level) },
+
+        // --- percent increases (add to percent) ---
+        "reckless"   to { c -> c.mods.percent += recklessDefenderEnchantment(c.level) },
+
+        // --- flat (base damage changes) ---
+        "root_boots" to { c -> c.mods.flat -= rootBootsDefenseHandler(c.holder, c.level).toFloat() },
+
+        // --- side effects only, untouched ---
+        "illumineye"       to { c -> illumineyeEnchantment(c.opponent, c.holder, c.level) },
+        "opticalization"   to { c -> opticalizationHitEnchantment(c.holder, c.opponent, c.level) },
+        "sslither_ssight"  to { c -> sslitherSsightEnchantment(c.opponent, c.holder, c.level) },
+        "veiled_in_shadow" to { c -> veiledInShadowEnchantment(c.holder, c.level, c.bonusImmunityTime) },
+        "black_rose"       to { c -> stxRoseHitEnchantment(c.opponent, c.level) },
+        "ignore_pain"      to { c -> ignorePainEnchantment(c.holder, c.level) },
+        "molten_core"      to { c -> moltenCoreEnchantment(c.holder, c.opponent, c.level) },
+        "untouchable"      to { c -> untouchableEnchantment(c.holder, c.bonusImmunityTime) },
+        "cowardice"        to { c -> cowardiceEnchantment(c.opponent, c.holder, c.level) },
+        "sporeful"         to { c -> sporefulEnchantment(c.holder, c.level) },
+        "squidify"         to { c -> squidifyEnchantment(c.holder, c.level) },
+    )
+
+    private val armorAttackEnchantmentsMap: Map<String, (ArmorEnchantContext) -> Unit> = mapOf(
+        "vigor"            to { c -> c.mods.percent += vigorEnchantment(c.holder, c.level) },
+        "reckless"         to { c -> c.mods.percent += recklessAttackerEnchantment(c.level) },
+
+        "mandiblemania"    to { c -> mandiblemaniaEnchantment(c.holder, c.level) },
+        "opticalization"   to { c -> opticalizationHitEnchantment(c.opponent, c.holder, c.level) },
+        "illumineye"       to { c -> illumineyeEnchantment(c.opponent, c.holder, c.level) },
+        "static_socks"     to { c -> staticSocksAttackEnchantment(c.holder, c.opponent, c.level)}
+    )
+
+
+    private fun processArmor(
+        holder: LivingEntity,
+        opponent: LivingEntity,
+        event: EntityDamageByEntityEvent,
+        map: Map<String, (ArmorEnchantContext) -> Unit>,
+        mods: DamageMods,
+        bonusImmunityTime: MutableList<Int>,
+    ) {
+        val pieces = listOfNotNull(
+            holder.equipment?.helmet,
+            holder.equipment?.chestplate,
+            holder.equipment?.leggings,
+            holder.equipment?.boots,
+        )
+        for (piece in pieces) {
+            if (!piece.hasItemMeta()) continue
+            for ((enchant, level) in piece.enchantments) {
+                val handler = map[enchant.getNameId()] ?: continue
+                handler(ArmorEnchantContext(event, holder, opponent, level, mods, bonusImmunityTime))
+            }
+        }
+    }
+
     @EventHandler
-    fun mainArmorDefenderHandler(event: EntityDamageByEntityEvent) {
+    fun mainArmorHandler(event: EntityDamageByEntityEvent) {
         if (event.damager !is LivingEntity) return
         if (event.entity !is LivingEntity) return
         if (event.cause != EntityDamageEvent.DamageCause.ENTITY_ATTACK) return
-        // Make thorns bug new enchant apply ranged effects
-        val enemy = event.damager as LivingEntity
+
+        val attacker = event.damager as LivingEntity
         val defender = event.entity as LivingEntity
-        val originalAmount = event.damage
-        // RESET DAMAGE TICKS
-        val bonusImmunityTime = mutableListOf(0) // Reference
+        val bonusImmunityTime = mutableListOf(0)
         defender.maximumNoDamageTicks = 20
-        // Start of ifs
-        if (defender.equipment?.helmet?.hasItemMeta() == true) {
-            val helmet = defender.equipment?.helmet!!
-            for (enchant in helmet.enchantments) {
-                when (enchant.key.getNameId()) {
-                    "antibonk" -> {
-                        event.damage -= antibonkEnchantment(event.isCritical, originalAmount, enchant.value)
-                    }
-                    "brawler" -> {
-                        brawlerArmorEnchantment(event, originalAmount, enchant.value)
-                    }
-                    "illumineye" -> {
-                        illumineyeEnchantment(enemy, defender, enchant.value)
-                    }
-                    "opticalization" -> {
-                        opticalizationHitEnchantment(defender, enemy, enchant.value)
-                    }
-                    "sslither_ssight" -> {
-                        sslitherSsightEnchantment(enemy, defender, enchant.value)
-                    }
-                    "reckless" -> {
-                        event.damage += recklessDefenderEnchantment(originalAmount, enchant.value)
-                    }
-                    "relentless" -> {
-                        event.damage -= relentlessEnchantment(defender, enchant.value, originalAmount)
-                    }
-                    "veiled_in_shadow" -> {
-                        veiledInShadowEnchantment(defender, enchant.value, bonusImmunityTime)
-                    }
-                }
-            }
-        }
-        if (defender.equipment?.chestplate?.hasItemMeta() == true) {
-            val chestplate = defender.equipment?.chestplate!!
-            for (enchant in chestplate.enchantments) {
-                when (enchant.key.getNameId()) {
-                    "black_rose" -> {
-                        stxRoseHitEnchantment(enemy, enchant.value)
-                    }
-                    "brawler" -> {
-                        brawlerArmorEnchantment(event, originalAmount, enchant.value)
-                    }
-                    "ignore_pain" -> {
-                        ignorePainEnchantment(defender, enchant.value)
-                    }
-                    "molten_core" -> {
-                        moltenCoreEnchantment(defender, enemy, enchant.value)
-                    }
-                    "reckless" -> {
-                        event.damage += recklessDefenderEnchantment(originalAmount, enchant.value)
-                    }
-                    "relentless" -> {
-                        event.damage -= relentlessEnchantment(defender, enchant.value, originalAmount)
-                    }
-                    "untouchable" -> {
-                        untouchableEnchantment(defender, bonusImmunityTime)
-                    }
-                    "veiled_in_shadow" -> {
-                        veiledInShadowEnchantment(defender, enchant.value, bonusImmunityTime)
-                    }
-                }
-            }
-        }
-        if (defender.equipment?.leggings?.hasItemMeta() == true) {
-            val leggings = defender.equipment?.leggings!!
-            for (enchant in leggings.enchantments) {
-                when (enchant.key.getNameId()) {
-                    "cowardice" -> {
-                        cowardiceEnchantment(enemy, defender, enchant.value)
-                    }
-                    "brawler" -> {
-                        brawlerArmorEnchantment(event, originalAmount, enchant.value)
-                    }
-                    "blurcise" -> {
-                        event.damage -= blurciseEnchantment(defender, enchant.value, originalAmount)
-                    }
-                    "reckless" -> {
-                        event.damage += recklessDefenderEnchantment(originalAmount, enchant.value)
-                    }
-                    "relentless" -> {
-                        event.damage -= relentlessEnchantment(defender, enchant.value, originalAmount)
-                    }
-                    "sporeful" -> {
-                        sporefulEnchantment(defender, enchant.value)
-                    }
-                    "squidify" -> {
-                        squidifyEnchantment(defender, enchant.value)
-                    }
-                    "veiled_in_shadow" -> {
-                        veiledInShadowEnchantment(defender, enchant.value, bonusImmunityTime)
-                    }
-                }
-            }
-        }
-        if (defender.equipment?.boots?.hasItemMeta() == true) {
-            val boots = defender.equipment?.boots!!
-            for (enchant in boots.enchantments) {
-                when (enchant.key.getNameId()) {
-                    "brawler" -> {
-                        brawlerArmorEnchantment(event, originalAmount, enchant.value)
-                    }
-                    "reckless" -> {
-                        event.damage += recklessDefenderEnchantment(originalAmount, enchant.value)
-                    }
-                    "relentless" -> {
-                        event.damage -= relentlessEnchantment(defender, enchant.value, originalAmount)
-                    }
-                    "root_boots" -> {
-                        event.damage -= rootBootsDefenseHandler(defender, enchant.value)
-                    }
-                    "veiled_in_shadow" -> {
-                        veiledInShadowEnchantment(defender, enchant.value, bonusImmunityTime)
-                    }
-                }
-            }
-        }
-        // Edit Damage Ticks
+
+        val atkMods = DamageMods()
+        val defMods = DamageMods()
+
+        val armor = listOfNotNull(
+            defender.equipment?.helmet,
+            defender.equipment?.chestplate,
+            defender.equipment?.leggings,
+            defender.equipment?.boots,
+        )
+        // Attacker's gear amplifies the outgoing hit...
+        processArmor(attacker, defender, event, armorAttackEnchantmentsMap, atkMods, bonusImmunityTime)
+        // ...then the defender's gear mitigates the incoming hit
+        processArmor(defender, attacker, event, armorDefenseEnchantmentsMap, defMods, bonusImmunityTime)
+
         if (bonusImmunityTime[0] > 0) {
             val immunityTicks = bonusImmunityTime[0]
             defender.maximumNoDamageTicks = 20 + immunityTicks
             defender.noDamageTicks = 10 + immunityTicks
         }
-        // Check
-        if (event.damage < 0.0) {
-            event.damage = 0.0
-        }
+
+        // Final Calculation Step
+        // (Base Damage + Base Flat Modifiers) * (1 + Percentage Modifiers) * postPercent
+        // attacker layer, then defender layer
+        val outgoing = (event.damage + atkMods.flat) * (1 + atkMods.percent) * atkMods.postPercent
+        event.damage = (outgoing + defMods.flat) * (1 + defMods.percent) * defMods.postPercent
+        if (event.damage < 0.0) event.damage = 0.0
     }
+
 
     @EventHandler
     fun mainArmorProjectileHandler(event: ProjectileHitEvent) {
@@ -194,83 +172,8 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         }
     }
 
-    // Main function for enchantments relating to entity damage for armor
-    @EventHandler
-    fun mainArmorAttackHandler(event: EntityDamageByEntityEvent) {
-        if (event.damager !is LivingEntity) return
-        if (event.entity !is LivingEntity) return
-        if (event.cause != EntityDamageEvent.DamageCause.ENTITY_ATTACK) return
-        val attacker = event.damager as LivingEntity
-        val enemy = event.entity as LivingEntity
-        val originalAmount = event.damage
-        // Start ifs
-        if (attacker.equipment?.helmet?.hasItemMeta() == true) {
-            val helmet = attacker.equipment?.helmet!!
-            for (enchant in helmet.enchantments) {
-                when (enchant.key.getNameId()) {
-                    "vigor" -> {
-                        event.damage += vigorEnchantment(attacker, enchant.value, originalAmount)
-                    }
-                    "mandiblemania" -> {
-                        mandiblemaniaEnchantment(attacker, enchant.value)
-                    }
-                    "opticalization" -> {
-                        opticalizationHitEnchantment(enemy, attacker, enchant.value)
-                    }
-                    "illumineye" -> {
-                        illumineyeEnchantment(enemy, attacker, enchant.value)
-                    }
-                    "reckless" -> {
-                        event.damage += recklessAttackerEnchantment(originalAmount, enchant.value)
-                    }
-                }
-            }
-        }
-        if (attacker.equipment?.chestplate?.hasItemMeta() == true) {
-            val chestplate = attacker.equipment?.chestplate!!
-            for (enchant in chestplate.enchantments) {
-                when (enchant.key.getNameId()) {
-                    "vigor" -> {
-                        event.damage += vigorEnchantment(attacker, enchant.value, originalAmount)
-                    }
-                    "reckless" -> {
-                        event.damage += recklessAttackerEnchantment(originalAmount, enchant.value)
-                    }
-                }
-            }
-        }
-        if (attacker.equipment?.leggings?.hasItemMeta() == true) {
-            val leggings = attacker.equipment?.leggings!!
-            for (enchant in leggings.enchantments) {
-                when (enchant.key.getNameId()) {
-                    "vigor" -> {
-                        event.damage += vigorEnchantment(attacker, enchant.value, originalAmount)
-                    }
-                    "reckless" -> {
-                        event.damage += recklessAttackerEnchantment(originalAmount, enchant.value)
-                    }
-                }
-            }
-        }
-        if (attacker.equipment?.boots?.hasItemMeta() == true) {
-            val boots = attacker.equipment?.boots!!
-            for (enchant in boots.enchantments) {
-                when (enchant.key.getNameId()) {
-                    "vigor" -> {
-                        event.damage += vigorEnchantment(attacker, enchant.value, originalAmount)
-                    }
-                    "reckless" -> {
-                        event.damage += recklessAttackerEnchantment(originalAmount, enchant.value)
-                    }
-                    "static_socks" -> {
-                        event.damage += staticSocksAttackEnchantment(attacker, enchant.value)
-                    }
-                }
-            }
-        }
-    }
 
-        // Main function for enchantments relating to specific damage
+    // Main function for enchantments relating to specific damage
     @EventHandler
     fun mainArmorHitHandler(event: EntityDamageEvent) {
         if (event.cause == EntityDamageEvent.DamageCause.FALL) {
@@ -505,13 +408,12 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
 
     private fun antibonkEnchantment(
         isCrit: Boolean,
-        damage: Double,
         level: Int,
-    ): Double {
+    ): Float {
         return if (isCrit) {
-            damage * (level * 0.1)
+            (level * 0.1F)
         } else {
-            0.0
+            0.0F
         }
     }
 
@@ -538,15 +440,14 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
      */
 
     private fun brawlerArmorEnchantment(
-        event: EntityDamageByEntityEvent,
-        originalDamage: Double,
+        defender: LivingEntity,
         level: Int
-    ) {
-        val defender = event.entity
+    ) : Float {
         // If surrounded
-        if (defender.location.getNearbyLivingEntities(4.0).size >= 4) { // 3 + self
-            val reducedDamage = originalDamage * (1.0 - (0.03 * level))
-            event.damage = reducedDamage
+        return if (defender.location.getNearbyLivingEntities(4.0).size >= 4) { // 3 + self
+            (0.03F * level)
+        } else {
+            0.0F
         }
     }
 
@@ -579,12 +480,11 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
     private fun blurciseEnchantment(
         defender: LivingEntity,
         level: Int,
-        amount: Double,
-    ): Double {
+    ): Float {
         if (defender.velocity.length() > 0.08) {
-            return amount * (level * 0.1)
+            return (level * 0.1).toFloat()
         }
-        return 0.0
+        return 0.0F
     }
 
     private fun brewfulBreathEnchantment(
@@ -897,30 +797,27 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
     }
 
     private fun recklessAttackerEnchantment(
-        damage: Double,
         level: Int
-    ): Double {
-        return damage * (level * 0.1)
+    ): Float {
+        return (level * 0.05).toFloat()
     }
 
     private fun recklessDefenderEnchantment(
-        damage: Double,
         level: Int
-    ): Double {
-        return damage * (level * 0.05)
+    ): Float {
+        return (level * 0.05).toFloat()
     }
 
 
     private fun relentlessEnchantment(
         defender: LivingEntity,
-        level: Int,
-        amount: Double): Double {
-        val maxHealth = defender.getAttribute(Attribute.MAX_HEALTH)?.value ?: return 0.0
+        level: Int): Float {
+        val maxHealth = defender.getAttribute(Attribute.MAX_HEALTH)?.value ?: 20.0
         val currentHealthPercent = defender.health / maxHealth
         if (currentHealthPercent <= 0.4) {
-            return amount * (level * 0.05)
+            return (level * 0.05).toFloat()
         }
-        return 0.0
+        return 0.0F
     }
 
     private fun rootBootsDefenseHandler(defender: LivingEntity, level: Int): Double {
@@ -1040,16 +937,19 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
 
     private fun staticSocksAttackEnchantment(
         attacker: LivingEntity,
+        victim: LivingEntity,
         level: Int
-    ): Double {
-        if (!attacker.scoreboardTags.contains(EntityTags.STATIC_SOCKS_CHARGING)) return 0.0
+    ) {
+        if (!attacker.scoreboardTags.contains(EntityTags.STATIC_SOCKS_CHARGING)) return
         val charge = attacker.getIntTag(EntityTags.STATIC_SOCKS_CHARGE)!!
-        // Remove
+        // Remove Tags and do Sound and Visual effects
         attacker.removeTag(EntityTags.STATIC_SOCKS_CHARGE)
         attacker.removeScoreboardTag(EntityTags.STATIC_SOCKS_CHARGING)
         attacker.world.spawnParticle(Particle.ELECTRIC_SPARK, attacker.location, charge * 3, 0.7, 0.5, 0.7)
         attacker.world.playSound(attacker.location, Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 1.5F, 4.5F)
-        return minOf((charge / 2.0), level * 1.0)
+        // Damage
+        val damageSource = DamageSource.builder(DamageType.LIGHTNING_BOLT).build()
+        victim.damage(level * 1.0, damageSource)
     }
 
     private fun staticSocksSneakEnchantment(
@@ -1102,14 +1002,13 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
 
     private fun vigorEnchantment(
         attacker: LivingEntity,
-        level: Int,
-        originalDamage: Double): Double {
-        val maxHealth = attacker.getAttribute(Attribute.MAX_HEALTH)?.value ?: return 0.0
+        level: Int): Float {
+        val maxHealth = attacker.getAttribute(Attribute.MAX_HEALTH)?.value ?: 20.0
         val currentHealthPercent = attacker.health / maxHealth
         if (currentHealthPercent >= 0.60) {
-            return originalDamage * (level * 0.15)
+            return (level * 0.04).toFloat()
         }
-        return 0.0
+        return 0.0F
     }
 
 }

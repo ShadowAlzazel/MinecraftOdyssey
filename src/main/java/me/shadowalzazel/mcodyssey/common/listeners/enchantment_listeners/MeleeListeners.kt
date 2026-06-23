@@ -37,168 +37,141 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
     private val invocativeLastTarget: MutableMap<UUID, UUID> = mutableMapOf()
     private val vengefulTargets: MutableMap<UUID, UUID> = mutableMapOf()
 
-    // Main function for enchantments relating to entity damage
+    // Everything any melee enchant might need
+    private data class MeleeEnchantContext(
+        val eventDamage: Double,      // the event final damage
+        val attacker: LivingEntity,   // the one attacking
+        val victim: LivingEntity,     // the one being hit
+        val weapon: ItemStack,
+        val attackPower: Double,
+        val level: Int,
+        val mods: DamageMods,
+        val isCritical: Boolean
+    )
+
+    private class DamageMods {
+        var flat: Float = 0.0f         // raw base added before percent
+        var percent: Float = 0.0f      // summed, applied as (1 + percent)
+        var postPercent: Float = 1.0f  // multiplied last (e.g. magic)
+    }
+
+    // --- damage modifiers: read base damage / state, mutate mods only ---
+    private val meleeDamageEnchantmentsMap: Map<String, (MeleeEnchantContext) -> Unit> = mapOf(
+        // --- percent increases (add to percent) ---
+        "backstabber"     to { c -> c.mods.percent += backstabberEnchantment(c.attacker, c.victim, c.level) },
+        "besiege"         to { c -> c.mods.percent += besiegeEnchantment(c.attacker, c.level) },
+        "brutality_curse" to { c -> c.mods.percent += brutalityCurseEnchantment(c.attacker, c.level) },
+        "committed"       to { c -> c.mods.percent += committedEnchantment(c.victim, c.level) },
+        "cull_the_weak"   to { c -> c.mods.percent += cullTheWeakEnchantment(c.victim, c.level) },
+        "douse"           to { c -> c.mods.percent += douseEnchantment(c.victim, c.level) },
+        "guarding_strike" to { c -> c.mods.percent += guardingStrikeEnchantment(c.attacker, c.level) },
+        "illucidation"    to { c -> c.mods.percent += illucidationEnchantment(c.victim, c.level, c.isCritical) },
+        "vital"           to { c -> c.mods.percent += vitalEnchantment(c.isCritical, c.level) },
+        "void_strike"     to { c -> c.mods.percent += voidStrikeEnchantment(c.attacker, c.victim, c.level) },
+        "vengeful"        to { c -> c.mods.percent += vengefulEnchantment(c.attacker, c.victim, c.level) },
+
+        // --- flat (base damage changes) ---
+        "life_force"      to { c -> c.mods.flat += lifeForceEnchantment(c.attacker, c.level) },
+
+        // --- post-percent multipliers (subtract from the multiplier) ---
+        "flame_edge"      to { c -> c.mods.postPercent -= flameEdgeEnchantment(c.attacker, c.victim, c.eventDamage, c.level) },
+        "magic_aspect"    to { c -> c.mods.postPercent -= magicAspectEnchantment(c.attacker, c.victim, c.eventDamage, c.level) },
+        "rupture"         to { c -> c.mods.postPercent -= ruptureEnchantment(c.attacker, c.victim, c.eventDamage, c.level) },
+    )
+
+    // --- side effects only, untouched ---
+    private val meleeEffectEnchantmentsMap: Map<String, (MeleeEnchantContext) -> Unit> = mapOf(
+        "aerosion_aspect"  to { c -> aerosionAspectEnchantment(c.victim, c.level) },
+        "arcane_cell"      to { c -> arcaneCellEnchantment(c.victim, c.level) },
+        "asphyxiate"       to { c -> asphyxiateEnchantment(c.victim, c.level) },
+        "budding"          to { c -> buddingEnchantment(c.victim, c.level) },          // MORE STACKS -> MORE INSTANCES
+        "buzzy_bees"       to { c -> buzzyBeesEnchantment(c.victim, c.level) },
+        "cleave"           to { c -> cleaveEnchantment(c.victim, c.level) },
+        "conflagrate"      to { c -> conflagrateEnchantment(c.attacker, c.victim, c.level, c.eventDamage) },
+        "decay"            to { c -> decayEnchantment(c.victim, c.level) },
+        "echo"             to { c -> echoEnchantment(c.attacker, c.victim, c.level) },
+        "execution"        to { c -> executionEnchantment(c.attacker, c.victim, c.level) },
+        "chain_lightning"  to { c -> chainLightningEnchantment(c.attacker, c.victim, c.eventDamage, c.level) },
+        "freezing_aspect"  to { c -> freezingAspectEnchantment(c.victim, c.level) },
+        "frog_fright"      to { c -> frogFrightEnchantment(c.attacker, c.victim, c.level) },
+        "frosty_fuse"      to { c -> frostyFuseEnchantment(c.victim, c.level) },
+        "gravity_well"     to { c -> gravityWellEnchantment(c.attacker, c.victim, c.level) },
+        "hemorrhage"       to { c -> hemorrhageEnchantment(c.victim, c.level) },        // MORE STACKS -> MORE DAMAGE PER INSTANCE
+        "invocative"       to { c -> invocativeEnchantment(c.attacker, c.victim, c.eventDamage, c.level) },
+        "miscalibrate"     to { c -> miscalibrateEnchantment(c.victim, c.level) },
+        "pestilence"       to { c -> pestilenceEnchantment(c.attacker, c.victim, c.level) },
+        "swap"             to { c -> swapEnchantment(c.attacker, c.victim, c.level) },
+        "whirlwind"        to { c -> whirlwindEnchantment(c.attacker, c.victim, c.eventDamage, c.level) },
+    )
+
+    // event.damage is calculated when this function is run, so it runs again after the mods are applied
+    private fun processWeapon(
+        event: EntityDamageByEntityEvent,
+        attacker: LivingEntity,
+        victim: LivingEntity,
+        weapon: ItemStack,
+        attackPower: Double,
+        map: Map<String, (MeleeEnchantContext) -> Unit>,
+        mods: DamageMods,
+    ) {
+        for ((enchant, level) in weapon.enchantments) {
+            val handler = map[enchant.getNameId()] ?: continue
+            handler(MeleeEnchantContext(
+                event.damage,
+                attacker,
+                victim,
+                weapon,
+                attackPower,
+                level,
+                mods,
+                event.isCancelled
+            ))
+        }
+    }
+
     @EventHandler(priority = EventPriority.HIGH)
     fun mainMeleeDamageHandler(event: EntityDamageByEntityEvent) {
         if (event.entity !is LivingEntity) return
         // Caused by entity attack
         if (event.cause != EntityDamageEvent.DamageCause.ENTITY_ATTACK &&
             event.cause != EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) return
+
         val attacker = if (event.damager is LivingEntity) {
             event.damager as LivingEntity
         } else {
             event.damageSource.causingEntity
         }
-        // Do Item and power checks
+
+        // Do item and power checks
         if (event.damage <= 0.0) return // Prevent going through shields
         if (attacker !is LivingEntity) return
         if (attacker.equipment?.itemInMainHand?.hasItemMeta() == false) return
+
         val victim = event.entity as LivingEntity
         val weapon = attacker.equipment!!.itemInMainHand
-        val attackPower = if (attacker is Player) { attacker.attackCooldown.toDouble() } else { 1.0 }
+        val attackPower = if (attacker is Player) attacker.attackCooldown.toDouble() else 1.0
 
-        // Set tags like vengeful (FOR now Players)
+        // Set tags like vengeful (for now, Players)
         if (event.entity is Player) {
             vengefulTargets[event.entity.uniqueId] = event.damager.uniqueId
         }
 
+        val mods = DamageMods()
+
         // (Base Damage + Base Flat Modifiers) * (1 + Percentage Modifiers) * postPercent
-        var flatDamageModifier = 0.0F // For adding raw base damage
-        var percentDamageModifier = 0.0F // For adding percent modifiers
-        var postPercentDamage = 1.0F // For changing damage percent modifiers like magic
+        // Damage modifiers take priority and are all gathered first...
+        processWeapon(event, attacker, victim, weapon, attackPower, meleeDamageEnchantmentsMap, mods)
 
-        // Damage Increases take priority
-        for (enchant in weapon.enchantments) {
-            when (enchant.key.getNameId()) {
-                "backstabber" -> {
-                    percentDamageModifier += backstabberEnchantment(attacker, victim, enchant.value)
-                }
-                "besiege" -> {
-                    percentDamageModifier += besiegeEnchantment(attacker, enchant.value)
-                }
-                "brutality_curse" -> {
-                    percentDamageModifier += brutalityCurseEnchantment(attacker, enchant.value)
-                }
-                "committed" -> {
-                    percentDamageModifier += committedEnchantment(victim, enchant.value)
-                }
-                "cull_the_weak" -> {
-                    percentDamageModifier += cullTheWeakEnchantment(victim, enchant.value)
-                }
-                "douse" -> {
-                    percentDamageModifier += douseEnchantment(victim, enchant.value)
-                }
-                "flame_edge" -> {
-                    postPercentDamage -= flameEdgeEnchantment(attacker, victim, event.damage, enchant.value)
-                }
-                "guarding_strike" -> {
-                    percentDamageModifier += guardingStrikeEnchantment(attacker, enchant.value)
-                }
-                "life_force" -> {
-                    flatDamageModifier += lifeForceEnchantment(attacker, enchant.value)
-                }
-                "illucidation" -> {
-                    percentDamageModifier += illucidationEnchantment(victim, enchant.value, event.isCritical)
-                }
-                "magic_aspect" -> {
-                    postPercentDamage -= magicAspectEnchantment(attacker, victim, event.damage, enchant.value)
-                }
-                "rupture" -> {
-                    postPercentDamage -= ruptureEnchantment(attacker, victim, event.damage, enchant.value)
-                }
-                "vital" -> {
-                    percentDamageModifier += vitalEnchantment(event.isCritical, enchant.value)
-                }
-                "void_strike" -> {
-                    percentDamageModifier += voidStrikeEnchantment(attacker, victim, enchant.value)
-                }
-                "vengeful" -> {
-                    percentDamageModifier += vengefulEnchantment(attacker, victim, enchant.value)
-                }
-            }
-        }
+        // Damage Calculation Step
+        // This changes the event damage context after the modifiers fired
+        event.damage = (event.damage + mods.flat) * (1 + mods.percent) * mods.postPercent
+        if (event.damage < 0.0) event.damage = 0.0
 
-        // Effect Enchantments are next
-        for (enchant in weapon.enchantments) {
-            when (enchant.key.getNameId()) {
-                "aerosion_aspect" -> {
-                    aerosionAspectEnchantment(victim, enchant.value)
-                }
-                "arcane_cell" -> {
-                    arcaneCellEnchantment(victim, enchant.value)
-                }
-                "asphyxiate" -> {
-                    asphyxiateEnchantment(victim, enchant.value)
-                }
-                "budding" -> {
-                    buddingEnchantment(victim, enchant.value) // MORE STACKS -> MORE INSTANCES
-                }
-                "buzzy_bees" -> {
-                    buzzyBeesEnchantment(victim, enchant.value)
-                }
-                "cleave" -> {
-                    cleaveEnchantment(victim, enchant.value)
-                }
-                "conflagrate" -> {
-                    conflagrateEnchantment(attacker, victim, enchant.value, event.damage)
-                }
-                "decay" -> {
-                    decayEnchantment(victim, enchant.value)
-                }
-                "echo" -> {
-                    echoEnchantment(attacker, victim, enchant.value)
-                }
-                "execution" -> {
-                    executionEnchantment(attacker, victim, enchant.value)
-                }
-                "chain_lightning" -> {
-                    chainLightningEnchantment(attacker, victim, event.damage, enchant.value)
-                }
-                "freezing_aspect" -> {
-                    freezingAspectEnchantment(victim, enchant.value)
-                }
-                "frog_fright" -> {
-                    frogFrightEnchantment(attacker, victim, enchant.value)
-                }
-                "frosty_fuse" -> {
-                    frostyFuseEnchantment(victim, enchant.value)
-                }
-                "gravity_well" -> {
-                    gravityWellEnchantment(attacker, victim, enchant.value)
-                }
-                "tempest_splitter" -> {
-                    tempestSplitterEnchantment(event, enchant.value)
-                }
-                "hemorrhage" -> {
-                    hemorrhageEnchantment(victim, enchant.value) // MORE STACKS -> MORE DAMAGE PER INSTANCE
-                }
-                "invocative" -> {
-                    invocativeEnchantment(event, enchant.value)
-                }
-                "miscalibrate" -> {
-                    miscalibrateEnchantment(victim, enchant.value)
-                }
-                "pestilence" -> {
-                    pestilenceEnchantment(attacker, victim, enchant.value)
-                }
-                "swap" -> {
-                    swapEnchantment(attacker, victim, enchant.value)
-                }
-                "whirlwind" -> {
-                    whirlwindEnchantment(attacker, victim, event.damage, enchant.value)
-                }
-            }
-        }
-
-        // Final Calculation Step
-        // (Base Damage + Base Flat Modifiers) * (1 + Percentage Modifiers) * postPercent
-        event.damage = (event.damage + flatDamageModifier) * (1 + percentDamageModifier) * postPercentDamage
-
-        // Check
-        if (event.damage < 0.0) {
-            event.damage = 0.0
-        }
+        // ...then side effect enchantments fire against the modified damage
+        processWeapon(event, attacker, victim, weapon, attackPower, meleeEffectEnchantmentsMap, mods)
+        // Finish
     }
+
 
     // TODO!!
     // Main function for shields/blocks
@@ -751,11 +724,10 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
 
 
     private fun invocativeEnchantment(
-        event: EntityDamageByEntityEvent,
-        level: Int) {
-        val attacker = event.damager
-        val victim = event.entity
-        val damage = event.damage
+        attacker: LivingEntity,
+        victim: LivingEntity,
+        damage: Double,
+        level: Int, ) {
         // Invocative Vars
         val lastTargetId = invocativeLastTarget[attacker.uniqueId]
         // Set the lastTarget to this current victim

@@ -43,14 +43,14 @@ object WeaponMaps {
         "claymore",
         "longsword",
         "rapier",
-        "cutlass",
         "saber",
         "sickle",
         "dagger",
         "kriegsmesser",
         "zweihander",
         "poleaxe",
-        "glaive",
+        //"cutlass", Usable with shield
+        //"glaive", Usable with shield
     )
 
     val DUAL_WIELDABLE = setOf(

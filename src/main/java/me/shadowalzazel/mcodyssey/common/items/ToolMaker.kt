@@ -202,12 +202,21 @@ interface ToolMaker : AttributeManager, DataTagManager, ToolComponentHelper {
                 val damageReductions = DamageReduction.damageReduction()
                     .base(0.0F)
                     .factor(0.5F) // Negates 50% damage on parry/block
+                    /*
                     .type(
                         RegistrySet.keySet(RegistryKey.DAMAGE_TYPE,
-                            listOf(TypedKey.create(RegistryKey.DAMAGE_TYPE, "mob_attack"),
-                            TypedKey.create(RegistryKey.DAMAGE_TYPE, "mob_attack_no_aggro"),
-                            TypedKey.create(RegistryKey.DAMAGE_TYPE, "player_attack"))
+                            listOf(
+                                TypedKey.create(RegistryKey.DAMAGE_TYPE, "mob_attack"),
+                                TypedKey.create(RegistryKey.DAMAGE_TYPE, "mob_attack_no_aggro"),
+                                TypedKey.create(RegistryKey.DAMAGE_TYPE, "player_attack"),
+                                TypedKey.create(RegistryKey.DAMAGE_TYPE, "mace_smash"))
                         )
+                    )
+                     */
+                    .type(getTagFromRegistry(
+                        RegistryKey.DAMAGE_TYPE,
+                        "can_be_parried",
+                        "odyssey")
                     )
                     .build()
                 val blockingAttacks = BlocksAttacks.blocksAttacks()
