@@ -35,7 +35,7 @@ interface MobMaker : EquipmentGenerator {
     }
 
 
-    fun spawnEliteMob(event: CreatureSpawnEvent) {
+    fun mobEliteHandler(event: CreatureSpawnEvent) {
         val mob = event.entity
         if (mob is Creeper) return
         if (mob.scoreboardTags.contains(EntityTags.SPAWN_HANDLED)) return
@@ -273,9 +273,6 @@ interface MobMaker : EquipmentGenerator {
         }
     }
 
-
-    /*-----------------------------------------------------------------------------------------------*/
-
     fun trimMobArmor(entity: LivingEntity, armorTrim: ArmorTrim) {
         val equipment = entity.equipment ?: return
         // Get Armor and add Trim
@@ -326,6 +323,7 @@ interface MobMaker : EquipmentGenerator {
         }
     }
 
+    // ──────────────────────────────────────────────────────────────────────────────
 
     private fun ItemStack.addDataTrim(armorTrim: ArmorTrim) {
         if (this.type != Material.AIR) {
@@ -335,7 +333,7 @@ interface MobMaker : EquipmentGenerator {
     }
 
 
-    fun LivingEntity.setArmorDropChances(chance: Float) {
+    private fun LivingEntity.setArmorDropChances(chance: Float) {
         this.equipment?.also {
             it.helmetDropChance = chance
             it.chestplateDropChance = chance
@@ -344,7 +342,7 @@ interface MobMaker : EquipmentGenerator {
         }
     }
 
-    fun LivingEntity.setNewArmor(list: List<ItemStack>) {
+    private fun LivingEntity.setNewArmor(list: List<ItemStack>) {
         // Apply
         this.equipment?.also {
             it.setHelmet(list[0])
@@ -354,7 +352,7 @@ interface MobMaker : EquipmentGenerator {
         }
     }
 
-    fun getArmorItems(entity: LivingEntity): MutableList<ItemStack>? {
+    private fun getArmorItems(entity: LivingEntity): MutableList<ItemStack>? {
         val equipment = entity.equipment ?: return null
         val armorContents = mutableListOf(
             equipment.helmet,

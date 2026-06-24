@@ -34,6 +34,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
 import java.util.*
+import kotlin.math.absoluteValue
 
 @Suppress("UnstableApiUsage")
 object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
@@ -48,6 +49,11 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         val bonusImmunityTime: MutableList<Int>,
     )
 
+    /**
+     *  Flat Damage: raw base added before percents.
+     *  Percent Modifier: summed, applied as (1 + percent).
+     *  Post Percent: multiplied last.
+     * */
     private class DamageMods {
         var flat: Float = 0.0f         // raw base added before percent
         var percent: Float = 0.0f      // summed, applied as (1 + percent)
@@ -115,6 +121,25 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         }
     }
 
+    /**
+     * Walks the entity's armor (helmet → chestplate → leggings → boots) and yields
+     *  every enchant id + level on pieces with meta. Deterministic slot order.
+     *
+     * */
+    private inline fun LivingEntity.forEachArmorEnchant(action: (id: String, level: Int) -> Unit) {
+        val eq = equipment ?: return
+        for (piece in listOfNotNull(eq.helmet, eq.chestplate, eq.leggings, eq.boots)) {
+            if (!piece.hasItemMeta()) continue
+            for ((enchant, level) in piece.enchantments) {
+                action(enchant.getNameId(), level)
+            }
+        }
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────────
+    // ────────────────────────────── ENCHANTMENTS ──────────────────────────────────
+    // ──────────────────────────────────────────────────────────────────────────────
+
     @EventHandler
     fun mainArmorHandler(event: EntityDamageByEntityEvent) {
         if (event.damager !is LivingEntity) return
@@ -157,17 +182,10 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
 
     @EventHandler
     fun mainArmorProjectileHandler(event: ProjectileHitEvent) {
-        if (event.hitEntity == null) return
-        val defender = event.hitEntity ?: return
-        if (defender !is LivingEntity) return
-        if (defender.equipment?.chestplate?.hasItemMeta() == true) {
-            val chestplate = defender.equipment?.chestplate!!
-            for (enchant in chestplate.enchantments) {
-                when (enchant.key.getNameId()) {
-                    "styx_rose" -> {
-                        styxRoseProjectileEnchantment(event, defender, enchant.value)
-                    }
-                }
+        val defender = event.entity as? LivingEntity ?: return
+        defender.forEachArmorEnchant { id, level ->
+            when (id) {
+                "styx_rose" -> styxRoseProjectileEnchantment(event, defender, level)
             }
         }
     }
@@ -176,235 +194,88 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
     // Main function for enchantments relating to specific damage
     @EventHandler
     fun mainArmorHitHandler(event: EntityDamageEvent) {
-        if (event.cause == EntityDamageEvent.DamageCause.FALL) {
-            val defender = event.entity as LivingEntity
-            if (defender.equipment?.boots?.hasItemMeta() == true) {
-                val boots = defender.equipment?.boots!!
-                for (enchant in boots.enchantments) {
-                    when (enchant.key.getNameId()) {
-                        "devastating_drop" -> {
-                            devastatingDrop(defender, event.damage, enchant.value)
-                        }
-                    }
-                }
+        if (event.cause != EntityDamageEvent.DamageCause.FALL) return
+        val defender = event.entity as? LivingEntity ?: return
+        defender.forEachArmorEnchant { id, level ->
+            when (id) {
+                "devastating_drop" -> devastatingDropEnchantment(defender, event.damage, level)
             }
         }
-        // DODGE AN ATTACK WITH (IDK)
-        // If CAN SEE AND WITHIN 3 BLOCKS DODGE MELEE
-        // IF LINE OF SIGHT projectile
-        // DODGE
-        // COOLDOWN
-        // IF SOMETHING
-        // IDK
-        // LIGHTNING REFLEXES -> dodge attacks if within range?
-        // CLOSE COMBAT SPECIALIST -> less damage if close?
-            /*
-        if (event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK || event.cause == EntityDamageEvent.DamageCause.PROJECTILE) {
-            //
-        }
-             */
     }
-    // Add if eat rotten or raw heal + other
 
-    // Main function for enchantments relating to consuming items
     @EventHandler
     fun mainArmorConsumingHandler(event: PlayerItemConsumeEvent) {
         val player = event.player
-        if (player.equipment!!.helmet?.hasItemMeta() == true) {
-            val helmet = player.equipment!!.helmet!!
-            for (enchant in helmet.enchantments) {
-                when (enchant.key.getNameId()) {
-                    "brewful_breath" -> {
-                        brewfulBreathEnchantment(player, event.item, enchant.value)
-                    }
-                    "mandiblemania" -> {
-                        mandiblemaniaEnchantment(player, enchant.value)
-                    }
-                }
+        player.forEachArmorEnchant { id, level ->
+            when (id) {
+                "brewful_breath" -> brewfulBreathEnchantment(player, event.item, level)
+                //"mandiblemania"  -> mandiblemaniaEnchantment(player, level)
+                "fairy_fare"  -> fairyFareEnchantment(player, event.item, level)
+                "potion_barrier" -> potionBarrierEnchantment(player, event.item, level)
             }
         }
-        if (player.equipment!!.chestplate?.hasItemMeta() == true) {
-            val chestplate = player.equipment!!.chestplate!!
-            for (enchant in chestplate.enchantments) {
-                when (enchant.key.getNameId()) {
-                    "fruitful_fare" -> {
-                        fruitfulFareEnchantment(player, event.item, enchant.value)
-                    }
-                    "potion_barrier" -> {
-                        potionBarrierEnchantment(player, event.item, enchant.value)
-                    }
-                }
-            }
-        }
-
     }
 
     @EventHandler
     fun passiveRegenHandler(event: EntityRegainHealthEvent) {
-        if (event.entity !is LivingEntity) return
-        // Armor Holder
-        val defender = event.entity as LivingEntity
+        val defender = event.entity as? LivingEntity ?: return
         val originalAmount = event.amount
-        if (defender.equipment?.helmet?.hasItemMeta() == true) {
-            val helmet = defender.equipment?.helmet!!
-            for (enchant in helmet.enchantments) {
-                when (enchant.key.getNameId()) {
-                    "revitalize" -> {
-                        event.amount += revitalizeEnchant(originalAmount, enchant.value)
-                    }
-                }
-            }
-        }
-        if (defender.equipment?.chestplate?.hasItemMeta() == true) {
-            val chestplate = defender.equipment?.chestplate!!
-            for (enchant in chestplate.enchantments) {
-                when (enchant.key.getNameId()) {
-                    "revitalize" -> {
-                        event.amount += revitalizeEnchant(originalAmount, enchant.value)
-                    }
-                }
-            }
-        }
-        if (defender.equipment?.leggings?.hasItemMeta() == true) {
-            val leggings = defender.equipment?.leggings!!
-            for (enchant in leggings.enchantments) {
-                when (enchant.key.getNameId()) {
-                    "revitalize" -> {
-                        event.amount += revitalizeEnchant(originalAmount, enchant.value)
-                    }
-                }
-            }
-        }
-        if (defender.equipment?.boots?.hasItemMeta() == true) {
-            val boots = defender.equipment?.boots!!
-            for (enchant in boots.enchantments) {
-                when (enchant.key.getNameId()) {
-                    "revitalize" -> {
-                        event.amount += revitalizeEnchant(originalAmount, enchant.value)
-                    }
-                }
+        defender.forEachArmorEnchant { id, level ->
+            when (id) {
+                "revitalize" -> event.amount += revitalizeEnchant(originalAmount, level)
             }
         }
     }
 
-    // Function regarding vehicles and armor
     @EventHandler
-    fun miscArmorVehicleHandler(event: VehicleEnterEvent) { // Move Horse Armor Enchant Here
-        if (event.entered is LivingEntity && event.vehicle is LivingEntity) {
-            val rider = event.entered as LivingEntity
-            val mount = event.vehicle as LivingEntity
-            if (rider.equipment?.boots?.hasItemMeta() == true) {
-                val boots = rider.equipment?.boots!!
-                for (enchant in boots.enchantments) {
-                    when (enchant.key.getNameId()) {
-                        "speedy_spurs" -> {
-                            speedySpursEnchantment(rider, mount, enchant.value)
-                        }
-                    }
-                }
+    fun miscArmorVehicleHandler(event: VehicleEnterEvent) {
+        val rider = event.entered as? LivingEntity ?: return
+        val mount = event.vehicle as? LivingEntity ?: return
+        rider.forEachArmorEnchant { id, level ->
+            when (id) {
+                "speedy_spurs" -> speedySpursEnchantment(rider, mount, level)
             }
         }
     }
 
-    // UNUSED
-    fun playerInputHandler(event: PlayerInputEvent) {
-        val player = event.player
-        // Start of ifs
-        if (player.equipment!!.boots?.hasItemMeta() == true) {
-            val boots = player.equipment!!.boots!!
-            for (enchant in boots.enchantments) {
-                when (enchant.key.getNameId()) {
-                    "cloud_strider" -> {
-                        cloudStriderEnchantment(player, enchant.value)
-                    }
-                }
-            }
-        }
-    }
-
-    // Function for sneaking
     @EventHandler
     fun sneakHandler(event: PlayerToggleSneakEvent) {
         val sneaker = event.player
-        // Start of ifs
-        if (sneaker.equipment!!.helmet?.hasItemMeta() == true) {
-            val helmet = sneaker.equipment!!.helmet!!
-            for (enchant in helmet.enchantments) {
-                when (enchant.key.getNameId()) {
-                    "sculk_sensitive" -> {
-                        sculkSensitiveSneakEnchantment(sneaker, enchant.value, event.isSneaking)
-                    }
-                }
+        sneaker.forEachArmorEnchant { id, level ->
+            when (id) {
+                "sculk_sensitive" -> sculkSensitiveSneakEnchantment(sneaker, level, event.isSneaking)
+                "leap_frog"       -> leapFrogSneakEnchantment(sneaker, event.isSneaking)
+                "root_boots"      -> rootBootsSneakEnchantment(sneaker, level, event.isSneaking)
+                "static_socks"    -> staticSocksSneakEnchantment(sneaker, level)
+                "cloud_strider"   -> cloudStriderEnchantment(sneaker, level)
             }
         }
-        if (sneaker.equipment!!.chestplate?.hasItemMeta() == true) {
-            val chestplate = sneaker.equipment!!.chestplate!!
-            for (enchant in chestplate.enchantments) {
-                when (enchant.key.getNameId()) {
-                    // Empty
-                }
-            }
-        }
-        if (sneaker.equipment!!.leggings?.hasItemMeta() == true) {
-            val leggings = sneaker.equipment!!.leggings!!
-            for (enchant in leggings.enchantments) {
-                when (enchant.key.getNameId()) {
-                    "leap_frog" -> {
-                        leapFrogSneakEnchantment(sneaker, event.isSneaking)
-                    }
-                }
-            }
-        }
-        if (sneaker.equipment!!.boots?.hasItemMeta() == true) {
-            val boots = sneaker.equipment!!.boots!!
-            for (enchant in boots.enchantments) {
-                when (enchant.key.getNameId()) {
-                    "root_boots" -> {
-                        rootBootsSneakEnchantment(sneaker, enchant.value, event.isSneaking)
-                    }
-                    "static_socks" -> {
-                        staticSocksSneakEnchantment(sneaker, enchant.value)  // Trigger on one toggle only
-                    }
-                    "cloud_strider" -> {
-                        cloudStriderEnchantment(sneaker, enchant.value)
-                    }
-                }
-            }
-        }
-        // After many charges -> when hit -> do static discharge
-        // Set timer -> if it has not moved -> add is rooted
     }
 
-    // Function for jumping
     @EventHandler
     fun jumpHandler(event: PlayerJumpEvent) {
         val jumper = event.player
-        val equipment = jumper.equipment ?: return
-        // Leggings
-        val leggingEnchants = equipment.leggings?.getData(DataComponentTypes.ENCHANTMENTS)?.enchantments()
-        if (leggingEnchants != null) {
-            for (enchant in leggingEnchants) {
-                when (enchant.key.getNameId()) {
-                    "leap_frog" -> {
-                        leapFrogEnchantment(event, enchant.value)
-                    }
-                }
-            }
-        }
-        // Boots
-        val bootEnchants = equipment.boots?.getData(DataComponentTypes.ENCHANTMENTS)?.enchantments()
-        if (bootEnchants != null) {
-            for (enchant in bootEnchants) {
-                when (enchant.key.getNameId()) {
-                    "cloud_strider" -> {
-                        cloudStriderEnchantment(jumper, enchant.value)
-                    }
-                }
+        jumper.forEachArmorEnchant { id, level ->
+            when (id) {
+                "leap_frog"     -> leapFrogEnchantment(event, level)
+                "cloud_strider" -> cloudStriderEnchantment(jumper, level)
             }
         }
     }
 
-    /*-----------------------------------------------------------------------------------------------*/
+    // UNUSED — also note there's no @EventHandler on this, so it never fires as written.
+    fun playerInputHandler(event: PlayerInputEvent) {
+        val player = event.player
+        player.forEachArmorEnchant { id, level ->
+            when (id) {
+                "cloud_strider" -> cloudStriderEnchantment(player, level)
+            }
+        }
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────────
+    // ──────────────────────────────── EFFECTS ─────────────────────────────────────
+    // ──────────────────────────────────────────────────────────────────────────────
 
     private fun antibonkEnchantment(
         isCrit: Boolean,
@@ -424,20 +295,6 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         return amount * (level * 0.1)
     }
 
-    /*
-    private fun beastlyArmorEnchantment(
-        defender: LivingEntity,
-        enemy: LivingEntity,
-        damage: Double,
-        level: Int
-    ): Double {
-        if (defender != enemy) {
-            return damage * (level * 0.05)
-        }
-        return 0.0
-    }
-
-     */
 
     private fun brawlerArmorEnchantment(
         defender: LivingEntity,
@@ -481,8 +338,9 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         defender: LivingEntity,
         level: Int,
     ): Float {
-        if (defender.velocity.length() > 0.08) {
-            return (level * 0.1).toFloat()
+        val isMoving = defender.velocity.length() > 0.105 || defender.forwardsMovement.absoluteValue > 0.04
+        if (isMoving) {
+            return (level * 0.08).toFloat()
         }
         return 0.0F
     }
@@ -548,77 +406,76 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         }
     }
 
-    private fun cloudStriderEnchantment(
-        jumper: Player,
-        level: Int
-    ) {
-        // Starting variables
-        val maxJumps = level
-        val jumpSpeed = 0.75
+    private fun cloudStriderEnchantment(jumper: Player, level: Int): Boolean {
+        val cloudJumpSpeed = 0.75
+        val maxJumps = level.coerceAtLeast(0)
+        if (maxJumps == 0) return false
 
-        println("Detected ${jumper} is trying to jump")
-        // If player is on ground, reset jump count
-        var currentCloudJumps = jumper.getIntTag(EntityTags.CLOUD_STRIDER_JUMPS) ?: 0
+        val currentJumps = jumper.getIntTag(EntityTags.CLOUD_STRIDER_JUMPS) ?: 0
+
+        // On the ground: reset the counter, but only write the tag if it changed.
         if (jumper.isOnGround) {
-            currentCloudJumps = 0
-            jumper.setIntTag(EntityTags.CLOUD_STRIDER_JUMPS, currentCloudJumps)
+            if (currentJumps != 0) {
+                jumper.setIntTag(EntityTags.CLOUD_STRIDER_JUMPS, 0)
+            }
+            return false
         }
-        // Else if not max jumps, do cloud stride jump
-        else if (currentCloudJumps < maxJumps) {
-            currentCloudJumps += 1
-            jumper.velocity = jumper.velocity.setY(0.0).add(Vector(0.0, jumpSpeed, 0.0)) // Add Y
-            jumper.setIntTag(EntityTags.CLOUD_STRIDER_JUMPS, currentCloudJumps)
-        }
+
+        // In the air: jump only if jumps remain.
+        if (currentJumps >= maxJumps) return false
+
+        jumper.velocity = jumper.velocity.setY(0.0).add(Vector(0.0, cloudJumpSpeed, 0.0))
+        jumper.setIntTag(EntityTags.CLOUD_STRIDER_JUMPS, currentJumps + 1)
+        return true
     }
 
-    private fun devastatingDrop(
+    private fun devastatingDropEnchantment(
         dropper: LivingEntity,
         receivedDamage: Double,
-        enchantmentStrength: Int
+        level: Int
     ) {
+        if (!dropper.isSneaking) return // Has to be sneaking
         dropper.location.getNearbyLivingEntities(4.0).forEach {
             if (it != dropper) {
-                it.damage(receivedDamage * (0.4 * enchantmentStrength))
+                it.damage(receivedDamage * (0.25 * level))
             }
         }
     }
 
-    private fun fruitfulFareEnchantment(
+    private fun fairyFareEnchantment(
         player: Player,
         food: ItemStack,
-        level: Int
-    ) {
-        val fareList = listOf(
-            Material.MELON_SLICE,
-            Material.APPLE,
-            Material.GOLDEN_APPLE,
-            Material.GLOW_BERRIES,
-            Material.SWEET_BERRIES,
-            Material.CHORUS_FRUIT,
-            Material.ENCHANTED_GOLDEN_APPLE,
-            Material.RABBIT_STEW
-        )
-        if (player.getCooldown(food.type) != 0) { return }
-        if (food.type in fareList) {
-            // Check Health
-            val currentHealth = player.health
-            if (player.getAttribute(Attribute.MAX_HEALTH)!!.value < currentHealth + (1 + level)) {
-                player.health = player.getAttribute(Attribute.MAX_HEALTH)!!.value
-            } else {
-                player.health += (1 + level)
-            }
-            player.setCooldown(food.type, 20 * 3)
-            // Particles
-            with(player.world) {
-                spawnParticle(Particle.HEART, player.location, 35, 0.5, 0.5, 0.5)
-                spawnParticle(Particle.HAPPY_VILLAGER, player.location, 35, 0.5, 0.5, 0.5)
-                spawnParticle(Particle.COMPOSTER, player.location, 35, 0.5, 0.5, 0.5)
-                playSound(player.location, Sound.ENTITY_STRIDER_HAPPY, 1.5F, 0.5F)
-                playSound(player.location, Sound.BLOCK_RESPAWN_ANCHOR_SET_SPAWN, 1.5F, 0.5F)
-                playSound(player.location, Sound.ENTITY_WANDERING_TRADER_DRINK_POTION, 1.5F, 0.8F)
-            }
+        level: Int): Double {
+        val fairyFareCooldown = 20 * 2 // In Ticks
+        if (level <= 0) return 0.0
+
+        // Non-food items have no FOOD component -> bail.
+        val nutrition = food.getData(DataComponentTypes.FOOD)?.nutrition() ?: return 0.0
+        if (nutrition <= 0) return 0.0
+
+        // Rate-limit. Note: this now applies to *every* food (see below).
+        if (player.getCooldown(food.type) > 0) return 0.0
+
+        val maxHealth = player.getAttribute(Attribute.MAX_HEALTH)?.value ?: return 0.0
+
+        // (level × 10)% of nutrition — e.g. nutrition 8 at level 5 -> 4.0 health.
+        val healAmount = nutrition * (level * 0.25F)
+        val newHealth = (player.health + healAmount).coerceAtMost(maxHealth)
+        val healed = newHealth - player.health
+        if (healed <= 0.0) return 0.0  // already at full health
+
+        //player.health = newHealth
+        player.heal(healAmount.toDouble(), EntityRegainHealthEvent.RegainReason.REGEN)
+        player.setCooldown(food.type, fairyFareCooldown)
+
+        with(player.world) {
+            spawnParticle(Particle.HAPPY_VILLAGER, player.location, 15, 0.5, 0.5, 0.5)
+            spawnParticle(Particle.COMPOSTER, player.location, 15, 0.5, 0.5, 0.5)
+            playSound(player.location, Sound.ENTITY_ALLAY_AMBIENT_WITH_ITEM, 0.5f, 0.5f)
         }
+        return healed
     }
+
 
     private fun ignorePainEnchantment(
         defender: LivingEntity,
@@ -902,8 +759,8 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
                 if (it != defender) {
                     it.addPotionEffects(
                         listOf(
-                            PotionEffect(PotionEffectType.BLINDNESS, ((level * 2) + 2) * 20, 1),
-                            PotionEffect(PotionEffectType.SLOWNESS, ((level * 2) + 2) * 20, 0)
+                            PotionEffect(PotionEffectType.BLINDNESS, (1 + level) * 20, 1),
+                            PotionEffect(PotionEffectType.SLOWNESS, (1 + level) * 20, 0)
                         )
                     )
                     if (it is Creature) {

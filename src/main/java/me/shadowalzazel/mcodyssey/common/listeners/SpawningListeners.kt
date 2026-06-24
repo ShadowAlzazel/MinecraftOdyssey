@@ -46,7 +46,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
         mobNaturalSpawnInStructure(event)
 
         // Handle Creating Elites
-        spawnEliteMob(event)
+        mobEliteHandler(event)
 
         // Handle edge spawns
         val inEdge = mob.location.world == Odyssey.instance.edge
@@ -426,8 +426,9 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
     }
 
 
-    /*-----------------------------------------------------------------------------------------------*/
-    // INCENDIUM
+    // ──────────────────────────────────────────────────────────────────────────────
+    // ──────────────────────────────── INCENDIUM ───────────────────────────────────
+    // ──────────────────────────────────────────────────────────────────────────────
 
     private fun cloneIllagerSanctum(illager: Illager) : Illager {
         return (illager.world.spawnEntity(

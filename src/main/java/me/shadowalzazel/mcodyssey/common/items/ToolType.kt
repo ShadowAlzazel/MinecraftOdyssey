@@ -72,7 +72,7 @@ enum class ToolType(
     HALBERD("halberd", "Halberd", 4.0, 0.8, "spear",2.0),
     PIKE("pike", "Pike", 6.0, 0.6, "spear", 3.0),
     POLEAXE("poleaxe", "Poleaxe", 4.0, 1.1, "axe", 1.0),
-    GLAIVE("glaive", "Glaive", 4.0, 1.3, "axe", 1.0),
+    GLAIVE("glaive", "Glaive", 4.0, 1.2, "axe", 1.0),
     //JAVELIN("pike", "Pike", 3.0, 1.2, "spear", 2.0),
     //LANCE("lance", "Lance", 3.0, 0.8, "spear", 3.0),
 
@@ -145,7 +145,6 @@ enum class ToolType(
 
 
     // Skills, Damage Types, Passives, Maps
-
     fun canParry(): Boolean {
         return WeaponMaps.CAN_PARRY.contains(this.toolName)
     }

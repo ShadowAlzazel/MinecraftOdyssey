@@ -40,6 +40,9 @@ object EffectTags {
     const val PARTLY_RUPTURED: String = "odyssey.partly_ruptured"
     const val FULLY_RUPTURED: String = "odyssey.fully_ruptured"
 
+    const val PRESS_THE_ATTACK_HIT_1 = "press_the_attack_hit_1"
+    const val PRESS_THE_ATTACK_HIT_2 = "press_the_attack_hit_2"
+    const val PRESS_THE_ATTACK_HIT_3 = "press_the_attack_hit_3"
 
     // TYPE MODIFIERS
     const val HEMORRHAGE_MODIFIER: String = "odyssey.hemorrhage_modifier.0"

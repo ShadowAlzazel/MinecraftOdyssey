@@ -144,9 +144,9 @@ interface DescriptionManager {
             "cowardice" -> listOf( // Leggings
                 "- Get knock backed further and gain speed $level=[level] for 6 seconds when hit.")
             "devastating_drop" -> listOf( // Boots
-                "- Converts fall damage to AOE damage at ${25 * level}%=[level x 25]")
+                "- When sneaking, converts fall damage into AoE damage at ${25 * level}%=[level x 25] potency.")
             "fairy_fare" -> listOf( // Renamed from fruitful_fare
-                "- Eating food recovers ${10 * level}%=[level x 10] of its hunger as health.")
+                "- Eating food recovers ${25 * level}%=[level x 25] of its hunger as health.")
             "ignore_pain" -> listOf( // Chestplate
                 "- Decrease Invulnerable time when hit by ${(level * 0.1).format(2)}=[level x 0.1] seconds",
                 "but gain absorption for ${5 - level}=[5 - level] seconds.")
@@ -180,10 +180,10 @@ interface DescriptionManager {
             "sculk_sensitive" -> listOf(
                 "- On sneak, sense moving entities within a ${5 + (level * 5)}=[5 + (level x 5)] block radius.")
             "speedy_spurs" -> listOf(
-                "- Increases the speed of ridden mounts by ${level * 0.1}%=[level x 10]")
+                "- Increases the Base movement speed of ridden mounts by ${level * 0.1}%=[level x 10]")
             "squidify" -> listOf( // Leggings
-                "- Getting hit applies Blindness I for ${level * 2}=[level x 2] seconds",
-                "and Slowness I to enemies for ${level}=[level] seconds.")
+                "- Getting hit applies Blindness I for ${level + 1}=[level + 1] seconds",
+                "and Slowness I to enemies for ${level + 1}=[level + 1] seconds.")
             "sslither_ssight" -> listOf( // Helmet
                 "- Taking damage by an entity within line of sight disables",
                 "their movement for ${0.5 * level}=[0.5 x level] seconds." )
@@ -266,8 +266,8 @@ interface DescriptionManager {
             "illucidation" -> listOf(
                 "- Deal ${level * 15}%=[level x 15] bonus damage to enemies that are glowing.",
                 "On a Critical Hit, the damage bonus is doubled and the glowing is removed.")
-            "impetus" -> listOf( // Moved from Leggings -> Melee
-                "- While moving, deal ${5 + level * 5}%=[5 + (level x 5)] increased damage.")
+            "impetus" -> listOf( // Moved from Leggings -> Melee (2 cost, max 4)
+                "- While moving, deal ${level * 10}%=[level x 10] increased damage.")
             "invocative" -> listOf( // The previous enemy you have damaged
                 "- Attacking deals ${level * 15}%=[level x 15] Void Damage to the last enemy you have damaged.")
             "magic_aspect" -> listOf(
@@ -282,7 +282,7 @@ interface DescriptionManager {
             "vengeful" -> listOf(
                 "- Deal ${level * 15}%=[level x 15] more damage to enemies that have damaged you.")
             "vital" -> listOf(
-                "- On a Critical Hit increase damage by ${level * 10}%=[level x 10].")
+                "- On a Critical Hit, increase damage by ${level * 10}%=[level x 10].")
             "void_strike" -> listOf(
                 "- Apply a stack of Void each attack; up to 10. At 10 all stacks are removed.",
                 "Attacks deal ${level * 10}%=[level x 10] bonus damage per Void stack.")
@@ -431,7 +431,7 @@ interface DescriptionManager {
 
             // New Melee
             "besiege" -> listOf( // Melee (2 cost, max 4)
-                "- Standing still or Crouching increases damage by ${15 * level}%=[level x 15].")
+                "- Standing still or Crouching increases damage by ${10 * level}%=[level x 10].")
             "duelist" -> listOf( // Melee (2 cost, max 5)
                 "- If you and the target are the only entities within 10 blocks,",
                 "Damage is increased by ${10 * level}%=[level x 10] and blocking/parrying is 25% more effective.")
@@ -441,10 +441,12 @@ interface DescriptionManager {
                 "- On a successful attack, get pushed backwards. ")
             "miscalibrate" -> listOf( // Melee (2 cost, max 5)
                 "- On a successful attack, lower immunity by ${level}=[level] ticks.")
-            "unyielding" -> listOf( // Melee (2 cost) max 4
-                "- Increase damage by ${level * 11}%=[level x 11] while below 40% health.")
+            "unyielding" -> listOf( // Melee (3 cost) max 3
+                "- Increase damage by ${level * 15}%=[level x 15] while below 40% health.")
             "nullify" -> listOf( // Melee (2 cost)
                 "- Attacking an enemy reduces the damage it does to you by ${5 * level}%=[level x 5].")
+            "press_the_attack" -> listOf(
+                "- The first 3 attacks on a target has its damage increased by ${20 * level}%=[level x 20].")
 
             // Lightning
             "shocking_impact" -> listOf(
@@ -508,6 +510,17 @@ interface DescriptionManager {
             // More cursed enchantments and more curses
             // Maybe a CURSED material that scales of curses
             // Maybe SOLARIUM, in sunlight, more stats
+
+            // DODGE AN ATTACK WITH (IDK)
+            // If CAN SEE AND WITHIN 3 BLOCKS DODGE MELEE
+            // IF LINE OF SIGHT projectile
+            // DODGE
+            // COOLDOWN
+            // IF SOMETHING
+            // IDK
+            // LIGHTNING REFLEXES -> dodge attacks if within range?
+            // CLOSE COMBAT SPECIALIST -> less damage if close?
+
 
             // Other
             "magistrate" -> listOf( // Helmet
