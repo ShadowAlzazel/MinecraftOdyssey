@@ -124,13 +124,13 @@ interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
             // Base Damage Type
             if (weaponType in WeaponMaps.PIERCING_WEAPONS) {
                 newToolTip.add(toolTipIndex++,
-                    darkGrayTextComponent("- Piercing Damage (Can do AoE damage along a ray)"))
+                    darkGrayTextComponent("- Piercing Damage (Deals damage along a ray)"))
             } else if (weaponType in WeaponMaps.SLASHING_WEAPONS) {
                 newToolTip.add(toolTipIndex++,
-                    darkGrayTextComponent("- Slashing Damage (Can do AoE slashes)"))
+                    darkGrayTextComponent("- Slashing Damage (Can do AoE damage slashes)"))
             } else if (weaponType in WeaponMaps.BLUNT_WEAPONS) {
                 newToolTip.add(toolTipIndex++,
-                    darkGrayTextComponent("- Blunt Damage (Can do AoE from impact)"))
+                    darkGrayTextComponent("- Blunt Damage (Can do AoE damage smashes)"))
             }
 
             // Active Skills
@@ -155,6 +155,12 @@ interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
                     darkGrayTextComponent("- Chargeable (Hold weapon to do a charge attack)"))
             }
             // Passives
+            if (weaponType in WeaponMaps.BONUS_CRIT_DAMAGE) {
+                val critModifier = WeaponMaps.BONUS_CRIT_DAMAGE[weaponType]!! + 0.5F
+                newToolTip.add(
+                    toolTipIndex++,
+                    darkGrayTextComponent("- Base Crit Modifier is ${critModifier})"))
+            }
         }
 
         // Hide Attribute Modifiers on simple Screen

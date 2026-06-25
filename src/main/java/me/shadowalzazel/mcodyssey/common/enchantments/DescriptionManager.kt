@@ -434,7 +434,7 @@ interface DescriptionManager {
                 "- Standing still or Crouching increases damage by ${10 * level}%=[level x 10].")
             "duelist" -> listOf( // Melee (2 cost, max 5)
                 "- If you and the target are the only entities within 10 blocks,",
-                "Damage is increased by ${10 * level}%=[level x 10] and blocking/parrying is 25% more effective.")
+                "Damage is increased by ${15 * level}%=[level x 15] and blocking/parrying is 25% more effective.")
             "laceration" -> listOf(
                 "- Deals bonus damage to unarmored targets.")
             "backdraft" -> listOf(
@@ -459,7 +459,7 @@ interface DescriptionManager {
             // Void
             "dematerialize" -> listOf( // 3 cost, up to 4
                 "- Converts attack into Void damage ticking every 0.5 seconds for 5 seconds.",
-                "The damage is ${10 + (level * 2.5)}%=[10 + (level x 2.5)] of the original.")
+                "The damage amount is ${10 + (level * 2.5)}%=[10 + (level x 2.5)] of the original.")
 
             // SHIELDS
             "mirror_force" -> listOf(

@@ -26,6 +26,7 @@ import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.scheduler.BukkitTask
 import org.bukkit.util.Vector
 import java.util.*
@@ -34,12 +35,9 @@ import kotlin.math.pow
 
 object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManager, VectorParticles {
 
-    private val recallTargets: MutableMap<UUID, LivingEntity> = mutableMapOf()
-    private val invocativePreviousDamage: MutableMap<UUID, Double> = mutableMapOf()
-    private val invocativeLastTarget: MutableMap<UUID, UUID> = mutableMapOf()
-    private val vengefulTargets: MutableMap<UUID, UUID> = mutableMapOf()
-    private val ptaTasks = mutableMapOf<UUID, BukkitTask>()
-
+    // ──────────────────────────────────────────────────────────────────────────────
+    // ──────────────────────────────── CONTEXTS ────────────────────────────────────
+    // ──────────────────────────────────────────────────────────────────────────────
 
     // Everything any melee enchant might need
     private data class MeleeEnchantContext(
@@ -135,6 +133,23 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
             ))
         }
     }
+
+    private const val VOID_DOT_TICKS = 10      // number of ticks (5s ÷ 0.5s)
+    private const val VOID_DOT_PERIOD = 10L
+
+    private val recallTargets: MutableMap<UUID, LivingEntity> = mutableMapOf()
+    private val invocativePreviousDamage: MutableMap<UUID, Double> = mutableMapOf()
+    private val invocativeLastTarget: MutableMap<UUID, UUID> = mutableMapOf()
+    private val vengefulTargets: MutableMap<UUID, UUID> = mutableMapOf()
+    private val ptaTasks = mutableMapOf<UUID, BukkitTask>()
+    private val voidDotStates = mutableMapOf<UUID, VoidDotState>()
+
+    private data class VoidDotState(
+        val task: BukkitTask,
+        val perTick: Double,
+        var ticksRemaining: Int
+    )
+
 
     // ──────────────────────────────────────────────────────────────────────────────
     // ──────────────────────────────── HANDLERS ────────────────────────────────────
@@ -305,8 +320,6 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
     }
 
 
-    /*-----------------------------------------------------------------------------------------------*/
-
     private fun arcaneCellEnchantment(victim: LivingEntity, level: Int) {
         if (victim.scoreboardTags.contains(EffectTags.ARCANE_JAILED)) return
         // Run
@@ -468,6 +481,64 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
 
     private fun cleaveEnchantment(victim: LivingEntity, level: Int) {
         //victim.shieldBlockingDelay += level * 20
+    }
+
+    /**
+     * Dematerialize: applies a Void damage-over-time equal to
+     * (10 + level × 2.5)% of the triggering attack's damage, spread across
+     * 10 ticks (every 0.5s for 5s).
+     *
+     * Re-hitting the same target refreshes the 5s window and folds the new
+     * hit's pool into whatever damage hasn't been dealt yet.
+     */
+    private fun dematerializeEnchantment(
+        attacker: LivingEntity,
+        victim: LivingEntity,
+        damage: Double,
+        level: Int
+    ) {
+        if (level <= 0) return
+
+        val conversionPct = 10.0 + (level * 2.5)
+        val newDotDamage = damage * conversionPct / 100.0
+        if (newDotDamage <= 0.0) return
+
+        val id = victim.uniqueId
+
+        // Carry over the undealt portion of any running DoT, then cancel it.
+        val carryOver = voidDotStates.remove(id)?.let { existing ->
+            existing.task.cancel()
+            existing.perTick * existing.ticksRemaining
+        } ?: 0.0
+
+        val perTick = (carryOver + newDotDamage) / VOID_DOT_TICKS
+
+        // VOID for now
+        val damageSource = DamageSource.builder(DamageType.OUT_OF_WORLD).build()
+
+        val task = object : BukkitRunnable() {
+            override fun run() {
+                val state = voidDotStates[id]
+                if (state == null || victim.isDead || !victim.isValid) {
+                    voidDotStates.remove(id)
+                    cancel()
+                    return
+                }
+
+                victim.damage(state.perTick, damageSource)
+                with(victim.world) {
+                    spawnParticle(Particle.REVERSE_PORTAL, victim.location, 12, 0.4, 0.6, 0.4, 0.02)
+                }
+
+                state.ticksRemaining -= 1
+                if (state.ticksRemaining <= 0) {
+                    voidDotStates.remove(id)
+                    cancel()
+                }
+            }
+        }.runTaskTimer(Odyssey.instance, VOID_DOT_PERIOD, VOID_DOT_PERIOD)
+
+        voidDotStates[id] = VoidDotState(task, perTick, VOID_DOT_TICKS)
     }
 
 

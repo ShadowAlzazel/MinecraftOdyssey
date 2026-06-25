@@ -8,7 +8,6 @@ import org.bukkit.attribute.Attribute
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageByEntityEvent
-import org.bukkit.inventory.ItemStack
 
 interface WeaponCombatHandler : AttackHelper, DataTagManager {
 
@@ -20,7 +19,8 @@ interface WeaponCombatHandler : AttackHelper, DataTagManager {
     // PERFECT PARRY?
 
     fun weaponBonusEffectsHandler(event: EntityDamageByEntityEvent) {
-        val player = event.damager as Player
+        val player = event.damager
+        if (player !is Player) return
         val victim = event.entity as LivingEntity
         // Further checks
         val mainWeapon = player.equipment.itemInMainHand
@@ -28,8 +28,12 @@ interface WeaponCombatHandler : AttackHelper, DataTagManager {
         // Get weapon type
         val mainWeaponType = mainWeapon.getStringTag(ItemDataTags.TOOL_TYPE)
         //val mainWeaponMaterial = mainWeapon.getStringTag(ItemDataTags.MATERIAL_TYPE)
+
+        val baseCritMultiplier = 1.5
+        var critBonus = 0.75  // 75% instead of vanilla 50%
+
         // Conditions
-        val twoHanded = offHandWeapon.type == Material.AIR
+        val isTwoHanding = offHandWeapon.type == Material.AIR
         val hasShield = offHandWeapon.type == Material.SHIELD
         val isMounted = (player.vehicle != null) && (player in player.vehicle!!.passengers)
         val isSneaking = player.isSneaking
@@ -46,9 +50,9 @@ interface WeaponCombatHandler : AttackHelper, DataTagManager {
                 //doWeaponAOESweep(player, victim, event.damage, rads, 1.75)
             }
             "katana" -> {
-                if (isCrit) event.damage += 3
-                if (twoHanded) {
-                    val rads = (80 * Math.PI) / 180 // Hits enemies near contact
+                critBonus = 0.6
+                if (isTwoHanding) {
+                    //val rads = (80 * Math.PI) / 180 // Hits enemies near contact
                     //doWeaponAOESweep(player, victim, event.damage * 0.75, rads)
                 }
             }
@@ -59,7 +63,7 @@ interface WeaponCombatHandler : AttackHelper, DataTagManager {
                 }
             }
             "saber" -> {
-                if (isMounted) event.damage += 3
+                if (isMounted) event.damage += 2
             }
             "scythe" -> {
                 val rads = (150 * Math.PI) / 180 // Always hits in a cone
@@ -71,7 +75,7 @@ interface WeaponCombatHandler : AttackHelper, DataTagManager {
             }
             "zweihander" -> {
                 val rads = (120 * Math.PI) / 180 // Always hits in a circle around player
-                doWeaponAOESweep(player, victim, event.damage, rads, 3.0)
+                //doWeaponAOESweep(player, victim, event.damage, rads, 3.0)
             }
             "poleaxe" -> {
                 val rads = (25 * Math.PI) / 180 // Hits enemies near contact
@@ -79,29 +83,32 @@ interface WeaponCombatHandler : AttackHelper, DataTagManager {
             }
             "glaive" -> {
                 val rads = (65 * Math.PI) / 180   // Hits enemies near contact
-                doWeaponAOESweep(player, victim, event.damage, rads)
+                //doWeaponAOESweep(player, victim, event.damage, rads)
             }
             "warhammer" -> {
-                if (twoHanded) victim.shieldBlockingDelay = 60
+                //if (twoHanded)
             }
             "spear" -> {
-                if (isSneaking) event.damage += 2.0
+                //if (isSneaking)
             }
             "halberd" -> {
-                if (isSneaking) event.damage += 2.0
+                //if (isSneaking)
                 //if (hasShield) event.damage += 1.0
             }
             "lance" -> {
                 if (isMounted && fullAttack) event.damage *= 2.50
             }
             "longaxe" -> {
-                if (twoHanded && isCrit) {
-                    //event.damage += 0.5 // Weird bug
-                    val extraCrit = (7.0 / 6.0) // Translates to 1.75X Damage
-                    event.damage *= extraCrit
+                if (isTwoHanding && isCrit) {
+                    critBonus = 0.75
                 }
             }
 
+        }
+        // Check crit
+        if (isCrit) {
+            val desiredMultiplier = 1.0 + critBonus
+            event.damage *= (desiredMultiplier / baseCritMultiplier)
         }
 
     }
@@ -118,7 +125,7 @@ interface WeaponCombatHandler : AttackHelper, DataTagManager {
         // Get bonuses from maps
         val bludgeoningDamage = WeaponMaps.BLUNT_DAMAGE_MAP[weapon]?.let { minOf(it, armor.div(2))} ?: 0.0 // Dmg = x < armor / 2
         val laceratingDamage = WeaponMaps.LACERATE_DAMAGE_MAP[weapon]?.let { maxOf(it - armor, 0.0) } ?: 0.0 // Dmg = x - armor
-        val piercingDamage = WeaponMaps.PIERCE_DAMAGE_MAP[weapon]?.let { minOf(armor, it) } ?: 0.0
+        val piercingDamage = WeaponMaps.PIERCE_TRUE_DAMAGE_MAP[weapon]?.let { minOf(armor, it) } ?: 0.0
         val cleavingDamage = WeaponMaps.CLEAVE_MAP[weapon] ?: 0.0
         // Piercing
         val trueDamage = piercingDamage * attackPower

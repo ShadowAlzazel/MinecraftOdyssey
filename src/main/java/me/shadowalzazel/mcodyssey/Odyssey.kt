@@ -95,13 +95,13 @@ class Odyssey : JavaPlugin() {
         logger.info("Enabling Enchantments...")
 
         // Register Recipes
-        logger.info("Registering Recipes...")
+        logger.info("Crafting Recipes...")
         RecipeLoader().createAllRecipes().forEach {
             Bukkit.addRecipe(it)
         }
 
         // Register Potion Mixes
-        logger.info("Registering Brews...")
+        logger.info("Mixing Brews...")
         PotionMixes.getMixes().forEach {
             server.potionBrewer.addPotionMix(it)
         }

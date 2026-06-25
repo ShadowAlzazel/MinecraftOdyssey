@@ -154,7 +154,6 @@ object DragonListeners : Listener {
         }
     }
 
-    @Suppress("UnstableApiUsage")
     @EventHandler
     fun dragonFireballHandler(event: EnderDragonFireballHitEvent) {
         val fireball = event.entity

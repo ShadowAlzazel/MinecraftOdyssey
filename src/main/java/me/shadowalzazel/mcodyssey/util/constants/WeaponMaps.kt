@@ -3,6 +3,25 @@ package me.shadowalzazel.mcodyssey.util.constants
 
 object WeaponMaps {
 
+    // IDEAS
+    // --------------------------------- IDEAS --------------------------------
+    // Mounted Bonus i.e. Cavalry Charges
+    // Scepter -> checks if offhand is a tome of _enchantment_, does spell.
+    // Can craft weapons without recipe, but with recipe, it is greater quality
+    // RUNE STONES vs ENCHANTMENTS
+    // Entities have custom dual and range wield mechanics!!!!!
+    // Make crit and still combos !!
+    // SWEEP PARTICLES!
+    // Rabbit Hide -> Sheath
+
+    // MINATO enchant
+    // If throw kunai
+    // it has tag
+    // If surface normalized
+    // spawn armor stand with kunai
+    // can tp if throw another
+    // Offhand DeprecatedWeapon
+
     // WEAPON ARCHETYPE DAMAGERS
     val PIERCING_WEAPONS = setOf(
         "rapier",
@@ -147,23 +166,15 @@ object WeaponMaps {
         "longaxe" to 14,
     )
 
-    // FOR MAGIC WEAPONS
-    val ARCANE_RANGES = mapOf(
-        "arcane_wand" to 32.0, // Range
-        "arcane_blade" to 8.0,
-        "arcane_scepter" to 48.0,
-        "warping_wand" to 8.0, // Cone
-    )
-
     // MOVED TO NEW ATTRIBUTE
     val REACH_MAP = mapOf(
         "claymore" to 4.2,
         "longaxe" to 3.7,
         "longsword" to 3.4,
         "cutlass" to 2.8,
-        "dagger" to 2.4,
-        "sickle" to 2.5,
-        "chakram" to 2.3,
+        "dagger" to 2.7,
+        "sickle" to 2.7,
+        "chakram" to 2.7,
         "spear" to 6.0,
         "halberd" to 7.9,
         "lance" to 8.2,
@@ -172,9 +183,9 @@ object WeaponMaps {
 
     // Minimum Distance -> Inside attack is reduced
     val MIN_RANGE_MAP = mapOf(
-        "spear" to 1.0,
-        "halberd" to 1.5,
-        "lance" to 1.5,
+        "spear" to 0.5,
+        "halberd" to 1.0,
+        "lance" to 1.0,
     )
     // MAYBE ADD PERFECT RANGE MECHANIC?! -> small 10% damage bonus if in sweet spot / perfect range
 
@@ -185,6 +196,7 @@ object WeaponMaps {
     // Bludgeoning - extra damage to armored targets
     // Cleaving - damages armor durability
     // Sweeping - increased sweep damage
+    // Mounted - more damage when on a mount
 
     val LACERATE_DAMAGE_MAP = mapOf(
         "katana" to 4.0,
@@ -194,7 +206,7 @@ object WeaponMaps {
         "sickle" to 3.0
     )
 
-    val PIERCE_DAMAGE_MAP = mapOf(
+    val PIERCE_TRUE_DAMAGE_MAP = mapOf(
         "dagger" to 1.0,
         "spear" to 1.0,
         "halberd" to 4.0,
@@ -208,13 +220,13 @@ object WeaponMaps {
         "poleaxe" to 1.0,
     )
 
-    // Non-damage
     val CLEAVE_MAP = mapOf(
         "chakram" to 1.0,
         "longaxe" to 3.0,
         "halberd" to 1.0,
         "poleaxe" to 2.0,
     )
+
     val SWEEP_MAP = mapOf(
         "katana" to 2.0,
         "claymore" to 3.0,
@@ -227,6 +239,16 @@ object WeaponMaps {
         "sickle" to 2.0,
         "dagger" to 1.0,
         "cutlass" to 1.0
+    )
+
+
+
+    // FOR MAGIC WEAPONS
+    val ARCANE_RANGES = mapOf(
+        "arcane_wand" to 32.0, // Range
+        "arcane_blade" to 8.0,
+        "arcane_scepter" to 48.0,
+        "warping_wand" to 8.0, // Cone
     )
 
 }
