@@ -224,7 +224,8 @@ interface DescriptionManager {
             "swap" -> listOf(
                 "- Directly attacking a target swaps location.")
             "buzzy_bees" -> listOf(
-                "- Summons an angered bee to attack most recent target.")
+                "- Summons an angered bee to attack most recent target.",
+                "- The bee has ${level * 3} increased damage.")
             "cleave" -> listOf(
                 "- Deals ${level}=[level] item damage to armor.",
                 "- Shield disables last for ${level}=[level] more seconds.")
@@ -312,8 +313,8 @@ interface DescriptionManager {
             // Odyssey - Ranged
             "alchemy_artillery" -> listOf(
                 "- Potion effect projectiles have their effect timers increased",
-                "by ${(0.2 * level).format(2)}=[0.2 x level]%. These projectiles also have their",
-                "speed increased by ${(0.1 * level).format(2)}%=[0.1 x level]")
+                "by ${(.0 * level).format(2)}=[20 x level]%. These projectiles also have their",
+                "speed increased by ${(10.0 * level).format(2)}%=[10 x level]")
             "ambush" -> listOf(
                 "- The first projectile to hit an enemy deals ${25 * level}%=[level x 25] more damage.")
             "ballistics" -> listOf(
@@ -326,7 +327,7 @@ interface DescriptionManager {
             "cluster_shot" -> listOf( // A circle attack
                 "- Shoots ${(level * 4)}=[level x 4] projectiles radially from the target.")
             "deadeye" -> listOf(
-                "- Projectiles deal ${20 * level}%=[level x 20] more damage if it hits the target's eye.")
+                "- Projectiles deal ${20 * level}%=[level x 20] more damage if it hits the target's head.")
             "death_from_above" -> listOf(
                 "- Increase damage by ${20 * level}%=[level x 20] if the projectile",
                 "was launched from ${level * 5}=[level x 5] blocks high.")
@@ -346,19 +347,19 @@ interface DescriptionManager {
                 "- Projectiles deal ${level * 10}%=[level x 10] more damage to glowing targets.")
             "overcharge" -> listOf(
                 "- Holding a fully drown applies a charge to a max of ${level}=[level].",
-                "Each charge increase damage and velocity by ${level * 10}%=[level x 10].")
+                "Each charge increase damage and velocity by ${level * 30}%=[level x 30].")
             "perpetual" -> listOf(
                 "- Projectiles ignore gravity for ${5 + (level * 5)}=[5 + (level x 5)] seconds.")
             "rain_of_arrows" -> listOf( // A timed rain
-                "- After a 0.5 delay, ${level + 2}=[2 + level] projectiles shoot up and come down from the target location.")
+                "- After a 1s delay, ${level * 6}=[level x 6] projectiles shoot up and come down from the target location.")
             "ricochet" -> listOf(
                 "- Projectiles ricochet off entities/block up to a max of ${level}=[level].",
-                "Each bounce increases damage by 10%")
+                "Each bounce increases damage by 25%")
             "sharpshooter" -> listOf(
                 "- Critical arrows gain ${level * 10}%=[level x 10] speed",
                 "and deal ${level * 5}%=[level x 5] extra damage.")
             "single_out" -> listOf(
-                "- Isolated targets more than 16 blocks away from another entity take ${level * 20}%=[level x 20] more damage.")
+                "- Isolated targets more than 12 blocks away from another entity take ${level * 20}%=[level x 20] more damage.")
             "singularity_shot" -> listOf(
                 "- The projectile has a black hole that sucks nearby entities.")
             "rend" -> listOf(

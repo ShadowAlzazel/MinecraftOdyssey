@@ -24,19 +24,30 @@ import kotlin.math.pow
 
 object DragonListeners : Listener {
 
+    // Wraps a handler body so one bad event logs an error instead of
+    // propagating. This is the single biggest "stop the server dying" win.
+    private inline fun safely(context: String, block: () -> Unit) {
+        try {
+            block()
+        } catch (t: Throwable) {
+            Odyssey.instance.logger.severe("DragonListeners error in $context: ${t.message}")
+            t.printStackTrace()
+        }
+    }
+
     @EventHandler
-    fun dragonPhaseHandler(event: EnderDragonChangePhaseEvent) {
+    fun dragonPhaseHandler(event: EnderDragonChangePhaseEvent) = safely("dragonPhaseHandler") {
         val dragon = event.entity
 
-        when(event.currentPhase) {
+        when (event.currentPhase) {
             EnderDragon.Phase.LEAVE_PORTAL -> {
                 event.newPhase = EnderDragon.Phase.CHARGE_PLAYER
-                return
+                return@safely
             }
             else -> {
                 // Target
-                val surface = event.entity.location.clone().toHighestLocation(HeightMap.MOTION_BLOCKING)
-                val dragonLocation = event.entity.location.clone()
+                val surface = dragon.location.clone().toHighestLocation(HeightMap.MOTION_BLOCKING)
+                val dragonLocation = dragon.location.clone()
                 val target = surface.getNearbyLivingEntities(30.0).find { it is Player }
                 if (target != null) {
                     val destination = target.location.clone()
@@ -53,7 +64,7 @@ object DragonListeners : Listener {
 
         when (event.newPhase) {
             EnderDragon.Phase.ROAR_BEFORE_ATTACK -> {
-                event.entity.getNearbyEntities(24.0, 16.0, 24.0).forEach {
+                dragon.getNearbyEntities(24.0, 16.0, 24.0).forEach {
                     if (it is Player) {
                         it.addPotionEffects(
                             listOf(
@@ -71,8 +82,8 @@ object DragonListeners : Listener {
                 }
             }
             EnderDragon.Phase.STRAFING -> {
-                val ground = event.entity.location.clone().toHighestLocation(HeightMap.MOTION_BLOCKING)
-                val origin = event.entity.location.clone()
+                val ground = dragon.location.clone().toHighestLocation(HeightMap.MOTION_BLOCKING)
+                val origin = dragon.location.clone()
                 ground.getNearbyEntities(20.0, 16.0, 20.0).forEach { player ->
                     if (player is Player) {
                         val destination = player.location.clone()
@@ -94,7 +105,7 @@ object DragonListeners : Listener {
             EnderDragon.Phase.LAND_ON_PORTAL -> {
                 if (1 > (0..1).random()) {
                     event.newPhase = EnderDragon.Phase.CHARGE_PLAYER
-                    event.entity.addScoreboardTag(EntityTags.LEFT_PORTAL)
+                    dragon.addScoreboardTag(EntityTags.LEFT_PORTAL)
                 }
             }
             EnderDragon.Phase.SEARCH_FOR_BREATH_ATTACK_TARGET -> {
@@ -103,7 +114,7 @@ object DragonListeners : Listener {
                 }
             }
             EnderDragon.Phase.LEAVE_PORTAL -> {
-                event.entity.addScoreboardTag(EntityTags.LEFT_PORTAL)
+                dragon.addScoreboardTag(EntityTags.LEFT_PORTAL)
             }
             EnderDragon.Phase.CIRCLING -> {
                 if (7 > (1..10).random()) {
@@ -113,9 +124,8 @@ object DragonListeners : Listener {
             EnderDragon.Phase.FLY_TO_PORTAL -> {
                 if (7 > (1..11).random()) {
                     event.newPhase = EnderDragon.Phase.CHARGE_PLAYER
-                }
-                else {
-                    DragonLightningStormTask(event.entity).runTaskTimer(Odyssey.instance, 5, 15)
+                } else if (dragon.isValid) {
+                    DragonLightningStormTask(dragon).runTaskTimer(Odyssey.instance, 5, 15)
                 }
             }
             else -> {
@@ -124,46 +134,43 @@ object DragonListeners : Listener {
     }
 
     @EventHandler
-    fun dragonRespawn(event: CreatureSpawnEvent) {
-        if (event.entityType != EntityType.ENDER_DRAGON) return
+    fun dragonRespawn(event: CreatureSpawnEvent) = safely("dragonRespawn") {
+        if (event.entityType != EntityType.ENDER_DRAGON) return@safely
     }
 
-
     @EventHandler
-    fun dragonShootHandler(event: EnderDragonShootFireballEvent) {
+    fun dragonShootHandler(event: EnderDragonShootFireballEvent) = safely("dragonShootHandler") {
         val fireball = event.fireball
-        fireball.velocity.multiply(1.2)
         if (6 > (1..10).random()) {
             event.fireball.addScoreboardTag(EntityTags.DRAGON_BOMB)
-            event.entity.launchProjectile(fireball.javaClass, fireball.velocity).apply {
+            // FIX: launchProjectile needs the Bukkit interface class, not the
+            // CraftBukkit impl class returned by fireball.javaClass. The old
+            // code threw IllegalArgumentException on every shot.
+            event.entity.launchProjectile(DragonFireball::class.java, fireball.velocity).apply {
                 addScoreboardTag(EntityTags.DRAGON_BOMB)
                 shooter = fireball.shooter
                 setHasLeftShooter(false)
-                velocity.multiply(1.13)
             }
-            event.entity.launchProjectile(fireball.javaClass, fireball.velocity).apply {
+            event.entity.launchProjectile(DragonFireball::class.java, fireball.velocity).apply {
                 addScoreboardTag(EntityTags.DRAGON_BOMB)
                 setHasLeftShooter(false)
-                velocity.multiply(0.8)
             }
-        }
-        else {
+        } else {
             event.entity.world.playSound(event.fireball.location, Sound.ENTITY_BLAZE_SHOOT, 24F, 0.6F)
-            event.fireball.velocity.multiply(2.5)
             event.fireball.addScoreboardTag(EntityTags.LIGHTNING_BALL)
         }
     }
 
     @EventHandler
-    fun dragonFireballHandler(event: EnderDragonFireballHitEvent) {
+    fun dragonFireballHandler(event: EnderDragonFireballHitEvent) = safely("dragonFireballHandler") {
         val fireball = event.entity
         if (fireball.scoreboardTags.contains(EntityTags.DRAGON_BOMB)) {
             // Fireball
-            with(event.entity.world) {
+            with(fireball.world) {
                 // Particles
-                spawnParticle(Particle.WITCH, event.entity.location, 45, 1.0, 0.2, 1.0)
+                spawnParticle(Particle.WITCH, fireball.location, 45, 1.0, 0.2, 1.0)
                 // Firework
-                (spawnEntity(event.entity.location, org.bukkit.entity.EntityType.FIREWORK_ROCKET) as Firework).also {
+                (spawnEntity(fireball.location, org.bukkit.entity.EntityType.FIREWORK_ROCKET) as Firework).also {
                     val newMeta = it.fireworkMeta
                     newMeta.power = 110
                     newMeta.addEffect(
@@ -183,25 +190,25 @@ object DragonListeners : Listener {
                 val damageSource = DamageSource.builder(DamageType.MAGIC).build()
                 entity.damage(power + 3.0, damageSource)
             }
-
         }
-        if (event.entity.scoreboardTags.contains(EntityTags.LIGHTNING_BALL)) {
+        if (fireball.scoreboardTags.contains(EntityTags.LIGHTNING_BALL)) {
             event.areaEffectCloud.particle = Particle.ELECTRIC_SPARK
             event.areaEffectCloud.radius += 2.25F
-            LightningCloudTask(event.entity.shooter!! as EnderDragon, event.areaEffectCloud).runTaskTimer(Odyssey.instance, 5, 25)
+            // Null-safe: shooter may be gone by the time the ball lands.
+            val shooter = fireball.shooter as? EnderDragon ?: return@safely
+            LightningCloudTask(shooter, event.areaEffectCloud).runTaskTimer(Odyssey.instance, 5, 25)
         }
     }
 
-
     @EventHandler
-    fun enderCrystalExplosion(event: ExplosionPrimeEvent) {
-        if (event.entityType != EntityType.END_CRYSTAL) return
-        if (event.entity.location.world.enderDragonBattle == null) return
-        val battle = event.entity.world.enderDragonBattle!!
-        if (battle.enderDragon == null) return
-        battle.enderDragon!!.phase = EnderDragon.Phase.CHARGE_PLAYER
+    fun enderCrystalExplosion(event: ExplosionPrimeEvent) = safely("enderCrystalExplosion") {
+        if (event.entityType != EntityType.END_CRYSTAL) return@safely
+        val world = event.entity.location.world ?: return@safely
+        val battle = world.enderDragonBattle ?: return@safely
+        val dragon = battle.enderDragon ?: return@safely
+        dragon.phase = EnderDragon.Phase.CHARGE_PLAYER
 
-        val eye = (event.entity.world.spawnEntity(event.entity.location.clone().add(0.0, 2.0, 0.0), EntityType.ITEM_DISPLAY) as ItemDisplay).apply {
+        val eye = (world.spawnEntity(event.entity.location.clone().add(0.0, 2.0, 0.0), EntityType.ITEM_DISPLAY) as ItemDisplay).apply {
             setItemStack(ItemStack(Material.ENDER_EYE, 1))
             glowColorOverride = Color.FUCHSIA
             isGlowing = true
@@ -211,7 +218,6 @@ object DragonListeners : Listener {
             displayWidth = 40.0F
             brightness = Display.Brightness(14, 14)
         }
-        LightningEyeTask(battle.enderDragon!!, eye).runTaskTimer(Odyssey.instance, 5, 25)
+        LightningEyeTask(dragon, eye).runTaskTimer(Odyssey.instance, 5, 25)
     }
-
 }

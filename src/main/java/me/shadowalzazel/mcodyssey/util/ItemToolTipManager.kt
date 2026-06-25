@@ -21,7 +21,16 @@ interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
 
     // Main Method called by other functions
     // ONLY updates the ToolTip Lore, does not do logic!
-    fun ItemStack.updateToolTip(toggleDescriptions: Boolean = true) {
+    fun ItemStack.updateToolTip(toggleDescriptions: Boolean = true): Boolean {
+        // Set boolean fields
+        val hasAttributes = this.getData(DataComponentTypes.ATTRIBUTE_MODIFIERS) != null
+        val enchantments = this.getData(DataComponentTypes.ENCHANTMENTS)?.enchantments()
+        val storedEnchantments = this.getData(DataComponentTypes.STORED_ENCHANTMENTS)?.enchantments()
+        val hasEnchants = enchantments != null && enchantments.isNotEmpty()
+        val hasStoredEnchants = storedEnchantments != null && storedEnchantments.isNotEmpty()
+
+        // Needs to have at least one of these
+        if (!(hasAttributes || hasEnchants || hasStoredEnchants)) return false
 
         // Start the tool tips
         val oldLore = this.lore()
@@ -29,13 +38,12 @@ interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
 
         // Item Vars
         var usedEnchantabilityPoints = 0
-        val enchantabilityMax = 35
+        val enchantabilityMax = getMaxEnchantabilityPoints()
         // Logic and ToolTip Vars
         var showDescriptions: Boolean = false
         var isCustomWeapon: Boolean = false
         var toolTipIndex = 0
         var startingIndex = 0
-
 
         // Local Helper Functions
         fun addEnchantToolTip(
@@ -65,12 +73,7 @@ interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
 
         val weaponType = getWeaponType()
         isCustomWeapon = weaponType != null
-
         // Get all enchantments
-        val enchantments = this.getData(DataComponentTypes.ENCHANTMENTS)?.enchantments()
-        val storedEnchantments = this.getData(DataComponentTypes.STORED_ENCHANTMENTS)?.enchantments()
-        val hasEnchants = enchantments != null && enchantments.isNotEmpty()
-        val hasStoredEnchants = storedEnchantments != null && storedEnchantments.isNotEmpty()
         usedEnchantabilityPoints = this.getUsedEnchantabilityPoints()
 
         // Check Toggles
@@ -154,12 +157,19 @@ interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
                     toolTipIndex++,
                     darkGrayTextComponent("- Chargeable (Hold weapon to do a charge attack)"))
             }
+
             // Passives
             if (weaponType in WeaponMaps.BONUS_CRIT_DAMAGE) {
                 val critModifier = WeaponMaps.BONUS_CRIT_DAMAGE[weaponType]!! + 0.5F
                 newToolTip.add(
                     toolTipIndex++,
-                    darkGrayTextComponent("- Base Crit Modifier is ${critModifier})"))
+                    darkGrayTextComponent("- Critical Damage Modifier is ${"%.2f".format(1 + critModifier)}%"))
+            }
+            if (weaponType in WeaponMaps.DISABLE_SHIELDS) {
+                val disableTime = WeaponMaps.DISABLE_SHIELDS[weaponType]!! / 20
+                newToolTip.add(
+                    toolTipIndex++,
+                    darkGrayTextComponent("- Can disable Blocking for ${disableTime} seconds"))
             }
         }
 
@@ -272,6 +282,8 @@ interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
 
         // Set the New ToolTip
         this.lore(newToolTip)
+
+        return true
     }
 
     /*-----------------------------------------------------------------------------------------------*/

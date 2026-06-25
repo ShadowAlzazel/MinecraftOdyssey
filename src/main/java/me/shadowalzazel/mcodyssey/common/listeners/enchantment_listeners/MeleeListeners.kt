@@ -94,6 +94,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         "cleave"           to { c -> cleaveEnchantment(c.victim, c.level) },
         "conflagrate"      to { c -> conflagrateEnchantment(c.attacker, c.victim, c.level, c.eventDamage) },
         "decay"            to { c -> decayEnchantment(c.victim, c.level) },
+        "dematerialize"    to { c -> dematerializeEnchantment(c.attacker, c.victim, c.eventDamage, c.level) }, //TODO: Move
         "echo"             to { c -> echoEnchantment(c.attacker, c.victim, c.level) },
         "execution"        to { c -> executionEnchantment(c.attacker, c.victim, c.level) },
         "chain_lightning"  to { c -> chainLightningEnchantment(c.attacker, c.victim, c.eventDamage, c.level) },
@@ -421,8 +422,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
                     it.addPotionEffects(
                         listOf(
                             PotionEffect(PotionEffectType.SPEED, 10 * 20, level - 1),
-                            PotionEffect(PotionEffectType.STRENGTH, 10 * 20, level - 1),
-                            PotionEffect(PotionEffectType.HASTE, 10 * 20, 0)
+                            PotionEffect(PotionEffectType.STRENGTH, 10 * 20, level - 1)
                         )
                     )
                     it.target = this@with

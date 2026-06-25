@@ -297,7 +297,6 @@ object WeaponListeners : Listener, WeaponProjectileHandler, EnchantmentManager {
 
         // Main-hand throwable
         val mainType = mainWeapon.getStringTag(ItemDataTags.TOOL_TYPE)
-        println(mainType)
         THROWABLES[mainType]?.let { spec ->
             throwWeapon(player, mainWeapon, spec)
             if (spec.dualThrowable && offHandType == mainType) {

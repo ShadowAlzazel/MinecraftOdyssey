@@ -1,17 +1,9 @@
 package me.shadowalzazel.mcodyssey.common.enchantments
 
-import io.papermc.paper.datacomponent.DataComponentTypes
 import me.shadowalzazel.mcodyssey.util.DataTagManager
-import me.shadowalzazel.mcodyssey.util.constants.CustomColors
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.TextComponent
-import net.kyori.adventure.text.format.TextColor
-import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.entity.LivingEntity
-import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 
 @Suppress("UnstableApiUsage")
@@ -46,7 +38,7 @@ interface EnchantabilityHandler : EnchantmentManager, DescriptionManager, DataTa
 
     /*-----------------------------------------------------------------------------------------------*/
     // Point Default
-    fun itemEnchantabilityPoints(item: ItemStack): Int {
+    private fun itemEnchantabilityPoints(item: ItemStack): Int {
         // And tool/armor type
         val baseMaterialPoints = when(item.type) {
             Material.NETHERITE_HELMET, Material.DIAMOND_HELMET, Material.IRON_HELMET, Material.CHAINMAIL_HELMET,
@@ -73,20 +65,20 @@ interface EnchantabilityHandler : EnchantmentManager, DescriptionManager, DataTa
         }
         var bonusPoints = 0
         val materialType = item.getStringTag(ItemDataTags.MATERIAL_TYPE)
-        val isEnchantMaterial = materialType == "mithril" || materialType == "crystal_alloy"
+        val isEnchantableMaterial = materialType == "mithril" || materialType == "crystal_alloy"
         val nameId = item.getItemNameId()
-        val isEnchantName = nameId.contains("mithril") || nameId.contains("crystal_alloy")
-        if (isEnchantMaterial || isEnchantName) {
+        val hasEnchantableName = nameId.contains("mithril") || nameId.contains("crystal_alloy")
+        if (isEnchantableMaterial || hasEnchantableName) {
             bonusPoints += 5
         }
         // Exotics
         when(nameId) {
             "excalibur" -> bonusPoints += 5
             "frost_fang", "knight_breaker", "abzu_blade", "elucidator", "shogun_lightning" -> {
-                bonusPoints += 5
+                bonusPoints += 0
             }
             "laplace_spear", "flaming_wolf_spear", "blade_broken_by_storms", "shogun_pulse", "firewood_staff" -> {
-                bonusPoints += 5
+                bonusPoints += 0
             }
         }
 

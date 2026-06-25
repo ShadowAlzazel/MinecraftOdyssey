@@ -1,6 +1,8 @@
 package me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners
 
 import com.destroystokyo.paper.event.player.PlayerReadyArrowEvent
+import io.papermc.paper.datacomponent.DataComponentTypes
+import io.papermc.paper.datacomponent.item.PotionContents
 import io.papermc.paper.event.entity.EntityLoadCrossbowEvent
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.tasks.enchantment_tasks.*
@@ -32,9 +34,155 @@ import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.sin
 
+@Suppress("UnstableApiUsage")
 object RangedListeners : Listener, EnchantmentManager {
 
+    // ──────────────────────────────────────────────────────────────────────────────
+    // ──────────────────────────────── CONTEXTS ────────────────────────────────────
+    // ──────────────────────────────────────────────────────────────────────────────
+
     private val currentOverchargeTasks = mutableMapOf<UUID, OverchargeTask>()
+
+    private class DamageMods {
+        var flat: Float = 0.0f         // raw base added before percent
+        var percent: Float = 0.0f      // summed, applied as (1 + percent)
+        var postPercent: Float = 1.0f  // multiplied last (e.g. magic)
+    }
+
+    private data class BowShotContext(
+        val event: EntityShootBowEvent,
+        val shooter: LivingEntity,
+        val projectile: Entity,
+        val bow: ItemStack,
+        val level: Int,
+    )
+
+    private data class ProjectileDamageContext(
+        val event: EntityDamageByEntityEvent,
+        val projectile: Projectile,
+        val shooter: LivingEntity,
+        val victim: LivingEntity,
+        val mods: DamageMods,
+    )
+
+    private data class ProjectileHitContext(
+        val event: ProjectileHitEvent,
+        val projectile: Projectile,
+        val victim: LivingEntity,
+    )
+
+    private data class ProjectileDeathContext(
+        val event: EntityDeathEvent,
+        val projectile: Projectile,
+        val victim: LivingEntity,
+    )
+
+    private data class BowReadyContext(
+        val player: Player,
+        val bow: ItemStack,
+        val level: Int,
+    )
+
+    // ──────────────────────────────────────────────────────────────────────────────
+    // ──────────────────────────────── MAPPINGS ────────────────────────────────────
+    // ──────────────────────────────────────────────────────────────────────────────
+
+    // Fired on shoot. Side effects on the projectile/shooter; iteration order is
+    // the bow's enchantment order (the map is lookup only), so "priority in order"
+    // is preserved.
+    private val bowShotEnchantmentsMap: Map<String, (BowShotContext) -> Unit> = mapOf(
+        "alchemy_artillery" to { c -> alchemyArtilleryShoot(c.projectile, c.level) },
+        "ballistics"        to { c -> ballisticsEnchantmentShoot(c.projectile, c.level) },
+        "ambush"            to { c -> ambushEnchantmentShoot(c.projectile, c.level) },
+        "bola_shot"         to { c -> bolaShotEnchantmentShoot(c.projectile, c.level) },
+        "burst_barrage"     to { c -> burstBarrageEnchantmentShoot(c.projectile, c.shooter, c.level) },
+        "chain_reaction"    to { c -> chainReactionEnchantmentShoot(c.projectile, c.level) },
+        "cluster_shot"      to { c -> clusterShotEnchantmentShoot(c.projectile, c.level) },
+        "deadeye"           to { c -> deadeyeEnchantmentShoot(c.projectile, c.level) },
+        "death_from_above"  to { c -> deathFromAboveEnchantmentShoot(c.projectile, c.level) },
+        "dynamo"            to { c -> dynamoEnchantmentShoot(c.projectile, c.level) },
+        "double_tap"        to { c -> doubleTapEnchantmentShoot(c.projectile, c.shooter) },
+        "entanglement"      to { c -> entanglementEnchantmentShoot(c.projectile, c.level) },
+        "fan_fire"          to { c -> fanFireEnchantmentShoot(c.projectile, c.shooter, c.level) },
+        "lucky_draw"        to { c -> luckyDrawEnchantmentShoot(c.event, c.level) },
+        "luxpose"           to { c -> luxposeEnchantmentShoot(c.projectile, c.level) },
+        "gale"              to { c -> galeEnchantmentShoot(c.shooter, c.projectile, c.level) },
+        "overcharge"        to { c -> overchargeEnchantmentShoot(c.projectile, c.shooter, c.bow) },
+        "perpetual"         to { c -> perpetualProjectileEnchantmentShoot(c.projectile, c.level) },
+        "rain_of_arrows"    to { c -> rainOfArrowsEnchantmentShoot(c.projectile, c.level) },
+        "ricochet"          to { c -> ricochetEnchantmentShoot(c.projectile, c.level) },
+        "sharpshooter"      to { c -> sharpshooterEnchantmentShoot(c.projectile, c.level) },
+        "single_out"        to { c -> singleOutEnchantmentShoot(c.projectile, c.level) },
+        "singularity_shot"  to { c -> singularityShotEnchantmentShoot(c.projectile, c.level, c.shooter) },
+        "steady_aim"        to { c -> steadyAim(c.projectile, c.level, c.shooter) },
+        "rend"              to { c -> rendEnchantmentShoot(c.projectile, c.level) },
+        "temporal"          to { c -> temporalTorrentEnchantmentShoot(c.projectile, c.level) },
+        "vulnerocity"       to { c -> vulnerocityEnchantmentShoot(c.projectile, c.level) },
+    )
+
+    // On-hit damage.
+    // (Base Damage + flat) * (1 + percent) * postPercent
+    // Entries below are currently FLAT (behaviour-identical to the old `event.damage += …`).
+    // To convert one to a percent modifier: change the enchant fn to return a fraction,
+    // then swap `c.mods.flat` -> `c.mods.percent` on its line.
+    private val projectileDamageEnchantmentsMap: Map<String, (ProjectileDamageContext) -> Unit> = mapOf(
+        EntityTags.AMBUSH_ARROW           to { c -> c.mods.percent += ambushEnchantmentHit(c.projectile, c.victim) },
+        EntityTags.BALLISTICS_ARROW       to { c -> c.mods.percent += ballisticsEnchantmentHit(c.projectile) },
+        EntityTags.DEADEYE_ARROW          to { c -> c.mods.percent += deadeyeEnchantmentHit(c.projectile, c.victim) },
+        EntityTags.DEATH_FROM_ABOVE_ARROW to { c -> c.mods.percent += deathFromAboveEnchantmentHit(c.projectile, c.victim, c.shooter) },
+        EntityTags.LUXPOSE_ARROW          to { c -> c.mods.percent += luxposeEnchantmentHit(c.projectile, c.victim) },
+        EntityTags.OVERCHARGE_ARROW       to { c -> c.mods.percent += overchargeEnchantmentHit(c.projectile) },
+        EntityTags.RICOCHET_ARROW         to { c -> c.mods.percent += ricochetEnchantmentEntityHit(c.projectile) },
+        EntityTags.SHARPSHOOTER_ARROW     to { c -> c.mods.percent += sharpshooterEnchantmentHit(c.projectile) },
+        EntityTags.SINGLE_OUT_ARROW       to { c -> c.mods.percent += singleOutEnchantmentHit(c.projectile, c.victim) },
+
+        // side effects only — don't touch mods
+        EntityTags.DYNAMO_ARROW           to { c -> dynamoEnchantmentHit(c.projectile, c.victim) },
+        EntityTags.SOUL_REND_ARROW        to { c -> soulRendEnchantmentHit(c.shooter, c.projectile, c.victim) },
+    )
+
+    // On-hit, entity only. Side effects.
+    private val projectileHitEnchantmentsMap: Map<String, (ProjectileHitContext) -> Unit> = mapOf(
+        EntityTags.BOLA_SHOT_ARROW        to { c -> bolaShotEnchantmentHit(c.projectile, c.victim) },
+        EntityTags.CHAIN_REACTION_ARROW   to { c -> chainReactionEnchantmentHit(c.projectile, c.victim) },
+        EntityTags.CLUSTER_SHOT_ARROW     to { c -> clusterShotEnchantmentHit(c.projectile, c.victim) },
+        EntityTags.ENTANGLEMENT_ARROW     to { c -> entanglementEnchantmentHit(c.projectile, c.victim) },
+        EntityTags.VULNEROCITY_ARROW      to { c -> vulnerocityEnchantmentHit(c.projectile, c.victim) },
+        EntityTags.RAIN_OF_ARROWS_ARROW   to { c -> rainOfArrowsEnchantmentHit(c.projectile, c.victim) },
+    )
+
+    // On kill. Side effects.
+    private val projectileDeathEnchantmentsMap: Map<String, (ProjectileDeathContext) -> Unit> = mapOf(
+        "THERMO_TEST" to { c -> dynamoEnchantmentKill(c.projectile, c.victim) }, // FIXME: looks like a placeholder tag
+    )
+
+    // On arrow ready.
+    private val bowReadyEnchantmentsMap: Map<String, (BowReadyContext) -> Unit> = mapOf(
+        "overcharge" to { c -> overchargeEnchantmentLoad(c.player, c.bow, c.level) },
+    )
+
+    private fun <C> dispatchEnchants(
+        item: ItemStack,
+        map: Map<String, (C) -> Unit>,
+        makeContext: (level: Int) -> C,
+    ) {
+        for ((enchant, level) in item.enchantments) {
+            val handler = map[enchant.getNameId()] ?: continue
+            handler(makeContext(level))
+        }
+    }
+
+    private fun <C> dispatchTags(
+        tags: Collection<String>,
+        map: Map<String, (C) -> Unit>,
+        context: C,
+    ) {
+        for (tag in tags) map[tag]?.invoke(context)
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────────
+    // ──────────────────────────────── HANDLERS ────────────────────────────────────
+    // ──────────────────────────────────────────────────────────────────────────────
 
     // Main function for enchantments relating to shooting bows
     @EventHandler
@@ -44,143 +192,33 @@ object RangedListeners : Listener, EnchantmentManager {
         if (projectile.scoreboardTags.contains(EntityTags.REPLICATED_ARROW)) return
         val shooter = event.entity
         val bow = event.bow ?: return
-        // Priority is in the order !!
-        // Loop for all enchants
-        for (enchant in bow.enchantments) {
-            when (enchant.key.getNameId()) {
-                "alchemy_artillery" -> {
-                    alchemyArtilleryShoot(projectile, enchant.value)
-                }
-                "ballistics" -> {
-                    ballisticsEnchantmentShoot(projectile, enchant.value)
-                }
-                "ambush" -> {
-                    ambushEnchantmentShoot(projectile, enchant.value)
-                }
-                "bola_shot" -> {
-                    bolaShotEnchantmentShoot(projectile, enchant.value)
-                }
-                "burst_barrage" -> {
-                    burstBarrageEnchantmentShoot(projectile, shooter, enchant.value)
-                }
-                "chain_reaction" -> {
-                    chainReactionEnchantmentShoot(projectile, enchant.value)
-                }
-                "cluster_shot" -> {
-                    clusterShotEnchantmentShoot(projectile, enchant.value)
-                }
-                "deadeye" -> {
-                    deadeyeEnchantmentShoot(projectile, enchant.value)
-                }
-                "death_from_above" -> {
-                    deathFromAboveEnchantmentShoot(projectile, enchant.value)
-                }
-                "dynamo" -> {
-                    dynamoEnchantmentShoot(projectile, enchant.value)
-                }
-                "double_tap" -> {
-                    doubleTapEnchantmentShoot(projectile, shooter)
-                }
-                "entanglement" -> {
-                    entanglementEnchantmentShoot(projectile, enchant.value)
-                }
-                "fan_fire" -> {
-                    fanFireEnchantmentShoot(projectile, shooter, enchant.value)
-                }
-                "lucky_draw" -> {
-                    event.setConsumeItem(!luckyDrawEnchantmentShoot(enchant.value))
-                }
-                "luxpose" -> {
-                    luxposeEnchantmentShoot(projectile, enchant.value)
-                }
-                "gale" -> {
-                    galeEnchantmentShoot(shooter, projectile, enchant.value)
-                }
-                "overcharge" -> {
-                    overchargeEnchantmentShoot(projectile, shooter, bow)
-                }
-                "perpetual" -> {
-                    perpetualProjectileEnchantmentShoot(projectile, enchant.value)
-                }
-                "ricochet" -> {
-                    ricochetEnchantmentShoot(projectile, enchant.value)
-                }
-                "sharpshooter" -> {
-                    sharpshooterEnchantmentShoot(projectile, enchant.value)
-                }
-                "single_out" -> {
-                    singleOutEnchantmentShoot(projectile, enchant.value)
-                }
-                "singularity_shot" -> {
-                    singularityShotEnchantmentShoot(projectile, enchant.value, shooter)
-                }
-                "steady_aim" -> {
-                    steadyAim(projectile, enchant.value, shooter)
-                }
-                "rend" -> {
-                    rendEnchantmentShoot(projectile, enchant.value)
-                }
-                "temporal" -> {
-                    temporalTorrentEnchantmentShoot(projectile, enchant.value)
-                }
-                "vulnerocity" -> {
-                    vulnerocityEnchantmentShoot(projectile, enchant.value)
-                }
-            }
+
+        dispatchEnchants(bow, bowShotEnchantmentsMap) { level ->
+            BowShotContext(event, shooter, projectile, bow, level)
         }
     }
+
     // Main function for enchantments relating to projectile damage
     @EventHandler
     fun mainProjectileDamageHandler(event: EntityDamageByEntityEvent) {
-        if (event.cause != EntityDamageEvent.DamageCause.PROJECTILE) { return }
-        if (event.damager !is Projectile) { return }
-        if (event.entity !is LivingEntity) { return }
+        if (event.cause != EntityDamageEvent.DamageCause.PROJECTILE) return
+        if (event.damager !is Projectile) return
+        if (event.entity !is LivingEntity) return
         val projectile = event.damager as Projectile
-        if (projectile.shooter == null) { return }
-        val shooter: LivingEntity = projectile.shooter as LivingEntity
-        val victim: LivingEntity = event.entity as LivingEntity
-        // Loop over arrow projectile tags
-        // Maybe sort in priority the tags OR in order
-        for (tag in projectile.scoreboardTags) {
-            when (tag) {
-                EntityTags.AMBUSH_ARROW -> {
-                    event.damage += ambushEnchantmentHit(projectile, victim)
-                }
-                EntityTags.BALLISTICS_ARROW -> {
-                    event.damage += ballisticsEnchantmentHit(projectile)
-                }
-                EntityTags.DEADEYE_ARROW -> {
-                    event.damage += deadeyeEnchantmentHit(projectile, victim)
-                }
-                EntityTags.DEATH_FROM_ABOVE_ARROW -> {
-                    event.damage += deathFromAboveEnchantmentHit(projectile, victim, shooter)
-                }
-                EntityTags.ENTANGLEMENT_ARROW -> {
-                    event.damage += entanglementEnchantmentHit(projectile, victim, shooter)
-                }
-                EntityTags.LUXPOSE_ARROW -> {
-                    event.damage += luxposeEnchantmentHit(projectile, victim)
-                }
-                EntityTags.OVERCHARGE_ARROW -> {
-                    event.damage += overchargeEnchantmentHit(projectile)
-                }
-                EntityTags.DYNAMO_ARROW -> {
-                    dynamoEnchantmentHit(projectile, victim)
-                }
-                EntityTags.RICOCHET_ARROW -> {
-                    event.damage += ricochetEnchantmentEntityHit(projectile)
-                }
-                EntityTags.SHARPSHOOTER_ARROW -> {
-                    event.damage += sharpshooterEnchantmentHit(projectile)
-                }
-                EntityTags.SINGLE_OUT_ARROW -> {
-                    event.damage += singleOutEnchantmentHit(projectile, victim)
-                }
-                EntityTags.SOUL_REND_ARROW -> {
-                    soulRendEnchantmentHit(shooter, projectile, victim)
-                }
-            }
-        }
+        if (projectile.shooter == null) return
+        val shooter = projectile.shooter as LivingEntity
+        val victim = event.entity as LivingEntity
+
+        val mods = DamageMods()
+        dispatchTags(
+            projectile.scoreboardTags.toSet(), // defensive copy
+            projectileDamageEnchantmentsMap,
+            ProjectileDamageContext(event, projectile, shooter, victim, mods),
+        )
+
+        // (Base Damage + flat) * (1 + percent) * postPercent
+        event.damage = (event.damage + mods.flat) * (1 + mods.percent) * mods.postPercent
+        if (event.damage < 0.0) event.damage = 0.0
     }
 
     // Main function for enchantments relating to projectile hits
@@ -188,27 +226,14 @@ object RangedListeners : Listener, EnchantmentManager {
     fun mainProjectileHitHandler(event: ProjectileHitEvent) {
         val projectile: Projectile = event.entity
         if (event.hitEntity is LivingEntity) {
-            val victim: LivingEntity = event.hitEntity as LivingEntity
+            val victim = event.hitEntity as LivingEntity
             if (projectile.scoreboardTags.isEmpty()) return
-            val tags = projectile.scoreboardTags.toSet() // Prevent async problems
-            for (tag in tags) {
-                when (tag) {
-                    EntityTags.BOLA_SHOT_ARROW -> {
-                        bolaShotEnchantmentHit(projectile, victim)
-                    }
-                    EntityTags.CHAIN_REACTION_ARROW -> {
-                        chainReactionEnchantmentHit(projectile, victim)
-                    }
-                    EntityTags.CLUSTER_SHOT_ARROW -> {
-                        clusterShotEnchantmentHit(projectile, victim)
-                    }
-                    EntityTags.VULNEROCITY_ARROW -> {
-                        vulnerocityEnchantmentHit(projectile, victim)
-                    }
-                }
-            }
-        }
-        else if (event.hitBlock != null) {
+            dispatchTags(
+                projectile.scoreboardTags.toSet(), // Prevent async problems
+                projectileHitEnchantmentsMap,
+                ProjectileHitContext(event, projectile, victim),
+            )
+        } else if (event.hitBlock != null) {
             if (projectile.scoreboardTags.contains(EntityTags.RICOCHET_ARROW)) {
                 ricochetEnchantmentBlockHit(projectile, event.hitBlockFace!!.direction)
             }
@@ -223,84 +248,29 @@ object RangedListeners : Listener, EnchantmentManager {
         val projectile = event.damageSource.directEntity ?: return
         if (projectile !is Projectile) return
         val victim: LivingEntity = event.entity
-        // Loop for all enchants
-        val tags = projectile.scoreboardTags.toSet() // Prevent async problems
-        for (tag in tags) {
-            when (tag) {
-                "THERMO_TEST" -> {
-                    dynamoEnchantmentKill(projectile, victim)
-                }
-            }
-        }
+
+        dispatchTags(
+            projectile.scoreboardTags.toSet(), // Prevent async problems
+            projectileDeathEnchantmentsMap,
+            ProjectileDeathContext(event, projectile, victim),
+        )
     }
 
     // Main function for enchantments relating to loading crossbows
     @EventHandler
     fun crossbowLoadingHandler(event: EntityLoadCrossbowEvent) {
-        if (event.crossbow.hasItemMeta()) {
-            return
-            /*
-            val someCrossbow = event.crossbow
-
-            for (enchant in someCrossbow.enchantments) {
-                // Continue if not OdysseyEnchant
-                //val gildedEnchant = findOdysseyEnchant(enchant.key) ?: continue
-                when (enchant.key) {
-                    OdysseyEnchantments.ALCHEMY_ARTILLERY -> {
-                        // Load More Damage
-                    }
-                }
-            }
-             */
-        }
+        // Currently a no-op: crossbow enchant handling is not implemented yet.
+        // NOTE: the original guard returned when the crossbow *had* meta (inverted),
+        // and the body was commented out — so nothing ran in either branch.
+        // When you wire this up, the guard should be `if (!event.crossbow.hasItemMeta()) return`.
     }
 
     // Main function for readying arrows
     @EventHandler
     fun bowReadyHandler(event: PlayerReadyArrowEvent) {
-        // Only works in survival
-        if (event.bow.hasItemMeta()) {
-            val bow = event.bow
-            val player = event.player
-            for (enchant in bow.enchantments) {
-                when (enchant.key.getNameId()) {
-                    "overcharge" -> {
-                        overchargeEnchantmentLoad(player, bow, enchant.value)
-                    }
-                }
-            }
-        }
-    }
-
-    @EventHandler
-    fun bowSwapHandsHandler(event: PlayerSwapHandItemsEvent) {
-        if (event.offHandItem.type != Material.BOW && event.offHandItem.type != Material.CROSSBOW) return
-        val offHand = event.offHandItem
-        if (!offHand.hasItemMeta()) return
-        if (offHand.hasEnchantment("rend")) {
-            soulRendEnchantmentActivate(event.player)
-        }
-    }
-
-    // QuickHands -> auto reload?? maybe compact??
-    // Helper function for cooldown
-    private fun cooldownManager(hitter: LivingEntity, message: String, cooldownMap: MutableMap<UUID, Long>, timer: Double): Boolean {
-        if (!cooldownMap.containsKey(hitter.uniqueId)) {
-            cooldownMap[hitter.uniqueId] = 0L
-        }
-        // Cooldown Timer
-        val timeElapsed: Long = System.currentTimeMillis() - cooldownMap[hitter.uniqueId]!!
-        return if (timeElapsed > timer * 1000) {
-            cooldownMap[hitter.uniqueId] = System.currentTimeMillis()
-            true
-        } else {
-            hitter.sendActionBar(
-                Component.text(
-                    "$message on Cooldown (Time Remaining: ${timer - ((timeElapsed / 1) * 0.001)}s)",
-                    TextColor.color(155, 155, 155)
-                )
-            )
-            false
+        if (!event.bow.hasItemMeta()) return
+        dispatchEnchants(event.bow, bowReadyEnchantmentsMap) { level ->
+            BowReadyContext(event.player, event.bow, level)
         }
     }
 
@@ -343,41 +313,56 @@ object RangedListeners : Listener, EnchantmentManager {
         setHasLeftShooter(false)
     }
 
-    /*-----------------------------------------------------------------------------------------------*/
+    // ──────────────────────────────────────────────────────────────────────────────
+    // ─────────────────────────────── ENCHANTMENTS ─────────────────────────────────
+    // ──────────────────────────────────────────────────────────────────────────────
 
     private fun alchemyArtilleryShoot(projectile: Entity, level: Int) {
-        if (projectile is Arrow) {
-            if (projectile.hasCustomEffects()) {
-                // Copy
-                val effectList = mutableListOf<PotionEffect>()
-                for (effect in projectile.customEffects) {
-                    val type = effect.type
-                    val duration = (effect.duration * (1 + (0.2 * level))).toInt() // 20/40/60%
-                    effectList.add(PotionEffect(type, duration, effect.amplifier))
-                }
-                for (effect in effectList) {
-                    projectile.addCustomEffect(effect, true)
-                }
-                projectile.velocity.multiply(1 + (0.1 * level))
+        val durationScale = 1 + (0.2 * level)
+        val speedScale = 1 + (0.1 * level)
+
+        // Extension functions
+        fun PotionEffect.scaled() = PotionEffect(type, (duration * durationScale).toInt(), amplifier)
+        fun List<PotionEffect>.scaleAll() = map { it.scaled() }
+
+        // Get contents
+        val contents = when (projectile) {
+            is Arrow ->  {
+                val entityPotionContents = projectile.getData(DataComponentTypes.POTION_CONTENTS)
+                val itemPotionContents = projectile.itemStack.getData(DataComponentTypes.POTION_CONTENTS)
+                entityPotionContents ?: itemPotionContents ?: return
             }
-            // Fix for 1.20.5 basePotionType
-            // getBasePotionType.toEffect
-        }
-        else if (projectile is ThrownPotion) {
-            val effectList = mutableListOf<PotionEffect>()
-            for (effect in projectile.effects) {
-                val type = effect.type
-                val duration = (effect.duration * (1 + (0.2 * level))).toInt() // 20/40/60%
-                effectList.add(PotionEffect(type, duration, effect.amplifier))
+            is ThrownPotion -> {
+                val entityPotionContents = projectile.getData(DataComponentTypes.POTION_CONTENTS)
+                val itemPotionContents = projectile.item.getData(DataComponentTypes.POTION_CONTENTS)
+                entityPotionContents ?: itemPotionContents ?: return
             }
-            val potionMeta = projectile.potionMeta.clone()
-            for (effect in effectList) {
-                potionMeta.addCustomEffect(effect, true)
+            else -> {
+                return
             }
-            projectile.potionMeta = potionMeta
-            projectile.velocity.multiply(1 + (0.1 * level))
         }
 
+        val scaledEffects = contents.allEffects().scaleAll()
+
+        val newContents = PotionContents.potionContents()
+            .apply {
+                contents.potion()?.let { potion(it) }
+                contents.customColor()?.let { customColor(it) }
+                scaledEffects.forEach { addCustomEffect(it) }
+            }
+            .build()
+
+        // Build contents
+        when(projectile) {
+            is Arrow -> {
+                projectile.itemStack.setData(DataComponentTypes.POTION_CONTENTS, newContents)
+            }
+            is ThrownPotion -> {
+                projectile.item.setData(DataComponentTypes.POTION_CONTENTS, newContents)
+            }
+        }
+
+        projectile.velocity = projectile.velocity.multiply(speedScale)
     }
 
     private fun dynamoEnchantmentShoot(projectile: Entity, level: Int) {
@@ -454,12 +439,12 @@ object RangedListeners : Listener, EnchantmentManager {
         }
     }
 
-    private fun ambushEnchantmentHit(projectile: Projectile, victim: LivingEntity): Double {
-        if (victim.scoreboardTags.contains(EntityTags.AMBUSH_MARKED)) return 0.0
-        val modifier = projectile.getIntTag(EntityTags.AMBUSH_MODIFIER) ?: return 0.0
+    private fun ambushEnchantmentHit(projectile: Projectile, victim: LivingEntity): Float {
+        if (victim.scoreboardTags.contains(EntityTags.AMBUSH_MARKED)) return 0.0F
+        val modifier = projectile.getIntTag(EntityTags.AMBUSH_MODIFIER) ?: return 0.0F
         victim.world.spawnParticle(Particle.VAULT_CONNECTION, victim.location, 10, 0.15, 0.15, 0.15)
         victim.addScoreboardTag(EntityTags.AMBUSH_MARKED)
-        return modifier * 2.0
+        return modifier * 0.25F
     }
 
     private fun ballisticsEnchantmentShoot(projectile: Entity, level: Int) {
@@ -469,9 +454,9 @@ object RangedListeners : Listener, EnchantmentManager {
         }
     }
 
-    private fun ballisticsEnchantmentHit(projectile: Projectile): Double {
-        val modifier = projectile.getIntTag(EntityTags.BALLISTICS_MODIFIER) ?: return 0.0
-        return modifier * 1.0
+    private fun ballisticsEnchantmentHit(projectile: Projectile): Float {
+        val modifier = projectile.getIntTag(EntityTags.BALLISTICS_MODIFIER) ?: return 0.0F
+        return modifier * 0.10F
     }
 
     private fun bolaShotEnchantmentShoot(projectile: Entity, level: Int) {
@@ -609,13 +594,13 @@ object RangedListeners : Listener, EnchantmentManager {
         }
     }
 
-    private fun deadeyeEnchantmentHit(projectile: Entity, victim: LivingEntity): Double {
-        val modifier = projectile.getIntTag(EntityTags.DEADEYE_MODIFIER) ?: return 0.0
-        val distance = projectile.location.distance(victim.eyeLocation)
-        if (distance <= 1.15) {
-            return 3.0 + (modifier * 2)
+    private fun deadeyeEnchantmentHit(projectile: Entity, victim: LivingEntity): Float {
+        val modifier = projectile.getIntTag(EntityTags.DEADEYE_MODIFIER) ?: return 0.0F
+        val eyeDistance = projectile.location.distance(victim.eyeLocation)
+        if (eyeDistance <= 0.8) {
+            return modifier * 0.2F
         }
-        return 0.0
+        return 0.0F
     }
 
     private fun deathFromAboveEnchantmentShoot(projectile: Entity, level: Int) {
@@ -625,13 +610,13 @@ object RangedListeners : Listener, EnchantmentManager {
         }
     }
 
-    private fun deathFromAboveEnchantmentHit(projectile: Projectile, victim: LivingEntity, shooter: LivingEntity): Double {
-        val modifier = projectile.getIntTag(EntityTags.DEATH_FROM_ABOVE_MODIFIER) ?: return 0.0
-        val height = 4 + (modifier * 4)
-        if (victim.location.distance(shooter.location) > height) {
-            return 1.5 + (modifier * 1.5)
+    private fun deathFromAboveEnchantmentHit(projectile: Projectile, victim: LivingEntity, shooter: LivingEntity): Float {
+        val modifier = projectile.getIntTag(EntityTags.DEATH_FROM_ABOVE_MODIFIER) ?: return 0.0F
+        val height = modifier * 5
+        if (victim.location.distance(shooter.location) >= height) {
+            return 0.2F * modifier / height
         }
-        return 0.0
+        return 0.0F
     }
 
     private fun doubleTapEnchantmentShoot(projectile: Entity, shooter: LivingEntity) {
@@ -655,13 +640,13 @@ object RangedListeners : Listener, EnchantmentManager {
         }
     }
 
-    private fun entanglementEnchantmentHit(projectile: Projectile, victim: LivingEntity, shooter: LivingEntity): Double {
-        val modifier = projectile.getIntTag(EntityTags.ENTANGLEMENT_MODIFIER) ?: return 0.0
+    private fun entanglementEnchantmentHit(projectile: Projectile, victim: LivingEntity) {
+        val modifier = projectile.getIntTag(EntityTags.ENTANGLEMENT_MODIFIER) ?: return
         victim.addScoreboardTag(EntityTags.ENTANGLED)
         val nearby = victim.location.getNearbyLivingEntities(10.0).filter {
             it.scoreboardTags.contains(EntityTags.ENTANGLED) && it != victim
         }
-        if (nearby.isEmpty()) return 0.0
+        if (nearby.isEmpty()) return
         val other = nearby.first()
         // Math
         val origin1 = victim.eyeLocation.clone()
@@ -675,9 +660,6 @@ object RangedListeners : Listener, EnchantmentManager {
         victim.scoreboardTags.remove(EntityTags.ENTANGLED)
         other.velocity = velocity2
         other.scoreboardTags.remove(EntityTags.ENTANGLED)
-        // Damage
-        other.damage(modifier * 1.0)
-        return modifier * 1.0
     }
 
     private fun fanFireEnchantmentShoot(projectile: Entity, shooter: LivingEntity, level: Int) {
@@ -714,8 +696,14 @@ object RangedListeners : Listener, EnchantmentManager {
         task.runTaskLater(Odyssey.instance, 5)
     }
 
-    private fun luckyDrawEnchantmentShoot(enchantmentStrength: Int): Boolean {
-        return (enchantmentStrength * 10) + 7 > (0..100).random()
+    private fun luckyDrawEnchantmentShoot(event: EntityShootBowEvent, level: Int) {
+        val luckyDraw = (level * 10) + 7 > (0..100).random()
+        val projectile = event.projectile as? Projectile ?: return
+        val shooter = projectile.shooter as? LivingEntity ?: return
+        if (luckyDraw) {
+            val item = event.consumable?.clone() ?: return
+            if (shooter is Player) shooter.inventory.addItem(item)
+        }
     }
 
     private fun luxposeEnchantmentShoot(projectile: Entity, level: Int) {
@@ -725,10 +713,10 @@ object RangedListeners : Listener, EnchantmentManager {
         }
     }
 
-    private fun luxposeEnchantmentHit(projectile: Projectile, victim: LivingEntity): Double {
-        if (!victim.isGlowing) return 0.0
-        val modifier = projectile.getIntTag(EntityTags.LUXPOSE_MODIFIER) ?: return 0.0
-        return modifier * 1.0
+    private fun luxposeEnchantmentHit(projectile: Projectile, victim: LivingEntity): Float {
+        if (!victim.isGlowing) return 0.0F
+        val modifier = projectile.getIntTag(EntityTags.LUXPOSE_MODIFIER) ?: return 0.0F
+        return modifier * 0.1F
     }
 
     private fun overchargeEnchantmentLoad(player: Player, bow: ItemStack, level: Int) {
@@ -766,9 +754,9 @@ object RangedListeners : Listener, EnchantmentManager {
         }
     }
 
-    private fun overchargeEnchantmentHit(projectile: Projectile): Double {
-        val modifier = projectile.getIntTag(EntityTags.OVERCHARGE_MODIFIER) ?: return 0.0
-        return 3.0 * modifier
+    private fun overchargeEnchantmentHit(projectile: Projectile): Float {
+        val modifier = projectile.getIntTag(EntityTags.OVERCHARGE_MODIFIER) ?: return 0.0F
+        return modifier * 0.3F
     }
 
     private fun perpetualProjectileEnchantmentShoot(projectile: Entity, level: Int) {
@@ -780,6 +768,52 @@ object RangedListeners : Listener, EnchantmentManager {
         }
     }
 
+    private fun rainOfArrowsEnchantmentShoot(projectile: Entity, level: Int) {
+        with(projectile) {
+            addScoreboardTag(EntityTags.RAIN_OF_ARROWS_ARROW)
+            setIntTag(EntityTags.RAIN_OF_ARROWS_MODIFIER, level)
+        }
+    }
+
+    private fun rainOfArrowsEnchantmentHit(projectile: Projectile, victim: LivingEntity) {
+        //if (!projectile.scoreboardTags.contains(EntityTags.ORIGINAL_ARROW)) return
+        val modifier = projectile.getIntTag(EntityTags.RAIN_OF_ARROWS_MODIFIER) ?: return
+
+        val arrowCount = modifier * 6
+        val strikeLocation = victim.location.clone()
+
+        // 1s delay before arrows launch
+        Odyssey.instance.server.scheduler.runTaskLater(Odyssey.instance, Runnable {
+
+            // Warning particles at ground target during the delay (spawned immediately, visible before arrows fall)
+            strikeLocation.world?.spawnParticle(Particle.ELECTRIC_SPARK, strikeLocation, 30, 0.6, 0.1, 0.6, 0.05)
+
+            for (x in 1..arrowCount) {
+                // Spread arrows evenly in a radial pattern
+                val angle = Math.PI * 2 * (x / (arrowCount * 1.0))
+                val spreadRadius = 0.6 // Tight spread at launch so they fan out naturally
+                val lateralX = spreadRadius * cos(angle)
+                val lateralZ = spreadRadius * sin(angle)
+
+                // Launch from slightly above victim location so arrows clear the target
+                val spawnLocation = strikeLocation.clone().add(lateralX, 1.0, lateralZ)
+
+                // Upward velocity with slight outward spread — goes up 6-10 blocks then arcs down
+                val upwardVelocity = org.bukkit.util.Vector(
+                    lateralX * 0.25,  // slight outward drift
+                    2.8,              // ~8 block apex
+                    lateralZ * 0.25
+                )
+
+                (projectile.world.spawnEntity(spawnLocation, projectile.type) as? Projectile)?.also {
+                    it.velocity = upwardVelocity
+                    it.shooter = projectile.shooter
+                    it.cloneAndTag(projectile, listOf(EntityTags.RAIN_OF_ARROWS_ARROW))
+                }
+            }
+        }, 20L) // 20 ticks = 1 second
+    }
+
     private fun ricochetEnchantmentShoot(projectile: Entity, level: Int) {
         with(projectile) {
             addScoreboardTag(EntityTags.RICOCHET_ARROW)
@@ -788,9 +822,9 @@ object RangedListeners : Listener, EnchantmentManager {
         }
     }
 
-    private fun ricochetEnchantmentEntityHit(projectile: Projectile): Double {
-        val modifier = projectile.getIntTag(EntityTags.RICOCHET_BOUNCE) ?: return 0.0
-        return modifier * 2.0 // Add 2 * bounce
+    private fun ricochetEnchantmentEntityHit(projectile: Projectile): Float {
+        val modifier = projectile.getIntTag(EntityTags.RICOCHET_BOUNCE) ?: return 0.0F
+        return modifier * 0.25F
     }
 
     private fun ricochetEnchantmentBlockHit(projectile: Projectile, normalVector: Vector) {
@@ -825,9 +859,9 @@ object RangedListeners : Listener, EnchantmentManager {
         }
     }
 
-    private fun sharpshooterEnchantmentHit(projectile: Entity): Double {
-        val modifier = projectile.getIntTag(EntityTags.SHARPSHOOTER_MODIFIER) ?: return 0.0
-        return modifier * 0.5
+    private fun sharpshooterEnchantmentHit(projectile: Entity): Float {
+        val modifier = projectile.getIntTag(EntityTags.SHARPSHOOTER_MODIFIER) ?: return 0.0F
+        return modifier * 0.05F
     }
 
     private fun singleOutEnchantmentShoot(projectile: Entity, level: Int) {
@@ -837,10 +871,12 @@ object RangedListeners : Listener, EnchantmentManager {
         }
     }
 
-    private fun singleOutEnchantmentHit(projectile: Entity, victim: LivingEntity): Double {
-        val modifier = projectile.getIntTag(EntityTags.SHARPSHOOTER_MODIFIER) ?: return 0.0
-        if (victim.location.world.getNearbyLivingEntities(victim.location, 16.0).isNotEmpty()) return 0.0
-        return (modifier * 2.0)
+    private fun singleOutEnchantmentHit(projectile: Entity, victim: LivingEntity): Float {
+        val modifier = projectile.getIntTag(EntityTags.SINGLE_OUT_MODIFIER) ?: return 0.0F
+        val nearbyEntities = victim.location.world.getNearbyLivingEntities(victim.location, 12.0).filter { it != victim }
+        val isIsolated = nearbyEntities.isEmpty()
+        if (!isIsolated) return 0.0F
+        return modifier * 0.2F
     }
 
     private fun singularityShotEnchantmentShoot(projectile: Entity, level: Int, shooter: LivingEntity) {
