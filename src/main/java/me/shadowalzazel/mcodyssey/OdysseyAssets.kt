@@ -18,7 +18,7 @@ import java.net.URI
 @Suppress("UnstableApiUsage")
 object OdysseyAssets : Listener, RegistryTagManager, DataTagManager {
 
-    private const val ODYSSEY_RESOURCE_PACK_HASH = "fc852eb8f64019b0afa13a1514db3c9e7ab14335"
+    private const val ODYSSEY_RESOURCE_PACK_HASH = "fabcf0b092baf83f4b3a170645ab125331d2c082"
     private const val ODYSSEY_RESOURCE_PACK_LINK = "https://www.dropbox.com/scl/fi/aiclr8b58ew5bzeb36w76/odyssey-resource-pack-v26.2.zip?rlkey=5fe7yn32f49nwuyowhs8k263n&st=zehi4f01&dl=1"
 
     // For the Vailcraft Server

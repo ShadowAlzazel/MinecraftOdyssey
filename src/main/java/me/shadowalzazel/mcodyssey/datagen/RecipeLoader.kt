@@ -20,6 +20,7 @@ class RecipeLoader {
             addAll(SmeltingRecipes().getRecipes())
             addAll(UtilityCrafting().getRecipes())
             addAll(UtilitySmithing().getRecipes())
+            addAll(StonecutterRecipes().getRecipes())
         }
         return recipeList
     }

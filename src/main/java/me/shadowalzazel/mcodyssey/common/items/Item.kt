@@ -56,6 +56,11 @@ open class Item(
         val TITANIUM_INGOT = DataItem("titanium_ingot")
         val SHADOW_TRIAL_KEY = DataItem("shadow_trial_key")
         val CRYSTAL_ALLOY_INGOT = DataItem("crystal_alloy_ingot")
+        val PRISMATIC_NAME_TAG = DataItem("prismatic_name_tag")
+        val IRIDIUM_NUGGET = DataItem("iridium_nugget")
+        val CINNABAR_SHARD = DataItem("cinnabar_shard")
+        val SULFUR_POWDER = DataItem("sulfur_powder")
+        val CRYSTALLINE_COMPOST = DataItem("crystalline_compost")
         // Smithing
         val IMPERIAL_ARMOR_TRIM_SMITHING_TEMPLATE = DataItem("imperial_armor_trim_smithing_template")
         val VOYAGER_ARMOR_TRIM_SMITHING_TEMPLATE = DataItem("voyager_armor_trim_smithing_template")
@@ -138,7 +143,8 @@ open class Item(
         val SALMON_ROLL = DataItem("salmon_roll")
         val SALMON_NIGIRI = DataItem("salmon_nigiri")
         val SHOYU_RAMEN = DataItem("shoyu_ramen")
-        val TONKOTSU_RAMEN = DataItem("tonkotsu_ramen")
+        val TONKATSU = DataItem("tonkatsu")
+        val STEAK_AND_EGGS = DataItem("steak_and_eggs")
         val SPIDER_EYE_BOBA = DataItem("spider_eye_boba")
         val EARL_LILY_BOBA_TEA = DataItem("earl_lily_boba_tea")
         val BRISKET = DataItem("brisket")
@@ -154,6 +160,7 @@ open class Item(
         val IRRADIATED_FRUIT = DataItem("irradiated_fruit")
         val SCULK_HEART = DataItem("sculk_heart")
         val SCULK_POINTER = DataItem("sculk_pointer")
+        val WARDEN_ENTRAILS = DataItem("scroll") // TODO -> change to 'warden_entrails'
         val SOUL_SPICE = DataItem("soul_spice")
         val SOUL_OMAMORI = DataItem("soul_omamori")
         // ---------------------------------- DATA ITEMS with custom  -----------------------------------
@@ -184,7 +191,7 @@ open class Item(
         val WARPING_WAND = DataItem("warping_wand")
         val VOID_LINKED_KUNAI = DataItem("void_linked_kunai")
         val SCROLL = DataItem("scroll")
-        val WARDEN_ENTRAILS = DataItem("scroll") // TODO -> change to 'warden_entrails'
+
         // ---------------------------------- ODYSSEY GENERATED -----------------------------------
         // Potions
         val POTION_VIAL = GeneratedItem("potion_vial", Potions.POTION_VIAL)

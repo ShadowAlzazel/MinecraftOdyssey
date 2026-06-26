@@ -6,12 +6,10 @@ import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
 import me.shadowalzazel.mcodyssey.common.items.ToolType
 import me.shadowalzazel.mcodyssey.datagen.ChoiceManager
 import me.shadowalzazel.mcodyssey.util.DataTagManager
-import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemType
 import org.bukkit.inventory.Recipe
 import org.bukkit.inventory.RecipeChoice
-import org.bukkit.inventory.RecipeChoice.MaterialChoice
 import org.bukkit.inventory.ShapedRecipe
 import org.bukkit.inventory.recipe.CraftingBookCategory
 
@@ -163,7 +161,7 @@ class WeaponRecipeCreator : DataTagManager, ChoiceManager, ToolMaker {
         val amount = if (type == ToolType.SHURIKEN) { 16 } else { 1 } // MOVE TO DICT LATER
         val result = createToolStack(material, type, amount)
         // Create name variables
-        val itemName = result.getItemIdentifier()!!
+        val itemName = result.getItemNameFromData()!!
         val resultKey = NamespacedKey(Odyssey.instance, itemName)
         // Get Pattern/Shape
         val pattern = weaponPatterns[type.toolName]!!

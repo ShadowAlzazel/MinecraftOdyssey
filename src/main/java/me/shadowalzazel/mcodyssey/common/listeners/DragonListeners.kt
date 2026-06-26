@@ -35,6 +35,16 @@ object DragonListeners : Listener {
         }
     }
 
+    // Returns the highest-block location for this column ONLY if its chunk is
+    // already loaded. Never forces a synchronous chunk load, which is what
+    // deadlocked the server thread when toHighestLocation was called during
+    // chunk/entity loading.
+    private fun Location.highestIfLoaded(): Location? {
+        val w = world ?: return null
+        if (!w.isChunkLoaded(blockX shr 4, blockZ shr 4)) return null
+        return clone().toHighestLocation(HeightMap.MOTION_BLOCKING)
+    }
+
     @EventHandler
     fun dragonPhaseHandler(event: EnderDragonChangePhaseEvent) = safely("dragonPhaseHandler") {
         val dragon = event.entity

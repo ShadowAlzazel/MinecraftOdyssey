@@ -37,7 +37,7 @@ object UpdateModel : CommandExecutor, RegistryTagManager, DataTagManager {
 
     private fun ItemStack.updateItemModel() {
         val oldModel = this.getData(DataComponentTypes.ITEM_MODEL)
-        val itemId = this.getItemIdentifier() ?: return
+        val itemId = this.getItemNameFromData() ?: return
         // Set
         if (oldModel == null || oldModel.key().namespace() == "minecraft") {
             this.resetData(DataComponentTypes.CUSTOM_MODEL_DATA) // Reset old override data

@@ -2,14 +2,12 @@ package me.shadowalzazel.mcodyssey.common.listeners
 
 import com.destroystokyo.paper.event.inventory.PrepareResultEvent
 import io.papermc.paper.datacomponent.DataComponentTypes
-import io.papermc.paper.registry.RegistryKey
 import me.shadowalzazel.mcodyssey.api.RegistryTagManager
 import me.shadowalzazel.mcodyssey.common.enchantments.TomeEnchanting
 import me.shadowalzazel.mcodyssey.common.items.Item
 import me.shadowalzazel.mcodyssey.util.constants.CustomColors
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
-import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.Particle
@@ -152,7 +150,7 @@ object EnchantingListeners : Listener, TomeEnchanting, RegistryTagManager {
         val equipment = event.inventory.inputEquipment ?: return
         val template = event.inventory.inputTemplate ?: return
         // Avoid Conflict with other smithing, using (Enchanted Book)
-        val templateId = template.getItemIdentifier() ?: return
+        val templateId = template.getItemNameFromData() ?: return
         if (recipe.result.type != Material.ENCHANTED_BOOK) return
         if (event.result?.type == Material.ENCHANTED_BOOK) {
             event.result = ItemStack(Material.AIR)
@@ -244,7 +242,7 @@ object EnchantingListeners : Listener, TomeEnchanting, RegistryTagManager {
 
     /*-----------------------------------------------------------------------------------------------*/
     private fun enchantingBookHandler(event: EnchantItemEvent) {
-        val itemID = event.item.getItemIdentifier()
+        val itemID = event.item.getItemNameFromData()
         when (itemID) {
             "arcane_book" -> {
                 arcaneBookHandler(event)

@@ -2,8 +2,10 @@ package me.shadowalzazel.mcodyssey.datagen
 
 import me.shadowalzazel.mcodyssey.common.items.Item
 import org.bukkit.Material
+import org.bukkit.inventory.ItemType
 import org.bukkit.inventory.RecipeChoice
 
+@Suppress("UnstableApiUsage")
 interface ChoiceManager {
 
     fun Item.toRecipeChoice(): RecipeChoice.ExactChoice {
@@ -61,11 +63,11 @@ interface ChoiceManager {
     }
 
     // Const
-    fun woodChoices(): RecipeChoice.MaterialChoice {
-        return RecipeChoice.MaterialChoice(
-            Material.ACACIA_PLANKS, Material.BIRCH_PLANKS, Material.DARK_OAK_PLANKS,
-            Material.OAK_PLANKS, Material.SPRUCE_PLANKS, Material.JUNGLE_PLANKS,
-            Material.CHERRY_PLANKS, Material.MANGROVE_PLANKS
+    fun woodChoices(): RecipeChoice {
+        return RecipeChoice.itemType(
+            ItemType.ACACIA_PLANKS, ItemType.BIRCH_PLANKS, ItemType.DARK_OAK_PLANKS,
+            ItemType.OAK_PLANKS, ItemType.SPRUCE_PLANKS, ItemType.JUNGLE_PLANKS,
+            ItemType.CHERRY_PLANKS, ItemType.MANGROVE_PLANKS, ItemType.PALE_OAK_PLANKS
         )
     }
 

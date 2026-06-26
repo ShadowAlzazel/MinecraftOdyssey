@@ -44,7 +44,7 @@ class ToolRecipeCreator : DataTagManager, ChoiceManager, ToolMaker {
         val amount = 1
         val result = createToolStack(material, type, amount)
         // Create name variables
-        val itemName = result.getItemIdentifier()!!
+        val itemName = result.getItemNameFromData()!!
         val resultKey = NamespacedKey(Odyssey.instance, itemName)
         // Get Pattern/Shape
         val pattern = toolPatterns[type.toolName]!!

@@ -94,7 +94,7 @@ object EffectListeners : Listener, EffectsManager {
     private fun auraPotionDrinking(event: PlayerItemConsumeEvent) {
         if (event.item.type != Material.POTION) return
         val item = event.item
-        if (item.getItemIdentifier() != "aura_potion") return
+        if (item.getItemNameFromData() != "aura_potion") return
         if (item.getData(DataComponentTypes.POTION_CONTENTS) == null) return
         // Task
         val effects = getPotionEffects(item) ?: return

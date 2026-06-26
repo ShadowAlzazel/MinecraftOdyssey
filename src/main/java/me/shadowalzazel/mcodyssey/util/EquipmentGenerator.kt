@@ -57,7 +57,7 @@ interface EquipmentGenerator : ToolMaker, ItemToolTipManager {
 
     // Returns a full set of trimmed armor
     fun generateTrimmedArmorSet(material: String, trimMaterials: List<TrimMaterial>, trimPatterns: List<TrimPattern>): List<ItemStack> {
-        val vanillaMaterials = listOf("diamond", "netherite", "iron", "chainmail", "golden", "stone", "wooden")
+        val vanillaMaterials = listOf("diamond", "netherite", "iron", "chainmail", "golden", "stone", "wooden", "copper")
         val armorSet = if (material in vanillaMaterials) createVanillaArmorSet(material) else createDataArmorSet(material)
         val randomTrim = generateRandomArmorTrim(trimMaterials, trimPatterns)
         val armorTrim = ItemArmorTrim.itemArmorTrim(randomTrim)

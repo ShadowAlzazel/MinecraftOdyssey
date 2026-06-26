@@ -23,7 +23,6 @@ import org.bukkit.event.entity.EntityShootBowEvent
 import org.bukkit.event.entity.ProjectileHitEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.CrossbowMeta
 
 @Suppress("UnstableApiUsage")
 interface WeaponProjectileHandler : DataTagManager, EnchantmentManager, AttackHelper, VectorParticles {
@@ -255,8 +254,8 @@ interface WeaponProjectileHandler : DataTagManager, EnchantmentManager, AttackHe
         if (player !is Player) return
         if (player.inventory.itemInMainHand.type != Material.CROSSBOW) return
         if (player.inventory.itemInOffHand.type != Material.CROSSBOW) return
-        if (player.inventory.itemInMainHand.getItemIdentifier() != "compact_crossbow") return
-        if (player.inventory.itemInOffHand.getItemIdentifier() != "compact_crossbow") return
+        if (player.inventory.itemInMainHand.getItemNameFromData() != "compact_crossbow") return
+        if (player.inventory.itemInOffHand.getItemNameFromData() != "compact_crossbow") return
         // Call runnable
         val handToLoad = if (event.hand == EquipmentSlot.HAND) EquipmentSlot.OFF_HAND else EquipmentSlot.HAND
         LoadCompactCrossbow(player, handToLoad).runTask(Odyssey.instance)
@@ -267,8 +266,8 @@ interface WeaponProjectileHandler : DataTagManager, EnchantmentManager, AttackHe
         val player = event.entity
         if (player !is Player) return
         if (player.inventory.itemInMainHand.type != Material.CROSSBOW) return
-        if (player.inventory.itemInMainHand.getItemIdentifier() != "tinkered_musket") return
-        if (player.inventory.itemInOffHand.getItemIdentifier() == "tinkered_musket") {
+        if (player.inventory.itemInMainHand.getItemNameFromData() != "tinkered_musket") return
+        if (player.inventory.itemInOffHand.getItemNameFromData() == "tinkered_musket") {
             event.isCancelled =true
             return
         } // Can not load this way

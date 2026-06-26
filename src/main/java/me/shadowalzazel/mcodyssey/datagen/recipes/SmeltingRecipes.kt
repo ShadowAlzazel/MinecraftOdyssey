@@ -7,9 +7,11 @@ import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.BlastingRecipe
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.ItemType
 import org.bukkit.inventory.Recipe
 import org.bukkit.inventory.RecipeChoice
 
+@Suppress("UnstableApiUsage")
 class SmeltingRecipes : ChoiceManager {
 
     fun getRecipes(): List<Recipe> {
@@ -22,7 +24,7 @@ class SmeltingRecipes : ChoiceManager {
 
     private fun glyphicItemFurnaceRecipe(): BlastingRecipe {
         val result = ItemStack(Material.BRICK)
-        val input = RecipeChoice.MaterialChoice(Material.CLAY_BALL)
+        val input = RecipeChoice.itemType(ItemType.CLAY_BALL)
         val experience = 200.0F
         val time = 20 * 20
         return BlastingRecipe(
@@ -37,7 +39,7 @@ class SmeltingRecipes : ChoiceManager {
     private fun heatedTitaniumRecipe(): BlastingRecipe {
         val result = Item.HEATED_TITANIUM_INGOT.newItemStack(1)
         val input = titaniumChoices()
-        val experience = 200.0F
+        val experience = 100.0F
         val time = 20 * 20
         return BlastingRecipe(
             NamespacedKey(Odyssey.instance, "heated_titanium_furnace"),
@@ -51,7 +53,7 @@ class SmeltingRecipes : ChoiceManager {
     private fun anodizedTitaniumRecipe(): BlastingRecipe {
         val result = Item.ANODIZED_TITANIUM_INGOT.newItemStack(1)
         val input = heatedTitaniumChoices()
-        val experience = 200.0F
+        val experience = 100.0F
         val time = 20 * 20
         return BlastingRecipe(
             NamespacedKey(Odyssey.instance, "anodized_titanium_furnace"),

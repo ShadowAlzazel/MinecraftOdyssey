@@ -31,7 +31,7 @@ object GlyphListeners : Listener, GlyphManager {
         if (recipe.result.type != Material.BRICK) return
 
         // Check if glyph
-        if (glyph.getItemIdentifier()?.contains("glyph") != true) return
+        if (glyph.getItemNameFromData()?.contains("glyph") != true) return
         // Apply
         val item = equipment.clone()
         item.addGlyph(glyph)
@@ -87,7 +87,7 @@ object GlyphListeners : Listener, GlyphManager {
         if (event.result.type != Material.BRICK) return
         // Tag Check
         if (!source.hasTag(ItemDataTags.IS_GLYPHIC_ITEM)) return
-        val itemId = source.getItemIdentifier() ?: return
+        val itemId = source.getItemNameFromData() ?: return
         // Cancel if more than 1
         if (event.result.amount > 1) {
             event.isCancelled = true

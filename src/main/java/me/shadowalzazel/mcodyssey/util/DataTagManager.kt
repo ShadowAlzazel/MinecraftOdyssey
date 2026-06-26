@@ -14,40 +14,48 @@ import java.util.*
 
 interface DataTagManager {
 
+    // ──────────────────────────────────────────────────────────────────────────────
+    // ───────────────────────────────── ITEM ID ────────────────────────────────────
+    // ──────────────────────────────────────────────────────────────────────────────
+
     private fun PersistentDataContainer.hasItemIdTag(): Boolean {
         return has(NamedKeys.ITEM_KEY)
     }
 
+    @Deprecated("Moving to DataComponent Item Name", level = DeprecationLevel.WARNING)
     fun ItemStack.hasItemIdTag(): Boolean {
         if (!this.hasItemMeta()) return false
         return itemMeta.persistentDataContainer.hasItemIdTag()
     }
 
-    fun ItemStack.getItemIdTag(): String? {
+    @Deprecated("Moving to DataComponent Item Name", level = DeprecationLevel.WARNING)
+    fun ItemStack.getItemKeyTag(): String? {
         if (!hasItemMeta()) return null
         return itemMeta.persistentDataContainer[NamedKeys.ITEM_KEY, PersistentDataType.STRING]
     }
 
     // Tries to get item_name
-    fun ItemStack.getItemIdentifier(): String? {
-        return if (this.hasItemMeta() && itemMeta.hasItemName()) {
-            @Suppress("DEPRECATION")
-            itemMeta.itemName
-        } else {
-            val text = getData(DataComponentTypes.ITEM_NAME)
-            if (text is TextComponent) return text.content()
-            if (text is TranslatableComponent) return null // Ignore Translate Key
-            getItemIdTag()
-        }
+    fun ItemStack.getItemNameFromData(): String? {
+        val text = getData(DataComponentTypes.ITEM_NAME)
+        if (text is TextComponent) return text.content()
+        if (text is TranslatableComponent) return null // Ignore Translate Key
+        return null
     }
 
+    /*
+     * Get item name from data, or defaults to Item Type name
+     */
     fun ItemStack.getItemNameId(): String {
-        return getItemIdentifier() ?: this.type.name.lowercase()
+        return getItemNameFromData() ?: this.type.name.lowercase()
     }
 
     fun ItemStack.matchItem(tag: String): Boolean {
-        return this.getItemIdTag() == tag
+        return this.getItemNameId() == tag
     }
+
+    // ──────────────────────────────────────────────────────────────────────────────
+    // ─────────────────────────────────── TAGS ─────────────────────────────────────
+    // ──────────────────────────────────────────────────────────────────────────────
 
     fun ItemStack.addTag(tag: String) {
         val tagKey = NamespacedKey(Odyssey.instance, tag)

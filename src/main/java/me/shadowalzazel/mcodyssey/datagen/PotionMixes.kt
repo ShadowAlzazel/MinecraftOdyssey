@@ -8,10 +8,12 @@ import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.ItemType
 import org.bukkit.inventory.RecipeChoice
 import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.potion.PotionType
 
+@Suppress("UnstableApiUsage")
 object PotionMixes {
 
     fun getMixes(): List<PotionMix> {
@@ -29,8 +31,8 @@ object PotionMixes {
             !it.hasTag(ItemDataTags.IS_POTION_VIAL) && it.type == Material.POTION
         }
         val result = Item.POTION_VIAL.newItemStack(1)
-        val ingredient = RecipeChoice.MaterialChoice(
-            Material.PRISMARINE_CRYSTALS
+        val ingredient = RecipeChoice.itemType(
+            ItemType.PRISMARINE_CRYSTALS
         )
         return PotionMix(
             NamespacedKey(Odyssey.instance, "vial_brewing"),
@@ -45,7 +47,7 @@ object PotionMixes {
             !it.hasTag(ItemDataTags.IS_UPGRADED_PLUS) && it.type == Material.POTION
         }
         val result = ItemStack(Material.POTION)
-        val ingredient = RecipeChoice.MaterialChoice(Material.GLOW_BERRIES)
+        val ingredient = RecipeChoice.itemType(ItemType.GLOW_BERRIES)
         return PotionMix(
             NamespacedKey(Odyssey.instance, "upgraded_plus_brewing"),
             result,
@@ -59,7 +61,7 @@ object PotionMixes {
             !it.hasTag(ItemDataTags.IS_EXTENDED_PLUS) && it.type == Material.POTION
         }
         val result = ItemStack(Material.POTION)
-        val ingredient = RecipeChoice.MaterialChoice(Material.HONEY_BOTTLE)
+        val ingredient = RecipeChoice.itemType(ItemType.HONEY_BOTTLE)
         return PotionMix(
             NamespacedKey(Odyssey.instance, "extended_plus_brewing"),
             result,
@@ -73,7 +75,7 @@ object PotionMixes {
             !it.hasTag(ItemDataTags.IS_AURA_POTION) && it.type == Material.POTION
         }
         val result = ItemStack(Material.POTION)
-        val ingredient = RecipeChoice.MaterialChoice(Material.EXPERIENCE_BOTTLE)
+        val ingredient = RecipeChoice.itemType(ItemType.EXPERIENCE_BOTTLE)
         return PotionMix(
             NamespacedKey(Odyssey.instance, "aura_potion_brewing"),
             result,
@@ -87,7 +89,7 @@ object PotionMixes {
             !it.hasTag(ItemDataTags.IS_BLAST_POTION) && it.type == Material.SPLASH_POTION
         }
         val result = ItemStack(Material.POTION)
-        val ingredient = RecipeChoice.MaterialChoice(Material.FIRE_CHARGE)
+        val ingredient = RecipeChoice.itemType(ItemType.FIRE_CHARGE)
         return PotionMix(
             NamespacedKey(Odyssey.instance, "blast_potion_brewing"),
             result,

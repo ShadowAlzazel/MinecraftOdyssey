@@ -25,7 +25,7 @@ sealed class IngredientChoice(open val amount: Int?) : DataTagManager {
     fun validateIngredient(item: ItemStack): Boolean {
         val validIngredient = when(this) {
             is MaterialChoice -> item.type == this.material
-            is ItemNameChoice -> item.getItemIdentifier() == this.itemName
+            is ItemNameChoice -> item.getItemNameFromData() == this.itemName
             is SpecificChoice -> item == this.itemStack
             is PotionEffectChoice -> this.validateItemEffect(item)
             is PotionTypeChoice -> getPotionContents(item)?.potion() == potionType

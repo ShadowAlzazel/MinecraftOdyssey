@@ -24,13 +24,15 @@ interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
     fun ItemStack.updateToolTip(toggleDescriptions: Boolean = true): Boolean {
         // Set boolean fields
         val hasAttributes = this.getData(DataComponentTypes.ATTRIBUTE_MODIFIERS) != null
+        val weaponType = getWeaponType()
+        val isCustomWeapon = weaponType != null
         val enchantments = this.getData(DataComponentTypes.ENCHANTMENTS)?.enchantments()
         val storedEnchantments = this.getData(DataComponentTypes.STORED_ENCHANTMENTS)?.enchantments()
         val hasEnchants = enchantments != null && enchantments.isNotEmpty()
         val hasStoredEnchants = storedEnchantments != null && storedEnchantments.isNotEmpty()
 
         // Needs to have at least one of these
-        if (!(hasAttributes || hasEnchants || hasStoredEnchants)) return false
+        if (!(isCustomWeapon || hasEnchants || hasStoredEnchants)) return false
 
         // Start the tool tips
         val oldLore = this.lore()
@@ -41,7 +43,6 @@ interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
         val enchantabilityMax = getMaxEnchantabilityPoints()
         // Logic and ToolTip Vars
         var showDescriptions: Boolean = false
-        var isCustomWeapon: Boolean = false
         var toolTipIndex = 0
         var startingIndex = 0
 
@@ -71,8 +72,7 @@ interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
             }
         }
 
-        val weaponType = getWeaponType()
-        isCustomWeapon = weaponType != null
+
         // Get all enchantments
         usedEnchantabilityPoints = this.getUsedEnchantabilityPoints()
 

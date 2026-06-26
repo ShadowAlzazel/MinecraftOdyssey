@@ -33,8 +33,8 @@ internal interface ArmorUpgrading : EquipmentDataManager, AttributeManager, Adva
         val equipment = event.inventory.inputEquipment ?: return
         val item = equipment.clone()
         // Get ids
-        val inputMaterialId = event.inventory.inputMineral?.getItemIdentifier() ?: return
-        val templateId = event.inventory.inputTemplate?.getItemIdentifier() ?: return
+        val inputMaterialId = event.inventory.inputMineral?.getItemNameFromData() ?: return
+        val templateId = event.inventory.inputTemplate?.getItemNameFromData() ?: return
         // Cross-check
         if (SmithingMaps.GET_TEMPLATE_FROM_MATERIAL[inputMaterialId] != templateId) return
         // Get upgrade path from the inputMaterial

@@ -217,7 +217,6 @@ object WeaponListeners : Listener, WeaponProjectileHandler, EnchantmentManager {
 
     private fun throwWeapon(player: Player, weapon: ItemStack, spec: ThrowableSpec) {
         if (player.getCooldown(weapon.type) > 0) return
-        println("Throwing")
 
         val projectile = (player.world.spawnEntity(player.eyeLocation, EntityType.SNOWBALL) as Snowball).also {
             it.item = weapon
@@ -323,7 +322,7 @@ object WeaponListeners : Listener, WeaponProjectileHandler, EnchantmentManager {
         if (!mainHand.itemMeta.hasCustomModelData()) return
         val player = event.player
         // Kunai
-        if (mainHand.getItemIdentifier() == "void_linked_kunai") {
+        if (mainHand.getItemNameFromData() == "void_linked_kunai") {
             val target = markedVoidTargets[player.uniqueId] ?: return
             // Create task to run AFTER event
             val voidLinkedChunk = target.chunk // First fire load
@@ -391,7 +390,7 @@ object WeaponListeners : Listener, WeaponProjectileHandler, EnchantmentManager {
             val thrower = projectile.shooter ?: return
             victim.addScoreboardTag(EntityTags.THROWABLE_ATTACK_HIT)
             // Match same weapon
-            if (thrower is HumanEntity && thrower.equipment!!.itemInMainHand.getItemIdTag() == projectile.item.getItemIdTag()) {
+            if (thrower is HumanEntity && thrower.equipment!!.itemInMainHand.getItemNameId() == projectile.item.getItemNameId()) {
                 //thrower.attack(victim)
                 victim.damage(damage * 1.0, createEntityDamageSource(thrower, projectile, DamageType.PLAYER_ATTACK))
 
@@ -503,12 +502,12 @@ object WeaponListeners : Listener, WeaponProjectileHandler, EnchantmentManager {
         // Projectile takes priority
         if (event.consumable != null) {
             val consumable = event.consumable!!
-            if (consumable.getItemIdentifier() == "explosive_arrow") {
+            if (consumable.getItemNameFromData() == "explosive_arrow") {
                 explosiveArrowShootHandler(event)
             }
         }
         // Match Shoot
-        when(val itemName = bow.getItemIdentifier()) {
+        when(val itemName = bow.getItemNameFromData()) {
             "crossbolter" -> crossbolterShooting(event)
             "auto_crossbow" -> autoCrossbowShooting(event)
             "warped_bow" -> return // Has +2 damage but -10% accuracy
@@ -526,7 +525,7 @@ object WeaponListeners : Listener, WeaponProjectileHandler, EnchantmentManager {
     fun crossbowLoadHandler(event: EntityLoadCrossbowEvent) {
         val crossbow = event.crossbow
         if (!crossbow.hasItemMeta()) return
-        when(val itemName = crossbow.getItemIdentifier()) {
+        when(val itemName = crossbow.getItemNameFromData()) {
             "crossbolter" -> crossbolterLoading(event)
             "compact_crossbow" -> compactCrossbowLoading(event)
             "tinkered_musket" -> tinkeredMusketLoading(event) // Requires x2 reload (gunpowder -> iron both have to be in hand)

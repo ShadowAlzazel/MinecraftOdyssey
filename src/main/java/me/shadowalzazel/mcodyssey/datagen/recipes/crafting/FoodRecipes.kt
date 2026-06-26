@@ -18,6 +18,8 @@ class FoodRecipes {
             coffeeRecipe(),
             crystalCandyRecipe(),
             fishNChipsRecipe(),
+            steakAndEggsRecipe(),
+            tonkatsuRecipe(),
             frenchToastRecipe(),
             fruitBowlRecipe(),
             salmonRollRecipe(),
@@ -85,6 +87,25 @@ class FoodRecipes {
         return ShapelessRecipe(NamespacedKey(Odyssey.instance, "fish_n_chips"), result).apply {
             addIngredient(Material.BAKED_POTATO)
             addIngredient(Material.COOKED_COD)
+            category = CraftingBookCategory.MISC
+        }
+    }
+
+    private fun tonkatsuRecipe(): ShapelessRecipe {
+        val result = Item.TONKATSU.newItemStack(1)
+        return ShapelessRecipe(NamespacedKey(Odyssey.instance, "tonkatsu"), result).apply {
+            addIngredient(Material.COOKED_PORKCHOP)
+            addIngredient(Material.SUGAR)
+            category = CraftingBookCategory.MISC
+        }
+    }
+
+    private fun steakAndEggsRecipe(): ShapelessRecipe {
+        val result = Item.STEAK_AND_EGGS.newItemStack(1)
+        return ShapelessRecipe(NamespacedKey(Odyssey.instance, "steak_and_eggs"), result).apply {
+            addIngredient(Material.COOKED_BEEF)
+            addIngredient(Material.EGG)
+            addIngredient(Material.EGG)
             category = CraftingBookCategory.MISC
         }
     }

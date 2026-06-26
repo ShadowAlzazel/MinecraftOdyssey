@@ -5,22 +5,29 @@ import me.shadowalzazel.mcodyssey.common.items.Item
 import me.shadowalzazel.mcodyssey.datagen.ChoiceManager
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
+import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.ItemType
 import org.bukkit.inventory.Recipe
+import org.bukkit.inventory.RecipeChoice
 import org.bukkit.inventory.ShapedRecipe
 import org.bukkit.inventory.ShapelessRecipe
 import org.bukkit.inventory.recipe.CraftingBookCategory
 
+@Suppress("UnstableApiUsage")
 class ItemRecipes : ChoiceManager {
 
     fun getRecipes(): List<Recipe> {
         return listOf(
+            // Odyssey
             soulSteelUpgradeTemplateRecipe(), titaniumUpgradeTemplateRecipe(), iridiumUpgradeTemplateRecipe(),
-            silverIngotRecipe(), silverNuggetRecipe(),
+            silverIngotRecipe(), silverNuggetRecipe(), iridiumIngotRecipe(),
             mithrilUpgradeTemplateRecipe(), blankTomeRecipe(), clayTotemRecipe(), clayOrbRecipe(), claySkullRecipe(), clayDowelRecipe(),
             clayKeyRecipe(), clayRodsRecipe(), scrollRecipe(),
             imperialTrimReplicateRecipe(), voyagerTrimReplicateRecipe(), dangerTrimReplicateRecipe(), leafTrimReplicateRecipe(), ringTrimReplicateRecipe(),
             pommelPartUpgradeTemplateRecipe(), hiltPartUpgradeTemplateRecipe(), bladePartUpgradeTemplateRecipe(), handlePartUpgradeTemplateRecipe(),
-            mastercraftedToolTemplateRecipe(), crystalAlloyIngotRecipe(), crystalAlloyUpgradeTemplateRecipe()
+            mastercraftedToolTemplateRecipe(), crystalAlloyIngotRecipe(), crystalAlloyUpgradeTemplateRecipe(),
+            // New Recipes for Vanilla
+            sulfurGunpowderRecipe(), sulfurRecipe(), crystallineCompostRecipe()
         )
     }
 
@@ -87,6 +94,16 @@ class ItemRecipes : ChoiceManager {
         val result = Item.SILVER_NUGGET.newItemStack(9)
         val recipe = ShapelessRecipe(NamespacedKey(Odyssey.instance, "silver_nugget"), result).apply {
             addIngredient(Item.SILVER_INGOT.newItemStack(1))
+            category = CraftingBookCategory.MISC
+        }
+        return recipe
+    }
+
+    private fun iridiumIngotRecipe(): ShapedRecipe {
+        val result = Item.IRIDIUM_INGOT.newItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "iridium_ingot"), result).apply {
+            shape("NNN", "NNN", "NNN")
+            setIngredient('N', Item.IRIDIUM_NUGGET.toRecipeChoice())
             category = CraftingBookCategory.MISC
         }
         return recipe
@@ -317,6 +334,34 @@ class ItemRecipes : ChoiceManager {
             category = CraftingBookCategory.MISC
         }
         return recipe
+    }
+
+    private fun sulfurGunpowderRecipe(): ShapelessRecipe {
+        val result = ItemStack(Material.GUNPOWDER, 4)
+        return ShapelessRecipe(NamespacedKey(Odyssey.instance, "gunpowder_from_sulfur"), result).apply {
+            addIngredient(Item.SULFUR_POWDER.toRecipeChoice())
+            addIngredient(Material.CHARCOAL)
+            addIngredient(RecipeChoice.itemType(ItemType.SUGAR))
+            category = CraftingBookCategory.MISC
+        }
+    }
+
+    private fun sulfurRecipe(): ShapelessRecipe {
+        val result = Item.SULFUR_POWDER.newItemStack(2)
+        return ShapelessRecipe(NamespacedKey(Odyssey.instance, "sulfur_powder"), result).apply {
+            addIngredient(Material.SULFUR_SPIKE)
+            category = CraftingBookCategory.MISC
+        }
+    }
+
+    private fun crystallineCompostRecipe(): ShapelessRecipe {
+        val result = Item.CRYSTALLINE_COMPOST.newItemStack(4)
+        return ShapelessRecipe(NamespacedKey(Odyssey.instance, "crystalline_compost"), result).apply {
+            addIngredient(RecipeChoice.itemType(ItemType.BONE_MEAL))
+            addIngredient(RecipeChoice.itemType(ItemType.AMETHYST_SHARD))
+            addIngredient(Item.SULFUR_POWDER.toRecipeChoice())
+            category = CraftingBookCategory.MISC
+        }
     }
 
 

@@ -1,19 +1,27 @@
 package me.shadowalzazel.mcodyssey.common.listeners
 
+import io.papermc.paper.registry.RegistryKey
+import me.shadowalzazel.mcodyssey.api.RegistryTagManager
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
+import org.bukkit.block.Block
+import org.bukkit.block.data.Directional
+import org.bukkit.block.Dispenser   // BlockState — NOT the block.data.type one
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.block.BlockDispenseEvent
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerDropItemEvent
+import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerItemConsumeEvent
+import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object ItemListeners : Listener, DataTagManager {
+object ItemListeners : Listener, DataTagManager, RegistryTagManager {
 
     /*
     fun itemUseOnDropHandler(event: PlayerDropItemEvent) {
@@ -29,6 +37,61 @@ object ItemListeners : Listener, DataTagManager {
         }
     }
      */
+
+    // ──────────────────────────────────────────────────────────────────────────────
+    // ──────────────────────────────── HANDLERS ────────────────────────────────────
+    // ──────────────────────────────────────────────────────────────────────────────
+
+    @EventHandler
+    fun playerItemInteractHandler(event: PlayerInteractEvent) {
+        val block = event.clickedBlock ?: return
+        val item = event.item ?: return
+        val customItemId = item.getItemNameFromData() ?: return
+        // When block to match
+        val success = when (customItemId) {
+            "crystalline_compost" -> crystallineCompostItemUse(block)
+            else -> false
+        }
+
+        if (success) {
+            item.subtract(1)
+        }
+
+    }
+
+    @EventHandler
+    fun dispenseItemUseHandler(event: BlockDispenseEvent) {
+        val dispenser = event.block
+        val dispensedItem = event.item
+        val customItemId = dispensedItem.getItemNameFromData() ?: return
+
+        // A dispenser's facing is stored in its BlockData, not its location
+        val data = dispenser.blockData as? Directional ?: return
+        val facing = data.facing            // BlockFace — can be UP, DOWN, NORTH, etc.
+        val blockInFront = dispenser.getRelative(facing)
+
+        // When block to match
+        val success = when (customItemId) {
+            "crystalline_compost" -> crystallineCompostItemUse(blockInFront)
+            else -> false
+        }
+
+        if (success) {
+            //dispensedItem.subtract(1)
+            // (no item entity in the world, no auto-decrement fight)
+            event.isCancelled = true
+
+            // Manually consume one from the dispenser's container
+            val inv = (dispenser.state as Dispenser).inventory
+            inv.removeItem(dispensedItem.clone().apply { amount = 1 })
+        }
+        else {
+            event.item = ItemStack(Material.AIR)
+            event.isCancelled = true
+        }
+    }
+
+
 
     @EventHandler
     fun eatingFood(event: PlayerItemConsumeEvent) {
@@ -88,7 +151,52 @@ object ItemListeners : Listener, DataTagManager {
     }
 
 
-    /*-----------------------------------------------------------------------------------------------*/
+    // ──────────────────────────────────────────────────────────────────────────────
+    // ────────────────────────────── ITEM FUNCTIONS ────────────────────────────────
+    // ──────────────────────────────────────────────────────────────────────────────
+
+    /*
+     * Returns true if successful, otherwise returns false
+     */
+    private fun crystallineCompostItemUse(block: Block): Boolean {
+        val blockType = block.type.asBlockType() ?: return false
+        // Small Flowers
+        /*
+        val smallFlowerTags = getTagFromRegistry(
+            RegistryKey.BLOCK,
+            "small_flowers",
+            "minecraft")
+        val smallFlowerBlocks = getCollectionFromTag(
+            RegistryKey.BLOCK,
+            smallFlowerTags).toList()
+        // Saplings
+        val saplingsTags = getTagFromRegistry(
+            RegistryKey.BLOCK,
+            "saplings",
+            "minecraft")
+        val saplingsBlocks = getCollectionFromTag(
+            RegistryKey.BLOCK,
+            saplingsTags).toList()
+
+         */
+        val crystallineGrowableTags = getTagFromRegistry(
+            RegistryKey.BLOCK,
+            "crystalline_compost_growable",
+            "odyssey")
+        val crystallineGrowableBlocks = getCollectionFromTag(
+            RegistryKey.BLOCK,
+            crystallineGrowableTags).toList()
+
+        // Check if small flower
+        val center = block.location.toCenterLocation()
+        if (blockType in crystallineGrowableBlocks) {
+            block.world.spawnParticle(Particle.WITCH, center, 10, 0.15, 0.15, 0.15)
+            // Spread flowers
+            block.world.dropItemNaturally(center, ItemStack(block.type, 1))
+            return true
+        }
+        return false
+    }
 
     private fun soulSpiceItemHandler(event: PlayerDropItemEvent) {
         val item = event.itemDrop
