@@ -50,22 +50,22 @@ enum class ToolType(
     SPEAR("spear", "Spear", 0.0, 1.0, "spear"),
 
     // Sword type weapons
-    CLAYMORE("claymore", "Claymore", 6.0, 1.2, "sword", 0.5),
     CUTLASS("cutlass", "Cutlass", 2.5, 2.1, "sword"),
     KATANA("katana", "Katana", 3.0, 1.7, "sword", 0.2),
     LONGSWORD("longsword", "Longsword", 4.0, 1.5, "sword", 0.3),
     RAPIER("rapier", "Rapier", 1.5, 3.5, "sword"),
     SABER("saber", "Saber", 3.0, 1.8, "sword"),
 
-    // Small Slashing Weapons
+    // Small Sword Weapons
     CHAKRAM("chakram", "Chakram", 1.5, 2.5, "sword", -0.3),
     DAGGER("dagger", "Dagger", 1.0, 3.0, "sword", -0.3),
     KUNAI("kunai", "Kunai", 1.0, 2.5, "sword"),
     SICKLE("sickle", "Sickle", 1.5, 2.7, "sword", -0.2),
     //ARM_BLADE("arm_blade", "Arm Blade", 2.0, 3.0, "sword", -0.3),
 
-    // Heavy Slashing Weapons
-    KRIEGSMESSER("kriegsmesser", "Kriegsmesser", 6.0, 1.0, "sword", 0.6),
+    // Heavy Sword Weapons
+    CLAYMORE("claymore", "Claymore", 6.5, 1.1, "sword", 0.5),
+    KRIEGSMESSER("kriegsmesser", "Kriegsmesser", 6.0, 1.3, "sword", 0.5),
     ZWEIHANDER("zweihander", "Zweihander", 7.0, 0.8, "sword", 1.0),
 
     // Polearms Weapons

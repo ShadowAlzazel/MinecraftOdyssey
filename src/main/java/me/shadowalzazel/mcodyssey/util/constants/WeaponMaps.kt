@@ -31,6 +31,7 @@ object WeaponMaps {
         "halberd",
         "lance",
         "poleaxe",
+        "pike",
     )
 
     val SLASHING_WEAPONS = setOf(
@@ -76,7 +77,8 @@ object WeaponMaps {
         "dagger",
         "cutlass",
         "chakram",
-        "cutlass"
+        "cutlass",
+        "double_axe"
     )
 
     val THROWABLE = setOf(
@@ -150,12 +152,13 @@ object WeaponMaps {
         "lance" to 18,
         "pike" to 18,
         "poleaxe" to 14,
+        "claymore" to 16,
     )
 
     val WHACK_ANIMATION = mapOf(
         "katana" to 11,
         "longsword" to 13,
-        "claymore" to 15,
+        //"claymore" to 15,
         "cutlass" to 10,
         "saber" to 10,
         "sickle" to 8,
@@ -183,8 +186,8 @@ object WeaponMaps {
 
     // Minimum Distance -> Inside attack is reduced
     val MIN_RANGE_MAP = mapOf(
-        "spear" to 0.5,
-        "halberd" to 1.0,
+        //"spear" to 0.5,
+        //"halberd" to 1.0,
         "lance" to 1.0,
     )
     // MAYBE ADD PERFECT RANGE MECHANIC?! -> small 10% damage bonus if in sweet spot / perfect range
@@ -199,20 +202,20 @@ object WeaponMaps {
     // Mounted - more damage when on a mount
 
     val LACERATE_DAMAGE_MAP = mapOf(
-        "katana" to 4.0,
-        "claymore" to 3.0,
-        "saber" to 2.0,
-        "scythe" to 4.0,
-        "sickle" to 3.0
+        "saber" to 1.0,
+        //"claymore" to 3.0,
+        //"sickle" to 3.0,
+        //"scythe" to 4.0,
+        //"katana" to 4.0,
     )
 
     val PIERCE_TRUE_DAMAGE_MAP = mapOf(
         "dagger" to 1.0,
         "spear" to 1.0,
-        "halberd" to 4.0,
-        "lance" to 3.0,
         "warhammer" to 1.0,
         "poleaxe" to 2.0,
+        "halberd" to 3.0,
+        "pike" to 3.0,
     )
 
     val BLUNT_DAMAGE_MAP = mapOf(

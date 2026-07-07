@@ -53,6 +53,10 @@ interface EquipmentDataManager : DataTagManager {
             Material.IRON_HOE, Material.DIAMOND_HOE, Material.NETHERITE_HOE -> {
                 "hoe"
             }
+            Material.WOODEN_SPEAR, Material.GOLDEN_SPEAR, Material.STONE_SPEAR,
+            Material.IRON_SPEAR, Material.DIAMOND_SPEAR, Material.NETHERITE_SPEAR -> {
+                "spear"
+            }
             Material.NETHERITE_LEGGINGS, Material.DIAMOND_LEGGINGS, Material.IRON_LEGGINGS,
             Material.CHAINMAIL_LEGGINGS, Material.GOLDEN_LEGGINGS, Material.LEATHER_LEGGINGS -> {
                 "leggings"
@@ -81,7 +85,7 @@ interface EquipmentDataManager : DataTagManager {
 
     fun equipmentIsIron(material: Material): Boolean {
         return when(material) {
-            Material.IRON_SWORD, Material.IRON_PICKAXE, Material.IRON_AXE, Material.IRON_SHOVEL, Material.IRON_HOE,
+            Material.IRON_SWORD, Material.IRON_PICKAXE, Material.IRON_AXE, Material.IRON_SHOVEL, Material.IRON_HOE, Material.IRON_SPEAR,
             Material.IRON_HELMET, Material.IRON_CHESTPLATE, Material.IRON_LEGGINGS, Material.IRON_BOOTS-> true
             else -> false
         }
@@ -89,7 +93,7 @@ interface EquipmentDataManager : DataTagManager {
 
     fun equipmentIsDiamond(material: Material): Boolean {
         return when(material) {
-            Material.DIAMOND_SWORD, Material.DIAMOND_PICKAXE, Material.DIAMOND_AXE, Material.DIAMOND_SHOVEL, Material.DIAMOND_HOE,
+            Material.DIAMOND_SWORD, Material.DIAMOND_PICKAXE, Material.DIAMOND_AXE, Material.DIAMOND_SHOVEL, Material.DIAMOND_HOE, Material.DIAMOND_SPEAR,
             Material.DIAMOND_HELMET, Material.DIAMOND_CHESTPLATE, Material.DIAMOND_LEGGINGS, Material.DIAMOND_BOOTS-> true
             else -> false
         }

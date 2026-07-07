@@ -27,7 +27,7 @@ class ItemRecipes : ChoiceManager {
             pommelPartUpgradeTemplateRecipe(), hiltPartUpgradeTemplateRecipe(), bladePartUpgradeTemplateRecipe(), handlePartUpgradeTemplateRecipe(),
             mastercraftedToolTemplateRecipe(), crystalAlloyIngotRecipe(), crystalAlloyUpgradeTemplateRecipe(),
             // New Recipes for Vanilla
-            sulfurGunpowderRecipe(), sulfurRecipe(), crystallineCompostRecipe()
+            sulfurGunpowderRecipe(), sulfurRecipe(), crystallineCompostRecipe(), prismaticNameTagRecipe()
         )
     }
 
@@ -362,6 +362,17 @@ class ItemRecipes : ChoiceManager {
             addIngredient(Item.SULFUR_POWDER.toRecipeChoice())
             category = CraftingBookCategory.MISC
         }
+    }
+
+    private fun prismaticNameTagRecipe(): ShapedRecipe {
+        val result = Item.PRISMATIC_NAME_TAG.newItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "prismatic_name_tag"), result).apply {
+            shape(" S ", "SCS", " S ")
+            setIngredient('C', Material.NAME_TAG)
+            setIngredient('S', Material.AMETHYST_SHARD)
+            category = CraftingBookCategory.MISC
+        }
+        return recipe
     }
 
 

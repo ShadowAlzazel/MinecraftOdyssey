@@ -13,7 +13,7 @@ class FrogFrightTask(
     override fun run() {
         if (!victim.isDead) {
             victim.velocity = pullDirection.clone().multiply(-1.1)
-            victim.damage(level * 1.0)
+            //victim.damage(level * 1.0)
         }
         this.cancel()
     }

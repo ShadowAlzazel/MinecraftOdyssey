@@ -232,7 +232,7 @@ interface DescriptionManager {
             "committed" -> listOf(
                 "- Deal ${level * 15}%=[level x 15] increased damage against enemies with less than 40% health.")
             "cull_the_weak" -> listOf(
-                "- Deal ${level * 15}%=[level x 15] bonus damage to enemies that are impaired by the following:",
+                "- Deal ${level * 10}%=[level x 10] bonus damage to enemies that are impaired by the following:",
                 "Slowness, Weakness, Blindness, or Nausea. These effects can stack individually.")
             "conflagrate" -> listOf(
                 "- After a 1.5 second delay, the target takes ${level * 20}%=[level x 20] Fire damage",
@@ -263,7 +263,7 @@ interface DescriptionManager {
                 "- Targets are knocked-up for ${level * 50}%=[level x 50] of knockback force.")
             "hemorrhage" -> listOf( // Simple DoT
                 "- Applies a Bleeding effect that ignores armor for 8 seconds.",
-                "Bleeding deals 5% of the original damage every second.")
+                "Bleeding deals ${level * 3}%=[level x 3] of the Base Damage every second.")
             "illucidation" -> listOf(
                 "- Deal ${level * 15}%=[level x 15] bonus damage to enemies that are glowing.",
                 "On a Critical Hit, the damage bonus is doubled and the glowing is removed.")
@@ -295,7 +295,7 @@ interface DescriptionManager {
             // ──────────────────────────────────────────────────────────────────────────────
 
             "expedite" -> listOf( // 1 cost, Table goes up to 5, but max is 10
-                "- Increase base mining speed by ${level * 1}=[level].")
+                "- Increase base mining speed by ${level * 10}=[level x 10]%.")
             "grasp" -> listOf(
                 "- Gain ${1 + level * 0.5}=[1 + (level x 0.5)] block interaction range.")
             "lodesight" -> listOf(
@@ -373,7 +373,7 @@ interface DescriptionManager {
                 "After a ${level * 0.2}=[level x 0.2] second delay, the speed is",
                 "increased to ${level * 10}%=[level x 10] of the original velocity.")
             "vulnerocity" -> listOf(
-                "- On projectile hit, reduce entity immunity time by ${level * 0.1}=[level x 0.1] seconds.")
+                "- On projectile hit, reduce entity immunity time by ${(10.0 * level).format(2)}%=[10 x level] seconds.")
 
             // Odyssey - Misc
             "shade_aid" -> listOf(
@@ -418,7 +418,7 @@ interface DescriptionManager {
             // ──────────────────────────────────────────────────────────────────────────────
 
             "aerosion_aspect" -> listOf(
-                "- Applies Aerosion. Targets have their armor shredded by ${level * 3}%=[level x 3] for 8 seconds.")
+                "- Applies Aerosion. Targets have their armor shredded by ${level * 4}%=[level x 4] for 6 seconds.")
 
             // Elemental damages, 2 cost, up to 5 levels
             "flame_edge" -> listOf(
@@ -447,7 +447,7 @@ interface DescriptionManager {
             "nullify" -> listOf( // Melee (2 cost)
                 "- Attacking an enemy reduces the damage it does to you by ${5 * level}%=[level x 5].")
             "press_the_attack" -> listOf(
-                "- The first 3 attacks on a target has its damage increased by ${20 * level}%=[level x 20].")
+                "- The first 3 attacks on a target has its damage increased by ${15 * level}%=[level x 15].")
 
             // Lightning
             "shocking_impact" -> listOf(
@@ -459,8 +459,10 @@ interface DescriptionManager {
 
             // Void
             "dematerialize" -> listOf( // 3 cost, up to 4
-                "- Converts attack into Void damage ticking every 0.5 seconds for 5 seconds.",
-                "The damage amount is ${10 + (level * 2.5)}%=[10 + (level x 2.5)] of the original.")
+                "- Converts attack into Void damage ticking every 0.5 seconds for 10 seconds.",
+                "The damage amount is ${level * 2}%=[level x 2] of the original.",
+                "Re-hitting the same target refreshes the 10s window and folds leftover damage.",
+                )
 
             // SHIELDS
             "mirror_force" -> listOf(

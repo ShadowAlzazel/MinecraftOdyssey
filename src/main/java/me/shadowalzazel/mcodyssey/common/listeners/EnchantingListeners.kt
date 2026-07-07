@@ -135,7 +135,7 @@ object EnchantingListeners : Listener, TomeEnchanting, RegistryTagManager {
             event.result = ItemStack(Material.BOOK)
         } else {
             val newItem = result.clone().also {
-                it.updateToolTip()
+                it.updateToolTip(forceUpdate = true)
             }
             inventory.result = newItem
             event.result = newItem

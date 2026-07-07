@@ -117,11 +117,11 @@ object WeaponListeners : Listener, WeaponProjectileHandler, EnchantmentManager {
         // --- circle sweepers (hit around the player) ---
         // "sickle"     to { it.sweep(deg = 100.0, radius = 2.0) },
         // "dagger"     to { it.sweep(deg = 80.0,  radius = 1.75) },
-        "chakram"       to { it.sweep(deg = 175.0, radius = 1.75) },
+        "chakram"       to { it.sweep(deg = 175.0, radius = 1.5) },
 
         // --- cone sweepers ---
-        "scythe"        to { it.sweep(deg = 150.0, radius = 4.0) },
-        // "zweihander" to { it.sweep(deg = 120.0, radius = 3.0) },
+        "scythe"        to { it.sweep(deg = 120.0, radius = 3.0) },
+        // "zweihander" to { it.sweep(deg = 120.0, radius = 2.0) },
         // "glaive"     to { it.sweep(deg = 65.0) },   // near contact
         // "poleaxe"    to { it.sweep(deg = 25.0) },   // near contact
 
@@ -443,6 +443,23 @@ object WeaponListeners : Listener, WeaponProjectileHandler, EnchantmentManager {
         }
     }
 
+    private fun shurikenHitEntityHandler(event: ProjectileHitEvent) {
+        val projectile: Projectile = event.entity
+        if (projectile !is ThrowableProjectile) return
+        val damage = projectile.getIntTag(EntityTags.THROWABLE_DAMAGE) ?: return
+        val victim = event.hitEntity ?: return
+        if (victim !is LivingEntity) return
+        // Damage hit entity
+        victim.addScoreboardTag(EntityTags.THROWABLE_ATTACK_HIT)
+        if (projectile.shooter != null) {
+            val thrower = projectile.shooter ?: return
+            victim.addScoreboardTag(EntityTags.THROWABLE_ATTACK_HIT)
+            victim.damage(damage * 1.0, thrower as LivingEntity)
+        } else {
+            victim.damage(damage * 1.0)
+        }
+    }
+
     private fun chakramHitBlockHandler(event: ProjectileHitEvent) {
         val projectile: Projectile = event.entity
         if (projectile !is ThrowableProjectile) return
@@ -476,22 +493,7 @@ object WeaponListeners : Listener, WeaponProjectileHandler, EnchantmentManager {
         }
     }
 
-    private fun shurikenHitEntityHandler(event: ProjectileHitEvent) {
-        val projectile: Projectile = event.entity
-        if (projectile !is ThrowableProjectile) return
-        val damage = projectile.getIntTag(EntityTags.THROWABLE_DAMAGE) ?: return
-        val victim = event.hitEntity ?: return
-        if (victim !is LivingEntity) return
-        // Damage hit entity
-        victim.addScoreboardTag(EntityTags.THROWABLE_ATTACK_HIT)
-        if (projectile.shooter != null) {
-            val thrower = projectile.shooter ?: return
-            victim.addScoreboardTag(EntityTags.THROWABLE_ATTACK_HIT)
-            victim.damage(damage * 1.0, thrower as LivingEntity)
-        } else {
-            victim.damage(damage * 1.0)
-        }
-    }
+
 
     /*-----------------------------------------------------------------------------------------------*/
     // Event for detecting when entity shoots bow

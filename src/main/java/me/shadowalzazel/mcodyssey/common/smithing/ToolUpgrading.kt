@@ -4,6 +4,7 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.api.AdvancementManager
 import me.shadowalzazel.mcodyssey.api.EquipmentDataManager
+import me.shadowalzazel.mcodyssey.util.ItemToolTipManager
 import me.shadowalzazel.mcodyssey.util.ToolComponentHelper
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
@@ -17,7 +18,7 @@ import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemStack
 
 @Suppress("UnstableApiUsage")
-internal interface ToolUpgrading : EquipmentDataManager, ToolComponentHelper, AdvancementManager {
+internal interface ToolUpgrading : EquipmentDataManager, ToolComponentHelper, AdvancementManager, ItemToolTipManager {
 
     fun toolSmithingHandler(event: PrepareSmithingEvent) {
         val recipe = event.inventory.recipe
@@ -37,12 +38,16 @@ internal interface ToolUpgrading : EquipmentDataManager, ToolComponentHelper, Ad
 
     private fun netheriteUpgrading(event: PrepareSmithingEvent) {
         val equipment = event.inventory.inputEquipment ?: return
-        if (equipment.getData(DataComponentTypes.ITEM_MODEL) == null) return
+        val oldModel = equipment.getData(DataComponentTypes.ITEM_MODEL)
+        //if (equipment.getData(DataComponentTypes.ITEM_MODEL) == null) return
         val upgradeMaterial = "netherite"
-        val itemType = event.result!!.type
-        val upgradedItem = toolUpgrader(equipment.withType(itemType), upgradeMaterial)
+        val upgradeItemType = event.result?.type ?: return
+        // Upgrade the item
+        val upgradedItem = toolUpgrader(equipment.withType(upgradeItemType), upgradeMaterial)
         modifyDamage(upgradedItem, 1.0)
+        upgradedItem.updateToolTip()
         event.result = upgradedItem
+        event.inventory.result = upgradedItem
     }
 
 
@@ -88,6 +93,7 @@ internal interface ToolUpgrading : EquipmentDataManager, ToolComponentHelper, Ad
         val mineableTags = getMiningTags(getItemToolType(upgradedItem) ?: "none")
         if (mineableTags != null) toolMiningUpgrader(upgradedItem, upgradeMaterial)
         // Finish
+        upgradedItem.updateToolTip()
         event.result = upgradedItem
         event.inventory.result = upgradedItem
     }

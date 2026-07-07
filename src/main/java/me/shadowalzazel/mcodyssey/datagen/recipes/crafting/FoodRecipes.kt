@@ -95,7 +95,9 @@ class FoodRecipes {
         val result = Item.TONKATSU.newItemStack(1)
         return ShapelessRecipe(NamespacedKey(Odyssey.instance, "tonkatsu"), result).apply {
             addIngredient(Material.COOKED_PORKCHOP)
-            addIngredient(Material.SUGAR)
+            addIngredient(Material.WHEAT)
+            addIngredient(Material.WHEAT)
+            addIngredient(Material.WHEAT)
             category = CraftingBookCategory.MISC
         }
     }

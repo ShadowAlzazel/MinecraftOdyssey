@@ -21,9 +21,10 @@ object EliteMobsData {
     val ALL_WEAPONS = listOf(
         ToolType.SABER, ToolType.KATANA, ToolType.LONGSWORD, ToolType.CUTLASS, ToolType.RAPIER,
         ToolType.CLAYMORE, ToolType.KRIEGSMESSER,
-        ToolType.POLEAXE, ToolType.LONGAXE, ToolType.GLAIVE, ToolType.DOUBLE_AXE,
-        // Dual Wield
+        ToolType.POLEAXE, ToolType.LONGAXE, ToolType.GLAIVE,
         ToolType.WARHAMMER, ToolType.SCYTHE, ToolType.HALBERD,
+        // Dual Wield
+        ToolType.DOUBLE_AXE,
         ToolType.DAGGER, ToolType.SICKLE, ToolType.CHAKRAM
     )
     val ALL_PARTS = listOf(

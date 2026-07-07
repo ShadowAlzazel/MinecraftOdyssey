@@ -21,7 +21,7 @@ interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
 
     // Main Method called by other functions
     // ONLY updates the ToolTip Lore, does not do logic!
-    fun ItemStack.updateToolTip(toggleDescriptions: Boolean = true): Boolean {
+    fun ItemStack.updateToolTip(toggleDescriptions: Boolean = true, forceUpdate: Boolean = false): Boolean {
         // Set boolean fields
         val hasAttributes = this.getData(DataComponentTypes.ATTRIBUTE_MODIFIERS) != null
         val weaponType = getWeaponType()
@@ -32,7 +32,9 @@ interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
         val hasStoredEnchants = storedEnchantments != null && storedEnchantments.isNotEmpty()
 
         // Needs to have at least one of these
-        if (!(isCustomWeapon || hasEnchants || hasStoredEnchants)) return false
+        if (!forceUpdate) {
+            if (!(isCustomWeapon || hasEnchants || hasStoredEnchants)) return false
+        }
 
         // Start the tool tips
         val oldLore = this.lore()
@@ -171,6 +173,13 @@ interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
                     toolTipIndex++,
                     darkGrayTextComponent("- Can disable Blocking for ${disableTime} seconds"))
             }
+            val canMineBlocks = this.getData(DataComponentTypes.TOOL) != null
+            if (canMineBlocks) {
+                newToolTip.add(
+                    toolTipIndex++,
+                    darkGrayTextComponent("- Also a tool that can mine blocks"))
+            }
+
         }
 
         // Hide Attribute Modifiers on simple Screen
@@ -190,8 +199,12 @@ interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
                 for (x in modifiers.modifiers()) {
                     // Get Attack Speed
                     if (x.attribute() == Attribute.ATTACK_SPEED) {
-                        // Skip Reset Speed
-                        if (x.modifier().key.key == AttributeTags.ITEM_RESET_ATTACK_SPEED) continue
+                        // Skip Reset Speed but include base speed
+                        if (x.modifier().key.key == AttributeTags.ITEM_RESET_ATTACK_SPEED) {
+                            continue
+                        } else {
+                            //flatAttackSpeed += 4.0
+                        }
                         // Get the modifiers
                         if (x.modifier().operation == AttributeModifier.Operation.ADD_NUMBER) {
                             flatAttackSpeed += x.modifier().amount
@@ -333,7 +346,13 @@ interface ItemToolTipManager : DataTagManager, EnchantabilityHandler {
 
     private fun createWeaponHeader(text: String): TextComponent {
         return Component.text("Weapon Attributes: ", CustomColors.GRAY.color).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-            .append(Component.text("[${text.replaceFirstChar { it.titlecase() }}]", CustomColors.BLUE.color))
+            .append(Component.text("[${text.toTitleCase()}]", CustomColors.BLUE.color))
+    }
+
+    private fun String.toTitleCase(): String {
+        return split('_', '-', ' ')
+            .filter { it.isNotEmpty() }
+            .joinToString(" ") { it.replaceFirstChar { c -> c.titlecase() } }
     }
 
     private fun createEnchantComponent(enchantment: Enchantment, level: Int, pointCost: Int): Component {

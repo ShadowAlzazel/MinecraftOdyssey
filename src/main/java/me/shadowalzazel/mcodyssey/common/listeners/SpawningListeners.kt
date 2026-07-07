@@ -39,6 +39,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
         if (event.spawnReason != CreatureSpawnEvent.SpawnReason.NATURAL) return
         if (event.entity !is Enemy) return
         if (event.entity is Guardian) return
+        if (event.entity is Phantom) return
         val mob = event.entity
         if (mob.scoreboardTags.contains(EntityTags.SPAWN_HANDLED)) return // Do not handle twice
 
@@ -71,15 +72,19 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             when (val name = structureRegistry.getKey(structure)?.key) {
                 "shadow_chambers" -> {
                     shadowChamberSpawnerSpawning(event)
+                    return
                 }
                 "terminal_grid" -> {
                     terminalGridSpawnerSpawning(event)
+                    return
                 }
                 "hypercubic_chamber" -> {
                     hypercubicChamberSpawnerSpawning(event)
+                    return
                 }
                 "sunken_library" -> {
                     sunkenLibrarySpawnerSpawning(event)
+                    return
                 }
                 "line_mine" -> {
                     //shadowChamberSpawnerSpawning(event)
@@ -201,24 +206,27 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             createShinyMob(mob, equipmentRandomBuilder, true)
             // Bonus Stats
             mob.addAttackAttribute(4.0, AttributeTags.MOB_ATTACK_DAMAGE)
+            mob.addStepAttribute(1.5, "odyssey.shiny_step")
         }
 
-        // Giant Spider,
+        // Menacing Spider,
         if (mob.scoreboardTags.contains("odyssey.giant")) {
             mob.apply {
-                setHealthAttribute(42.0, AttributeTags.MOB_HEALTH)
-                heal(42.0)
-                addReachAttribute(0.5,  AttributeTags.MOB_REACH)
-                addAttackAttribute(10.0, AttributeTags.MOB_ATTACK_DAMAGE)
-                addScaleAttribute(0.5, AttributeTags.MOB_SCALE)
+                setHealthAttribute(62.0, AttributeTags.MOB_HEALTH)
+                heal(62.0)
+                addReachAttribute(1.5,  AttributeTags.MOB_REACH)
+                addAttackAttribute(14.0, AttributeTags.MOB_ATTACK_DAMAGE)
+                addScaleAttribute(2.0, AttributeTags.MOB_SCALE)
             }
         }
+
         // Vanguard
         if (mob.scoreboardTags.contains("odyssey.vanguard")) {
             // Weapon
-            val weapon = createToolStack(ToolMaterial.IRON, ToolType.POLEAXE)
+            val randomWeaponType = listOf(ToolType.POLEAXE, ToolType.HALBERD).random()
+            val weapon = createToolStack(ToolMaterial.IRON, randomWeaponType)
             // Add Enchantments
-            val enchantItem = ItemStack(Material.NETHERITE_SWORD).enchantWithLevels(30, false, Random())
+            val enchantItem = ItemStack(Material.GOLDEN_SWORD).enchantWithLevels(30, false, Random())
             val swordEnchants = enchantItem.enchantments
             weapon.apply {
                 addUnsafeEnchantment(Enchantment.BREACH, 4)
@@ -244,15 +252,16 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             // Apply Stats and weapon
             mob.apply {
                 // Stats
-                setHealthAttribute(15.0, AttributeTags.MOB_HEALTH)
-                heal(15.0)
-                addAttackAttribute(4.0, AttributeTags.MOB_ATTACK_DAMAGE)
+                setHealthAttribute(30.0, AttributeTags.MOB_HEALTH)
+                heal(30.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
+                addAttackAttribute(3.0, AttributeTags.MOB_ATTACK_DAMAGE)
                 addScaleAttribute(0.1, AttributeTags.MOB_SCALE)
+                addStepAttribute(1.5, "odyssey.vanguard_step")
                 // Equipment
                 equipment?.also {
                     it.setItemInOffHand(offHand)
                     it.setItemInMainHand(weapon)
-                    it.itemInMainHandDropChance = 0.05F // Change to difficulty
+                    it.itemInMainHandDropChance = 0.03F // Change to difficulty
                 }
                 // Do Custom mob
                 createArmoredMob(this, equipmentRandomBuilder, enchantWeapon = true, replaceOldWeapon = false)
@@ -277,16 +286,21 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             mob.setHealthAttribute(10.0, AttributeTags.MOB_HEALTH)
             mob.addArmorAttribute(2.0, AttributeTags.MOB_ARMOR)
             mob.heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
+            mob.addStepAttribute(0.5, "odyssey.mob_shadow_step")
         }
         // All Shadow Chamber Mobs
         mob.apply {
+            // At 20
+            // Per 16 blocks/LEVEL OF DUNGEON DEPTH
+            // +20% difficulty
+
             // To stop handlers
             addScoreboardTag(EntityTags.SPAWN_HANDLED)
             addScoreboardTag(EntityTags.SHADOW_MOB)
             // Stats
-            setHealthAttribute(10.0, AttributeTags.SHADOW_CHAMBERS_HEALTH_BONUS)
-            heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
-            addAttackAttribute(2.0, AttributeTags.SHADOW_CHAMBERS_ATTACK_BONUS)
+            setHealthAttribute(20.0, AttributeTags.SHADOW_CHAMBERS_HEALTH_BONUS)
+            heal(20.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
+            addAttackAttribute(3.0, AttributeTags.SHADOW_CHAMBERS_ATTACK_BONUS)
             addArmorAttribute(2.0, AttributeTags.SHADOW_CHAMBERS_ARMOR_BONUS)
             addSpeedAttribute(0.0325, AttributeTags.SHADOW_CHAMBERS_SPEED_BONUS)
             // Special Attributes
@@ -388,10 +402,10 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             // Creator
             createArmoredMob(mob, equipmentRandomBuilder, enchantWeapon = true, replaceOldWeapon = true)
             // Stats
-            mob.addAttackAttribute(2.0, AttributeTags.MOB_ATTACK_DAMAGE)
-            mob.setHealthAttribute(10.0, AttributeTags.MOB_HEALTH)
+            mob.addAttackAttribute(3.0, AttributeTags.MOB_ATTACK_DAMAGE)
+            mob.setHealthAttribute(20.0, AttributeTags.MOB_HEALTH)
             mob.addArmorAttribute(2.0, AttributeTags.MOB_ARMOR)
-            mob.heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
+            mob.heal(20.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
         }
         // Creaking
         if (mob is Creaking) {
@@ -402,10 +416,11 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
         // Spider
         if (mob.scoreboardTags.contains("odyssey.giant") && mob is Spider) {
             mob.apply {
-                setHealthAttribute(40.0, AttributeTags.MOB_HEALTH)
-                heal(40.0)
-                addAttackAttribute(10.0, AttributeTags.MOB_ATTACK_DAMAGE)
-                addScaleAttribute(0.7, AttributeTags.MOB_SCALE)
+                setHealthAttribute(62.0, AttributeTags.MOB_HEALTH)
+                heal(62.0)
+                addReachAttribute(1.5,  AttributeTags.MOB_REACH)
+                addAttackAttribute(14.0, AttributeTags.MOB_ATTACK_DAMAGE)
+                addScaleAttribute(2.0, AttributeTags.MOB_SCALE)
             }
         }
 
@@ -419,7 +434,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             addAttackAttribute(2.0, AttributeTags.SUNKEN_LIBRARY_ATTACK_BONUS)
             addArmorAttribute(2.0, AttributeTags.SUNKEN_LIBRARY_ARMOR_BONUS)
             addSpeedAttribute(0.02, AttributeTags.SUNKEN_LIBRARY_SPEED_BONUS)
-            addStepAttribute(0.5, AttributeTags.SUNKEN_LIBRARY_STEP_HEIGHT)
+            addStepAttribute(1.5, AttributeTags.SUNKEN_LIBRARY_STEP_HEIGHT)
         }
         // Finish
         return

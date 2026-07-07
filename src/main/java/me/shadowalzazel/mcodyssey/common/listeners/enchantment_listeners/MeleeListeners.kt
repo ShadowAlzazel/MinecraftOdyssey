@@ -4,6 +4,8 @@ import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.combat.AttackHelper
 import me.shadowalzazel.mcodyssey.common.effects.EffectsManager
+import me.shadowalzazel.mcodyssey.common.effects.StatusEffect
+import me.shadowalzazel.mcodyssey.common.effects.StatusEffectManager.applyOdysseyEffect
 import me.shadowalzazel.mcodyssey.common.enchantments.EnchantmentManager
 import me.shadowalzazel.mcodyssey.common.tasks.enchantment_tasks.*
 import me.shadowalzazel.mcodyssey.util.VectorParticles
@@ -102,7 +104,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         "frog_fright"      to { c -> frogFrightEnchantment(c.attacker, c.victim, c.level) },
         "frosty_fuse"      to { c -> frostyFuseEnchantment(c.victim, c.level) },
         "gravity_well"     to { c -> gravityWellEnchantment(c.attacker, c.victim, c.level) },
-        "hemorrhage"       to { c -> hemorrhageEnchantment(c.victim, c.level) },        // MORE STACKS -> MORE DAMAGE PER INSTANCE
+        "hemorrhage"       to { c -> hemorrhageEnchantment(c.victim, c.eventDamage, c.level) },        // MORE STACKS -> MORE DAMAGE PER INSTANCE
         "invocative"       to { c -> invocativeEnchantment(c.attacker, c.victim, c.eventDamage, c.level) },
         "miscalibrate"     to { c -> miscalibrateEnchantment(c.victim, c.level) },
         "pestilence"       to { c -> pestilenceEnchantment(c.attacker, c.victim, c.level) },
@@ -134,9 +136,6 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
             ))
         }
     }
-
-    private const val VOID_DOT_TICKS = 10      // number of ticks (5s ÷ 0.5s)
-    private const val VOID_DOT_PERIOD = 10L
 
     private val recallTargets: MutableMap<UUID, LivingEntity> = mutableMapOf()
     private val invocativePreviousDamage: MutableMap<UUID, Double> = mutableMapOf()
@@ -285,16 +284,12 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         victim: LivingEntity,
         level: Int) {
         // Effects
-        victim.addOdysseyEffect(EffectTags.AEROSION, 15 * 20, level)
         with(victim.world) {
             playSound(victim.location, Sound.ENTITY_WIND_CHARGE_THROW, 2.5F, 0.9F)
-            spawnParticle(Particle.SMALL_GUST, victim.location, 35, 1.0, 0.5, 1.0)
+            spawnParticle(Particle.SMALL_GUST, victim.location, 25, 1.0, 0.5, 1.0)
         }
-        // Set Stacks
-        val stacks = victim.getIntTag(EntityTags.AEROSION_STACKS) ?: 0
-        if (stacks < level) {
-            victim.setIntTag(EntityTags.AEROSION_STACKS, stacks + 1)
-        }
+        // Set Effect
+        victim.applyOdysseyEffect(StatusEffect.AEROSION, 20 * 6, level * 1.0)
     }
 
     private fun tempestSplitterEnchantment(
@@ -483,10 +478,13 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         //victim.shieldBlockingDelay += level * 20
     }
 
+    private const val VOID_DOT_TICKS = 2 * 10  // Number of runs (20 / 5 = 4) * 10
+    private const val VOID_DOT_PERIOD = 10L // Run every 10 ticks -> 0.5s
+
     /**
      * Dematerialize: applies a Void damage-over-time equal to
-     * (10 + level × 2.5)% of the triggering attack's damage, spread across
-     * 10 ticks (every 0.5s for 5s).
+     * (5 + level × 5)% of the triggering attack's damage, spread across
+     * 20 ticks (every 0.5s for 10s).
      *
      * Re-hitting the same target refreshes the 5s window and folds the new
      * hit's pool into whatever damage hasn't been dealt yet.
@@ -499,8 +497,8 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
     ) {
         if (level <= 0) return
 
-        val conversionPct = 10.0 + (level * 2.5)
-        val newDotDamage = damage * conversionPct / 100.0
+        val conversionPct = (level * 0.02)
+        val newDotDamage = damage * conversionPct
         if (newDotDamage <= 0.0) return
 
         val id = victim.uniqueId
@@ -511,7 +509,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
             existing.perTick * existing.ticksRemaining
         } ?: 0.0
 
-        val perTick = (carryOver + newDotDamage) / VOID_DOT_TICKS
+        val damagePerTick = (carryOver / VOID_DOT_TICKS) + newDotDamage
 
         // VOID for now
         val damageSource = DamageSource.builder(DamageType.OUT_OF_WORLD).build()
@@ -538,7 +536,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
             }
         }.runTaskTimer(Odyssey.instance, VOID_DOT_PERIOD, VOID_DOT_PERIOD)
 
-        voidDotStates[id] = VoidDotState(task, perTick, VOID_DOT_TICKS)
+        voidDotStates[id] = VoidDotState(task, damagePerTick, VOID_DOT_TICKS)
     }
 
 
@@ -597,10 +595,10 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
 
         if (hasSlowness || hasWeakness || hasFatigue || hasNausea) {
             victim.world.spawnParticle(Particle.TRIAL_SPAWNER_DETECTION_OMINOUS, victim.location, 10, 0.25, 0.25, 0.25)
-            if (hasSlowness) modifier += (0.15F * level)
-            if (hasWeakness) modifier += (0.15F * level)
-            if (hasFatigue) modifier += (0.15F * level)
-            if (hasNausea) modifier += (0.15F * level)
+            if (hasSlowness) modifier += (0.1F * level)
+            if (hasWeakness) modifier += (0.1F * level)
+            if (hasFatigue) modifier += (0.1F * level)
+            if (hasNausea) modifier += (0.1F * level)
         }
         return modifier
     }
@@ -775,13 +773,13 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
 
     private fun hemorrhageEnchantment(
         victim: LivingEntity,
+        damage: Double,
         level: Int) {
-        // Effects
-        victim.addOdysseyEffect(EffectTags.HEMORRHAGING, 9 * 20, level)
-        with(victim.world) {
-            playSound(victim.location, Sound.BLOCK_NETHER_SPROUTS_PLACE, 2.5F, 0.9F)
-            spawnParticle(Particle.CRIT, victim.location, 35, 1.0, 0.5, 1.0)
-        }
+        // VFX
+        victim.world.playSound(victim.location, Sound.BLOCK_NETHER_SPROUTS_PLACE, 2.5F, 0.9F)
+        // Calculate Damage
+        val hemorrhageDamage = damage * 0.03 * level
+        victim.applyOdysseyEffect(StatusEffect.HEMORRHAGE, 8 * 20, hemorrhageDamage)
     }
 
     private fun illucidationEnchantment(
@@ -982,7 +980,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
     private fun pressTheAttackEnchantment(
         victim: LivingEntity,
         level: Int): Float {
-        val bonusMultiplier = 0.2F * level
+        val bonusMultiplier = 0.15F * level
         val blockData = Material.GOLD_BLOCK.createBlockData()
 
         with(victim) {

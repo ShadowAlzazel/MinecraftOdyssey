@@ -26,7 +26,7 @@ import org.bukkit.potion.PotionEffectType
 @Suppress("UnstableApiUsage")
 object EffectListeners : Listener, EffectsManager {
 
-    @EventHandler
+
     fun mainDamageHandler(event: EntityDamageEvent) {
         if (event.entity !is LivingEntity) return
         val entity = event.entity as LivingEntity
@@ -49,7 +49,7 @@ object EffectListeners : Listener, EffectsManager {
     }
 
 
-    @EventHandler
+
     fun hungerRegenHandler(event: FoodLevelChangeEvent) {
         if (event.entity.scoreboardTags.contains(EffectTags.MIASMA)) {
             event.isCancelled = true
@@ -57,7 +57,7 @@ object EffectListeners : Listener, EffectsManager {
         }
     }
 
-    @EventHandler
+
     fun healthRegenHandler(event: EntityRegainHealthEvent) {
         if (event.entity.scoreboardTags.contains(EffectTags.IRRADIATED)) {
             event.isCancelled = true
@@ -124,7 +124,6 @@ object EffectListeners : Listener, EffectsManager {
 
     /*-----------------------------------------------------------------------------------------------*/
     // Main Splash Handler
-    @EventHandler
     fun splashPotionHandler(event: PotionSplashEvent) {
         // Potion Item Tag Getters
         if (!event.potion.item.hasItemMeta()) return
@@ -137,12 +136,11 @@ object EffectListeners : Listener, EffectsManager {
         for (entity in event.affectedEntities) {
             // For Vials -> Lower Intensity
             // For Large Potions -> Increase Intensity
-            entity.addOdysseyEffect(effect, duration, amplifier, event.getIntensity(entity))
+            //entity.addOdysseyEffect(effect, duration, amplifier, event.getIntensity(entity))
         }
     }
 
     // Main function regarding lingering potions
-    @EventHandler
     fun lingeringSplashHandler(event: LingeringPotionSplashEvent) {
         // Potion Item Tag Getters
         val potionItem = event.entity.item

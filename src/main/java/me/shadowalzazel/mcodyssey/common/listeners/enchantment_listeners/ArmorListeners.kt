@@ -292,7 +292,7 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         amount: Double,
         level: Int,
     ): Double {
-        return amount * (level * 0.1)
+        return amount * (level * 0.05)
     }
 
 

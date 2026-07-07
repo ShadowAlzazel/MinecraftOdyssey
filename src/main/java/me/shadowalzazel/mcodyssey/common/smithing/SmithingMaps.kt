@@ -165,7 +165,7 @@ object SmithingMaps {
         "soul_steel_upgrade_template",
         "titanium_upgrade_template",
         "iridium_upgrade_template",
-        "netherite_upgrade_template",
+        "netherite_upgrade_smithing_template",
         "crystal_alloy_upgrade_template"
     )
 

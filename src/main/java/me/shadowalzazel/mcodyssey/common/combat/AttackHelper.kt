@@ -16,7 +16,6 @@ import org.bukkit.inventory.ItemStack
 import kotlin.math.cos
 import kotlin.math.pow
 
-@Suppress("UnstableApiUsage")
 interface AttackHelper {
 
     fun doWeaponAOESweep(attacker: LivingEntity, victim: LivingEntity, damage: Double, angle: Double, radius: Double? = null) {

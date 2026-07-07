@@ -78,31 +78,33 @@ class UtilitySmithing : ChoiceManager { // USE THIS CLASS TO CREATE RECIPE WHICH
     /*-----------------------------------------------------------------------------------------------*/
     // For Upgrading a tool material
     private fun toolUpgrading(): SmithingTransformRecipe {
-        val template = RecipeChoice.MaterialChoice(Material.PAPER)
-        val addition = RecipeChoice.MaterialChoice(Material.IRON_INGOT)
+        val template = RecipeChoice.itemType(ItemType.PAPER)
+        val addition = RecipeChoice.itemType(ItemType.IRON_INGOT)
         return SmithingTransformRecipe(
             NamespacedKey(Odyssey.instance, "tool_upgrading"),
             ItemStack(Material.IRON_INGOT),
             template,
-            RecipeChoice.MaterialChoice(
-                Material.IRON_SWORD,
-                Material.IRON_AXE,
-                Material.IRON_PICKAXE,
-                Material.IRON_SHOVEL,
-                Material.IRON_HOE,
-                Material.IRON_BOOTS,
-                Material.IRON_LEGGINGS,
-                Material.IRON_CHESTPLATE,
-                Material.IRON_HELMET,
-                Material.DIAMOND_SWORD,
-                Material.DIAMOND_AXE,
-                Material.DIAMOND_PICKAXE,
-                Material.DIAMOND_SHOVEL,
-                Material.DIAMOND_HOE,
-                Material.DIAMOND_BOOTS,
-                Material.DIAMOND_LEGGINGS,
-                Material.DIAMOND_CHESTPLATE,
-                Material.DIAMOND_HELMET,
+            RecipeChoice.itemType(
+                ItemType.IRON_SWORD,
+                ItemType.IRON_AXE,
+                ItemType.IRON_PICKAXE,
+                ItemType.IRON_SHOVEL,
+                ItemType.IRON_HOE,
+                ItemType.IRON_SPEAR,
+                ItemType.IRON_BOOTS,
+                ItemType.IRON_LEGGINGS,
+                ItemType.IRON_CHESTPLATE,
+                ItemType.IRON_HELMET,
+                ItemType.DIAMOND_SWORD,
+                ItemType.DIAMOND_AXE,
+                ItemType.DIAMOND_PICKAXE,
+                ItemType.DIAMOND_SHOVEL,
+                ItemType.DIAMOND_HOE,
+                ItemType.DIAMOND_SPEAR,
+                ItemType.DIAMOND_BOOTS,
+                ItemType.DIAMOND_LEGGINGS,
+                ItemType.DIAMOND_CHESTPLATE,
+                ItemType.DIAMOND_HELMET,
             ),
             addition
         )
