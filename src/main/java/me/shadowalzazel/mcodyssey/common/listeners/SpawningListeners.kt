@@ -282,7 +282,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             // Stats
             mob.addAttackAttribute(2.0, AttributeTags.MOB_ATTACK_DAMAGE)
             mob.setHealthAttribute(20.0, AttributeTags.MOB_HEALTH)
-            mob.addArmorAttribute(3.0, AttributeTags.MOB_ARMOR)
+            mob.addArmorAttribute(4.0, AttributeTags.MOB_ARMOR)
             mob.heal(20.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
             mob.addStepAttribute(0.5, "odyssey.mob_shadow_step")
         }
