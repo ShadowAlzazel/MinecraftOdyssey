@@ -1,5 +1,6 @@
 package me.shadowalzazel.mcodyssey.common.enchantments
 
+import io.papermc.paper.datacomponent.DataComponentType
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.ItemEnchantments
 import me.shadowalzazel.mcodyssey.api.AdvancementManager
@@ -22,137 +23,106 @@ import org.bukkit.inventory.meta.Repairable
 @Suppress("UnstableApiUsage")
 internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager, ItemToolTipManager {
 
+    /*-- Shared component helpers ------------------------------------------------------------*/
+
+    /** Which component this item stores its enchants in. Books use STORED_ENCHANTMENTS. */
+    private fun ItemStack.enchantComponent(): DataComponentType.Valued<ItemEnchantments> =
+        if (type == Material.ENCHANTED_BOOK || type == Material.BOOK) DataComponentTypes.STORED_ENCHANTMENTS
+        else DataComponentTypes.ENCHANTMENTS
+
+    /** Effective enchants, reading whichever component actually holds them. */
+    private fun ItemStack.readEnchants(): Map<Enchantment, Int> {
+        val out = HashMap<Enchantment, Int>()
+        getData(DataComponentTypes.ENCHANTMENTS)?.enchantments()?.forEach { (e, l) -> out[e] = l }
+        getData(DataComponentTypes.STORED_ENCHANTMENTS)?.enchantments()?.forEach { (e, l) ->
+            out.merge(e, l, ::maxOf)
+        }
+        return out
+    }
+
+    /** Writes the map back to the correct component and refreshes the tooltip. */
+    private fun ItemStack.writeEnchants(enchants: Map<Enchantment, Int>) {
+        setData(enchantComponent(), ItemEnchantments.itemEnchantments().addAll(enchants))
+        updateToolTip()
+    }
+
+    private fun awardAdvancement(viewers: List<HumanEntity>, key: String) {
+        val namespaced = NamespacedKey.fromString(key) ?: return
+        for (v in viewers) {
+            if (v !is Player) continue
+            val advancement = v.server.getAdvancement(namespaced) ?: continue
+            v.getAdvancementProgress(advancement).awardCriteria("requirement")
+        }
+    }
+
+    /*-- Tomes -------------------------------------------------------------------------------*/
+
     fun tomeOfDischargeOnItem(item: ItemStack, viewers: List<HumanEntity>): ItemStack? {
-
-        val itemEnchants = item.getData(DataComponentTypes.ENCHANTMENTS)
-        val hasItemEnchants = itemEnchants != null && itemEnchants.enchantments().isNotEmpty()
-        val storedEnchants = item.getData(DataComponentTypes.STORED_ENCHANTMENTS)
-        val hasStoredEnchants = storedEnchants != null && storedEnchants.enchantments().isNotEmpty()
-
-        // This item has no enchants
-        if (!hasStoredEnchants && !hasItemEnchants) {
+        val enchants = item.readEnchants()
+        if (enchants.isEmpty()) {
             viewers.forEach { it.broadcastBarMessage("This item needs to have enchantments to use this tome.") }
             return null
         }
 
-        var dischargeEnchant: Enchantment? = null
+        val dischargeEnchant = enchants.keys.random()
+        item.writeEnchants(enchants - dischargeEnchant)
 
-        // ITEM ENCHANTMENTS
-        if (itemEnchants != null && hasItemEnchants) {
-            // add to remove enchant
-            val enchantToRemove = itemEnchants.enchantments().toList().random()
-            dischargeEnchant = enchantToRemove.first
-            // Remove enchantment
-            val enchantmentMap = itemEnchants.enchantments().toMutableMap()
-            enchantmentMap.remove(enchantToRemove.first)
-            val enchantmentBuilder = ItemEnchantments.itemEnchantments().addAll(enchantmentMap)
-            item.setData(DataComponentTypes.ENCHANTMENTS, enchantmentBuilder)
+        if (dischargeEnchant.isCursed) {
+            awardAdvancement(viewers, "odyssey:odyssey/discharge_a_curse")
         }
-        // STORED ENCHANTMENTS
-        else if (storedEnchants != null && hasStoredEnchants) {
-            // add to remove enchant
-            val enchantToRemove = storedEnchants.enchantments().toList().random()
-            dischargeEnchant = enchantToRemove.first
-            // Remove enchantment
-            val enchantmentMap = storedEnchants.enchantments().toMutableMap()
-            enchantmentMap.remove(enchantToRemove.first)
-            val enchantmentBuilder = ItemEnchantments.itemEnchantments().addAll(enchantmentMap)
-            item.setData(DataComponentTypes.STORED_ENCHANTMENTS, enchantmentBuilder)
-        }
-
-        // Advancement
-        if (dischargeEnchant?.isCursed == true) {
-            for (v in viewers) {
-                if (v !is Player) continue
-                val advancement = v.server.getAdvancement(NamespacedKey.fromString("odyssey:odyssey/discharge_a_curse")!!)
-                if (advancement != null) {
-                    v.getAdvancementProgress(advancement).awardCriteria("requirement")
-                }
-            }
-        }
-
-        // Broadcast what enchant to remove
-        if (dischargeEnchant != null) {
-            val name = dischargeEnchant.key.key
-            viewers.forEach { it.broadcastBarMessage("Removing Enchantment: $name") }
-        }
-
+        viewers.forEach { it.broadcastBarMessage("Removing Enchantment: ${dischargeEnchant.key.key}") }
         return item
     }
 
-    fun tomeOfHarmonyOnItem(item: ItemStack): ItemStack? {
-        val meta = item.itemMeta
-        if (meta is Repairable) {
-            meta.repairCost = 1
+    fun tomeOfHarmonyOnItem(item: ItemStack): ItemStack {
+        // Repair cost is no longer a stacking penalty, so it resets to 0, not 1.
+        item.setData(DataComponentTypes.REPAIR_COST, 0)
+        if (item.getData(DataComponentTypes.MAX_DAMAGE) != null) {
+            item.setData(DataComponentTypes.DAMAGE, 0)
         }
-        if (meta is Damageable) {
-            meta.damage = 0
-        }
-        item.itemMeta = meta
+        item.updateToolTip()
         return item
     }
 
     fun tomeOfPromotionOnItem(item: ItemStack, viewers: List<HumanEntity>): ItemStack? {
-        val meta = item.itemMeta
-        val hasStoredEnchants = meta is EnchantmentStorageMeta && meta.storedEnchants.isNotEmpty()
-        if (!meta.hasEnchants() && !hasStoredEnchants) {
+        val enchants = item.readEnchants()
+        if (enchants.isEmpty()) {
             viewers.forEach { it.broadcastBarMessage("This item needs to be enchanted to use this tome.") }
             return null
         }
-        // Get Enchant to Upgrade if available
-        val availableEnchants = if (hasStoredEnchants) {
-            val storedMeta = item.itemMeta as EnchantmentStorageMeta
-            storedMeta.storedEnchants.toList().filter { it.second < it.first.maxLevel }
-        } else {
-            item.enchantments.toList().filter { it.second < it.first.maxLevel }
-        }
-        // Return if no available enchants
-        if (availableEnchants.isEmpty()) {
+
+        val upgradeable = enchants.toList().filter { (ench, lvl) -> lvl < ench.maxLevel }
+        if (upgradeable.isEmpty()) {
             viewers.forEach { it.broadcastBarMessage("This item already has max level enchants!") }
             return null
         }
-        // Get Enchant
-        val enchantToUpgrade = availableEnchants.random()
-        // check over Enchantability point limit
-        val checkedMaxLevel = minOf(enchantToUpgrade.first.maxLevel, enchantToUpgrade.second + 1)
-        val maxEnchantabilityPoints = item.getMaxEnchantabilityPoints()
-        val usedEnchantabilityPoints = item.getUsedEnchantabilityPoints()
-        val potentialNewPoints = usedEnchantabilityPoints - getEnchantabilityCost(enchantToUpgrade) + getEnchantabilityCost(enchantToUpgrade, checkedMaxLevel)
-        if (potentialNewPoints > maxEnchantabilityPoints && !hasStoredEnchants) {
-            viewers.forEach { it.broadcastBarMessage("The enchantment ${enchantToUpgrade.first.key} would be to expensive!") }
-            return null
-        }
-        // Upgrade Enchant
-        if (hasStoredEnchants) {
-            val storedMeta = item.itemMeta as EnchantmentStorageMeta
-            // Remove and re-add
-            storedMeta.removeStoredEnchant(enchantToUpgrade.first)
-            storedMeta.addStoredEnchant(enchantToUpgrade.first, checkedMaxLevel, false)
-            item.itemMeta = storedMeta
-        } else {
-            // Remove and re-add
-            item.removeEnchantment(enchantToUpgrade.first)
-            item.addEnchantment(enchantToUpgrade.first, checkedMaxLevel)
-        }
-        // Advancement
-        if (checkedMaxLevel >= enchantToUpgrade.first.maxLevel) {
-            viewers.forEach {
-                if (it is Player) {
-                    val advancement = it.server.getAdvancement(NamespacedKey.fromString("odyssey:odyssey/use_promotion_tome")!!)
-                    if (advancement != null) {
-                        it.getAdvancementProgress(advancement).awardCriteria("requirement")
-                    }
-                }
+
+        val (ench, currentLevel) = upgradeable.random()
+        val newLevel = minOf(ench.maxLevel, currentLevel + 1)
+
+        // Books ignore the enchantability budget; gear does not.
+        val isBook = item.enchantComponent() == DataComponentTypes.STORED_ENCHANTMENTS
+        if (!isBook) {
+            val projected = item.getUsedEnchantabilityPoints() -
+                    getEnchantabilityCost(ench to currentLevel) +
+                    getEnchantabilityCost(ench to newLevel)
+            if (projected > item.getMaxEnchantabilityPoints()) {
+                viewers.forEach { it.broadcastBarMessage("The enchantment ${ench.key.key} would be too expensive!") }
+                return null
             }
+        }
+
+        item.writeEnchants(enchants + (ench to newLevel))
+
+        if (newLevel >= ench.maxLevel) {
+            awardAdvancement(viewers, "odyssey:odyssey/use_promotion_tome")
         }
         return item
     }
 
     fun tomeOfReplicationOnItem(item: ItemStack, viewers: List<HumanEntity>): ItemStack? {
-        val meta = item.itemMeta
-        val hasStoredEnchants = meta is EnchantmentStorageMeta && meta.storedEnchants.isNotEmpty()
-        val isBook = item.type == Material.ENCHANTED_BOOK || item.type == Material.BOOK
-        if (!hasStoredEnchants && !isBook) {
+        val stored = item.getData(DataComponentTypes.STORED_ENCHANTMENTS)?.enchantments()
+        if (stored.isNullOrEmpty()) {
             viewers.forEach { it.broadcastBarMessage("This tome can only be used on enchanted books with enchants!") }
             return null
         }
@@ -160,115 +130,62 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager, I
     }
 
     fun tomeOfImitationOnItem(item: ItemStack, viewers: List<HumanEntity>): ItemStack? {
-        val meta = item.itemMeta
-        val hasStoredEnchants = meta is EnchantmentStorageMeta && meta.storedEnchants.isNotEmpty()
-        val isBook = item.type == Material.ENCHANTED_BOOK || item.type == Material.BOOK
-        if (!hasStoredEnchants && isBook) {
+        val stored = item.getData(DataComponentTypes.STORED_ENCHANTMENTS)?.enchantments()
+        if (stored.isNullOrEmpty()) {
             viewers.forEach { it.broadcastBarMessage("This tome can only be used on enchanted books with enchants!") }
             return null
         }
-        meta as EnchantmentStorageMeta
-        val randomEnchant = meta.storedEnchants.toList().random()
-        // Create new book
+
+        val (ench, level) = stored.toList().random()
+        val checkedLevel = minOf(ench.maxLevel, level)
+
         val imitatedBook = ItemStack(Material.ENCHANTED_BOOK, 1)
-        val newMeta = imitatedBook.itemMeta as EnchantmentStorageMeta
-        newMeta.addStoredEnchant(randomEnchant.first, randomEnchant.second, false)
-        imitatedBook.itemMeta = newMeta
-        // Advancement
-        if (randomEnchant.second >= randomEnchant.first.maxLevel) {
-            viewers.forEach {
-                if (it is Player) {
-                    val advancement = it.server.getAdvancement(NamespacedKey.fromString("odyssey:odyssey/use_imitation_tome")!!)
-                    if (advancement != null) {
-                        it.getAdvancementProgress(advancement).awardCriteria("requirement")
-                    }
-                }
-            }
+        imitatedBook.writeEnchants(mapOf(ench to checkedLevel))
+
+        if (checkedLevel >= ench.maxLevel) {
+            awardAdvancement(viewers, "odyssey:odyssey/use_imitation_tome")
         }
         return imitatedBook
     }
 
-    // Extracts an enchantment from an item, without destroying it
+    /** Extracts one enchantment onto a book, without destroying the source. */
     fun tomeOfExtractionOnItem(item: ItemStack, viewers: List<HumanEntity>): ItemStack? {
-        // Sentries
-        val storedEnchantments = item.getData(DataComponentTypes.STORED_ENCHANTMENTS)?.enchantments()
-        val itemEnchantments = item.getData(DataComponentTypes.ENCHANTMENTS)?.enchantments()
-        if (itemEnchantments.isNullOrEmpty() && storedEnchantments.isNullOrEmpty()) {
+        val enchants = item.readEnchants()
+        if (enchants.isEmpty()) {
             viewers.forEach { it.broadcastBarMessage("This item needs to be enchanted to use this tome.") }
             return null
         }
-        // Depends on what data type
-        if (!itemEnchantments.isNullOrEmpty()) {
-            // Get enchantment
-            val extractedEnchant = itemEnchantments.toList().random()
-            val checkMax = minOf(extractedEnchant.first.maxLevel, extractedEnchant.second)
-            // New Book
-            val extractedBook = ItemStack(Material.ENCHANTED_BOOK, 1)
-            val bookEnchantment = ItemEnchantments.itemEnchantments().add(extractedEnchant.first, checkMax)
-            extractedBook.setData(DataComponentTypes.STORED_ENCHANTMENTS, bookEnchantment)
-            // Return book
-            return extractedBook
-        }
-        else if (!storedEnchantments.isNullOrEmpty()) {
-            // Get enchantment
-            val extractedEnchant = storedEnchantments.toList().random()
-            val checkMax = minOf(extractedEnchant.first.maxLevel, extractedEnchant.second)
-            // New Book
-            val extractedBook = ItemStack(Material.ENCHANTED_BOOK, 1)
-            val bookEnchantment = ItemEnchantments.itemEnchantments().add(extractedEnchant.first, checkMax)
-            extractedBook.setData(DataComponentTypes.STORED_ENCHANTMENTS, bookEnchantment)
-            // Return book
-            return extractedBook
-        }
-        return null
+
+        val (ench, level) = enchants.toList().random()
+        val extractedBook = ItemStack(Material.ENCHANTED_BOOK, 1)
+        extractedBook.writeEnchants(mapOf(ench to minOf(ench.maxLevel, level)))
+        return extractedBook
     }
 
     fun tomeOfExtractionPostEffect(item: ItemStack, book: ItemStack, viewers: List<HumanEntity>): ItemStack? {
-        val storedEnchantments = item.getData(DataComponentTypes.STORED_ENCHANTMENTS)?.enchantments()
-        val itemEnchantments = item.getData(DataComponentTypes.ENCHANTMENTS)?.enchantments()
-        // Get Extracted Enchant
-        val extractedEnchant = book.getData(DataComponentTypes.STORED_ENCHANTMENTS)?.enchantments()?.toList()?.first() ?: return null
+        val extracted = book.getData(DataComponentTypes.STORED_ENCHANTMENTS)
+            ?.enchantments()?.keys?.firstOrNull() ?: return null
 
-        // Remove from old
-        if (!itemEnchantments.isNullOrEmpty()) {
-            val enchantmentMap = itemEnchantments.toMutableMap()
-            enchantmentMap.remove(extractedEnchant.first)
-            val enchantmentBuilder = ItemEnchantments.itemEnchantments().addAll(enchantmentMap)
-            item.setData(DataComponentTypes.ENCHANTMENTS, enchantmentBuilder)
-        }
-        if (!storedEnchantments.isNullOrEmpty()) {
-            val enchantmentMap = storedEnchantments.toMutableMap()
-            enchantmentMap.remove(extractedEnchant.first)
-            val enchantmentBuilder = ItemEnchantments.itemEnchantments().addAll(enchantmentMap)
-            item.setData(DataComponentTypes.ENCHANTMENTS, enchantmentBuilder)
-        }
+        item.writeEnchants(item.readEnchants() - extracted)
         return item
     }
 
     fun tomeOfExpenditureOnItem(item: ItemStack, viewers: List<HumanEntity>): ItemStack? {
-        // Sentries
-        val storedEnchantments = item.getData(DataComponentTypes.STORED_ENCHANTMENTS)?.enchantments()
-        val itemEnchantments = item.getData(DataComponentTypes.ENCHANTMENTS)?.enchantments()
-        if (itemEnchantments == null && storedEnchantments == null) {
+        val enchants = item.readEnchants()
+        if (enchants.isEmpty()) {
             viewers.forEach { it.broadcastBarMessage("This item needs to be enchanted to use this tome.") }
             return null
         }
-        // Get Extracted
-        val extractedEnchant = item.enchantments.toList().random()
-        val checkMax = minOf(extractedEnchant.first.maxLevel, extractedEnchant.second)
-        // Create new book
+
+        val (ench, level) = enchants.toList().random()
         val extractedBook = ItemStack(Material.ENCHANTED_BOOK, 1)
-        val newMeta = extractedBook.itemMeta as EnchantmentStorageMeta
-        newMeta.addStoredEnchant(extractedEnchant.first, checkMax, false)
-        extractedBook.itemMeta = newMeta
+        extractedBook.writeEnchants(mapOf(ench to minOf(ench.maxLevel, level)))
         return extractedBook
     }
 
-    // Removes all enchants and gain XP! destroys item
+    /** Removes all enchants and gives XP. Destroys the item. */
     fun tomeOfAvariceOnItem(item: ItemStack, viewers: List<HumanEntity>): ItemStack? {
-        val meta = item.itemMeta
-        val hasStoredEnchants = meta is EnchantmentStorageMeta && meta.storedEnchants.isNotEmpty()
-        if (!meta.hasEnchants() && !hasStoredEnchants) {
+        if (item.readEnchants().isEmpty()) {
             viewers.forEach { it.broadcastBarMessage("This item needs to be enchanted to use this tome.") }
             return null
         }
@@ -276,68 +193,18 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager, I
     }
 
     fun tomeOfAvaricePostEffect(item: ItemStack, viewers: List<HumanEntity>) {
-        val meta = item.itemMeta
-        val hasStoredEnchants = meta is EnchantmentStorageMeta && meta.storedEnchants.isNotEmpty()
-        // Get Enchant to Upgrade if available
-        val allEnchants = if (hasStoredEnchants) {
-            val storedMeta = item.itemMeta as EnchantmentStorageMeta
-            storedMeta.enchants.toList()
-        } else {
-            item.enchantments.toList()
-        }
-        var totalLevels = 0
-        for (enchant in allEnchants) {
-            totalLevels += enchant.second
-            viewers.forEach {
-                if (it is Player) {
-                    it.giveExp(totalLevels * 50)
-                    it.playSound(it.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.5F, 0.9F)
-                }
+        val totalLevels = item.readEnchants().values.sum()
+        if (totalLevels <= 0) return
+
+        val reward = totalLevels * 50
+        viewers.forEach {
+            if (it is Player) {
+                it.giveExp(reward)
+                it.playSound(it.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.5F, 0.9F)
             }
         }
     }
 
-    // Adds enchants from one item to another
-    fun tomeOfPolymerizationOnItem(book: ItemStack, item: ItemStack, other: ItemStack, viewers: List<HumanEntity>): ItemStack? {
-        // Check book is enchantment storage
-        val meta = item.itemMeta
-        val hasStoredEnchants = meta is EnchantmentStorageMeta && meta.storedEnchants.isNotEmpty()
-        // Get Enchant to Upgrade if available
-        val itemEnchants = if (hasStoredEnchants) {
-            val storedMeta = item.itemMeta as EnchantmentStorageMeta
-            storedMeta.storedEnchants
-        } else {
-            item.enchantments
-        }
-        val otherEnchants = other.enchantments
-        if (otherEnchants.isEmpty()) return null
-        // Loop other
-        for (enchant in otherEnchants) {
-            val enchantment = enchant.key
-            if (!enchantment.canEnchantItem(item)) continue
-            // Conflict
-            val hasConflict = itemEnchants.any { it.key.conflictsWith(enchantment) }
-            if (hasConflict) continue
-            // Is In List
-            val otherLevel = minOf(enchantment.maxLevel, enchant.value)
-            if (enchantment in itemEnchants.keys) {
-                val itemLevel = itemEnchants[enchantment]!!
-                itemEnchants[enchantment] = maxOf(otherLevel, itemLevel)
-            } else {
-                itemEnchants[enchantment] = otherLevel
-            }
-        }
-        val result = item.clone()
-        result.addEnchantments(itemEnchants)
-        // Check max
-        val maxEnchantabilityPoints = result.getMaxEnchantabilityPoints()
-        val usedEnchantabilityPoints = result.getUsedEnchantabilityPoints()
-        if (usedEnchantabilityPoints > maxEnchantabilityPoints) {
-            viewers.forEach { it.broadcastBarMessage("There are too many enchantments to be applied!") }
-            return null
-        }
-        return result
-    }
 
     /*-----------------------------------------------------------------------------------------------*/
     // Fail Message
