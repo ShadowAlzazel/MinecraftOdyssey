@@ -38,7 +38,8 @@ internal interface ToolUpgrading : EquipmentDataManager, ToolComponentHelper, Ad
 
     private fun netheriteUpgrading(event: PrepareSmithingEvent) {
         val equipment = event.inventory.inputEquipment ?: return
-        val oldModel = equipment.getData(DataComponentTypes.ITEM_MODEL)
+        // Skip if empty model -> vanilla tool
+        val oldModel = equipment.getData(DataComponentTypes.ITEM_MODEL) ?: return
         //if (equipment.getData(DataComponentTypes.ITEM_MODEL) == null) return
         val upgradeMaterial = "netherite"
         val upgradeItemType = event.result?.type ?: return

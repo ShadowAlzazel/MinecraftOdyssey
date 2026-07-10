@@ -683,7 +683,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         victim: LivingEntity,
         damage: Double,
         level: Int): Float {
-        val modifier = 0.1F * level
+        val modifier = 0.06F * level
         val damageSource = DamageSource.builder(DamageType.ON_FIRE).build()
         val fireDamage = damage * modifier
         victim.damage(fireDamage, damageSource)

@@ -422,7 +422,7 @@ interface DescriptionManager {
 
             // Elemental damages, 2 cost, up to 5 levels
             "flame_edge" -> listOf(
-                "- Convert ${level * 10}%=[level x 10] of Final damage into Fire type damage.")
+                "- Convert ${level * 6}%=[level x 6] of Final damage into Fire type damage.")
             "frosty_edge" -> listOf(
                 "- Convert ${level * 10}%=[level x 10] of Final damage into Freeze type damage.")
             "electric_edge" -> listOf(
@@ -461,8 +461,7 @@ interface DescriptionManager {
             "dematerialize" -> listOf( // 3 cost, up to 4
                 "- Converts attack into Void damage ticking every 0.5 seconds for 10 seconds.",
                 "The damage amount is ${level * 2}%=[level x 2] of the original.",
-                "Re-hitting the same target refreshes the 10s window and folds leftover damage.",
-                )
+                "Re-hitting the same target refreshes the 10s window and folds leftover damage.",)
 
             // SHIELDS
             "mirror_force" -> listOf(

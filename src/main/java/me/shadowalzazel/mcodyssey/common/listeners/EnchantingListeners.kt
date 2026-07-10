@@ -47,9 +47,78 @@ object EnchantingListeners : Listener, TomeEnchanting, RegistryTagManager {
     // GILDED ENCHANTS ARE LIKE CURSES (not removable)
 
 
-    /*-----------------------------------------------------------------------------------------------*/
+    // ──────────────────────────────────────────────────────────────────────────────
+    // ────────────────────────────────── ANVIL ─────────────────────────────────────
+    // ──────────────────────────────────────────────────────────────────────────────
+
+    /**
+     * Effective enchantments on an item as a plain map.
+     * Merges normal gear (ENCHANTMENTS) and enchanted books (STORED_ENCHANTMENTS),
+     * keeping the highest level if a key somehow appears in both.
+     */
+    private fun ItemStack.readEnchants(): Map<Enchantment, Int> {
+        val out = HashMap<Enchantment, Int>()
+        getData(DataComponentTypes.ENCHANTMENTS)?.enchantments()?.forEach { (ench, lvl) -> out[ench] = lvl }
+        getData(DataComponentTypes.STORED_ENCHANTMENTS)?.enchantments()?.forEach { (ench, lvl) ->
+            out.merge(ench, lvl, ::maxOf)
+        }
+        return out
+    }
+
     @EventHandler
     fun anvilHandler(event: PrepareAnvilEvent) {
+        val first = event.inventory.firstItem ?: return    // left slot: the item being worked on
+        val second = event.inventory.secondItem            // right slot: book / material / item / null
+        val result = event.result ?: return                // vanilla's proposed output
+        val anvilView = event.view
+
+        // ---- Cost model --------------------------------------------------------------------------
+        // Cost is recomputed from scratch every time and never reads the vanilla prior-work penalty.
+        // That, plus zeroing REPAIR_COST below, is what removes the exponential stacking mechanic.
+
+        val firstEnchantments = first.readEnchants()
+        val resultEnchantments = result.readEnchants()
+
+        // Enchantability points that are NEW on the result: brand-new enchants, plus the delta
+        // for level upgrades (Sharp III -> V charges only the difference).
+        var addedPoints = 0
+        for ((ench, lvl) in resultEnchantments) {
+            val oldLvl = firstEnchantments[ench] ?: 0
+            if (lvl > oldLvl) {
+                val newCost = getEnchantabilityCost(ench to lvl)
+                val oldCost = if (oldLvl > 0) getEnchantabilityCost(ench to oldLvl) else 0
+                addedPoints += newCost - oldCost
+            }
+        }
+
+        val rawCost = when {
+            second == null   -> 1                       // rename only
+            addedPoints > 0  -> addedPoints             // enchanting / combining that adds enchants
+            else             -> resultEnchantments.size + 1     // plain repair / merge with nothing new
+        }
+        val cost = rawCost.coerceAtLeast(1)
+
+        // ---- Apply cost & kill the stacking penalty ----------------------------------------------
+        anvilView.repairCost = cost
+        anvilView.maximumRepairCost = 50                 // lift the "Too Expensive!" ceiling
+        result.setData(DataComponentTypes.REPAIR_COST, 0)          // never escalate on next use
+
+        // ---- Enchantability soft-cap check -------------------------------------------------------
+        val usedPoints = result.getUsedEnchantabilityPoints()
+        val maxPoints = result.getMaxEnchantabilityPoints()
+        if (usedPoints > maxPoints && result.type != Material.ENCHANTED_BOOK) {
+            event.result = null
+            event.viewers.forEach { it.sendBarMessage("The item is maxed out on enchantability points.") }
+            return
+        }
+
+        // ---- Finalise ----------------------------------------------------------------------------
+        result.updateToolTip()
+        event.result = result
+    }
+    
+    
+    fun oldAnvilHandler(event: PrepareAnvilEvent) {
         // Handled natively by class -> Conflicts / Adding E-Book to slotted / Renaming
         if (event.inventory.firstItem == null) return
         val first = event.inventory.firstItem ?: return
@@ -110,7 +179,7 @@ object EnchantingListeners : Listener, TomeEnchanting, RegistryTagManager {
         // Update
         val finalHasEnchants = (result.getData(DataComponentTypes.ENCHANTMENTS) != null) || (result.getData(DataComponentTypes.STORED_ENCHANTMENTS) != null)
         if (finalHasEnchants) {
-            //  update points
+
         }
         result.updateToolTip()
 

@@ -4,11 +4,14 @@ import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.items.Item
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
+import org.bukkit.inventory.ItemType
 import org.bukkit.inventory.Recipe
+import org.bukkit.inventory.RecipeChoice
 import org.bukkit.inventory.ShapedRecipe
 import org.bukkit.inventory.ShapelessRecipe
 import org.bukkit.inventory.recipe.CraftingBookCategory
 
+@Suppress("UnstableApiUsage")
 class FoodRecipes {
 
     fun getRecipes(): List<Recipe> {
@@ -106,8 +109,8 @@ class FoodRecipes {
         val result = Item.STEAK_AND_EGGS.newItemStack(1)
         return ShapelessRecipe(NamespacedKey(Odyssey.instance, "steak_and_eggs"), result).apply {
             addIngredient(Material.COOKED_BEEF)
-            addIngredient(Material.EGG)
-            addIngredient(Material.EGG)
+            addIngredient(RecipeChoice.itemType(ItemType.EGG, ItemType.BLUE_EGG, ItemType.BROWN_EGG))
+            addIngredient(RecipeChoice.itemType(ItemType.EGG, ItemType.BLUE_EGG, ItemType.BROWN_EGG))
             category = CraftingBookCategory.MISC
         }
     }

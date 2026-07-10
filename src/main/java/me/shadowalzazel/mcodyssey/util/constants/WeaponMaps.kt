@@ -103,12 +103,6 @@ object WeaponMaps {
         "sickle" to 40
     )
 
-    val CAN_DISMOUNT = setOf(
-        "pike",
-        "halberd",
-        "zweihander",
-    )
-
     val MINIMUM_CHARGE = mapOf(
         "halberd" to 0.5,
         "longaxe" to 0.5,
@@ -129,12 +123,6 @@ object WeaponMaps {
         "kriegsmesser" to 0.4F,
         "zweihander" to 0.45F,
         "pike" to 0.35F,
-    )
-
-    val REQUIRES_TWO_HANDS = setOf(
-        "zweihander",
-        "claymore",
-        "halberd"
     )
 
     val BONUS_CRIT_DAMAGE = mapOf(
@@ -192,6 +180,17 @@ object WeaponMaps {
     )
     // MAYBE ADD PERFECT RANGE MECHANIC?! -> small 10% damage bonus if in sweet spot / perfect range
 
+    val REQUIRES_TWO_HANDS = setOf(
+        "zweihander",
+        "claymore",
+        "halberd"
+    )
+
+    val CAN_DISMOUNT = setOf(
+        "pike",
+        "halberd",
+        "zweihander",
+    )
 
     // BONUS PASSIVE DAMAGE TYPES
     // Lacerating - more damage to unarmored targets
