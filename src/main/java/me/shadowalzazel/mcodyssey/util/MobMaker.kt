@@ -173,11 +173,6 @@ interface MobMaker : EquipmentGenerator {
             setArmorDropChances(0.05F)
             // Add Attributes and Stats
             val modifier = 1.0 * difficulty
-
-            // 10 + 5 * difficulty
-            setHealthAttribute(10.0 + (5.0 * modifier), AttributeTags.ELITE_HEALTH)
-            // 1.0 + 1 * difficulty
-            addAttackAttribute(1.0 + (modifier), AttributeTags.ELITE_ATTACK_DAMAGE)
             addArmorAttribute(2.0, AttributeTags.ELITE_ARMOR)
             addSpeedAttribute(0.01, AttributeTags.ELITE_SPEED)
         }
@@ -259,17 +254,14 @@ interface MobMaker : EquipmentGenerator {
 
             // Stats and Attributes
             addScaleAttribute(0.2)
-            // 20 + 10 * difficulty
-            setHealthAttribute(20.0 + (10.0 * modifier), AttributeTags.ELITE_HEALTH)
-            // 3.0 + 1 * difficulty
-            addAttackAttribute(3.0 + (modifier), AttributeTags.ELITE_ATTACK_DAMAGE)
-            addArmorAttribute(4.0, AttributeTags.ELITE_ARMOR)
+            setHealthAttribute(10.0 + (5.0 * modifier), AttributeTags.ELITE_HEALTH)
+            addArmorAttribute(2.0, AttributeTags.ELITE_ARMOR)
             addSpeedAttribute(0.015, AttributeTags.ELITE_SPEED)
-
             // Set tags
             addScoreboardTag(EntityTags.ELITE_MOB)
             // set new health
-            health += 20.0 + (10.0 * modifier)
+            heal(10.0 + (5.0 * modifier), EntityRegainHealthEvent.RegainReason.CUSTOM)
+            health += 10.0 + (5.0 * modifier)
         }
     }
 

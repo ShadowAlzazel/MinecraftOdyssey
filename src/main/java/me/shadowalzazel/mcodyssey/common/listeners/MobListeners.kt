@@ -102,6 +102,10 @@ object MobListeners : Listener, DataTagManager {
                     val inBoat = vehicle is Boat
                     //val target = entity.getTargetEntity(16) ?: return
                     //if (target !is LivingEntity) return
+
+                    // DISABLED FOR NOW
+                    // WAIT FOR OMINOUS
+                    /*
                     mob.location.getNearbyLivingEntities(6.0, 4.0, 6.0).filter {
                         it != mob &&
                         it.scoreboardTags.contains(EntityTags.SHADOW_MOB) &&
@@ -117,6 +121,8 @@ object MobListeners : Listener, DataTagManager {
                             it.target = damager
                         }
                     }
+
+                     */
 
                 }
 

@@ -52,7 +52,7 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
         // Handle edge spawns
         val inEdge = mob.location.world == Odyssey.instance.edge
         if (inEdge) {
-            mob.addAttackAttribute(3.0, AttributeTags.MOB_EDGE_ATTACK_BONUS)
+            mob.addAttackAttribute(2.0, AttributeTags.MOB_EDGE_ATTACK_BONUS)
             mob.setHealthAttribute(15.0, AttributeTags.MOB_EDGE_HEALTH_BONUS)
             mob.heal(15.0)
         }
@@ -205,7 +205,6 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
                 EliteMobsData.SHINY_ARMOR_TRIM_PATTERNS)
             createShinyMob(mob, equipmentRandomBuilder, true)
             // Bonus Stats
-            mob.addAttackAttribute(4.0, AttributeTags.MOB_ATTACK_DAMAGE)
             mob.addStepAttribute(1.5, "odyssey.shiny_step")
         }
 
@@ -216,14 +215,14 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
                 heal(62.0)
                 addReachAttribute(1.5,  AttributeTags.MOB_REACH)
                 addAttackAttribute(14.0, AttributeTags.MOB_ATTACK_DAMAGE)
-                addScaleAttribute(2.0, AttributeTags.MOB_SCALE)
+                addScaleAttribute(1.2, AttributeTags.MOB_SCALE)
             }
         }
 
         // Vanguard
         if (mob.scoreboardTags.contains("odyssey.vanguard")) {
             // Weapon
-            val randomWeaponType = listOf(ToolType.POLEAXE, ToolType.HALBERD).random()
+            val randomWeaponType = listOf(ToolType.POLEAXE, ToolType.GLAIVE, ToolType.HALBERD).random()
             val weapon = createToolStack(ToolMaterial.IRON, randomWeaponType)
             // Add Enchantments
             val enchantItem = ItemStack(Material.GOLDEN_SWORD).enchantWithLevels(30, false, Random())
@@ -254,7 +253,6 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
                 // Stats
                 setHealthAttribute(30.0, AttributeTags.MOB_HEALTH)
                 heal(30.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
-                addAttackAttribute(3.0, AttributeTags.MOB_ATTACK_DAMAGE)
                 addScaleAttribute(0.1, AttributeTags.MOB_SCALE)
                 addStepAttribute(1.5, "odyssey.vanguard_step")
                 // Equipment
@@ -282,10 +280,10 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             // Creator
             createArmoredMob(mob, equipmentRandomBuilder, enchantWeapon = true, replaceOldWeapon = true)
             // Stats
-            mob.addAttackAttribute(4.0, AttributeTags.MOB_ATTACK_DAMAGE)
-            mob.setHealthAttribute(10.0, AttributeTags.MOB_HEALTH)
-            mob.addArmorAttribute(2.0, AttributeTags.MOB_ARMOR)
-            mob.heal(10.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
+            mob.addAttackAttribute(2.0, AttributeTags.MOB_ATTACK_DAMAGE)
+            mob.setHealthAttribute(20.0, AttributeTags.MOB_HEALTH)
+            mob.addArmorAttribute(3.0, AttributeTags.MOB_ARMOR)
+            mob.heal(20.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
             mob.addStepAttribute(0.5, "odyssey.mob_shadow_step")
         }
         // All Shadow Chamber Mobs
@@ -300,9 +298,9 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             // Stats
             setHealthAttribute(20.0, AttributeTags.SHADOW_CHAMBERS_HEALTH_BONUS)
             heal(20.0, EntityRegainHealthEvent.RegainReason.CUSTOM)
-            addAttackAttribute(3.0, AttributeTags.SHADOW_CHAMBERS_ATTACK_BONUS)
             addArmorAttribute(2.0, AttributeTags.SHADOW_CHAMBERS_ARMOR_BONUS)
             addSpeedAttribute(0.0325, AttributeTags.SHADOW_CHAMBERS_SPEED_BONUS)
+            addReachAttribute(-0.5, "odyssey.shadow_reach_nerf")
             // Special Attributes
             addStepAttribute(0.5, AttributeTags.SHADOW_CHAMBERS_STEP_HEIGHT)
         }

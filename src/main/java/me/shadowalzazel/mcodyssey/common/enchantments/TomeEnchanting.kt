@@ -42,7 +42,9 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager, I
 
     /** Writes the map back to the correct component and refreshes the tooltip. */
     private fun ItemStack.writeEnchants(enchants: Map<Enchantment, Int>) {
-        setData(enchantComponent(), ItemEnchantments.itemEnchantments().addAll(enchants))
+        val component = enchantComponent()
+        if (enchants.isEmpty()) unsetData(component)
+        else setData(component, ItemEnchantments.itemEnchantments().addAll(enchants))
         updateToolTip()
     }
 
@@ -65,13 +67,22 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager, I
         }
 
         val dischargeEnchant = enchants.keys.random()
-        item.writeEnchants(enchants - dischargeEnchant)
+        val remaining = enchants - dischargeEnchant
+
+        // An enchanted book with zero stored enchants is a broken item — hand back a plain book.
+        val isBook = item.type == Material.ENCHANTED_BOOK
+        val result = if (isBook && remaining.isEmpty()) {
+            ItemStack(Material.BOOK, 1)
+        } else {
+            item.writeEnchants(remaining)
+            item
+        }
 
         if (dischargeEnchant.isCursed) {
             awardAdvancement(viewers, "odyssey:odyssey/discharge_a_curse")
         }
         viewers.forEach { it.broadcastBarMessage("Removing Enchantment: ${dischargeEnchant.key.key}") }
-        return item
+        return result
     }
 
     fun tomeOfHarmonyOnItem(item: ItemStack): ItemStack {

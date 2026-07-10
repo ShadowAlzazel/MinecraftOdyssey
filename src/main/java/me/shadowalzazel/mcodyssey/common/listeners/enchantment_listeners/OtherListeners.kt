@@ -12,6 +12,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.ProjectileLaunchEvent
 import org.bukkit.event.player.PlayerFishEvent
 import org.bukkit.inventory.ItemStack
+import me.shadowalzazel.mcodyssey.common.items.Item as OdysseyItem
 
 object OtherListeners : Listener, EnchantmentManager, AttackHelper {
 
@@ -87,6 +88,12 @@ object OtherListeners : Listener, EnchantmentManager, AttackHelper {
                     val gems = listOf(
                         ItemStack(Material.EMERALD, (1..(enchant.value)).random()),
                         ItemStack(Material.DIAMOND, (1..(enchant.value)).random()),
+                        OdysseyItem.ALEXANDRITE.newItemStack((1..(enchant.value)).random()),
+                        OdysseyItem.JOVIANITE.newItemStack((1..(enchant.value)).random()),
+                        OdysseyItem.NEPTUNIAN.newItemStack((1..(enchant.value)).random()),
+                        OdysseyItem.JADE.newItemStack((1..(enchant.value)).random()),
+                        OdysseyItem.KUNZITE.newItemStack((1..(enchant.value)).random()),
+                        OdysseyItem.RUBY.newItemStack((1..(enchant.value)).random()),
                     )
                     //item.itemStack = gems.random()
                     if (item.itemStack.type !in goodPulls) {
@@ -94,7 +101,7 @@ object OtherListeners : Listener, EnchantmentManager, AttackHelper {
                     }
                 }
                 "wisdom_of_the_deep" -> {
-                    event.expToDrop *= (0.75 + (0.75 * enchant.value)).toInt()
+                    event.expToDrop *= ((enchant.value + 1) * 1)
                 }
             }
         }
@@ -128,7 +135,7 @@ object OtherListeners : Listener, EnchantmentManager, AttackHelper {
     }
 
     private fun yankEnchantment(victim: LivingEntity, level: Int) {
-        victim.velocity = victim.velocity.multiply(1 + (0.4 * level))
+        victim.velocity = victim.velocity.multiply(1 + (0.5 * level))
     }
 
     /*-----------------------------------------------------------------------------------------------*/

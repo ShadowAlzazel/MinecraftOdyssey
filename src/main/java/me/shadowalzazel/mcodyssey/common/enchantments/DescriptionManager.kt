@@ -122,8 +122,6 @@ interface DescriptionManager {
             // ──────────────────────────────── ARMOR ───────────────────────────────────────
             // ──────────────────────────────────────────────────────────────────────────────
 
-            "adaptive_protection" -> listOf( // Max 4, Incompatible with other protection
-                "- Getting damaged by the same source reduces its amount by 4% up to ${5 * level}%=[level x 5]")
             "analysis" -> listOf( // Helmet
                 "- Increase experience gained by ${level * 10}%=[level x 10].")
             "antibonk" -> listOf( // Helmet
@@ -306,6 +304,17 @@ interface DescriptionManager {
             "pluck" -> listOf( // Mining
                 "- Items that are mined are directly added to the players inventory.")
 
+            "bomb_ob" -> listOf(
+                "- Cause an explosion when the bob hits a target.")
+            "wisdom_of_the_deep" -> listOf(
+                "- Increase fishing experience gain by ${level * 100}%=[level x 100].")
+            "scourer" -> listOf(
+                "- Converts bad loot into gems.")
+            "yank" -> listOf(
+                "- Increase pulling power fishing rod by ${level * 50}%=[level x 50].")
+            "lengthy_line" -> listOf(
+                "- Increase cast line velocity by ${level * 50}%=[level x 50].")
+
             // ──────────────────────────────────────────────────────────────────────────────
             // ─────────────────────────────── PROJECTILE ───────────────────────────────────
             // ──────────────────────────────────────────────────────────────────────────────
@@ -386,17 +395,6 @@ interface DescriptionManager {
             "fealty" -> listOf(
                 "- When the wearer dies, this item is kept when respawning.")
 
-            // Reworked/Changed
-            "vigor" -> listOf( // All Armor (3 cost, max 3)
-                "- Deal ${level * 4}%=[level x 4] increased damage while above 60% health.")
-            "cloud_jumper" -> listOf( // boots
-                "- Have ${level}=[level] more jumps.")
-            "moon_walker" -> listOf( // boots
-                "- Reduce gravity by ${level * 10}%=[level x 10].")
-            "life_force" -> listOf( // Melee
-                "- Increase Base Damage based on ${level * 5}%=[level x 5] max health.",
-                "- This effect is doubled while below 50% max health.")
-
             // Curses
             "encumbering_curse" -> listOf(
                 "- Increase weight by ${level * 10}%=[level x 10].")
@@ -424,11 +422,22 @@ interface DescriptionManager {
             "flame_edge" -> listOf(
                 "- Convert ${level * 6}%=[level x 6] of Final damage into Fire type damage.")
             "frosty_edge" -> listOf(
-                "- Convert ${level * 10}%=[level x 10] of Final damage into Freeze type damage.")
+                "- Convert ${level * 6}%=[level x 6] of Final damage into Freeze type damage.")
             "electric_edge" -> listOf(
-                "- Convert ${level * 10}%=[level x 10] of Final damage into Electric type damage.")
+                "- Convert ${level * 6}%=[level x 6] of Final damage into Electric type damage.")
             "void_edge" -> listOf(
-                "- Convert ${level * 10}%=[level x 10] of Final damage into Void type damage.")
+                "- Convert ${level * 6}%=[level x 6] of Final damage into Void type damage.")
+
+            // Reworked/Changed
+            "vigor" -> listOf( // All Armor (3 cost, max 3)
+                "- Deal ${level * 4}%=[level x 4] increased damage while above 60% health.")
+            "cloud_jumper" -> listOf( // boots
+                "- Have ${level}=[level] more jumps.")
+            "moon_walker" -> listOf( // boots
+                "- Reduce gravity by ${level * 10}%=[level x 10].")
+            "life_force" -> listOf( // Melee
+                "- Increase Base Damage based on ${level * 5}%=[level x 5] max health.",
+                "- This effect is doubled while below 50% max health.")
 
             // New Melee
             "besiege" -> listOf( // Melee (2 cost, max 4)
@@ -461,7 +470,7 @@ interface DescriptionManager {
             "dematerialize" -> listOf( // 3 cost, up to 4
                 "- Converts attack into Void damage ticking every 0.5 seconds for 10 seconds.",
                 "The damage amount is ${level * 2}%=[level x 2] of the original.",
-                "Re-hitting the same target refreshes the 10s window and folds leftover damage.",)
+                "Re-hitting the same target refreshes the 10s window and folds leftover damage.")
 
             // SHIELDS
             "mirror_force" -> listOf(
@@ -501,6 +510,9 @@ interface DescriptionManager {
             "frostbite" -> listOf(
                 "- Parrying/Blocking applies Freezing for ${2 + level}=[level + 2] seconds.")
 
+            "adaptive_protection" -> listOf( // Max 4, Incompatible with other protection
+                "- Getting damaged by the same source reduces its amount by 4% up to ${5 * level}%=[level x 5]")
+
             // Fallback
             else -> listOf("No description for $name")
         }
@@ -512,6 +524,8 @@ interface DescriptionManager {
             // More cursed enchantments and more curses
             // Maybe a CURSED material that scales of curses
             // Maybe SOLARIUM, in sunlight, more stats
+
+            // When you DIE YOU EXPLODE!!
 
             // DODGE AN ATTACK WITH (IDK)
             // If CAN SEE AND WITHIN 3 BLOCKS DODGE MELEE
@@ -536,11 +550,6 @@ interface DescriptionManager {
             "enchantment_based_enchant_p2" -> listOf( // Cost 5
                 "Each Free Point increases damage by 2%"
             )
-
-            "press_the_attack" -> listOf(
-                "- The first 3 Attacks on a target has its damage increased by ${20 * level}%=[level x 20]."
-            )
-
 
             // 1 cost
             "intrinsic" -> listOf(
