@@ -136,7 +136,7 @@ class Odyssey : JavaPlugin() {
             ItemListeners,
             OtherListeners,
             MobListeners,
-            DragonListeners,
+            //DragonListeners, Moved to Command
             SnifferListeners,
             ArtisanListeners,
             GlyphListeners,
@@ -158,7 +158,8 @@ class Odyssey : JavaPlugin() {
             "give_item" to GiveItem,
             "give_weapon" to GiveWeapon,
             "summon_mob" to SummonMob,
-            "update_model" to UpdateModel
+            "update_model" to UpdateModel,
+            "ender_dragon_boss_battle" to EnderDragonBossBattle
         ).forEach {
             getCommand(it.key)?.setExecutor(it.value)
         }

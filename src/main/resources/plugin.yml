@@ -33,3 +33,6 @@ commands:
   update_model:
     description: "Updates the model using item_name for old Odyssey items."
     usage: /<command>
+  ender_dragon_boss_battle:
+    description: "Activates the hard ender dragon boss."
+    usage: /<command>

@@ -48,6 +48,7 @@ object EntityTags {
     const val DRAGON_BOMB: String = "odyssey.dragon_bomb"
     const val LEFT_PORTAL: String = "odyssey.left_portal"
     const val LIGHTNING_BALL: String = "odyssey.lightning_ball"
+    const val CURSED_FIREBALL: String = "odyssey.cursed_fireball"
 
     const val SUPER_FIREWORK: String = "odyssey.super_firework"
 
