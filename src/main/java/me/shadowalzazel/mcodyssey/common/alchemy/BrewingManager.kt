@@ -20,14 +20,9 @@ import org.bukkit.potion.PotionType
 
 interface BrewingManager : RegistryTagManager, DataTagManager {
 
-    fun customBrewingHandler(event: BrewEvent) {
-        event.contents.ingredient ?: return
-        brewedCustomPotion(event)
-    }
-
     // ──────────────────────────────────────────────────────────────────────────────
     // Ingredient reference:
-    //   Prismarine Crystals  -> Potion Vials   (self-contained model + name + stack)
+    //   Prismarine Crystals  -> Potion Vials    (self-contained model + name + stack)
     //   Glow Berries         -> Upgraded+       (amplifier +1, shorter duration)
     //   Honey Bottle         -> Extended+       (longer duration)
     //   Experience Bottle    -> Aura
@@ -37,6 +32,11 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
     //   Redstone / Glowstone -> model-only change on a plain potion
     //   Popped Chorus Fruit  -> Concoctions
     // ──────────────────────────────────────────────────────────────────────────────
+
+    fun customBrewingHandler(event: BrewEvent) {
+        if (event.contents.ingredient == null) return
+        brewedCustomPotion(event)
+    }
 
     private fun brewedCustomPotion(event: BrewEvent) {
         val ingredient = event.contents.ingredient ?: return
@@ -48,8 +48,8 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
             if (input.getData(DataComponentTypes.POTION_CONTENTS) == null) continue
 
             // -----------------------------------------------------------------------------
-            // 1) Custom ingredients. Vanilla has no recipe for these, so we generate the
-            //    result ourselves FROM the input potion.
+            // 1) Custom effect ingredients. Vanilla has no recipe for these, so we generate
+            //    the result ourselves FROM the input potion.
             // -----------------------------------------------------------------------------
             if (inputIsNotEnhanced(input)) {
                 val enhanced = when (ingredient.type) {
@@ -71,10 +71,38 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
             }
 
             // -----------------------------------------------------------------------------
-            // 2) Everything else. Vanilla already produced the correct result (contents +
-            //    type, including splash/lingering). We ONLY restyle the model, seeding it
-            //    from the input so the bottle the player has built up carries forward.
-            //    We never touch the potion contents here -- that was the awkward-potion bug.
+            // 2) Type-changing ingredients (gunpowder -> splash, dragon breath -> lingering).
+            //    Plain vanilla potions: vanilla already produced the correct splash/lingering,
+            //    so use that result (this is what makes Harming II / Infestation convert).
+            //    Custom potions (vials / concoctions / enhanced): vanilla won't convert them
+            //    correctly, so we force the type ourselves and carry the input's contents.
+            // -----------------------------------------------------------------------------
+            val forcedType = when (ingredient.type) {
+                Material.GUNPOWDER     -> Material.SPLASH_POTION
+                Material.DRAGON_BREATH -> Material.LINGERING_POTION
+                else                   -> null
+            }
+            if (forcedType != null) {
+                val vanilla = event.results.getOrNull(slot)
+                val converted: ItemStack = if (!isCustomPotion(input) && vanilla != null && vanilla.type == forcedType) {
+                    vanilla.clone()
+                } else {
+                    val forced = if (input.type != forcedType) input.withType(forcedType) else input.clone()
+                    // Re-apply contents so custom effects can't be lost in the conversion.
+                    input.getData(DataComponentTypes.POTION_CONTENTS)?.let {
+                        forced.setData(DataComponentTypes.POTION_CONTENTS, it)
+                    }
+                    forced
+                }
+                styleModel(target = converted, input = input, ingredient = ingredient.type)
+                event.results[slot] = converted
+                continue
+            }
+
+            // -----------------------------------------------------------------------------
+            // 3) Everything else (nether wart, sugar, redstone, glowstone, ...). Vanilla
+            //    computed the correct contents; we ONLY restyle the model, seeding it from
+            //    the input so the built-up bottle carries forward. Contents are left alone.
             // -----------------------------------------------------------------------------
             val result = event.results.getOrNull(slot)?.clone() ?: continue
             if (result.type == Material.AIR) continue
@@ -82,6 +110,8 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
             event.results[slot] = result
         }
     }
+
+    /*-----------------------------------------------------------------------------------------------*/
 
     /**
      * Restyles [target] for the current [ingredient], seeding from [input] (the potion the
@@ -99,23 +129,34 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
      * is re-applied explicitly so type conversions (e.g. -> lingering) can't drop it.
      */
     private fun styleModel(target: ItemStack, input: ItemStack, ingredient: Material) {
-        // Keep the base item model the input already used; only default when brand new.
-        val baseModel = input.getData(DataComponentTypes.ITEM_MODEL) ?: createOdysseyKey("alchemy_potion")
-        target.setData(DataComponentTypes.ITEM_MODEL, baseModel)
-
-        // Vials don't use the bottle/cap composite. Preserve their identity so a splash vial
-        // still reads as a vial (just thrown), rather than becoming a composite splash potion.
+        // Vials use a dedicated model, not the bottle/cap composite. Preserve their identity
+        // so a splash vial still reads as a vial (just thrown), rather than becoming a
+        // composite splash potion.
         if (input.hasTag(ItemDataTags.IS_POTION_VIAL)) {
+            target.setData(DataComponentTypes.ITEM_MODEL, createOdysseyKey("potion_vial"))
             input.getData(DataComponentTypes.CUSTOM_MODEL_DATA)?.let { target.setData(DataComponentTypes.CUSTOM_MODEL_DATA, it) }
             input.getData(DataComponentTypes.ITEM_NAME)?.let { target.setData(DataComponentTypes.ITEM_NAME, it) }
-            input.getData(DataComponentTypes.CONSUMABLE)?.let { target.setData(DataComponentTypes.CONSUMABLE, it) }
             target.setData(DataComponentTypes.MAX_STACK_SIZE, 64)
             if (!target.hasTag(ItemDataTags.IS_POTION_VIAL)) target.addTag(ItemDataTags.IS_POTION_VIAL)
+
+            // Only a drinkable (POTION) vial keeps the drink behaviour. A thrown vial
+            // (splash / lingering) is used by throwing, so strip any consumable that the
+            // original vial carried or that withType() copied across.
+            if (target.type == Material.POTION) {
+                input.getData(DataComponentTypes.CONSUMABLE)?.let { target.setData(DataComponentTypes.CONSUMABLE, it) }
+            } else {
+                target.unsetData(DataComponentTypes.CONSUMABLE)
+            }
             return
         }
 
-        // Composite model (normal potions + multi-effect concoctions): carry the built-up
-        // model, keep the bottle, and set the cap from the resulting potion type.
+        // Composite model (normal potions + multi-effect concoctions): this is the ONLY
+        // model non-vial potions ever use, so just force it — don't try to "preserve" it
+        // by reading ITEM_MODEL back off the input, since Paper returns an implicit vanilla
+        // default there (e.g. minecraft:potion) even when it was never explicitly set, which
+        // silently defeated the old ?: fallback and left potions looking vanilla.
+        target.setData(DataComponentTypes.ITEM_MODEL, createOdysseyKey("alchemy_potion"))
+
         if (target !== input) {
             input.getData(DataComponentTypes.CUSTOM_MODEL_DATA)?.let {
                 target.setData(DataComponentTypes.CUSTOM_MODEL_DATA, it)
@@ -130,7 +171,7 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
             else                      -> getCapModel(ingredient) ?: prevParts.getOrNull(2)
         }
 
-        target.updatePotionModel(bottle, cap) // base model already set above
+        target.updatePotionModel(bottle, cap)
         target.setData(DataComponentTypes.MAX_STACK_SIZE, 8)
     }
 
@@ -162,51 +203,32 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
         this.setData(DataComponentTypes.CUSTOM_MODEL_DATA, customData)
     }
 
-    /**
-     * Rebuilds every effect on this potion onto a fresh THICK base, scaling duration and
-     * offsetting amplifier. Returns false (leaving the item untouched) if there is nothing
-     * to rebuild. Shared by all the custom-potion creators.
-     */
-    private fun ItemStack.applyRebuiltEffects(durationScale: Double, amplifierDelta: Int = 0): Boolean {
-        val potionData = this.getData(DataComponentTypes.POTION_CONTENTS) ?: return false
-        val effects = (potionData.potion()?.potionEffects ?: emptyList()) + potionData.customEffects()
-        if (effects.isEmpty()) return false
-
-        val builder = PotionContents.potionContents().potion(PotionType.THICK)
-        for (effect in effects) {
-            builder.addCustomEffect(
-                PotionEffect(effect.type, (effect.duration * durationScale).toInt(), effect.amplifier + amplifierDelta)
-            )
-        }
-        this.setData(DataComponentTypes.POTION_CONTENTS, builder)
-        return true
-    }
-
-
-    // ──────────────────────────────────────────────────────────────────────────────
-    // ───────────────────────────────── UTILITY ────────────────────────────────────
-    // ──────────────────────────────────────────────────────────────────────────────
-
     private fun plainName(text: String): Component =
         Component.text(text)
             .decoration(TextDecoration.ITALIC, false)
             .decoration(TextDecoration.BOLD, false)
 
-
     private fun inputIsNotEnhanced(potion: ItemStack): Boolean {
-        //val hasPotionTag: (String) -> Boolean = { tag: String -> potion.hasTag(tag)}
-        if (potion.hasTag(ItemDataTags.IS_POTION_VIAL)) return false
-        if (potion.hasTag(ItemDataTags.IS_EXTENDED_PLUS)) return false
-        if (potion.hasTag(ItemDataTags.IS_UPGRADED_PLUS)) return false
-        if (potion.hasTag(ItemDataTags.IS_AURA_POTION)) return false
-        if (potion.hasTag(ItemDataTags.IS_BLAST_POTION)) return false
-        return true
+        val enhancedTags = listOf(
+            ItemDataTags.IS_POTION_VIAL,
+            ItemDataTags.IS_EXTENDED_PLUS,
+            ItemDataTags.IS_UPGRADED_PLUS,
+            ItemDataTags.IS_AURA_POTION,
+            ItemDataTags.IS_BLAST_POTION,
+        )
+        return enhancedTags.none { potion.hasTag(it) }
     }
 
-    private fun getIngredientResult(ingredient: ItemStack): Material = when (ingredient.type) {
-        Material.GUNPOWDER     -> Material.SPLASH_POTION
-        Material.DRAGON_BREATH -> Material.LINGERING_POTION
-        else                   -> Material.POTION
+    /**
+     * A "custom" potion is one vanilla cannot faithfully re-brew: our enhanced/vial potions,
+     * or anything carrying custom effects (concoctions). For these, vanilla's brewing result
+     * is unreliable (no-effect or unconverted), so we build the result from the input instead.
+     * Plain vanilla potions (base type, no custom effects) are NOT custom.
+     */
+    private fun isCustomPotion(potion: ItemStack): Boolean {
+        if (!inputIsNotEnhanced(potion)) return true // vials + enhanced tags
+        val contents = potion.getData(DataComponentTypes.POTION_CONTENTS) ?: return false
+        return contents.customEffects().isNotEmpty()
     }
 
     // Cap for NORMAL potions only. splash_cap / lingering_cap are handled in styleModel
@@ -228,6 +250,28 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
         Material.HONEY_BOTTLE      -> "volumetric_bottle"
         Material.EXPERIENCE_BOTTLE -> "aura_bottle"
         else                       -> null
+    }
+
+    /*-----------------------------------------------------------------------------------------------*/
+
+    /**
+     * Rebuilds every effect on this potion onto a fresh THICK base, scaling duration and
+     * offsetting amplifier. Returns false (leaving the item untouched) if there is nothing
+     * to rebuild. Shared by all the custom-potion creators.
+     */
+    private fun ItemStack.applyRebuiltEffects(durationScale: Double, amplifierDelta: Int = 0): Boolean {
+        val potionData = this.getData(DataComponentTypes.POTION_CONTENTS) ?: return false
+        val effects = (potionData.potion()?.potionEffects ?: emptyList()) + potionData.customEffects()
+        if (effects.isEmpty()) return false
+
+        val builder = PotionContents.potionContents().potion(PotionType.THICK)
+        for (effect in effects) {
+            builder.addCustomEffect(
+                PotionEffect(effect.type, (effect.duration * durationScale).toInt(), effect.amplifier + amplifierDelta)
+            )
+        }
+        this.setData(DataComponentTypes.POTION_CONTENTS, builder)
+        return true
     }
 
     private fun createUpgradedPlusPotion(potion: ItemStack): ItemStack {
