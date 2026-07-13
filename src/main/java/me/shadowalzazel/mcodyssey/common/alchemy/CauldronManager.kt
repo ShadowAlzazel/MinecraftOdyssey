@@ -26,7 +26,7 @@ interface CauldronManager : AdvancementManager {
         val players = event.block.location.getNearbyPlayers(3.0).toList()
         rewardAdvancement(players, "odyssey/cauldron_alchemy")
         // Run searcher
-        asyncRecipeSearcher(items, blockUnderneath.type)
+        recipeSearcher(items, blockUnderneath.type)
         return
     }
 
@@ -46,6 +46,12 @@ interface CauldronManager : AdvancementManager {
         }
     }
 
+
+    // check the recipes with items
+    private fun recipeSearcher(items: MutableCollection<Item>, fuel: Material) {
+        val recipe = recipeFinder(items, fuel)
+        if (recipe != null) CauldronRunner(recipe, items).runTask(Odyssey.instance)
+    }
 
 
 }

@@ -56,7 +56,7 @@ class CauldronBrewTask(
         with(cauldron.world) {
             dropItem(location.clone().add(0.0, 0.5, 0.0), result.clone())
             playSound(location, Sound.BLOCK_BREWING_STAND_BREW, 2.5F, 0.5F)
-            spawnParticle(Particle.DRAGON_BREATH, location, 15, 0.25, 0.25, 0.25)
+            spawnParticle(Particle.WITCH, location, 15, 0.25, 0.25, 0.25)
             // Color
             val potionData = result.getData(DataComponentTypes.POTION_CONTENTS)
             if (potionData != null) {
