@@ -17,12 +17,15 @@ import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.SoundCategory
+import org.bukkit.attribute.Attribute
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.*
 import org.bukkit.event.entity.EntityShootBowEvent
 import org.bukkit.event.entity.ProjectileHitEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 
 @Suppress("UnstableApiUsage")
 interface WeaponProjectileHandler : DataTagManager, EnchantmentManager, AttackHelper, VectorParticles {
@@ -38,7 +41,7 @@ interface WeaponProjectileHandler : DataTagManager, EnchantmentManager, AttackHe
     fun explosiveArrowHitHandler(event: ProjectileHitEvent) {
         val projectile = event.entity
         val location = projectile.location
-        WeaponListeners.explosionHandler(location.getNearbyLivingEntities(2.0), location, 2.0)
+        WeaponListeners.explosionHandler(location.getNearbyLivingEntities(3.0), location, 3.0)
     }
 
     /*-----------------------------------------------------------------------------------------------*/
@@ -103,6 +106,46 @@ interface WeaponProjectileHandler : DataTagManager, EnchantmentManager, AttackHe
     }
 
     /*-----------------------------------------------------------------------------------------------*/
+
+    private fun isUndeadType(entity: LivingEntity): Boolean {
+        val undead = setOf(
+            EntityType.ZOMBIE, EntityType.ZOMBIE_VILLAGER, EntityType.HUSK, EntityType.DROWNED,
+            EntityType.ZOMBIFIED_PIGLIN, EntityType.SKELETON, EntityType.STRAY, EntityType.WITHER_SKELETON,
+            EntityType.BOGGED, EntityType.SKELETON_HORSE, EntityType.ZOMBIE_HORSE, EntityType.ZOGLIN,
+            EntityType.WITHER, EntityType.PHANTOM
+        )
+        return entity.type in undead
+    }
+
+    private fun applyPotionEffects(entity: LivingEntity, effects: List<PotionEffect>, shooter: LivingEntity?) {
+        for (effect in effects) {
+            when (effect.type) {
+                PotionEffectType.INSTANT_HEALTH, PotionEffectType.INSTANT_DAMAGE ->
+                    applyInstantEffect(entity, effect, shooter)
+                else -> entity.addPotionEffect(effect)
+            }
+        }
+    }
+
+    private fun applyInstantEffect(entity: LivingEntity, effect: PotionEffect, shooter: LivingEntity?) {
+        val isHealPotion = effect.type == PotionEffectType.INSTANT_HEALTH
+        // Undead take harm from healing and heal from harming
+        val heals = if (isUndeadType(entity)) {
+            !isHealPotion // Undead heal from harming potions (NOT heal potions)
+        } else {
+            isHealPotion  // Normal entities heal from healing potions
+        }
+        if (heals) {
+            val amount = (4 shl effect.amplifier).toDouble()   // Instant Health: 4, 8, 16...
+            val maxHealth = entity.getAttribute(Attribute.MAX_HEALTH)?.value ?: 20.0
+            entity.health = (entity.health + amount).coerceAtMost(maxHealth)
+        } else {
+            val amount = (6 shl effect.amplifier).toDouble()   // Instant Damage: 6, 12, 24...
+            if (shooter != null) entity.damage(amount, shooter) else entity.damage(amount)
+        }
+    }
+
+
     fun alchemicalWeaponShooting(event: EntityShootBowEvent, weaponType: String) {
         // Initial Sentries
         val crossbow = event.bow ?: return
@@ -163,7 +206,7 @@ interface WeaponProjectileHandler : DataTagManager, EnchantmentManager, AttackHe
                 spawnConeParticles(particle, shooter.location, 280, 45.0, 6.0, color)
                 // Run
                 for (entity in entitiesInCone) {
-                    entity.addPotionEffects(effects)
+                    applyPotionEffects(entity, effects, shooter)   // <-- was entity.addPotionEffects(effects)
                     val location = entity.location
                     location.world.spawnParticle(particle, location, 15, 0.03, 0.1, 0.03, color)
                     location.world.spawnParticle(particle, location, 5, 0.08, 0.15, 0.08, color)

@@ -87,16 +87,35 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
      * Restyles [target] for the current [ingredient], seeding from [input] (the potion the
      * player brewed) so the built-up model isn't lost.
      *
-     * The CAP is driven by the RESULTING potion type, not the ingredient: a splash is always
-     * splash_cap, a lingering is always lingering_cap, and only a normal potion falls back to
-     * the ingredient's cap. This is what makes "redstone on a splash" keep splash_cap and
-     * "dragon breath -> lingering" pick up lingering_cap.
+     * BASE MODEL: whatever the input already used is kept (vials stay "potion_vial",
+     * concoctions/normal potions stay "alchemy_potion", etc). A brand-new potion with no
+     * model defaults to "alchemy_potion". This stops a vial from being flattened into a
+     * plain composite potion when it's turned into a splash.
      *
-     * The BOTTLE is set by the ingredient when it defines one, otherwise the input's existing
-     * bottle is re-applied explicitly so type conversions (e.g. -> lingering) can't drop it.
+     * CAP: driven by the RESULTING potion type -- a splash is always splash_cap, a lingering
+     * always lingering_cap, and only a normal potion falls back to the ingredient's cap.
+     *
+     * BOTTLE: set by the ingredient when it defines one, otherwise the input's existing bottle
+     * is re-applied explicitly so type conversions (e.g. -> lingering) can't drop it.
      */
     private fun styleModel(target: ItemStack, input: ItemStack, ingredient: Material) {
-        // Carry over any flags/floats/colors the player built up.
+        // Keep the base item model the input already used; only default when brand new.
+        val baseModel = input.getData(DataComponentTypes.ITEM_MODEL) ?: createOdysseyKey("alchemy_potion")
+        target.setData(DataComponentTypes.ITEM_MODEL, baseModel)
+
+        // Vials don't use the bottle/cap composite. Preserve their identity so a splash vial
+        // still reads as a vial (just thrown), rather than becoming a composite splash potion.
+        if (input.hasTag(ItemDataTags.IS_POTION_VIAL)) {
+            input.getData(DataComponentTypes.CUSTOM_MODEL_DATA)?.let { target.setData(DataComponentTypes.CUSTOM_MODEL_DATA, it) }
+            input.getData(DataComponentTypes.ITEM_NAME)?.let { target.setData(DataComponentTypes.ITEM_NAME, it) }
+            input.getData(DataComponentTypes.CONSUMABLE)?.let { target.setData(DataComponentTypes.CONSUMABLE, it) }
+            target.setData(DataComponentTypes.MAX_STACK_SIZE, 64)
+            if (!target.hasTag(ItemDataTags.IS_POTION_VIAL)) target.addTag(ItemDataTags.IS_POTION_VIAL)
+            return
+        }
+
+        // Composite model (normal potions + multi-effect concoctions): carry the built-up
+        // model, keep the bottle, and set the cap from the resulting potion type.
         if (target !== input) {
             input.getData(DataComponentTypes.CUSTOM_MODEL_DATA)?.let {
                 target.setData(DataComponentTypes.CUSTOM_MODEL_DATA, it)
@@ -104,17 +123,14 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
         }
 
         val prevParts = input.getData(DataComponentTypes.CUSTOM_MODEL_DATA)?.strings().orEmpty()
-        val prevBottle = prevParts.getOrNull(1)
-        val prevCap = prevParts.getOrNull(2)
-
-        val bottle = getBottleModel(ingredient) ?: prevBottle
+        val bottle = getBottleModel(ingredient) ?: prevParts.getOrNull(1)
         val cap = when (target.type) {
             Material.SPLASH_POTION    -> "splash_cap"
             Material.LINGERING_POTION -> "lingering_cap"
-            else                      -> getCapModel(ingredient) ?: prevCap
+            else                      -> getCapModel(ingredient) ?: prevParts.getOrNull(2)
         }
 
-        target.updatePotionModel(bottle, cap, "alchemy_potion")
+        target.updatePotionModel(bottle, cap) // base model already set above
         target.setData(DataComponentTypes.MAX_STACK_SIZE, 8)
     }
 
@@ -234,8 +250,7 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
         if (potion.hasTag(ItemDataTags.IS_POTION_VIAL)) return potion
         if (!potion.applyRebuiltEffects(durationScale = 0.4)) return potion
 
-        val consumable = Consumable.consumable()
-            .consumeSeconds(0.8f)
+        val consumable = Consumable.consumable().consumeSeconds(0.8f)
         consumable.sound(Key.key("entity.generic.drink"))
 
         potion.setData(DataComponentTypes.CONSUMABLE, consumable)
@@ -247,8 +262,8 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
         return potion
     }
 
+    // Aura: mini-beacon style, applies effects to nearby entities.
     private fun createAuraPotion(potion: ItemStack): ItemStack {
-        // Create AURA POTION when near, applies effects, GOOD or BAD (mini-beacon)
         if (potion.hasTag(ItemDataTags.IS_AURA_POTION)) return potion
         if (!potion.applyRebuiltEffects(durationScale = 0.6)) return potion
         potion.setData(DataComponentTypes.MAX_STACK_SIZE, 8)
@@ -257,8 +272,8 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
         return potion
     }
 
+    // Blast: timed potion that explodes after a delay or on contact.
     private fun createBlastPotion(potion: ItemStack): ItemStack {
-        // Create BLAST POTION, timed potion that explodes after a 10 sec delay or something contacts it
         if (potion.hasTag(ItemDataTags.IS_BLAST_POTION)) return potion
         if (!potion.applyRebuiltEffects(durationScale = 1.0)) return potion
         potion.setData(DataComponentTypes.MAX_STACK_SIZE, 8)
