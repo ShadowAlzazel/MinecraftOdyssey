@@ -57,7 +57,8 @@ object DragonListeners : Listener {
     @EventHandler
     fun dragonPhaseHandler(event: EnderDragonChangePhaseEvent) = safely("dragonPhaseHandler") {
         val dragon = event.entity
-        val isLoaded = dragon.world.isChunkLoaded(dragon.chunk.x, dragon.chunk.z)
+        val loc = dragon.location
+        val isLoaded = dragon.world.isChunkLoaded(loc.blockX shr 4, loc.blockZ shr 4)
         if (!isLoaded) return@safely
 
         when (event.currentPhase) {
