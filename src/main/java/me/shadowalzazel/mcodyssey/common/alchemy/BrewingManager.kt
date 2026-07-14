@@ -23,7 +23,7 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
     // ──────────────────────────────────────────────────────────────────────────────
     // Ingredient reference:
     //   Prismarine Crystals  -> Potion Vials    (self-contained model + name + stack)
-    //   Glow Berries         -> Upgraded+       (amplifier +1, shorter duration)
+    //   Diamond         -> Upgraded+       (amplifier +1, shorter duration)
     //   Honey Bottle         -> Extended+       (longer duration)
     //   Experience Bottle    -> Aura
     //   Fire Charge          -> Blast
@@ -53,7 +53,7 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
             // -----------------------------------------------------------------------------
             if (inputIsNotEnhanced(input)) {
                 val enhanced = when (ingredient.type) {
-                    Material.GLOW_BERRIES        -> createUpgradedPlusPotion(input)
+                    Material.DIAMOND             -> createUpgradedPlusPotion(input)
                     Material.HONEY_BOTTLE        -> createExtendedPlusPotion(input)
                     Material.EXPERIENCE_BOTTLE   -> createAuraPotion(input)
                     Material.FIRE_CHARGE         -> createBlastPotion(input)
@@ -236,7 +236,7 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
     private fun getCapModel(material: Material): String? = when (material) {
         Material.REDSTONE          -> "tall_cap"
         Material.GLOWSTONE_DUST    -> "short_cap"
-        Material.GLOW_BERRIES      -> "short_cap"
+        Material.DIAMOND           -> "diamond_cap"
         Material.HONEY_BOTTLE      -> "tall_cap"
         Material.EXPERIENCE_BOTTLE -> "ring_cap"
         Material.FIRE_CHARGE       -> "fuse_cap"
@@ -246,7 +246,7 @@ interface BrewingManager : RegistryTagManager, DataTagManager {
     private fun getBottleModel(material: Material): String? = when (material) {
         Material.REDSTONE          -> "volumetric_bottle"
         Material.GLOWSTONE_DUST    -> "square_bottle"
-        Material.GLOW_BERRIES      -> "square_bottle"
+        Material.DIAMOND           -> "square_bottle"
         Material.HONEY_BOTTLE      -> "volumetric_bottle"
         Material.EXPERIENCE_BOTTLE -> "aura_bottle"
         else                       -> null

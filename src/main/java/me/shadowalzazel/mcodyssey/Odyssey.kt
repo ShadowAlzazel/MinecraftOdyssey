@@ -13,6 +13,7 @@ import me.shadowalzazel.mcodyssey.datagen.RecipeLoader
 import me.shadowalzazel.mcodyssey.server.commands.admin.*
 import me.shadowalzazel.mcodyssey.common.world_events.WorldEventsManager
 import me.shadowalzazel.mcodyssey.datagen.RecipeManager
+import me.shadowalzazel.mcodyssey.server.commands.PostItem
 import me.shadowalzazel.mcodyssey.server.commands.UpdateModel
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
@@ -152,14 +153,11 @@ class Odyssey : JavaPlugin() {
 
         // Set Commands
         logger.info("Setting Commands...")
-        mapOf("summon_boss" to SummonBoss,
-            "enchant_with_odyssey" to EnchantWithOdyssey,
-            "get_item_data" to GetItemData,
-            "give_item" to GiveItem,
-            "give_weapon" to GiveWeapon,
+        mapOf(
+            "summon_boss" to SummonBoss,
             "summon_mob" to SummonMob,
-            "update_model" to UpdateModel,
-            "ender_dragon_boss_battle" to EnderDragonBossBattle
+            "post_item" to PostItem(),
+            "ender_dragon_boss_battle" to EnderDragonBossBattle()
         ).forEach {
             getCommand(it.key)?.setExecutor(it.value)
         }

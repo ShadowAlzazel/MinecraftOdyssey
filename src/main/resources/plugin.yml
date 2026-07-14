@@ -10,28 +10,12 @@ commands:
     description: "Summons an Odyssey boss."
     usage: /<command>
     permission: op
-  enchant_with_odyssey:
-    description: "Applies the gilded enchantment to the current item in the main hand."
-    usage: /<command>
-    permission: op
-  give_item:
-    description: "Gives an Odyssey custom item."
-    usage: /<command>
-    permission: op
-  give_weapon:
-    description: "Gives an Odyssey weapon from available materials and types."
-    usage: /<command>
-    permission: op
-  get_item_data:
-    description: "Gets the data components of a held item."
-    usage: /<command>
-    permission: op
   summon_mob:
     description: "Summons a Custom Mob."
     usage: /<command>
     permission: op
-  update_model:
-    description: "Updates the model using item_name for old Odyssey items."
+  post_item:
+    description: "Broadcasts the players held item."
     usage: /<command>
   ender_dragon_boss_battle:
     description: "Activates the hard ender dragon boss."

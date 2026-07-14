@@ -12,7 +12,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityRegainHealthEvent
 import org.bukkit.scheduler.BukkitRunnable
 
-object EnderDragonBossBattle : CommandExecutor, AttributeManager {
+class EnderDragonBossBattle : CommandExecutor, AttributeManager {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         val isOP = sender is Player && sender.isOp

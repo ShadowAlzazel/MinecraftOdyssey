@@ -47,7 +47,7 @@ object PotionMixes {
             !it.hasTag(ItemDataTags.IS_UPGRADED_PLUS) && it.type == Material.POTION
         }
         val result = ItemStack(Material.POTION)
-        val ingredient = RecipeChoice.itemType(ItemType.GLOW_BERRIES)
+        val ingredient = RecipeChoice.itemType(ItemType.DIAMOND)
         return PotionMix(
             NamespacedKey(Odyssey.instance, "upgraded_plus_brewing"),
             result,
