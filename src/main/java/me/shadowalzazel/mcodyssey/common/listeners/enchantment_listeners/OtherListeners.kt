@@ -144,23 +144,24 @@ object OtherListeners : Listener, EnchantmentManager, AttackHelper {
     fun voidJumpHandler(event: ProjectileLaunchEvent) {
         if (event.entity !is EnderPearl) return
         if (event.entity.shooter !is Player) return
-        val player = event.entity.shooter!! as Player
-        if (player.equipment!!.chestplate.type != Material.ELYTRA) return
-        val elytra = player.equipment!!.chestplate
-        if (!elytra.hasItemMeta()) return
+        val player = event.entity.shooter as? Player ?: return
+        if (player.equipment.chestplate.type != Material.ELYTRA) return
+        val elytra = player.equipment.chestplate
         if (!elytra.hasEnchantment("void_jump")) return
-        val activeItem = player.activeItem
+        val activeItem = player.equipment.itemInMainHand
         if (activeItem.type != Material.ENDER_PEARL) return
-        if (player.getCooldown(activeItem.type) > 0) return
-        if (player.velocity.length() < 2.5) return
-        if (!player.isFlying) return
+        if (player.velocity.length() < 0.3) return
         // Passed all checks
         val jumpLevel = elytra.enchantments[getNamedEnchantment("void_jump")] ?: return
         // Math and TP
         val unitVector = player.eyeLocation.direction.clone().normalize()
-        val jumpLocation = player.location.clone().add(unitVector.clone().multiply((jumpLevel * 5.0) + 5))
+        val momentum = player.location.direction.clone()
+        val oldVelocity = player.velocity.clone()
+        val jumpLocation = player.location.clone().add(unitVector.clone().multiply((jumpLevel * 5) + 5))
         voidJumpParticles(player.location)
         player.teleport(jumpLocation)
+        player.velocity = oldVelocity
+        player.location.direction = momentum
         voidJumpParticles(jumpLocation)
         // Cooldown
         player.setCooldown(activeItem.type, 4 * 20)

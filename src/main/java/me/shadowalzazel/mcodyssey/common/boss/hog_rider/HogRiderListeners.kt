@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.unused.bosses.hog_rider
+package me.shadowalzazel.mcodyssey.common.boss.hog_rider
 
 import org.bukkit.event.Listener
 

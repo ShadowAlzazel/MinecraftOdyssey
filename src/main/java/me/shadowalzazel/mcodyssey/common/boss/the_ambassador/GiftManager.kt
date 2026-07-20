@@ -1,7 +1,8 @@
-package me.shadowalzazel.mcodyssey.unused.bosses.the_ambassador
+package me.shadowalzazel.mcodyssey.common.boss.the_ambassador
 
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import kotlin.collections.get
 
 class GiftManager(internal val ambassador: TheAmbassador) {
 
@@ -11,6 +12,7 @@ class GiftManager(internal val ambassador: TheAmbassador) {
 
     // Appeasement Mechanic
     internal fun appeasementHandler(player: Player, item: ItemStack) {
+        /*
         // Check if player in gift cooldown map
         var cooldown = ambassador.playersGiftCooldown[player.uniqueId]
         if (cooldown == null) {
@@ -22,6 +24,8 @@ class GiftManager(internal val ambassador: TheAmbassador) {
         if (timeElapsed >= 4 * 1000) {
             ambassador.playersGiftCooldown[player.uniqueId] = System.currentTimeMillis()
         }
+
+         */
     }
 
 

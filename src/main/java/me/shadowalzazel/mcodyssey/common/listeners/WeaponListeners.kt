@@ -390,8 +390,8 @@ object WeaponListeners : Listener, WeaponProjectileHandler, EnchantmentManager {
             val thrower = projectile.shooter ?: return
             victim.addScoreboardTag(EntityTags.THROWABLE_ATTACK_HIT)
             // Match same weapon
-            if (thrower is HumanEntity && thrower.equipment!!.itemInMainHand.getItemNameId() == projectile.item.getItemNameId()) {
-                //thrower.attack(victim)
+            if (thrower is HumanEntity && thrower.equipment.itemInMainHand.getItemNameId() == projectile.item.getItemNameId()) {
+                thrower.attack(victim)
                 victim.damage(damage * 1.0, createEntityDamageSource(thrower, projectile, DamageType.PLAYER_ATTACK))
 
             } else {
@@ -416,6 +416,7 @@ object WeaponListeners : Listener, WeaponProjectileHandler, EnchantmentManager {
             val thrower = projectile.shooter ?: return
             if (thrower !is LivingEntity) return
             target.addScoreboardTag(EntityTags.THROWABLE_ATTACK_HIT)
+            thrower.attack(target)
             target.damage(damage * 1.0, createEntityDamageSource(thrower, projectile, DamageType.PLAYER_ATTACK))
             returnChakram = true
         }

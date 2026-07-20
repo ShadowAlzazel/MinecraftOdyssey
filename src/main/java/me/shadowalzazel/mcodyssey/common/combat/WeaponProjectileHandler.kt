@@ -5,7 +5,6 @@ import io.papermc.paper.datacomponent.item.ChargedProjectiles
 import io.papermc.paper.event.entity.EntityLoadCrossbowEvent
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.util.VectorParticles
-import me.shadowalzazel.mcodyssey.common.listeners.WeaponListeners
 import me.shadowalzazel.mcodyssey.common.tasks.weapon_tasks.LoadAutoCrossbow
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.common.enchantments.EnchantmentManager
@@ -41,7 +40,7 @@ interface WeaponProjectileHandler : DataTagManager, EnchantmentManager, AttackHe
     fun explosiveArrowHitHandler(event: ProjectileHitEvent) {
         val projectile = event.entity
         val location = projectile.location
-        WeaponListeners.explosionHandler(location.getNearbyLivingEntities(3.0), location, 3.0)
+        explosionHandler(location.getNearbyLivingEntities(3.0), location, 3.0)
     }
 
     /*-----------------------------------------------------------------------------------------------*/

@@ -1,6 +1,10 @@
-package me.shadowalzazel.mcodyssey.unused.bosses.hog_rider
+package me.shadowalzazel.mcodyssey.common.boss.hog_rider
 
-import me.shadowalzazel.mcodyssey.unused.bosses.base.OdysseyBoss
+import me.shadowalzazel.mcodyssey.common.boss.BossStats
+import me.shadowalzazel.mcodyssey.common.boss.GiftReceiver
+import me.shadowalzazel.mcodyssey.common.boss.OdysseyBoss
+import me.shadowalzazel.mcodyssey.common.boss.the_ambassador.TheAmbassador.Companion.KEY
+import me.shadowalzazel.mcodyssey.common.boss.the_ambassador.TheAmbassador.Companion.NAME
 import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.text.Component
 import org.bukkit.Location
@@ -10,16 +14,21 @@ import org.bukkit.World
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Hoglin
+import org.bukkit.entity.Item
+import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.PiglinBrute
+import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
+import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import org.checkerframework.checker.units.qual.t
 
-class HogRiderBoss : OdysseyBoss(
-    name = "Hog Rider",
-    type = EntityType.PIGLIN_BRUTE
-) {
+class HogRider(
+    plugin: JavaPlugin,
+    private val spawnLocation: Location,
+) : OdysseyBoss(plugin, KEY, NAME), GiftReceiver {
 
     // Boss Spawning Logic
     var bossEntityRider: PiglinBrute? = null
@@ -47,6 +56,8 @@ class HogRiderBoss : OdysseyBoss(
         smokyWarHammer.itemMeta = smokyWarHammerMeta
         return smokyWarHammer
     }
+
+
 
 
 
@@ -118,7 +129,7 @@ class HogRiderBoss : OdysseyBoss(
         bossEntityRider = hogRider
         bossEntityMount = warthog
         //
-        hogRiderBossBar = BossBar.bossBar(Component.text("HOG RIDA"), 1F, BossBar.Color.YELLOW, BossBar.Overlay.PROGRESS)
+        hogRiderBossBar = BossBar.bossBar(Component.text("HOG RIDAAAA"), 1F, BossBar.Color.YELLOW, BossBar.Overlay.PROGRESS)
 
     }
 
@@ -149,6 +160,36 @@ class HogRiderBoss : OdysseyBoss(
 
         }
 
+    }
+
+    override val stats = BossStats(
+        maxHealth = 800.0,
+        armor = 10.0)
+
+    override fun createEntity(location: Location): LivingEntity {
+        val rider = (location.world.spawnEntity(location, EntityType.PIGLIN_BRUTE) as PiglinBrute).apply {
+            customName(NAME)
+            isCustomNameVisible = true
+            removeWhenFarAway = false
+            isAggressive = true
+            isAware = true
+            isImmuneToZombification = true
+            canPickupItems = true
+            equipment.itemInMainHandDropChance = 100f
+        }.also { entity = it; applyBaseAttributes() }
+        //
+        hogRiderBossBar = BossBar.bossBar(
+            Component.text("HOG RIDAAAA"),
+            1F,
+            BossBar.Color.YELLOW,
+            BossBar.Overlay.PROGRESS)
+
+        //
+        return rider
+    }
+
+    override fun onGift(giver: Player, item: Item) {
+        TODO("Not yet implemented")
     }
 
 

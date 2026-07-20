@@ -1,9 +1,11 @@
 package me.shadowalzazel.mcodyssey
 
-import me.shadowalzazel.mcodyssey.unused.bosses.BossManager
-import me.shadowalzazel.mcodyssey.unused.bosses.hog_rider.HogRiderListeners
-import me.shadowalzazel.mcodyssey.unused.bosses.the_ambassador.AmbassadorListeners
+
 import me.shadowalzazel.mcodyssey.common.StructureDetector
+import me.shadowalzazel.mcodyssey.common.boss.BossListener
+import me.shadowalzazel.mcodyssey.common.boss.BossManager
+import me.shadowalzazel.mcodyssey.common.boss.the_ambassador.AmbassadorListeners
+import me.shadowalzazel.mcodyssey.common.boss.the_ambassador.TheAmbassador
 import me.shadowalzazel.mcodyssey.common.effects.StatusEffectManager
 import me.shadowalzazel.mcodyssey.common.listeners.*
 import me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners.*
@@ -12,9 +14,7 @@ import me.shadowalzazel.mcodyssey.datagen.PotionMixes
 import me.shadowalzazel.mcodyssey.datagen.RecipeLoader
 import me.shadowalzazel.mcodyssey.server.commands.admin.*
 import me.shadowalzazel.mcodyssey.common.world_events.WorldEventsManager
-import me.shadowalzazel.mcodyssey.datagen.RecipeManager
 import me.shadowalzazel.mcodyssey.server.commands.PostItem
-import me.shadowalzazel.mcodyssey.server.commands.UpdateModel
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.NamespacedKey
@@ -24,12 +24,12 @@ import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 import java.io.FileNotFoundException
 import java.net.URI
+import kotlin.math.log
 
 @Suppress("UnstableApiUsage")
 class Odyssey : JavaPlugin() {
 
     // Managers
-    val bossManager: BossManager
     val worldEventManager: WorldEventsManager
     val structureDetector: StructureDetector
 
@@ -44,7 +44,6 @@ class Odyssey : JavaPlugin() {
 
     init {
         instance = this
-        bossManager = BossManager(this)
         worldEventManager = WorldEventsManager(this)
         structureDetector = StructureDetector(this)
     }
@@ -93,6 +92,10 @@ class Odyssey : JavaPlugin() {
         // Set Worlds
         edge = server.getWorld(NamespacedKey(instance, "edge"))!!
 
+        // Summon Bosses
+        logger.info("Waking up the big bosses...")
+        BossManager.register(TheAmbassador.KEY) { plugin, loc -> TheAmbassador(plugin, loc) }
+
         // Enable Status Effects
         logger.info("Checking the status of the effects...")
         StatusEffectManager.init(this)
@@ -116,13 +119,17 @@ class Odyssey : JavaPlugin() {
         // Register Events
         logger.info("Registering Events...")
         listOf(
+            // Classes
             OdysseyListeners,
+            BossListener(),
+            AmbassadorListeners,
+            //DragonListeners, Moved to Command
+
+            // Objects
             ArcaneListeners,
             SmithingListeners,
             AlchemyListeners,
             EnchantingListeners,
-            AmbassadorListeners,
-            HogRiderListeners,
             ArmorListeners,
             MeleeListeners,
             ToolListeners,
@@ -137,7 +144,6 @@ class Odyssey : JavaPlugin() {
             ItemListeners,
             OtherListeners,
             MobListeners,
-            //DragonListeners, Moved to Command
             SnifferListeners,
             ArtisanListeners,
             GlyphListeners,
@@ -154,7 +160,7 @@ class Odyssey : JavaPlugin() {
         // Set Commands
         logger.info("Setting Commands...")
         mapOf(
-            "summon_boss" to SummonBoss,
+            "summon_boss" to SummonBoss(),
             "summon_mob" to SummonMob,
             "post_item" to PostItem(),
             "ender_dragon_boss_battle" to EnderDragonBossBattle()

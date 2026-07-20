@@ -431,8 +431,8 @@ interface DescriptionManager {
             // Reworked/Changed
             "vigor" -> listOf( // All Armor (3 cost, max 3)
                 "- Deal ${level * 4}%=[level x 4] increased damage while above 60% health.")
-            "cloud_jumper" -> listOf( // boots
-                "- Have ${level}=[level] more jumps.")
+            "void_jump" -> listOf( // boots
+                "- When flying, using an ender pearl teleports ${5 + (level) * 5}=[5 + (level x 5)] blocks in your direction.")
             "moon_walker" -> listOf( // boots
                 "- Reduce gravity by ${level * 10}%=[level x 10].")
             "life_force" -> listOf( // Melee
@@ -447,6 +447,8 @@ interface DescriptionManager {
                 "Damage is increased by ${15 * level}%=[level x 15] and blocking/parrying is 25% more effective.")
             "laceration" -> listOf(
                 "- Deals bonus damage to unarmored targets.")
+            "close_quarters" -> listOf( // Melee 2 cost, max 5
+                "- Deals bonus damage ${30 * level}%=[level x 30] to enemies with 2 blocks.")
             "backdraft" -> listOf(
                 "- On a successful attack, get pushed backwards. ")
             "miscalibrate" -> listOf( // Melee (2 cost, max 5)
@@ -488,8 +490,7 @@ interface DescriptionManager {
             "bouncy" -> listOf(
                 "- Increase bounciness by ${10 * level}%=[level x 10].")
             "cloud_strider" -> listOf(
-                "- Crouching in the air causes a small jump. Can only be done $level times."
-            )
+                "- Crouching in the air causes a small jump. Can only be done $level times.")
 
             // Mining
             "soul_miner" -> listOf( // Incompatible with mending

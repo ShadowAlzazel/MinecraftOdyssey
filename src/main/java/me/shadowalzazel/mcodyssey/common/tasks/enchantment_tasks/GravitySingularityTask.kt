@@ -24,7 +24,7 @@ class GravitySingularityTask (
             // Check if Gravity Well entity has tag
             if (EffectTags.GRAVITY_WELLED !in singularity.scoreboardTags) { this.cancel() }
             // Check if Moving
-            val movableSingularity = singularity.scoreboardTags.contains(EntityTags.FALLING_SINGULARITY) || singularity.scoreboardTags.contains(EntityTags.MOVING_SINGULARITY)
+            val movableSingularity = isMovingSingularity(singularity)
             if (movableSingularity) {
                 singularityLocation = singularity.location.clone()
             }
@@ -37,13 +37,13 @@ class GravitySingularityTask (
                 spawnParticle(Particle.SONIC_BOOM, someLocation, 2, 0.0, 0.0, 0.0)
             }
             // Pull
-            singularity.location.getNearbyLivingEntities(3.25 ).forEach {
-                //TODO:  INCLUDE FALLING AND MOVING
-                if (!it.scoreboardTags.contains(EntityTags.MOVING_SINGULARITY) && it != attacker) {
-                    it.teleport(singularityLocation.clone().add((-3..3).random() * 0.08, 0.1, (-3..3).random() * 0.08))
-                    it.damage(0.5 * modifier)
+            singularity.location.getNearbyLivingEntities(3.25)
+                .filter { it != attacker && !isMovingSingularity(it)
                 }
-            }
+                .forEach {
+                it.teleport(singularityLocation.clone().add((-3..3).random() * 0.08, 0.1, (-3..3).random() * 0.08))
+                it.damage(0.5 * modifier)
+                }
             // Timer
             val timeElapsed = System.currentTimeMillis() - timer
             val isDead = singularity.isDead
@@ -53,4 +53,12 @@ class GravitySingularityTask (
             }
         }
     }
+
+
+    private fun isMovingSingularity(target: Entity) : Boolean {
+        if (target.scoreboardTags.contains(EntityTags.FALLING_SINGULARITY)) return true
+        if (target.scoreboardTags.contains(EntityTags.MOVING_SINGULARITY)) return true
+        return false
+    }
+
 }
