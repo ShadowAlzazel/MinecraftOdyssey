@@ -58,20 +58,25 @@ class UtilitySmithing : ChoiceManager { // USE THIS CLASS TO CREATE RECIPE WHICH
             NamespacedKey(Odyssey.instance, "book_smithing"),
             result,
             template,
-            RecipeChoice.MaterialChoice(
-                Material.NETHERITE_SWORD, Material.DIAMOND_SWORD, Material.IRON_SWORD, Material.GOLDEN_SWORD, Material.STONE_SWORD, Material.WOODEN_SWORD,
-                Material.NETHERITE_AXE, Material.DIAMOND_AXE, Material.IRON_AXE, Material.GOLDEN_AXE, Material.STONE_AXE, Material.WOODEN_AXE,
-                Material.NETHERITE_PICKAXE, Material.DIAMOND_PICKAXE, Material.IRON_PICKAXE, Material.GOLDEN_PICKAXE, Material.STONE_PICKAXE, Material.WOODEN_PICKAXE,
-                Material.NETHERITE_SHOVEL, Material.DIAMOND_SHOVEL, Material.IRON_SHOVEL, Material.GOLDEN_SHOVEL, Material.STONE_SHOVEL, Material.WOODEN_SHOVEL,
-                Material.NETHERITE_HOE, Material.DIAMOND_HOE, Material.IRON_HOE, Material.GOLDEN_HOE, Material.STONE_HOE, Material.WOODEN_HOE,
-                Material.NETHERITE_BOOTS, Material.DIAMOND_BOOTS, Material.IRON_BOOTS, Material.GOLDEN_BOOTS, Material.CHAINMAIL_BOOTS, Material.LEATHER_BOOTS,
-                Material.NETHERITE_LEGGINGS, Material.DIAMOND_LEGGINGS, Material.IRON_LEGGINGS, Material.GOLDEN_LEGGINGS, Material.CHAINMAIL_LEGGINGS, Material.LEATHER_LEGGINGS,
-                Material.NETHERITE_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.IRON_CHESTPLATE, Material.GOLDEN_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, Material.LEATHER_CHESTPLATE,
-                Material.NETHERITE_HELMET, Material.DIAMOND_HELMET, Material.IRON_HELMET, Material.GOLDEN_HELMET, Material.CHAINMAIL_HELMET, Material.LEATHER_HELMET,
-                Material.NETHERITE_SPEAR, Material.DIAMOND_SPEAR, Material.IRON_SPEAR, Material.GOLDEN_SPEAR, Material.STONE_SPEAR, Material.WOODEN_SPEAR,
-                Material.ELYTRA, Material.SHIELD, Material.BOW, Material.CROSSBOW, Material.TRIDENT, Material.FISHING_ROD
+            RecipeChoice.itemType(
+                ItemType.NETHERITE_SWORD, ItemType.DIAMOND_SWORD, ItemType.IRON_SWORD, ItemType.GOLDEN_SWORD, ItemType.STONE_SWORD, ItemType.WOODEN_SWORD,
+                ItemType.NETHERITE_AXE, ItemType.DIAMOND_AXE, ItemType.IRON_AXE, ItemType.GOLDEN_AXE, ItemType.STONE_AXE, ItemType.WOODEN_AXE,
+                ItemType.NETHERITE_PICKAXE, ItemType.DIAMOND_PICKAXE, ItemType.IRON_PICKAXE, ItemType.GOLDEN_PICKAXE, ItemType.STONE_PICKAXE, ItemType.WOODEN_PICKAXE,
+                ItemType.NETHERITE_SHOVEL, ItemType.DIAMOND_SHOVEL, ItemType.IRON_SHOVEL, ItemType.GOLDEN_SHOVEL, ItemType.STONE_SHOVEL, ItemType.WOODEN_SHOVEL,
+                ItemType.NETHERITE_HOE, ItemType.DIAMOND_HOE, ItemType.IRON_HOE, ItemType.GOLDEN_HOE, ItemType.STONE_HOE, ItemType.WOODEN_HOE,
+                ItemType.NETHERITE_BOOTS, ItemType.DIAMOND_BOOTS, ItemType.IRON_BOOTS, ItemType.GOLDEN_BOOTS, ItemType.CHAINMAIL_BOOTS, ItemType.LEATHER_BOOTS,
+                ItemType.NETHERITE_LEGGINGS, ItemType.DIAMOND_LEGGINGS, ItemType.IRON_LEGGINGS, ItemType.GOLDEN_LEGGINGS, ItemType.CHAINMAIL_LEGGINGS, ItemType.LEATHER_LEGGINGS,
+                ItemType.NETHERITE_CHESTPLATE, ItemType.DIAMOND_CHESTPLATE, ItemType.IRON_CHESTPLATE, ItemType.GOLDEN_CHESTPLATE, ItemType.CHAINMAIL_CHESTPLATE, ItemType.LEATHER_CHESTPLATE,
+                ItemType.NETHERITE_HELMET, ItemType.DIAMOND_HELMET, ItemType.IRON_HELMET, ItemType.GOLDEN_HELMET, ItemType.CHAINMAIL_HELMET, ItemType.LEATHER_HELMET,
+                ItemType.NETHERITE_SPEAR, ItemType.DIAMOND_SPEAR, ItemType.IRON_SPEAR, ItemType.GOLDEN_SPEAR, ItemType.STONE_SPEAR, ItemType.WOODEN_SPEAR,
+                // Copper
+                ItemType.COPPER_SWORD, ItemType.COPPER_SPEAR, ItemType.COPPER_SHOVEL, ItemType.COPPER_PICKAXE, ItemType.COPPER_AXE, ItemType.COPPER_HOE,
+                ItemType.COPPER_HELMET, ItemType.COPPER_CHESTPLATE, ItemType.COPPER_LEGGINGS, ItemType.COPPER_BOOTS,
+
+                // Special
+                ItemType.ELYTRA, ItemType.SHIELD, ItemType.BOW, ItemType.CROSSBOW, ItemType.TRIDENT, ItemType.FISHING_ROD, ItemType.MACE
             ),
-            RecipeChoice.MaterialChoice(Material.PRISMARINE_CRYSTALS, Material.LAPIS_LAZULI)
+            RecipeChoice.itemType(ItemType.LAPIS_LAZULI)
         )
     }
 

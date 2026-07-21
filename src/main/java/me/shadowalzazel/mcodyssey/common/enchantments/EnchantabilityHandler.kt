@@ -75,7 +75,7 @@ interface EnchantabilityHandler : EnchantmentManager, DescriptionManager, DataTa
         when(nameId) {
             "excalibur" -> bonusPoints += 5
             "frost_fang", "knight_breaker", "abzu_blade", "elucidator", "shogun_lightning" -> {
-                bonusPoints += 0
+                bonusPoints += 5
             }
             "laplace_spear", "flaming_wolf_spear", "blade_broken_by_storms", "shogun_pulse", "firewood_staff" -> {
                 bonusPoints += 0

@@ -52,12 +52,15 @@ class FrostyFuseTask(
                 }
 
                 // Create ice pillar?
+                /*
                 if (victim.eyeLocation.block.type in listOf(Material.AIR, Material.WATER)) {
                     victim.eyeLocation.block.type = Material.PACKED_ICE
                 }
                 if (victim.eyeLocation.clone().subtract(0.0, 1.0, 0.0).block.type in listOf(Material.AIR, Material.WATER)) {
                     victim.eyeLocation.clone().subtract(0.0, 1.0, 0.0).block.type = Material.PACKED_ICE
                 }
+
+                 */
 
                 this.cancel()
             }

@@ -456,7 +456,7 @@ object RangedListeners : Listener, EnchantmentManager {
 
     private fun ballisticsEnchantmentHit(projectile: Projectile): Float {
         val modifier = projectile.getIntTag(EntityTags.BALLISTICS_MODIFIER) ?: return 0.0F
-        return modifier * 0.10F
+        return modifier * 0.15F
     }
 
     private fun bolaShotEnchantmentShoot(projectile: Entity, level: Int) {
