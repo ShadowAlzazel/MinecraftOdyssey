@@ -134,8 +134,16 @@ object StatusEffectManager {
             }
 
             for (a in byId.values) {
+                // Early-out check. Runs every loop pass (every TICK_RATE), independent of
+                // tickInterval — so cancellation lands within ~0.2s, not on the next 20-tick beat.
+                if (a.effect.cancelIf(entity)) {
+                    clearModifiers(entity, a.effect)   // fires onRemove too
+                    expired += uuid to a.effect.id     // deferred removal, safe during iteration
+                    continue                           // skip this tick's callback + aging
+                }
+
                 // Periodic callback (particles, DoT, etc.), if this effect defines one.
-                // Countdown approach handles any interval, even non-multiples of TICK_INTERVAL.
+                // Countdown approach handles any interval, even non-multiples of TICK_RATE.
                 if (a.effect.tickInterval > 0) {
                     a.ticksUntilTrigger -= TICK_RATE
                     if (a.ticksUntilTrigger <= 0) {
