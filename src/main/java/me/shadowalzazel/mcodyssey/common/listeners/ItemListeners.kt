@@ -70,10 +70,11 @@ object ItemListeners : Listener, DataTagManager, RegistryTagManager {
         val facing = data.facing            // BlockFace — can be UP, DOWN, NORTH, etc.
         val blockInFront = dispenser.getRelative(facing)
 
-        // When block to match
+        // If the custom item has no dispense-use, bail out and let the
+        // dispenser/dropper drop it exactly like vanilla.
         val success = when (customItemId) {
             "crystalline_compost" -> crystallineCompostItemUse(blockInFront)
-            else -> false
+            else -> return
         }
 
         if (success) {
