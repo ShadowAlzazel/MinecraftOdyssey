@@ -641,7 +641,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
     private fun dangerCloseEnchantment(attacker: LivingEntity, victim: LivingEntity, level: Int): Float {
         val isClose = victim.location.distance(attacker.location) <= 2.1
         if (!isClose) return 0.0F
-        return level * 0.2F
+        return level * 0.10F
     }
 
 

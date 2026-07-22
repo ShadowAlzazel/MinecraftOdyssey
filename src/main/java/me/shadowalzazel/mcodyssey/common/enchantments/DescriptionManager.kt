@@ -467,8 +467,8 @@ interface DescriptionManager {
                 "- Attacking an enemy reduces the damage it does to you by ${5 * level}%=[level x 5].")
 
             // New Melee
-            "danger_close" -> listOf( // Melee 1 cost, max 5
-                "- Deals bonus damage ${20 * level}%=[level x 20] to enemies within 2 blocks.")
+            "danger_close" -> listOf( // Melee 1 cost, max 10
+                "- Deals bonus damage ${10 * level}%=[level x 10] to enemies within 2 blocks.")
             "duelist" -> listOf( // Melee (2 cost, max 5)
                 "- If you and the target are the only entities within 10 blocks,",
                 "Damage is increased by ${15 * level}%=[level x 15]",
