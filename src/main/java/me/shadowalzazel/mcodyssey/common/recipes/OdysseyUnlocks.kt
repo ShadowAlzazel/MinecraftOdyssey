@@ -198,11 +198,15 @@ object OdysseyUnlocks {
     private fun registerSimpleTable() = RecipeUnlocks.table(
         "wheat"   to listOf("tonkatsu", "french_toast"),
         "cooked_beef"      to listOf("steak_and_eggs"),
-        "amethyst_shard"   to listOf("crystal_alloy_ingot", "blank_tome", "crystalline_compost", "prismatic_name_tag"),
+        "amethyst_shard"   to listOf("crystal_alloy_ingot", "blank_tome", "crystal_candy",
+            "crystalline_compost", "prismatic_name_tag"),
         "book"             to listOf("blank_tome"),
         "netherite_ingot"  to listOf("auto_crossbow"),
         "heavy_core"       to listOf("auto_crossbow", "tinkered_musket"),
-        "gunpowder"        to listOf("sulfur_powder", "gunpowder_from_sulfur"),
+        "gunpowder"        to listOf("sulfur_powder", "gunpowder_from_sulfur", "explosive_arrow"),
+        "cocoa_beans"      to listOf("chocolate_mochi"),
+        "cooked_cod"       to listOf("fish_n_chips"),
+        "sweet_berries"    to listOf("fruit_bowl", "crystal_candy"),
         /*
         "cooked_beef"      to listOf("beef_wellington", "hearty_stew"),
         "wheat"            to listOf("travel_bread", "seed_cake"),

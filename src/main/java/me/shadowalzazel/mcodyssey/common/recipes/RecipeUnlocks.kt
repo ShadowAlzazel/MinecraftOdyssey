@@ -28,7 +28,13 @@ enum class UnlockTrigger {
     /** Player joined — use for baseline / always-available recipes. */
     JOIN,
     /** Fired manually from your own code via RecipeUnlocks.fire(...). */
-    MANUAL
+    MANUAL;
+
+    companion object {
+        /** Everything except JOIN — the sensible default for item-driven unlocks. */
+        val ITEM_TRIGGERS: Set<UnlockTrigger> =
+            setOf(DISCOVER, CRAFT, PICKUP, SMELT, MANUAL)
+    }
 }
 
 /* ------------------------------------------------------------------------- */
@@ -293,11 +299,15 @@ object RecipeUnlocks {
 /* ------------------------------------------------------------------------- */
 
 /**
+ * Lowercase, namespace-free, underscore-separated.
+ * Normalising here means it does not matter whether your item_name component
+ * holds "iron_zweihander" or "Iron Zweihander" — both land on the same id.
+ */
+internal fun String.normaliseId(): String =
+    substringAfter(':').lowercase().replace(' ', '_')
+
+/**
  * Custom id if the item has one, otherwise the vanilla material name.
  * Always lowercase and without a namespace prefix.
  */
-fun ItemStack.unlockId(): String {
-    val custom = runCatching { getItemNameId() }.getOrNull()?.toString()
-    val raw = if (custom.isNullOrBlank()) type.key.key else custom
-    return raw.lowercase().substringAfter(':')
-}
+fun ItemStack.unlockId(): String = getItemNameId().normaliseId()
