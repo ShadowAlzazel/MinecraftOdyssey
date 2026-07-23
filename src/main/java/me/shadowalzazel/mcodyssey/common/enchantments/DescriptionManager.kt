@@ -144,7 +144,7 @@ interface DescriptionManager {
             "claw_climbing" -> listOf(
                 "- Increase automatic step height by $level=[level] blocks.")
             "cloud_strider" -> listOf(
-                "- Crouching in the air causes a small jump. Can only be done $level times.")
+                "- Crouching in the air causes a small jump. This can only be done $level times.")
             "cowardice" -> listOf( // Leggings
                 "- Get knock backed further and gain speed $level=[level] for 6 seconds when hit.")
             "devastating_drop" -> listOf( // Boots
@@ -449,12 +449,49 @@ interface DescriptionManager {
 
 
             // ──────────────────────────────────────────────────────────────────────────────
-            // ────────────────────────────────── NEW/WIP ───────────────────────────────────
+            // ────────────────────────────────── REWORKED ───────────────────────────────────
             // ──────────────────────────────────────────────────────────────────────────────
 
             // Elemental damages, 2 cost, up to 5 levels
             "flame_edge" -> listOf(
                 "- Convert ${level * 6}%=[level x 6] of Final damage into Fire type damage.")
+            "danger_close" -> listOf( // Melee 2 cost, max 5
+                "- Deals ${20 * level}%=[level x 20] bonus damage to enemies within 2 blocks.")
+            "dematerialize" -> listOf( // Melee (3 cost, max 4)
+                "- Converts attack into Void damage ticking every 0.5 seconds for 10 seconds.",
+                "The damage amount is ${level * 2}%=[level x 2] of the original.",
+                "Re-hitting the same target refreshes the 10s window and folds leftover damage.")
+
+            // SHIELDS
+            "mirror_force" -> listOf(
+                "- Reflect enemy projectiles at ${40 * level}%=[level x 40] the original speed.")
+            "fortification" -> listOf( // Melee (4 cost, max 4)
+                "- Increase armor by ${1 * level}=[level x 1] when holding the shield.")
+            "carapace" -> listOf( // Melee (5 cost, max 5)
+                "- Increase health by ${10 * level}=[level x 10]% hearts when holding the shield.")
+
+            // BLOCKS/PARRY
+            "guarding_strike" -> listOf( // Shield (3 cost, max 5)
+                "- After a shield block, your next attack deals ${20 * level}%=[level x 20] more damage.")
+            "blowback" -> listOf( // Blocking (2 cost, max 2)
+                "- Enemies that attack the wielder while blocking, are knocked back.",
+                "This effect is doubled when the item is a shield.")
+            "frostbite" -> listOf(  // Blocking (2 cost, max 3)
+                "- Parrying/Blocking applies Freezing for ${2 + level}=[level + 2] seconds.")
+
+
+
+            // ──────────────────────────────────────────────────────────────────────────────
+            // ────────────────────────────────── NEW/WIP ───────────────────────────────────
+            // ──────────────────────────────────────────────────────────────────────────────
+
+            // WIP BLOCKING
+            "riposte" -> listOf(
+                "- A successful parry attacks the enemy.")
+            "counterattack" -> listOf(
+                "- After a parry, your next attack deals ${15 * level}%=[level x 15] more damage.")
+
+
             "frosty_edge" -> listOf(
                 "- Convert ${level * 6}%=[level x 6] of Final damage into Freeze type damage.")
             "electric_edge" -> listOf(
@@ -467,8 +504,6 @@ interface DescriptionManager {
                 "- Attacking an enemy reduces the damage it does to you by ${5 * level}%=[level x 5].")
 
             // New Melee
-            "danger_close" -> listOf( // Melee 2 cost, max 5
-                "- Deals ${20 * level}%=[level x 20] bonus damage to enemies within 2 blocks.")
             "duelist" -> listOf( // Melee (2 cost, max 5)
                 "- If you and the target are the only entities within 10 blocks,",
                 "Damage is increased by ${15 * level}%=[level x 15]",
@@ -481,10 +516,7 @@ interface DescriptionManager {
                 "Applies Shock Charge to a target. If the target moves more than 10 blocks, it takes Electric damage.")
 
             // Void
-            "dematerialize" -> listOf( // Melee (3 cost, max 4)
-                "- Converts attack into Void damage ticking every 0.5 seconds for 10 seconds.",
-                "The damage amount is ${level * 2}%=[level x 2] of the original.",
-                "Re-hitting the same target refreshes the 10s window and folds leftover damage.")
+
 
             // Armor
 
@@ -504,28 +536,7 @@ interface DescriptionManager {
 
             // Ideas: Bastion, Buttress, Safeguard
 
-            // SHIELDS
-            "mirror_force" -> listOf(
-                "- Reflect enemy projectiles at ${40 * level}%=[level x 40] the original speed.")
-            "fortification" -> listOf( // Melee (4 cost, max 4)
-                "- Increase armor by ${1 * level}=[level x 1] when holding the shield.")
-            "carapace" -> listOf( // Melee (5 cost, max 5)
-                "- Increase health by ${10 * level}=[level x 10]% hearts when holding the shield.")
 
-            // BLOCKS/PARRY
-            "guarding_strike" -> listOf( // Shield (3 cost, max 5)
-                "- After a shield block, your next attack deals ${20 * level}%=[level x 20] more damage.")
-            "blowback" -> listOf( // Blocking (2 cost, max 2)
-                "- Enemies that attack the wielder while blocking, are knocked back.",
-                "This effect is doubled when the item is a shield.")
-            "frostbite" -> listOf(  // Blocking (2 cost, max 3)
-                "- Parrying/Blocking applies Freezing for ${2 + level}=[level + 2] seconds.")
-
-            // WIP BLOCKING
-            "riposte" -> listOf(
-                "- A successful parry attacks the enemy.")
-            "counterattack" -> listOf(
-                "- After a parry, your next attack deals ${15 * level}%=[level x 15] more damage.")
 
             // Fallback
             else -> listOf("No description for $name")

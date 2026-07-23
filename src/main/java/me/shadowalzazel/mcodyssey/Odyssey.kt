@@ -10,6 +10,7 @@ import me.shadowalzazel.mcodyssey.common.effects.StatusEffectManager
 import me.shadowalzazel.mcodyssey.common.listeners.*
 import me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners.*
 import me.shadowalzazel.mcodyssey.common.listeners.enchantment_listeners.OtherListeners
+import me.shadowalzazel.mcodyssey.common.recipes.OdysseyUnlocks
 import me.shadowalzazel.mcodyssey.datagen.PotionMixes
 import me.shadowalzazel.mcodyssey.datagen.RecipeLoader
 import me.shadowalzazel.mcodyssey.server.commands.admin.*
@@ -104,6 +105,7 @@ class Odyssey : JavaPlugin() {
 
         // Register Recipes
         logger.info("Crafting Recipes...")
+        OdysseyUnlocks.register()
         RecipeLoader().createAllRecipes().forEach {
             Bukkit.addRecipe(it)
         }

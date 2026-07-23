@@ -6,6 +6,7 @@ import me.shadowalzazel.mcodyssey.datagen.ChoiceManager
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ShapedRecipe
+import org.bukkit.inventory.recipe.CraftingBookCategory
 
 class ItemRecipeCreator : ChoiceManager {
 
@@ -22,6 +23,7 @@ class ItemRecipeCreator : ChoiceManager {
         }
     }
 
+    // TODO: UPGRADE REPLICATE
 
     private fun patternReplicateRecipe(item: Item): ShapedRecipe {
         val result = item.newItemStack(2)
@@ -30,6 +32,8 @@ class ItemRecipeCreator : ChoiceManager {
             setIngredient('R', Material.RABBIT_HIDE)
             setIngredient('X', item.toRecipeChoice())
             setIngredient('D', Material.DIAMOND)
+            group = "part_pattern_replicas"
+            category = CraftingBookCategory.MISC
         }
         return recipe
     }
@@ -40,6 +44,8 @@ class ItemRecipeCreator : ChoiceManager {
             shape("G", "X")
             setIngredient('G', Material.GOLD_INGOT)
             setIngredient('X', item.toRecipeChoice())
+            group = "part_upgrade_templates_replicas"
+            category = CraftingBookCategory.MISC
         }
         return recipe
     }

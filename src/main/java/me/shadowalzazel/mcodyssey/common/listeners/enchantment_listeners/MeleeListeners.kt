@@ -1268,11 +1268,15 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper, EnchantmentManag
         level: Int
     ) {
         val attackerLocation = attacker.location.clone()
+        val oldAttackerDir= attackerLocation.direction.clone()
         val victimLocation = victim.location.clone()
+        val oldVictimDir= victimLocation.direction.clone()
         val distance = attackerLocation.distance(victimLocation)
 
         attacker.teleport(victimLocation)
+        attacker.location.direction = oldAttackerDir
         victim.teleport(attackerLocation)
+        victim.location.direction = oldVictimDir
     }
 
     private fun thunderousEnchantment(

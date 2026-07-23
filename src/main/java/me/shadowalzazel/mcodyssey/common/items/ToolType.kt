@@ -98,47 +98,37 @@ enum class ToolType(
     companion object {
 
         // Types Methods
-        fun getVanillaTypes(): List<ToolType> {
-            return listOf(
-                SWORD,
-                PICKAXE,
-                SHOVEL,
-                HOE,
-                AXE,
-                SPEAR,
-            )
-        }
+        private val VANILLA = listOf(SWORD, PICKAXE, SHOVEL, HOE, AXE, SPEAR)
+        fun getVanillaTypes(): List<ToolType> = VANILLA
 
-        fun getOdysseyTypes(): List<ToolType> {
-            return listOf(
-                CLAYMORE,
-                CUTLASS,
-                KATANA,
-                LONGSWORD,
-                RAPIER,
-                SABER,
+        private val ODYSSEY = listOf(
+            CLAYMORE,
+            CUTLASS,
+            KATANA,
+            LONGSWORD,
+            RAPIER,
+            SABER,
 
-                CHAKRAM,
-                DAGGER,
-                KUNAI,
-                SICKLE,
+            CHAKRAM,
+            DAGGER,
+            KUNAI,
+            SICKLE,
 
-                KRIEGSMESSER,
-                ZWEIHANDER,
+            KRIEGSMESSER,
+            ZWEIHANDER,
 
-                HALBERD,
-                PIKE,
+            HALBERD,
+            PIKE,
 
-                DOUBLE_AXE,
-                GLAIVE,
-                LONGAXE,
-                POLEAXE,
+            DOUBLE_AXE,
+            GLAIVE,
+            LONGAXE,
+            POLEAXE,
 
-                WARHAMMER,
-                SCYTHE,
-                BATTLESAW,
-            )
-        }
+            WARHAMMER,
+            SCYTHE,
+            BATTLESAW)
+        fun getOdysseyTypes(): List<ToolType> = ODYSSEY
 
         fun getFromName(name: String): ToolType? = entries.find { name == it.toolName }
     }

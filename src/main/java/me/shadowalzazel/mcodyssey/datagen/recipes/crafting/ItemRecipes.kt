@@ -20,7 +20,7 @@ class ItemRecipes : ChoiceManager {
         return listOf(
             // Odyssey
             soulSteelUpgradeTemplateRecipe(), titaniumUpgradeTemplateRecipe(), iridiumUpgradeTemplateRecipe(),
-            silverIngotRecipe(), silverNuggetRecipe(), iridiumIngotRecipe(),
+            silverIngotRecipe(), silverNuggetRecipe(), iridiumIngotRecipe(), iridiumNuggetRecipe(),
             mithrilUpgradeTemplateRecipe(), blankTomeRecipe(), clayTotemRecipe(), clayOrbRecipe(), claySkullRecipe(), clayDowelRecipe(),
             clayKeyRecipe(), clayRodsRecipe(), scrollRecipe(),
             imperialTrimReplicateRecipe(), voyagerTrimReplicateRecipe(), dangerTrimReplicateRecipe(), leafTrimReplicateRecipe(), ringTrimReplicateRecipe(),
@@ -109,10 +109,19 @@ class ItemRecipes : ChoiceManager {
         return recipe
     }
 
+    private fun iridiumNuggetRecipe(): ShapelessRecipe {
+        val result = Item.IRIDIUM_NUGGET.newItemStack(9)
+        val recipe = ShapelessRecipe(NamespacedKey(Odyssey.instance, "iridium_nugget"), result).apply {
+            addIngredient(Item.IRIDIUM_INGOT.newItemStack(1))
+            category = CraftingBookCategory.MISC
+        }
+        return recipe
+    }
+
     // Trims
     private fun imperialTrimReplicateRecipe(): ShapedRecipe {
         val result = Item.IMPERIAL_ARMOR_TRIM_SMITHING_TEMPLATE.newItemStack(2)
-        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "imperial_armor_trim_template_replicate"), result).apply {
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "imperial_armor_trim_smithing_template_replicate"), result).apply {
             shape("DTD", "DXD", "DDD")
             setIngredient('D', Material.DIAMOND)
             setIngredient('X', Material.TUFF_BRICKS)
@@ -124,7 +133,7 @@ class ItemRecipes : ChoiceManager {
 
     private fun voyagerTrimReplicateRecipe(): ShapedRecipe {
         val result = Item.VOYAGER_ARMOR_TRIM_SMITHING_TEMPLATE.newItemStack(2)
-        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "voyager_armor_trim_template_replicate"), result).apply {
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "voyager_armor_trim_smithing_template_replicate"), result).apply {
             shape("DTD", "DXD", "DDD")
             setIngredient('D', Material.DIAMOND)
             setIngredient('X', Material.COBBLED_DEEPSLATE)
@@ -136,7 +145,7 @@ class ItemRecipes : ChoiceManager {
 
     private fun ringTrimReplicateRecipe(): ShapedRecipe {
         val result = Item.RING_ARMOR_TRIM_SMITHING_TEMPLATE.newItemStack(2)
-        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "ring_armor_trim_template_replicate"), result).apply {
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "ring_armor_trim_smithing_template_replicate"), result).apply {
             shape("DTD", "DXD", "DDD")
             setIngredient('D', Material.DIAMOND)
             setIngredient('X', Material.COPPER_BLOCK)
@@ -148,7 +157,7 @@ class ItemRecipes : ChoiceManager {
 
     private fun leafTrimReplicateRecipe(): ShapedRecipe {
         val result = Item.LEAF_ARMOR_TRIM_SMITHING_TEMPLATE.newItemStack(2)
-        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "leaf_armor_trim_template_replicate"), result).apply {
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "leaf_armor_trim_smithing_template_replicate"), result).apply {
             shape("DTD", "DXD", "DDD")
             setIngredient('D', Material.DIAMOND)
             setIngredient('X', Material.PACKED_MUD)
@@ -160,7 +169,7 @@ class ItemRecipes : ChoiceManager {
 
     private fun dangerTrimReplicateRecipe(): ShapedRecipe {
         val result = Item.DANGER_ARMOR_TRIM_SMITHING_TEMPLATE.newItemStack(2)
-        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "danger_armor_trim_template_replicate"), result).apply {
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "danger_armor_trim_smithing_template_replicate"), result).apply {
             shape("DTD", "DXD", "DDD")
             setIngredient('D', Material.DIAMOND)
             setIngredient('X', Material.MOSSY_COBBLESTONE)
