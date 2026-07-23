@@ -191,6 +191,8 @@ open class Item(
         val WARPING_WAND = DataItem("warping_wand")
         val VOID_LINKED_KUNAI = DataItem("void_linked_kunai")
         val SCROLL = DataItem("scroll")
+        val BUILDERS_GAUNTLET = DataItem("builders_gauntlet")
+        val CRYSTAL_ALLOY_TRIMMERS = DataItem("crystal_alloy_trimmers")
 
         // ---------------------------------- ODYSSEY GENERATED -----------------------------------
         // Potions

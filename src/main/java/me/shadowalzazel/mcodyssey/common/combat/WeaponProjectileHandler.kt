@@ -43,6 +43,13 @@ interface WeaponProjectileHandler : DataTagManager, EnchantmentManager, AttackHe
         explosionHandler(location.getNearbyLivingEntities(3.0), location, 3.0)
     }
 
+    fun dynamiteHitHandler(event: ProjectileHitEvent) {
+        val projectile = event.entity
+        val location = projectile.location
+        explosionHandler(location.getNearbyLivingEntities(3.0), location, 3.0)
+    }
+
+
     /*-----------------------------------------------------------------------------------------------*/
     fun autoCrossbowShooting(event: EntityShootBowEvent) {
         val crossbow = event.bow ?: return

@@ -14,7 +14,7 @@ import me.shadowalzazel.mcodyssey.datagen.PotionMixes
 import me.shadowalzazel.mcodyssey.datagen.RecipeLoader
 import me.shadowalzazel.mcodyssey.server.commands.admin.*
 import me.shadowalzazel.mcodyssey.common.world_events.WorldEventsManager
-import me.shadowalzazel.mcodyssey.server.commands.PostItem
+import me.shadowalzazel.mcodyssey.server.commands.ShowItem
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.NamespacedKey
@@ -24,7 +24,6 @@ import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 import java.io.FileNotFoundException
 import java.net.URI
-import kotlin.math.log
 
 @Suppress("UnstableApiUsage")
 class Odyssey : JavaPlugin() {
@@ -162,7 +161,7 @@ class Odyssey : JavaPlugin() {
         mapOf(
             "summon_boss" to SummonBoss(),
             "summon_mob" to SummonMob,
-            "post_item" to PostItem(),
+            "show_item" to ShowItem(),
             "ender_dragon_boss_battle" to EnderDragonBossBattle()
         ).forEach {
             getCommand(it.key)?.setExecutor(it.value)

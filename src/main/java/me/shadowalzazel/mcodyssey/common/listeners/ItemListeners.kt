@@ -1,8 +1,13 @@
+@file:Suppress("UnstableApiUsage")
+
 package me.shadowalzazel.mcodyssey.common.listeners
 
+import io.papermc.paper.datacomponent.DataComponentTypes
+import io.papermc.paper.datacomponent.item.ItemEnchantments
 import io.papermc.paper.registry.RegistryKey
 import me.shadowalzazel.mcodyssey.api.RegistryTagManager
-import me.shadowalzazel.mcodyssey.util.DataTagManager
+import me.shadowalzazel.mcodyssey.common.enchantments.EnchantabilityHandler
+import me.shadowalzazel.mcodyssey.common.items.Item
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import org.bukkit.Material
 import org.bukkit.Particle
@@ -10,42 +15,58 @@ import org.bukkit.Sound
 import org.bukkit.block.Block
 import org.bukkit.block.data.Directional
 import org.bukkit.block.Dispenser   // BlockState — NOT the block.data.type one
+import org.bukkit.entity.Entity
+import org.bukkit.entity.EntityType
+import org.bukkit.entity.ItemFrame
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockDispenseEvent
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerDropItemEvent
+import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerItemConsumeEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object ItemListeners : Listener, DataTagManager, RegistryTagManager {
+object ItemListeners : Listener, EnchantabilityHandler, RegistryTagManager {
 
-    /*
-    fun itemUseOnDropHandler(event: PlayerDropItemEvent) {
-        if (!event.itemDrop.itemStack.hasItemIdTag()) return
-        // For all Item on Drop Uses
-        when (event.itemDrop.itemStack.getItemIdentifier()) {
-            "soul_spice" -> { //TODO: Move to seperate item consumable
-                soulSpiceItemHandler(event)
-            }
-            else -> {
-
-            }
-        }
-    }
-     */
+    private fun ItemStack.hasMaterialType(type: String): Boolean =
+        getStringTag(ItemDataTags.MATERIAL_TYPE) == type || getItemNameId().contains(type)
 
     // ──────────────────────────────────────────────────────────────────────────────
     // ──────────────────────────────── HANDLERS ────────────────────────────────────
     // ──────────────────────────────────────────────────────────────────────────────
 
+
+    @EventHandler
+    fun playerItemInteractEntityHandler(event: PlayerInteractAtEntityEvent) {
+        val item = event.player.inventory.itemInMainHand
+        val entity = event.rightClicked
+        val customItemId = item.getItemNameFromData() ?: return
+        // When block to match
+        val success = when (customItemId) {
+            "crystal_alloy_trimmers" -> crystalAlloyTrimmersItemUse(entity)
+            else -> false
+        }
+
+        if (success) {
+            val hasDurability = item.getData(DataComponentTypes.MAX_DAMAGE) != null
+            // Damage if durability, else remove 1
+            if (hasDurability) {
+                item.damage(1, event.player)
+            } else {
+                item.subtract(1)
+            }
+        }
+    }
+
     @EventHandler
     fun playerItemInteractHandler(event: PlayerInteractEvent) {
-        val block = event.clickedBlock ?: return
         val item = event.item ?: return
+        val block = event.clickedBlock
         val customItemId = item.getItemNameFromData() ?: return
         // When block to match
         val success = when (customItemId) {
@@ -92,14 +113,21 @@ object ItemListeners : Listener, DataTagManager, RegistryTagManager {
         }
     }
 
-
-
     @EventHandler
-    fun eatingFood(event: PlayerItemConsumeEvent) {
+    fun consumeItemHandler(event: PlayerItemConsumeEvent) {
         // Buffed Golden Apples
         if (event.item.type == Material.ENCHANTED_GOLDEN_APPLE) {
             event.player.addPotionEffect(PotionEffect(PotionEffectType.REGENERATION, 20 * 20, 3))
             event.player.addPotionEffect(PotionEffect(PotionEffectType.ABSORPTION, 120 * 20, 4))
+            return
+        }
+
+        val item = event.item
+        val customItemId = item.getItemNameFromData() ?: return
+
+        val success = when (customItemId) {
+            "scroll" -> scrollItemUse(event.player)
+            else -> return
         }
     }
 
@@ -159,7 +187,8 @@ object ItemListeners : Listener, DataTagManager, RegistryTagManager {
     /*
      * Returns true if successful, otherwise returns false
      */
-    private fun crystallineCompostItemUse(block: Block): Boolean {
+    private fun crystallineCompostItemUse(block: Block?): Boolean {
+        if (block == null) return false
         val blockType = block.type.asBlockType() ?: return false
         // Small Flowers
         /*
@@ -178,7 +207,6 @@ object ItemListeners : Listener, DataTagManager, RegistryTagManager {
         val saplingsBlocks = getCollectionFromTag(
             RegistryKey.BLOCK,
             saplingsTags).toList()
-
          */
         val crystallineGrowableTags = getTagFromRegistry(
             RegistryKey.BLOCK,
@@ -198,6 +226,58 @@ object ItemListeners : Listener, DataTagManager, RegistryTagManager {
         }
         return false
     }
+
+    private fun crystalAlloyTrimmersItemUse(entity: Entity): Boolean {
+        val type = entity.type
+        if (type != EntityType.ITEM_FRAME && type != EntityType.GLOW_ITEM_FRAME) return false
+        // Item Frame
+        entity.world.spawnParticle(Particle.WITCH, entity.location, 8, 0.15, 0.15, 0.15)
+
+        if (entity is ItemFrame) {
+            entity.isInvisible = !entity.isInvisible
+        }
+        return true
+    }
+
+
+    private fun scrollItemUse(player: Player): Boolean {
+        val offhand = player.equipment.itemInOffHand
+        val type = offhand.type
+        // For Books
+        if (type != Material.ENCHANTED_BOOK) return false
+        // Get levels on book or fail if none
+        var enchantabilityCost = 0
+        val enchantments = offhand.readEnchants()
+        enchantments.forEach { it -> enchantabilityCost += getEnchantabilityCost(it.toPair())}
+        if (enchantabilityCost <= 0) return false
+        // Check exp levels
+        if (enchantabilityCost <= player.level) {
+            // Add stored enchants to scroll
+            val newScroll = Item.SCROLL.newItemStack(1).apply {
+                setData(DataComponentTypes.MAX_STACK_SIZE, 1)
+                val itemEnchantments = ItemEnchantments.itemEnchantments().addAll(enchantments)
+                setData(DataComponentTypes.STORED_ENCHANTMENTS, itemEnchantments)
+                setData(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true)
+            }
+            // Modify player
+            player.inventory.addItem(newScroll)
+            player.level -= enchantabilityCost
+
+            // VFX
+            with(player.world) {
+                spawnParticle(Particle.CRIT, player.location, 75, 0.5, 0.5, 0.5)
+                spawnParticle(Particle.WITCH, player.location, 35, 0.5, 0.5, 0.5)
+                playSound(player.location, Sound.BLOCK_ENCHANTMENT_TABLE_USE, 1.5F, 1.3F)
+                playSound(player.location, Sound.BLOCK_AMETHYST_BLOCK_CHIME, 1.5F, 1.4F)
+            }
+            // Exit
+            return true
+        }
+
+        return true
+    }
+
+
 
     private fun soulSpiceItemHandler(event: PlayerDropItemEvent) {
         val item = event.itemDrop

@@ -16,7 +16,8 @@ class EquipmentRecipes : ChoiceManager {
             chainHookRecipe(), tinkeredMusketRecipe(), tinkeredBowRecipe(), autoCrossbowRecipe(), warpingWandRecipe(),
             arcaneWandRecipe(), arcaneBladeRecipe(), arcaneScepterRecipe(), explosiveArrowRecipe(), alchemicalDriverRecipe(),
             arcanePenRecipe(), arcaneStylusRecipe(), arcanePointyHatRecipe(), arcaneWitchHatRecipe(),
-            compactCrossbowRecipe(), voidLinkedKunaiRecipe(), alchemicalDiffuserRecipe()
+            compactCrossbowRecipe(), voidLinkedKunaiRecipe(), alchemicalDiffuserRecipe(),
+            buildersGauntletRecipe(), crystalAlloyTrimmersRecipe()
         )
     }
 
@@ -227,6 +228,28 @@ class EquipmentRecipes : ChoiceManager {
             setIngredient('B', Material.BREEZE_ROD)
             setIngredient('E', Material.ENDER_EYE)
             category = CraftingBookCategory.EQUIPMENT
+        }
+        return recipe
+    }
+
+
+    private fun buildersGauntletRecipe(): ShapedRecipe {
+        val result = Item.BUILDERS_GAUNTLET.newItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "builders_gauntlet"), result).apply {
+            shape("XXX", "ILI")
+            setIngredient('L', Material.LEATHER)
+            setIngredient('X', Item.TITANIUM_INGOT.toRecipeChoice())
+            setIngredient('I', Material.IRON_INGOT)
+        }
+        return recipe
+    }
+
+    private fun crystalAlloyTrimmersRecipe(): ShapedRecipe {
+        val result = Item.CRYSTAL_ALLOY_TRIMMERS.newItemStack(1)
+        val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "crystal_alloy_trimmers"), result).apply {
+            shape("X ", "IX")
+            setIngredient('X', Item.CRYSTAL_ALLOY_INGOT.toRecipeChoice())
+            setIngredient('I', Material.IRON_INGOT)
         }
         return recipe
     }

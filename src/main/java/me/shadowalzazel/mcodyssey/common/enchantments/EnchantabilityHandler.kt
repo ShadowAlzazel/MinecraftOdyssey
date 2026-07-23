@@ -1,15 +1,23 @@
 package me.shadowalzazel.mcodyssey.common.enchantments
 
+import io.papermc.paper.datacomponent.DataComponentType
+import io.papermc.paper.datacomponent.DataComponentTypes
+import io.papermc.paper.datacomponent.item.ItemEnchantments
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
+import kotlin.collections.component1
+import kotlin.collections.component2
 
-@Suppress("UnstableApiUsage")
 interface EnchantabilityHandler : EnchantmentManager, DescriptionManager, DataTagManager {
 
-    /*-----------------------------------------------------------------------------------------------*/
+    /*-- Shared component helpers ------------------------------------------------------------*/
+    fun Enchantment.enchantabilityCost(level: Int = 1): Int {
+        return maxOf((this.anvilCost / 2), 1) * level
+    }
+
     fun getEnchantabilityCost(enchant: Pair<Enchantment, Int>, override: Int? = null): Int {
         val level = override ?: enchant.second
         return enchant.first.enchantabilityCost(level)

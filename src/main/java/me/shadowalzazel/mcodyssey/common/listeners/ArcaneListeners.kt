@@ -33,7 +33,8 @@ object ArcaneListeners: Listener, ArcaneEquipmentManager, DataTagManager {
         val itemName = mainhand.getItemNameId()
         // Detect magic items
         when (itemName) {
-            "scroll" -> scrollConsumingHandler(event)
+            // TODO -> Disabled decryption for now
+            //"scroll" -> scrollConsumingHandler(event)
             "spell_scroll" -> {
                 // Scroll damage
                 val scroll = event.item.clone()

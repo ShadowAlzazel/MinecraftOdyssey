@@ -598,7 +598,7 @@ object RangedListeners : Listener, EnchantmentManager {
         val modifier = projectile.getIntTag(EntityTags.DEADEYE_MODIFIER) ?: return 0.0F
         val eyeDistance = projectile.location.distance(victim.eyeLocation)
         if (eyeDistance <= 0.8) {
-            return modifier * 0.2F
+            return modifier * 0.3F
         }
         return 0.0F
     }
@@ -612,9 +612,9 @@ object RangedListeners : Listener, EnchantmentManager {
 
     private fun deathFromAboveEnchantmentHit(projectile: Projectile, victim: LivingEntity, shooter: LivingEntity): Float {
         val modifier = projectile.getIntTag(EntityTags.DEATH_FROM_ABOVE_MODIFIER) ?: return 0.0F
-        val height = modifier * 5
+        val height = modifier * 4
         if (victim.location.distance(shooter.location) >= height) {
-            return 0.2F * modifier / height
+            return 0.3F * modifier
         }
         return 0.0F
     }
@@ -801,7 +801,7 @@ object RangedListeners : Listener, EnchantmentManager {
                 // Upward velocity with slight outward spread — goes up 6-10 blocks then arcs down
                 val upwardVelocity = org.bukkit.util.Vector(
                     lateralX * 0.25,  // slight outward drift
-                    2.8,              // ~8 block apex
+                    1.8,              // ~8 block apex
                     lateralZ * 0.25
                 )
 

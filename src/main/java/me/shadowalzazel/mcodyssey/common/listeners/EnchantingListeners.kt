@@ -48,22 +48,8 @@ object EnchantingListeners : Listener, TomeEnchanting, RegistryTagManager {
 
 
     // ──────────────────────────────────────────────────────────────────────────────
-    // ────────────────────────────────── ANVIL ─────────────────────────────────────
+    // ───────────────────────────────── HANDLERS ───────────────────────────────────
     // ──────────────────────────────────────────────────────────────────────────────
-
-    /**
-     * Effective enchantments on an item as a plain map.
-     * Merges normal gear (ENCHANTMENTS) and enchanted books (STORED_ENCHANTMENTS),
-     * keeping the highest level if a key somehow appears in both.
-     */
-    private fun ItemStack.readEnchants(): Map<Enchantment, Int> {
-        val out = HashMap<Enchantment, Int>()
-        getData(DataComponentTypes.ENCHANTMENTS)?.enchantments()?.forEach { (ench, lvl) -> out[ench] = lvl }
-        getData(DataComponentTypes.STORED_ENCHANTMENTS)?.enchantments()?.forEach { (ench, lvl) ->
-            out.merge(ench, lvl, ::maxOf)
-        }
-        return out
-    }
 
     @EventHandler
     fun anvilHandler(event: PrepareAnvilEvent) {
@@ -72,7 +58,10 @@ object EnchantingListeners : Listener, TomeEnchanting, RegistryTagManager {
         val result = event.result ?: return                // vanilla's proposed output
         val anvilView = event.view
 
-        // ---- Cost model --------------------------------------------------------------------------
+        // ──── Enchanting Scrolls ────────────────────────────────────────────────────────────────────
+        // Scrolls are single times use enchanting items
+
+        // ──── Cost model  ───────────────────────────────────────────────────────────────────────────
         // Cost is recomputed from scratch every time and never reads the vanilla prior-work penalty.
         // That, plus zeroing REPAIR_COST below, is what removes the exponential stacking mechanic.
 
@@ -98,12 +87,12 @@ object EnchantingListeners : Listener, TomeEnchanting, RegistryTagManager {
         }
         val cost = rawCost.coerceAtLeast(1)
 
-        // ---- Apply cost & kill the stacking penalty ----------------------------------------------
+        // ──── Apply cost & kill the stacking penalty ────────────────────────────────────────────────
         anvilView.repairCost = cost
         anvilView.maximumRepairCost = 50                 // lift the "Too Expensive!" ceiling
         result.setData(DataComponentTypes.REPAIR_COST, 0)          // never escalate on next use
 
-        // ---- Enchantability soft-cap check -------------------------------------------------------
+        // ──── Enchantability soft-cap check ─────────────────────────────────────────────────────────
         val usedPoints = result.getUsedEnchantabilityPoints()
         val maxPoints = result.getMaxEnchantabilityPoints()
         if (usedPoints > maxPoints && result.type != Material.ENCHANTED_BOOK) {
@@ -112,12 +101,12 @@ object EnchantingListeners : Listener, TomeEnchanting, RegistryTagManager {
             return
         }
 
-        // ---- Finalise ----------------------------------------------------------------------------
+        // ──── Finalise ──────────────────────────────────────────────────────────────────────────────
         result.updateToolTip()
         event.result = result
     }
 
-    /*-----------------------------------------------------------------------------------------------*/
+
     @EventHandler
     fun grindstoneHandler(event: PrepareResultEvent) {
         // Get grindstone
@@ -139,7 +128,7 @@ object EnchantingListeners : Listener, TomeEnchanting, RegistryTagManager {
         }
     }
 
-    /*-----------------------------------------------------------------------------------------------*/
+
     @EventHandler(priority = EventPriority.HIGH)
     fun smithingEnchantHandler(event: PrepareSmithingEvent) {
         val recipe = event.inventory.recipe ?: return
@@ -169,6 +158,7 @@ object EnchantingListeners : Listener, TomeEnchanting, RegistryTagManager {
                 "tome_of_imitation" -> tomeOfImitationOnItem(equipment.clone(), event.viewers)
                 "tome_of_replication" -> tomeOfReplicationOnItem(equipment.clone(), event.viewers)
                 "tome_of_extraction" -> tomeOfExtractionOnItem(equipment.clone(), event.viewers)
+                //"scroll" ->
                 else -> {
                     null
                 }
@@ -222,7 +212,6 @@ object EnchantingListeners : Listener, TomeEnchanting, RegistryTagManager {
 
     }
 
-    /*-----------------------------------------------------------------------------------------------*/
 
     @EventHandler
     fun enchantingTableHandler(event: EnchantItemEvent) {
@@ -236,6 +225,10 @@ object EnchantingListeners : Listener, TomeEnchanting, RegistryTagManager {
         }
     }
 
+
+    // ──────────────────────────────────────────────────────────────────────────────
+    // ────────────────────────────── ITEM HANDLERS ─────────────────────────────────
+    // ──────────────────────────────────────────────────────────────────────────────
 
     /*-----------------------------------------------------------------------------------------------*/
     private fun enchantingBookHandler(event: EnchantItemEvent) {
@@ -388,6 +381,16 @@ object EnchantingListeners : Listener, TomeEnchanting, RegistryTagManager {
             if (enchant.key !in event.enchantsToAdd.keys) {
                 event.enchantsToAdd[enchant.key] = enchant.value
             }
+        }
+    }
+
+    // TODO
+    private fun scrollItemEnchanting(item: ItemStack, scroll: ItemStack) {
+        val enchantments = scroll.readEnchants()
+        if (enchantments.isEmpty()) return
+        // Add Enchantments
+        for (e in enchantments) {
+            //if (e.key.conflictsWith())
         }
     }
 

@@ -182,7 +182,7 @@ interface DescriptionManager {
             "revitalize" -> listOf( // All
                 "- Increase health regeneration amount by ${(level * 5)}=[level x 5]%")
             "root_boots" -> listOf(
-                "- Reduce knockback by ${20 * level}%=[20 x level]. This is doubled when crouching.")
+                "- Reduce knockback by ${10 * level}%=[10 x level]. This is doubled when crouching.")
             "sculk_sensitive" -> listOf(
                 "- On sneak, sense moving entities within a ${5 + (level * 5)}=[5 + (level x 5)] block radius.")
             "slip_n_slide" -> listOf(
@@ -371,10 +371,10 @@ interface DescriptionManager {
             "cluster_shot" -> listOf( // A circle attack
                 "- Shoots ${(level * 4)}=[level x 4] projectiles radially from the target.")
             "deadeye" -> listOf(
-                "- Projectiles deal ${20 * level}%=[level x 20] more damage if it hits the target's head.")
+                "- Projectiles deal ${30 * level}%=[level x 30] more damage if it hits the target's head.")
             "death_from_above" -> listOf(
-                "- Increase damage by ${20 * level}%=[level x 20] if the projectile",
-                "was launched from ${level * 5}=[level x 5] blocks high.")
+                "- Increase damage by ${30 * level}%=[level x 30] if the projectile",
+                "was launched from ${level * 5}=[level x 4] blocks high.")
             "double_tap" -> listOf(
                 "- When you shoot a projectile, an identical one is automatically fired.")
             "dynamo" -> listOf( // Bow
@@ -467,8 +467,8 @@ interface DescriptionManager {
                 "- Attacking an enemy reduces the damage it does to you by ${5 * level}%=[level x 5].")
 
             // New Melee
-            "danger_close" -> listOf( // Melee 1 cost, max 10
-                "- Deals bonus damage ${10 * level}%=[level x 10] to enemies within 2 blocks.")
+            "danger_close" -> listOf( // Melee 2 cost, max 5
+                "- Deals ${20 * level}%=[level x 20] bonus damage to enemies within 2 blocks.")
             "duelist" -> listOf( // Melee (2 cost, max 5)
                 "- If you and the target are the only entities within 10 blocks,",
                 "Damage is increased by ${15 * level}%=[level x 15]",

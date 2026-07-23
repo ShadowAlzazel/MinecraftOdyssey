@@ -25,21 +25,6 @@ internal interface TomeEnchanting : EnchantabilityHandler, AdvancementManager, I
 
     /*-- Shared component helpers ------------------------------------------------------------*/
 
-    /** Which component this item stores its enchants in. Books use STORED_ENCHANTMENTS. */
-    private fun ItemStack.enchantComponent(): DataComponentType.Valued<ItemEnchantments> =
-        if (type == Material.ENCHANTED_BOOK || type == Material.BOOK) DataComponentTypes.STORED_ENCHANTMENTS
-        else DataComponentTypes.ENCHANTMENTS
-
-    /** Effective enchants, reading whichever component actually holds them. */
-    private fun ItemStack.readEnchants(): Map<Enchantment, Int> {
-        val out = HashMap<Enchantment, Int>()
-        getData(DataComponentTypes.ENCHANTMENTS)?.enchantments()?.forEach { (e, l) -> out[e] = l }
-        getData(DataComponentTypes.STORED_ENCHANTMENTS)?.enchantments()?.forEach { (e, l) ->
-            out.merge(e, l, ::maxOf)
-        }
-        return out
-    }
-
     /** Writes the map back to the correct component and refreshes the tooltip. */
     private fun ItemStack.writeEnchants(enchants: Map<Enchantment, Int>) {
         val component = enchantComponent()

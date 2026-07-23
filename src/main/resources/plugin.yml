@@ -14,7 +14,7 @@ commands:
     description: "Summons a Custom Mob."
     usage: /<command>
     permission: op
-  post_item:
+  show_item:
     description: "Broadcasts the players held item."
     usage: /<command>
   ender_dragon_boss_battle:
