@@ -44,6 +44,7 @@ object RecipeListeners : Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     fun onPickup(event: EntityPickupItemEvent) {
         val player = event.entity as? Player ?: return
+        if (!RecipeUnlocks.hasRulesFor(UnlockTrigger.PICKUP)) return  // before unlockId()
         RecipeUnlocks.onItem(player, event.item.itemStack, UnlockTrigger.PICKUP)
     }
 

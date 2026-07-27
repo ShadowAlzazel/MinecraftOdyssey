@@ -29,6 +29,7 @@ import org.bukkit.inventory.meta.trim.ArmorTrim
 import org.bukkit.inventory.meta.trim.TrimMaterial
 import org.bukkit.inventory.meta.trim.TrimPattern
 import org.bukkit.loot.Lootable
+import me.shadowalzazel.mcodyssey.common.items.Item as OdysseyItem
 import java.util.*
 
 @Suppress("UnstableApiUsage")
@@ -276,6 +277,12 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
                 listOf("chainmail"),
                 listOf(TrimMaterials.OBSIDIAN),
                 EliteMobsData.SHADOW_MOB_TRIM_PATTERNS)
+
+            // Random Buckler
+            if (3 > (0..10).random()) {
+                val diamondBuckler = OdysseyItem.DIAMOND_BUCKLER.newItemStack(1)
+                mob.equipment?.setItemInOffHand(diamondBuckler)
+            }
 
             // Creator
             createArmoredMob(mob, equipmentRandomBuilder, enchantWeapon = true, replaceOldWeapon = true)

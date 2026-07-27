@@ -75,6 +75,9 @@ class FoodRecipes {
         }
     }
 
+    // TODO: Breakfast Burrito
+    // BURGER
+
     private fun berryTartRecipe(): ShapedRecipe {
         val result = Item.BERRY_TART.newItemStack(4)
         return ShapedRecipe(NamespacedKey(Odyssey.instance, "berry_tart"), result).apply {
@@ -219,7 +222,7 @@ class FoodRecipes {
         return ShapedRecipe(NamespacedKey(Odyssey.instance, "matcha_melon_boba_tea"), result).apply {
             shape("SCL", " B ", " C ")
             setIngredient('L', Material.MELON_SLICE)
-            setIngredient('S', Material.SUGAR)
+            setIngredient('S', Material.SHORT_GRASS)
             setIngredient('C', Material.COCOA_BEANS)
             setIngredient('B', Material.GLASS_BOTTLE)
             category = CraftingBookCategory.MISC

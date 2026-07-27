@@ -149,11 +149,11 @@ open class Item(
         val EARL_LILY_BOBA_TEA = DataItem("earl_lily_boba_tea")
         val BRISKET = DataItem("brisket")
         val COOKED_BRISKET = DataItem("cooked_brisket")
-        val OOLONG_ORCHID_BOBA_TEA = DataItem("earl_lily_boba_tea")
-        val MATCHA_MELON_BOBA_TEA = DataItem("earl_lily_boba_tea")
-        val THAI_TULIP_BOBA_TEA = DataItem("earl_lily_boba_tea")
-        val ALLIUM_JADE_BOBA_TEA = DataItem("earl_lily_boba_tea")
-        val CORNFLOWER_CEYLON_BOBA_TEA = DataItem("earl_lily_boba_tea")
+        val OOLONG_ORCHID_BOBA_TEA = DataItem("oolong_orchid_boba_tea")
+        val MATCHA_MELON_BOBA_TEA = DataItem("matcha_melon_boba_tea")
+        val THAI_TULIP_BOBA_TEA = DataItem("thai_tulip_boba_tea")
+        val ALLIUM_JADE_BOBA_TEA = DataItem("allium_jade_boba_tea")
+        val CORNFLOWER_CEYLON_BOBA_TEA = DataItem("cornflower_ceylon_boba_tea")
         // Misc
         val EXPLOSIVE_ARROW = DataItem("explosive_arrow")
         val TOTEM_OF_VEXING = DataItem("totem_of_vexing")
@@ -193,6 +193,20 @@ open class Item(
         val SCROLL = DataItem("scroll")
         val BUILDERS_GAUNTLET = DataItem("builders_gauntlet")
         val CRYSTAL_ALLOY_TRIMMERS = DataItem("crystal_alloy_trimmers")
+        // Bucklers
+        val WOODEN_BUCKLER = DataItem("wooden_buckler")
+        val GOLDEN_BUCKLER = DataItem("golden_buckler")
+        val IRON_BUCKLER = DataItem("iron_buckler")
+        val DIAMOND_BUCKLER = DataItem("diamond_buckler")
+        val NETHERITE_BUCKLER = DataItem("netherite_buckler")
+        val COPPER_BUCKLER = DataItem("copper_buckler")
+        val SILVER_BUCKLER = DataItem("silver_buckler")
+        val SOUL_STEEL_BUCKLER = DataItem("soul_steel_buckler")
+        val TITANIUM_BUCKLER = DataItem("titanium_buckler")
+        val ANODIZED_TITANIUM_BUCKLER = DataItem("anodized_titanium_buckler")
+        val IRIDIUM_BUCKLER = DataItem("iridium_buckler")
+        val MITHRIL_BUCKLER = DataItem("mithril_buckler")
+        val CRYSTAL_ALLOY_BUCKLER = DataItem("crystal_alloy_buckler")
 
         // ---------------------------------- ODYSSEY GENERATED -----------------------------------
         // Potions

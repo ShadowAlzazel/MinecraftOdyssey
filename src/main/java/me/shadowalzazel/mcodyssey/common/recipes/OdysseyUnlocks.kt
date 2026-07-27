@@ -62,6 +62,10 @@ object OdysseyUnlocks {
             "handle_part_upgrade_template", "pommel_part_upgrade_template",
             "blade_part_upgrade_template_replicate", "hilt_part_upgrade_template_replicate",
             "handle_part_upgrade_template_replicate", "pommel_part_upgrade_template_replicate")
+
+        group("boba_teas",
+            "earl_lily_boba_tea", "oolong_orchid_boba_tea", "matcha_melon_boba_tea",
+            "thai_tulip_boba_tea", "allium_jade_boba_tea", "cornflower_ceylon_boba_tea")
     }
 
     // ──────────────────────────────────────────────────────────────────────────────
@@ -155,6 +159,12 @@ object OdysseyUnlocks {
             grantEach { ctx -> listOf("odyssey:" + ctx.id + "_replicate") }
         }
 
+        rule("cocoa_boba") {
+            on(DISCOVER, PICKUP, CRAFT)
+            whenIdIs("cocoa_beans")
+            grantGroup("boba_teas")
+        }
+
         /*
         rule("diamond_to_arcana") {
             onAnyTrigger()
@@ -204,9 +214,15 @@ object OdysseyUnlocks {
         "netherite_ingot"  to listOf("auto_crossbow"),
         "heavy_core"       to listOf("auto_crossbow", "tinkered_musket"),
         "gunpowder"        to listOf("sulfur_powder", "gunpowder_from_sulfur", "explosive_arrow"),
-        "cocoa_beans"      to listOf("chocolate_mochi"),
+        "cocoa_beans"      to listOf("chocolate_mochi", "coffee"),
         "cooked_cod"       to listOf("fish_n_chips"),
+        "salmon"           to listOf("salmon_roll"),
         "sweet_berries"    to listOf("fruit_bowl", "crystal_candy"),
+        "cooked_chicken"   to listOf("shoyu_ramen"),
+        "spider_eye"       to listOf("spider_eye_boba"),
+        "bone"             to listOf("dog_spinach", "dog_milk_bone"),
+        "crossbow"         to listOf("compact_crossbow", "auto_crossbow", "chain_hook"),
+        "shield"           to listOf("wooden_buckler", "iron_buckler", "diamond_buckler", "netherite_buckler", "iridium_buckler"),
         /*
         "cooked_beef"      to listOf("beef_wellington", "hearty_stew"),
         "wheat"            to listOf("travel_bread", "seed_cake"),

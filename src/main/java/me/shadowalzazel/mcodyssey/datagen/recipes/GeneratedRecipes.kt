@@ -18,6 +18,7 @@ class GeneratedRecipes : ChoiceManager {
         recipeList.addAll(WeaponRecipeCreator().generateWeaponRecipes())
         recipeList.addAll(ArmorRecipeCreator().generateArmorRecipes())
         recipeList.addAll(ItemRecipeCreator().generateItemRecipes())
+        recipeList.addAll(BucklerRecipeCreator().generateBucklerRecipes())
         return recipeList
     }
 

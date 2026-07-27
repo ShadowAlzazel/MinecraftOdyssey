@@ -10,6 +10,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.Recipe
+import java.util.EnumMap
 import java.util.UUID
 
 /* ------------------------------------------------------------------------- */
@@ -81,12 +82,12 @@ private inline fun <T> Iterable<T>.longestMatchIn(haystack: String, selector: (T
 
 class UnlockRule internal constructor(
     val id: String,
-    private val triggers: Set<UnlockTrigger>,
+    val triggers: Set<UnlockTrigger>,
     private val conditions: List<(UnlockContext) -> Boolean>,
     private val grants: List<(UnlockContext) -> Collection<String>>,
 ) {
-    fun matches(ctx: UnlockContext): Boolean =
-        ctx.trigger in triggers && conditions.all { it(ctx) }
+    /** Trigger is handled by the index, so this only evaluates conditions. */
+    fun matches(ctx: UnlockContext): Boolean = conditions.all { it(ctx) }
 
     fun resolve(ctx: UnlockContext): List<NamespacedKey> =
         grants.flatMap { it(ctx) }.distinct().map { it.toRecipeKey() }
@@ -115,6 +116,7 @@ class UnlockRuleBuilder internal constructor(private val id: String) {
     // --- when should this rule even be considered? -------------------------
     fun on(vararg trigger: UnlockTrigger) = apply { triggers += trigger }
     fun onAnyTrigger() = apply { triggers += UnlockTrigger.entries }
+    fun onItemTriggers() = apply { triggers += UnlockTrigger.ITEM_TRIGGERS }
 
     // --- conditions --------------------------------------------------------
     fun whenIdIs(vararg ids: String) = require { ctx -> ids.any { ctx.id.equals(it, true) } }
@@ -158,31 +160,47 @@ class UnlockRuleBuilder internal constructor(private val id: String) {
 
 object RecipeUnlocks {
 
-    /** Namespace used for bare recipe names like "arcane_pen". */
     var defaultNamespace: String = "odyssey"
-
-    /** Skip keys with no registered recipe on the server — catches typos silently. */
     var validateRecipes: Boolean = true
-
-    /** Log every grant + every bad key. Turn on while adding content. */
     var debug: Boolean = false
-
-    /** How far an unlock is allowed to chain into further unlocks in one dispatch. */
     var maxCascadeDepth: Int = 8
 
-    private val rules = mutableListOf<UnlockRule>()
+    /** Skip a pickup if this player just picked up the same id. Kills farm churn. */
+    var dedupePickups: Boolean = true
+
+    // --- storage -----------------------------------------------------------
+
+    /** Rules bucketed by trigger — dispatch only ever scans one bucket. */
+    private val rulesByTrigger: EnumMap<UnlockTrigger, MutableList<UnlockRule>> =
+        EnumMap(UnlockTrigger::class.java)
+
+    /** Exact-id table entries — O(1) regardless of how many thousands you add. */
+    private class TableEntry(val triggers: Set<UnlockTrigger>, val recipes: List<String>)
+    private val tableIndex = HashMap<String, MutableList<TableEntry>>()
+
     private val groups = mutableMapOf<String, MutableSet<String>>()
     private val running = HashSet<UUID>()
+    private val lastPickup = HashMap<UUID, String>()
 
-    val ruleCount: Int get() = rules.size
+    /** Per-trigger population count, covering both rules and table entries. */
+    private val triggerCounts: EnumMap<UnlockTrigger, Int> = EnumMap(UnlockTrigger::class.java)
+
+    val ruleCount: Int get() = rulesByTrigger.values.sumOf { it.size }
+    val tableCount: Int get() = tableIndex.values.sumOf { it.size }
+
+    /** The early-exit. False means a listener can return before touching the item. */
+    fun hasRulesFor(trigger: UnlockTrigger): Boolean = (triggerCounts[trigger] ?: 0) > 0
 
     // --- registration ------------------------------------------------------
 
     fun rule(id: String, block: UnlockRuleBuilder.() -> Unit) {
-        rules += UnlockRuleBuilder(id).apply(block).build()
+        val rule = UnlockRuleBuilder(id).apply(block).build()
+        for (trigger in rule.triggers) {
+            rulesByTrigger.getOrPut(trigger) { mutableListOf() } += rule
+            bump(trigger)
+        }
     }
 
-    /** A reusable bundle of recipe names, referenced with grantGroup("name"). */
     fun group(name: String, vararg recipes: String) {
         groups.getOrPut(name) { mutableSetOf() } += recipes
     }
@@ -194,36 +212,58 @@ object RecipeUnlocks {
     internal fun resolveGroup(name: String): Set<String> = groups[name] ?: emptySet()
 
     /**
-     * Bulk shorthand: "seeing/crafting X unlocks Y and Z", on any trigger.
-     * This is the one you'll use for the long tail of items.
+     * Bulk shorthand. Goes into a hash index rather than becoming rules,
+     * so 5000 entries cost the same per event as 5.
      */
-    fun table(vararg entries: Pair<String, List<String>>) {
-        entries.forEach { (source, unlocks) ->
-            rule("table:$source") {
-                onAnyTrigger()
-                whenIdIs(source)
-                grant(unlocks)
-            }
+    fun table(
+        vararg entries: Pair<String, List<String>>,
+        triggers: Set<UnlockTrigger> = UnlockTrigger.ITEM_TRIGGERS,
+    ) {
+        for ((source, unlocks) in entries) {
+            val key = source.normaliseId()
+            tableIndex.getOrPut(key) { mutableListOf() } += TableEntry(triggers, unlocks)
+            triggers.forEach(::bump)
         }
     }
 
+    private fun bump(trigger: UnlockTrigger) {
+        triggerCounts[trigger] = (triggerCounts[trigger] ?: 0) + 1
+    }
+
     fun clear() {
-        rules.clear()
+        rulesByTrigger.clear()
+        tableIndex.clear()
         groups.clear()
+        triggerCounts.clear()
+    }
+
+    /** Call from PlayerQuitEvent so the dedupe map does not leak. */
+    fun forget(player: Player) {
+        lastPickup.remove(player.uniqueId)
+        running.remove(player.uniqueId)
     }
 
     // --- entry points ------------------------------------------------------
 
-    fun onRecipe(player: Player, key: NamespacedKey, trigger: UnlockTrigger = UnlockTrigger.DISCOVER): Int =
-        dispatch(UnlockContext(player, trigger, key.key.lowercase(), key.namespace, recipeKey = key))
+    fun onRecipe(player: Player, key: NamespacedKey, trigger: UnlockTrigger = UnlockTrigger.DISCOVER): Int {
+        if (!hasRulesFor(trigger)) return 0
+        return dispatch(UnlockContext(player, trigger, key.key.lowercase(), key.namespace, recipeKey = key))
+    }
 
     fun onItem(player: Player, item: ItemStack, trigger: UnlockTrigger, recipe: Recipe? = null): Int {
+        if (!hasRulesFor(trigger)) return 0
+        val id = item.unlockId()
+
+        if (trigger == UnlockTrigger.PICKUP && dedupePickups) {
+            if (lastPickup.put(player.uniqueId, id) == id) return 0
+        }
+
         val key = (recipe as? Keyed)?.key
         return dispatch(
             UnlockContext(
                 player = player,
                 trigger = trigger,
-                id = item.unlockId(),
+                id = id,
                 namespace = key?.namespace ?: item.type.key.namespace,
                 item = item,
                 recipeKey = key,
@@ -231,11 +271,11 @@ object RecipeUnlocks {
         )
     }
 
-    /** Call this from anywhere in your own code — quests, mob drops, blocks placed, whatever. */
-    fun fire(player: Player, id: String, trigger: UnlockTrigger = UnlockTrigger.MANUAL): Int =
-        dispatch(UnlockContext(player, trigger, id.lowercase().substringAfter(':')))
+    fun fire(player: Player, id: String, trigger: UnlockTrigger = UnlockTrigger.MANUAL): Int {
+        if (!hasRulesFor(trigger)) return 0
+        return dispatch(UnlockContext(player, trigger, id.normaliseId()))
+    }
 
-    /** Grants recipes directly, bypassing rules. Returns how many were new. */
     fun give(player: Player, vararg recipes: String): Int =
         player.discoverRecipes(recipes.map { it.toRecipeKey() }.filter { canDiscover(player, it) })
 
@@ -243,13 +283,11 @@ object RecipeUnlocks {
 
     fun dispatch(context: UnlockContext): Int {
         val player = context.player
-        // Re-entrancy guard: discoverRecipes() fires PlayerRecipeDiscoverEvent,
-        // which comes straight back here. Cascading is handled below instead.
         if (!running.add(player.uniqueId)) return 0
         try {
             var granted = 0
             var frontier = listOf(context)
-            val visited = HashSet<String>()
+            val seenKeys = HashSet<NamespacedKey>()
             var depth = 0
 
             while (frontier.isNotEmpty() && depth < maxCascadeDepth) {
@@ -257,23 +295,15 @@ object RecipeUnlocks {
                 val wanted = LinkedHashSet<NamespacedKey>()
 
                 for (ctx in frontier) {
-                    if (!visited.add(ctx.toString())) continue
-                    for (rule in rules) {
-                        if (!rule.matches(ctx)) continue
-                        val keys = rule.resolve(ctx)
-                        if (debug && keys.isNotEmpty()) {
-                            Bukkit.getLogger().info("[Unlocks] $ctx -> rule '${rule.id}' -> $keys")
-                        }
-                        wanted += keys
-                    }
+                    collectTable(ctx, wanted)
+                    collectRules(ctx, wanted)
                 }
 
-                val pending = wanted.filter { canDiscover(player, it) }
+                val pending = wanted.filter { seenKeys.add(it) && canDiscover(player, it) }
                 if (pending.isEmpty()) break
 
                 granted += player.discoverRecipes(pending)
 
-                // Let newly unlocked recipes trigger rules of their own.
                 frontier = pending.map {
                     UnlockContext(player, UnlockTrigger.DISCOVER, it.key, it.namespace, recipeKey = it)
                 }
@@ -281,6 +311,26 @@ object RecipeUnlocks {
             return granted
         } finally {
             running.remove(player.uniqueId)
+        }
+    }
+
+    private fun collectTable(ctx: UnlockContext, into: MutableSet<NamespacedKey>) {
+        val entries = tableIndex[ctx.id] ?: return
+        for (entry in entries) {
+            if (ctx.trigger !in entry.triggers) continue
+            for (name in entry.recipes) into += name.toRecipeKey()
+            if (debug) Bukkit.getLogger().info("[Unlocks] $ctx -> table -> ${entry.recipes}")
+        }
+    }
+
+    private fun collectRules(ctx: UnlockContext, into: MutableSet<NamespacedKey>) {
+        val bucket = rulesByTrigger[ctx.trigger] ?: return
+        for (rule in bucket) {
+            if (!rule.matches(ctx)) continue
+            val keys = rule.resolve(ctx)
+            if (keys.isEmpty()) continue
+            if (debug) Bukkit.getLogger().info("[Unlocks] $ctx -> rule '${rule.id}' -> $keys")
+            into += keys
         }
     }
 
