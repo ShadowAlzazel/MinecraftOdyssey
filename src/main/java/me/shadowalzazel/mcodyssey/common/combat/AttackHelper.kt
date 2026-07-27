@@ -81,6 +81,13 @@ interface AttackHelper {
     }
 
 
+    fun getAttacksPerSecondCooldown(attacksPerSecond: Double): Double {
+        // Guard against zero or negative values to prevent Infinity or division errors
+        if (attacksPerSecond <= 0.0) return 1.0
+
+        return 1.0 / attacksPerSecond
+    }
+
     fun createEntityDamageSource(entity: Entity, projectile: Entity? = null, type: DamageType): DamageSource {
         val sourceBuilder = DamageSource.builder(type)
         sourceBuilder.withCausingEntity(entity)

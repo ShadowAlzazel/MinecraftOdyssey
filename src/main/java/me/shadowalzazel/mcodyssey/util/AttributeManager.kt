@@ -16,6 +16,96 @@ import org.bukkit.inventory.ItemStack
 @Suppress("UnstableApiUsage")
 interface AttributeManager : ItemComponentsManager, RegistryTagManager {
 
+    // ──────────────────────────────────────────────────────────────────────────────
+    // ───────────────────────────── DATA COMPONENTS ────────────────────────────────
+    // ──────────────────────────────────────────────────────────────────────────────
+
+    data class AttributeTotal(
+        val flatAdd: Double = 0.0,               // ADD_NUMBER, summed
+        val percentAdd: Double = 0.0,            // ADD_SCALAR, summed
+        val percentMultiply: List<Double> = emptyList() // MULTIPLY_SCALAR_1, applied one at a time
+    ) {
+        /** Folds this total onto a base value, vanilla-style. */
+        fun applyTo(base: Double): Double {
+            var value = base + flatAdd
+            value *= (1.0 + percentAdd)
+            percentMultiply.forEach { value *= (1.0 + it) }
+            return value
+        }
+    }
+
+    /**
+     * Sums up all of this item's modifiers for [attribute] into flat/percent buckets.
+     * Pass [exclude] to skip specific modifiers, e.g. by their key.
+     */
+    fun ItemStack.getAttributeTotal(
+        attribute: Attribute,
+        exclude: (AttributeModifier) -> Boolean = { false }
+    ): AttributeTotal {
+        val entries = getData(DataComponentTypes.ATTRIBUTE_MODIFIERS)?.modifiers() ?: return AttributeTotal()
+
+        var flat = 0.0
+        var percentAdd = 0.0
+        val percentMultiply = mutableListOf<Double>()
+
+        for (entry in entries) {
+            if (entry.attribute() != attribute) continue
+            val mod = entry.modifier()
+            if (exclude(mod)) continue
+
+            when (mod.operation) {
+                AttributeModifier.Operation.ADD_NUMBER -> flat += mod.amount
+                AttributeModifier.Operation.ADD_SCALAR -> percentAdd += mod.amount
+                AttributeModifier.Operation.MULTIPLY_SCALAR_1 -> percentMultiply += mod.amount
+            }
+        }
+
+        return AttributeTotal(flat, percentAdd, percentMultiply)
+    }
+
+    /** Base value + all item modifiers -> one final number, no manual math needed at the call site. */
+    fun ItemStack.getFinalAttributeValue(
+        attribute: Attribute,
+        base: Double,
+        exclude: (AttributeModifier) -> Boolean = { false }
+    ): Double = getAttributeTotal(attribute, exclude).applyTo(base)
+
+    /**
+     * When copying attributes for armor upgrading
+     */
+    fun ItemStack.copyAttributes(input: ItemStack, union: Boolean=true) {
+        // Copy from input
+        if (!union) {
+            transferComponent(this, input, DataComponentTypes.ATTRIBUTE_MODIFIERS)
+            return
+        }
+        // If union, transfer old attributes not found in new input
+        else {
+            val transferredAttributes = input.getData(DataComponentTypes.ATTRIBUTE_MODIFIERS)?.modifiers()?.toList() ?: return
+            val existingAttributes = this.getData(DataComponentTypes.ATTRIBUTE_MODIFIERS)?.modifiers()?.toList()
+            // Builder for attributes
+            val builder = ItemAttributeModifiers.itemAttributes()
+            transferredAttributes.forEach { builder.addModifier(it.attribute(), it.modifier()) }
+            // Loop through existing attributes to get the key and match to the Data Item
+            if (existingAttributes != null) {
+                for (modifier in existingAttributes) {
+                    // If modifier key not in modifiers -> add to builder
+                    val modifierKey = modifier.modifier().key
+                    if (modifierKey.namespace == "minecraft") continue // Ignore default modifiers
+                    val hasKey = transferredAttributes.any { it.modifier().key == modifierKey }
+                    if (!hasKey) builder.addModifier(modifier.attribute(), modifier.modifier())
+                    //else if (override) builder.addModifier(modifier.attribute(), modifier.modifier())
+                }
+            }
+            this.setData(DataComponentTypes.ATTRIBUTE_MODIFIERS, builder)
+        }
+    }
+
+
+    // ──────────────────────────────────────────────────────────────────────────────
+    // ───────────────────────────── LIVING ENTITY ──────────────────────────────────
+    // ──────────────────────────────────────────────────────────────────────────────
+
     fun LivingEntity.setAttributeModifier(
         value: Double,
         name: String,
@@ -106,39 +196,9 @@ interface AttributeManager : ItemComponentsManager, RegistryTagManager {
         this.setAttributeModifier(value, name, Attribute.STEP_HEIGHT)
     }
 
-    /*-----------------------------------------------------------------------------------------------*/
-    // Item Components
-    fun ItemStack.copyAttributes(input: ItemStack, union: Boolean=true) {
-        // Copy from input
-        if (!union) {
-            transferComponent(this, input, DataComponentTypes.ATTRIBUTE_MODIFIERS)
-            return
-        }
-        // If union, transfer old attributes not found in new input
-        else {
-            val transferredAttributes = input.getData(DataComponentTypes.ATTRIBUTE_MODIFIERS)?.modifiers()?.toList() ?: return
-            val existingAttributes = this.getData(DataComponentTypes.ATTRIBUTE_MODIFIERS)?.modifiers()?.toList()
-            // Builder for attributes
-            val builder = ItemAttributeModifiers.itemAttributes()
-            transferredAttributes.forEach { builder.addModifier(it.attribute(), it.modifier()) }
-            // Loop through existing attributes to get the key and match to the Data Item
-            if (existingAttributes != null) {
-                for (modifier in existingAttributes) {
-                    // If modifier key not in modifiers -> add to builder
-                    val modifierKey = modifier.modifier().key
-                    if (modifierKey.namespace == "minecraft") continue // Ignore default modifiers
-                    val hasKey = transferredAttributes.any { it.modifier().key == modifierKey }
-                    if (!hasKey) builder.addModifier(modifier.attribute(), modifier.modifier())
-                    //else if (override) builder.addModifier(modifier.attribute(), modifier.modifier())
-                }
-            }
-            this.setData(DataComponentTypes.ATTRIBUTE_MODIFIERS, builder)
-        }
-    }
-
-
-    /*-----------------------------------------------------------------------------------------------*/
-    // Items
+    // ──────────────────────────────────────────────────────────────────────────────
+    // ────────────────────────────────── ITEMS ─────────────────────────────────────
+    // ──────────────────────────────────────────────────────────────────────────────
 
     fun ItemStack.setGenericAttribute(
         value: Double,

@@ -472,7 +472,8 @@ interface DescriptionManager {
 
             // BLOCKS/PARRY
             "guarding_strike" -> listOf( // Shield (3 cost, max 5)
-                "- After a shield block, your next attack deals ${20 * level}%=[level x 20] more damage.")
+                "- After a Parry/Block, your next attack deals ${10 * level}%=[level x 10] more damage.",
+                "This effect is doubled when the blocking item is a shield.")
             "blowback" -> listOf( // Blocking (2 cost, max 2)
                 "- Enemies that attack the wielder while blocking, are knocked back.",
                 "This effect is doubled when the item is a shield.")
@@ -480,16 +481,19 @@ interface DescriptionManager {
                 "- Parrying/Blocking applies Freezing for ${2 + level}=[level + 2] seconds.")
 
 
-
             // ──────────────────────────────────────────────────────────────────────────────
             // ────────────────────────────────── NEW/WIP ───────────────────────────────────
             // ──────────────────────────────────────────────────────────────────────────────
 
             // WIP BLOCKING
-            "riposte" -> listOf(
-                "- A successful parry attacks the enemy.")
-            "counterattack" -> listOf(
-                "- After a parry, your next attack deals ${15 * level}%=[level x 15] more damage.")
+            "riposte" -> listOf( // WEAPON ONLY
+                "- On a successful weapon parry, automatically strike the attacker you are facing.",
+                "This attack has ${25 + (25 * level)}%=[25 + (25 x level)] base damage.",
+                "- After attacking, the weapon goes on cooldown equal to 100% of your attack speed.")
+            "counterattack" -> listOf( // SHIELD ONLY
+                "- On a shield block, strike the attacker you are facing with your free hand.",
+                "This attack has ${20 + (20 * level)}%=[20 + (20 x level)] base damage.",
+                "- After attacking, the weapon goes on cooldown equal to 150% of the items attack speed.")
 
 
             "frosty_edge" -> listOf(
@@ -527,6 +531,11 @@ interface DescriptionManager {
                 "- Stripping a log, gives sticks 1-${level + 1} sticks.",
                 "- 10% chance to get saplings"
             )
+
+            "old_riposte" -> listOf( // WEAPON ONLY
+                "- After a successful weapon parry, your next weapon attack also reflects ${10 * level}%=[10 x level]",
+                "of the absorbed damage. (This attack has 0.2 seconds to complete).")
+
 
             // Ranged
             "point_blank"-> listOf(

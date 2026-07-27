@@ -554,7 +554,8 @@ object ArmorListeners : Listener, EnchantmentManager, EffectsManager {
         level: Int
     ) {
         if (entity is Player) {
-            entity.saturation += (entity.saturation * (1 + (level * 0.02))).toFloat()
+            //entity.saturation += (entity.saturation * (1 + (level * 0.02))).toFloat()
+            entity.saturation += (20.0 * (level * 0.02)).toFloat()
         }
     }
 
