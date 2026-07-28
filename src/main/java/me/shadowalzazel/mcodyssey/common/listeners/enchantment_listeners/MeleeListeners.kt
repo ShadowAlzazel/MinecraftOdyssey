@@ -25,7 +25,6 @@ import me.shadowalzazel.mcodyssey.util.constants.EntityTags.removeTag
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags.setIntTag
 import org.bukkit.*
 import org.bukkit.attribute.Attribute
-import org.bukkit.attribute.AttributeModifier
 import org.bukkit.damage.DamageSource
 import org.bukkit.damage.DamageType
 import org.bukkit.entity.*
@@ -45,7 +44,6 @@ import org.bukkit.util.Vector
 import java.util.*
 import kotlin.math.absoluteValue
 import kotlin.math.pow
-import kotlin.math.round
 
 object MeleeListeners : Listener, EffectsManager, AttackHelper,
     EnchantmentManager, VectorParticles, RegistryTagManager, AttributeManager {
@@ -305,7 +303,6 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper,
                 damageMods
 
             )
-
             //val damageAbsorbed = blockedAttack.absorbed
             //val activeShield = blockedAttack.item
             //println(event.damage) // Initial Damage
@@ -620,14 +617,16 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper,
     private val COUNTERATTACK_USERS = mutableMapOf<UUID, Double>()
 
     private fun counterattackOnBlockEnchantment(blocker: LivingEntity, aggressor: LivingEntity, shield: ItemStack, level: Int) {
-        // Get cooldown
+        // Check if an attack is ready
         val ready = if (blocker is Player) blocker.attackCooldown >= 1.0 else true
         if (!ready) return
-        if (blocker.equipment == null) return
 
         // Check what is the main hand
+        if (blocker.equipment == null) return
         val weaponHand = if (shield == blocker.equipment!!.itemInOffHand) EquipmentSlot.HAND else EquipmentSlot.OFF_HAND
-        val weapon = blocker.equipment!!.itemInMainHand
+        val weapon = blocker.equipment!!.getItem(weaponHand)
+        // Check if weapon has cooldown
+        if (blocker is Player && blocker.getCooldown(weapon) > 0) return
 
         // Get range data
         val entityBaseRange = blocker.getAttribute(Attribute.ENTITY_INTERACTION_RANGE)?.baseValue ?: 3.0
@@ -641,7 +640,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper,
             eyeLocation,
             direction,
             attackRange, // Max distance matching your range check
-            0.03  // Ray size expansion (0.0 checks the exact bounding box)
+            0.07  // Ray size expansion (0.0 checks the exact bounding box)
         ) { entity -> entity.uniqueId == aggressor.uniqueId }
         // If the ray trace didn't strike the aggressor, they aren't looking at them
         if (rayTraceResult?.hitEntity == null) return
@@ -667,7 +666,16 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper,
             if (this is Player) {
                 clearActiveItem()
                 swingHand(weaponHand)
-                attack(aggressor)
+                // Switch Hands for attack logic if weapon in offhand
+                if (weaponHand == EquipmentSlot.HAND) {
+                    attack(aggressor)
+                } else {
+                    equipment.setItemInMainHand(weapon)
+                    attack(aggressor)
+                    // Re-swap
+                    equipment.setItemInMainHand(shield)
+                    equipment.setItemInOffHand(weapon)
+                }
                 resetCooldown()
                 setCooldown(weapon, cooldownTicks.toInt())
                 // Also reduce hunger
@@ -1344,13 +1352,18 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper,
 
     private val RIPOSTE_USERS = mutableMapOf<UUID, Double>()
 
-    private fun riposteOnBlockEnchantment(blocker: LivingEntity, aggressor: LivingEntity, item: ItemStack, level: Int) {
+    private fun riposteOnBlockEnchantment(blocker: LivingEntity, aggressor: LivingEntity, weapon: ItemStack, level: Int) {
+        // Check if an attack is ready
+        val ready = if (blocker is Player) blocker.attackCooldown >= 1.0 else true
+        if (!ready) return
+        // Get Weapon Cooldown
+        val weaponHand = if (weapon == blocker.equipment!!.itemInMainHand) EquipmentSlot.HAND else EquipmentSlot.OFF_HAND
+        if (blocker.equipment == null) return
+        if (blocker is Player && blocker.getCooldown(weapon) > 0) return
+
         // Skip if not in range
         val attackRange = blocker.getAttribute(Attribute.ENTITY_INTERACTION_RANGE)?.value ?: 3.0
         if (blocker.location.distance(aggressor.location) > attackRange) return
-        // Get cooldown
-        val ready = if (blocker is Player) blocker.attackCooldown >= 1.0 else true
-        if (!ready) return
 
         // Line-of-sight / Hitbox Ray cast Check
         val eyeLocation = blocker.eyeLocation
@@ -1360,14 +1373,14 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper,
             eyeLocation,
             direction,
             attackRange, // Max distance matching your range check
-            0.03  // Ray size expansion (0.0 checks the exact bounding box)
+            0.04  // Ray size expansion (0.0 checks the exact bounding box)
         ) { entity -> entity.uniqueId == aggressor.uniqueId }
 
         // If the ray trace didn't strike the aggressor, they aren't looking at them
         if (rayTraceResult?.hitEntity == null) return
 
         // Create cooldown
-        val attackSpeed = blocker.getAttribute(Attribute.ATTACK_SPEED)?.value ?: 4.0
+        val attackSpeed = blocker.getAttribute(Attribute.ATTACK_SPEED)?.value ?: 1.0
         // Calculate ticks from inverse attack speed (1 / attackSpeed * 20 ticks)
         val cooldownTicks = if (attackSpeed > 0.0) {
             ((1.0 / attackSpeed) * 20.0).toInt()
@@ -1382,10 +1395,20 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper,
         with(blocker) {
             if (this is Player) {
                 clearActiveItem()
-                swingMainHand()
-                attack(aggressor)
+                swingHand(weaponHand)
+                // Switch Hands for attack logic if weapon in offhand
+                if (weaponHand == EquipmentSlot.HAND) {
+                    attack(aggressor)
+                } else {
+                    val otherItem = equipment.itemInMainHand
+                    equipment.setItemInMainHand(weapon)
+                    attack(aggressor)
+                    // Re-swap
+                    equipment.setItemInMainHand(otherItem)
+                    equipment.setItemInOffHand(weapon)
+                }
                 resetCooldown()
-                setCooldown(item, cooldownTicks)
+                setCooldown(weapon, cooldownTicks.toInt())
                 // Also reduce hunger
                 if (saturation > 0) {
                     saturation = maxOf(saturation - 1.0, 0.0).toFloat()
@@ -1395,7 +1418,7 @@ object MeleeListeners : Listener, EffectsManager, AttackHelper,
 
             } else {
                 attack(aggressor)
-                swingMainHand()
+                swingHand(weaponHand)
             }
         }
 
