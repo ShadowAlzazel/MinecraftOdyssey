@@ -1,6 +1,7 @@
 package me.shadowalzazel.mcodyssey.common.boss
 
 import me.shadowalzazel.mcodyssey.util.AttributeManager
+import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.text.Component
 import org.bukkit.Location
 import org.bukkit.Sound
@@ -53,7 +54,21 @@ abstract class OdysseyBoss(
     val isEntityReady get() = ::entity.isInitialized
     val isAlive get() = isEntityReady && !entity.isDead && state != BossState.DEPARTED
 
-    // ------------------------------------------------------------------ lifecycle
+    // ──────────────────────────────────────────────────────────────────────────────
+    // boss bar (opt-in)-
+
+    /** Override with a title to enable the bar. Null = no bar. */
+    protected open val bossBarTitle: Component? = null
+    protected open val bossBarColor: BossBar.Color = BossBar.Color.RED
+    protected open val bossBarOverlay: BossBar.Overlay = BossBar.Overlay.PROGRESS
+    protected open val bossBarRadius: Double get() = stats.activationRadius
+
+    var bossBar: BossBar? = null
+        private set
+    private val bossBarViewers = mutableSetOf<UUID>()
+
+    // ──────────────────────────────────────────────────────────────────────────────
+    // lifecycle
 
     /** Spawn + configure the mob. Called once from [spawn]. */
     protected abstract fun createEntity(location: Location): LivingEntity
@@ -64,8 +79,8 @@ abstract class OdysseyBoss(
     open fun spawn(location: Location) {
         entity = createEntity(location)
         state = BossState.SPAWNED
+        startBossBar()
         onSpawn(location)
-        // Never let a forgotten boss linger forever.
         runLater(stats.despawnAfterTicks) { if (state != BossState.DEFEATED) depart() }
     }
 
@@ -94,12 +109,14 @@ abstract class OdysseyBoss(
 
     private fun cleanup() {
         attacks.stop()
+        clearBossBar()
         tasks.forEach { it.cancel() }
         tasks.clear()
         BossManager.forget(this)
     }
 
-    // ------------------------------------------------------------- behaviour hooks
+    // ──────────────────────────────────────────────────────────────────────────────
+    // behaviour hooks
 
     protected open fun onSpawn(location: Location) {}
     protected open fun onActivate() {}
@@ -109,7 +126,8 @@ abstract class OdysseyBoss(
     /** Routed here by [BossListener] whenever the boss takes damage. */
     open fun onDamaged(source: Entity?, amount: Double) {}
 
-    // -------------------------------------------------------------------- helpers
+    // ──────────────────────────────────────────────────────────────────────────────
+    // helpers
 
     fun nearbyPlayers(radius: Double = stats.activationRadius): List<Player> =
         entity.getNearbyEntities(radius, radius, radius).filterIsInstance<Player>()
@@ -133,7 +151,44 @@ abstract class OdysseyBoss(
         entity.health = stats.maxHealth
     }
 
-    // --------------------------------------------------- task management (auto-cancelled)
+    // ──────────────────────────────────────────────────────────────────────────────
+    // boss bar internals
+
+    private fun startBossBar() {
+        val title = bossBarTitle ?: return
+        val bar = BossBar.bossBar(title, 1f, bossBarColor, bossBarOverlay)
+        bossBar = bar
+        runTimer(0L, 10L) { updateBossBar(bar) }
+    }
+
+    private fun updateBossBar(bar: BossBar) {
+        if (!isAlive) {
+            clearBossBar()
+            return
+        }
+        val maxHp = entity.getAttribute(Attribute.MAX_HEALTH)?.value ?: stats.maxHealth
+        bar.progress((entity.health / maxHp).toFloat().coerceIn(0f, 1f))
+
+        val near = nearbyPlayers(bossBarRadius)
+        val nearIds = near.map { it.uniqueId }.toHashSet()
+        // Show to anyone new in range.
+        near.forEach { if (bossBarViewers.add(it.uniqueId)) it.showBossBar(bar) }
+        // Hide from anyone who walked out of range.
+        bossBarViewers.filter { it !in nearIds }.forEach { id ->
+            bossBarViewers.remove(id)
+            plugin.server.getPlayer(id)?.hideBossBar(bar)
+        }
+    }
+
+    private fun clearBossBar() {
+        val bar = bossBar ?: return
+        bossBarViewers.mapNotNull { plugin.server.getPlayer(it) }.forEach { it.hideBossBar(bar) }
+        bossBarViewers.clear()
+        bossBar = null
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────────
+    // task management (auto cancel)
 
     fun runLater(delayTicks: Long, action: () -> Unit) {
         tasks += plugin.server.scheduler.runTaskLater(plugin, Runnable { action() }, delayTicks)

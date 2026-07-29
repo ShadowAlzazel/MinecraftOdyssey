@@ -34,7 +34,7 @@ import java.util.UUID
  * This file is only behaviour: the trading state machine and how it hooks into
  * the shared boss framework.
  */
-@Suppress("UnstableApiUsage")
+
 class TheAmbassador(
     plugin: JavaPlugin,
     private val spawnLocation: Location,
