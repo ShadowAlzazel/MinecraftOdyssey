@@ -72,4 +72,13 @@ object EquipmentPresets {
         listOf(TrimMaterial.DIAMOND),
         listOf(TrimPatterns.VOYAGER, TrimPattern.BOLT, TrimPattern.RAISER),
     )
+
+    fun gildedMarauder() = EquipmentRandomBuilder(
+        listOf(ToolMaterial.GOLDEN),
+        listOf(ToolType.WARHAMMER, ToolType.LONGAXE, ToolType.DOUBLE_AXE),
+        listOf("fancy", "danger"),
+        listOf("golden"),
+        listOf(TrimMaterial.DIAMOND, TrimMaterial.COPPER, TrimMaterial.IRON),
+        listOf(TrimPattern.RIB, TrimPattern.SNOUT),
+    )
 }

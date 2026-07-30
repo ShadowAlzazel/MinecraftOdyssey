@@ -124,6 +124,19 @@ object MobArchetypes {
         },
     )
 
+    val GILDED_MARAUDER = MobArchetype(
+        id = "gilded_marauder",
+        predicate = { it is PiglinBrute },
+        stats = statProfile {
+            health(20.0, AttributeTags.MOB_HEALTH)
+            armor(2.0, AttributeTags.MOB_ARMOR)
+        },
+        decorate = { mob ->
+            createArmoredMob(mob, EquipmentPresets.gildedMarauder(), enchantWeapon = true, replaceOldWeapon = true)
+            //mob.type
+        },
+    )
+
     /** Creaking stats differ per structure, so this is a factory rather than a constant. */
     fun creaking(health: Double, attack: Double, speed: Double? = null) = MobArchetype(
         id = "creaking",

@@ -6,6 +6,7 @@ import me.shadowalzazel.mcodyssey.common.boss.Dialogue
 import me.shadowalzazel.mcodyssey.common.boss.DialogueKey
 import me.shadowalzazel.mcodyssey.common.boss.OdysseyBoss
 import me.shadowalzazel.mcodyssey.common.boss.TargetMode
+import me.shadowalzazel.mcodyssey.common.enchantments.OdysseyEnchantments
 import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -94,10 +95,18 @@ class HogRider(
                 ),
             )
             // Armor
-            equipment.setHelmet(ItemStack(Material.NETHERITE_HELMET))
-            equipment.setChestplate(ItemStack(Material.NETHERITE_CHESTPLATE))
-            equipment.setLeggings(ItemStack(Material.NETHERITE_LEGGINGS))
-            equipment.setBoots(ItemStack(Material.NETHERITE_BOOTS))
+            equipment.setHelmet(ItemStack(Material.NETHERITE_HELMET).apply {
+                this.addEnchantment(Enchantment.PROTECTION, 4)
+            })
+            equipment.setChestplate(ItemStack(Material.NETHERITE_CHESTPLATE).apply {
+                this.addEnchantment(Enchantment.PROTECTION, 4)
+            })
+            equipment.setLeggings(ItemStack(Material.NETHERITE_LEGGINGS).apply {
+                this.addEnchantment(Enchantment.PROTECTION, 4)
+            })
+            equipment.setBoots(ItemStack(Material.NETHERITE_BOOTS).apply {
+                this.addEnchantment(Enchantment.PROTECTION, 4)
+            })
         }
 
         hog.addPassenger(rider)
@@ -109,14 +118,15 @@ class HogRider(
 
     private fun createMace(): ItemStack {
         val mace = ItemStack(Material.MACE)
-        val meta = mace.itemMeta
         // Mace-family enchants (1.21+). Swap to your OdysseyEnchantments as needed.
-        meta.addEnchant(Enchantment.DENSITY, 5, true)
-        meta.addEnchant(Enchantment.BREACH, 4, true)
-        meta.addEnchant(Enchantment.WIND_BURST, 3, true)
-        meta.addEnchant(Enchantment.FIRE_ASPECT, 2, true)
-        meta.addEnchant(Enchantment.UNBREAKING, 3, true)
-        mace.itemMeta = meta
+        mace.apply {
+            addUnsafeEnchantment(Enchantment.DENSITY, 3)
+            addUnsafeEnchantment(Enchantment.BREACH, 5)
+            addUnsafeEnchantment(Enchantment.WIND_BURST, 3)
+            addUnsafeEnchantment(Enchantment.UNBREAKING, 3)
+            addUnsafeEnchantment(OdysseyEnchantments.HEMORRHAGE, 3)
+        }
+
         return mace
     }
 

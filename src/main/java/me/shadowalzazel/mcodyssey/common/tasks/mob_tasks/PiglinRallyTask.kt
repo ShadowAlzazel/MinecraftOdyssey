@@ -1,6 +1,6 @@
  package me.shadowalzazel.mcodyssey.common.tasks.mob_tasks
 
- import me.shadowalzazel.mcodyssey.common.listeners.SpawningListeners
+ import me.shadowalzazel.mcodyssey.common.mobs.clonePiglinBrute
  import me.shadowalzazel.mcodyssey.util.constants.EntityTags
  import org.bukkit.entity.PiglinBrute
  import org.bukkit.scheduler.BukkitRunnable
@@ -15,7 +15,7 @@
 
          brute.getNearbyEntities(7.0, 6.0, 7.0).forEach {
              if (it is PiglinBrute && it != brute) {
-                 val new = SpawningListeners.clonePiglinBrute(it)
+                 val new = clonePiglinBrute(it)
                  new.addScoreboardTag(EntityTags.STARTED_RALLYING)
              }
              it.addScoreboardTag(EntityTags.STARTED_RALLYING)

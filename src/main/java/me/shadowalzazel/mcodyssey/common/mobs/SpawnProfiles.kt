@@ -2,10 +2,13 @@ package me.shadowalzazel.mcodyssey.common.mobs
 
 import me.shadowalzazel.mcodyssey.api.LootTableManager
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
-import org.bukkit.entity.*
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags
+import org.bukkit.entity.Illager
+import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.PiglinBrute
+import org.bukkit.entity.Vindicator
 import org.bukkit.loot.Lootable
 import java.util.concurrent.ThreadLocalRandom
-import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 
 private fun chance(percent: Int) = ThreadLocalRandom.current().nextInt(100) < percent
 
@@ -140,6 +143,10 @@ object SpawnProfiles {
             speed(0.02, AttributeTags.SUNKEN_LIBRARY_SPEED_BONUS)
             step(1.5, AttributeTags.SUNKEN_LIBRARY_STEP_HEIGHT)
         },
+    )
+
+    val GILDED_ARENA = StructureSpawnProfile(
+        key = "gilded_arena",
     )
 
     // ──────────────────────────────────────────────────────────────────────────────
