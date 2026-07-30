@@ -3,7 +3,7 @@ package me.shadowalzazel.mcodyssey.common.arcane.util
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.ItemLore
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.common.CastingContext
+import me.shadowalzazel.mcodyssey.common.arcane.CastingContext
 import me.shadowalzazel.mcodyssey.common.arcane.ArcaneCaster
 import me.shadowalzazel.mcodyssey.common.arcane.ArcaneSource
 import me.shadowalzazel.mcodyssey.common.arcane.ArcaneSpellBuilder

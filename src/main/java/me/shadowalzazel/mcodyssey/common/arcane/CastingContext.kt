@@ -1,7 +1,5 @@
-package me.shadowalzazel.mcodyssey.common
+package me.shadowalzazel.mcodyssey.common.arcane
 
-import me.shadowalzazel.mcodyssey.common.arcane.ArcaneCaster
-import me.shadowalzazel.mcodyssey.common.arcane.ArcaneTarget
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.util.Vector

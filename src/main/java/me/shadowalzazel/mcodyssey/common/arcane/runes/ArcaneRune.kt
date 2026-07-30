@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.common.arcane.runes
 
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.common.CastingContext
+import me.shadowalzazel.mcodyssey.common.arcane.CastingContext
 import me.shadowalzazel.mcodyssey.common.arcane.ArcaneSource
 import me.shadowalzazel.mcodyssey.common.arcane.ArcaneTarget
 import me.shadowalzazel.mcodyssey.common.arcane.CastingBuilder
@@ -30,10 +30,6 @@ import org.bukkit.util.Vector
 // =====================================================================================
 //  ARCANE RUNE  --  Base sealed class for all runes
 // =====================================================================================
-// Notes:
-/*
-    For magic circle: Runes are read in a CLOCK-WISE ORDER!
- */
 
 sealed class ArcaneRune : RuneDataManager {
     abstract val name: String

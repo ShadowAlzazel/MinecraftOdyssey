@@ -4,7 +4,7 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import me.shadowalzazel.mcodyssey.common.arcane.util.ArcaneEquipmentManager
 import me.shadowalzazel.mcodyssey.common.arcane.ArcaneSpellBuilder
 import me.shadowalzazel.mcodyssey.common.arcane.ArcaneCaster
-import me.shadowalzazel.mcodyssey.common.CastingContext
+import me.shadowalzazel.mcodyssey.common.arcane.CastingContext
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
