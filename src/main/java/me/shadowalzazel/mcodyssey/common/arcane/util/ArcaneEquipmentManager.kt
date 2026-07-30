@@ -1,24 +1,38 @@
-package me.shadowalzazel.mcodyssey.common.arcane
+package me.shadowalzazel.mcodyssey.common.arcane.util
 
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.ItemLore
 import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.common.arcane.runes.*
-import me.shadowalzazel.mcodyssey.common.arcane.ArcaneCaster
-import me.shadowalzazel.mcodyssey.common.arcane.ArcaneTarget
 import me.shadowalzazel.mcodyssey.common.CastingContext
-import me.shadowalzazel.mcodyssey.common.arcane.util.RayTracerAndDetector
+import me.shadowalzazel.mcodyssey.common.arcane.ArcaneCaster
+import me.shadowalzazel.mcodyssey.common.arcane.ArcaneSource
+import me.shadowalzazel.mcodyssey.common.arcane.ArcaneSpellBuilder
+import me.shadowalzazel.mcodyssey.common.arcane.ArcaneTarget
+import me.shadowalzazel.mcodyssey.common.arcane.EnchantingRuneDecrypter
+import me.shadowalzazel.mcodyssey.common.arcane.runes.ArcaneRune
+import me.shadowalzazel.mcodyssey.common.arcane.runes.CastingRune
+import me.shadowalzazel.mcodyssey.common.arcane.runes.DomainRune
+import me.shadowalzazel.mcodyssey.common.arcane.runes.ModifierRune
 import me.shadowalzazel.mcodyssey.common.combat.AttackHelper
-import me.shadowalzazel.mcodyssey.util.VectorParticles
 import me.shadowalzazel.mcodyssey.common.tasks.arcane_tasks.MagicMissileLauncher
 import me.shadowalzazel.mcodyssey.util.DataTagManager
+import me.shadowalzazel.mcodyssey.util.VectorParticles
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
-import org.bukkit.*
+import org.bukkit.Location
+import org.bukkit.Material
+import org.bukkit.NamespacedKey
+import org.bukkit.Particle
+import org.bukkit.Sound
 import org.bukkit.damage.DamageType
-import org.bukkit.entity.*
+import org.bukkit.entity.Display
+import org.bukkit.entity.EntityType
+import org.bukkit.entity.ItemDisplay
+import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Player
+import org.bukkit.entity.Snowball
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerItemConsumeEvent
 import org.bukkit.inventory.ItemStack
@@ -34,7 +48,7 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
 
     fun scrollConsumingHandler(event: PlayerItemConsumeEvent) {
         val player = event.player
-        val equipment = player.equipment ?: return
+        val equipment = player.equipment
         val offhandName = equipment.itemInOffHand.getItemNameId()
         when (offhandName) {
             "arcane_pen" -> arcanePenWithScrollCastingHandler(player)
@@ -45,9 +59,9 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
 
     fun decryptingWithScrollHandler(event: PlayerItemConsumeEvent) {
         val player = event.player
-        val equipment = player.equipment ?: return
-        val enchantedBook = equipment.itemInOffHand ?: return
-        val scrolls = equipment.itemInMainHand ?: return
+        val equipment = player.equipment
+        val enchantedBook = equipment.itemInOffHand
+        val scrolls = equipment.itemInMainHand
         // Check book enchants
         val storedEnchants = enchantedBook.getData(DataComponentTypes.STORED_ENCHANTMENTS) ?: return
         val enchantments = storedEnchants.enchantments()
@@ -78,8 +92,8 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
         // So the rune is placed in the players direction
         val pointLocation = event.interactionPoint ?: player.location
 
-        val equipment = player.equipment ?: return
-        val arcaneStylus = equipment.itemInMainHand ?: return
+        val equipment = player.equipment
+        val arcaneStylus = equipment.itemInMainHand
 
         val interactedBlock = event.clickedBlock
         println("BLOCK: $interactedBlock")
@@ -164,7 +178,7 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
         val topItem = bundleContents.contents().first()
 
         // Try and get a rune
-        val rune = ArcaneRune.getRuneFromItem(topItem) ?: return
+        val rune = ArcaneRune.Companion.getRuneFromItem(topItem) ?: return
         val displayRuneItem = ItemStack(Material.PAPER).also {
             val itemName = "${rune.name}_rune_mark"
             it.setData(DataComponentTypes.ITEM_MODEL, NamespacedKey("odyssey", "rune_mark"))
@@ -197,7 +211,8 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
         // Check if we can build spell
         val spellBuilder = ArcaneSpellBuilder(
             arcaneItem = arcanePen,
-            additionalItems = bundleContents.contents())
+            additionalItems = bundleContents.contents()
+        )
         val canBuildSpell = spellBuilder.canBuildSpell()
         if (!canBuildSpell) return
 
@@ -263,13 +278,14 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
             CastingRune.Beam(),
         )
 
-        val offHandSource = ArcaneSource.getSourceFromRawItem(offHandItem)
+        val offHandSource = ArcaneSource.Companion.getSourceFromRawItem(offHandItem)
         // Build the spell
         val spellBuilder = ArcaneSpellBuilder(
             arcaneItem = arcaneTool,
             additionalItems = listOf(offHandItem),
             providedRunes = wandRunes,
-            providedSource = offHandSource ?: ArcaneSource.Magic)
+            providedSource = offHandSource ?: ArcaneSource.Magic
+        )
         val canBuildSpell = spellBuilder.canBuildSpell()
         if (!canBuildSpell) return
 
@@ -321,13 +337,14 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
             DomainRune.Direct,
             CastingRune.Zone()
         )
-        val offHandSource = ArcaneSource.getSourceFromRawItem(offHandItem)
+        val offHandSource = ArcaneSource.Companion.getSourceFromRawItem(offHandItem)
         // Build the spell
         val spellBuilder = ArcaneSpellBuilder(
             arcaneItem = arcaneTool,
             additionalItems = listOf(offHandItem),
             providedRunes = scepterRunes,
-            providedSource = offHandSource ?: ArcaneSource.Magic)
+            providedSource = offHandSource ?: ArcaneSource.Magic
+        )
         val canBuildSpell = spellBuilder.canBuildSpell()
         if (!canBuildSpell) return
 
@@ -436,7 +453,7 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
         val period = 2
         val guided = true // Means will lock onto player target
         val launcher = MagicMissileLauncher(launchDirection, missile, maxTime, delayTime, guided, period, targetLocation)
-        launcher.runTaskTimer(Odyssey.instance, 10, period.toLong())
+        launcher.runTaskTimer(Odyssey.Companion.instance, 10, period.toLong())
     }
 
     fun ovalWandHandler(event: PlayerInteractEvent) {
