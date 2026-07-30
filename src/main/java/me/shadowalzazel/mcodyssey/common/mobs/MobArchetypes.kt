@@ -1,5 +1,7 @@
 package me.shadowalzazel.mcodyssey.common.mobs
 
+import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.common.boss.BossManager
 import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
 import me.shadowalzazel.mcodyssey.common.items.ToolType
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
@@ -21,6 +23,20 @@ import java.util.Random
  * chambers is baked in.
  */
 object MobArchetypes {
+
+    // ──────────────────────────────────────────────────────────────────────────────
+    // Bosses
+
+    val BOSS_HOG_RIDER = MobArchetype(
+        id = "hog_rider",
+        predicate = { mob -> mob.scoreboardTags.contains("odyssey.hog_rider") && mob is PiglinBrute},
+        decorate = { mob ->
+            BossManager.summon(Odyssey.instance, "hog_rider", mob.location)
+        }
+    )
+
+    // ──────────────────────────────────────────────────────────────────────────────
+    // Regular Mobs
 
     val TRIAL_ELITE_SHINY = MobArchetype(
         id = "trial_elite_shiny",
@@ -126,7 +142,7 @@ object MobArchetypes {
 
     val GILDED_MARAUDER = MobArchetype(
         id = "gilded_marauder",
-        predicate = { it is PiglinBrute },
+        predicate = { !it.scoreboardTags.contains("odyssey.hog_rider") && it is PiglinBrute },
         stats = statProfile {
             health(20.0, AttributeTags.MOB_HEALTH)
             armor(2.0, AttributeTags.MOB_ARMOR)

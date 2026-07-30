@@ -34,11 +34,12 @@ object SpawningListeners : Listener, MobFactory, StructureHelper, RegistryTagMan
         val profile = mob.structureKeys().firstNotNullOfOrNull(SpawnRegistry::spawner) ?: return
         profile.applyTo(mob, this)
 
-        // TODO: Temporary method
+        /*
         if (mob.scoreboardTags.contains("odyssey.hog_rider")) {
             BossManager.summon(Odyssey.instance, "hog_rider", mob.location)
             mob.remove()
         }
+         */
     }
 
     /** Natural spawns: structure loot rules, elites, edge-world buffs. */

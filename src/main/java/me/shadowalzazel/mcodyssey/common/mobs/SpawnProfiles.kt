@@ -147,6 +147,10 @@ object SpawnProfiles {
 
     val GILDED_ARENA = StructureSpawnProfile(
         key = "gilded_arena",
+        archetypes = listOf(
+            MobArchetypes.GILDED_MARAUDER,
+            MobArchetypes.BOSS_HOG_RIDER
+        ),
     )
 
     // ──────────────────────────────────────────────────────────────────────────────
@@ -195,6 +199,7 @@ object SpawnRegistry {
         SpawnProfiles.TERMINAL_GRID,
         SpawnProfiles.HYPERCUBIC_CHAMBER,
         SpawnProfiles.SUNKEN_LIBRARY,
+        SpawnProfiles.GILDED_ARENA,
     ).associateBy { it.key }
 
     private val natural = listOf(
