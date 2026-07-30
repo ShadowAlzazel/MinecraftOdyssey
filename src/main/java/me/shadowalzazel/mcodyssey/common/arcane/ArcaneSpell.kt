@@ -2,10 +2,10 @@ package me.shadowalzazel.mcodyssey.common.arcane
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.arcane.runes.*
-import me.shadowalzazel.mcodyssey.common.arcane.util.ArcaneTarget
-import me.shadowalzazel.mcodyssey.common.arcane.util.AsyncCastingManager
-import me.shadowalzazel.mcodyssey.common.arcane.util.CastingContext
-import me.shadowalzazel.mcodyssey.common.arcane.util.CastingBuilder
+import me.shadowalzazel.mcodyssey.common.arcane.ArcaneTarget
+import me.shadowalzazel.mcodyssey.common.arcane.AsyncCastingManager
+import me.shadowalzazel.mcodyssey.common.CastingContext
+import me.shadowalzazel.mcodyssey.common.arcane.CastingBuilder
 import org.bukkit.entity.Item
 import org.bukkit.entity.LivingEntity
 

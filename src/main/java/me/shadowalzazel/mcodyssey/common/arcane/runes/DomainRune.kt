@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.common.arcane.runes
 
-import me.shadowalzazel.mcodyssey.common.arcane.util.ArcaneTarget
-import me.shadowalzazel.mcodyssey.common.arcane.util.CastingContext
+import me.shadowalzazel.mcodyssey.common.arcane.ArcaneTarget
+import me.shadowalzazel.mcodyssey.common.CastingContext
 import me.shadowalzazel.mcodyssey.common.arcane.util.RayTracerAndDetector
 import org.bukkit.entity.LivingEntity
 

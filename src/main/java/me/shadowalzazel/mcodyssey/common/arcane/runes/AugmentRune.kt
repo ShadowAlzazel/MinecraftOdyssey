@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.common.arcane.runes
 
-import me.shadowalzazel.mcodyssey.common.arcane.util.CastingContext
+import me.shadowalzazel.mcodyssey.common.CastingContext
 import org.bukkit.entity.Item
 import org.bukkit.entity.LivingEntity
 
@@ -22,7 +22,6 @@ sealed class AugmentRune : ArcaneRune() {
                 if (block != null) {
                     // Use the wiki to find the values to break
                     // https://minecraft.wiki/w/Module:Blast_resistance_values
-                    // TODO: Disabled for now
                     block.breakNaturally()
                 }
             }

@@ -1,14 +1,8 @@
-package me.shadowalzazel.mcodyssey.common.arcane.runes
+package me.shadowalzazel.mcodyssey.common.arcane
 
-import me.shadowalzazel.mcodyssey.common.arcane.RuneDataManager
-import me.shadowalzazel.mcodyssey.common.arcane.util.ArcaneCaster
-import me.shadowalzazel.mcodyssey.common.arcane.util.ArcaneTarget
 import me.shadowalzazel.mcodyssey.common.combat.AttackHelper
-import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.damage.DamageType
-import org.bukkit.entity.EntityType
-import org.bukkit.entity.FallingBlock
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.Vector
@@ -41,9 +35,9 @@ sealed class ArcaneSource(
                 "warping_wand" -> Soul
                 "arcane_scepter" -> Magic
                 // Special
-                "arcane_pen" -> Radiant
+                "arcane_pen" -> Magic
                 // Scrolls
-                "spell_scroll" -> Radiant
+                "spell_scroll" -> Magic
                 else -> null
             }
 

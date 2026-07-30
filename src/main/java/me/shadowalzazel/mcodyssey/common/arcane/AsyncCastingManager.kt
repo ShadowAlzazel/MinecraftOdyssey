@@ -1,6 +1,5 @@
-package me.shadowalzazel.mcodyssey.common.arcane.util
+package me.shadowalzazel.mcodyssey.common.arcane
 
-import me.shadowalzazel.mcodyssey.common.arcane.ArcaneSpell
 import org.bukkit.scheduler.BukkitRunnable
 
 class AsyncCastingManager(

@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.common.arcane.util
+package me.shadowalzazel.mcodyssey.common.arcane
 
 import me.shadowalzazel.mcodyssey.common.arcane.runes.ArcaneRune
 import me.shadowalzazel.mcodyssey.common.arcane.runes.ModifierRune

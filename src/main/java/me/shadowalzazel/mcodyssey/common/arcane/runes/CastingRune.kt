@@ -1,6 +1,10 @@
 package me.shadowalzazel.mcodyssey.common.arcane.runes
 
 import me.shadowalzazel.mcodyssey.Odyssey
+import me.shadowalzazel.mcodyssey.common.CastingContext
+import me.shadowalzazel.mcodyssey.common.arcane.ArcaneSource
+import me.shadowalzazel.mcodyssey.common.arcane.ArcaneTarget
+import me.shadowalzazel.mcodyssey.common.arcane.CastingBuilder
 import me.shadowalzazel.mcodyssey.common.arcane.util.*
 import me.shadowalzazel.mcodyssey.common.combat.AttackHelper
 import me.shadowalzazel.mcodyssey.util.VectorParticles
@@ -20,7 +24,6 @@ import org.bukkit.util.Vector
 // These runes determine the fundamental way magic is expressed
 // As such, these `call` the cast.
 
-@Suppress("UnstableApiUsage")
 sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
     AttackHelper, VectorParticles {
 
@@ -29,7 +32,8 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector,
         val rune: CastingRune,
         val source: ArcaneSource,
         val context: CastingContext,
-        val build: CastingBuilder) : BukkitRunnable() {
+        val build: CastingBuilder
+    ) : BukkitRunnable() {
         override fun run() {
             rune.manifest(source, context, build)
         }

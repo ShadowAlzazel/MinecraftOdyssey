@@ -18,7 +18,6 @@ interface RuneInscribing : RuneDataManager {
 
 
     fun smithingRuneInscribing(event: PrepareSmithingEvent) {
-        // TODO: for now just deletes the pen
         val arcanePen = event.inventory.inputEquipment ?: return
         val ink = event.inventory.inputMineral ?: return
         val scrolls = event.inventory.inputTemplate ?: return

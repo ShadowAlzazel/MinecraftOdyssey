@@ -1,5 +1,6 @@
-package me.shadowalzazel.mcodyssey.common.arcane.util
+package me.shadowalzazel.mcodyssey.common.arcane
 
+import me.shadowalzazel.mcodyssey.common.arcane.ArcaneTarget
 import org.bukkit.Location
 import org.bukkit.block.Block
 import org.bukkit.entity.Entity

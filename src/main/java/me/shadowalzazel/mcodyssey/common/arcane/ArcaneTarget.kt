@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.common.arcane.util
+package me.shadowalzazel.mcodyssey.common.arcane
 
 import org.bukkit.Location
 import org.bukkit.block.Block

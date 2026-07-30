@@ -4,9 +4,9 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.ItemLore
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.arcane.runes.*
-import me.shadowalzazel.mcodyssey.common.arcane.util.ArcaneCaster
-import me.shadowalzazel.mcodyssey.common.arcane.util.ArcaneTarget
-import me.shadowalzazel.mcodyssey.common.arcane.util.CastingContext
+import me.shadowalzazel.mcodyssey.common.arcane.ArcaneCaster
+import me.shadowalzazel.mcodyssey.common.arcane.ArcaneTarget
+import me.shadowalzazel.mcodyssey.common.CastingContext
 import me.shadowalzazel.mcodyssey.common.arcane.util.RayTracerAndDetector
 import me.shadowalzazel.mcodyssey.common.combat.AttackHelper
 import me.shadowalzazel.mcodyssey.util.VectorParticles
@@ -172,8 +172,6 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
             it.setData(DataComponentTypes.ITEM_NAME, Component.text(itemName))
         }
 
-        // TODO: Quaternion matrix transformation based on block face
-        // TODO: The item will have a facing direction
         val itemDisplay = player.world.spawnEntity(normalLocation, EntityType.ITEM_DISPLAY) as ItemDisplay
         itemDisplay.also {
             it.setItemStack(displayRuneItem)

@@ -1,7 +1,7 @@
 package me.shadowalzazel.mcodyssey.common.arcane
 
 import me.shadowalzazel.mcodyssey.common.arcane.runes.*
-import me.shadowalzazel.mcodyssey.common.arcane.util.CastingContext
+import me.shadowalzazel.mcodyssey.common.CastingContext
 import org.bukkit.inventory.ItemStack
 
 /**

@@ -9,7 +9,6 @@ import org.bukkit.damage.DamageType
 import org.bukkit.inventory.ItemStack
 
 // Base sealed class for all runes
-@Suppress("UnstableApiUsage")
 sealed class ArcaneRune : RuneDataManager {
     abstract val name: String
     abstract val displayName: String
@@ -21,6 +20,7 @@ sealed class ArcaneRune : RuneDataManager {
             "zone" -> CastingRune.Zone()
             "ball" -> CastingRune.Ball()
             "point" -> CastingRune.Point()
+
             // Domain (change the casting context like location or target)
             "next" -> DomainRune.Next
             "nearby" -> DomainRune.Nearby
@@ -30,7 +30,8 @@ sealed class ArcaneRune : RuneDataManager {
             "differ" -> DomainRune.Differ
             "direct" -> DomainRune.Direct
             "self" -> DomainRune.Self
-            // "UP" -> targets 1 block up?
+
+
             // Augment (effects like breaking blocks or TP)
             "break" -> AugmentRune.Break(value ?: 2.0)
             "coda" -> AugmentRune.Coda
@@ -38,12 +39,16 @@ sealed class ArcaneRune : RuneDataManager {
             "teleport" -> AugmentRune.Teleport
             "heal" -> AugmentRune.Heal(value ?: 4.0)
             // "levitation" -> If target is a block, move 1 up! if target is entity -> levitate?
+
+
             // Modifier (stat modifiers for other runes)
             "amplify" -> ModifierRune.Amplify(4.0)
             "wide" -> ModifierRune.Wide(value ?: 1.0)
             "delay" -> ModifierRune.Delay(2.0)
             "convergence" -> ModifierRune.Convergence(1.0)
             "range" -> ModifierRune.Range(16.0)
+
+
             else -> null
         }
 
