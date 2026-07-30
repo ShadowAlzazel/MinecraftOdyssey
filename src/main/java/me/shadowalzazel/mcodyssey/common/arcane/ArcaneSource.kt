@@ -1,13 +1,101 @@
 package me.shadowalzazel.mcodyssey.common.arcane
 
 import me.shadowalzazel.mcodyssey.common.combat.AttackHelper
+import org.bukkit.Location
 import org.bukkit.Particle
+import org.bukkit.block.Block
 import org.bukkit.damage.DamageType
+import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.Vector
 
-@Suppress("UnstableApiUsage")
+// =====================================================================================
+//  ARCANE CASTER  --  Holds who/what is casting (entity or block)
+// =====================================================================================
+/**
+ * This caster can be an ENTITY or a BLOCK
+ */
+class ArcaneCaster(
+    val entityCaster: Entity? = null,
+    val blockCaster: Block? = null
+) {
+
+    val isBlock: Boolean
+    val isEntity: Boolean
+
+    init {
+        isEntity = entityCaster != null
+        isBlock = blockCaster != null
+    }
+
+    fun convertToTarget(): ArcaneTarget {
+        return if (isBlock) {
+            ArcaneTarget(blockTarget = blockCaster)
+        } else {
+            ArcaneTarget(entityTarget = entityCaster!!)
+        }
+    }
+
+    fun getLocation(): Location {
+        return if (isEntity) {
+            entityCaster!!.location
+        }
+        else { // isBlock
+            blockCaster!!.location.toCenterLocation()
+        }
+    }
+
+    fun toEntityList(): List<LivingEntity> {
+        val entityList = mutableListOf<LivingEntity>()
+        if (entityCaster is LivingEntity) entityList.add(entityCaster)
+        return entityList
+    }
+
+}
+
+// =====================================================================================
+//  ARCANE TARGET  --  Holds who/what is being targeted (entity or block)
+// =====================================================================================
+/**
+ * This target can be an ENTITY or a BLOCK
+ */
+class ArcaneTarget(
+    val entityTarget: Entity? = null,
+    val blockTarget: Block? = null
+) {
+
+    val isBlock: Boolean
+    val isEntity: Boolean
+
+    init {
+        isEntity = entityTarget != null
+        isBlock = blockTarget != null
+    }
+
+
+    fun getLocation(): Location {
+        return if (isEntity) {
+            entityTarget!!.location
+        }
+        else { // isBlock
+            blockTarget!!.location
+        }
+
+    }
+
+    fun toEntityList(): List<LivingEntity> {
+        val entityList = mutableListOf<LivingEntity>()
+        if (entityTarget is LivingEntity) entityList.add(entityTarget)
+        return entityList
+    }
+
+}
+
+// =====================================================================================
+//  ARCANE SOURCE  --  The element of the spell; does not change once casting
+// =====================================================================================
+
 sealed class ArcaneSource(
     val name: String,
     val damageType: DamageType,
