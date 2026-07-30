@@ -171,7 +171,7 @@ class HogRider(
 
     companion object {
         const val KEY = "hog_rider"
-        val NAME: Component = Component.text("Hog Rida", TextColor.color(255, 170, 0))
+        val NAME: Component = Component.text("Hoggg Ridaaaaa", TextColor.color(255, 170, 0))
     }
 }
 

@@ -61,7 +61,8 @@ object EntityTags {
     const val SHADOW_MOB: String = "odyssey.shadow_mob"
 
     const val TRIAL_ELITE: String = "odyssey.trial_elite"
-    const val GIANT_MOB: String = "odyssey.giant"
+    const val GIANT: String = "odyssey.giant"
+    const val VANGUARD: String = "odyssey.vanguard"
 
     const val SPAWN_HANDLED: String = "odyssey.spawn_handled" // Used to check and not trigger spawn events
 

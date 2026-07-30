@@ -106,6 +106,20 @@ interface AttributeManager : ItemComponentsManager, RegistryTagManager {
     // ───────────────────────────── LIVING ENTITY ──────────────────────────────────
     // ──────────────────────────────────────────────────────────────────────────────
 
+    // ──────────────────────────────────────────────────────────────────────────────
+    // Public Getters and setters
+
+    fun setHealthAttribute(entity: LivingEntity, value: Double) {
+        entity.setHealthAttribute(value)
+    }
+
+    fun addAttackAttribute(entity: LivingEntity, value: Double) {
+        entity.addAttackAttribute(value)
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────────
+    // Extended Methods
+
     fun LivingEntity.setAttributeModifier(
         value: Double,
         name: String,

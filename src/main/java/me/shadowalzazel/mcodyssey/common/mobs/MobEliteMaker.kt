@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.util
+package me.shadowalzazel.mcodyssey.common.mobs
 
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.ItemArmorTrim
@@ -7,20 +7,32 @@ import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
 import me.shadowalzazel.mcodyssey.common.items.ToolType
-import me.shadowalzazel.mcodyssey.util.constants.*
+import me.shadowalzazel.mcodyssey.util.EquipmentGenerator
+import me.shadowalzazel.mcodyssey.util.EquipmentRandomBuilder
+import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
+import me.shadowalzazel.mcodyssey.util.constants.CustomColors
+import me.shadowalzazel.mcodyssey.util.constants.EliteMobsData
+import me.shadowalzazel.mcodyssey.util.constants.EntityTags
+import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Material
-import org.bukkit.entity.*
+import org.bukkit.entity.Creeper
+import org.bukkit.entity.Entity
+import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.PigZombie
+import org.bukkit.entity.Skeleton
+import org.bukkit.entity.Zombie
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.entity.EntityRegainHealthEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.trim.ArmorTrim
 import java.util.Random
+import kotlin.collections.forEach
 import kotlin.math.absoluteValue
 
 @Suppress("UnstableApiUsage")
-interface MobMaker : EquipmentGenerator {
+interface MobEliteMaker : EquipmentGenerator {
 
     fun getDistanceDifficulty(entity: Entity): Double {
         val distanceScale = 3000.0 // TODO: Get from plugin yml
@@ -41,7 +53,7 @@ interface MobMaker : EquipmentGenerator {
         if (mob.scoreboardTags.contains(EntityTags.SPAWN_HANDLED)) return
         // Surface Spawns for now -> fix for mob farms
         //if (mob.location.block.lightFromSky < 1) return
-        val inEdge = mob.location.world == Odyssey.instance.edge
+        val inEdge = mob.location.world == Odyssey.Companion.instance.edge
         // random roll
         val roll = (0..1000).random()
         val difficulty = getDistanceDifficulty(mob)
@@ -73,7 +85,8 @@ interface MobMaker : EquipmentGenerator {
                 EliteMobsData.ALL_PARTS,
                 toStringList(materials),
                 EliteMobsData.ELITE_ARMOR_TRIM_MATS,
-                EliteMobsData.SHINY_ARMOR_TRIM_PATTERNS)
+                EliteMobsData.SHINY_ARMOR_TRIM_PATTERNS
+            )
             // Create
             createShinyMob(mob, equipmentRandomBuilder, true)
         }
@@ -92,7 +105,8 @@ interface MobMaker : EquipmentGenerator {
                 EliteMobsData.ALL_PARTS,
                 toStringList(materials) + "chainmail",
                 EliteMobsData.ELITE_ARMOR_TRIM_MATS,
-                EliteMobsData.ELITE_ARMOR_TRIM_PATTERNS)
+                EliteMobsData.ELITE_ARMOR_TRIM_PATTERNS
+            )
 
             // Create Mob Pack Data
             val mobs = mutableListOf(mob)
@@ -280,7 +294,7 @@ interface MobMaker : EquipmentGenerator {
     fun enchantMobWornArmorRandomly(entity: LivingEntity, levelRange: IntRange) {
         val equipment = entity.equipment ?: return
         // Random levels
-        val random = Random(Odyssey.instance.seed) //WORLD SEED
+        val random = Random(Odyssey.Companion.instance.seed) //WORLD SEED
         // Get Armor and enchant
         val armor = getArmorItems(entity) ?: return
         for (x in 0..3) {

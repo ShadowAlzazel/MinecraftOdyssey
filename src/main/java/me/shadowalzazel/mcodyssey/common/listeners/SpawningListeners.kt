@@ -8,8 +8,9 @@ import me.shadowalzazel.mcodyssey.common.items.ToolType
 import me.shadowalzazel.mcodyssey.common.trims.TrimMaterials
 import me.shadowalzazel.mcodyssey.common.trims.TrimPatterns
 import me.shadowalzazel.mcodyssey.util.EquipmentRandomBuilder
-import me.shadowalzazel.mcodyssey.util.MobMaker
+import me.shadowalzazel.mcodyssey.common.mobs.MobEliteMaker
 import me.shadowalzazel.mcodyssey.api.RegistryTagManager
+import me.shadowalzazel.mcodyssey.common.boss.BossManager
 import me.shadowalzazel.mcodyssey.util.ItemToolTipManager
 import me.shadowalzazel.mcodyssey.util.StructureHelper
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
@@ -33,7 +34,7 @@ import me.shadowalzazel.mcodyssey.common.items.Item as OdysseyItem
 import java.util.*
 
 @Suppress("UnstableApiUsage")
-object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManager, ItemToolTipManager {
+object SpawningListeners : Listener, MobEliteMaker, StructureHelper, RegistryTagManager, ItemToolTipManager {
 
     @EventHandler(priority = EventPriority.LOW)
     fun mobNaturalSpawningHandler(event: CreatureSpawnEvent) {
@@ -89,6 +90,9 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
                 }
                 "line_mine" -> {
                     //shadowChamberSpawnerSpawning(event)
+                }
+                "gilded_arena" -> {
+                    gildedArenaSpawnerSpawning(event)
                 }
             }
         }
@@ -189,6 +193,14 @@ object SpawningListeners : Listener, MobMaker, StructureHelper, RegistryTagManag
             if (75 > roll) { // 75% chance to change LootTable of mobs in supershaft
                 mob.lootTable = LootTableManager.getResourceLootTable("structure_spawns/line_mine")
             }
+        }
+    }
+
+    private fun gildedArenaSpawnerSpawning(event: CreatureSpawnEvent) {
+        val mob = event.entity
+        if (mob.scoreboardTags.contains("odyssey.hog_rider")) {
+            BossManager.summon(Odyssey.instance, "hog_rider", mob.location)
+            mob.remove()
         }
     }
 

@@ -20,6 +20,5 @@ object OdysseyMobs {
     val ROTTING_SUMMON = RottingSummon
 
     val DUBIOUS_DEALER = DubiousDealer
-    // TODO
 
 }

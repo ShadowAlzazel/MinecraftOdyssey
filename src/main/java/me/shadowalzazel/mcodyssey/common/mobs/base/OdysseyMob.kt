@@ -1,6 +1,6 @@
 package me.shadowalzazel.mcodyssey.common.mobs.base
 
-import me.shadowalzazel.mcodyssey.util.MobMaker
+import me.shadowalzazel.mcodyssey.common.mobs.MobEliteMaker
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import org.bukkit.Location
@@ -14,7 +14,7 @@ open class OdysseyMob(
     internal val displayName: String,
     private val tagName: String,
     private val type: EntityType,
-    private val bonusHealth: Double) : MobMaker {
+    private val bonusHealth: Double) : MobEliteMaker {
 
     // Custom Entity Type -> custom model
     open fun createMob(world: World, location: Location): Entity {
