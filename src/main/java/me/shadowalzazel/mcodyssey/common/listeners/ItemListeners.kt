@@ -5,7 +5,9 @@ package me.shadowalzazel.mcodyssey.common.listeners
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.ItemEnchantments
 import io.papermc.paper.registry.RegistryKey
+import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.api.RegistryTagManager
+import me.shadowalzazel.mcodyssey.common.boss.BossManager
 import me.shadowalzazel.mcodyssey.common.enchantments.EnchantabilityHandler
 import me.shadowalzazel.mcodyssey.common.items.Item
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
@@ -13,6 +15,7 @@ import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.block.Block
+import org.bukkit.block.BlockType
 import org.bukkit.block.data.Directional
 import org.bukkit.block.Dispenser   // BlockState — NOT the block.data.type one
 import org.bukkit.entity.Entity
@@ -71,6 +74,7 @@ object ItemListeners : Listener, EnchantabilityHandler, RegistryTagManager {
         // When block to match
         val success = when (customItemId) {
             "crystalline_compost" -> crystallineCompostItemUse(block)
+            "ominous_eye" -> ominousEyeItemUse(block)
             else -> false
         }
 
@@ -225,6 +229,22 @@ object ItemListeners : Listener, EnchantabilityHandler, RegistryTagManager {
             return true
         }
         return false
+    }
+
+    private fun ominousEyeItemUse(block: Block?): Boolean {
+        if (block == null) return false
+        val blockType = block.type.asBlockType() ?: return false
+        // Check if beacon
+        if (blockType == BlockType.BEACON) {
+            val boss = BossManager.summon(Odyssey.instance, "ambassador", block.location.toCenterLocation().add(0.0, 50.0, 0.0))
+            if (boss != null) {
+                return true
+            } else {
+                return false
+            }
+        }
+
+        return true
     }
 
     private fun crystalAlloyTrimmersItemUse(entity: Entity): Boolean {

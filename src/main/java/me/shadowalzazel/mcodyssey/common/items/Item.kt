@@ -160,9 +160,11 @@ open class Item(
         val IRRADIATED_FRUIT = DataItem("irradiated_fruit")
         val SCULK_HEART = DataItem("sculk_heart")
         val SCULK_POINTER = DataItem("sculk_pointer")
-        val WARDEN_ENTRAILS = DataItem("scroll") // TODO -> change to 'warden_entrails'
+        val WARDEN_ENTRAILS = DataItem("scroll")
         val SOUL_SPICE = DataItem("soul_spice")
         val SOUL_OMAMORI = DataItem("soul_omamori")
+        val OMINOUS_EYE = DataItem("ominous_eye")
+
         // ---------------------------------- DATA ITEMS with custom  -----------------------------------
         // Exotics
         val ABZU_BLADE = DataItem("abzu_blade")

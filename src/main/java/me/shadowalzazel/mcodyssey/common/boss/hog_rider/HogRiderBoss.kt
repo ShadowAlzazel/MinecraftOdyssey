@@ -12,8 +12,11 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.NamespacedKey
 import org.bukkit.Sound
 import org.bukkit.attribute.Attribute
+import org.bukkit.block.Block
+import org.bukkit.block.BlockType
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Hoglin
@@ -21,6 +24,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.PiglinBrute
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
@@ -57,6 +61,70 @@ class HogRider(
     override val bossBarColor: BossBar.Color = BossBar.Color.YELLOW
     override val bossBarOverlay: BossBar.Overlay = BossBar.Overlay.NOTCHED_6
     override val bossBarRadius: Double = 48.0
+
+    // ------------------------------------------------------- reinforcements
+
+    /** Live reinforcement adds summoned into the arena. */
+    private val reinforcements = mutableListOf<PiglinBrute>()
+    private val maxReinforcements = 6
+
+    /**
+     * Resolve the arena centre. Reads the doubles you marked on the boss's PDC;
+     * if they're absent it assumes the boss spawned at the centre. If you stored
+     * the centre on a different entity or a marker block, point this there.
+     */
+    private fun readArenaCenter(source: LivingEntity): Location {
+        if (arenaCenter != null) return arenaCenter!!
+
+        val center = source.location
+        val radiusXZ = 8
+        val radiusY = 5
+        var found: Block?
+        val target = Material.TRIAL_SPAWNER
+
+        for (x in -radiusXZ..radiusXZ) {
+            for (y in -radiusY..radiusY) {
+                for (z in -radiusXZ..radiusXZ) {
+                    val block = world.getBlockAt(
+                        center.blockX + x,
+                        center.blockY + y,
+                        center.blockZ + z
+                    )
+                    if (block.type == target) {
+                        found = block
+                        arenaCenter = found.location.toCenterLocation()
+                        return arenaCenter!!
+                    }
+                }
+            }
+        }
+        return spawnLocation.clone()
+    }
+    private var arenaCenter: Location? = null
+
+    private fun liveReinforcements(): Int {
+        reinforcements.removeAll { it.isDead || !it.isValid }
+        return reinforcements.size
+    }
+
+    private fun summonReinforcement(spot: Location) {
+        val brute = (spot.world.spawnEntity(spot, EntityType.PIGLIN_BRUTE) as PiglinBrute).apply {
+            isImmuneToZombification = true
+            isAggressive = true
+            isAware = true
+            removeWhenFarAway = false
+            getAttribute(Attribute.MAX_HEALTH)?.baseValue = 50.0
+            health = 50.0
+            addScoreboardTag("odyssey.gilded_marauder")
+            setRotation(spot.yaw, spot.pitch) // face inward, as placed
+        }
+        reinforcements += brute
+    }
+
+    private fun clearReinforcements() {
+        reinforcements.forEach { if (it.isValid) it.remove() }
+        reinforcements.clear()
+    }
 
     // ---------------------------------------------------------------- spawning
 
@@ -142,11 +210,11 @@ class HogRider(
     override fun attackOptions(): List<AttackOption> = listOf(
         // Move 1: leap ~20 blocks onto a target, then smash on landing.
         AttackOption(
-            weight = 3,
+            weight = 4,
             attack = LeapAttack(
                 leapPower = 2.0,
                 horizontalPull = 1.6,
-                onLand = ShockwaveSmashAttack(maxRadius = 8.0, damage = 16.0, knockback = 1.4),
+                onLand = ShockwaveSmashAttack(maxRadius = 8.0, damage = 24.0, knockback = 1.5),
             ),
             target = TargetMode.RANDOM_PLAYER,
             line = HogRiderLine.LEAP,
@@ -157,6 +225,29 @@ class HogRider(
             attack = ShockwaveSmashAttack(maxRadius = 12.0, damage = 12.0, knockback = 1.3),
             target = TargetMode.SELF,
             line = HogRiderLine.SMASH,
+        ),
+        // Move 3: small ground smash
+        AttackOption(
+            weight = 3,
+            attack = ShockwaveSmashAttack(maxRadius = 5.0, damage = 6.0, knockback = 1.0),
+            target = TargetMode.SELF,
+            line = HogRiderLine.SMASH,
+        ),
+        // Move 4: call brutes onto the coliseum seats (only fires with players near).
+        AttackOption(
+            weight = 1,
+            attack = SummonReinforcementsAttack(
+                count = 2..3,
+                ringRadius = 25.0,
+                ringHeight = 11,
+                isSeat = { it == Material.DIORITE_SLAB },
+                centerResolver = ::readArenaCenter,
+                canTrigger = { liveReinforcements() < maxReinforcements },
+                summon = ::summonReinforcement,
+            ),
+            target = TargetMode.SELF,
+            line = HogRiderLine.REINFORCEMENTS,
+            requiresPlayers = true,
         ),
     )
 
@@ -171,6 +262,7 @@ class HogRider(
         }
         mount?.remove()
         mount = null
+        // clearReinforcements() // remove leftover adds; delete this line to let them linger
         // TODO: drop your unique Hog Rider loot here.
     }
 
@@ -193,6 +285,8 @@ enum class HogRiderLine : DialogueKey {
     ARRIVAL,
     LEAP,
     SMASH,
+    REINFORCEMENTS,
+    SMALL_SMASH,
     DEFEATED;
 
     override val id: String get() = name
@@ -206,6 +300,8 @@ object HogRiderDialogue {
         line(HogRiderLine.ARRIVAL, "HOOOOOGGG RIIDDAAAAAA!!!")
         line(HogRiderLine.LEAP, "INCOMING!", "LOOK UP!")
         line(HogRiderLine.SMASH, "SMAAASH!", "BONK!")
-        line(HogRiderLine.DEFEATED, "the hog... rides no more...")
+        line(HogRiderLine.REINFORCEMENTS, "TO ME, BRUTES!", "YOU ARE OUTNUMBERED!")
+        line(HogRiderLine.SMALL_SMASH, "Get Smashed!", "*Grunt*")
+        line(HogRiderLine.DEFEATED, "The hog... rides no more...")
     }
 }

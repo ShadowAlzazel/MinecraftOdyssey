@@ -27,7 +27,8 @@ class ItemRecipes : ChoiceManager {
             pommelPartUpgradeTemplateRecipe(), hiltPartUpgradeTemplateRecipe(), bladePartUpgradeTemplateRecipe(), handlePartUpgradeTemplateRecipe(),
             mastercraftedToolTemplateRecipe(), crystalAlloyIngotRecipe(), crystalAlloyUpgradeTemplateRecipe(),
             // New Recipes for Vanilla
-            sulfurGunpowderRecipe(), sulfurRecipe(), crystallineCompostRecipe(), prismaticNameTagRecipe()
+            sulfurGunpowderRecipe(), sulfurRecipe(), crystallineCompostRecipe(), prismaticNameTagRecipe(),
+            ominousEyeRecipe()
         )
     }
 
@@ -382,6 +383,16 @@ class ItemRecipes : ChoiceManager {
             category = CraftingBookCategory.MISC
         }
         return recipe
+    }
+
+    private fun ominousEyeRecipe(): ShapelessRecipe {
+        val result = Item.OMINOUS_EYE.newItemStack(1)
+        return ShapelessRecipe(NamespacedKey(Odyssey.instance, "ominous_eye"), result).apply {
+            addIngredient(RecipeChoice.itemType(ItemType.ENDER_EYE))
+            addIngredient(RecipeChoice.itemType(ItemType.OMINOUS_TRIAL_KEY))
+            addIngredient(Item.MITHRIL_INGOT.toRecipeChoice())
+            category = CraftingBookCategory.MISC
+        }
     }
 
 

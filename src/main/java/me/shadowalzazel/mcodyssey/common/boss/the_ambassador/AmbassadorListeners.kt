@@ -26,7 +26,7 @@ object AmbassadorListeners: Listener {
             playSound(event.entity.location, Sound.AMBIENT_BASALT_DELTAS_MOOD, 2.5F, 0.8F)
             playSound(event.entity.location, Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 2.5F, 0.8F)
             playSound(event.entity.location, Sound.ENTITY_IRON_GOLEM_DEATH, 2.0F, 0.8F)
-            spawnParticle(Particle.FLASH, event.entity.location, 5, 1.0, 1.0, 1.0)
+            //spawnParticle(Particle.FLASH, event.entity.location, 5, 1.0, 1.0, 1.0)
         }
 
         val center = event.entity.location.clone()

@@ -64,6 +64,9 @@ object EntityTags {
     const val GIANT: String = "odyssey.giant"
     const val VANGUARD: String = "odyssey.vanguard"
 
+    const val GILDED_MARAUDER: String = "odyssey.gilded_marauder"
+    const val HOG_RIDER: String = "odyssey.hog_rider"
+
     const val SPAWN_HANDLED: String = "odyssey.spawn_handled" // Used to check and not trigger spawn events
 
     // ARROWS

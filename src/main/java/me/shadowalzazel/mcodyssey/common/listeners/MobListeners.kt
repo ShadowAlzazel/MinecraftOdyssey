@@ -146,6 +146,8 @@ object MobListeners : Listener, DataTagManager {
         val brute = event.entity as PiglinBrute
         if (brute.scoreboardTags.contains(EntityTags.STARTED_RALLYING)) return
         if (event.cause == EntityDamageEvent.DamageCause.PROJECTILE) return
+        if (brute.scoreboardTags.contains(EntityTags.GILDED_MARAUDER)) return
+        if (brute.scoreboardTags.contains(EntityTags.HOG_RIDER)) return
 
         // 2% Chance to call Reinforcements
         val roll = (2 > (0..100).random())
