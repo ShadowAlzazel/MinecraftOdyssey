@@ -5,6 +5,7 @@ import me.shadowalzazel.mcodyssey.common.StructureDetector
 import me.shadowalzazel.mcodyssey.common.boss.BossListener
 import me.shadowalzazel.mcodyssey.common.boss.BossManager
 import me.shadowalzazel.mcodyssey.common.boss.hog_rider.HogRider
+import me.shadowalzazel.mcodyssey.common.boss.slime_king.SlimeKing
 import me.shadowalzazel.mcodyssey.common.boss.the_ambassador.AmbassadorListeners
 import me.shadowalzazel.mcodyssey.common.boss.the_ambassador.TheAmbassador
 import me.shadowalzazel.mcodyssey.common.effects.StatusEffectManager
@@ -97,6 +98,7 @@ class Odyssey : JavaPlugin() {
         logger.info("Waking up the big bosses...")
         BossManager.register(TheAmbassador.KEY) { plugin, loc -> TheAmbassador(plugin, loc) }
         BossManager.register(HogRider.KEY) { plugin, loc -> HogRider(plugin, loc) }
+        BossManager.register(SlimeKing.KEY) { plugin, loc -> SlimeKing(plugin, loc) }
 
         // Enable Status Effects
         logger.info("Checking the status of the effects...")

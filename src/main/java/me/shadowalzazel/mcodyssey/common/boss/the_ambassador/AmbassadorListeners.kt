@@ -30,7 +30,7 @@ object AmbassadorListeners: Listener {
         }
 
         val center = event.entity.location.clone()
-        val radius = 2.5
+        val radius = 3.0
         val entities = event.entity.getNearbyEntities(radius, radius, radius).filterIsInstance<LivingEntity>()
         for (e in entities) {
             // indirect distance square

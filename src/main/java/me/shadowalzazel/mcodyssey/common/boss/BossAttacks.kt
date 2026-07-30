@@ -1,99 +1,76 @@
 package me.shadowalzazel.mcodyssey.common.boss
 
-import org.bukkit.Location
-import org.bukkit.World
-import org.bukkit.entity.*
+import me.shadowalzazel.mcodyssey.common.boss.hog_rider.ShockwaveSmashAttack
+import org.bukkit.Sound
+import org.bukkit.entity.Entity
+import org.bukkit.entity.LivingEntity
 import org.bukkit.plugin.java.JavaPlugin
-import org.bukkit.scheduler.BukkitTask
+import org.bukkit.scheduler.BukkitRunnable
 
 /**
- * Everything an attack needs to run, decoupled from any specific boss.
- * Because an attack only ever touches [AttackContext], the same attack object
- * can be reused by any boss (or fired manually anywhere).
+ * Hurls the source toward a target with a big vertical arc. If the source is
+ * riding something (a mount), the *vehicle* is launched so the whole unit flies.
+ *
+ * [onLand] fires the instant the leaper touches ground again — chain a
+ * [ShockwaveSmashAttack] here to get a jump-then-slam combo.
+ *
+ * Reusable by any boss: `LeapAttack()` for a default ~20-block hop, or tune
+ * [leapPower]/[horizontalPull] per boss.
  */
-class AttackContext(
-    val plugin: JavaPlugin,
-    val source: LivingEntity,
-    val world: World,
-    val origin: Location,        // where the attack is centred
-    val targets: List<Player>,   // the players this cast should primarily hit
-    val nearby: List<Player>,    // everyone in range (for wider AoE / effects)
-)
+class LeapAttack(
+    private val leapPower: Double = 2.0,      // vertical velocity (~2.0 ≈ 20 blocks high)
+    private val horizontalPull: Double = 1.5, // how hard it flies toward the target
+    private val onLand: BossAttack? = null,
+    private val landTimeoutTicks: Int = 120,
+) : BossAttack {
 
-/** A reusable, self-contained boss attack. */
-fun interface BossAttack {
-    fun execute(ctx: AttackContext)
-}
+    override fun execute(ctx: AttackContext) {
+        val target = ctx.targets.firstOrNull() ?: ctx.nearby.randomOrNull() ?: return
+        val leaper: Entity = ctx.source.vehicle ?: ctx.source
 
-/** How the scheduler picks where an attack lands. */
-enum class TargetMode {
-    RANDOM_PLAYER,
-    ALL_PLAYERS,
-    SELF
-}
+        val horizontal = target.location.toVector().subtract(leaper.location.toVector()).setY(0.0)
+        val direction = if (horizontal.lengthSquared() > 1e-4) horizontal.normalize()
+        else leaper.location.direction.setY(0.0).normalize()
 
-/**
- * One entry in a boss's attack rotation: an attack, how heavily it's weighted,
- * who it targets, and an optional line of dialogue to fire when it triggers.
- */
-class AttackOption(
-    val weight: Int,
-    val attack: BossAttack,
-    val target: TargetMode = TargetMode.RANDOM_PLAYER,
-    val line: DialogueKey? = null,
-    val requiresPlayers: Boolean = true,
-) {
-    fun resolveContext(boss: OdysseyBoss, nearby: List<Player>): AttackContext {
-        val (origin, affected) = when (target) {
-            TargetMode.SELF -> boss.location to emptyList()
-            TargetMode.ALL_PLAYERS -> boss.location to nearby
-            TargetMode.RANDOM_PLAYER -> {
-                val chosen = nearby.randomOrNull()
-                (chosen?.location ?: boss.randomOffsetLocation(9)) to listOfNotNull(chosen)
+        leaper.velocity = direction.multiply(horizontalPull).setY(leapPower)
+
+        //.world.playSound(leaper.location, Sound.ENTITY_HOGLIN_ANGRY, 2.0f, 0.8f)
+        //leaper.world.playSound(leaper.location, Sound.ENTITY_RAVAGER_ROAR, 1.5f, 1.2f)
+
+        if (onLand != null) {
+            LandingWatcher(ctx.plugin, ctx.source, leaper, landTimeoutTicks) {
+                onLand.execute(landingContext(ctx.plugin, ctx.source, leaper))
+            }.runTaskTimer(ctx.plugin, 2L, 1L)
+        }
+    }
+
+    private fun landingContext(plugin: JavaPlugin, source: LivingEntity, leaper: Entity): AttackContext {
+        val here = leaper.location
+        val nearby = here.getNearbyPlayers(16.0).toList()
+        return AttackContext(plugin, source, here.world, here, nearby, nearby)
+    }
+
+    /** Waits for the leaper to leave the ground and land again, then fires [onLand]. */
+    private class LandingWatcher(
+        private val plugin: JavaPlugin,
+        private val source: Entity,
+        private val leaper: Entity,
+        private val timeoutTicks: Int,
+        private val onLand: () -> Unit,
+    ) : BukkitRunnable() {
+        private var airborne = false
+        private var ticks = 0
+
+        override fun run() {
+            ticks++
+            if (!leaper.isValid || !source.isValid) {
+                cancel(); return
+            }
+            if (!leaper.isOnGround) airborne = true
+            if ((airborne && leaper.isOnGround) || ticks >= timeoutTicks) {
+                onLand()
+                cancel()
             }
         }
-        return AttackContext(boss.plugin, boss.entity, boss.world, origin, affected, nearby)
-    }
-}
-
-/**
- * Runs a boss's weighted attack rotation on a timer. Owned by the base class;
- * you never touch this directly, you just supply [AttackOption]s.
- */
-class AttackScheduler(private val boss: OdysseyBoss) {
-
-    private var task: BukkitTask? = null
-
-    fun start(periodTicks: Long, provider: () -> List<AttackOption>) {
-        stop()
-        task = boss.plugin.server.scheduler.runTaskTimer(
-            boss.plugin, Runnable { castOnce(provider()) }, 0L, periodTicks,
-        )
-    }
-
-    fun stop() {
-        task?.cancel()
-        task = null
-    }
-
-    private fun castOnce(options: List<AttackOption>) {
-        if (!boss.isAlive || options.isEmpty()) return
-        val nearby = boss.nearbyPlayers(boss.stats.attackRadius)
-        val usable = options.filter { !it.requiresPlayers || nearby.isNotEmpty() }
-        val choice = weightedPick(usable) ?: return
-        val ctx = choice.resolveContext(boss, nearby)
-        choice.attack.execute(ctx)
-        choice.line?.let { boss.announce(it, nearby) }
-    }
-
-    private fun weightedPick(options: List<AttackOption>): AttackOption? {
-        val total = options.sumOf { it.weight }
-        if (total <= 0) return null
-        var roll = (0 until total).random()
-        for (o in options) {
-            if (roll < o.weight) return o
-            roll -= o.weight
-        }
-        return options.lastOrNull()
     }
 }

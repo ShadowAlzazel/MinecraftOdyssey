@@ -4,6 +4,7 @@ import me.shadowalzazel.mcodyssey.common.boss.AttackOption
 import me.shadowalzazel.mcodyssey.common.boss.BossStats
 import me.shadowalzazel.mcodyssey.common.boss.Dialogue
 import me.shadowalzazel.mcodyssey.common.boss.DialogueKey
+import me.shadowalzazel.mcodyssey.common.boss.LeapAttack
 import me.shadowalzazel.mcodyssey.common.boss.OdysseyBoss
 import me.shadowalzazel.mcodyssey.common.boss.TargetMode
 import me.shadowalzazel.mcodyssey.common.enchantments.OdysseyEnchantments
