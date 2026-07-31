@@ -2,6 +2,7 @@ package me.shadowalzazel.mcodyssey
 
 
 import me.shadowalzazel.mcodyssey.common.StructureDetector
+import me.shadowalzazel.mcodyssey.common.arcane.MobSpellCastManager
 import me.shadowalzazel.mcodyssey.common.boss.BossListener
 import me.shadowalzazel.mcodyssey.common.boss.BossManager
 import me.shadowalzazel.mcodyssey.common.boss.hog_rider.HogRider
@@ -100,6 +101,10 @@ class Odyssey : JavaPlugin() {
         BossManager.register(HogRider.KEY) { plugin, loc -> HogRider(plugin, loc) }
         BossManager.register(SlimeKing.KEY) { plugin, loc -> SlimeKing(plugin, loc) }
 
+        // Enable Magic
+        logger.info("Drawing Magic Circles...")
+        MobSpellCastManager.init(this)
+
         // Enable Status Effects
         logger.info("Checking the status of the effects...")
         StatusEffectManager.init(this)
@@ -166,8 +171,9 @@ class Odyssey : JavaPlugin() {
         logger.info("Setting Commands...")
         mapOf(
             "summon_boss" to SummonBoss(),
-            "summon_mob" to SummonMob,
+            "summon_mob" to SummonMob(),
             "show_item" to ShowItem(),
+            "equip_to_mob" to EquipToMob(),
             "ender_dragon_boss_battle" to EnderDragonBossBattle()
         ).forEach {
             getCommand(it.key)?.setExecutor(it.value)
@@ -206,6 +212,7 @@ class Odyssey : JavaPlugin() {
         logger.info("The Odyssey will wait another day...")
         // Shutdown status
         StatusEffectManager.shutdown()
+        MobSpellCastManager.shutdown()
     }
 
 }

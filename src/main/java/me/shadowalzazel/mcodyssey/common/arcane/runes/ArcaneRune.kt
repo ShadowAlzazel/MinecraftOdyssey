@@ -367,7 +367,7 @@ sealed class AugmentRune : ArcaneRune() {
                 if (block != null) {
                     // Use the wiki to find the values to break
                     // https://minecraft.wiki/w/Module:Blast_resistance_values
-                    block.breakNaturally()
+                    //block.breakNaturally()
                 }
             }
             is PickUp -> {
@@ -452,7 +452,6 @@ sealed class AugmentRune : ArcaneRune() {
 //  MODIFIER RUNE  --  Stat modifiers for other runes
 // =====================================================================================
 
-@Suppress("UnstableApiUsage")
 sealed class ModifierRune : ArcaneRune() {
     abstract val value: Double
 

@@ -14,6 +14,10 @@ commands:
     description: "Summons a Custom Mob."
     usage: /<command>
     permission: op
+  equip_to_mob:
+    description: "Gives a mob your hand held item."
+    usage: /<command>
+    permission: op
   show_item:
     description: "Broadcasts the players held item."
     usage: /<command>

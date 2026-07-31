@@ -103,11 +103,11 @@ object ArcaneListeners: Listener, DataTagManager {
         when (itemName) {
             // Tools
             "arcane_wand" -> ArcaneSpellItems.castBuiltInWand(player)
-            "arcane_blade" -> null //arcaneBladeHandler(event)
             "arcane_scepter" -> ArcaneSpellItems.castBuiltInScepter(player)
             // Others
             "arcane_pen" -> ArcaneSpellItems.openPenWriter(player, mainhand)
             "arcane_stylus" -> null
+            "arcane_blade" -> null //arcaneBladeHandler(event)
         }
 
     }

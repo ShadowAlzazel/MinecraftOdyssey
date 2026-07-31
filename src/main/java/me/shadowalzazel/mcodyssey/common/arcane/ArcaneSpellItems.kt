@@ -5,6 +5,8 @@ import me.shadowalzazel.mcodyssey.common.arcane.runes.CastingRune
 import me.shadowalzazel.mcodyssey.common.arcane.runes.DomainRune
 import me.shadowalzazel.mcodyssey.common.arcane.runes.ModifierRune
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
+import org.bukkit.Material
+import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
@@ -15,44 +17,46 @@ import org.bukkit.inventory.ItemStack
  * [ArcaneCasting] — no ArcaneSpellBuilder, no hardcoded rune lists inline.
  *
  * Wire these from your existing event listener:
- *   - spell scroll used   -> castScroll(player, scroll)
+ *   - spell scroll used   -> castScroll(entity, scroll)
  *   - arcane pen used     -> openPenWriter(player, pen)     (right-click / interact, NOT consume)
- *   - wand used           -> castWand(player)
- *   - scepter used        -> castScepter(player)
+ *   - wand used           -> castWand(entity)
+ *   - scepter used        -> castScepter(entity)
  */
 object ArcaneSpellItems {
 
     /** Cast whatever spell is inscribed on the scroll. */
-    fun castScroll(caster: Player, scroll: ItemStack): Boolean =
+    fun castScroll(caster: LivingEntity, scroll: ItemStack): Boolean =
         ArcaneCasting.castFromItem(scroll, ArcaneCasting.basicContext(caster))
 
     /** Open the writer dialog for the pen. Never casts, never touches the pen's runes. */
     fun openPenWriter(caster: Player, pen: ItemStack) = SpellPenDialog.open(caster, pen)
 
-    private fun castBuiltIn(caster: Player, spell: String, cooldown: Int): Boolean {
+    private fun castBuiltIn(caster: LivingEntity, spell: String, cooldown: Int): Boolean {
         val equipment = caster.equipment ?: return false
         val tool = equipment.itemInMainHand
-        if (caster.getCooldown(tool) > 0) return false
+        if (caster is Player && caster.getCooldown(tool) > 0) return false
         tool.damage(1, caster)
         val source = ArcaneSource.getSourceFromRawItem(equipment.itemInOffHand) ?: ArcaneSource.Magic
         val ok = ArcaneCasting.castSpellString(
             spell,
             ArcaneCasting.basicContext(caster),
             source)
-        caster.setCooldown(tool, cooldown)
+        if (caster is Player && ok) {
+            caster.setCooldown(tool, cooldown)
+        }
         return ok
     }
 
 
     /** Built-in wand: fires its fixed default spell (as spell-code), element taken from the off-hand. */
-    fun castBuiltInWand(caster: Player): Boolean = castBuiltIn(
+    fun castBuiltInWand(caster: LivingEntity): Boolean = castBuiltIn(
         caster,
         BuiltInSpells.WAND,
         cooldown = 20)
 
     /** Built-in scepter: fires its fixed default spell (as functions), element taken from the off-hand. */
-    fun castBuiltInScepter(caster: Player): Boolean = ArcaneCasting.castSequence(
-        source = ArcaneSource.getSourceFromRawItem(caster.equipment.itemInOffHand) ?: ArcaneSource.Magic,
+    fun castBuiltInScepter(caster: LivingEntity): Boolean = ArcaneCasting.castSequence(
+        source = ArcaneSource.getSourceFromRawItem(caster.equipment?.itemInOffHand ?: ItemStack(Material.AIR)) ?: ArcaneSource.Magic,
         context = ArcaneCasting.basicContext(caster),
         runes = listOf<ArcaneRune>(
             ModifierRune.Range(32.0),
