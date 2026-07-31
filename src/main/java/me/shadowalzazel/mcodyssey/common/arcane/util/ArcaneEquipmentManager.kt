@@ -43,7 +43,7 @@ import org.bukkit.util.Vector
 import org.joml.Quaternionf
 import kotlin.math.abs
 
-@Suppress("UnstableApiUsage")
+@Deprecated("Outdated API", level=DeprecationLevel.WARNING)
 interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager, RayTracerAndDetector {
 
 
@@ -52,8 +52,8 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
         val equipment = player.equipment
         val offhandName = equipment.itemInOffHand.getItemNameId()
         when (offhandName) {
-            "arcane_pen" -> arcanePenWithScrollCastingHandler(player)
-            "enchanted_book" -> decryptingWithScrollHandler(event)
+            //"arcane_pen" -> arcanePenWithScrollCastingHandler(player)
+            //"enchanted_book" -> decryptingWithScrollHandler(event)
         }
 
     }

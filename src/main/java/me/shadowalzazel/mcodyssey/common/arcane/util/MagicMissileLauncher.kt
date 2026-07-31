@@ -8,6 +8,7 @@ import org.bukkit.entity.Projectile
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
 
+@Deprecated("Outdated API", level=DeprecationLevel.WARNING)
 class MagicMissileLauncher (
     private val initialVelocity: Vector,
     private val projectile: Projectile,

@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack
 /**
  * The init method handles the building of the runeSequence
  */
+@Deprecated("Outdated API", level=DeprecationLevel.WARNING)
 class ArcaneSpellBuilder(
     arcaneItem: ItemStack,
     additionalItems: List<ItemStack> = listOf(),

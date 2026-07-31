@@ -153,13 +153,13 @@ sealed class ArcaneSource(
         bonus: Double = 0.0
     ) {
         // Get based on source
-        val value = when(this@ArcaneSource) {
+        val baseDamageMultiplier = when(this@ArcaneSource) {
             Fire -> 2.0
             Aero -> 2.0
             Frost -> 2.0
-            Magic -> 4.0
-            Radiant -> 0.0 // TEMP
-            Soul -> 3.0
+            Magic -> 3.0
+            Radiant -> 1.0
+            Soul -> 1.0
             Void -> 3.0
         }
 
@@ -174,7 +174,7 @@ sealed class ArcaneSource(
             // Damage Logic FOR Entity Damage source
             if (caster.isEntity) {
                 val damageSource = createEntityDamageSource(caster.entityCaster!!, null, damageType)
-                val damageValue = value + bonus
+                val damageValue = baseDamageMultiplier + bonus
                 target.entityTarget.damage(damageValue, damageSource)
             }
             // Bonus Effects

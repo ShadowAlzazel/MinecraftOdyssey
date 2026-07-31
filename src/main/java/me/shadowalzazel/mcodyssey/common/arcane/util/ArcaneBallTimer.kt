@@ -5,6 +5,7 @@ import org.bukkit.entity.Projectile
 import org.bukkit.scheduler.BukkitRunnable
 import kotlin.random.Random
 
+@Deprecated("Outdated API", level=DeprecationLevel.WARNING)
 class ArcaneBallTimer(
     private val magicBall: Projectile,
     private val particle: Particle
