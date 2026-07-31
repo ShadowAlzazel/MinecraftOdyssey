@@ -1,195 +1,86 @@
 package me.shadowalzazel.mcodyssey.common.arcane
 
-import me.shadowalzazel.mcodyssey.Odyssey
-import me.shadowalzazel.mcodyssey.common.arcane.runes.*
-import me.shadowalzazel.mcodyssey.common.arcane.ArcaneTarget
-import me.shadowalzazel.mcodyssey.common.arcane.AsyncCastingManager
-import me.shadowalzazel.mcodyssey.common.arcane.CastingContext
-import me.shadowalzazel.mcodyssey.common.arcane.CastingBuilder
-import org.bukkit.entity.Item
-import org.bukkit.entity.LivingEntity
+import me.shadowalzazel.mcodyssey.common.arcane.runes.ArcaneRune
+import me.shadowalzazel.mcodyssey.common.arcane.runes.AugmentRune
+import me.shadowalzazel.mcodyssey.common.arcane.runes.CastingRune
+import me.shadowalzazel.mcodyssey.common.arcane.runes.DomainRune
+import me.shadowalzazel.mcodyssey.common.arcane.runes.ModifierRune
 
+/**
+ * Executes a linear rune sequence. Runes are read left to right; each casting
+ * rune fires a sub-cast, and the runes after it continue from wherever that cast ended
+ * (its impact point, the entity it hit, and so on).
+ *
+ * Chaining is driven by a completion callback rather than per-tick polling: a synchronous
+ * form (Beam, Zone, Disperse) reports "done" immediately, while a projectile (Ball, Bolt)
+ * reports "done" only when it impacts. That single difference is what lets a spell like
+ * `[Bolt, Next, Zone]` wait for the bolt to land before dropping the zone on it — with no
+ * signals, no manager, and no busy loop.
+ */
 class ArcaneSpell(
     val source: ArcaneSource,
-    val orginalContext: CastingContext,
-    val runeSequence: List<ArcaneRune>
+    private val originalContext: CastingContext,
+    private val runeSequence: List<ArcaneRune>
 ) {
+    private val runeCount = runeSequence.size
+    private var seqCounter = 0
 
-    // Shared vars
-    private val castingManager: AsyncCastingManager
-    private val runeCount: Int
-    private var seqCounter: Int
-    private val sharedContext: CastingContext
-    // Buffer vars
-    private val runesInBuffer: MutableList<ArcaneRune>
-    private var builderInBuffer: CastingBuilder?
+    // Working context. The original is kept intact for Domain runes that reference it.
+    private val context: CastingContext
 
-    // Async vars
-    var hasCastingSignal: Boolean
-    var hasCreateSignal: Boolean
-    var isCasting: Boolean
-    private var isFinished: Boolean
+    // Safety valve for future loop runes (Coda / Repeat) so a spell can never run away.
+    private var castsRun = 0
+    private val maxCasts = 64
 
-    // Cycle Runes
     init {
-        // Default vars
-        runeCount = runeSequence.count()
-
-        // Default Ignore self
-        // VERY IMPORTANT convert to TARGET class and add to ignore list
-        val caster = orginalContext.caster
-        orginalContext.ignoredTargets.add(caster.convertToTarget())
-        // Finish Context
-        sharedContext = orginalContext.clone()
-
-        // Set UP the buffer and the sequence counter
-        seqCounter = 0
-        runesInBuffer = mutableListOf()
-        builderInBuffer = null
-        isFinished = false
-
-        // Create the async cycle
-        hasCastingSignal = true
-        hasCreateSignal = true
-        isCasting = false
-        castingManager = AsyncCastingManager(this)
+        // Ignore the caster by default: convert to a target and add to the ignore list.
+        originalContext.ignoredTargets.add(originalContext.caster.convertToTarget())
+        context = originalContext.clone()
     }
 
-    fun isFinished(): Boolean {
-        if (seqCounter >= runeCount) {
-            isFinished = true
-        }
-        return isFinished
+    fun isFinished(): Boolean = seqCounter >= runeCount
+
+    /** Public entry point. */
+    fun castSpell() = advance()
+
+    /** Step to the next cast cycle, unless the sequence is done or the safety cap is hit. */
+    private fun advance() {
+        if (seqCounter >= runeCount || castsRun >= maxCasts) return
+        castsRun++
+        runNextCycle(onComplete = ::advance)
     }
 
     /**
-     * RULES:
-     * - Context is preserved across the entire read. Meaning it is single channel and global. NOT local.
-     *
-     * - CastingRune:
-     * These runes trigger a `CastCycle`. Similar to a domain rune, they also change context.
-     * They change the target context
+     * The reader. Consumes runes up to and including the next casting rune (or the end of
+     * the sequence), applying each as it goes, then fires the form. [onComplete] runs once
+     * the cycle has fully resolved. This is the ONE place the sequence "grammar" is
+     * interpreted, so new rune categories only ever touch this `when`.
      */
-
-    fun castSpell() {
-        // ----------------------
-        // Read runes
-        // When READER READS a casting RUNE -> SEND runes to separate list (buffer)
-        // CALL async runner
-        // END this call
-
-        // Async runner EXECUTES Read runes in BUFFER
-        // has an AWAIT when it finishes its methods (while true)
-        // Most Casting runes return the AWAIT INSTANTLY
-        // Some like BALL need to wait.
-
-        // When AWAIT is handled -> return to READER
-        // ----------------------
-
-        // Start Casting Manager
-        // Run now and every tick and checks if has the signal to RUN the buffer
-        castingManager.runTaskTimer(Odyssey.instance, 0, 1L)
-    }
-
-    /**
-     * This loads a cast cycle into the BUFFER
-     */
-    fun createCastingCycle() {
-        // Local Cycle Variables
-        var castingRune: CastingRune? = null
-        var triggerCast = false
-        // Create a builder
-        val cycleBuilder = CastingBuilder()
-        cycleBuilder.apply {
+    private fun runNextCycle(onComplete: () -> Unit) {
+        val builder = CastingBuilder().apply {
             damageType = source.damageType
             particle = source.particle
         }
-        // TODO:
-        // Builder can be USED by non-casting RUNES
-        // i.e. trace, break
-
-        // READING
-        while (seqCounter < runeCount) {
-            val rune = runeSequence[seqCounter]
-            runesInBuffer.add(rune)
-            // when reaching casting rune
-            if (rune is CastingRune) {
-                castingRune = rune
-                triggerCast = true
-            }
-            // When reaches the end or has REACHED a casting rune
-            if (seqCounter == runeCount - 1 || castingRune != null) {
-                triggerCast = true
-            }
-            seqCounter++
-            // Break and put in BUFFER if triggerCast
-            if (triggerCast) {
-                castingRune = null
-                builderInBuffer = cycleBuilder
-                break
-            }
-        }
-
-    }
-
-    /**
-     * This runs the casting cycle that was in the BUFFER
-     */
-    fun runCastingCycle() {
-        // Get vars in the buffer
-        val builder = builderInBuffer!!
-        val context = sharedContext
-        val runes = runesInBuffer
-
         var castingRune: CastingRune? = null
 
-        // Start this loop
-        for ((i, rune) in runes.withIndex()) {
-            println("Rune [${i}] [${rune.name}] \n")
-            // TODO: Have augment, and domain runes CONSUME modifiers that are read before
+        while (seqCounter < runeCount) {
+            val rune = runeSequence[seqCounter]
+            seqCounter++
             when (rune) {
-                is ModifierRune -> {
-                    builder.storeRune(rune)
-                }
-                // Domain runes change context
-                is DomainRune -> {
-                    rune.change(orginalContext, context)
-                }
-                // Do the augment rune effect
-                is AugmentRune -> {
-                    rune.effect(context)
-                }
-                // This should be the final rune called
-                is CastingRune -> {
-                    castingRune = rune
-                    // Assemble the casting rune with the builder
-                    // CALL assemble BEFORE buildStored
-                    castingRune.assemble(builder)
-                    builder.buildStored()
-                    // Run the cast
-                    castingRune.cast(source, context, builder)
-                }
+                is ModifierRune -> builder.storeRune(rune)               // tunes the upcoming cast
+                is DomainRune   -> rune.change(originalContext, context) // re-aims / relocates
+                is AugmentRune  -> rune.effect(context)                  // side effect on the context
+                is CastingRune  -> { castingRune = rune; break }         // the form ends this cycle
             }
         }
-        // When done with loop, get signal from castingRune
-        // Reset signal if no casting rune
-        if (castingRune != null) {
-            hasCastingSignal = true
-            hasCreateSignal = true
-        }
-        else {
-            val castingRuneFinished = true
-            // TODO: Have the Ball timer have access to the signal
-            // Then when isDead -> turn on the signal
-            if (castingRuneFinished) {
-                hasCastingSignal = true
-                hasCreateSignal = true
-            }
-        }
-        // Remove the builder in the buffer
-        builderInBuffer = null
-        // Remove all runes in buffer
-        runesInBuffer.removeIf { true }
-    }
 
+        val form = castingRune
+        if (form != null) {
+            form.assemble(builder)  // rune defaults first...
+            builder.buildStored()   // ...then modifiers fold in on top (signed, so they can subtract)
+            form.cast(source, context, builder, onComplete)
+        } else {
+            onComplete() // only trailing modifiers/domains/augments were left — nothing to await
+        }
+    }
 }

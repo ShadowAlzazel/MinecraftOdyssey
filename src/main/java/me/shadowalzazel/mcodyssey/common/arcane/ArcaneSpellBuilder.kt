@@ -7,7 +7,6 @@ import org.bukkit.inventory.ItemStack
 /**
  * The init method handles the building of the runeSequence
  */
-@Suppress("UnstableApiUsage")
 class ArcaneSpellBuilder(
     arcaneItem: ItemStack,
     additionalItems: List<ItemStack> = listOf(),

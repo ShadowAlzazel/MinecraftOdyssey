@@ -19,52 +19,77 @@ import org.bukkit.util.Vector
 
 /**
  * Casting runes are the *forms* a spell can take. They read defaults + modifiers from a
- * [CastingBuilder] and then manifest the [ArcaneSource] into the world.
+ * [CastingBuilder] and manifest the [ArcaneSource] into the world.
+ *
+ * Completion: a form must report when it is finished so the spell can chain onward. Most
+ * forms are synchronous and are marked done automatically. A form that keeps working after
+ * manifest() returns (a projectile in flight) sets [defersCompletion] = true and calls the
+ * provided `onComplete` itself once it resolves.
  *
  * TO ADD A NEW CASTING RUNE:
- *   1. Add a `class Foo : CastingRune()` below with a name/displayName.
- *   2. In build(), set the DEFAULT builder fields it cares about (modifiers add on top).
- *   3. In manifest(), do the effect, and set context.targetLocation (and context.target)
- *      to wherever the form "ends" so the next link in the sequence can continue from there.
- *   4. Register its name in ArcaneRune.fromNameID(). That's it — no other file needs to know.
+ *   1. Add a `class Foo : CastingRune()` with name/displayName.
+ *   2. build(): set the DEFAULT builder fields it uses (modifiers add on top).
+ *   3. manifest(): do the effect and set context.targetLocation / context.target to where
+ *      the form ends, so the next rune continues from there.
+ *   4. If it finishes later (async), set `defersCompletion = true` and call onComplete()
+ *      when it actually resolves.
+ *   5. Register its name in ArcaneRune.fromNameID(). Nothing else needs to change.
  */
 sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, VectorParticles {
 
-    // Runs a delayed cast one tick-batch later.
-    class DelayedCastRunner(
-        val rune: CastingRune,
-        val source: ArcaneSource,
-        val context: CastingContext,
-        val builder: CastingBuilder
-    ) : BukkitRunnable() {
-        override fun run() = rune.manifest(source, context, builder)
-    }
+    /** True if the form finishes after manifest() returns (e.g. a projectile). */
+    open val defersCompletion: Boolean get() = false
 
     /** Set default builder fields for this rune. Modifiers are folded in afterwards. */
     abstract fun build(builder: CastingBuilder)
 
-    /** Express the source into the world. */
-    abstract fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder)
+    /**
+     * Express the source into the world. For deferred forms, keep the [onComplete] handle
+     * and call it when the effect actually resolves; synchronous forms may ignore it.
+     */
+    abstract fun manifest(
+        source: ArcaneSource,
+        context: CastingContext,
+        builder: CastingBuilder,
+        onComplete: () -> Unit
+    )
 
-    /** Entry point used by the spell engine; honours Delay. */
-    fun cast(source: ArcaneSource, context: CastingContext, builder: CastingBuilder) {
+    /** Entry point used by the spell engine; honours Delay, then runs the form. */
+    fun cast(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
         if (builder.delayInTicks > 0) {
-            DelayedCastRunner(this, source, context, builder)
+            DelayedCastRunner(this, source, context, builder, onComplete)
                 .runTaskLater(Odyssey.instance, builder.delayInTicks)
         } else {
-            manifest(source, context, builder)
+            runManifest(source, context, builder, onComplete)
         }
+    }
+
+    /** Runs manifest and auto-completes for synchronous forms. */
+    internal fun runManifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
+        manifest(source, context, builder, onComplete)
+        if (!defersCompletion) onComplete()
     }
 
     /** Applies this rune's defaults into the provided builder. */
     fun assemble(provided: CastingBuilder) = build(provided)
+
+    // Runs a delayed cast one tick-batch later.
+    class DelayedCastRunner(
+        private val rune: CastingRune,
+        private val source: ArcaneSource,
+        private val context: CastingContext,
+        private val builder: CastingBuilder,
+        private val onComplete: () -> Unit
+    ) : BukkitRunnable() {
+        override fun run() = rune.runManifest(source, context, builder, onComplete)
+    }
 
     // Small helper: caster-owned living entities to ignore in target scans.
     protected fun CastingContext.filteredLivingIgnores(): List<LivingEntity> =
         ignoredTargets.mapNotNull { it.entityTarget as? LivingEntity }
 
     // -----------------------------------------------------------------------------------
-    //  POINT  — a single-target tap at the current target/location.
+    //  POINT — a single-target tap at the current target/location.
     // -----------------------------------------------------------------------------------
     class Point : CastingRune() {
         override val name = "point"
@@ -74,7 +99,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
             builder.damage = 0.0
         }
 
-        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder) {
+        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
             val target = context.target
             val point: Location
             if (target?.entityTarget is LivingEntity) {
@@ -89,7 +114,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
     }
 
     // -----------------------------------------------------------------------------------
-    //  BEAM  — a straight ray. Wide -> more forgiving/wider, Range -> longer.
+    //  BEAM — a straight ray. Wide -> more forgiving/wider, Range -> longer.
     // -----------------------------------------------------------------------------------
     class Beam : CastingRune() {
         override val name = "beam"
@@ -102,7 +127,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
             builder.spread = 0.0
         }
 
-        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder) {
+        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
             val caster = context.caster
             val range = builder.range.coerceAtLeast(1.0)
             // A wider beam simply snaps to targets more generously.
@@ -143,8 +168,8 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
     }
 
     // -----------------------------------------------------------------------------------
-    //  DISPERSE  — a cone/cloud. Wide -> wider angle, Range -> further, Invert -> apex flips
-    //              (base at the caster, tip out — a converging cone instead of a spreading one).
+    //  DISPERSE — a cone/cloud. Wide -> wider angle, Range -> further, Invert -> apex flips
+    //             (base at the caster, tip out: a converging cone instead of a spreading one).
     // -----------------------------------------------------------------------------------
     class Disperse : CastingRune() {
         override val name = "disperse"
@@ -156,13 +181,12 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
             builder.spread = 0.0
         }
 
-        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder) {
+        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
             val caster = context.caster
             val reach = builder.range.coerceAtLeast(1.0)
             val halfAngle = Math.toRadians((20.0 + builder.spread * 8.0).coerceIn(5.0, 80.0))
 
             val baseDir = context.direction.clone().normalize()
-            // Normal cone opens away from the caster; inverted cone converges to a far point.
             val apex = if (builder.invert)
                 context.castingLocation.clone().add(baseDir.clone().multiply(reach))
             else
@@ -205,11 +229,12 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
     }
 
     // -----------------------------------------------------------------------------------
-    //  BALL  — a slow, floaty particle orb. No gravity by default; big, showy trail.
+    //  BALL — a slow, floaty particle orb. No gravity by default; big, showy trail.
     // -----------------------------------------------------------------------------------
     class Ball : CastingRune() {
         override val name = "ball"
         override val displayName = "Ball"
+        override val defersCompletion = true
 
         override fun build(builder: CastingBuilder) {
             builder.damage = 3.0
@@ -219,18 +244,19 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
             builder.gravity = false
         }
 
-        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder) {
-            ArcaneProjectile(source, context, builder, context.caster, context.castingLocation, context.direction)
+        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
+            ArcaneProjectile(source, context, builder, context.caster, context.castingLocation, context.direction, onComplete)
                 .runTaskTimer(Odyssey.instance, 0, 1)
         }
     }
 
     // -----------------------------------------------------------------------------------
-    //  BOLT  — a fast particle dart. Tight trail; Gravity rune makes it arc.
+    //  BOLT — a fast particle dart. Tight trail; the Gravity rune makes it arc.
     // -----------------------------------------------------------------------------------
     class Bolt : CastingRune() {
         override val name = "bolt"
         override val displayName = "Bolt"
+        override val defersCompletion = true
 
         override fun build(builder: CastingBuilder) {
             builder.damage = 4.0
@@ -240,14 +266,14 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
             builder.gravity = false   // enabled by the Gravity rune
         }
 
-        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder) {
-            ArcaneProjectile(source, context, builder, context.caster, context.castingLocation, context.direction)
+        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
+            ArcaneProjectile(source, context, builder, context.caster, context.castingLocation, context.direction, onComplete)
                 .runTaskTimer(Odyssey.instance, 0, 1)
         }
     }
 
     // -----------------------------------------------------------------------------------
-    //  ZONE  — an area burst at the current target location. Wide -> bigger radius.
+    //  ZONE — an area burst at the current target location. Wide -> bigger radius.
     // -----------------------------------------------------------------------------------
     class Zone : CastingRune() {
         override val name = "zone"
@@ -260,7 +286,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
             builder.aimAssist = 0.1
         }
 
-        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder) {
+        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
             val caster = context.caster
             val radius = builder.spread.coerceAtLeast(0.5)
             val center = context.targetLocation ?: context.castingLocation
@@ -286,10 +312,10 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
     }
 
     // ===================================================================================
-    //  ARCANE PROJECTILE  — the flashy, purely-particle traveller shared by Ball and Bolt.
-    //  No arrows, no snowballs: it's a moving point that leaves a particle trail, checks
-    //  block/entity collisions against its own radius, and on impact updates the shared
-    //  context so the NEXT rune in the sequence continues from the point of impact.
+    //  ARCANE PROJECTILE — the flashy, purely-particle traveller shared by Ball and Bolt.
+    //  A moving point that leaves a particle trail, checks block/entity collisions against
+    //  its own radius, and on impact updates the shared context AND calls onResolve so the
+    //  next rune in the sequence continues from the point of impact.
     // ===================================================================================
     class ArcaneProjectile(
         private val source: ArcaneSource,
@@ -298,8 +324,8 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
         private val caster: ArcaneCaster,
         start: Location,
         direction: Vector,
-        // The engine can pass a callback here to resume the chain on impact (see notes).
-        private val onResolve: ((CastingContext) -> Unit)? = null
+        // Called once when the projectile resolves (hit or expiry). Resumes the spell chain.
+        private val onResolve: (() -> Unit)? = null
     ) : BukkitRunnable() {
 
         private val world = context.world
@@ -348,9 +374,9 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
                 source.invoke(target, caster, velocity, damage)
                 context.target = target
             }
-            // Hand the impact point to the shared context so the chain can continue from here.
+            // Hand the impact point to the shared context, then resume the chain.
             context.targetLocation = pos.clone()
-            onResolve?.invoke(context)
+            onResolve?.invoke()
             cancel()
         }
     }

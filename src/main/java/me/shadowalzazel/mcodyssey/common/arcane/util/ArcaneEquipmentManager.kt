@@ -5,6 +5,7 @@ import io.papermc.paper.datacomponent.item.ItemLore
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.arcane.CastingContext
 import me.shadowalzazel.mcodyssey.common.arcane.ArcaneCaster
+import me.shadowalzazel.mcodyssey.common.arcane.ArcaneCasting
 import me.shadowalzazel.mcodyssey.common.arcane.ArcaneSource
 import me.shadowalzazel.mcodyssey.common.arcane.ArcaneSpellBuilder
 import me.shadowalzazel.mcodyssey.common.arcane.ArcaneTarget
@@ -272,23 +273,13 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
 
         // Create a default sequence
         val wandRunes = listOf<ArcaneRune>(
-            ModifierRune.Range(16.0),
+            ModifierRune.Range(32.0),
             ModifierRune.Amplify(4.0), // 4.0
             ModifierRune.Convergence(0.35),
             CastingRune.Beam(),
         )
 
-        val offHandSource = ArcaneSource.Companion.getSourceFromRawItem(offHandItem)
-        // Build the spell
-        val spellBuilder = ArcaneSpellBuilder(
-            arcaneItem = arcaneTool,
-            additionalItems = listOf(offHandItem),
-            providedRunes = wandRunes,
-            providedSource = offHandSource ?: ArcaneSource.Magic
-        )
-        val canBuildSpell = spellBuilder.canBuildSpell()
-        if (!canBuildSpell) return
-
+        val offHandSource = ArcaneSource.getSourceFromRawItem(offHandItem) ?: ArcaneSource.Magic
         // Context params based on initial conditions
         val direction = caster.eyeLocation.direction.clone()
         //val target = getRayTraceEntity(caster, 16.0, 0.15)
@@ -296,7 +287,7 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
             caster.eyeLocation,
             caster.eyeLocation.direction,
             listOf(caster),
-            16.0,
+            32.0,
             0.15
         )
         val targetLocation: Location = if (target != null) {
@@ -315,8 +306,20 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
             targetLocation = targetLocation
         )
 
+        // THIS IS DEPRECATED
+        // Build the spell
+        val spellBuilder = ArcaneSpellBuilder(
+            arcaneItem = arcaneTool,
+            additionalItems = listOf(offHandItem),
+            providedRunes = wandRunes,
+            providedSource = offHandSource
+        )
+        val canBuildSpell = spellBuilder.canBuildSpell()
+        if (!canBuildSpell) return
         val spell = spellBuilder.buildSpell(spellContext)
-        spell.castSpell()
+
+        //spell.castSpell()
+        ArcaneCasting.castSequence(offHandSource, spellContext, wandRunes)
         caster.setCooldown(equipment.itemInMainHand, 20)
     }
 
@@ -335,7 +338,7 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
             ModifierRune.Amplify(4.0), // Default(1.0) + 3.0
             ModifierRune.Convergence(0.1),
             DomainRune.Direct,
-            CastingRune.Bolt(),
+            CastingRune.Zone(),
             //ModifierRune.Amplify(4.0), // Default(1.0) + 3.0
             //CastingRune.Zone()
         )

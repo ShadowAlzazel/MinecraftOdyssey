@@ -26,15 +26,4 @@ data class CastingContext(
         )
     }
 
-    /*
-    fun setEntityTarget(entity: Entity) {
-        if (target == null) {
-            target = ArcaneTarget(entity)
-        } else {
-            target!!.entityTarget = entity
-        }
-    }
-
-     */
-
 }
