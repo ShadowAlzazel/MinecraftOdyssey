@@ -14,7 +14,7 @@ import me.shadowalzazel.mcodyssey.common.arcane.runes.CastingRune
 import me.shadowalzazel.mcodyssey.common.arcane.runes.DomainRune
 import me.shadowalzazel.mcodyssey.common.arcane.runes.ModifierRune
 import me.shadowalzazel.mcodyssey.common.combat.AttackHelper
-import me.shadowalzazel.mcodyssey.common.tasks.arcane_tasks.MagicMissileLauncher
+import me.shadowalzazel.mcodyssey.common.arcane.util.MagicMissileLauncher
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.util.VectorParticles
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
@@ -332,10 +332,12 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
         // Create a default sequence
         val scepterRunes = listOf<ArcaneRune>(
             ModifierRune.Range(16.0),
-            ModifierRune.Amplify(3.0), // Default(1.0) + 3.0
+            ModifierRune.Amplify(4.0), // Default(1.0) + 3.0
             ModifierRune.Convergence(0.1),
             DomainRune.Direct,
-            CastingRune.Zone()
+            CastingRune.Bolt(),
+            //ModifierRune.Amplify(4.0), // Default(1.0) + 3.0
+            //CastingRune.Zone()
         )
         val offHandSource = ArcaneSource.Companion.getSourceFromRawItem(offHandItem)
         // Build the spell

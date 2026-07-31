@@ -1,4 +1,4 @@
-package me.shadowalzazel.mcodyssey.common.tasks.arcane_tasks
+package me.shadowalzazel.mcodyssey.common.arcane.util
 
 import org.bukkit.FluidCollisionMode
 import org.bukkit.Location
