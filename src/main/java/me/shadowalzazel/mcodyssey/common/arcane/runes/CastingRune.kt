@@ -41,280 +41,6 @@ import kotlin.math.sqrt
  */
 sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, VectorParticles {
 
-    /** True if the form finishes after manifest() returns (e.g. a projectile). */
-    open val defersCompletion: Boolean get() = false
-
-    /** Set default builder fields for this rune. Modifiers are folded in afterwards. */
-    abstract fun build(builder: CastingBuilder)
-
-    /**
-     * Express the source into the world. For deferred forms, keep the [onComplete] handle
-     * and call it when the effect actually resolves; synchronous forms may ignore it.
-     */
-    abstract fun manifest(
-        source: ArcaneSource,
-        context: CastingContext,
-        builder: CastingBuilder,
-        onComplete: () -> Unit
-    )
-
-    /** Entry point used by the spell engine; honours Delay, then runs the form. */
-    fun cast(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
-        if (builder.delayInTicks > 0) {
-            DelayedCastRunner(this, source, context, builder, onComplete)
-                .runTaskLater(Odyssey.instance, builder.delayInTicks)
-        } else {
-            runManifest(source, context, builder, onComplete)
-        }
-    }
-
-    /** Runs manifest and auto-completes for synchronous forms. */
-    internal fun runManifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
-        manifest(source, context, builder, onComplete)
-        if (!defersCompletion) onComplete()
-    }
-
-    /** Applies this rune's defaults into the provided builder. */
-    fun assemble(provided: CastingBuilder) = build(provided)
-
-    // Runs a delayed cast one tick-batch later.
-    class DelayedCastRunner(
-        private val rune: CastingRune,
-        private val source: ArcaneSource,
-        private val context: CastingContext,
-        private val builder: CastingBuilder,
-        private val onComplete: () -> Unit
-    ) : BukkitRunnable() {
-        override fun run() = rune.runManifest(source, context, builder, onComplete)
-    }
-
-    // Small helper: caster-owned living entities to ignore in target scans.
-    protected fun CastingContext.filteredLivingIgnores(): List<LivingEntity> =
-        ignoredTargets.mapNotNull { it.entityTarget as? LivingEntity }
-
-    // -----------------------------------------------------------------------------------
-    //  POINT — a single-target tap at the current target/location.
-    // -----------------------------------------------------------------------------------
-    class Point : CastingRune() {
-        override val name = "point"
-        override val displayName = "Point"
-
-        override fun build(builder: CastingBuilder) {
-            builder.damage = 0.0
-        }
-
-        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
-            val target = context.target
-            val point: Location
-            if (target?.entityTarget is LivingEntity) {
-                source.invoke(target, context.caster, context.direction, builder.damage)
-                point = target.entityTarget.eyeLocation
-            } else {
-                point = context.targetLocation ?: context.castingLocation
-            }
-            spawnPointParticles(builder.particle, point, 10, 0.05)
-            context.targetLocation = point
-        }
-    }
-
-    // -----------------------------------------------------------------------------------
-    //  BEAM — a straight ray. Wide -> more forgiving/wider, Range -> longer.
-    // -----------------------------------------------------------------------------------
-    class Beam : CastingRune() {
-        override val name = "beam"
-        override val displayName = "Beam"
-
-        override fun build(builder: CastingBuilder) {
-            builder.damage = 1.0
-            builder.range = 16.0
-            builder.aimAssist = 0.25
-            builder.spread = 0.0
-        }
-
-        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
-            val caster = context.caster
-            val range = builder.range.coerceAtLeast(1.0)
-            // A wider beam simply snaps to targets more generously.
-            val aim = (builder.aimAssist + builder.spread * 0.1).coerceAtLeast(0.0)
-
-            val castLoc = context.castingLocation
-            val beamDir = context.targetLocation?.clone()?.subtract(castLoc)?.toVector() ?: context.direction
-            val filter = context.filteredLivingIgnores()
-
-            val end: Location
-            val hitEntity = getEntityRayTrace(castLoc, beamDir, filter, range, aim)
-            if (hitEntity is LivingEntity) {
-                val newTarget = ArcaneTarget(entityTarget = hitEntity)
-                context.target = newTarget
-                source.invoke(newTarget, caster, beamDir, builder.damage)
-                end = hitEntity.eyeLocation
-            } else {
-                val hitBlock = context.world.rayTraceBlocks(castLoc, context.direction, range, FluidCollisionMode.NEVER)?.hitBlock
-                if (hitBlock != null) {
-                    val newTarget = ArcaneTarget(blockTarget = hitBlock)
-                    context.target = newTarget
-                    source.invoke(newTarget, caster, beamDir, builder.damage)
-                    end = hitBlock.location.toCenterLocation()
-                } else {
-                    end = castLoc.clone().add(context.direction.clone().normalize().multiply(range))
-                }
-            }
-
-            spawnLineParticles(
-                particle = builder.particle,
-                start = castLoc,
-                end = end,
-                count = (end.distance(castLoc) * 6).toInt()
-            )
-            context.targetLocation = end
-            context.world.playSound(castLoc, Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, 2F, 2F)
-        }
-    }
-
-    // -----------------------------------------------------------------------------------
-    //  DISPERSE — a cone/cloud. Wide -> wider angle, Range -> further, Invert -> apex flips
-    //             (base at the caster, tip out: a converging cone instead of a spreading one).
-    // -----------------------------------------------------------------------------------
-    class Disperse : CastingRune() {
-        override val name = "disperse"
-        override val displayName = "Disperse"
-
-        override fun build(builder: CastingBuilder) {
-            builder.damage = 2.0
-            builder.range = 8.0
-            builder.spread = 0.0
-        }
-
-        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
-            val caster = context.caster
-            val reach = builder.range.coerceAtLeast(1.0)
-            val halfAngle = Math.toRadians((20.0 + builder.spread * 8.0).coerceIn(5.0, 80.0))
-
-            val baseDir = context.direction.clone().normalize()
-            val apex = if (builder.invert)
-                context.castingLocation.clone().add(baseDir.clone().multiply(reach))
-            else
-                context.castingLocation.clone()
-            val coneDir = if (builder.invert) baseDir.clone().multiply(-1.0) else baseDir
-
-            val filter = context.filteredLivingIgnores()
-            apex.getNearbyLivingEntities(reach).forEach { e ->
-                if (e in filter) return@forEach
-                val to = e.location.clone().add(0.0, e.height / 2.0, 0.0).subtract(apex).toVector()
-                if (to.length() <= reach && to.angle(coneDir) <= halfAngle) {
-                    source.invoke(ArcaneTarget(entityTarget = e), caster, baseDir, builder.damage)
-                }
-            }
-
-            spawnConeParticles(builder.particle, apex, coneDir, reach, halfAngle)
-            context.targetLocation = apex.clone().add(coneDir.clone().multiply(reach))
-            context.world.playSound(context.castingLocation, Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, 1.5F, 1.6F)
-        }
-
-        private fun spawnConeParticles(particle: Particle, apex: Location, dir: Vector, reach: Double, halfAngle: Double) {
-            val world = apex.world
-            val ref = if (Math.abs(dir.y) > 0.9) Vector(1.0, 0.0, 0.0) else Vector(0.0, 1.0, 0.0)
-            val right = dir.clone().getCrossProduct(ref).normalize()
-            val up = right.clone().getCrossProduct(dir).normalize()
-            val steps = 10
-            for (s in 1..steps) {
-                val dist = reach * s / steps
-                val ringR = Math.tan(halfAngle) * dist
-                val center = apex.clone().add(dir.clone().multiply(dist))
-                val points = 6 + s
-                for (p in 0 until points) {
-                    val a = 2 * Math.PI * p / points
-                    val offset = right.clone().multiply(Math.cos(a) * ringR)
-                        .add(up.clone().multiply(Math.sin(a) * ringR))
-                    world.spawnParticle(particle, center.clone().add(offset), 1, 0.0, 0.0, 0.0, 0.0)
-                }
-            }
-        }
-    }
-
-    // -----------------------------------------------------------------------------------
-    //  BALL — a slow, floaty particle orb. No gravity by default; big, showy trail.
-    // -----------------------------------------------------------------------------------
-    class Ball : CastingRune() {
-        override val name = "ball"
-        override val displayName = "Ball"
-        override val defersCompletion = true
-
-        override fun build(builder: CastingBuilder) {
-            builder.damage = 3.0
-            builder.range = 24.0
-            builder.spread = 0.6      // orb radius
-            builder.speed = 0.4
-            builder.gravity = false
-        }
-
-        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
-            ArcaneProjectile(source, context, builder, context.caster, context.castingLocation, context.direction, onComplete)
-                .runTaskTimer(Odyssey.instance, 0, 1)
-        }
-    }
-
-    // -----------------------------------------------------------------------------------
-    //  BOLT — a fast particle dart. Tight trail; the Gravity rune makes it arc.
-    // -----------------------------------------------------------------------------------
-    class Bolt : CastingRune() {
-        override val name = "bolt"
-        override val displayName = "Bolt"
-        override val defersCompletion = true
-
-        override fun build(builder: CastingBuilder) {
-            builder.damage = 4.0
-            builder.range = 32.0
-            builder.spread = 0.25     // dart radius
-            builder.speed = 1.1
-            builder.gravity = false   // enabled by the Gravity rune
-        }
-
-        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
-            ArcaneProjectile(source, context, builder, context.caster, context.castingLocation, context.direction, onComplete)
-                .runTaskTimer(Odyssey.instance, 0, 1)
-        }
-    }
-
-    // -----------------------------------------------------------------------------------
-    //  ZONE — an area burst at the current target location. Wide -> bigger radius.
-    // -----------------------------------------------------------------------------------
-    class Zone : CastingRune() {
-        override val name = "zone"
-        override val displayName = "Zone"
-
-        override fun build(builder: CastingBuilder) {
-            builder.damage = 0.0
-            builder.range = 16.0
-            builder.spread = 3.0      // radius
-            builder.aimAssist = 0.1
-        }
-
-        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
-            val caster = context.caster
-            val radius = builder.spread.coerceAtLeast(0.5)
-            val center = context.targetLocation ?: context.castingLocation
-            val filter = context.filteredLivingIgnores()
-
-            center.getNearbyLivingEntities(radius).forEach {
-                if (it !in filter) {
-                    source.invoke(ArcaneTarget(entityTarget = it), caster, context.direction, builder.damage)
-                }
-            }
-
-            spawnCircleParticles(
-                particle = builder.particle,
-                center = center,
-                upDirection = Vector(0, 1, 0),
-                radius = radius,
-                heightOffset = 0.25,
-                count = (radius * Math.PI * 7).toInt()
-            )
-            context.targetLocation = center
-            context.world.playSound(center, Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, 2F, 2F)
-        }
-    }
-
     // ===================================================================================
     //  ARCANE PROJECTILE — the flashy, purely-particle traveller shared by Ball and Bolt.
     //  A moving point that leaves a particle trail, checks block/entity collisions against
@@ -384,6 +110,301 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
             cancel()
         }
     }
+
+    /*
+     * Ideas:
+     *
+     * New Casting Runes:
+     * `erupt` spews a steady stream upwards. Like the geyser
+     * `vortex` spawns a rotating swirling mas.
+     * `familiar` a magic summon
+     *
+     * Mechanics: True Proper chaining
+     * New list of targets create new target contexts. But with the cut sub-sequence.
+     * To prevent recursion, these new sequence have their own casting rune that was given by
+     * the previous run. Since it already reads in order.
+     *
+     */
+
+    /** True if the form finishes after manifest() returns (e.g. a projectile). */
+    open val defersCompletion: Boolean get() = false
+
+    /** Set default builder fields for this rune. Modifiers are folded in afterwards. */
+    abstract fun build(builder: CastingBuilder)
+
+    /**
+     * Express the source into the world. For deferred forms, keep the [onComplete] handle
+     * and call it when the effect actually resolves; synchronous forms may ignore it.
+     */
+    abstract fun manifest(
+        source: ArcaneSource,
+        context: CastingContext,
+        builder: CastingBuilder,
+        onComplete: () -> Unit
+    )
+
+    /** Entry point used by the spell engine; honours Delay, then runs the form. */
+    fun cast(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
+        if (builder.delayInTicks > 0) {
+            DelayedCastRunner(this, source, context, builder, onComplete)
+                .runTaskLater(Odyssey.instance, builder.delayInTicks)
+        } else {
+            runManifest(source, context, builder, onComplete)
+        }
+    }
+
+    /** Runs manifest and auto-completes for synchronous forms. */
+    internal fun runManifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
+        manifest(source, context, builder, onComplete)
+        if (!defersCompletion) onComplete()
+    }
+
+    /** Applies this rune's defaults into the provided builder. */
+    fun assemble(provided: CastingBuilder) = build(provided)
+
+    // Runs a delayed cast one tick-batch later.
+    class DelayedCastRunner(
+        private val rune: CastingRune,
+        private val source: ArcaneSource,
+        private val context: CastingContext,
+        private val builder: CastingBuilder,
+        private val onComplete: () -> Unit
+    ) : BukkitRunnable() {
+        override fun run() = rune.runManifest(source, context, builder, onComplete)
+    }
+
+    // Small helper: caster-owned living entities to ignore in target scans.
+    protected fun CastingContext.filteredLivingIgnores(): List<LivingEntity> =
+        ignoredTargets.mapNotNull { it.entityTarget as? LivingEntity }
+
+
+    // -----------------------------------------------------------------------------------
+    //  POINT — a single-target tap at the current target/location.
+    // -----------------------------------------------------------------------------------
+    class Point : CastingRune() {
+        override val name = "point"
+        override val displayName = "Point"
+
+        override fun build(builder: CastingBuilder) {
+            builder.damage = 0.0
+        }
+
+        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
+            val target = context.target
+            val point: Location
+            if (target?.entityTarget is LivingEntity) {
+                source.invoke(target, context.caster, context.direction, builder.damage)
+                point = target.entityTarget.eyeLocation
+            } else {
+                point = context.targetLocation ?: context.castingLocation
+            }
+            spawnPointParticles(builder.particle, point, 10, 0.05)
+            context.targetLocation = point
+        }
+    }
+
+
+    // -----------------------------------------------------------------------------------
+    //  BEAM — a straight ray. Wide -> more forgiving/wider, Range -> longer.
+    // -----------------------------------------------------------------------------------
+    class Beam : CastingRune() {
+        override val name = "beam"
+        override val displayName = "Beam"
+
+        override fun build(builder: CastingBuilder) {
+            builder.damage = 1.0
+            builder.range = 16.0
+            builder.aimAssist = 0.25
+            builder.spread = 0.0
+        }
+
+        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
+            val caster = context.caster
+            val range = builder.range.coerceAtLeast(1.0)
+            // A wider beam simply snaps to targets more generously.
+            val aim = (builder.aimAssist + builder.spread * 0.1).coerceAtLeast(0.0)
+
+            val castLoc = context.castingLocation
+            val beamDir = context.targetLocation?.clone()?.subtract(castLoc)?.toVector() ?: context.direction
+            val filter = context.filteredLivingIgnores()
+
+            val end: Location
+            val hitEntity = getEntityRayTrace(castLoc, beamDir, filter, range, aim)
+            if (hitEntity is LivingEntity) {
+                val newTarget = ArcaneTarget(entityTarget = hitEntity)
+                context.target = newTarget
+                source.invoke(newTarget, caster, beamDir, builder.damage)
+                end = hitEntity.eyeLocation
+            } else {
+                val hitBlock = context.world.rayTraceBlocks(castLoc, context.direction, range, FluidCollisionMode.NEVER)?.hitBlock
+                if (hitBlock != null) {
+                    val newTarget = ArcaneTarget(blockTarget = hitBlock)
+                    context.target = newTarget
+                    source.invoke(newTarget, caster, beamDir, builder.damage)
+                    end = hitBlock.location.toCenterLocation()
+                } else {
+                    end = castLoc.clone().add(context.direction.clone().normalize().multiply(range))
+                }
+            }
+
+            spawnLineParticles(
+                particle = builder.particle,
+                start = castLoc,
+                end = end,
+                count = (end.distance(castLoc) * 6).toInt()
+            )
+            context.targetLocation = end
+            context.world.playSound(castLoc, Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, 2F, 2F)
+        }
+    }
+
+
+    // -----------------------------------------------------------------------------------
+    //  DISPERSE — a cone/cloud. Wide -> wider angle, Range -> further, Invert -> apex flips
+    //             (base at the caster, tip out: a converging cone instead of a spreading one).
+    // -----------------------------------------------------------------------------------
+    class Disperse : CastingRune() {
+        override val name = "disperse"
+        override val displayName = "Disperse"
+
+        override fun build(builder: CastingBuilder) {
+            builder.damage = 2.0
+            builder.range = 8.0
+            builder.spread = 0.0
+        }
+
+        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
+            val caster = context.caster
+            val reach = builder.range.coerceAtLeast(1.0)
+            val halfAngle = Math.toRadians((20.0 + builder.spread * 8.0).coerceIn(5.0, 80.0))
+
+            val baseDir = context.direction.clone().normalize()
+            val apex = if (builder.invert)
+                context.castingLocation.clone().add(baseDir.clone().multiply(reach))
+            else
+                context.castingLocation.clone()
+            val coneDir = if (builder.invert) baseDir.clone().multiply(-1.0) else baseDir
+
+            val filter = context.filteredLivingIgnores()
+            apex.getNearbyLivingEntities(reach).forEach { e ->
+                if (e in filter) return@forEach
+                val to = e.location.clone().add(0.0, e.height / 2.0, 0.0).subtract(apex).toVector()
+                if (to.length() <= reach && to.angle(coneDir) <= halfAngle) {
+                    source.invoke(ArcaneTarget(entityTarget = e), caster, baseDir, builder.damage)
+                }
+            }
+
+            spawnConeParticles(builder.particle, apex, coneDir, reach, halfAngle)
+            context.targetLocation = apex.clone().add(coneDir.clone().multiply(reach))
+            context.world.playSound(context.castingLocation, Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, 1.5F, 1.6F)
+        }
+
+        private fun spawnConeParticles(particle: Particle, apex: Location, dir: Vector, reach: Double, halfAngle: Double) {
+            val world = apex.world
+            val ref = if (Math.abs(dir.y) > 0.9) Vector(1.0, 0.0, 0.0) else Vector(0.0, 1.0, 0.0)
+            val right = dir.clone().getCrossProduct(ref).normalize()
+            val up = right.clone().getCrossProduct(dir).normalize()
+            val steps = 10
+            for (s in 1..steps) {
+                val dist = reach * s / steps
+                val ringR = Math.tan(halfAngle) * dist
+                val center = apex.clone().add(dir.clone().multiply(dist))
+                val points = 6 + s
+                for (p in 0 until points) {
+                    val a = 2 * Math.PI * p / points
+                    val offset = right.clone().multiply(Math.cos(a) * ringR)
+                        .add(up.clone().multiply(Math.sin(a) * ringR))
+                    world.spawnParticle(particle, center.clone().add(offset), 1, 0.0, 0.0, 0.0, 0.0)
+                }
+            }
+        }
+    }
+
+
+    // -----------------------------------------------------------------------------------
+    //  BALL — a slow, floaty particle orb. No gravity by default; big, showy trail.
+    // -----------------------------------------------------------------------------------
+    class Ball : CastingRune() {
+        override val name = "ball"
+        override val displayName = "Ball"
+        override val defersCompletion = true
+
+        override fun build(builder: CastingBuilder) {
+            builder.damage = 3.0
+            builder.range = 24.0
+            builder.spread = 0.6      // orb radius
+            builder.speed = 0.4
+            builder.gravity = false
+        }
+
+        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
+            ArcaneProjectile(source, context, builder, context.caster, context.castingLocation, context.direction, onComplete)
+                .runTaskTimer(Odyssey.instance, 0, 1)
+        }
+    }
+
+    // -----------------------------------------------------------------------------------
+    //  BOLT — a fast particle dart. Tight trail; the Gravity rune makes it arc.
+    // -----------------------------------------------------------------------------------
+    class Bolt : CastingRune() {
+        override val name = "bolt"
+        override val displayName = "Bolt"
+        override val defersCompletion = true
+
+        override fun build(builder: CastingBuilder) {
+            builder.damage = 4.0
+            builder.range = 32.0
+            builder.spread = 0.25     // dart radius
+            builder.speed = 1.1
+            builder.gravity = false   // enabled by the Gravity rune
+        }
+
+        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
+            ArcaneProjectile(source, context, builder, context.caster, context.castingLocation, context.direction, onComplete)
+                .runTaskTimer(Odyssey.instance, 0, 1)
+        }
+    }
+
+
+    // -----------------------------------------------------------------------------------
+    //  ZONE — an area burst at the current target location. Wide -> bigger radius.
+    // -----------------------------------------------------------------------------------
+    class Zone : CastingRune() {
+        override val name = "zone"
+        override val displayName = "Zone"
+
+        override fun build(builder: CastingBuilder) {
+            builder.damage = 0.0
+            builder.range = 16.0
+            builder.spread = 3.0      // radius
+            builder.aimAssist = 0.1
+        }
+
+        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
+            val caster = context.caster
+            val radius = builder.spread.coerceAtLeast(0.5)
+            val center = context.targetLocation ?: context.castingLocation
+            val filter = context.filteredLivingIgnores()
+
+            center.getNearbyLivingEntities(radius).forEach {
+                if (it !in filter) {
+                    source.invoke(ArcaneTarget(entityTarget = it), caster, context.direction, builder.damage)
+                }
+            }
+
+            spawnCircleParticles(
+                particle = builder.particle,
+                center = center,
+                upDirection = Vector(0, 1, 0),
+                radius = radius,
+                heightOffset = 0.25,
+                count = (radius * Math.PI * 7).toInt()
+            )
+            context.targetLocation = center
+            context.world.playSound(center, Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, 2F, 2F)
+        }
+    }
+
 
     // -----------------------------------------------------------------------------------
     //  RAIN — a burst of small falling drops over the target area. Wide -> radius.
@@ -510,12 +531,177 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
         }
     }
 
+
     // -----------------------------------------------------------------------------------
-    //  WALL — a standing particle plane. Range -> height, Wide -> width. Applies the
+    //  WALL — a standing particle plane that runs from the caster toward the target.
+    //         The cast -> target vector is the wall's length axis. Range -> length,
+    //         Wide -> height. Applies the source's effect to any entity whose body crosses
+    //         it, and re-applies on an interval while they linger inside. Lasts a few
+    //         seconds, places nothing.
+    // -----------------------------------------------------------------------------------
+    class Wall : CastingRune() {
+        override val name = "wall"
+        override val displayName = "Wall"
+
+        override fun build(builder: CastingBuilder) {
+            builder.damage = 0.0   // bonus on top of the source's own base; source carries the hit
+            builder.range = 4.0    // length
+            builder.spread = 4.0   // height (tall)
+        }
+
+        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
+            val start = context.castingLocation.clone().add(0.0, -1.0, 0.0)
+            val target = (context.targetLocation ?: context.castingLocation).clone()
+            val length = builder.range.coerceIn(1.0, 24.0)   // <- swap for start.distance(target) to span exactly to the target
+            val height = builder.spread.coerceIn(1.0, 32.0)
+
+            // The plane runs horizontally from the caster toward the target.
+            var along = target.toVector().subtract(start.toVector()).setY(0.0)
+            if (along.lengthSquared() < 1e-4) along = context.direction.clone().setY(0.0)
+            if (along.lengthSquared() < 1e-4) along = Vector(1.0, 0.0, 0.0)
+            along = along.normalize()
+            val normal = Vector(-along.z, 0.0, along.x)   // horizontal, perpendicular to the run
+
+            WallTask(source, context, start, along, normal, length, height, builder.damage)
+                .runTaskTimer(Odyssey.instance, 0, 1)
+
+            // Wall lingers in the background; the chain continues from the far end immediately.
+            context.targetLocation = target
+        }
+
+        private class WallTask(
+            private val source: ArcaneSource,
+            private val context: CastingContext,
+            private val base: Location,      // start of the wall (casting location)
+            private val along: Vector,       // horizontal length direction (start -> target)
+            private val normal: Vector,      // plane normal (horizontal, perpendicular to `along`)
+            private val length: Double,
+            private val height: Double,
+            private val bonus: Double
+        ) : BukkitRunnable() {
+
+            private val world = base.world
+            private val ignored: List<LivingEntity> = context.ignoredTargets.mapNotNull { it.entityTarget as? LivingEntity }
+            private val lastHitTick = HashMap<UUID, Int>()
+            private val thickness = 0.5     // how "solid" the plane is along its normal
+            private val applyInterval = 10  // re-apply to a lingering entity every N ticks
+            private val lifetimeTicks = 100 // wall duration
+            private var tick = 0
+
+            override fun run() {
+                if (tick >= lifetimeTicks) { cancel(); return }
+                if (tick % 2 == 0) render()
+                sweep()
+                tick++
+            }
+
+            private fun render() {
+                val up = Vector(0.0, 1.0, 0.0)
+                val lSteps = maxOf(2, (length * 2).toInt())
+                val hSteps = maxOf(2, (height * 2).toInt())
+                for (li in 0..lSteps) {
+                    val l = length * li / lSteps
+                    for (hi in 0..hSteps) {
+                        val at = base.clone()
+                            .add(along.clone().multiply(l))
+                            .add(up.clone().multiply(height * hi / hSteps))
+                        world.spawnParticle(source.particle, at, 1, 0.02, 0.02, 0.02, 0.0)
+                    }
+                }
+            }
+
+            private fun sweep() {
+                // Search from the middle of the span so the whole length is covered.
+                val mid = base.clone().add(along.clone().multiply(length / 2.0))
+                val reach = maxOf(length / 2.0, height) + 2.0
+                mid.getNearbyLivingEntities(reach).forEach { e ->
+                    if (e in ignored) return@forEach
+                    // Project the entity's centre into the wall's local frame.
+                    val to = e.boundingBox.center.subtract(base.toVector())
+                    val halfW = e.width / 2.0
+                    val l = to.dot(along)    // offset along the length
+                    val n = to.dot(normal)   // distance from the plane
+                    val h = to.y             // height above the base
+                    val crossing = Math.abs(n) <= thickness + halfW &&
+                            l in (-halfW)..(length + halfW) &&
+                            h in -0.4..(height + 0.4)
+                    if (!crossing) return@forEach
+
+                    val last = lastHitTick[e.uniqueId]
+                    if (last == null || tick - last >= applyInterval) {
+                        lastHitTick[e.uniqueId] = tick
+                        source.invoke(ArcaneTarget(entityTarget = e), context.caster, normal, bonus)
+                    }
+                }
+            }
+        }
+    }
+
+
+    // -----------------------------------------------------------------------------------
+    //  SLASH — a single perpendicular cut: a 1D line drawn across the caster's look
+    //          direction. Applies the source's effect once to anything the line crosses.
+    //          Fires instantly, lingers not at all, places nothing. The flat sibling of Wall.
+    // -----------------------------------------------------------------------------------
+    class Slash : CastingRune() {
+        override val name = "slash"
+        override val displayName = "Slash"
+
+        override fun build(builder: CastingBuilder) {
+            builder.damage = 0.0   // bonus on top of the source's own base; source carries the hit
+            builder.spread = 4.0   // length of the cut
+        }
+
+        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
+            val at = (context.targetLocation ?: context.castingLocation).clone()
+            val world = at.world
+            val width = builder.spread.coerceIn(1.0, 32.0)
+            val halfWidth = width / 2.0
+            val thickness = 0.6   // how close along the look axis still counts as cut
+            val bonus = builder.damage
+
+            // The cut runs across the caster's horizontal look direction.
+            var facing = context.direction.clone().setY(0.0)
+            if (facing.lengthSquared() < 1e-4) facing = Vector(1.0, 0.0, 0.0)
+            facing = facing.normalize()
+            val across = Vector(-facing.z, 0.0, facing.x)
+
+            // Draw the line.
+            val steps = maxOf(2, (width * 3).toInt())
+            for (i in 0..steps) {
+                val w = -halfWidth + width * i / steps
+                val point = at.clone().add(across.clone().multiply(w))
+                world.spawnParticle(source.particle, point, 1, 0.02, 0.02, 0.02, 0.0)
+            }
+
+            // Apply the effect once to anything the line crosses.
+            val ignored = context.ignoredTargets.mapNotNull { it.entityTarget as? LivingEntity }
+            at.getNearbyLivingEntities(halfWidth + 2.0).forEach { e ->
+                if (e in ignored) return@forEach
+                val to = e.boundingBox.center.subtract(at.toVector())
+                val halfW = e.width / 2.0
+                val a = to.dot(across)   // offset along the cut
+                val n = to.dot(facing)   // distance from the cut plane
+                val h = to.y             // height relative to the cut
+                val crossing = Math.abs(n) <= thickness + halfW &&
+                        a in (-halfWidth - halfW)..(halfWidth + halfW) &&
+                        Math.abs(h) <= e.height / 2.0 + 0.4
+                if (crossing) {
+                    source.invoke(ArcaneTarget(entityTarget = e), context.caster, facing, bonus)
+                }
+            }
+
+            context.targetLocation = at
+        }
+    }
+
+
+    // -----------------------------------------------------------------------------------
+    //  OLD_WALL — a standing particle plane. Range -> height, Wide -> width. Applies the
     //         source's effect to any entity whose body crosses it, and re-applies on an
     //         interval while they linger inside. Lasts a few seconds, places nothing.
     // -----------------------------------------------------------------------------------
-    class Wall : CastingRune() {
+    class OldWall : CastingRune() {
         override val name = "wall"
         override val displayName = "Wall"
 

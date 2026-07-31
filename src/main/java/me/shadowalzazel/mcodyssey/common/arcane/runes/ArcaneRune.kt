@@ -47,6 +47,7 @@ sealed class ArcaneRune : RuneDataManager {
             "wall" -> CastingRune.Wall()
             "rain" -> CastingRune.Rain()
             "wave" -> CastingRune.Wave()
+            "slash" -> CastingRune.Slash()
             // Domain
             "next" -> DomainRune.Next
             "nearby" -> DomainRune.Nearby
@@ -85,6 +86,7 @@ sealed class ArcaneRune : RuneDataManager {
             "obsidian" -> CastingRune.Wall()
             "breeze_rod" -> CastingRune.Rain()
             "wind_charge" -> CastingRune.Wave()
+            "flint" -> CastingRune.Slash()
             // Domain
             "heart_of_the_sea" -> DomainRune.Next
             "ender_eye" -> DomainRune.Nearby
