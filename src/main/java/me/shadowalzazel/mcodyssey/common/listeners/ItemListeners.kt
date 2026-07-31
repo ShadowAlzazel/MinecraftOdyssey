@@ -130,7 +130,7 @@ object ItemListeners : Listener, EnchantabilityHandler, RegistryTagManager {
         val customItemId = item.getItemNameFromData() ?: return
 
         val success = when (customItemId) {
-            "scroll" -> scrollItemUse(event.player)
+            //"scroll" -> scrollItemUse(event.player)
             else -> return
         }
     }

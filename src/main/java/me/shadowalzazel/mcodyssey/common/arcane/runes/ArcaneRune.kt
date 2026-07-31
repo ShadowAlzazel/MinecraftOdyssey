@@ -76,8 +76,9 @@ sealed class ArcaneRune : RuneDataManager {
             // Casting
             "alexandrite" -> CastingRune.Beam()
             "snowball" -> CastingRune.Zone()
-            "arrow" -> CastingRune.Ball()
+            "arrow" -> CastingRune.Bolt()
             "iron_nugget" -> CastingRune.Point()
+            "glass_bottle" -> CastingRune.Disperse()
             // Domain
             "heart_of_the_sea" -> DomainRune.Next
             "ender_eye" -> DomainRune.Nearby

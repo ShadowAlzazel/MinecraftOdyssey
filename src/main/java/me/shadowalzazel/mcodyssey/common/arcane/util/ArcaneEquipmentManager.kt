@@ -200,7 +200,6 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
     }
 
 
-
     fun arcanePenWithScrollCastingHandler(caster: LivingEntity) {
         if (caster !is Player) return
         // ----------- BUILDING SPELL ----------
@@ -260,7 +259,6 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
         val spell = spellBuilder.buildSpell(spellContext)
         spell.castSpell()
     }
-
 
     fun arcaneWandHandler(caster: LivingEntity) {
         if (caster !is Player) return
