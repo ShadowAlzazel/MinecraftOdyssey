@@ -44,6 +44,9 @@ sealed class ArcaneRune : RuneDataManager {
             "bolt" -> CastingRune.Bolt()
             "zone" -> CastingRune.Zone()
             "point" -> CastingRune.Point()
+            "wall" -> CastingRune.Wall()
+            "rain" -> CastingRune.Rain()
+            "wave" -> CastingRune.Wave()
             // Domain
             "next" -> DomainRune.Next
             "nearby" -> DomainRune.Nearby
@@ -79,6 +82,9 @@ sealed class ArcaneRune : RuneDataManager {
             "arrow" -> CastingRune.Bolt()
             "iron_nugget" -> CastingRune.Point()
             "glass_bottle" -> CastingRune.Disperse()
+            "obsidian" -> CastingRune.Wall()
+            "breeze_rod" -> CastingRune.Rain()
+            "wind_charge" -> CastingRune.Wave()
             // Domain
             "heart_of_the_sea" -> DomainRune.Next
             "ender_eye" -> DomainRune.Nearby
@@ -97,7 +103,7 @@ sealed class ArcaneRune : RuneDataManager {
             // Modifier
             "diamond" -> ModifierRune.Amplify(4.0)
             "emerald" -> ModifierRune.Wide(1.0)
-            "clock" -> ModifierRune.Delay(2.0)
+            "clock" -> ModifierRune.Delay(1.0) // -> 1s
             "kunzite" -> ModifierRune.Convergence(1.0)
             "amethyst_shard" -> ModifierRune.Range(16.0)
             // Modifier Special

@@ -16,6 +16,10 @@ import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
+import java.util.UUID
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 /**
  * Casting runes are the *forms* a spell can take. They read defaults + modifiers from a
@@ -378,6 +382,231 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
             context.targetLocation = pos.clone()
             onResolve?.invoke()
             cancel()
+        }
+    }
+
+    // -----------------------------------------------------------------------------------
+    //  RAIN — a burst of small falling drops over the target area. Wide -> radius.
+    //         Each drop is an independent falling projectile (does not resume the chain).
+    // -----------------------------------------------------------------------------------
+    class Rain : CastingRune() {
+        override val name = "rain"
+        override val displayName = "Rain"
+
+        override fun build(builder: CastingBuilder) {
+            builder.damage = 2.0
+            builder.range = 12.0   // drop travel / lifetime
+            builder.spread = 3.0   // area radius
+            builder.speed = 0.8
+        }
+
+        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
+            val center = context.targetLocation ?: context.castingLocation
+            val radius = builder.spread.coerceAtLeast(0.5)
+            val drops = 20
+            val height = 5.0
+            val down = Vector(0.0, -1.0, 0.0)
+
+            repeat(drops) {
+                val angle = Math.random() * 2.0 * Math.PI
+                val r = sqrt(Math.random()) * radius   // even spread across the disc
+                val start = center.clone().add(cos(angle) * r, height, sin(angle) * r)
+                // Small, gravity-fed drop on its own context clone so it can't disturb the chain.
+                val dropBuilder = builder.copy(gravity = true, spread = 0.35)
+                ArcaneProjectile(source, context.clone(), dropBuilder, context.caster, start, down)
+                    .runTaskTimer(Odyssey.instance, 0, 1)
+            }
+
+            context.targetLocation = center
+        }
+    }
+
+
+    // -----------------------------------------------------------------------------------
+    //  WAVE — an expanding ring that damages + knocks back what it sweeps over.
+    //         Range -> max radius, Wide -> band thickness, Speed -> ring speed.
+    // -----------------------------------------------------------------------------------
+    class Wave : CastingRune() {
+        override val name = "wave"
+        override val displayName = "Wave"
+        override val defersCompletion = true
+
+        override fun build(builder: CastingBuilder) {
+            builder.damage = 3.0
+            builder.range = 8.0    // max radius
+            builder.spread = 1.0   // band thickness
+            builder.speed = 0.5    // blocks per tick
+        }
+
+        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
+            val center = (context.targetLocation ?: context.castingLocation).clone()
+            WaveTask(
+                source, context, center,
+                maxRadius = builder.range.coerceAtLeast(1.0),
+                band = builder.spread.coerceAtLeast(0.5),
+                ringSpeed = builder.speed.coerceAtLeast(0.1),
+                damage = builder.damage,
+                onComplete = onComplete
+            ).runTaskTimer(Odyssey.instance, 0, 1)
+            context.targetLocation = center
+        }
+
+        private class WaveTask(
+            private val source: ArcaneSource,
+            private val context: CastingContext,
+            private val center: Location,
+            private val maxRadius: Double,
+            private val band: Double,
+            private val ringSpeed: Double,
+            private val damage: Double,
+            private val onComplete: () -> Unit
+        ) : BukkitRunnable() {
+
+            private val world = center.world
+            private val ignored: List<LivingEntity> = context.ignoredTargets.mapNotNull { it.entityTarget as? LivingEntity }
+            private val alreadyHit = HashSet<UUID>()
+            private var radius = 1.0
+            private var first = true
+
+            override fun run() {
+                if (first) {
+                    first = false
+                    world.playSound(center, Sound.ENTITY_GENERIC_EXPLODE, 1.2f, 0.8f)
+                    world.spawnParticle(Particle.EXPLOSION, center, 2)
+                }
+                drawRing()
+                sweepFront()
+                radius += ringSpeed
+                if (radius > maxRadius) {
+                    onComplete()
+                    cancel()
+                }
+            }
+
+            private fun drawRing() {
+                val points = maxOf(8, (radius * 6).toInt())
+                for (i in 0 until points) {
+                    val angle = 2.0 * Math.PI * i / points
+                    val at = Location(world, center.x + radius * Math.cos(angle), center.y + 0.25, center.z + radius * Math.sin(angle))
+                    world.spawnParticle(source.particle, at, 3, 0.15, 0.1, 0.15, 0.02)
+                }
+            }
+
+            private fun sweepFront() {
+                center.getNearbyLivingEntities(maxRadius + band).forEach { e ->
+                    if (e in ignored || e.uniqueId in alreadyHit) return@forEach
+                    val dx = e.location.x - center.x
+                    val dz = e.location.z - center.z
+                    val flat = Math.sqrt(dx * dx + dz * dz)
+                    if (flat in (radius - band)..(radius + band)) {
+                        alreadyHit += e.uniqueId
+                        val out = e.location.toVector().subtract(center.toVector()).setY(0.0)
+                        val dir = if (out.lengthSquared() > 1e-4) out.normalize() else e.location.direction.setY(0.0).normalize()
+                        source.invoke(ArcaneTarget(entityTarget = e), context.caster, dir, damage)
+                        e.velocity = dir.multiply(0.9).setY(0.55)
+                    }
+                }
+            }
+        }
+    }
+
+    // -----------------------------------------------------------------------------------
+    //  WALL — a standing particle plane. Range -> height, Wide -> width. Applies the
+    //         source's effect to any entity whose body crosses it, and re-applies on an
+    //         interval while they linger inside. Lasts a few seconds, places nothing.
+    // -----------------------------------------------------------------------------------
+    class Wall : CastingRune() {
+        override val name = "wall"
+        override val displayName = "Wall"
+
+        override fun build(builder: CastingBuilder) {
+            builder.damage = 0.0   // bonus on top of the source's own base; source carries the hit
+            builder.range = 4.0    // height
+            builder.spread = 4.0   // width
+        }
+
+        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
+            val base = (context.targetLocation ?: context.castingLocation).clone()
+            val height = builder.range.coerceIn(1.0, 24.0)
+            val width = builder.spread.coerceIn(1.0, 32.0)
+
+            // The plane stands across the caster's horizontal look direction.
+            var facing = context.direction.clone().setY(0.0)
+            if (facing.lengthSquared() < 1e-4) facing = Vector(1.0, 0.0, 0.0)
+            facing = facing.normalize()
+            val across = Vector(-facing.z, 0.0, facing.x)
+
+            WallTask(source, context, base, facing, across, width, height, builder.damage)
+                .runTaskTimer(Odyssey.instance, 0, 1)
+
+            // Wall lingers in the background; the chain continues from its base immediately.
+            context.targetLocation = base
+        }
+
+        private class WallTask(
+            private val source: ArcaneSource,
+            private val context: CastingContext,
+            private val base: Location,
+            private val facing: Vector,
+            private val across: Vector,
+            private val width: Double,
+            private val height: Double,
+            private val bonus: Double
+        ) : BukkitRunnable() {
+
+            private val world = base.world
+            private val ignored: List<LivingEntity> = context.ignoredTargets.mapNotNull { it.entityTarget as? LivingEntity }
+            private val lastHitTick = HashMap<UUID, Int>()
+            private val halfWidth = width / 2.0
+            private val thickness = 0.5     // how "solid" the plane is along its normal
+            private val applyInterval = 10  // re-apply to a lingering entity every N ticks
+            private val lifetimeTicks = 100 // wall duration
+            private var tick = 0
+
+            override fun run() {
+                if (tick >= lifetimeTicks) { cancel(); return }
+                if (tick % 2 == 0) render()
+                sweep()
+                tick++
+            }
+
+            private fun render() {
+                val up = Vector(0.0, 1.0, 0.0)
+                val wSteps = maxOf(2, (width * 2).toInt())
+                val hSteps = maxOf(2, (height * 2).toInt())
+                for (wi in 0..wSteps) {
+                    val w = -halfWidth + width * wi / wSteps
+                    for (hi in 0..hSteps) {
+                        val at = base.clone()
+                            .add(across.clone().multiply(w))
+                            .add(up.clone().multiply(height * hi / hSteps))
+                        world.spawnParticle(source.particle, at, 1, 0.02, 0.02, 0.02, 0.0)
+                    }
+                }
+            }
+
+            private fun sweep() {
+                val reach = maxOf(halfWidth, height) + 2.0
+                base.getNearbyLivingEntities(reach).forEach { e ->
+                    if (e in ignored) return@forEach
+                    // Project the entity's centre into the wall's local frame.
+                    val to = e.boundingBox.center.subtract(base.toVector())
+                    val halfW = e.width / 2.0
+                    val a = to.dot(across)   // offset along the wall
+                    val n = to.dot(facing)   // distance from the plane
+                    val h = to.y             // height above the base
+                    val crossing = Math.abs(n) <= thickness + halfW &&
+                            a in (-halfWidth - halfW)..(halfWidth + halfW) &&
+                            h in -0.4..(height + 0.4)
+                    if (!crossing) return@forEach
+
+                    val last = lastHitTick[e.uniqueId]
+                    if (last == null || tick - last >= applyInterval) {
+                        lastHitTick[e.uniqueId] = tick
+                        source.invoke(ArcaneTarget(entityTarget = e), context.caster, facing, bonus)
+                    }
+                }
+            }
         }
     }
 }
