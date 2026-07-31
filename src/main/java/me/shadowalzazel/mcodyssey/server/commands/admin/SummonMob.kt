@@ -1,11 +1,6 @@
 package me.shadowalzazel.mcodyssey.server.commands.admin
 
-import me.shadowalzazel.mcodyssey.common.mobs.hostile.Preacher
-import me.shadowalzazel.mcodyssey.common.mobs.hostile.Ruined
-import me.shadowalzazel.mcodyssey.common.mobs.hostile.Savage
-import me.shadowalzazel.mcodyssey.common.mobs.hostile.Vanguard
-import me.shadowalzazel.mcodyssey.common.mobs.neutral.DubiousDealer
-import me.shadowalzazel.mcodyssey.common.mobs.passive.TreasurePig
+import me.shadowalzazel.mcodyssey.common.mobs.OdysseyMobs
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -21,32 +16,10 @@ object SummonMob : CommandExecutor {
         val mobName = args[0]
         val location = sender.location
         val world = sender.world
-        //val amount = minOf(64, maxOf(1, args[1].toInt()))
-        when(mobName) {
-            "savage" -> {
-                Savage.createMob(world, location)
-            }
-            "savage_knight" -> {
-                Savage.createKnight(world, location)
-            }
-            "vanguard" -> {
-                Vanguard.createMob(world, location)
-            }
-            "vanguard_knight" -> {
-                Vanguard.createKnight(world, location)
-            }
-            "preacher" -> {
-                Preacher.createMob(world, location)
-            }
-            "ruined" -> {
-                Ruined.createMob(world, location)
-            }
-            "treasure_pig" -> {
-                TreasurePig.createMob(world, location)
-            }
-            "dubious_dealer" -> {
-                DubiousDealer.createMob(world, location)
-            }
+        val entity = OdysseyMobs.spawn(mobName, world, location)
+        if (entity == null) {
+            sender.sendMessage("Unknown mob: $mobName")
+            return false
         }
 
         return true

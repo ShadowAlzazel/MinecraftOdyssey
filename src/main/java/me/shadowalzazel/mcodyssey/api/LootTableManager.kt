@@ -52,7 +52,7 @@ object LootTableManager : RegistryTagManager {
     }
 
     /**
-     * This creates an itemStack from the odyssey:item/. loot table.
+     * This creates an itemStack from the odyssey:item/ loot table.
      *
      * @param name The name of the loot table which should be the Item.
      * @return The loot item into ItemStack form.
@@ -72,6 +72,20 @@ object LootTableManager : RegistryTagManager {
         val lootTableKey: ResourceKey<NmsLootTable> = newLootKey(name, namespace)
         val lootTable = CraftLootTable.minecraftToBukkit(lootTableKey)
         return lootTable
+    }
+
+    /**
+     * This creates items from a given LootTable. Table must have type `chest`
+     */
+    fun newItemsFromLootTable(lootTable: LootTable): MutableCollection<ItemStack> {
+        val contextBuilder = LootContext.Builder(Odyssey.instance.overworld.spawnLocation).apply {
+            lootedEntity(null)
+            luck(0F)
+            killer(null)
+        }
+        val context = contextBuilder.build()
+        val items = lootTable.populateLoot(Random(0L), context)
+        return items
     }
 
     /**

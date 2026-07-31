@@ -117,6 +117,14 @@ interface AttributeManager : ItemComponentsManager, RegistryTagManager {
         entity.addAttackAttribute(value)
     }
 
+    fun addStepAttribute(entity: LivingEntity, value: Double) {
+        entity.addStepAttribute(value)
+    }
+
+    fun addSpeedAttribute(entity: LivingEntity, value: Double) {
+        entity.addSpeedAttribute(value)
+    }
+
     // ──────────────────────────────────────────────────────────────────────────────
     // Extended Methods
 

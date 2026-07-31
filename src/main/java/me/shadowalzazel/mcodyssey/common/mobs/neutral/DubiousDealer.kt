@@ -11,10 +11,14 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-object DubiousDealer : OdysseyMob("Dubious Dealer", "dubious_dealer", EntityType.WANDERING_TRADER, 40.0) {
+object DubiousDealer : OdysseyMob(
+    "Dubious Dealer",
+    "dubious_dealer",
+    EntityType.WANDERING_TRADER
+) {
 
-    override fun createMob(world: World, location: Location): WanderingTrader {
-        return (super.createMob(world, location) as WanderingTrader).apply {
+    override fun spawn(world: World, location: Location): WanderingTrader {
+        return (spawnBase(world, location) as WanderingTrader).apply {
             // Effects
             addPotionEffects(listOf(
                 PotionEffect(PotionEffectType.SPEED, 99999, 2)

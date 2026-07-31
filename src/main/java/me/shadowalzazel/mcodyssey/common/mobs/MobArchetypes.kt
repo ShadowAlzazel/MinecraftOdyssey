@@ -2,10 +2,12 @@ package me.shadowalzazel.mcodyssey.common.mobs
 
 import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.boss.BossManager
+import me.shadowalzazel.mcodyssey.common.enchantments.OdysseyEnchantments
 import me.shadowalzazel.mcodyssey.common.items.ToolMaterial
 import me.shadowalzazel.mcodyssey.common.items.ToolType
 import me.shadowalzazel.mcodyssey.util.constants.AttributeTags
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -80,6 +82,55 @@ object MobArchetypes {
                 it.itemInMainHandDropChance = 0.03F // TODO: scale with difficulty
             }
             createArmoredMob(mob, EquipmentPresets.vanguard(), enchantWeapon = true, replaceOldWeapon = false)
+        },
+    )
+
+    val SAVAGE = MobArchetype(
+        id = "savage",
+        predicate = hasTag(EntityTags.SAVAGE),
+        stats = statProfile {
+            health(50.0, AttributeTags.MOB_HEALTH)
+        },
+        decorate = { mob ->
+            mob.canPickupItems = true
+            mob.clearActiveItem()
+            val weapon = buildSavageWeapon()
+            mob.equipment?.also {
+                it.setItemInMainHand(weapon)
+                it.setItemInOffHand(weapon.clone())
+            }
+        },
+    )
+
+    val RUINED = MobArchetype(
+        id = "ruined",
+        predicate = hasTag(EntityTags.RUINED),
+        stats = statProfile {
+            health(50.0, AttributeTags.MOB_HEALTH)
+        },
+        decorate = { mob ->
+            mob.canPickupItems = true
+            mob.clearActiveItem()
+            val weapon = buildRuinedWeapon()
+            mob.equipment?.also {
+                it.setItemInMainHand(weapon)
+            }
+        },
+    )
+
+    val PREACHER = MobArchetype(
+        id = "preacher",
+        predicate = hasTag(EntityTags.PREACHER),
+        stats = statProfile {
+            health(130.0, AttributeTags.MOB_HEALTH)
+        },
+        decorate = { mob ->
+            mob.canPickupItems = true
+            mob.clearActiveItem()
+            val weapon = buildPreacherWeapon()
+            mob.equipment?.also {
+                it.setItemInMainHand(weapon)
+            }
         },
     )
 
@@ -164,9 +215,12 @@ object MobArchetypes {
         },
     )
 
-    /* ---------- helpers ---------- */
 
-    private fun MobFactory.buildVanguardWeapon(): ItemStack {
+
+    // ──────────────────────────────────────────────────────────────────────────────
+    // Weapon builder helpers
+
+    internal fun MobFactory.buildVanguardWeapon(): ItemStack {
         val type = listOf(ToolType.POLEAXE, ToolType.HALBERD).random()
         val weapon = createToolStack(ToolMaterial.IRON, type)
 
@@ -181,4 +235,31 @@ object MobArchetypes {
             updateToolTip()
         }
     }
+
+    internal fun MobFactory.buildSavageWeapon(): ItemStack {
+        return createToolStack(ToolMaterial.COPPER, ToolType.DAGGER).apply {
+            addUnsafeEnchantment(OdysseyEnchantments.HEMORRHAGE, 4)
+            itemMeta.displayName(Component.text("Brutal Dagger"))
+        }
+    }
+
+    internal fun MobFactory.buildSavageKnightWeapon(): ItemStack {
+        return createToolStack(ToolMaterial.COPPER, ToolType.LONGAXE).apply {
+            addUnsafeEnchantment(OdysseyEnchantments.HEMORRHAGE, 4)
+            itemMeta.displayName(Component.text("Brutal Longaxe"))
+        }
+    }
+
+    internal fun MobFactory.buildRuinedWeapon(): ItemStack {
+        return createToolStack(ToolMaterial.DIAMOND, ToolType.CLAYMORE).apply {
+            addUnsafeEnchantment(OdysseyEnchantments.INVOCATIVE, 3)
+            itemMeta.displayName(Component.text("Maligned Claymore"))
+        }
+    }
+
+    // TODO: slots + enchants still unresolved from the original — left as a bare weapon until that's decided.
+    internal fun MobFactory.buildPreacherWeapon(): ItemStack {
+        return createToolStack(ToolMaterial.NETHERITE, ToolType.CLAYMORE)
+    }
+
 }

@@ -24,6 +24,7 @@ private fun chance(percent: Int) = ThreadLocalRandom.current().nextInt(100) < pe
  *   2. if none matched, the fallback runs
  *   3. handler tags go on
  *   4. the structure-wide baseline buff lands on top
+ *   5. factory is a generic object that has the interface [MobFactory]
  */
 class StructureSpawnProfile(
     val key: String,
@@ -52,7 +53,10 @@ class NaturalSpawnProfile(
     fun applyTo(mob: LivingEntity) {
         mob.addScoreboardTag(tag)
         if (mob is Lootable && chance(lootTableChance)) {
-            mob.lootTable = LootTableManager.getResourceLootTable(lootTablePath)
+            val lootTable = LootTableManager.getResourceLootTable(lootTablePath)
+            if (lootTable != null) {
+                mob.lootTable = lootTable
+            }
         }
     }
 }

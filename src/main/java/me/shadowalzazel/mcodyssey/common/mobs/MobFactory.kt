@@ -16,6 +16,21 @@ interface MobFactory : MobEliteMaker, AttributeManager {
             // Inherit from MORE classes and not just a line of classes
         }
     }
+
+    /**
+     * Generic way to add an archetype to a mob.
+     *
+     * This method takes in a mob and uses a pre-existing archetype to in [MobArchetypes]
+     * to modify can apply the archetype stats and profile to the mob.
+     */
+    fun applyArchetype(mob: LivingEntity, archetype: MobArchetype) {
+        val matched = archetype.matches(mob)
+        if (!matched) return
+        // Get decorate and use default factory
+        archetype.applyTo(mob, this@MobFactory)
+        // Apply stats
+        archetype.stats.applyTo(mob)
+    }
 }
 
 /**

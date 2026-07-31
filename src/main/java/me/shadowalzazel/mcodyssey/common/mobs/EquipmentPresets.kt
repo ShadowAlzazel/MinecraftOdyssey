@@ -6,8 +6,12 @@ import me.shadowalzazel.mcodyssey.common.trims.TrimMaterials
 import me.shadowalzazel.mcodyssey.common.trims.TrimPatterns
 import me.shadowalzazel.mcodyssey.util.EquipmentRandomBuilder
 import me.shadowalzazel.mcodyssey.util.constants.EliteMobsData
+import org.bukkit.Material
+import org.bukkit.enchantments.Enchantment
+import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.trim.TrimMaterial
 import org.bukkit.inventory.meta.trim.TrimPattern
+import java.util.Random
 
 // ──────────────────────────────────────────────────────────────────────────────
 // ─────────────────────────── EQUIPMENT CATALOGUE ──────────────────────────────
@@ -81,4 +85,6 @@ object EquipmentPresets {
         listOf(TrimMaterial.DIAMOND, TrimMaterial.COPPER, TrimMaterial.IRON),
         listOf(TrimPattern.RIB, TrimPattern.SNOUT),
     )
+
+
 }

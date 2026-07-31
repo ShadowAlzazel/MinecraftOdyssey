@@ -63,6 +63,10 @@ object EntityTags {
     const val TRIAL_ELITE: String = "odyssey.trial_elite"
     const val GIANT: String = "odyssey.giant"
     const val VANGUARD: String = "odyssey.vanguard"
+    const val SAVAGE = "odyssey.savage"
+    const val RUINED = "odyssey.ruined"
+    const val PREACHER = "odyssey.preacher"
+
 
     const val GILDED_MARAUDER: String = "odyssey.gilded_marauder"
     const val HOG_RIDER: String = "odyssey.hog_rider"
