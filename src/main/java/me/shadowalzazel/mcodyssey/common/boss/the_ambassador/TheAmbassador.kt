@@ -1,31 +1,18 @@
 package me.shadowalzazel.mcodyssey.common.boss.the_ambassador
 
-import io.papermc.paper.datacomponent.DataComponentTypes
-import io.papermc.paper.datacomponent.item.ItemEnchantments
-import me.shadowalzazel.mcodyssey.common.boss.AttackOption
-import me.shadowalzazel.mcodyssey.common.boss.BossManager
-import me.shadowalzazel.mcodyssey.common.boss.BossState
-import me.shadowalzazel.mcodyssey.common.boss.BossStats
-import me.shadowalzazel.mcodyssey.common.boss.Dialogue
-import me.shadowalzazel.mcodyssey.common.boss.GiftReceiver
-import me.shadowalzazel.mcodyssey.common.boss.OdysseyBoss
-import me.shadowalzazel.mcodyssey.common.boss.TargetMode
-import me.shadowalzazel.mcodyssey.common.enchantments.OdysseyEnchantments
+import me.shadowalzazel.mcodyssey.common.boss.*
+import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
-import org.bukkit.Location
-import org.bukkit.Material
-import org.bukkit.Particle
-import org.bukkit.Sound
-import org.bukkit.World
+import org.bukkit.*
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.*
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import java.util.UUID
+import java.util.*
 
 /**
  * The Ambassador: an envoy you can appease with gifts or provoke into a fight.
@@ -57,6 +44,12 @@ class TheAmbassador(
 
     private val playerLikeness = mutableMapOf<UUID, Double>()
     private val giftCooldown = mutableMapOf<UUID, Long>()
+
+    // --- boss bar (fixed: now actually shown + kept in sync) ---
+    override val bossBarTitle: Component = NAME
+    override val bossBarColor: BossBar.Color = BossBar.Color.PINK
+    override val bossBarOverlay: BossBar.Overlay = BossBar.Overlay.NOTCHED_10
+    override val bossBarRadius: Double = 48.0
 
     // ---------------------------------------------------------------- spawning
 

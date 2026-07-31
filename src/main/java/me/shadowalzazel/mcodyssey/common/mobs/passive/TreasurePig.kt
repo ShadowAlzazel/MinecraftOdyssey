@@ -32,7 +32,7 @@ object TreasurePig : OdysseyMob(
         }
 
         val pig = (spawnBase(world, location) as Pig).apply {
-            addPotionEffect(PotionEffect(PotionEffectType.SPEED, 20 * 60 * 60, 4))
+            addPotionEffect(PotionEffect(PotionEffectType.SPEED, 20 * 60 * 60, 3))
             addPotionEffect(PotionEffect(PotionEffectType.JUMP_BOOST, 20 * 60 * 60, 2))
             canPickupItems = true
             val treasureLootTable = LootTableManager.getResourceLootTable(
