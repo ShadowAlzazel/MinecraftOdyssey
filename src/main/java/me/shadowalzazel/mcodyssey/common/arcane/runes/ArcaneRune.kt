@@ -53,6 +53,7 @@ sealed class ArcaneRune : RuneDataManager {
             // Domain
             "next" -> DomainRune.Next
             "nearby" -> DomainRune.Nearby
+            "seek" -> DomainRune.Seek
             "origin" -> DomainRune.Origin
             "kernel" -> DomainRune.Kernel
             "swap" -> DomainRune.Swap
@@ -94,7 +95,8 @@ sealed class ArcaneRune : RuneDataManager {
             "wind_charge"     -> CastingRune.Vortex()
             // Domain
             "heart_of_the_sea" -> DomainRune.Next
-            "ender_eye" -> DomainRune.Nearby
+            "chorus_fruit" -> DomainRune.Nearby
+            "ender_eye" -> DomainRune.Seek
             "nether_star" -> DomainRune.Origin
             "oak_sapling" -> DomainRune.Kernel
             "popped_chorus_fruit" -> DomainRune.Swap
@@ -259,6 +261,11 @@ sealed class DomainRune : ArcaneRune(), RayTracerAndDetector {
                     successful = false
                 }
             }
+            is Seek -> {
+                // TODO: Seek tracks/follows
+                // For like PERSISTENT runes, this changes the casting location per invoke or run.
+                // Looks for nearest entity
+            }
             is Trace -> {
                 // New Direction?
             }
@@ -338,6 +345,11 @@ sealed class DomainRune : ArcaneRune(), RayTracerAndDetector {
     data object Trace : DomainRune() {
         override val name = "trace"
         override val displayName = "Trace"
+    }
+
+    data object Seek : DomainRune() {
+        override val name = "seek"
+        override val displayName = "Seek"
     }
 
     // Looks for a new entity/location that is NOT the same
