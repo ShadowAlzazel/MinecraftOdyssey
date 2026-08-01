@@ -17,6 +17,8 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
 import java.util.UUID
+import kotlin.math.abs
+import kotlin.math.ceil
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
@@ -827,73 +829,85 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
         override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
             val center = (context.targetLocation ?: context.castingLocation).clone()
             val height = builder.range.coerceIn(2.0, 24.0)
-            val radius = builder.spread.coerceIn(1.0, 12.0)
-            val spin = builder.speed.coerceIn(0.05, 1.0) * (if (builder.invert) -1.0 else 1.0)
-
-            TornadoTask(source, context, center, height, radius, spin, builder.damage)
+            val crownRadius = builder.spread.coerceIn(1.0, 12.0)
+            val baseRadius  = (crownRadius * 0.25).coerceAtLeast(0.4)   // foot is narrower than the crown
+            val spinDir = if (builder.invert) -1.0 else 1.0
+            TornadoTask(source, context, center, height, baseRadius, crownRadius, spinDir, builder.damage)
                 .runTaskTimer(Odyssey.instance, 0, 1)
-
             context.targetLocation = center
         }
+
 
         private class TornadoTask(
             private val source: ArcaneSource,
             private val context: CastingContext,
             private val center: Location,
             private val height: Double,
-            private val maxRadius: Double,
-            private val spin: Double,
+            private val baseRadius: Double,     // radius at the foot  (f = 0)
+            private val crownRadius: Double,    // radius at the crown (f = 1)
+            private val spinDir: Double,        // +1 / -1 (Invert)
             private val bonus: Double
         ) : BukkitRunnable() {
+
+            // ======================= KNOBS — the dials to test with =======================
+            private val DEBUG                 = true   // logs every derived value once at spawn
+            // Feel:
+            private val secondsPerFootRev     = 4.0    // time for the FAST foot to make one turn. Bigger = slower spin.
+            private val totalTwistTurns       = 0.70   // helix winding foot->crown, in TURNS. Keep < 1.0 so it sweeps, not barber-poles.
+            private val particleStepBlocks    = 0.55   // TEST ME: spacing between consecutive particles along an arm.
+            private val arms                  = 3      // number of helical strands.
+            private val armGapRad             = 2.0 * Math.PI / arms  // TEST ME: angular gap between arms. Set != even to break symmetry.
+            // Lifetime / cadence:
+            private val formTicks   = (height * 10).toInt().coerceIn(60, 100)
+            private val lifeTicks   = 100
+            private val applyInterval = 10
+            private val trailTicks  = 30    // ~how long particles linger; used only for the alias read-out below.
+
+            // ==================== DERIVED — do not hand-tune these ========================
+            private val twoPi        = 2.0 * Math.PI
+            private val totalTwist   = totalTwistTurns * twoPi                 // rad of spatial winding foot->crown
+
+            // Vertical resolution derived from desired particle spacing along the helix arc.
+            private val avgRadius    = (baseRadius + crownRadius) / 2.0
+            private val helixArc     = run { val s = avgRadius * totalTwist; sqrt(height * height + s * s) }
+            private val planes       = maxOf(4, ceil(helixArc / particleStepBlocks).toInt())
+            private val twistPerPlane = totalTwist / planes                   // <- "angular differential per plane"
+            private val heightPerPlane = height / planes
+
+            // Angular velocity from CONSTANT TANGENTIAL SPEED: omega = v / r. Anchor v at the foot.
+            private val omegaFoot    = spinDir * twoPi / (secondsPerFootRev * 20.0)  // rad/tick at the foot (fastest ring)
+            private val tangential   = abs(omegaFoot) * baseRadius             // blocks/tick, constant up the column
+            private fun radiusAt(f: Double) = baseRadius + (crownRadius - baseRadius) * f
+            private fun omegaAt(f: Double)  = spinDir * tangential / radiusAt(f)    // rad/tick at height f
+            private fun spinAt(f: Double)   = omegaAt(f) * tick                     // rotation accumulated by this tick
+
+            // ALIAS SAFETY: the fastest ring (foot) must sweep LESS than the arm-symmetry angle
+            // within one particle-trail window, or the trail paints every angle and motion dies.
+            // >1 safe, <1 smear. Fix a low value by slowing the foot, using fewer arms, or an uneven armGapRad.
+            private val symmetryAngle  = armGapRad.coerceAtLeast(1e-3)
+            private val footTrailSweep = abs(omegaFoot) * trailTicks
+            private val aliasSafety    = symmetryAngle / footTrailSweep
 
             private val world = center.world
             private val ignored: List<LivingEntity> = context.ignoredTargets.mapNotNull { it.entityTarget as? LivingEntity }
             private val lastHitTick = HashMap<UUID, Int>()
-            private val chainedEntities = HashSet<UUID>()      // Link reaction: once per entity
-
-            // Two phases: form top->bottom over formTicks, THEN stand and spin for lifeTicks.
-            private val formTicks = (height * 10).toInt().coerceIn(40, 100)   // ~3-5s, taller = longer
-            private val lifeTicks = 100                                        // 5s once fully formed
-
-            private val applyInterval = 10
+            private val chainedEntities = HashSet<UUID>()
             private var tick = 0
 
             override fun run() {
+                if (tick == 0 && DEBUG) logDerived()
                 if (tick >= formTicks + lifeTicks) { cancel(); return }
                 render()
-                if (tick >= formTicks) sweep()   // <- harmless while forming; remove to damage during formation // the whole funnel rotates each tick
+                if (tick >= formTicks) sweep()   // harmless while forming; move up to damage during formation
                 tick++
             }
 
-            private fun radiusAt(f: Double): Double = maxRadius * (0.25 + 0.75 * f)
-
-            // --- Rotation model ---------------------------------------------------------------
-            // The funnel is meant to turn SLOWLY and to CHURN, never to spin rigidly. Two rules
-            // keep the turn visible instead of smearing to a static shell:
-            //
-            //   1) DIFFERENTIAL (sheared) rotation. The crown turns faster than the foot, so the
-            //      shape is always deforming. A rigidly-rotating pattern can strobe to a standstill
-            //      (shutter == rpm, the wagon wheel); a sheared one has no single frequency to alias
-            //      against, so it always reads as churning.
-            //   2) SLOW angular velocity. Particles linger ~1-2s and can't be shortened, so each
-            //      tick's arm is drawn over the last ~30 ticks of arms. If the arm sweeps a full
-            //      symmetry angle (2*PI / arms) within that trail window, the copies fill every angle
-            //      and the motion vanishes. Slow spin keeps the trail a short comet-arc, not a ring.
-            //
-            // `spin` (from the Speed modifier) is used for DIRECTION only here — magnitude is fixed
-            // slow on purpose. To let Speed influence the rate, fold `abs(spin)` into the two omegas.
-            private val dir = if (spin >= 0) 1.0 else -1.0
-            private val footOmega  = 0.030 * dir   // rad/tick at the foot  (~1 rev / 10s)
-            private val crownOmega = 0.075 * dir   // rad/tick at the crown (~2.5x the foot -> shear)
-
-            // Angular position of height-fraction f at the current tick. Linear shear foot -> crown.
-            private fun spinAt(f: Double): Double {
-                val omega = footOmega + (crownOmega - footOmega) * f
-                return omega * tick
+            private fun logDerived() {
+                Odyssey.instance.logger.info(
+                    "[Vortex] planes=$planes  twistPerPlane=%.3frad  heightPerPlane=%.2f  omegaFoot=%.4f  omegaCrown=%.4f  tangential=%.3f  aliasSafety=%.2f (want >1)"
+                        .format(twistPerPlane, heightPerPlane, omegaFoot, omegaAt(1.0), tangential, aliasSafety)
+                )
             }
-            private val arms = 2
-            private val armSamples = maxOf(6, (height * 1.2).toInt())
-            private val twist = 2.0 * Math.PI * 0.3   // total turn foot->crown; keep under 1.0
 
             private fun render() {
                 val forming = tick < formTicks
@@ -901,22 +915,19 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
                 val bottomF = 1.0 - form
 
                 for (a in 0 until arms) {
-                    val armBase = a * (2.0 * Math.PI / arms)   // static per-arm offset; time-spin is in spinAt(f)
-
-                    for (j in 0..armSamples) {
-                        val f = j.toDouble() / armSamples
+                    val armBase = a * armGapRad
+                    for (p in 0..planes) {
+                        val f = p.toDouble() / planes
                         if (f < bottomF) continue
-                        val angle = armBase + twist * f + spinAt(f)   // spatial winding + SHEARED time-rotation
+                        val angle = armBase + twistPerPlane * p + spinAt(f)   // static offset + spatial winding + SHEARED spin
                         val r = radiusAt(f)
                         val at = center.clone().add(cos(angle) * r, height * f, sin(angle) * r)
                         world.spawnParticle(source.particle, at, 1, 0.0, 0.0, 0.0, 0.0)
                     }
-
-                    // Bright head at the crown — sparse and slow, so its short comet-trail SHOWS the turn.
-                    val ha = armBase + twist + spinAt(1.0)
+                    // Bright head at the crown: sparse + slow, so its short comet-trail SHOWS the turn.
+                    val ha = armBase + totalTwist + spinAt(1.0)
                     val hr = radiusAt(1.0)
-                    val head = center.clone().add(cos(ha) * hr, height, sin(ha) * hr)
-                    world.spawnParticle(source.particle, head, 3, 0.04, 0.04, 0.04, 0.0)
+                    world.spawnParticle(source.particle, center.clone().add(cos(ha) * hr, height, sin(ha) * hr), 3, 0.04, 0.04, 0.04, 0.0)
                 }
 
                 if (forming) {
@@ -924,10 +935,9 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
                     val tipR = radiusAt(bottomF)
                     world.spawnParticle(source.particle, center.clone().add(0.0, tipY, 0.0), 6, tipR * 0.4, 0.1, tipR * 0.4, 0.03)
                 } else {
-                    // Foot dust at a DIFFERENT rate than the arms, so it isn't locked to them.
                     val gr = radiusAt(0.0)
                     for (a in 0 until 2) {
-                        val ga = spinAt(0.0) * 1.7 + a * Math.PI
+                        val ga = spinAt(0.0) * 1.7 + a * Math.PI    // foot dust, off-rate so it isn't locked to the arms
                         world.spawnParticle(source.particle, center.clone().add(cos(ga) * gr, 0.1, sin(ga) * gr), 2, 0.05, 0.02, 0.05, 0.0)
                     }
                 }
@@ -935,7 +945,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
             }
 
             private fun sweep() {
-                center.getNearbyLivingEntities(maxRadius + 1.0).forEach { e ->
+                center.getNearbyLivingEntities(crownRadius + 1.0).forEach { e ->
                     if (e in ignored) return@forEach
                     val dx = e.location.x - center.x
                     val dz = e.location.z - center.z
@@ -947,15 +957,13 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
                     val hasRadial = flat > 1e-4
                     val inward  = if (hasRadial) Vector(-dx / flat, 0.0, -dz / flat) else Vector(0.0, 0.0, 0.0)
                     val tangent = if (hasRadial) Vector(-dz / flat, 0.0,  dx / flat) else Vector(0.0, 0.0, 0.0)
-                    val swirlSign = if (spin >= 0) 1.0 else -1.0
                     e.velocity = inward.clone().multiply(0.25)
-                        .add(tangent.clone().multiply(0.35 * swirlSign))
+                        .add(tangent.clone().multiply(0.35 * spinDir))
                         .setY(0.28)
 
                     val last = lastHitTick[e.uniqueId]
                     if (last == null || tick - last >= applyInterval) {
                         lastHitTick[e.uniqueId] = tick
-                        // Must be finite AND non-zero — the source normalizes it (this was the crash).
                         val hitDir = if (hasRadial) inward.clone() else Vector(0.0, 1.0, 0.0)
                         source.invoke(ArcaneTarget(entityTarget = e), context.caster, hitDir, bonus)
                         if (chainedEntities.add(e.uniqueId)) {
