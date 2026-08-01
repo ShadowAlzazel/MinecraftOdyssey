@@ -314,8 +314,9 @@ class ItemRecipes : ChoiceManager {
     private fun crystalAlloyIngotRecipe(): ShapedRecipe {
         val result = Item.CRYSTAL_ALLOY_INGOT.newItemStack(1)
         val recipe = ShapedRecipe(NamespacedKey(Odyssey.instance, "crystal_alloy_ingot"), result).apply {
-            shape("DG", "GX")
+            shape("DG", "SX")
             setIngredient('G', Material.GOLD_INGOT)
+            setIngredient('S', Item.CRYSTAL_ALLOY_INGOT.toRecipeChoice())
             setIngredient('D', Material.DIAMOND)
             setIngredient('X', Material.AMETHYST_SHARD)
             category = CraftingBookCategory.MISC

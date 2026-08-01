@@ -14,7 +14,6 @@ import net.kyori.adventure.text.event.ClickCallback
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.ItemType
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 
@@ -154,9 +153,16 @@ object SpellPenDialog : RuneDataManager {
             return
         }
 
+        /*
         val newSpellScroll = Item.SPELL_SCROLL.newItemStack(1)
         storeSpell(newSpellScroll, session.sequence, session.source)
         player.inventory.addItem(newSpellScroll)
+         */
+        val writtenScroll = Item.SCROLL.newItemStack(1)
+        storeSpell(writtenScroll, session.sequence, session.source)
+        player.inventory.addItem(writtenScroll)
+
+
 
         //storeSpell(scroll, session.sequence, session.source)
         // TODO(consume): spend the physical rune items from the pen bundle here, per your

@@ -122,13 +122,9 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
      *
      * New Casting Runes:
      * `erupt` spews a steady stream upwards. Like the geyser
-     * `vortex` spawns a rotating swirling mas.
-     * `familiar` a magic summon
+     * `vortex` spawns a rotating swirling mass like a tornado. Really want that helix rotating particle effect.
+     * `familiar` a magic summon. Probably a small ball for now that seeks out targets?
      *
-     * Mechanics: True Proper chaining
-     * New list of targets create new target contexts. But with the cut sub-sequence.
-     * To prevent recursion, these new sequence have their own casting rune that was given by
-     * the previous run. Since it already reads in order.
      *
      */
 
@@ -502,8 +498,8 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
             override fun run() {
                 if (first) {
                     first = false
-                    world.playSound(center, Sound.ENTITY_GENERIC_EXPLODE, 1.2f, 0.8f)
-                    world.spawnParticle(Particle.EXPLOSION, center, 2)
+                    //world.playSound(center, Sound.ENTITY_GENERIC_EXPLODE, 1.2f, 0.8f)
+                    //world.spawnParticle(Particle.EXPLOSION, center, 2)
                 }
                 drawRing()
                 sweepFront()
@@ -710,6 +706,211 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
             }
 
             context.targetLocation = at
+        }
+    }
+
+
+    // -----------------------------------------------------------------------------------
+    //  ERUPT — a geyser: a steady vertical spout from the target. Range -> column height,
+    //          Wide -> column radius, Amplify -> damage. Anything caught inside the column
+    //          is struck on an interval and launched upward. Lingers a moment, places
+    //          nothing. The vertical sibling of Wall.
+    // -----------------------------------------------------------------------------------
+    class Erupt : CastingRune() {
+        override val name = "erupt"
+        override val displayName = "Erupt"
+
+        override fun build(builder: CastingBuilder) {
+            builder.damage = 3.0    // bonus on top of the source's own base
+            builder.range = 6.0     // column height
+            builder.spread = 1.5    // column radius
+        }
+
+        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
+            val base = (context.targetLocation ?: context.castingLocation).clone()
+            val height = builder.range.coerceIn(2.0, 24.0)
+            val radius = builder.spread.coerceIn(0.5, 8.0)
+
+            GeyserTask(source, context, base, height, radius, builder.damage)
+                .runTaskTimer(Odyssey.instance, 0, 1)
+
+            // Spout lingers in the background; the chain continues from its mouth.
+            context.targetLocation = base
+        }
+
+        private class GeyserTask(
+            private val source: ArcaneSource,
+            private val context: CastingContext,
+            private val base: Location,
+            private val height: Double,
+            private val radius: Double,
+            private val bonus: Double
+        ) : BukkitRunnable() {
+
+            private val world = base.world
+            private val ignored: List<LivingEntity> = context.ignoredTargets.mapNotNull { it.entityTarget as? LivingEntity }
+            private val lastHitTick = HashMap<UUID, Int>()
+            private val chainedEntities = HashSet<UUID>()   // Link reaction: once per entity
+            private val applyInterval = 8
+            private val lifetimeTicks = 40                  // ~2s
+            private var tick = 0
+
+            override fun run() {
+                if (tick >= lifetimeTicks) { cancel(); return }
+                render()
+                sweep()
+                tick++
+            }
+
+            // A jittering column with a bright "head" that climbs and resets, so the stream
+            // keeps pumping upward like a spout.
+            private fun render() {
+                val steps = maxOf(4, (height * 2).toInt())
+                for (i in 0..steps) {
+                    val f = i.toDouble() / steps
+                    val jitter = radius * (0.15 + 0.25 * f)          // a touch wider up top
+                    val a = Math.random() * 2.0 * Math.PI
+                    val r = sqrt(Math.random()) * jitter
+                    val at = base.clone().add(cos(a) * r, height * f, sin(a) * r)
+                    world.spawnParticle(source.particle, at, 1, 0.02, 0.03, 0.02, 0.01)
+                }
+                val headY = ((tick % 12) / 12.0) * height
+                world.spawnParticle(source.particle, base.clone().add(0.0, headY, 0.0), 5, radius * 0.3, 0.1, radius * 0.3, 0.06)
+                world.spawnParticle(source.particle, base.clone().add(0.0, 0.15, 0.0), 4, radius * 0.25, 0.1, radius * 0.25, 0.05)
+                if (tick == 0) world.playSound(base, Sound.ENTITY_GENERIC_EXPLODE, 0.8f, 1.6f)
+            }
+
+            private fun sweep() {
+                base.getNearbyLivingEntities(radius + 1.0).forEach { e ->
+                    if (e in ignored) return@forEach
+                    val dx = e.location.x - base.x
+                    val dz = e.location.z - base.z
+                    val flat = Math.sqrt(dx * dx + dz * dz)
+                    val h = e.location.y - base.y
+                    if (flat > radius + e.width / 2.0 || h !in -1.0..(height + 1.0)) return@forEach
+
+                    val last = lastHitTick[e.uniqueId]
+                    if (last == null || tick - last >= applyInterval) {
+                        lastHitTick[e.uniqueId] = tick
+                        source.invoke(ArcaneTarget(entityTarget = e), context.caster, Vector(0.0, 1.0, 0.0), bonus)
+                        // Geyser launch: mostly up, a touch outward.
+                        val out = if (flat > 1e-4) Vector(dx / flat, 0.0, dz / flat).multiply(0.2) else Vector()
+                        e.velocity = out.setY(0.8)
+                        if (chainedEntities.add(e.uniqueId)) {
+                            context.chainSpawner?.invoke(ArcaneTarget(entityTarget = e))
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    // -----------------------------------------------------------------------------------
+    //  VORTEX — a tornado: rotating helical strands climbing a funnel. Range -> height,
+    //           Wide -> crown radius (funnel is narrow at the foot, wide up top), Speed ->
+    //           spin rate, Invert -> spins the other way. Entities inside are dragged toward
+    //           the eye, spun, lifted, and struck on an interval. Lingers a few seconds,
+    //           places nothing. The swirling sibling of Zone.
+    // -----------------------------------------------------------------------------------
+    class Vortex : CastingRune() {
+        override val name = "vortex"
+        override val displayName = "Vortex"
+
+        override fun build(builder: CastingBuilder) {
+            builder.damage = 2.0    // bonus on top of the source's own base
+            builder.range = 8.0     // funnel height
+            builder.spread = 3.0    // crown radius
+            builder.speed = 0.35    // spin rate (radians/tick)
+        }
+
+        override fun manifest(source: ArcaneSource, context: CastingContext, builder: CastingBuilder, onComplete: () -> Unit) {
+            val center = (context.targetLocation ?: context.castingLocation).clone()
+            val height = builder.range.coerceIn(2.0, 24.0)
+            val radius = builder.spread.coerceIn(1.0, 12.0)
+            val spin = builder.speed.coerceIn(0.05, 1.0) * (if (builder.invert) -1.0 else 1.0)
+
+            TornadoTask(source, context, center, height, radius, spin, builder.damage)
+                .runTaskTimer(Odyssey.instance, 0, 1)
+
+            // Funnel lingers in the background; the chain continues from its eye.
+            context.targetLocation = center
+        }
+
+        private class TornadoTask(
+            private val source: ArcaneSource,
+            private val context: CastingContext,
+            private val center: Location,
+            private val height: Double,
+            private val maxRadius: Double,
+            private val spin: Double,
+            private val bonus: Double
+        ) : BukkitRunnable() {
+
+            private val world = center.world
+            private val ignored: List<LivingEntity> = context.ignoredTargets.mapNotNull { it.entityTarget as? LivingEntity }
+            private val lastHitTick = HashMap<UUID, Int>()
+            private val chainedEntities = HashSet<UUID>()   // Link reaction: once per entity
+            private val strands = 3
+            private val turns = 2.0                          // full rotations foot -> crown
+            private val applyInterval = 10
+            private val lifetimeTicks = 80                   // ~4s
+            private var phase = 0.0
+            private var tick = 0
+
+            override fun run() {
+                if (tick >= lifetimeTicks) { cancel(); return }
+                render()
+                sweep()
+                phase += spin
+                tick++
+            }
+
+            // Narrow at the foot, flaring toward the crown.
+            private fun radiusAt(f: Double): Double = maxRadius * (0.25 + 0.75 * f)
+
+            private fun render() {
+                val hSteps = maxOf(6, (height * 2).toInt())
+                for (i in 0..hSteps) {
+                    val f = i.toDouble() / hSteps
+                    val r = radiusAt(f)
+                    for (s in 0 until strands) {
+                        val angle = phase + (2.0 * Math.PI * turns * f) + s * (2.0 * Math.PI / strands)
+                        val at = center.clone().add(cos(angle) * r, height * f, sin(angle) * r)
+                        world.spawnParticle(source.particle, at, 1, 0.0, 0.0, 0.0, 0.0)
+                    }
+                }
+                if (tick % 20 == 0) world.playSound(center, Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, 1.4f, 0.7f)
+            }
+
+            private fun sweep() {
+                center.getNearbyLivingEntities(maxRadius + 1.0).forEach { e ->
+                    if (e in ignored) return@forEach
+                    val dx = e.location.x - center.x
+                    val dz = e.location.z - center.z
+                    val flat = Math.sqrt(dx * dx + dz * dz)
+                    val h = e.location.y - center.y
+                    val f = (h / height).coerceIn(0.0, 1.0)
+                    if (flat > radiusAt(f) + e.width / 2.0 || h !in -1.0..(height + 1.0)) return@forEach
+
+                    // Pull toward the eye + tangential swirl + gentle lift.
+                    val inward = if (flat > 1e-4) Vector(-dx / flat, 0.0, -dz / flat) else Vector()
+                    val tangent = if (flat > 1e-4) Vector(-dz / flat, 0.0, dx / flat) else Vector()
+                    val swirlSign = if (spin >= 0) 1.0 else -1.0
+                    e.velocity = inward.clone().multiply(0.25)
+                        .add(tangent.clone().multiply(0.35 * swirlSign))
+                        .setY(0.28)
+
+                    val last = lastHitTick[e.uniqueId]
+                    if (last == null || tick - last >= applyInterval) {
+                        lastHitTick[e.uniqueId] = tick
+                        source.invoke(ArcaneTarget(entityTarget = e), context.caster, inward.clone(), bonus)
+                        if (chainedEntities.add(e.uniqueId)) {
+                            context.chainSpawner?.invoke(ArcaneTarget(entityTarget = e))
+                        }
+                    }
+                }
+            }
         }
     }
 

@@ -13,7 +13,9 @@ object EnchantingRuneDecrypter : EnchantmentManager, RuneDataManager {
         // All Purpose
         "mending"              to listOf("point", "heal"),
         "unbreaking"           to listOf("self", "convergence"),
-        "curse_of_vanishing"   to listOf("next", "break"),
+        "curse_of_vanishing"   to listOf("next", "break"),    // new rune: "vanishing" (casted spell is invisible)
+        "curse_of_encumbering" to listOf(),    // new rune: "field", "force" (increases gravity)
+        "curse_of_binding"     to listOf(),    // new rune: "binding" (permanently binds a spell on an entity to be triggered at the casters will)
 
         // Armor
         "aqua_affinity"        to listOf("beam", "range"),
@@ -24,37 +26,46 @@ object EnchantingRuneDecrypter : EnchantmentManager, RuneDataManager {
         "fire_protection"      to listOf("zone", "invert"),
         "frost_walker"         to listOf("ball", "origin"),
         "projectile_protection" to listOf("beam", "invert"),
-        "protection"           to listOf("zone", "convergence"),
+        "protection"           to listOf("zone", "convergence"),     // new rune: "protection" (gives entities within damage reduction)
         "respiration"          to listOf("point", "range"),
         "soul_speed"           to listOf("beam", "amplify"),
         "thorns"               to listOf("beam", "trace"),
         "swift_sneak"          to listOf("beam", "wide"),
+        "cowardice"            to listOf()                          // new rune: "flee" (after spell cast, gain speed)
+        "void_jump"            to listOf()                          // new rune: "Teleportation" (upon spell cast, teleport)
 
         // Melee Weapons
         "bane_of_arthropods"   to listOf("beam", "amplify"),
         "breach"               to listOf("point", "invert"),
         "density"              to listOf("ball", "convergence"),
         "efficiency"           to listOf("beam", "amplify"),
-        "fire_aspect"          to listOf("beam", "ignite"),      // new rune: ignite
+        "fire_aspect"          to listOf("beam", "ignite"),       // new rune: ignite
         "looting"              to listOf("zone", "amplify"),
         "impaling"             to listOf("beam", "trace"),
-        "knockback"            to listOf("point", "thrust"),     // new rune: thrust
+        "knockback"            to listOf("point", "thrust"),      // new rune: thrust
         "sharpness"            to listOf("beam", "amplify"),
         "smite"                to listOf("beam", "amplify"),
         "sweeping_edge"        to listOf("ball", "amplify"),
         "wind_burst"           to listOf("point", "amplify", "self"),
+        "gravity_well"         to listOf()                        // new rune: "singularity" ()
+        "echo"                 to listOf()                        // new rune: "echo" (spell can re cast)
+        "arcane_cell"          to listOf()                        // new rune: "shield","barrier" (create an impenetrable barrier)
+        "pestilence"           to listOf()                        // new rune: "diffuser" (applies potion effect to all affected entities)
+        "buzzy_bees"           to listOf()                        // new rune: "sting" (summons bees)
+        "danger_close"         to listOf()                        // new rune: "epicenter" (spell does more damage the closer entities are to the center)
+        "plunder"              to listOf()                        // new rune: "plunder" (loot from mobs killed with spell are directed to your inventory}
 
         // Ranged Weapons
-        "channeling"           to listOf("beam", "storm", "trace"),  // new rune: storm
+        "channeling"           to listOf("beam", "storm", "trace"),   // new rune: storm
         "flame"                to listOf("beam", "ignite"),
-        "infinity"             to listOf("self", "infinite"),       // new rune: infinite
-        "loyalty"              to listOf("point", "trace", "self"),
+        "infinity"             to listOf("self", "infinite"),         // new rune: infinite
+        "loyalty"              to listOf("point", "trace", "self"),   // new rune: "loyalty" (if the casted spell is a moving projectile, after a set distance, it returns to the player)
         "riptide"              to listOf("ball", "self"),
         "multishot"            to listOf("ball", "amplify", "trace"),
-        "piercing"             to listOf("beam", "pierce"),         // new rune: pierce
+        "piercing"             to listOf("beam", "pierce"),           // new rune: pierce
         "power"                to listOf("beam", "amplify"),
         "punch"                to listOf("point", "thrust"),
-        "quick_charge"         to listOf("self", "delay"),
+        "quick_charge"         to listOf("self", "delay"),            // new rune: "quick charge" (decreases spell cast time)
 
         // Tools
         "efficiency"           to listOf("beam", "amplify"),
