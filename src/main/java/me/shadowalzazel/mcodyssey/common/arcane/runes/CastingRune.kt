@@ -102,6 +102,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
             world.spawnParticle(particle, pos, 24, size * 0.6, size * 0.6, size * 0.6, 0.02)
             if (target != null) {
                 source.invoke(target, caster, velocity, damage)
+                context.chainSpawner?.invoke(ArcaneTarget(entityTarget = target.entityTarget))
                 context.target = target
             }
             // Hand the impact point to the shared context, then resume the chain.
@@ -239,6 +240,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
                 val newTarget = ArcaneTarget(entityTarget = hitEntity)
                 context.target = newTarget
                 source.invoke(newTarget, caster, beamDir, builder.damage)
+                context.chainSpawner?.invoke(ArcaneTarget(entityTarget = hitEntity))
                 end = hitEntity.eyeLocation
             } else {
                 val hitBlock = context.world.rayTraceBlocks(castLoc, context.direction, range, FluidCollisionMode.NEVER)?.hitBlock
@@ -246,6 +248,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
                     val newTarget = ArcaneTarget(blockTarget = hitBlock)
                     context.target = newTarget
                     source.invoke(newTarget, caster, beamDir, builder.damage)
+                    context.chainSpawner?.invoke(ArcaneTarget(entityTarget = hitEntity))
                     end = hitBlock.location.toCenterLocation()
                 } else {
                     end = castLoc.clone().add(context.direction.clone().normalize().multiply(range))
@@ -296,6 +299,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
                 val to = e.location.clone().add(0.0, e.height / 2.0, 0.0).subtract(apex).toVector()
                 if (to.length() <= reach && to.angle(coneDir) <= halfAngle) {
                     source.invoke(ArcaneTarget(entityTarget = e), caster, baseDir, builder.damage)
+                    context.chainSpawner?.invoke(ArcaneTarget(entityTarget = e))
                 }
             }
 
@@ -394,6 +398,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
             center.getNearbyLivingEntities(radius).forEach {
                 if (it !in filter) {
                     source.invoke(ArcaneTarget(entityTarget = it), caster, context.direction, builder.damage)
+                    context.chainSpawner?.invoke(ArcaneTarget(entityTarget = it))
                 }
             }
 
@@ -529,6 +534,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
                         val out = e.location.toVector().subtract(center.toVector()).setY(0.0)
                         val dir = if (out.lengthSquared() > 1e-4) out.normalize() else e.location.direction.setY(0.0).normalize()
                         source.invoke(ArcaneTarget(entityTarget = e), context.caster, dir, damage)
+                        context.chainSpawner?.invoke(ArcaneTarget(entityTarget = e))
                         e.velocity = dir.multiply(0.9).setY(0.55)
                     }
                 }
@@ -594,6 +600,8 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
             private val lifetimeTicks = 100 // wall duration
             private var tick = 0
 
+            internal val chainedEntities = HashSet<UUID>()
+
             override fun run() {
                 if (tick >= lifetimeTicks) { cancel(); return }
                 if (tick % 2 == 0) render()
@@ -636,9 +644,11 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
                     val last = lastHitTick[e.uniqueId]
                     if (last == null || tick - last >= applyInterval) {
                         lastHitTick[e.uniqueId] = tick
-                        // in WallTask right after the existing source.invoke(...) on hit:
                         source.invoke(ArcaneTarget(entityTarget = e), context.caster, normal, bonus)
-                        context.chainSpawner?.invoke(ArcaneTarget(entityTarget = e))
+                        // Fork the linked reaction ONCE per entity, on its first hit only.
+                        if (chainedEntities.add(e.uniqueId)) {
+                            context.chainSpawner?.invoke(ArcaneTarget(entityTarget = e))
+                        }
                     }
                 }
             }

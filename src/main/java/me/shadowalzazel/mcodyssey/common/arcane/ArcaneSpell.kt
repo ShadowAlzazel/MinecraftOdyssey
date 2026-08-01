@@ -72,6 +72,7 @@ class ArcaneSpell(
             val rune = runeSequence[seqCounter]
             seqCounter++
             when (rune) {
+                DomainRune.Link -> { /* grammar marker; only meaningful right after a form. Orphan Link = no-op. */ }
                 is ModifierRune -> builder.storeRune(rune)               // tunes the upcoming cast
                 is DomainRune   -> rune.change(originalContext, context) // re-aims / relocates
                 is AugmentRune  -> rune.effect(context)                  // side effect on the context
@@ -84,13 +85,16 @@ class ArcaneSpell(
             form.assemble(builder)
             builder.buildStored()
 
-            if (form.chainsOnHit) {
-                // The runes after a reactive form are its reaction, not a linear continuation.
-                // Snapshot the tail and bind it; then end the MAIN thread so the tail runs
-                // ONLY per-hit, never once-at-placement.
-                val tail = runeSequence.subList(seqCounter, runeCount).toList()
-                if (tail.isNotEmpty()) context.chainSpawner = { hit -> spawnBranch(context, tail, hit) }
-                seqCounter = runeCount
+            // A Link immediately after this form binds the REST of the sequence as the form's
+            // per-hit reaction: every entity the form damages forks a fresh sub-spell that runs
+            // the reaction on that entity. The reaction is consumed from the main thread.
+            if (seqCounter < runeCount && runeSequence[seqCounter] is DomainRune.Link) {
+                seqCounter++                                             // consume the Link
+                val reaction = runeSequence.subList(seqCounter, runeCount).toList()
+                if (reaction.isNotEmpty()) {
+                    context.chainSpawner = { hit -> spawnBranch(context, reaction, hit) }
+                }
+                seqCounter = runeCount                                   // the rest lives only as the reaction
             }
 
             form.cast(source, context, builder, onComplete)
