@@ -830,63 +830,64 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
             val center = (context.targetLocation ?: context.castingLocation).clone()
             val height = builder.range.coerceIn(2.0, 24.0)
             val crownRadius = builder.spread.coerceIn(1.0, 12.0)
-            val baseRadius  = (crownRadius * 0.25).coerceAtLeast(0.4)   // foot is narrower than the crown
             val spinDir = if (builder.invert) -1.0 else 1.0
-            TornadoTask(source, context, center, height, baseRadius, crownRadius, spinDir, builder.damage)
+            TornadoTask(source, context, center, height, crownRadius, spinDir, builder.damage)
                 .runTaskTimer(Odyssey.instance, 0, 1)
             context.targetLocation = center
         }
-
 
         private class TornadoTask(
             private val source: ArcaneSource,
             private val context: CastingContext,
             private val center: Location,
             private val height: Double,
-            private val baseRadius: Double,     // radius at the foot  (f = 0)
-            private val crownRadius: Double,    // radius at the crown (f = 1)
-            private val spinDir: Double,        // +1 / -1 (Invert)
+            private val crownRadius: Double,
+            private val spinDir: Double,
             private val bonus: Double
         ) : BukkitRunnable() {
 
-            // ======================= KNOBS — the dials to test with =======================
-            private val DEBUG                 = true   // logs every derived value once at spawn
-            // Feel:
-            private val secondsPerFootRev     = 4.0    // time for the FAST foot to make one turn. Bigger = slower spin.
-            private val totalTwistTurns       = 0.70   // helix winding foot->crown, in TURNS. Keep < 1.0 so it sweeps, not barber-poles.
-            private val particleStepBlocks    = 0.55   // TEST ME: spacing between consecutive particles along an arm.
-            private val arms                  = 3      // number of helical strands.
-            private val armGapRad             = 2.0 * Math.PI / arms  // TEST ME: angular gap between arms. Set != even to break symmetry.
-            // Lifetime / cadence:
-            private val formTicks   = (height * 10).toInt().coerceIn(60, 100)
-            private val lifeTicks   = 100
-            private val applyInterval = 10
-            private val trailTicks  = 30    // ~how long particles linger; used only for the alias read-out below.
+            // ============================== KNOBS ==============================
+            private val DEBUG              = true
+            // Funnel shape
+            private val footRadiusFraction = 0.25   // foot radius as a fraction of the crown
+            // Motion
+            private val secondsPerFootRev  = 4.0    // time for the fastest (foot) ring to make one turn
+            private val totalTwistTurns    = 0.70   // static helix winding foot->crown, in turns (< 1 = sweep)
+            // Band geometry — ANGULAR
+            private val arms               = 3      // number of bands
+            private val armWidthDeg        = 80.0  // angular WIDTH of each band; gap = (360/arms - armWidthDeg)
+            // Particle density — LINEAR (constant block spacing => sparse foot, dense crown)
+            private val arcStepBlocks      = 2.55   // spacing between particles ACROSS a band's arc
+            private val climbStepBlocks    = 1.25   // spacing between stacked rings up the column
+            private val renderEveryTicks   = 1      // bump to 2 if the particle count is heavy
+            // Cadence
+            private val applyInterval      = 10
+            // ==================================================================
 
-            // ==================== DERIVED — do not hand-tune these ========================
-            private val twoPi        = 2.0 * Math.PI
-            private val totalTwist   = totalTwistTurns * twoPi                 // rad of spatial winding foot->crown
+            // ------------------------ DERIVED (don't hand-tune) ------------------------
+            private val twoPi         = 2.0 * Math.PI
+            private val baseRadius    = (crownRadius * footRadiusFraction).coerceAtLeast(0.4)
+            private val armSpacingRad = twoPi / arms                                   // centre-to-centre between bands
+            private val armWidthRad   = Math.toRadians(armWidthDeg).coerceIn(0.02, armSpacingRad)  // capped so bands don't fuse
+            private val totalTwist    = totalTwistTurns * twoPi
 
-            // Vertical resolution derived from desired particle spacing along the helix arc.
-            private val avgRadius    = (baseRadius + crownRadius) / 2.0
-            private val helixArc     = run { val s = avgRadius * totalTwist; sqrt(height * height + s * s) }
-            private val planes       = maxOf(4, ceil(helixArc / particleStepBlocks).toInt())
-            private val twistPerPlane = totalTwist / planes                   // <- "angular differential per plane"
-            private val heightPerPlane = height / planes
+            // Vertical resolution from the desired climb spacing along the average helix.
+            private val avgRadius     = (baseRadius + crownRadius) / 2.0
+            private val helixArc      = run { val s = avgRadius * totalTwist; sqrt(height * height + s * s) }
+            private val planes        = maxOf(4, ceil(helixArc / climbStepBlocks).toInt())
+            private val twistPerPlane = totalTwist / planes
 
-            // Angular velocity from CONSTANT TANGENTIAL SPEED: omega = v / r. Anchor v at the foot.
-            private val omegaFoot    = spinDir * twoPi / (secondsPerFootRev * 20.0)  // rad/tick at the foot (fastest ring)
-            private val tangential   = abs(omegaFoot) * baseRadius             // blocks/tick, constant up the column
+            // Angular velocity from CONSTANT tangential speed (v = ω·r), anchored at the foot.
+            private val omegaFoot     = spinDir * twoPi / (secondsPerFootRev * 20.0)
+            private val tangential    = abs(omegaFoot) * baseRadius
             private fun radiusAt(f: Double) = baseRadius + (crownRadius - baseRadius) * f
-            private fun omegaAt(f: Double)  = spinDir * tangential / radiusAt(f)    // rad/tick at height f
-            private fun spinAt(f: Double)   = omegaAt(f) * tick                     // rotation accumulated by this tick
+            private fun omegaAt(f: Double)  = spinDir * tangential / radiusAt(f)
+            private fun spinAt(f: Double)   = omegaAt(f) * tick
+            // Particles across a band at radius r: arc length / spacing. THE fix.
+            private fun acrossAt(r: Double) = maxOf(1, ceil(r * armWidthRad / arcStepBlocks).toInt())
 
-            // ALIAS SAFETY: the fastest ring (foot) must sweep LESS than the arm-symmetry angle
-            // within one particle-trail window, or the trail paints every angle and motion dies.
-            // >1 safe, <1 smear. Fix a low value by slowing the foot, using fewer arms, or an uneven armGapRad.
-            private val symmetryAngle  = armGapRad.coerceAtLeast(1e-3)
-            private val footTrailSweep = abs(omegaFoot) * trailTicks
-            private val aliasSafety    = symmetryAngle / footTrailSweep
+            private val formTicks = (height * 10).toInt().coerceIn(60, 100)
+            private val lifeTicks = 100
 
             private val world = center.world
             private val ignored: List<LivingEntity> = context.ignoredTargets.mapNotNull { it.entityTarget as? LivingEntity }
@@ -897,47 +898,52 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
             override fun run() {
                 if (tick == 0 && DEBUG) logDerived()
                 if (tick >= formTicks + lifeTicks) { cancel(); return }
-                render()
-                if (tick >= formTicks) sweep()   // harmless while forming; move up to damage during formation
+                if (tick % renderEveryTicks == 0) render()
+                if (tick >= formTicks) sweep()
                 tick++
             }
 
             private fun logDerived() {
                 Odyssey.instance.logger.info(
-                    "[Vortex] planes=$planes  twistPerPlane=%.3frad  heightPerPlane=%.2f  omegaFoot=%.4f  omegaCrown=%.4f  tangential=%.3f  aliasSafety=%.2f (want >1)"
-                        .format(twistPerPlane, heightPerPlane, omegaFoot, omegaAt(1.0), tangential, aliasSafety)
+                    ("[Vortex] planes=%d  band=%.0f°  gap=%.0f°  foot=%d/band  crown=%d/band  ~%d particles/frame  " +
+                            "ωfoot=%.4f  ωcrown=%.4f")
+                        .format(
+                            planes, Math.toDegrees(armWidthRad), Math.toDegrees(armSpacingRad - armWidthRad),
+                            acrossAt(baseRadius) + 1, acrossAt(crownRadius) + 1,
+                            arms * planes * (acrossAt(avgRadius) + 1),
+                            omegaFoot, omegaAt(1.0)
+                        )
                 )
             }
 
             private fun render() {
                 val forming = tick < formTicks
                 val form = if (forming) tick.toDouble() / formTicks else 1.0
-                val bottomF = 1.0 - form
+                val bottomF = 1.0 - form   // funnel descends: crown first, foot last
 
                 for (a in 0 until arms) {
-                    val armBase = a * armGapRad
+                    val armCenter = a * armSpacingRad
                     for (p in 0..planes) {
                         val f = p.toDouble() / planes
                         if (f < bottomF) continue
-                        val angle = armBase + twistPerPlane * p + spinAt(f)   // static offset + spatial winding + SHEARED spin
                         val r = radiusAt(f)
-                        val at = center.clone().add(cos(angle) * r, height * f, sin(angle) * r)
-                        world.spawnParticle(source.particle, at, 1, 0.0, 0.0, 0.0, 0.0)
+                        val ringAngle = armCenter + twistPerPlane * p + spinAt(f)   // band CENTRE at this height
+                        val across = acrossAt(r)                                    // <- radius-driven particle count
+                        for (j in 0..across) {
+                            val angle = ringAngle - armWidthRad / 2.0 + armWidthRad * j / across
+                            val at = center.clone().add(cos(angle) * r, height * f, sin(angle) * r)
+                            world.spawnParticle(source.particle, at, 1, 0.0, 0.0, 0.0, 0.0)
+                        }
                     }
-                    // Bright head at the crown: sparse + slow, so its short comet-trail SHOWS the turn.
-                    val ha = armBase + totalTwist + spinAt(1.0)
-                    val hr = radiusAt(1.0)
-                    world.spawnParticle(source.particle, center.clone().add(cos(ha) * hr, height, sin(ha) * hr), 3, 0.04, 0.04, 0.04, 0.0)
                 }
 
                 if (forming) {
-                    val tipY = height * bottomF
                     val tipR = radiusAt(bottomF)
-                    world.spawnParticle(source.particle, center.clone().add(0.0, tipY, 0.0), 6, tipR * 0.4, 0.1, tipR * 0.4, 0.03)
+                    world.spawnParticle(source.particle, center.clone().add(0.0, height * bottomF, 0.0), 6, tipR * 0.4, 0.1, tipR * 0.4, 0.03)
                 } else {
                     val gr = radiusAt(0.0)
                     for (a in 0 until 2) {
-                        val ga = spinAt(0.0) * 1.7 + a * Math.PI    // foot dust, off-rate so it isn't locked to the arms
+                        val ga = spinAt(0.0) * 1.7 + a * Math.PI   // ground dust, off-rate so it isn't locked to the bands
                         world.spawnParticle(source.particle, center.clone().add(cos(ga) * gr, 0.1, sin(ga) * gr), 2, 0.05, 0.02, 0.05, 0.0)
                     }
                 }
