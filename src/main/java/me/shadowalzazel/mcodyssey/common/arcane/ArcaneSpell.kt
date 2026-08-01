@@ -5,6 +5,7 @@ import me.shadowalzazel.mcodyssey.common.arcane.runes.AugmentRune
 import me.shadowalzazel.mcodyssey.common.arcane.runes.CastingRune
 import me.shadowalzazel.mcodyssey.common.arcane.runes.DomainRune
 import me.shadowalzazel.mcodyssey.common.arcane.runes.ModifierRune
+import org.bukkit.entity.LivingEntity
 
 /**
  * Executes a linear rune sequence. Runes are read left to right; each casting
@@ -20,7 +21,9 @@ import me.shadowalzazel.mcodyssey.common.arcane.runes.ModifierRune
 class ArcaneSpell(
     val source: ArcaneSource,
     private val originalContext: CastingContext,
-    private val runeSequence: List<ArcaneRune>
+    private val runeSequence: List<ArcaneRune>,
+    private val budget: CastBudget = CastBudget(),   // shared across the whole branch tree
+    isBranch: Boolean = false
 ) {
     private val runeCount = runeSequence.size
     private var seqCounter = 0
@@ -34,7 +37,9 @@ class ArcaneSpell(
 
     init {
         // Ignore the caster by default: convert to a target and add to the ignore list.
-        originalContext.ignoredTargets.add(originalContext.caster.convertToTarget())
+        // Branches inherit the parent's ignore list (via the cloned context), so only the
+        // ROOT spell adds the caster — otherwise every hit re-appends it.
+        if (!isBranch) originalContext.ignoredTargets.add(originalContext.caster.convertToTarget())
         context = originalContext.clone()
     }
 
@@ -76,11 +81,35 @@ class ArcaneSpell(
 
         val form = castingRune
         if (form != null) {
-            form.assemble(builder)  // rune defaults first...
-            builder.buildStored()   // ...then modifiers fold in on top (signed, so they can subtract)
+            form.assemble(builder)
+            builder.buildStored()
+
+            if (form.chainsOnHit) {
+                // The runes after a reactive form are its reaction, not a linear continuation.
+                // Snapshot the tail and bind it; then end the MAIN thread so the tail runs
+                // ONLY per-hit, never once-at-placement.
+                val tail = runeSequence.subList(seqCounter, runeCount).toList()
+                if (tail.isNotEmpty()) context.chainSpawner = { hit -> spawnBranch(context, tail, hit) }
+                seqCounter = runeCount
+            }
+
             form.cast(source, context, builder, onComplete)
         } else {
-            onComplete() // only trailing modifiers/domains/augments were left — nothing to await
+            onComplete()
         }
     }
+
+    private fun spawnBranch(template: CastingContext, tail: List<ArcaneRune>, hit: ArcaneTarget) {
+        if (tail.isEmpty()) return
+        val child = template.clone()          // chainSpawner is NOT carried over
+        child.target = hit
+        val e = hit.entityTarget
+        if (e is LivingEntity) child.targetLocation = e.eyeLocation
+        ArcaneSpell(source, child, tail, budget, isBranch = true).castSpell()
+    }
+}
+
+/** Shared cast budget so a whole tree of branches can never run away. */
+class CastBudget(var remaining: Int = 64) {
+    fun tryConsume(): Boolean = if (remaining > 0) { remaining--; true } else false
 }

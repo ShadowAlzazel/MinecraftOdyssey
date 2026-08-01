@@ -111,6 +111,11 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
         }
     }
 
+
+    // next to `defersCompletion`, in the base class:
+    /** True if this form damages targets over time and its tail should react per-hit. */
+    open val chainsOnHit: Boolean get() = false
+
     /*
      * Ideas:
      *
@@ -542,6 +547,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
     class Wall : CastingRune() {
         override val name = "wall"
         override val displayName = "Wall"
+        override val chainsOnHit = true
 
         override fun build(builder: CastingBuilder) {
             builder.damage = 0.0   // bonus on top of the source's own base; source carries the hit
@@ -630,7 +636,9 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
                     val last = lastHitTick[e.uniqueId]
                     if (last == null || tick - last >= applyInterval) {
                         lastHitTick[e.uniqueId] = tick
+                        // in WallTask right after the existing source.invoke(...) on hit:
                         source.invoke(ArcaneTarget(entityTarget = e), context.caster, normal, bonus)
+                        context.chainSpawner?.invoke(ArcaneTarget(entityTarget = e))
                     }
                 }
             }

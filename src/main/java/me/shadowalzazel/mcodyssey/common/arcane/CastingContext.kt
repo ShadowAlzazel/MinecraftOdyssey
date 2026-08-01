@@ -11,7 +11,11 @@ data class CastingContext(
     var direction: Vector,
     var target: ArcaneTarget? = null,
     var targetLocation: Location? = null,
-    val ignoredTargets: MutableList<ArcaneTarget> = mutableListOf()
+    val ignoredTargets: MutableList<ArcaneTarget> = mutableListOf(),
+    // Set by the engine only while a reactive form is manifesting. Each entity the form
+    // damages is handed here so the remaining runes can fork onto it. Deliberately NOT part
+    // of the data-class contract and NOT copied by clone() — a sub-spell installs its own.
+    var chainSpawner: ((ArcaneTarget) -> Unit)? = null
     ) {
 
     fun clone(): CastingContext {

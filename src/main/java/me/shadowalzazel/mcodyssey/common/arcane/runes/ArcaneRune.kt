@@ -57,6 +57,7 @@ sealed class ArcaneRune : RuneDataManager {
             "differ" -> DomainRune.Differ
             "direct" -> DomainRune.Direct
             "self" -> DomainRune.Self
+            "link" -> DomainRune.Link
             // Augment
             "break" -> AugmentRune.Break(value ?: 2.0)
             "coda" -> AugmentRune.Coda
@@ -96,6 +97,7 @@ sealed class ArcaneRune : RuneDataManager {
             "coal" -> DomainRune.Differ
             "stick" -> DomainRune.Direct
             "paper" -> DomainRune.Self
+            "iron_chain" -> DomainRune.Link
             // Augment
             "cactus" -> AugmentRune.Break(2.0)
             "gold_ingot" -> AugmentRune.Coda
