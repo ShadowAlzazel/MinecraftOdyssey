@@ -3,6 +3,7 @@ package me.shadowalzazel.mcodyssey.common.listeners
 import io.papermc.paper.datacomponent.DataComponentTypes
 import me.shadowalzazel.mcodyssey.common.arcane.ArcaneSpellBuilder
 import me.shadowalzazel.mcodyssey.common.arcane.ArcaneCaster
+import me.shadowalzazel.mcodyssey.common.arcane.ArcaneCasting
 import me.shadowalzazel.mcodyssey.common.arcane.ArcaneSpellItems
 import me.shadowalzazel.mcodyssey.common.arcane.CastingContext
 import me.shadowalzazel.mcodyssey.util.DataTagManager
@@ -56,22 +57,30 @@ object ArcaneListeners: Listener, DataTagManager {
 
     }
 
-    //@EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.LOW)
     fun dispenserHandler(event: BlockDispenseEvent) {
         val dispensedItem = event.item
         val itemName = dispensedItem.getItemNameId()
-        if (itemName == "spell_scroll") {
+        if (itemName == "spell_scroll" || itemName == "scroll") {
             // Triggered for block
             val direction = event.velocity
             val spellScroll = event.item
             // Check if we can build spell
-            val spellBuilder = ArcaneSpellBuilder(arcaneItem = spellScroll)
-            val canBuildSpell = spellBuilder.canBuildSpell()
-            if (!canBuildSpell) return
+            //val spellBuilder = ArcaneSpellBuilder(arcaneItem = spellScroll)
+            //val canBuildSpell = spellBuilder.canBuildSpell()
+            //if (!canBuildSpell) return
+
+
+
             // Do stuff to item
-            event.item = ItemStack(Material.AIR)
-            val currentDamage = spellScroll.getData(DataComponentTypes.DAMAGE) ?: 0
-            spellScroll.setData(DataComponentTypes.DAMAGE, currentDamage + 1)
+            if (itemName == "spell_scroll") {
+                event.item = ItemStack(Material.AIR)
+                val currentDamage = spellScroll.getData(DataComponentTypes.DAMAGE) ?: 0
+                spellScroll.setData(DataComponentTypes.DAMAGE, currentDamage + 1)
+            } else {
+                event.item = ItemStack(Material.AIR)
+            }
+
             // Run caster
             val block = event.block
             val faceDirection = event.block.location.direction.clone().normalize()
@@ -86,9 +95,10 @@ object ArcaneListeners: Listener, DataTagManager {
                 targetLocation = null
             )
 
+            ArcaneCasting.castFromItem(event.item, spellContext)
             // Build Spell
-            val spell = spellBuilder.buildSpell(spellContext)
-            spell.castSpell()
+            //val spell = spellBuilder.buildSpell(spellContext)
+            //spell.castSpell()
         }
 
     }

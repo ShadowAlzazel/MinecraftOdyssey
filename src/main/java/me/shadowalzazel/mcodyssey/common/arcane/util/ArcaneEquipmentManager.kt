@@ -15,7 +15,6 @@ import me.shadowalzazel.mcodyssey.common.arcane.runes.CastingRune
 import me.shadowalzazel.mcodyssey.common.arcane.runes.DomainRune
 import me.shadowalzazel.mcodyssey.common.arcane.runes.ModifierRune
 import me.shadowalzazel.mcodyssey.common.combat.AttackHelper
-import me.shadowalzazel.mcodyssey.common.arcane.util.MagicMissileLauncher
 import me.shadowalzazel.mcodyssey.util.DataTagManager
 import me.shadowalzazel.mcodyssey.util.VectorParticles
 import me.shadowalzazel.mcodyssey.util.constants.EntityTags
@@ -521,7 +520,7 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
                 when (item.getItemNameId()) {
                     "ruby" -> runes.add(ModifierRune.Source(DamageType.IN_FIRE, Particle.FLAME))
                     "diamond" -> runes.add(ModifierRune.Amplify(4.0))
-                    "emerald" -> runes.add(ModifierRune.Wide(2.0))
+                    "emerald" -> runes.add(ModifierRune.Spread(2.0))
                     "echo_shard" -> runes.add(ModifierRune.Source(DamageType.SONIC_BOOM, Particle.SONIC_BOOM))
                     "neptunian" -> runes.add(ModifierRune.Source(DamageType.FREEZE, Particle.SNOWFLAKE))
                     "alexandrite" -> runes.add(CastingRune.Beam()) // overwrite or ADD!!!
@@ -540,7 +539,7 @@ interface ArcaneEquipmentManager : VectorParticles, AttackHelper, DataTagManager
             when (equipment.itemInOffHand.getItemNameId()) {
                 "ruby" -> runes.add(ModifierRune.Source(DamageType.IN_FIRE, Particle.FLAME))
                 "diamond" -> runes.add(ModifierRune.Amplify(2.0))
-                "emerald" -> runes.add(ModifierRune.Wide(2.0))
+                "emerald" -> runes.add(ModifierRune.Spread(2.0))
                 "echo_shard" -> runes.add(ModifierRune.Source(DamageType.SONIC_BOOM, Particle.SONIC_BOOM))
                 "neptunian" -> runes.add(ModifierRune.Source(DamageType.FREEZE, Particle.SNOWFLAKE))
                 "alexandrite" -> runes.add(CastingRune.Beam()) // overwrite or ADD!!!

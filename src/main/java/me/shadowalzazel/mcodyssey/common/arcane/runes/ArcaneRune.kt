@@ -1,31 +1,17 @@
 package me.shadowalzazel.mcodyssey.common.arcane.runes
 
-import me.shadowalzazel.mcodyssey.Odyssey
 import me.shadowalzazel.mcodyssey.common.arcane.CastingContext
-import me.shadowalzazel.mcodyssey.common.arcane.ArcaneSource
 import me.shadowalzazel.mcodyssey.common.arcane.ArcaneTarget
-import me.shadowalzazel.mcodyssey.common.arcane.CastingBuilder
 import me.shadowalzazel.mcodyssey.common.arcane.RuneDataManager
 import me.shadowalzazel.mcodyssey.common.arcane.runes.DomainRune.Kernel.getItemNameId
 import me.shadowalzazel.mcodyssey.common.arcane.runes.DomainRune.Kernel.getStringTag
 import me.shadowalzazel.mcodyssey.common.arcane.util.*
-import me.shadowalzazel.mcodyssey.common.combat.AttackHelper
-import me.shadowalzazel.mcodyssey.util.VectorParticles
-import me.shadowalzazel.mcodyssey.util.constants.EntityTags
 import me.shadowalzazel.mcodyssey.util.constants.ItemDataTags
-import org.bukkit.FluidCollisionMode
-import org.bukkit.Location
-import org.bukkit.Material
 import org.bukkit.Particle
-import org.bukkit.Sound
 import org.bukkit.damage.DamageType
-import org.bukkit.entity.EntityType
 import org.bukkit.entity.Item
 import org.bukkit.entity.LivingEntity
-import org.bukkit.entity.Snowball
 import org.bukkit.inventory.ItemStack
-import org.bukkit.scheduler.BukkitRunnable
-import org.bukkit.util.Vector
 
 // =====================================================================================
 //  ARCANE RUNE  --  Base sealed class for all runes
@@ -69,7 +55,7 @@ sealed class ArcaneRune : RuneDataManager {
             "heal" -> AugmentRune.Heal(value ?: 4.0)
             // Modifier (generic, signed — now respect the stored value)
             "amplify" -> ModifierRune.Amplify(value ?: 4.0)
-            "wide" -> ModifierRune.Wide(value ?: 1.0)
+            "spread", "wide" -> ModifierRune.Spread(value ?: 1.0)
             "speed" -> ModifierRune.Speed(value ?: 0.5)
             "delay" -> ModifierRune.Delay(value ?: 2.0)
             "convergence" -> ModifierRune.Convergence(value ?: 1.0)
@@ -112,7 +98,7 @@ sealed class ArcaneRune : RuneDataManager {
             "honeycomb" -> AugmentRune.Heal(4.0)
             // Modifier
             "diamond" -> ModifierRune.Amplify(4.0)
-            "emerald" -> ModifierRune.Wide(1.0)
+            "emerald" -> ModifierRune.Spread(1.0)
             "clock" -> ModifierRune.Delay(1.0) // -> 1s
             "kunzite" -> ModifierRune.Convergence(1.0)
             "amethyst_shard" -> ModifierRune.Range(16.0)
@@ -481,7 +467,7 @@ sealed class AugmentRune : ArcaneRune() {
 sealed class ModifierRune : ArcaneRune() {
     abstract val value: Double
 
-    class Wide(value: Double?) : ModifierRune() {
+    class Spread(value: Double?) : ModifierRune() {
         override val name = "wide"
         override val displayName = "Wide"
         override val value = value ?: 0.0

@@ -10,7 +10,7 @@ import org.bukkit.damage.DamageType
  *
  * The whole modifier vocabulary is intentionally SMALL and generic (see [applyModifier]).
  * Each casting rune decides what a field like `spread` or `range` means for it, so a
- * player never has to learn a rune-per-parameter. Values are signed, so Wide(-1.0)
+ * player never has to learn a rune-per-parameter. Values are signed, so Spread(-1.0)
  * narrows, Range(-4.0) shortens, etc. — one rune covers both directions.
  */
 data class CastingBuilder(
@@ -20,7 +20,7 @@ data class CastingBuilder(
     var particle: Particle = Particle.WITCH,        // set from the spell's source
     // --- Shape / reach (each casting rune interprets these) ---
     var range: Double = 0.0,                        // Range      -> length / distance / lifetime
-    var spread: Double = 0.0,                       // Wide       -> beam width / cone angle / zone radius / ball size
+    var spread: Double = 0.0,                       // Spread       -> beam width / cone angle / zone radius / ball size
     var speed: Double = 0.5,                        // Speed      -> projectile speed
     var aimAssist: Double = 0.0,                    // Convergence-> accuracy / snap
     var delayInTicks: Long = 0L,                    // Delay
@@ -44,7 +44,7 @@ data class CastingBuilder(
         when (rune) {
             is ModifierRune.Amplify     -> damage       += rune.value
             is ModifierRune.Range       -> range        += rune.value
-            is ModifierRune.Wide        -> spread       += rune.value
+            is ModifierRune.Spread      -> spread       += rune.value
             is ModifierRune.Speed       -> speed        += rune.value
             is ModifierRune.Convergence -> aimAssist    += rune.value
             is ModifierRune.Delay       -> delayInTicks += (rune.value * 20).toLong()

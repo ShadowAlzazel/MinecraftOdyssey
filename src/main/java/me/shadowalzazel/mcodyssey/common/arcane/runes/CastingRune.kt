@@ -475,6 +475,8 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
                 band = builder.spread.coerceAtLeast(0.5),
                 ringSpeed = builder.speed.coerceAtLeast(0.1),
                 damage = builder.damage,
+                maxAbove = 3.5,
+                maxBelow = 1.5,
                 onComplete = onComplete
             ).runTaskTimer(Odyssey.instance, 0, 1)
             context.targetLocation = center
@@ -488,6 +490,8 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
             private val band: Double,
             private val ringSpeed: Double,
             private val damage: Double,
+            private val maxAbove: Double,
+            private val maxBelow: Double,
             private val onComplete: () -> Unit
         ) : BukkitRunnable() {
 
@@ -496,6 +500,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
             private val alreadyHit = HashSet<UUID>()
             private var radius = 1.0
             private var first = true
+            private val maxHeight: Double = 2.5
 
             override fun run() {
                 if (first) {
@@ -522,11 +527,16 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
             }
 
             private fun sweepFront() {
-                center.getNearbyLivingEntities(maxRadius + band).forEach { e ->
+                center.getNearbyLivingEntities(radius + band).forEach { e ->
                     if (e in ignored || e.uniqueId in alreadyHit) return@forEach
+
+                    // vertical slab: -maxBelow .. +maxAbove around center.y
+                    val box = e.boundingBox
+                    if (box.maxY < center.y - maxBelow || box.minY > center.y + maxAbove) return@forEach
+
                     val dx = e.location.x - center.x
                     val dz = e.location.z - center.z
-                    val flat = Math.sqrt(dx * dx + dz * dz)
+                    val flat = sqrt(dx * dx + dz * dz)
                     if (flat in (radius - band)..(radius + band)) {
                         alreadyHit += e.uniqueId
                         val out = e.location.toVector().subtract(center.toVector()).setY(0.0)
@@ -849,7 +859,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
             // ============================== KNOBS ==============================
             private val DEBUG              = true
             // Funnel shape
-            private val footRadiusFraction = 0.25   // foot radius as a fraction of the crown
+            private val footRadiusFraction = 0.5   // foot radius as a fraction of the crown
             // Motion
             private val secondsPerFootRev  = 4.0    // time for the fastest (foot) ring to make one turn
             private val totalTwistTurns    = 0.70   // static helix winding foot->crown, in turns (< 1 = sweep)
@@ -857,7 +867,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
             private val arms               = 3      // number of bands
             private val armWidthDeg        = 80.0  // angular WIDTH of each band; gap = (360/arms - armWidthDeg)
             // Particle density — LINEAR (constant block spacing => sparse foot, dense crown)
-            private val arcStepBlocks      = 2.55   // spacing between particles ACROSS a band's arc
+            private val arcStepBlocks      = 3.0   // spacing between particles ACROSS a band's arc
             private val climbStepBlocks    = 1.25   // spacing between stacked rings up the column
             private val renderEveryTicks   = 1      // bump to 2 if the particle count is heavy
             // Cadence
@@ -887,7 +897,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
             private fun acrossAt(r: Double) = maxOf(1, ceil(r * armWidthRad / arcStepBlocks).toInt())
 
             private val formTicks = (height * 10).toInt().coerceIn(60, 100)
-            private val lifeTicks = 100
+            private val lifeTicks = formTicks * 3
 
             private val world = center.world
             private val ignored: List<LivingEntity> = context.ignoredTargets.mapNotNull { it.entityTarget as? LivingEntity }
@@ -951,7 +961,7 @@ sealed class CastingRune : ArcaneRune(), RayTracerAndDetector, AttackHelper, Vec
             }
 
             private fun sweep() {
-                center.getNearbyLivingEntities(crownRadius + 1.0).forEach { e ->
+                center.getNearbyLivingEntities(crownRadius + 1.5).forEach { e ->
                     if (e in ignored) return@forEach
                     val dx = e.location.x - center.x
                     val dz = e.location.z - center.z
